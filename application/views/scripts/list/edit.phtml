@@ -1,0 +1,68 @@
+<form method="post" action="<?php echo $this->url(array('controller'=>'list')); ?>" class="uniForm">
+	<fieldset class="inlineLabels">
+		<legend>List Details</legend>
+
+		<div class="ctrlHolder">
+			<label for="slug" class="requiredField">
+				Slug<span class="asteriskField">*</span>
+			</label>		
+			<input name="slug" id="slug" type="text" size="20" value="<?php echo htmlspecialchars($this->editingList->slug); ?>">
+			<p class="formHint">Format is <code>username/listname</code></p>
+		</div>
+
+		<div class="ctrlHolder">
+			<label for="name" class="requiredField">
+				Name<span class="asteriskField">*</span>
+			</label>		
+			<input name="name" id="name" type="text" size="20" value="<?php echo htmlspecialchars($this->editingList->name); ?>">
+			<p class="formHint">A nice name, for display purposes</p>
+		</div>
+
+		<div class="ctrlHolder">
+			<p class="label">Status</p>
+			<ul class="blockLabels">
+				<?php foreach (Model_TwitterBase::$statuses as $val => $name) : ?>
+				<li>
+					<label class="radio"><input name="status" type="radio" value="<?php echo $val; ?>"
+					<?php if($this->editingList->status==$val) echo 'checked'; ?>> <?php echo $name; ?></label>
+				</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+
+		<div class="ctrlHolder">
+			<label for="backfill">
+				Backfill
+			</label>		
+			<select name="backfill" id="backfill" class="selectInput">
+				<?php for ($i=0; $i<=20; $i+=5) : ?>
+				<option value="<?php echo $i; ?>"><?php echo $i*Zend_Registry::get('config')->twitter->list_fetch_per_page; ?> tweets</option>
+				<?php endfor; ?>
+			</select>
+			<p class="formHint">Note that backfilling is not always possible, and the more tweets fetched, the longer this list will take to save.</p>
+		</div>
+
+		<div class="ctrlHolder checkbox">
+			<p class="label">Sentiment analysis</p>
+		<?php if ($this->campaign->analysis_quota) : ?>
+			<ul class="blockLabels">
+				<?php foreach (array(1 => 'Enabled', 0 => 'Disabled') as $val => $name) : ?>
+				<li>
+					<label class="radio"><input name="should_analyse" type="radio" value="<?php echo $val; ?>"
+						<?php if ($this->editingList->should_analyse == $val) echo 'checked'; ?>> <?php echo $name; ?>
+			</label>
+				</li>
+				<?php endforeach; ?>
+			</ul>
+			<?php else : ?>
+			Sentiment analysis is disabled for this campaign
+			<?php endif; ?>
+		</div>
+				
+	</fieldset>
+	
+	<div class="buttonHolder">
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', $this->gatekeeper()->fallbackUrlArgs(array('controller'=>'list', 'action'=>'index')), null, true); ?>
+		<input type="submit" value="Save" class="primaryAction">
+	</div>
+</form>

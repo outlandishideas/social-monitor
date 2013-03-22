@@ -1,0 +1,6 @@
+campaigns:
+  label: Campaigns
+  controller: campaign
+user:
+  label: Users
+  controller: user

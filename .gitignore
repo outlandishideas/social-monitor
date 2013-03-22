@@ -1,0 +1,6 @@
+
+/.idea
+/php_errors.log
+/log/*
+!/log/index.html
+/lib/bin

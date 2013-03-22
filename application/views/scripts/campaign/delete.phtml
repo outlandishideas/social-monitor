@@ -1,0 +1,13 @@
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm">
+
+	<fieldset class="inlineLabels">
+		<p>Are you sure you want to delete the campaign <strong><?php echo $this->campaignToDelete->name; ?></strong>?
+			This will delete all information associated with this campaign including tweets and Facebook posts.
+			Other campaigns will not be affected.</p>
+	</fieldset>
+	<div class="buttonHolder">
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller' => 'campaign', 'action' => 'index'), null, true); ?>
+		<input type="submit" value="Delete" class="primaryAction">
+	</div>
+</form>
+

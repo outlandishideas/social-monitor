@@ -1,0 +1,16 @@
+table.dataTable td {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+}
+
+table.dataTable.dtable tr td.sorting_1, table.dataTable.dtable tr td.sorting_2 {
+	background: #e2e2e2;
+}
+
+table.dataTable tr.selected td {
+	background-color: #dff0d8;
+}
+
+table.dataTable tr.selected td.sorting_1, table.dataTable tr.selected td.sorting_2 {
+	background-color: #d6e9c6;
+}

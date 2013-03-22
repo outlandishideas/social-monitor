@@ -1,0 +1,40 @@
+<?php echo $this->gatekeeper()->filter('<p><a class="button add" href="%url%">Add new</a></p>', array('controller'=>'user', 'action'=>'new'), null, true); ?>
+
+<table class="users text">
+	<tr>
+		<th class="name">Name</th>
+		<th class="email">Email Address</th>
+		<th class="user-level">User Level</th>
+		<th class="campaigns">Campaigns</th>
+		<th class="last-sign-in">Last Sign In</th>
+		<th class="options"></th>
+	</tr>
+<?php foreach ($this->users as $user) : ?>
+	<?php
+		$userLevel = array_key_exists($user->user_level, $this->userLevels) ? $this->userLevels[$user->user_level] : 'Unknown (' . $user->user_level . ')';
+	?>
+	<tr <?php if ($user->id == $this->user->id) echo 'class="current-user"'; ?>>
+		<td class="name"><?php echo $user->safeName; ?></td>
+		<td class="email"><?php echo $user->email; ?></td>
+		<td class="user-level"><?php echo $userLevel; ?></td>
+		<td class="campaigns"><?php echo $user->canManageCampaigns() ? count($user->campaigns) : 'All'; ?></td>
+		<td class="last-sign-in"><?php echo $this->prettyDate($user->last_sign_in, 'Never signed in'); ?></td>
+		<td class="options">
+			<?php
+				$links = array();
+				if ($this->user->id == $user->id) {
+					$links['<a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit-self');
+				} else {
+					$links['<a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit', 'id'=>$user->id);
+				}
+				if ($user->canManageCampaigns()) {
+					$links['<a href="%url%">Manage Campaigns</a>'] = array('controller'=>'user', 'action'=>'manage', 'id'=>$user->id);
+				}
+				$links['<a href="%url%" class="autoConfirm">Delete</a>'] = array('controller'=>'user', 'action'=>'delete', 'id'=>$user->id);
+				$links = $this->gatekeeper()->filterAll($links);
+				echo implode(' | ', $links);
+			?>
+		</td>
+	</tr>
+<?php endforeach; ?>
+</table>

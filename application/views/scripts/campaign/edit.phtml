@@ -1,0 +1,82 @@
+<form method="post" action="<?php echo $this->url(array('controller'=>'campaign')); ?>" class="uniForm" novalidate>
+
+	<fieldset class="inlineLabels">
+		<legend>Campaign details</legend>
+		<div class="ctrlHolder">
+			<label for="name" class="requiredField">
+				Campaign name<span class="asteriskField">*</span>
+			</label>
+			<input name="name" value="<?php echo htmlspecialchars($this->editingCampaign->name); ?>" class="textinput"
+			       maxlength="20" type="text" id="name">
+		</div>
+		<div class="ctrlHolder">
+			<label for="timezone" class="requiredField">
+				Timezone<span class="asteriskField">*</span>
+			</label>
+			<select name="timezone" id="timezone" class="selectInput">
+				<optgroup label="Frequently used">
+					<option value="Europe/London">London</option>
+					<option value="Europe/Paris">CET</option>
+					<option value="Australia/Sydney">Sydney</option>
+					<option value="America/New_York">New York</option>
+				</optgroup>
+				<optgroup label="All timezones">
+					<?php foreach ($this->zones as $tz => $name) : ?>
+					<option value="<?php echo $tz; ?>" <?php if ($this->editingCampaign->timezone == $tz) echo 'selected'; ?>><?php echo $name; ?></option>
+					<?php endforeach; ?>
+				</optgroup>
+			</select>
+			<p class="formHint">Changing the timezone for a campaign with existing data may result in odd-looking graphs</p>
+		</div>
+		<div class="ctrlHolder">
+			<label for="analysis_quota">
+				Sentiment analysis quota
+			</label>
+			<input name="analysis_quota"
+			       value="<?php echo htmlspecialchars($this->editingCampaign->analysis_quota); ?>"
+			       class="textinput" maxlength="10" type="number" min="0" step="500" id="analysis_quota">
+
+			<p class="formHint">Daily API request cap. Set to zero to disable analysis for this campaign.</p>
+		</div>
+		<div class="ctrlHolder">
+			<label for="twitter_oauth">Twitter API</label>
+			<div>
+				<?php
+				$token = $this->editingCampaign->twitterToken;
+				if ($token && $token->twitterUser) {
+					echo "Campaign signed in as @{$token->twitterUser->screen_name}. ";
+					echo $this->gatekeeper()->filter('<a href="%url%">Sign out</a>.', array(
+						'controller' => 'campaign', 'action' => 'deauth'
+					), 'default', true);
+
+				} else {
+					echo $this->gatekeeper()->filter('<a href="%url%">Sign in with Twitter</a> ', array(
+						'controller' => 'campaign', 'action' => 'oauth'
+					), 'default', true);
+				}
+				?>
+
+			</div>
+		</div>
+	</fieldset>
+
+	<fieldset class="inlineLabels">
+		<legend>Campaign Users</legend>
+
+		<?php foreach ($this->allUsers as $user) : ?>
+
+		<div class="ctrlHolder checkbox">
+			<label for="user_<?php echo $user->id; ?>">
+				<?php echo $user->safeName; ?>
+			</label>
+			<input type="checkbox" id="user_<?php echo $user->id; ?>" name="user[<?php echo $user->id; ?>]" <?php if (!$user->canManageCampaigns()) echo 'disabled'; ?> <?php if (!$user->canManageCampaigns() || in_array($user->id, $this->editingCampaign->userIds)) echo 'checked'; ?> class="checkboxinput">
+		</div>
+		<?php endforeach; ?>
+
+	</fieldset>
+	<div class="buttonHolder">
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'campaign', 'action'=>'index'), null, true); ?>
+		<input type="submit" value="Save" class="primaryAction">
+	</div>
+</form>
+

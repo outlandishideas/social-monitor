@@ -1,0 +1,52 @@
+<form method="post" action="<?php echo $this->url(array('controller'=>'user')); ?>" class="uniForm">
+
+	<fieldset class="inlineLabels">
+		<legend>User Details</legend>
+
+		<div class="ctrlHolder">
+			<label for="name" class="requiredField">
+				User name<span class="asteriskField">*</span>
+			</label>		
+			<input id="name" name="name" type="text" size="27" value="<?php echo $this->editingUser->safeName; ?>">
+		</div>
+
+		<div class="ctrlHolder">
+			<label for="email" class="requiredField">
+				Email address<span class="asteriskField">*</span>
+			</label>		
+			<input id="email" name="email" type="text" size="27" value="<?php echo htmlspecialchars($this->editingUser->email); ?>">
+		</div>
+
+		<div class="ctrlHolder">
+			<label for="user_level" class="requiredField">
+				User Level<span class="asteriskField">*</span>
+			</label>		
+			<select id="user_level" name="user_level" <?php if (!$this->user->canPerform('change_user_level')) echo 'disabled'; ?>>
+				<?php foreach ($this->userLevels as $value=>$label) : ?>
+				<option value="<?php echo $value; ?>" <?php if ($value == $this->editingUser->user_level) echo 'selected'; ?>><?php echo $label; ?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+
+		<div class="ctrlHolder">
+			<label for="password" class="requiredField">
+				Password<span class="asteriskField">*</span>
+			</label>		
+			<input id="password" name="password" type="password" size="27">
+		</div>
+
+		<div class="ctrlHolder">
+			<label for="password_confirm" class="requiredField">
+				Password (again)<span class="asteriskField">*</span>
+			</label>		
+			<input id="password_confirm" name="password_confirm" type="password" size="27">
+		</div>
+
+	</fieldset>
+	
+	<div class="buttonHolder">
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', $this->gatekeeper()->fallbackUrlArgs(array('controller'=>'user', 'action'=>'index')), null, true); ?>
+		<input type="submit" value="Save" class="primaryAction">
+	</div>
+
+</form>

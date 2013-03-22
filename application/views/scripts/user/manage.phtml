@@ -1,0 +1,20 @@
+<form method="post" action="<?php echo $this->url(array('controller'=>'user')); ?>" class="uniForm">
+
+	<fieldset class="inlineLabels">
+		<legend><?php echo $this->managingUser->safeName; ?></legend>
+
+		<?php foreach ($this->allCampaigns as $campaign) : ?>
+		<div class="ctrlHolder">
+			<label for="campaign_<?php echo $campaign->id; ?>" class="checkbox"> <?php echo $campaign->name; ?></label>
+			<input type="checkbox" id="campaign_<?php echo $campaign->id; ?>" name="campaign[<?php echo $campaign->id; ?>]" <?php if (!$this->managingUser->canManageCampaigns()) echo 'disabled'; ?> <?php if (in_array($campaign->id, $this->managingUser->campaignIds)) echo 'checked'; ?>>
+		</div>
+		<?php endforeach; ?>
+
+	</fieldset>
+	
+	<div class="buttonHolder">
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', $this->gatekeeper()->fallbackUrlArgs(array('controller'=>'user', 'action'=>'index')), null, true); ?>
+		<input type="submit" value="Save" class="primaryAction" <?php if (!$this->managingUser->canManageCampaigns()) echo 'disabled'; ?>>
+	</div>
+
+</form>

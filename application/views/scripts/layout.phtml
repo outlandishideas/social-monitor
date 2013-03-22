@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="baseUrl" content="<?php echo $this->baseUrl('/'); ?>">
+	<title>33D :: <?php echo strip_tags($this->title); ?></title>
+	<?php
+		echo $this->minifyHeadLink()
+			->appendStylesheet('assets/fonts/proxima-nova-fontfacekit/stylesheet.css')
+			->appendStylesheet('assets/lib/bootstrap/bootstrap.css')
+			->appendStylesheet('assets/lib/tipsy/css/tipsy.css')
+			->appendStylesheet('assets/css/svg.css')
+			->appendStylesheet('assets/css/33d.css')
+			->appendStylesheet('assets/css/networks.css')
+			->appendStylesheet('assets/css/ui-custom.css')
+			->appendStylesheet('assets/css/uni-form.css')
+			->appendStylesheet('assets/css/33d.uni-form.css')
+			->appendStylesheet('assets/lib/jquery/smoothness/jquery-ui-1.8.17.custom.css')
+			->appendStylesheet('assets/css/ui.daterangepicker.css')
+			->appendStylesheet('assets/lib/datatables/media/css/jquery.dataTables.css')
+			->appendStylesheet('assets/css/jquery.dataTables.custom.css')
+			->appendStylesheet('assets/lib/farbtastic/farbtastic.css')
+	?>
+</head>
+<body class="<?php echo $this->bodyClass; ?>">
+	<div id="wrapper">
+		<header id="main-header">
+			<div class="hold">
+				<?php if (Zend_Auth::getInstance()->hasIdentity()) : ?>
+				<div id="nav-bar">
+					<div id="nav">
+						<div class="main">
+						<?php echo $this->navigation()->menu()->setMaxDepth(0); ?>
+						</div>
+						<div class="extra">
+						<?php echo $this->navigation()->menu()->render($this->user->isAdmin ? $this->adminMenu : $this->nonAdminMenu); ?>
+						</div>
+					</div>
+				</div>
+				<div id="user-nav" class="dropdown" data-jobs="<?php echo htmlspecialchars(json_encode($this->jobSubs)); ?>">
+					<a href="" class="dropdown-toggle" data-toggle="dropdown">
+						<span>Logged in as</span>
+						<?php echo $this->user->safeName; ?>
+						<b class="caret"></b>
+					</a>
+					<div class="dropdown-menu"></div>
+				</div>
+				<?php endif; ?>
+				<?php if ($this->campaign) : ?>
+				<div id="campaign-switcher" class="dropdown">
+					<a href="" class="dropdown-toggle" data-toggle="dropdown">
+						<span>Current Campaign:</span>
+						<?php echo $this->campaign->name ?>
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu">
+						<?php foreach ($this->campaigns as $key => $value) : ?>
+							<li <?php echo $value->id == $this->campaign->id ? 'class="selected"' : '' ?>>
+								<a href="<?php echo $this->url(array('controller'=>'campaign', 'action'=>'select', 'id'=>$value->id)) . '?forward=' . Zend_Controller_Front::getInstance()->getRequest()->getControllerName(); ?>"><?php echo $value->name ?></a>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
+				<?php endif; ?>
+				<h1><?php echo $this->title; ?></h1>
+			</div>
+		</header>
+		<div id="content" class="clearfix">
+			<?php echo $this->FlashMessages(); ?>
+			<?php echo $this->layout()->content; ?>
+		</div>
+	</div>
+	<div id="loader" class="dead"></div>
+
+	<?php
+		echo $this->minifyHeadScript()
+			->appendFile('http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js')
+			->appendFile('http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js')
+			->appendScript('var jsConfig = ' . json_encode($this->jsConfig) . ';')
+			->appendFile('assets/lib/d3/d3.v2.min.js') //use preminified version to avoid error
+			->appendFile('assets/lib/jquery/date.js')
+			->appendFile('assets/lib/jquery/daterangepicker.jQuery.js')
+			->appendFile('assets/lib/jquery/jquery.ui.widget.js')
+			->appendFile('assets/lib/tipsy/js/jquery.tipsy.js')
+			->appendFile('assets/lib/datatables/media/js/jquery.dataTables.js')
+			->appendFile('assets/js/dataTables.filteringDelay.js')
+			->appendFile('assets/lib/jquery/uni-form.jquery.min.js')
+			->appendFile('assets/lib/farbtastic/farbtastic.js')
+			->appendFile('assets/js/plugins.js')
+			->appendFile('assets/lib/backbone/underscore.js')
+			->appendFile('assets/lib/bootstrap/bootstrap.js')
+			->appendFile('assets/js/datatables.js')
+			->appendFile('assets/js/mapping.js')
+			->appendFile('assets/js/jobs.js')
+			->appendFile('assets/js/network.js')
+			->appendFile('assets/js/charts.js')
+			->appendFile('assets/js/main.js')
+	?>
+
+</body>
+</html>

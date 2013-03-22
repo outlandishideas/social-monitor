@@ -1,0 +1,32 @@
+
+@font-face {
+	font-family: 'ProxSemibold';
+	src: url('Prox-Semibold-webfont.eot');
+	src: local('☺'), url('Prox-Semibold-webfont.woff') format('woff'), url('Prox-Semibold-webfont.ttf') format('truetype'), url('Prox-Semibold-webfont.svg#webfontJjmd6mKt') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'ProxItalic';
+	src: url('proximanova-regitalic-webfont.eot');
+	src: local('☺'), url('proximanova-regitalic-webfont.woff') format('woff'), url('proximanova-regitalic-webfont.ttf') format('truetype'), url('proximanova-regitalic-webfont.svg#webfontiGrVkP1j') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Prox';
+	src: url('Prox-Reg-webfont.eot');
+	src: local('☺'), url('Prox-Reg-webfont.woff') format('woff'), url('Prox-Reg-webfont.ttf') format('truetype'), url('Prox-Reg-webfont.svg#webfontgbHAUEFq') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'ProxLight';
+	src: url('Prox-Light-webfont.eot');
+	src: local('☺'), url('Prox-Light-webfont.woff') format('woff'), url('Prox-Light-webfont.ttf') format('truetype'), url('Prox-Light-webfont.svg#webfontgbHAUEFq') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}

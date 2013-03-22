@@ -1,0 +1,16 @@
+<h1>Password reset</h1>
+<form method="post" action="<?php echo $this->url(); ?>">
+	<fieldset>
+		<ul>
+			<li>
+				<label for="username">Name/Email</label>
+				<input id="username" name="username" type="text" size="26">
+			</li>
+			<li class="button-right">
+				<a href="<?php echo $this->url(array('controller'=>'user', 'action'=>'login')); ?>">Back to login</a>
+				<input type="submit" value="Send" class="button add" />
+			</li>
+		</ul>
+	</fieldset>
+</form>
+

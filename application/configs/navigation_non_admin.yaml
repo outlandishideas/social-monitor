@@ -1,0 +1,4 @@
+user:
+  label: Account Settings
+  controller: user
+  action: edit-self

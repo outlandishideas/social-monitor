@@ -1,0 +1,21 @@
+<h1>Login</h1>
+<form method="post" action="<?php echo $this->url(array('controller'=>'user', 'action'=>'login')); ?>">
+	<input type="hidden" name="redirect_to" value="<?php echo $this->redirect_to; ?>" />
+	<fieldset>
+		<ul>
+			<li>
+				<label for="username">Name/Email</label>
+				<input id="username" name="username" type="text" size="26">
+			</li>
+			<li>
+				<label for="password">Password</label>
+				<input id="password" name="password" type="password" size="26">
+			</li>
+			<li class="button-right">
+				<a href="<?php echo $this->url(array('controller'=>'user', 'action'=>'forgotten')); ?>">Forgot password?</a>
+				<input type="submit" value="Log in" class="button add" />
+			</li>
+		</ul>
+	</fieldset>
+</form>
+

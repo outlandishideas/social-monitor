@@ -1,0 +1,48 @@
+<?php if ($this->campaign->twitterLists): ?>
+<h2>Active Lists</h2>
+<ul>
+	<?php foreach ($this->campaign->twitterLists as $list): ?>
+		<?php if (!$list->isActive()) continue; ?>
+	<li>
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">' . $list->name . '</a>', array('controller' => 'list', 'action' => 'view', 'id' => $list->id)) ?: $list->name; ?>
+		&mdash; <?php echo number_format($list->tweets_this_month); ?> tweets this month
+	</li>
+	<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+<?php if ($this->campaign->twitterSearches): ?>
+<h2>Active Searches</h2>
+<ul>
+	<?php foreach ($this->campaign->twitterSearches as $search): ?>
+	<?php if (!$search->isActive()) continue; ?>
+	<li>
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">' . $search->name . '</a>', array('controller' => 'search', 'action' => 'view', 'id' => $search->id)) ?: $search->name; ?>
+		&mdash; <?php echo number_format($search->tweets_this_month); ?> tweets this month
+	</li>
+	<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+<?php if ($this->campaign->facebookPages): ?>
+<h2>Facebook Pages</h2>
+<ul>
+	<?php foreach ($this->campaign->facebookPages as $page): ?>
+	<li>
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">' . $page->name . '</a>', array('controller' => 'facebook', 'action' => 'view', 'id' => $page->id)) ?: $page->name; ?>
+		&mdash; <?php echo number_format($page->posts_this_month); ?> posts this month
+	</li>
+	<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+<?php if ($this->campaign->networks): ?>
+<h2>Networks</h2>
+<ul>
+	<?php foreach ($this->campaign->networks as $network): ?>
+	<li>
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">' . $network->name . '</a>', array('controller' => 'network', 'action' => 'view', 'id' => $network->id)) ?: $network->name; ?>
+	</li>
+	<?php endforeach; ?>
+</ul>
+<?php endif; ?>

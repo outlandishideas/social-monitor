@@ -1,0 +1,214 @@
+.uniForm fieldset {
+  margin: 0 0 10px 0;
+}
+.uniForm fieldset legend {
+  font-weight: bold;
+  font-size: 100%;
+  margin: 0;
+  padding: 0.5em 0;
+}
+.uniForm .ctrlHolder {
+  padding: 1em;
+  border-bottom: 1px solid #efefef;
+}
+.uniForm .ctrlHolder.suboption label {
+	width: 30%;
+	margin-left: 2%;
+}
+.uniForm .ctrlHolder.focused {
+  background: #fffcdf;
+}
+.uniForm .inlineLabels .inlineLabels label em,
+.uniForm .inlineLabels .inlineLabels .label em {
+  font-style: normal;
+  font-weight: bold;
+}
+.uniForm .inlineLabels .formHint {
+  padding-top: .5em;
+}
+.uniForm .buttonHolder {
+  background: #efefef;
+  text-align: right;
+  margin: 1.5em 0 0 0;
+  padding: 1.5em;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -o-border-radius: 4px;
+  -khtml-border-radius: 4px;
+}
+.uniForm .buttonHolder .primaryAction {
+  padding: 10px 15px;
+  background: #191919;
+  color: #fff;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border-width: 0px;
+  margin-left: 0;
+  cursor: pointer;
+}
+.uniForm .buttonHolder .primaryAction:hover {
+  background-color: #24abf8;
+}
+.uniForm .buttonHolder .primaryAction:active {
+  position: relative;
+  top: 1px;
+}
+.uniForm .buttonHolder a {
+  margin-right: 10px;
+}
+.uniForm .inlineAction {
+  padding: 4px 10px;
+  background: #191919;
+  color: #fff;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border-width: 0px;
+  margin-left: 0;
+  cursor: pointer;
+}
+.uniForm .inlineAction:hover {
+  background-color: #24abf8;
+}
+.uniForm .secondaryAction {
+  text-align: left;
+}
+.uniForm .buttonHolder a,
+.uniForm button.secondaryAction {
+  background: transparent;
+  border: none;
+  color: #777;
+  margin: 1.25em 10px 0 0;
+  padding: 0;
+}
+.uniForm .buttonHolder a:hover,
+.uniForm button.secondaryAction:hover {
+  color: #333;
+}
+.uniForm label small {
+  font-size: .75em;
+  color: #777;
+}
+.uniForm .textInput,
+.uniForm textarea {
+  padding: 4px 2px;
+  border: 1px solid #aaa;
+  background: #fff;
+}
+.uniForm textarea {
+  height: 12em;
+}
+.uniForm select {
+  max-width: 200px;
+}
+.uniForm ul li label {
+  font-size: .85em;
+}
+.uniForm ul.offset {
+  margin-left: 32%;
+}
+.uniForm .ctrlHolder .textInput:focus,
+.uniForm .ctrlHolder textarea:focus {
+  outline: none;
+}
+.uniForm .ctrlHolder.focused .formHint {
+  color: #333;
+}
+.uniForm .ctrlHolder .error,
+.uniForm .ctrlHolder .focused.error {
+  background: #ffdfdf;
+  border: 1px solid #f3afb5;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -o-border-radius: 4px;
+  -khtml-border-radius: 4px;
+}
+.uniForm .ctrlHolder .error input.error,
+.uniForm .ctrlHolder .focused.error input.error,
+.uniForm .ctrlHolder .error select.error,
+.uniForm .ctrlHolder .focused.error select.error,
+.uniForm .ctrlHolder .error textarea.error,
+.uniForm .ctrlHolder .focused.error textarea.error {
+  color: #af4c4c;
+  margin: 0 0 6px 0;
+  padding: 4px;
+}
+.uniForm .formHint {
+  font-size: .85em;
+  color: #777;
+}
+.uniForm #okMsg {
+  background: #c8ffbf;
+  border: 1px solid #a2ef95;
+  margin: 0 0 1.5em 0;
+  padding: 1.5em;
+  text-align: center;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -o-border-radius: 4px;
+  -khtml-border-radius: 4px;
+}
+.uniForm #okMsg p {
+  margin: 0;
+}
+.uniForm .col {
+  margin-bottom: 1.5em;
+}
+.uniForm .col.first {
+  width: 49%;
+  float: left;
+  clear: none;
+}
+.uniForm .col.last {
+  width: 49%;
+  float: right;
+  clear: none;
+  margin-right: 0;
+}
+ol.messages {
+  clear: left;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+ol.messages li {
+  padding: 8px 35px 8px 14px;
+  margin-bottom: 18px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  /*background: #fcf8e3 url(../img/msg-close.png) no-repeat right center;*/
+  background-color: #fcf8e3;
+  border: 1px solid #fbeed5;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  color: #c09853;
+}
+ol.messages .alert .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  line-height: 18px;
+}
+ol.messages li.success {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #468847;
+}
+ol.messages li.danger,
+ol.messages li.error {
+  background-color: #f2dede;
+  border-color: #eed3d7;
+  color: #b94a48;
+}
+ol.messages li.info {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #3a87ad;
+}
+ol.messages li a {
+	text-decoration: underline;
+}

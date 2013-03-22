@@ -1,0 +1,39 @@
+#network-chart {
+	border: 1px solid #ddd;
+	margin: 0;
+	position: relative;
+}
+
+#network-chart .load-overlay {
+	background: #eee url(../img/ajax-loader-big.gif) no-repeat center center;
+	opacity: 0.6;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	display: none;
+}
+
+#network-chart.loading .load-overlay {
+	display: block;
+}
+
+#network-table tr.loading .icon {
+	background-image: url(../img/ajax-loader.gif);
+}
+
+#network-menu {
+	float: right;
+	margin: 13px 0;
+	line-height: 24px;
+}
+
+#network-menu a {
+	margin-left: 15px;
+}
+
+form.toggleForm {
+	display: none;
+	margin-bottom: 20px;
+}

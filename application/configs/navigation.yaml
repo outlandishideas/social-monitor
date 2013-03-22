@@ -1,0 +1,22 @@
+home:
+  label: Home
+  controller: index
+lists:
+  label: Lists
+  controller: list
+searches:
+  label: Searches
+  controller: search
+  pages:
+    regions:
+      label: Regions
+      controller: region
+trends:
+  label: Trends
+  controller: trend
+facebook:
+  label: Facebook
+  controller: facebook
+networks:
+  label: Networks
+  controller: network
