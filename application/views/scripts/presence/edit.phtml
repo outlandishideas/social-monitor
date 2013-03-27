@@ -1,24 +1,36 @@
 <form method="post" action="<?php echo $this->url(); ?>" class="uniForm">
 
 	<fieldset class="inlineLabels">
-		<legend>Page details</legend>
-		<div class="ctrlHolder">
-			<label for="name" class="requiredField">
-				Page username<span class="asteriskField">*</span>
-			</label>
-			<input name="username" id="name" type="text" value="<?php echo $this->editingPage->username; ?>"> 
-			<p class="formHint"><?php echo $this->hintName; ?></p>
+		<legend>Presence details</legend>
+		<div class="ctrlHolder checkbox">
+			<p class="label">Type<span class="asteriskField">*</span></p>
+			<ul class="blockLabels">
+				<?php foreach ($this->types as $val => $name) : ?>
+				<li>
+					<label class="radio"><input name="type" type="radio" value="<?php echo $val; ?>"
+						<?php if ($this->presence->type == $val) echo 'checked'; ?>> <?php echo $name; ?>
+					</label>
+				</li>
+				<?php endforeach; ?>
+			</ul>
 		</div>
-        <div class="ctrlHolder">
-            <label for="campaign" class="requiredField">
-                Campaign<span class="asteriskField">*</span>
-            </label>
-            <select name="campaign_id" id="campaign">
-               <?php foreach($this->campaigns as $campaign) : ?>
-                    <option value="<?php echo $campaign->id; ?>" <?php if($campaign->id == $this->editingPage->campaign_id) echo 'selected'; ?> ><?php echo $campaign->name; ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+		<div class="ctrlHolder">
+			<label for="handle" class="requiredField">
+				Handle<span class="asteriskField">*</span>
+			</label>
+			<input name="handle" id="handle" type="text" value="<?php echo $this->presence->handle; ?>">
+			<p class="formHint">For www.facebook.com/<strong>platform</strong> or www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'</p>
+		</div>
+<!--        <div class="ctrlHolder">-->
+<!--            <label for="campaign" class="requiredField">-->
+<!--                Campaign<span class="asteriskField">*</span>-->
+<!--            </label>-->
+<!--            <select name="campaign_id" id="campaign">-->
+<!--               --><?php //foreach($this->campaigns as $campaign) : ?>
+<!--                    <option value="--><?php //echo $campaign->id; ?><!--" --><?php //if($campaign->id == $this->editingPage->campaign_id) echo 'selected'; ?><!-- >--><?php //echo $campaign->name; ?><!--</option>-->
+<!--                --><?php //endforeach; ?>
+<!--            </select>-->
+<!--        </div>-->
 	</fieldset>
     <input type="hidden" value="<?php $this->type; ?>">
 	<div class="buttonHolder">

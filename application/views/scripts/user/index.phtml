@@ -5,7 +5,6 @@
 		<th class="name">Name</th>
 		<th class="email">Email Address</th>
 		<th class="user-level">User Level</th>
-		<th class="campaigns">Campaigns</th>
 		<th class="last-sign-in">Last Sign In</th>
 		<th class="options"></th>
 	</tr>
@@ -17,7 +16,6 @@
 		<td class="name"><?php echo $user->safeName; ?></td>
 		<td class="email"><?php echo $user->email; ?></td>
 		<td class="user-level"><?php echo $userLevel; ?></td>
-		<td class="campaigns"><?php echo $user->canManageCampaigns() ? count($user->campaigns) : 'All'; ?></td>
 		<td class="last-sign-in"><?php echo $this->prettyDate($user->last_sign_in, 'Never signed in'); ?></td>
 		<td class="options">
 			<?php
@@ -26,9 +24,6 @@
 					$links['<a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit-self');
 				} else {
 					$links['<a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit', 'id'=>$user->id);
-				}
-				if ($user->canManageCampaigns()) {
-					$links['<a href="%url%">Manage Campaigns</a>'] = array('controller'=>'user', 'action'=>'manage', 'id'=>$user->id);
 				}
 				$links['<a href="%url%" class="autoConfirm">Delete</a>'] = array('controller'=>'user', 'action'=>'delete', 'id'=>$user->id);
 				$links = $this->gatekeeper()->filterAll($links);

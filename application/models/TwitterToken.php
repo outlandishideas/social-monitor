@@ -6,7 +6,7 @@ require_once APP_ROOT_PATH.'/lib/twitteroauth/twitteroauth.php';
 define('TWITTER_SEARCH_ENDPOINT', 'http://search.twitter.com/search.json');
 
 class Model_TwitterToken extends Model_Base {
-	protected $_tableName = 'twitter_tokens';
+	protected static $tableName = 'twitter_tokens';
 
 	public function getConnection() {
 		$config = Zend_Registry::get('config');

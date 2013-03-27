@@ -10,10 +10,8 @@ live:
     consumer_key: ***REMOVED***
     consumer_secret: ***REMOVED***
     cache_user_data: 7
-    network_max_size: 150
     list_fetch_per_page: 300
     search_fetch_per_page: 100
-    network_max_user_connections: 100000
   klout:
     api_key: ***REMOVED***
   peerindex:

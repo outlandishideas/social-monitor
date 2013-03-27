@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="baseUrl" content="<?php echo $this->baseUrl('/'); ?>">
-	<title>33D :: <?php echo strip_tags($this->title); ?></title>
+	<title>British Council :: <?php echo strip_tags($this->title); ?></title>
 	<?php
 		echo $this->minifyHeadLink()
 			->appendStylesheet('assets/fonts/proxima-nova-fontfacekit/stylesheet.css')
@@ -11,7 +11,6 @@
 			->appendStylesheet('assets/lib/tipsy/css/tipsy.css')
 			->appendStylesheet('assets/css/svg.css')
 			->appendStylesheet('assets/css/33d.css')
-			->appendStylesheet('assets/css/networks.css')
 			->appendStylesheet('assets/css/ui-custom.css')
 			->appendStylesheet('assets/css/uni-form.css')
 			->appendStylesheet('assets/css/33d.uni-form.css')
@@ -37,32 +36,13 @@
 						</div>
 					</div>
 				</div>
-				<div id="user-nav" class="dropdown" data-jobs="<?php echo htmlspecialchars(json_encode($this->jobSubs)); ?>">
+				<div id="user-nav" class="dropdown">
 					<a href="" class="dropdown-toggle" data-toggle="dropdown">
 						<span>Logged in as</span>
 						<?php echo $this->user->safeName; ?>
 						<b class="caret"></b>
 					</a>
 					<div class="dropdown-menu"></div>
-				</div>
-				<?php endif; ?>
-				<?php if ($this->campaign) : ?>
-				<div id="campaign-switcher" class="dropdown">
-					<a href="" class="dropdown-toggle" data-toggle="dropdown">
-						<span>Current Campaign:</span>
-						<?php echo $this->campaign->name ?>
-						<b class="caret"></b>
-					</a>
-					<ul class="dropdown-menu">
-                            <li>
-                                <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'index')); ?>">All Campaigns</a>
-                            </li>
-						<?php foreach ($this->campaigns as $key => $value) : ?>
-							<li <?php echo $value->id == $this->campaign->id ? 'class="selected"' : '' ?>>
-								<a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'index', 'id'=>$value->id)); ?>"><?php echo $value->name ?></a>
-							</li>
-						<?php endforeach; ?>
-					</ul>
 				</div>
 				<?php endif; ?>
 				<h1><?php echo $this->title; ?></h1>
@@ -94,8 +74,6 @@
 			->appendFile('assets/lib/bootstrap/bootstrap.js')
 			->appendFile('assets/js/datatables.js')
 			->appendFile('assets/js/mapping.js')
-			->appendFile('assets/js/jobs.js')
-			->appendFile('assets/js/network.js')
 			->appendFile('assets/js/charts.js')
 			->appendFile('assets/js/main.js')
 	?>

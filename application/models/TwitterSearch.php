@@ -1,7 +1,7 @@
 <?php
 
 class Model_TwitterSearch extends Model_TwitterBase {
-	protected $_tableName = 'twitter_searches';
+	protected static $tableName = 'twitter_searches';
 	protected $type = 'search';
 
 	public function getLabel() {

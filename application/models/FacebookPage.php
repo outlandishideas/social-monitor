@@ -3,7 +3,7 @@
 include APP_ROOT_PATH."/lib/facebook/facebook.php";
 
 class Model_FacebookPage extends Model_SocialApiBase {
-	protected $_tableName = 'facebook_pages';
+	protected static $tableName = 'facebook_pages';
 
 	private static $_fb;
 
@@ -56,7 +56,6 @@ class Model_FacebookPage extends Model_SocialApiBase {
 			$updatedClauses = array('');
 		}
 
-		$shouldAnalyse = $this->should_analyse && $this->campaign->analysis_quota;
 		$localTimeZone = new DateTimeZone($this->campaign->timezone);
 		$fetchCount = new FetchCount(0, 0, 'post');
 
@@ -82,8 +81,7 @@ class Model_FacebookPage extends Model_SocialApiBase {
 							'created_time' => gmdate('Y-m-d H:i:s', $post['created_time']),
 							'actor_id' => $post['actor_id'],
 							'permalink' => $post['permalink'],
-							'type' => $post['type'],
-							'is_analysed' => !$shouldAnalyse
+							'type' => $post['type']
 						));
 
 						$date = DateTime::createFromFormat('U', $post['created_time']);
@@ -95,8 +93,6 @@ class Model_FacebookPage extends Model_SocialApiBase {
 							$p->type = 0;
 						}
 						$fetchCount->added++;
-					} else if (!$shouldAnalyse) {
-						$p->is_analysed = true;
 					}
 					$p->comments = isset($post['comments']['count']) ? $post['comments']['count'] : 0;
 					$p->likes = isset($post['likes']['count']) ? $post['likes']['count'] : 0;
@@ -237,22 +233,6 @@ class Model_FacebookPage extends Model_SocialApiBase {
 		$deleteStreamQuery = $this->_db->prepare('DELETE FROM facebook_stream WHERE facebook_page_id = :page_id');
 		$deleteStreamQuery->execute($args);
 		parent::delete();
-	}
-
-	public static function fetchUnanalysed($campaign, $limit) {
-		$instance = new static();
-
-		$sql = "SELECT fs.*
-			FROM facebook_stream fs
-			JOIN {$instance->_tableName} fp ON fs.facebook_page_id = fp.id
-			WHERE is_analysed = 0
-			AND created_time > DATE_SUB(NOW(), INTERVAL 2 DAY)
-			AND fp.campaign_id = :campaign_id
-			ORDER BY created_time DESC LIMIT $limit";
-
-		$statement = $instance->_db->prepare($sql);
-		$statement->execute(array(':campaign_id' => $campaign->id));
-		return Model_FacebookPost::objectify($statement);
 	}
 
 	/**

@@ -1,7 +1,10 @@
 <?php
 
 class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
-	protected $_tableName = 'users', $_sortColumn = 'name', $_authName = '', $_authPassword = '';
+	protected static $tableName = 'users';
+	protected static $sortColumn = 'name';
+
+	protected $_authName = '', $_authPassword = '';
 
 	const PASSWORD_SALT = 'Humpty dumpty sat on a wall';
 
@@ -68,59 +71,14 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	 * @return bool
 	 */
 	function canPerform($action) {
-		return !$action || in_array($action, Model_User::getPermissions($this->user_level));
-	}
-
-	function canManageCampaigns() {
-		return !$this->isAdmin;
+		//todo: reinstate this when all permissions have been ironed out
+		return true;
+//		return !$action || in_array($action, Model_User::getPermissions($this->user_level));
 	}
 
 	function getIsAdmin() {
 		$levels = array_flip(self::$userLevels);
 		$adminLevel = (int)$levels['Admin'];
 		return $this->user_level >= $adminLevel;
-	}
-	
-	function getCampaigns() {
-		return $this->campaigns = Model_Campaign::fetchAll();
-	}
-	
-	function getCampaignIds() {
-		$this->campaignIds = array();
-		foreach ($this->campaigns as $c) {
-			$this->campaignIds[] = $c->id;
-		}
-		return $this->campaignIds;
-	}
-	
-	function assignCampaign($id) {
-		$this->updateCampaigns('INSERT INTO user_campaigns (user_id, campaign_id) VALUES (:user_id, :campaign_id)', $id);
-	}
-	
-	function unassignCampaign($id) {
-		$this->updateCampaigns('DELETE FROM user_campaigns WHERE user_id = :user_id AND campaign_id = :campaign_id', $id);
-	}
-	
-	private function updateCampaigns($sql, $campaignId) {
-		$statement = $this->_db->prepare($sql);
-		try {
-			$statement->execute(array(':user_id'=>$this->id, ':campaign_id'=>$campaignId));
-			unset($this->campaigns);
-			unset($this->campaignIds);
-		} catch (Exception $ex) { }
-	}
-
-	public function delete() {
-		$this->_db->prepare('DELETE FROM user_campaigns WHERE user_id = ?')->execute(array($this->id));
-		parent::delete();
-	}
-
-	/**
-	 * @return Model_JobSubscription[]
-	 */
-	public function getJobSubscriptions() {
-		$stmt = $this->_db->prepare('SELECT * FROM job_subscriptions WHERE user_id = :id');
-		$stmt->execute(array(':id' => $this->id));
-		return Model_JobSubscription::objectify($stmt);
 	}
 }

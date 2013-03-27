@@ -321,40 +321,6 @@ class UserController extends BaseController
 		$this->_helper->redirector->gotoSimple('index', 'index');
 	}
 
-	/**
-	 * Organises the campaigns that the selected user is allowed to manage
-	 * @permission manage_user
-	 */
-	public function manageAction()
-	{
-		$this->view->title = 'Manage User Campaigns';
-		$this->view->managingUser = Model_User::fetchById($this->_request->id);
-
-		$this->validateData($this->view->managingUser);
-
-		$this->view->allCampaigns = Model_Campaign::fetchAll();
-		if ($this->_request->isPost()) {
-			$allIds = array();
-			foreach ($this->view->allCampaigns as $c) { $allIds[] = $c->id; }
-
-			$currentIds = $this->view->managingUser->campaignIds;
-			$newIds = $this->_request->campaign ? array_keys($this->_request->campaign) : array();
-			foreach ($allIds as $id) {
-				if (in_array($id, $newIds)) {
-					if (!in_array($id, $currentIds)) {
-						$this->view->managingUser->assignCampaign($id);
-					}
-				} else {
-					if (in_array($id, $currentIds)) {
-						$this->view->managingUser->unassignCampaign($id);
-					}
-				}
-			}
-			$this->_helper->FlashMessenger(array('info' => 'Campaigns saved'));
-			$this->_helper->redirector->gotoSimple('index');
-		}
-	}
-
 	public function statusAction(){
 		$data = array(
 			'logoutUrl' => $this->view->url(array('controller' => 'user', 'action' => 'logout')),
@@ -364,83 +330,6 @@ class UserController extends BaseController
 			'jobs' => array()
 		);
 
-		if ($this->view->user->twitterToken) {
-			$data['rateLimits'] = $this->view->user->twitterToken->getRateLimit();
-			$data['deauthUrl'] = $this->view->url(array('controller' => 'user', 'action' => 'deauth'));
-		} else {
-			$data['oauthUrl'] = $this->view->url(array('controller' => 'user', 'action' => 'oauth'));
-		}
-
-		/** @var Model_JobSubscription[] $subscriptions  */
-		$subscriptions = $this->view->user->getJobSubscriptions();
-		foreach ($subscriptions as $subscription) {
-			try {
-				$job = $subscription->getJob();
-				$stats = $job->stats();
-				$state = null;
-				switch ($stats['state']) {
-					case 'ready' :
-						$state = 'Waiting its turn';
-						break;
-					case 'reserved' :
-						$state = 'Running';
-						break;
-					case 'delayed' :
-						$timeLeft = floor($stats['time-left']/60);
-						$state = 'Postponed for '.$timeLeft.' mins';
-						break;
-
-				}
-				$jobData = $job->getData();
-				$data['jobs'][] = array(
-					'id' => $job->getId(),
-					'description' => !empty($jobData['description']) ? $jobData['description'] : $job->getType(),
-					'state' => $state,
-					'timeLeft' => $stats['time-left']
-				);
-			} catch (Pheanstalk_Exception_ServerException $e) {
-				list($type) = explode(':', $e->getMessage());
-				//if job not found, remove subscription
-				if ($type == 'NOT_FOUND') {
-					$subscription->delete();
-				} else {
-					throw $e;
-				}
-			}
-		}
-
 		$this->apiSuccess($data);
-	}
-
-	public function notificationsAction() {
-		Zend_Session::writeClose(); //release session on long running actions
-
-		set_time_limit(0);
-		header('Content-type: application/json');
-
-		//disable output buffering
-		for ($i = 0; $i <= ob_get_level(); $i++) {
-			ob_end_flush();
-		}
-		ob_implicit_flush(true);
-
-		//blocking call to beanstalk
-		$job = Model_Job::waitForJobUpdate($this->view->user);
-
-		$jobData = $job->getData();
-		$job->delete();
-
-		$msg = 'Job';
-		if (!empty($jobData['originalJobData']['description'])) {
-			$msg .= ' "'.$jobData['originalJobData']['description'].'"';
-		}
-		$msg .= ' complete.';
-		if (!empty($jobData['originalJobData']['completedUrl'])) {
-			$msg .= ' <a href="' . $jobData['originalJobData']['completedUrl'] . '">View</a>';
-		}
-
-		$flashMessages = array(array('info' => $msg));
-
-		$this->apiSuccess($jobData, $flashMessages);
 	}
 }

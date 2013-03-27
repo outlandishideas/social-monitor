@@ -399,6 +399,11 @@ table.text td {
 	vertical-align: top;
 }
 
+table th.options,
+table td.options {
+	width: 350px;
+}
+
 table.users .current-user {
 	font-weight: bold;
 }

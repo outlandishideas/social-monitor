@@ -16,18 +16,12 @@ class BaseController extends Zend_Controller_Action {
 	{
 		$this->auth = Zend_Auth::getInstance();
 		$this->view->user = null;
-		$this->view->campaign = null;		
-		$this->view->campaigns = null;
-		$this->view->jobSubs = array();
 
 		//try to load the user
 		if ($this->auth->hasIdentity()) {
 			$this->view->user = Model_User::fetchById($this->auth->getIdentity());
 
-			// load the campaign
 			if ($this->view->user) {
-
-				$this->view->campaigns = Model_Campaign::fetchAll();
 
                 date_default_timezone_set('UTC');
                 //get/set default date range
@@ -127,19 +121,20 @@ class BaseController extends Zend_Controller_Action {
 	 * @param $action
 	 */
 	protected function rejectIfNotAllowed($action) {
-		if (!$this->view->user->canPerform($action)) {
-			$message = 'Not allowed: Insufficient user privileges';
-			if (APPLICATION_ENV != 'live') {
-				$message .= ' (' . $action . ')';
-			}
-			if ($this->_request->isXmlHttpRequest()) {
-				$this->apiError($message);
-			} else {
-				$this->_helper->FlashMessenger(array('error' => $message));
-				$urlArgs = $this->view->gatekeeper()->fallbackUrlArgs(array('action'=>'index'));
-				$this->_helper->redirector->gotoRoute($urlArgs, null, true);
-			}
-		}
+		//todo: reinstate this when all permissions have been ironed out
+//		if (!$this->view->user->canPerform($action)) {
+//			$message = 'Not allowed: Insufficient user privileges';
+//			if (APPLICATION_ENV != 'live') {
+//				$message .= ' (' . $action . ')';
+//			}
+//			if ($this->_request->isXmlHttpRequest()) {
+//				$this->apiError($message);
+//			} else {
+//				$this->_helper->FlashMessenger(array('error' => $message));
+//				$urlArgs = $this->view->gatekeeper()->fallbackUrlArgs(array('action'=>'index'));
+//				$this->_helper->redirector->gotoRoute($urlArgs, null, true);
+//			}
+//		}
 	}
 
 	/**
@@ -152,29 +147,6 @@ class BaseController extends Zend_Controller_Action {
 	protected function validateData($item, $type = null, $action = null) {
 		if (!$item) {
 			$this->dataNotFound($type);
-		} else if (method_exists($item, 'campaign_id') && $item->campaign_id != $this->view->campaign->id) {
-			$deny = true;
-			if (in_array($item->campaign_id, $this->view->user->campaignIds)) {
-				$campaign = Model_Campaign::fetchById($item->campaign_id);
-				if ($campaign) {
-					$this->view->user->last_campaign_id = $campaign->id;
-					$this->view->user->save();
-					$this->view->campaign = $campaign;
-					$deny = false;
-					$this->_helper->FlashMessenger(array('info' => "Switched campaign to: $campaign->name"));
-				}
-			}
-
-			if ($deny) {
-				if (!$type) {
-					$type = $this->_request->getControllerName();
-				}
-				if (!$action) {
-					$action = $this->_request->getActionName();
-				}
-				$this->_helper->FlashMessenger(array('error' => "Not allowed: Insufficient user privileges to $action this $type"));
-				$this->_helper->redirector->gotoSimple('index');
-			}
 		}
 	}
 	

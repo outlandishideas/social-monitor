@@ -1,7 +1,7 @@
 <?php
 
 class Model_TwitterUser extends Model_Base {
-	protected $_tableName = 'twitter_users', $_sortColumn = 'id';
+	protected static $tableName = 'twitter_users';
 
 	const FRIENDS = 1, FOLLOWERS = 2;
 
@@ -299,7 +299,6 @@ class Model_TwitterUser extends Model_Base {
 	public function delete() {
 		$args = array(':id'=>$this->id);
 		$this->_db->prepare('DELETE FROM twitter_user_relationships WHERE id = :id')->execute($args);
-		$this->_db->prepare('DELETE FROM campaign_network_users WHERE twitter_user_id = :id')->execute($args);
 		parent::delete();
 	}
 

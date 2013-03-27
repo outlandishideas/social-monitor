@@ -4,6 +4,7 @@ class IndexController extends BaseController
 {
 	public function indexAction() {
 		$this->view->title = 'Home';
+		$this->view->campaigns = Model_Campaign::fetchAll();
 	}
 
 	public function dateRangeAction() {

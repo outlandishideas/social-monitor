@@ -10,43 +10,22 @@
 			       maxlength="20" type="text" id="name">
 		</div>
 		<div class="ctrlHolder">
-			<label for="timezone" class="requiredField">
-				Timezone<span class="asteriskField">*</span>
+			<label for="country" class="requiredField">
+				Country<span class="asteriskField">*</span>
 			</label>
-			<select name="timezone" id="timezone" class="selectInput">
-				<optgroup label="Frequently used">
-					<option value="Europe/London">London</option>
-					<option value="Europe/Paris">CET</option>
-					<option value="Australia/Sydney">Sydney</option>
-					<option value="America/New_York">New York</option>
-				</optgroup>
-				<optgroup label="All timezones">
-					<?php foreach ($this->zones as $tz => $name) : ?>
-					<option value="<?php echo $tz; ?>" <?php if ($this->editingCampaign->timezone == $tz) echo 'selected'; ?>><?php echo $name; ?></option>
-					<?php endforeach; ?>
-				</optgroup>
+			<select name="country" id="country" class="selectInput">
+				<option value="">--Select--</option>
+				<?php foreach ($this->countries as $code => $name) : ?>
+				<option value="<?php echo $code; ?>" <?php if ($this->editingCampaign->country == $code) echo 'selected'; ?>><?php echo $name; ?></option>
+				<?php endforeach; ?>
 			</select>
-			<p class="formHint">Changing the timezone for a campaign with existing data may result in odd-looking graphs</p>
 		</div>
 		<div class="ctrlHolder">
-			<label for="twitter_oauth">Twitter API</label>
-			<div>
-				<?php
-				$token = $this->editingCampaign->twitterToken;
-				if ($token && $token->twitterUser) {
-					echo "Campaign signed in as @{$token->twitterUser->screen_name}. ";
-					echo $this->gatekeeper()->filter('<a href="%url%">Sign out</a>.', array(
-						'controller' => 'campaign', 'action' => 'deauth'
-					), 'default', true);
-
-				} else {
-					echo $this->gatekeeper()->filter('<a href="%url%">Sign in with Twitter</a> ', array(
-						'controller' => 'campaign', 'action' => 'oauth'
-					), 'default', true);
-				}
-				?>
-
-			</div>
+			<label for="audience">
+				Audience size</span>
+			</label>
+			<input name="audience" value="<?php echo htmlspecialchars($this->editingCampaign->audience); ?>" class="textinput"
+			       maxlength="20" type="text" id="audience">
 		</div>
 	</fieldset>
 

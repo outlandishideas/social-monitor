@@ -76,21 +76,6 @@ $.extend(app, {
 				</table>\
 				<% } else { %>\
 				<p>No recent requests so rate limits unknown.</p>\
-				<% } %>\
-				<h4>Background Jobs</h4>\
-				<% if (jobs.length) { %>\
-				<table class="text">\
-					<tr><th>ID</th><th>Description</th><th>State</th></tr>\
-					<% for (var i in jobs) { %>\
-					<tr>\
-						<td><%=jobs[i].id%></td>\
-						<td><%=jobs[i].description%></td>\
-						<td><%=jobs[i].state%></td>\
-					</tr>\
-					<% } %>\
-				</table>\
-				<% } else { %>\
-				<p>No jobs queued.</p>\
 				<% } %>'
 
 }
@@ -139,11 +124,6 @@ app.init = {
 					});
 				}
 			});
-
-			//listen for job updates over AJAX
-			if ($item.data('jobs').length) {
-				app.jobs.listen();
-			}
 		},
 
 		'#date-picker': function($item) {
@@ -211,8 +191,6 @@ app.init = {
 					.on('click', '.link', app.charts.grabSvgElement)
 					.appendTo($item);
 		},
-
-		'#network-chart': app.network.init,
 
 		'input#query, input#slug': function($item) {
 			//set list/search name to slug/query value when creating it

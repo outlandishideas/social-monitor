@@ -1,7 +1,7 @@
 <?php
 
 class Model_TwitterList extends Model_TwitterBase {
-	protected $_tableName = 'twitter_lists';
+	protected static $tableName = 'twitter_lists';
 	protected $type = 'list';
 
 	public function getLabel() {

@@ -2,7 +2,7 @@
 
 class FetchController extends BaseController
 {
-	protected $publicActions = array('index', 'twitter-queue', 'job');
+	protected $publicActions = array('index');
 
 	/**
 	 * Fetches all tweets/trends/facebook pages etc
@@ -19,37 +19,37 @@ class FetchController extends BaseController
 		//randomise order to avoid one campaign from blocking others
 		shuffle($campaigns);
 
-		$lastToken = null;
-		foreach ($campaigns as $campaign) {
-			if ($campaign->twitterToken) {
-				$this->log('Fetching tweets for campaign: '.$campaign->name);
-
-				$listsAndSearches = array_merge($campaign->activeTwitterLists, $campaign->activeTwitterSearches);
-				$this->log('Found ' . count($listsAndSearches) . ' active lists/searches');
-				$this->fetchTweets($listsAndSearches, $campaign->twitterToken);
-
-				$lastToken = $campaign->twitterToken;
-			} else {
-				$this->log('Skipping tweets for campaign with no token: '.$campaign->name."\n");
-			}
-		}
-
-		//fetch trends and facebook pages globaly rather than by campaign
-		$this->fetchAllPages();
-
-		$this->fetchAllTrends($lastToken);
+//		$lastToken = null;
+//		foreach ($campaigns as $campaign) {
+//			if ($campaign->twitterToken) {
+//				$this->log('Fetching tweets for campaign: '.$campaign->name);
+//
+//				$listsAndSearches = array_merge($campaign->activeTwitterLists, $campaign->activeTwitterSearches);
+//				$this->log('Found ' . count($listsAndSearches) . ' active lists/searches');
+//				$this->fetchTweets($listsAndSearches, $campaign->twitterToken);
+//
+//				$lastToken = $campaign->twitterToken;
+//			} else {
+//				$this->log('Skipping tweets for campaign with no token: '.$campaign->name."\n");
+//			}
+//		}
+//
+//		//fetch trends and facebook pages globaly rather than by campaign
+//		$this->fetchAllPages();
+//
+//		$this->fetchAllTrends($lastToken);
 
 		$this->touchLock();
 
 		//fetch klout for users in lists
-		$this->log('Updating Klout scores');
-		$this->fetchKlout(Model_TwitterUser::fetchNoKlout(), true);
-
-		$this->touchLock();
-
-		//fetch peerindex
-		$this->log('Updating PeerIndex scores');
-		$this->fetchPeerindex(Model_TwitterUser::fetchNoPeerindex(), true);
+//		$this->log('Updating Klout scores');
+//		$this->fetchKlout(Model_TwitterUser::fetchNoKlout(), true);
+//
+//		$this->touchLock();
+//
+//		//fetch peerindex
+//		$this->log('Updating PeerIndex scores');
+//		$this->fetchPeerindex(Model_TwitterUser::fetchNoPeerindex(), true);
 
 		$this->log('Finished');
 		$this->releaseLock();
@@ -123,149 +123,11 @@ class FetchController extends BaseController
 		}
 	}
 
-	private function fetchAllTrends($token) {
-		$regions = Model_TwitterTrendRegion::fetchAll();
-		$fetched = array();
-		foreach ($regions as $region) {
-			// don't fetch trends for the same region more than once
-			if (array_key_exists($region->woeid, $fetched)) {
-				$region->last_fetched = $fetched[$region->woeid]->last_fetched;
-			} else {
-				$this->log("Fetching trends for '{$region->name}'");
-				try {
-					$count = $region->fetchTrends($token);
-					$this->log("Fetched $count trends");
-					$fetched[$region->woeid] = $region;
-				} catch (Exception_TwitterApi $e) {
-					$this->log("API failed with HTTP code ".$e->getCode());
-				}
-			}
-			$region->save();
-		}
-	}
-	
 	/**
 	 * @param $message string Send an email to the configured email address
 	 */
 	protected function sendNotificationEmail($message) {
 		$this->sendEmail($message, 'nobody@example.com', 'The Listening Post', $this->config->app->notification_email, 'Social Dashboard Notification');
-	}
-
-	/**
-	 * Called from command line to process jobs from Beanstalkd
-	 */
-	public function twitterQueueAction() {
-
-		$this->setupConsoleOutput();
-		set_time_limit(0);
-
-		try {
-			$this->log('Environment: '.APPLICATION_ENV);
-			$this->log('Waiting for jobs...');
-
-			/** @var $db Zend_Db_Adapter_Pdo_Mysql */
-			$db = Zend_Registry::get('db');
-			$db->closeConnection();
-
-			//loop forever, waiting for jobs
-			while($job = Model_Job::reserve()) {
-				$data = $job->getData();
-				$jobType = $job->getType();
-				$this->log('Processing job #' . $job->getId() . ': ' . $jobType);
-
-				/** @var $token Model_TwitterToken */
-				$token = Model_TwitterToken::fetchById($data['token_id']);
-
-				try {
-					try {
-						switch ($jobType) {
-							case 'fetch_related_users' :
-								/** @var $users Model_TwitterUser[] */
-								$users = Model_TwitterUser::fetchById($data['ids'], $token);
-								$type = $data['relation_type'];
-								foreach ($users as $user) {
-									if ($user->relatedUpToDate($type)) {
-										$this->log('IDs already up to date for '.$user->screen_name);
-									} else {
-										try {
-											$ids = $user->fetchRelatedIds($type, $token);
-											$this->log('Fetched '.count($ids).' IDs for '.$user->screen_name);
-										} catch (Exception_TwitterNotFound $nfe) {
-											$this->log('User '.$user->screen_name.' does not exist. Deleted.');
-											$user->delete();
-										}
-									}
-								}
-
-								$this->log('Finished job #'.$job->getId());
-								$job->complete();
-
-								break;
-							default :
-								$this->log('Deleted unknown job type');
-								$job->delete();
-						}
-
-
-					} catch (Exception_TwitterApi $e) {
-						if ($e->getCode() == Model_TwitterStatusCodes::TOO_MANY_REQUESTS) {
-							//requeue job with delay
-							$limits = $token->getRateLimit($e->getPath());
-							$delay = $limits['reset'] - time() + 10;
-							$job->release(Pheanstalk::DEFAULT_PRIORITY, $delay);
-							$this->log('Requeued with delay until '.date('H:i:s', $limits['reset']));
-						} else {
-							$this->log('Unhandled Twitter Exception: '.$e->getCode());
-							$job->delete();
-						}
-					} catch (Pheanstalk_Exception_ServerException $e) {
-						list($type) = explode(':', $e->getMessage());
-						if ($type == 'NOT_FOUND') {
-							$this->log('Job timed out');
-						} else {
-							throw $e;
-						}
-					}
-				} catch (Exception $e) {
-					$this->log('Unhandled exception: ' . $e->getMessage());
-					$this->log('Deleting job #' . $job->getId());
-					$job->delete();
-				}
-				$db->closeConnection();
-			}
-		} catch (Pheanstalk_Exception $e) {
-			$this->log($e->getMessage());
-			$this->log('Exiting');
-			return;
-		}
-	}
-
-	public function jobAction() {
-		if (PHP_SAPI != 'cli') die ('Must be run on the command line');
-
-		$this->setupConsoleOutput();
-
-		if (!$this->_request->getParam('id')) {
-			$this->log('Please supply a job id');
-			exit;
-		}
-
-		try {
-			$job = Model_Job::fetchById($this->_request->getParam('id'));
-
-			switch ($this->_request->getParam('do')) {
-				case 'delete' :
-					$job->delete();
-					$this->log('Job deleted');
-					break;
-				case 'view' :
-				default:
-					print_r($job->getData());
-			}
-		} catch (Pheanstalk_Exception $ex) {
-			$this->log('Beanstalk error: '.$ex->getMessage());
-		}
-
 	}
 
 	protected function setupConsoleOutput() {

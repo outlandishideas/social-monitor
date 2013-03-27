@@ -1,8 +1,8 @@
 <?php
 
 class Model_TwitterTweet extends Model_StatusBase {
-	protected $_tableName = 'twitter_tweets', $_sortColumn = 'id';
-	
+	protected static $tableName = 'twitter_tweets';
+
 	// does a substring replacement using the indices for choosing the substring range
 	protected static function replaceTweetSubstring($originalText, $replacement, $indices) {
 		return

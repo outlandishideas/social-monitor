@@ -246,12 +246,10 @@ abstract class Model_TwitterBase extends Model_SocialApiBase {
 		if ($tweetCount > 0) {
 			$tweets = array();
 			$users = array();
-			$shouldAnalyse = $this->should_analyse && $this->campaign->analysis_quota;
 			$localTimeZone = new DateTimeZone($this->campaign->timezone);
 			$utcTimeZone = new DateTimeZone('UTC');
 			foreach ($tweetList as $tweet) {
 				$tweetData = $this->createTweetInsertData($tweet);
-				$tweetData['is_analysed'] = !$shouldAnalyse;
 
 				$date = DateTime::createFromFormat('Y-m-d H:i:s', $tweetData['created_time'], $utcTimeZone);
 				$createdTime = $date->getTimestamp();
@@ -283,22 +281,6 @@ abstract class Model_TwitterBase extends Model_SocialApiBase {
 	 * static functions
 	 ********************/
 
-
-	public static function fetchUnanalysed($campaign, $limit) {
-		$instance = new static();
-
-		$sql = "SELECT tt.*
-			FROM twitter_tweets tt
-			JOIN {$instance->_tableName} tj ON tt.parent_id = tj.id AND tt.parent_type = :type
-			WHERE tt.is_analysed = 0
-			AND created_time > DATE_SUB(NOW(), INTERVAL 2 DAY)
-			AND tj.campaign_id = :campaign_id
-			ORDER BY created_time DESC LIMIT $limit";
-
-		$statement = $instance->_db->prepare($sql);
-		$statement->execute(array(':type' => $instance->getType(), ':campaign_id' => $campaign->id));
-		return Model_TwitterTweet::objectify($statement);
-	}
 
 	public static function getMentionsForModelIds($db, $modelIds, $dateRange, $filterType = null, $filterValue = null, $bucketCol = 'bucket_4_hours') {
 		if (!$modelIds) {

@@ -25,13 +25,15 @@ class FetchCount {
 abstract class Model_Base
 {
 	protected static $columns = array();
+	protected static $tableName;
+	protected static $sortColumn = 'id';
 
 	/**
 	 * @var PDO
 	 */
 	protected $_db;
 
-	protected $_row, $_tableName, $_sortColumn = null, $_isNew;
+	protected $_row, $_isNew;
 	
 	public function __construct($data = null, $fromDb = false)
 	{
@@ -47,15 +49,15 @@ abstract class Model_Base
 	public function getColumnNames()
 	{
 		$classname = get_called_class();
-		if (!array_key_exists($classname, self::$columns)) {
-			self::$columns[$classname] = array();
+		if (!array_key_exists($classname, Model_Base::$columns)) {
+			Model_Base::$columns[$classname] = array();
 			$statement = $this->_db->prepare('SELECT column_name AS name FROM information_schema.columns WHERE table_schema=database() AND table_name=:tableName');
-			$statement->execute(array(':tableName'=>$this->_tableName));
+			$statement->execute(array(':tableName'=>static::$tableName));
 			foreach ($statement as $row) {
-				self::$columns[$classname][] = $row['name'];
+				Model_Base::$columns[$classname][] = $row['name'];
 			}
 		}
-		return self::$columns[$classname];
+		return Model_Base::$columns[$classname];
 	}
 	
 	public function __get($name)
@@ -63,7 +65,7 @@ abstract class Model_Base
 		$methodName = 'get'.ucfirst($name);
 		if (method_exists($this, $methodName)) {
 			return $this->$methodName();
-		} elseif (in_array($name, $this->columnNames)) {
+		} elseif (in_array($name, $this->getColumnNames())) {
 			return isset($this->_row[$name]) ? $this->_row[$name] : null;
 		}
 		return null;
@@ -74,7 +76,7 @@ abstract class Model_Base
 		$methodName = 'set'.ucfirst($name);
 		if (method_exists($this, $methodName)) {
 			return $this->$methodName($value);
-		} elseif (in_array($name, $this->columnNames)) {
+		} elseif (in_array($name, $this->getColumnNames())) {
 			return $this->_row[$name] = $value;
 		} else {
 			return $this->$name = $value;
@@ -83,7 +85,7 @@ abstract class Model_Base
 	
 	public function find($id)
 	{
-		$statement = $this->_db->prepare('SELECT * FROM '.$this->_tableName.' WHERE id = ?');
+		$statement = $this->_db->prepare('SELECT * FROM '.static::$tableName.' WHERE id = ?');
 		$statement->execute(array($id));
 		if (!count($statement)) {
 			throw new RuntimeException('ID not found in database');
@@ -97,11 +99,11 @@ abstract class Model_Base
 		$data = $this->_row;
 		
 		if ($this->_isNew) {
-			$query = 'INSERT INTO '.$this->_tableName.' '.
+			$query = 'INSERT INTO '.static::$tableName.' '.
 				'(`'.implode('`,`', array_keys($data)).'`) '.
 				'VALUES ('.implode(',', array_fill(0, count($data), '?')).')';
 		} else {
-			$query = 'UPDATE '.$this->_tableName.' '.
+			$query = 'UPDATE '.static::$tableName.' '.
 				'SET '.implode('=?, ', array_keys($data)).'=? '.
 				'WHERE id=?';
 			//add id to fill last placeholder
@@ -120,7 +122,7 @@ abstract class Model_Base
 	
 	public function delete()
 	{
-		$statement = $this->_db->prepare('DELETE FROM '.$this->_tableName.' WHERE id = ?');
+		$statement = $this->_db->prepare('DELETE FROM '.static::$tableName.' WHERE id = ?');
 		$statement->execute(array($this->id));
 		$this->_row = array();
 		$this->_isNew = true;
@@ -149,8 +151,9 @@ abstract class Model_Base
 	public function fromArray($data)
 	{
 		if ($data) {
+			$columnNames = $this->getColumnNames();
 			foreach ($data as $key => $value) {
-				if (in_array($key, $this->columnNames)) {
+				if (in_array($key, $columnNames)) {
 					$this->{$key} = $value;
 				}
 			}
@@ -197,17 +200,18 @@ abstract class Model_Base
 	 * @return Model_Base[]
 	 */
 	protected function fetch($clause = null, $args = array()) {
-		$sql = 'SELECT * FROM '.$this->_tableName;
+		$sql = 'SELECT * FROM '.static::$tableName;
 		if ($clause) {
 			$sql .= ' WHERE ' . $clause;
 		}
-		$orderBy = $this->_sortColumn;
+		$orderBy = static::$sortColumn;
+		$columnNames = $this->getColumnNames();
 		if (is_numeric($orderBy)) {
-			$orderBy = $this->columnNames[$orderBy];
-		} else if (!in_array($orderBy, $this->columnNames)) {
-			$orderBy = $this->columnNames[0];
+			$orderBy = $columnNames[$orderBy];
+		} else if (!in_array($orderBy, $columnNames)) {
+			$orderBy = $columnNames[0];
 		}
-		$sql .= ' ORDER BY '.$orderBy;
+		$sql .= ' ORDER BY ' . $orderBy;
 
 		$statement = $this->_db->prepare($sql);
 		$statement->execute($args);
