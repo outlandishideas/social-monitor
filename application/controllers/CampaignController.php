@@ -12,6 +12,19 @@ class CampaignController extends BaseController
 		$this->view->campaigns = $this->view->user->campaigns;
 	}
 
+    /**
+     * Views a specific campaign page
+     * @permission view_facebook_page
+     */
+    public function viewAction()
+    {
+        $page = Model_Campaign::fetchById($this->_request->id);
+
+        $this->view->title = $page->name;
+        $this->view->page = $page;
+        $this->view->defaultLineId = self::makeLineId('Model_Campaign', $page->id);
+    }
+
 	/**
 	 * If the user is assigned to the given campaign, switches to it
 	 * @permission select_campaign

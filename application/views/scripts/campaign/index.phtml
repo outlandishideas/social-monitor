@@ -17,7 +17,7 @@
 	</tr>
 	<?php foreach ($this->campaigns as $campaign) : ?>
 	<tr>
-		<td><a href="<?php echo $this->url(array('controller'=>'campaign', 'action'=>'select', 'id'=>$campaign->id)); ?>"><?php echo $campaign->name; ?></a></td>
+		<td><a href="<?php echo $this->url(array('controller'=>'campaign', 'action'=>'view', 'id'=>$campaign->id)); ?>"><?php echo $campaign->name; ?></a></td>
 		<td><?php echo number_format($campaign->statusCountThisMonth); ?></td>
 		<td><?php echo number_format($campaign->openAmplifyCountThisMonth); ?></td>
 		<td><?php echo count($campaign->twitterLists); ?></td>

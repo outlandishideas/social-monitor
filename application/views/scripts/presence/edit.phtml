@@ -1,0 +1,28 @@
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm">
+
+	<fieldset class="inlineLabels">
+		<legend>Page details</legend>
+		<div class="ctrlHolder">
+			<label for="name" class="requiredField">
+				Page username<span class="asteriskField">*</span>
+			</label>
+			<input name="username" id="name" type="text" value="<?php echo $this->editingPage->username; ?>"> 
+			<p class="formHint"><?php echo $this->hintName; ?></p>
+		</div>
+        <div class="ctrlHolder">
+            <label for="campaign" class="requiredField">
+                Campaign<span class="asteriskField">*</span>
+            </label>
+            <select name="campaign_id" id="campaign">
+               <?php foreach($this->campaigns as $campaign) : ?>
+                    <option value="<?php echo $campaign->id; ?>" <?php if($campaign->id == $this->editingPage->campaign_id) echo 'selected'; ?> ><?php echo $campaign->name; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+	</fieldset>
+    <input type="hidden" value="<?php $this->type; ?>">
+	<div class="buttonHolder">
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', $this->gatekeeper()->fallbackUrlArgs(array('action'=>'index')), null, true); ?>
+		<input type="submit" value="Save" class="primaryAction">
+	</div>
+</form>

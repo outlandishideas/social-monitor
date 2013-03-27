@@ -46,20 +46,15 @@ class Model_Campaign extends Model_Base {
 		return $this->activeTwitterLists;
 	}
 
+    function getPresences() {
+        $this->presences = $this->facebookPages;
+        return $this->presences;
+    }
+
 	function getActiveTwitterSearches() {
 		$this->activeTwitterSearches = Model_TwitterSearch::fetchAll('campaign_id = :cid AND status = 1',
 			array(':cid'=>$this->id));
 		return $this->activeTwitterSearches;
-	}
-
-	function getTwitterTrendRegions() {
-		$this->twitterTrendRegions = Model_TwitterTrendRegion::fetchAll('campaign_id = ' . $this->id);
-		return $this->twitterTrendRegions;
-	}
-	
-	function getNetworks() {
-		$this->networks = Model_CampaignNetwork::fetchAll('campaign_id = ' . $this->id);
-		return $this->networks;
 	}
 
 	function getFacebookPages() {

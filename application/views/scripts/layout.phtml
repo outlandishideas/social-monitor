@@ -54,9 +54,12 @@
 						<b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu">
+                            <li>
+                                <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'index')); ?>">All Campaigns</a>
+                            </li>
 						<?php foreach ($this->campaigns as $key => $value) : ?>
 							<li <?php echo $value->id == $this->campaign->id ? 'class="selected"' : '' ?>>
-								<a href="<?php echo $this->url(array('controller'=>'campaign', 'action'=>'select', 'id'=>$value->id)) . '?forward=' . Zend_Controller_Front::getInstance()->getRequest()->getControllerName(); ?>"><?php echo $value->name ?></a>
+								<a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'index', 'id'=>$value->id)); ?>"><?php echo $value->name ?></a>
 							</li>
 						<?php endforeach; ?>
 					</ul>

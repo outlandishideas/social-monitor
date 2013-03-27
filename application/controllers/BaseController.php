@@ -27,51 +27,23 @@ class BaseController extends Zend_Controller_Action {
 			// load the campaign
 			if ($this->view->user) {
 
-				$this->view->campaigns = $this->view->user->campaigns;
+				$this->view->campaigns = Model_Campaign::fetchAll();
 
-				if ($this->view->user->last_campaign_id && in_array($this->view->user->last_campaign_id, $this->view->user->campaignIds)) {
-					// load user's last used campaign
-					$this->view->campaign = Model_Campaign::fetchById($this->view->user->last_campaign_id);
-				} elseif (count($this->view->user->campaigns) == 0) {
-					$this->_helper->FlashMessenger(array('error' => 'Sorry, you do not have any assigned campaigns'));
-					$this->auth->clearIdentity();
-					$this->forward('login', 'user');
-				} elseif (count($this->view->user->campaigns) == 1) {
-					//load user's only assigned campaign
-					$this->view->campaign = $this->view->campaigns[0];
-					$this->view->user->last_campaign_id = $this->view->campaign->id;
-					$this->view->user->save();
-				} elseif ($this->_request->getActionName() != 'select' || $this->_request->getControllerName() != 'campaign') {
-					//ask user to choose a campaign
-					$this->forward('select', 'campaign');
-				}
+                date_default_timezone_set('UTC');
+                //get/set default date range
+                if (!isset($_SESSION['dateRange'])) {
+                    $today = date('Y-m-d');
+                    $_SESSION['dateRange'] = array($today, date('Y-m-d', strtotime($today . ' +1 day')));
+                }
+                $this->view->jsonDateRange = json_encode($_SESSION['dateRange']);
 
-				if ($this->view->campaign) {
-					date_default_timezone_set($this->view->campaign->timezone);
-
-					//get/set default date range
-					if (!isset($_SESSION['dateRange'])) {
-						$today = date('Y-m-d');
-						$_SESSION['dateRange'] = array($today, date('Y-m-d', strtotime($today . ' +1 day')));
-					}
-					$this->view->jsonDateRange = json_encode($_SESSION['dateRange']);
-
-					//set start date
-					$this->view->dateRangeString = date($this->config->app->dateFormat, strtotime($_SESSION['dateRange'][0]));
-					$interval = date_diff(date_create($_SESSION['dateRange'][0]), date_create($_SESSION['dateRange'][1]));
-					//only show second date if range > 1 day
-					if ($interval->days > 1) {
-						$this->view->dateRangeString .= ' - ' . date($this->config->app->dateFormat, strtotime($_SESSION['dateRange'][1] . ' -1 day'));
-					}
-				} else {
-					date_default_timezone_set('UTC');
-				}
-
-				//get job subscriptions
-				$subscriptions = $this->view->user->getJobSubscriptions();
-				foreach ($subscriptions as $jobSub) {
-					$this->view->jobSubs[] = $jobSub->toArray();
-				}
+                //set start date
+                $this->view->dateRangeString = date($this->config->app->dateFormat, strtotime($_SESSION['dateRange'][0]));
+                $interval = date_diff(date_create($_SESSION['dateRange'][0]), date_create($_SESSION['dateRange'][1]));
+                //only show second date if range > 1 day
+                if ($interval->days > 1) {
+                    $this->view->dateRangeString .= ' - ' . date($this->config->app->dateFormat, strtotime($_SESSION['dateRange'][1] . ' -1 day'));
+                }
 
 			}
 

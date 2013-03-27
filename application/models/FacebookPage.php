@@ -7,6 +7,10 @@ class Model_FacebookPage extends Model_SocialApiBase {
 
 	private static $_fb;
 
+    public function getFacebookPosts() {
+        $this->facebookPosts = Model_FacebookPost::fetchAll('facebook_page_id = '. $this->id);
+    }
+
 	/**
 	 * Update page info from FB
 	 */

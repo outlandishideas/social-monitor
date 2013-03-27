@@ -82,17 +82,7 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	}
 	
 	function getCampaigns() {
-		//admins have all campaigns
-		if ($this->getIsAdmin()) {
-			return $this->campaigns = Model_Campaign::fetchAll();
-		}
-
-		//otherwise fetch assigned campaigns
-		$statement = $this->_db->prepare('SELECT c.* FROM campaigns AS c
-			INNER JOIN user_campaigns AS uc ON c.id = uc.campaign_id WHERE uc.user_id = :user_id');
-		$statement->execute(array(':user_id'=>$this->id));
-		$this->campaigns = Model_Campaign::objectify($statement->fetchAll());
-		return $this->campaigns;
+		return $this->campaigns = Model_Campaign::fetchAll();
 	}
 	
 	function getCampaignIds() {

@@ -1,0 +1,46 @@
+<?php
+    $links = $this->gatekeeper()->filterAll(array(
+        '<a class="button add" href="%url%">Add new Facebook</a>' => array('action' => 'new', 'type'=>'facebook'),
+        '<a class="button add" href="%url%">Add new Twitter</a>' => array('action' => 'new', 'type'=>'twitter')
+    ));
+	if ($links) :
+
+?>
+<p>
+    <?php echo implode('', $links); ?>
+</p>
+<?php endif; ?>
+
+<table class="text">
+    <tr>
+        <th>Page</th>
+        <th>Likes</th>
+        <th><abbr title="Posts in month to date">MTD</abbr></th>
+        <th><abbr title="Posts in past 24 hours">24h</abbr></th>
+        <th>Last updated info</th>
+        <th>Last fetched posts</th>
+        <th>Facebook page</th>
+        <th></th>
+    </tr>
+    <?php foreach ($this->presences as $page) : ?>
+    <tr>
+        <td><?php echo $this->gatekeeper()->filter('<a href="%url%">' . $page->name . '</a>', array('action'=>'view', 'id'=>$page->id)); ?></td>
+        <td><?php echo $page->fan_count; ?></td>
+        <td><?php echo $page->posts_this_month; ?></td>
+        <td><?php echo $page->posts_last_24_hours; ?></td>
+        <td><?php echo $this->prettyDate($page->last_updated, 'Never'); ?></td>
+        <td><?php echo $this->prettyDate($page->last_fetched, 'Never'); ?></td>
+        <td><a href="<?php echo $page->page_url; ?>"><img src="<?php echo $page->pic_square; ?>"></a></td>
+        <td>
+            <?php
+            $links = $this->gatekeeper()->filterAll(array(
+                '<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$page->id),
+                '<a href="%url%">Update info</a>' => array('action'=>'update', 'id'=>$page->id),
+                '<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$page->id)
+            ));
+            echo implode(' | ', $links);
+            ?>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</table>

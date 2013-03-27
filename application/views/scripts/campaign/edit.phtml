@@ -29,16 +29,6 @@
 			<p class="formHint">Changing the timezone for a campaign with existing data may result in odd-looking graphs</p>
 		</div>
 		<div class="ctrlHolder">
-			<label for="analysis_quota">
-				Sentiment analysis quota
-			</label>
-			<input name="analysis_quota"
-			       value="<?php echo htmlspecialchars($this->editingCampaign->analysis_quota); ?>"
-			       class="textinput" maxlength="10" type="number" min="0" step="500" id="analysis_quota">
-
-			<p class="formHint">Daily API request cap. Set to zero to disable analysis for this campaign.</p>
-		</div>
-		<div class="ctrlHolder">
 			<label for="twitter_oauth">Twitter API</label>
 			<div>
 				<?php
@@ -60,20 +50,6 @@
 		</div>
 	</fieldset>
 
-	<fieldset class="inlineLabels">
-		<legend>Campaign Users</legend>
-
-		<?php foreach ($this->allUsers as $user) : ?>
-
-		<div class="ctrlHolder checkbox">
-			<label for="user_<?php echo $user->id; ?>">
-				<?php echo $user->safeName; ?>
-			</label>
-			<input type="checkbox" id="user_<?php echo $user->id; ?>" name="user[<?php echo $user->id; ?>]" <?php if (!$user->canManageCampaigns()) echo 'disabled'; ?> <?php if (!$user->canManageCampaigns() || in_array($user->id, $this->editingCampaign->userIds)) echo 'checked'; ?> class="checkboxinput">
-		</div>
-		<?php endforeach; ?>
-
-	</fieldset>
 	<div class="buttonHolder">
 		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'campaign', 'action'=>'index'), null, true); ?>
 		<input type="submit" value="Save" class="primaryAction">
