@@ -5,7 +5,6 @@
 	<tr>
 		<th>Name</th>
 		<th>Statuses <abbr title="Month to date">MTD</abbr></th>
-		<th><abbr title="OpenAmplify">OA</abbr> <abbr title="Month to date">MTD</abbr></th>
 		<th>Lists</th>
 		<th>Searches</th>
 		<th>Trends</th>
@@ -19,7 +18,6 @@
 	<tr>
 		<td><a href="<?php echo $this->url(array('controller'=>'campaign', 'action'=>'view', 'id'=>$campaign->id)); ?>"><?php echo $campaign->name; ?></a></td>
 		<td><?php echo number_format($campaign->statusCountThisMonth); ?></td>
-		<td><?php echo number_format($campaign->openAmplifyCountThisMonth); ?></td>
 		<td><?php echo count($campaign->twitterLists); ?></td>
 		<td><?php echo count($campaign->twitterSearches); ?></td>
 		<td><?php echo count($campaign->twitterTrendRegions); ?></td>
@@ -39,7 +37,6 @@
 			<?php
 				$actions = $this->gatekeeper()->filterAll(array(
 					'<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$campaign->id),
-					'<a href="%url%">API stats</a>' => array('action'=>'api', 'id'=>$campaign->id),
 					'<a href="%url%">Delete</a>' => array('action'=>'delete', 'id'=>$campaign->id)
 				));
 				echo implode(' | ', $actions);

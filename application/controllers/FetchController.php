@@ -2,7 +2,7 @@
 
 class FetchController extends BaseController
 {
-	protected $publicActions = array('index', 'analyse', 'twitter-queue', 'job');
+	protected $publicActions = array('index', 'twitter-queue', 'job');
 
 	/**
 	 * Fetches all tweets/trends/facebook pages etc
@@ -144,109 +144,6 @@ class FetchController extends BaseController
 		}
 	}
 	
-	public function analyseAction() {
-
-		$this->setupConsoleOutput();
-		$this->acquireLock();
-		set_time_limit($this->config->openamplify->max_duration);
-		$endTime = time() + $this->config->openamplify->max_duration;
-
-		$campaigns = Model_Campaign::fetchAll();
-		foreach ($campaigns as $campaign) {
-			//only process campaign if analysis is enabled
-			if ($campaign->analysis_quota) {
-				$this->log("Processing campaign $campaign->name");
-				$this->analyseThings($campaign, 'Model_TwitterList', $endTime);
-				$this->touchLock();
-				$this->analyseThings($campaign, 'Model_TwitterSearch', $endTime);
-				$this->touchLock();
-				$this->analyseThings($campaign, 'Model_FacebookPage', $endTime);
-				$this->touchLock();
-			} else {
-				$this->log("Skipping campaign with no quota $campaign->name");
-			}
-		}
-
-		$this->log('Finished');
-		$this->releaseLock();
-	}
-	
-	private function analyseThings($campaign, $class, $endTime) {
-		$failures = 0;
-		$successes = 0;
-
-		//get the number of OA requests used today
-		$totalKey = 'open_amplify_' . gmdate('Y-m-d');
-		$campaignKey = $totalKey.'_campaign_'.$campaign->id;
-		$totalRequestsUsed = $this->getOption($totalKey) ?: 0;
-		$campaignRequestsUsed = $this->getOption($campaignKey) ? : 0;
-
-		//loop through batches of statuses until:
-		// a) they're all processed, or
-		// b) we go over the time limit, or
-		// c) we run out of API calls for the campaign, or
-		// d) we run out of overall API calls, or
-		// e) we get more than max_failures failed API calls
-		while (
-			time() < $endTime && //b
-			$totalRequestsUsed < $this->config->openamplify->daily_request_limit && //d
-			$campaignRequestsUsed < $campaign->analysis_quota //c
-		) {
-			$statuses = $class::fetchUnanalysed($campaign, $this->config->openamplify->batch_size);
-			if (!$statuses) {
-				break; //a
-			}
-			foreach ($statuses as $status) {
-				try {
-					$status->extractTopics();
-					$status->is_analysed = true;
-					$status->save();
-					$successes++;
-				} catch (RuntimeException $ex) {
-					$this->log('Error occurred: ' . $ex->getMessage());
-					$failures++;
-					if ($failures >= $this->config->openamplify->max_failures) {
-						break 2; //e
-					}
-				}
-
-				$totalRequestsUsed++;
-				$campaignRequestsUsed++;
-			}
-		}
-
-		//update the number of API calls used today
-		$this->setOption($totalKey, $totalRequestsUsed);
-		$this->setOption($campaignKey, $campaignRequestsUsed);
-
-		$limits = array();
-		if ($totalRequestsUsed >= $this->config->openamplify->daily_request_limit) {
-			$limits['final'] = "Overall OpenAmplify limit reached.\n\nUsed $totalRequestsUsed of {$this->config->openamplify->daily_request_limit} API requests.\n\nNo more statuses will be analysed today. Limit will reset at 00:00 GMT";
-		}
-		if ($totalRequestsUsed >= $this->config->openamplify->daily_request_limit * 0.8) {
-			$limits['warning'] = "Reached 80% of overall OpenAmplify quota.";
-		}
-		if ($campaignRequestsUsed >= $campaign->analysis_quota) {
-			$limits['campaign_'.$campaign->id] = "OpenAmplify limit reached for campaign '$campaign->name'.\n\nUsed $campaignRequestsUsed of {$campaign->analysis_quota} API requests.\n\nNo more statuses will be analysed today. Limit will reset at 00:00 GMT";
-		}
-
-		//if we have reached a limit, send a notification email
-		foreach ($limits as $name => $message) {
-
-			//only send email once per day
-			$notificationKey = $totalKey.'_sent_'.$name;
-			if (!$this->getOption($notificationKey)) {
-				$this->sendNotificationEmail($message);
-				$this->setOption($notificationKey, 1);
-			}
-
-			$this->log('OpenAmplify '.$name.' limit reached');
-		}
-
-		$type = substr($class, 6);
-		$this->log("Processed $successes statuses from $type " . ($failures ? " ($failures failed)" : ''));
-	}
-
 	/**
 	 * @param $message string Send an email to the configured email address
 	 */

@@ -3,8 +3,8 @@ live:
     adapter: Pdo_Mysql
     params:
       host: 212.13.212.68
-      dbname: live
-      username: 33digital
+      dbname: bcmonitor
+      username: a_bcmonitor
       password:
   twitter:
     consumer_key: ***REMOVED***
@@ -14,20 +14,6 @@ live:
     list_fetch_per_page: 300
     search_fetch_per_page: 100
     network_max_user_connections: 100000
-  openamplify:
-    enabled: 1
-    api_key: ***REMOVED***
-    stop_words:
-     - rt
-     - http
-     - https
-     - @
-     - t.co
-    min_text_length: 5
-    max_failures: 10
-    max_duration: 550
-    batch_size: 50
-    daily_request_limit: 50000
   klout:
     api_key: ***REMOVED***
   peerindex:
@@ -62,7 +48,6 @@ alpha:
   db:
     params:
       host: 127.0.0.1
-      dbname: 33dashboard
       username: root
       password:
   app:

@@ -1,15 +1,8 @@
 <?php
 
-require_once('OpenAmplify.php');
-
 class Model_TwitterTweet extends Model_StatusBase {
 	protected $_tableName = 'twitter_tweets', $_sortColumn = 'id';
 	
-	// extracts topics using openamplify on the tweet text, then inserts them into the twitter_tweet_topics table
-	public function extractTopics() {
-		return OpenAmplify::extractTopics('tweet', $this->text_expanded, $this);
-	}
-
 	// does a substring replacement using the indices for choosing the substring range
 	protected static function replaceTweetSubstring($originalText, $replacement, $indices) {
 		return
