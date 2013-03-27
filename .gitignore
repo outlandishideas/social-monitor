@@ -4,3 +4,4 @@
 /log/*
 !/log/index.html
 /lib/bin
+/application/configs/config.yaml
