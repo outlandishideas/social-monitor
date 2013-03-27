@@ -1,34 +1,31 @@
+<?php // this is currently almost identical to scripts/presence/index, and is just temporary ?>
 
 <table class="text">
-    <tr>
-        <th>Page</th>
-        <th>Likes</th>
-        <th><abbr title="Posts in month to date">MTD</abbr></th>
-        <th><abbr title="Posts in past 24 hours">24h</abbr></th>
-        <th>Last updated info</th>
-        <th>Last fetched posts</th>
-        <th>Facebook page</th>
-        <th></th>
-    </tr>
-    <?php foreach ($this->page->presences as $page) : ?>
-    <tr>
-        <td><?php echo $this->gatekeeper()->filter('<a href="%url%">' . $page->name . '</a>', array('action'=>'view', 'id'=>$page->id)); ?></td>
-        <td><?php echo $page->fan_count; ?></td>
-        <td><?php echo $page->posts_this_month; ?></td>
-        <td><?php echo $page->posts_last_24_hours; ?></td>
-        <td><?php echo $this->prettyDate($page->last_updated, 'Never'); ?></td>
-        <td><?php echo $this->prettyDate($page->last_fetched, 'Never'); ?></td>
-        <td><a href="<?php echo $page->page_url; ?>"><img src="<?php echo $page->pic_square; ?>"></a></td>
-        <td>
-            <?php
-            $links = $this->gatekeeper()->filterAll(array(
-                '<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$page->id),
-                '<a href="%url%">Update info</a>' => array('action'=>'update', 'id'=>$page->id),
-                '<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$page->id)
-            ));
-            echo implode(' | ', $links);
-            ?>
-        </td>
-    </tr>
-    <?php endforeach; ?>
+	<tr>
+		<th>Handle</th>
+		<th>Popularity</th>
+		<th>Last updated info</th>
+		<th>Last fetched statuses</th>
+		<th>External link</th>
+	</tr>
+	<?php foreach ($this->campaign->presences as $presence) : ?>
+	<tr>
+		<td>
+			<img src="<?php echo $this->baseUrl('assets/img/' . $presence->type . '.png'); ?>" />
+			<?php echo $this->gatekeeper()->filter('<a href="%url%">' . $presence->handle . '</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>
+		</td>
+		<td><?php echo number_format($presence->popularity) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
+		<td><?php echo $this->prettyDate($presence->last_updated, 'Never'); ?></td>
+		<td><?php echo $this->prettyDate($presence->last_fetched, 'Never'); ?></td>
+		<td>
+			<a href="<?php echo $presence->page_url; ?>">
+				<?php if ($presence->image_url) : ?>
+				<img src="<?php echo $presence->image_url; ?>" />
+				<?php else : ?>
+				<?php echo $presence->page_url; ?>
+				<?php endif; ?>
+			</a>
+		</td>
+	</tr>
+	<?php endforeach; ?>
 </table>
