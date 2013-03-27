@@ -5,8 +5,18 @@ class Model_Campaign extends Model_Base {
 	protected static $sortColumn = 'name';
 
     function getPresences() {
-        $this->presences = Model_Presence::fetchAll('campaign_id = :cid', array(':cid'=>$this->id));
-        return $this->presences;
+	    if (!isset($this->presences)) {
+		    $statement = $this->_db->prepare('SELECT presence_id FROM campaign_presences WHERE campaign_id = :cid');
+		    $statement->execute(array(':cid'=>$this->id));
+		    $ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+		    if ($ids) {
+			    $clause = 'id IN (' . implode(',', $ids) . ')';
+			    $this->presences = Model_Presence::fetchAll($clause);
+		    } else {
+			    $this->presences = array();
+		    }
+	    }
+	    return $this->presences;
     }
 
 	function getFacebookPages() {
