@@ -21,12 +21,12 @@
 	</tr>
 	<?php foreach ($this->presences as $presence) : ?>
 	<tr>
-		<td><a class="presence <?php echo $presence->type; ?>" href="<?php echo $this->url(array('action'=>'view', 'id'=>$presence->id)); ?>"><?php echo $presence->handle; ?></a></td>
+		<td><a class="presence <?php echo $presence->type; ?>" href="<?php echo $this->url(array('action'=>'view', 'id'=>$presence->id)); ?>" title="<?php echo $presence->label; ?>"><?php echo $presence->handle; ?></a></td>
 		<td><?php echo number_format($presence->popularity) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
 		<td><?php echo $this->prettyDate($presence->last_updated, 'Never'); ?></td>
 		<td><?php echo $this->prettyDate($presence->last_fetched, 'Never'); ?></td>
 		<td>
-			<a href="<?php echo $presence->page_url; ?>">
+			<a href="<?php echo $presence->page_url; ?>" target="_blank">
 			<?php if ($presence->image_url) : ?>
 				<img src="<?php echo $presence->image_url; ?>" />
 			<?php else : ?>

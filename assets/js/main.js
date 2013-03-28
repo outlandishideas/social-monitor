@@ -56,27 +56,7 @@ $.extend(app, {
 						</div>\
 					</div>',
 		message: '<li class="<%=type%>"><%=msg%></li>',
-		userStatus: '<% if (oauthUrl) { %><div class="right"><a href="<%=oauthUrl%>">Sign in</a> to Twitter</div><% } %>\
-				<% if (deauthUrl) { %><div class="right""><a href="<%=deauthUrl%>">Sign out</a> of Twitter</div><% } %>\
-				<div><a href="<%=logoutUrl%>">Logout</a> of Listening Post</div>\
-				<h4>Twitter Rate Limits</h4>\
-				<% if (!$.isEmptyObject(rateLimits)) {%>\
-				<table class="text">\
-					<tr><th>Request type</th><th colspan="2">Usage</th><th>Reset in</th></tr>\
-					<% for (var path in rateLimits) { %>\
-					<tr>\
-						<td><%=path%></td>\
-						<td><div class="bar">\
-							<div style="width: <%=100-rateLimits[path].remaining*100/rateLimits[path].limit%>%;"></div>\
-						</div></td>\
-						<td><%=rateLimits[path].limit-rateLimits[path].remaining+"/"+rateLimits[path].limit%></td>\
-						<td><%=rateLimits[path].reset?Math.round((rateLimits[path].reset*1000 - Date.now())/60000)+" mins":"n/a"%></td>\
-					</tr>\
-					<% } %>\
-				</table>\
-				<% } else { %>\
-				<p>No recent requests so rate limits unknown.</p>\
-				<% } %>',
+		userStatus: '<div><a href="<%=logoutUrl%>">Logout</a> of Listening Post</div>',
 		presence:
 			'<li>\
 				<input type="hidden" value="<%=id%>" name="presences[]" />\

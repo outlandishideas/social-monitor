@@ -1,8 +1,5 @@
 <?php
 
-define('KLOUT_API_ENDPOINT', 'http://api.klout.com/1/klout.json');
-define('PEERINDEX_API_ENDPOINT', 'http://api.peerindex.net/v2/profile/profile.json');
-
 class BaseController extends Zend_Controller_Action {
 
 	protected $publicActions = array();
@@ -160,47 +157,6 @@ class BaseController extends Zend_Controller_Action {
 		$this->_helper->redirector->gotoSimple('');
 	}
 
-	protected function getOauthUrl() {
-		$callback_url = 'http://'.$_SERVER['HTTP_HOST'].$this->view->url(array('action'=>'callback'));
-		return Model_TwitterToken::getAuthorizeUrl($callback_url);
-	}
-
-	/**
-	 * @param $obj a campaign or application user
-	 * @return \Model_TwitterUser|null
-	 */
-	protected function handleOauthCallback($obj) {
-		if (!$this->_request->oauth_verifier) {
-			return null;
-		}
-
-		//fetch token from API
-		$token = Model_TwitterToken::getToken($this->_request->oauth_verifier);
-		$token->save();
-
-		//if user or campaign has existing token and it is different then unlink it
-		if ($obj->token_id && $token->oauth_token != $obj->twitterToken->oauth_token) {
-			$obj->token_id = null;
-		}
-
-		//link app user or campaign to token
-		if (!$obj->token_id) {
-			$obj->token_id = $token->id;
-			$obj->save();
-		}
-
-		//get details of authenticated user
-		$twitterUser = Model_TwitterUser::fetchById($token->twitter_user_id);
-		if (!$twitterUser) {
-			//add user to db
-			$userData = (array)$token->apiRequest('account/verify_credentials');
-			$twitterUser = new Model_TwitterUser($userData);
-			$twitterUser->save();
-		}
-
-		return $twitterUser;
-	}
-
 	//format a json response with data
 	protected function apiSuccess($data = null, $messages = array()) {
 		$flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
@@ -346,82 +302,6 @@ class BaseController extends Zend_Controller_Action {
 		);
 	}
 
-
-	protected function fetchKlout($users, $logErrors = false) {
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-
-		for ($i = 0; $i < count($users); $i += 5) {
-
-			//get next batch of 5 usernames
-			$userBatch = array_slice($users, $i, 5);
-			$usernames = array();
-			foreach ($userBatch as $twitterUser) {
-				$usernames[] = $twitterUser->screen_name;
-			}
-
-			//request data from Klout API
-			$params = array(
-				'users' => implode(',', $usernames),
-				'key' => $this->config->klout->api_key
-			);
-			$url = KLOUT_API_ENDPOINT . '?' . http_build_query($params);
-			curl_setopt($ch, CURLOPT_URL, $url);
-			$json = curl_exec($ch);
-			$resultCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-			$nowDate = gmdate('Y-m-d H:i:s');
-
-			//process response
-			if ($resultCode == 200) {
-				$response = json_decode($json);
-				if (isset($response->users)) {
-					foreach ($userBatch as $twitterUser) {
-						$twitterUser->klout_last_updated = $nowDate;
-						foreach ($response->users as $kloutUser) {
-							if ($kloutUser->twitter_screen_name == $twitterUser->screen_name) {
-								$twitterUser->klout = $kloutUser->kscore;
-								break;
-							}
-						}
-						$twitterUser->save();
-					}
-				}
-			} else if ($logErrors) {
-				$this->log("Klout API error: " . print_r($params, true));
-				$this->log($json);
-			}
-		}
-		curl_close($ch);
-	}
-
-	protected function fetchPeerindex($users, $logErrors = false) {
-		foreach ($users as $twitterUser) {
-			$params = array(
-				'id' => $twitterUser->screen_name,
-				'api_key' => $this->config->peerindex->api_key
-			);
-			$url = PEERINDEX_API_ENDPOINT . '?' . http_build_query($params);
-			$ch = curl_init($url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-			$responseText = curl_exec($ch);
-			$resultCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-			if ($resultCode == 200) {
-				$response = json_decode($responseText);
-				$twitterUser->peerindex = $response->peerindex;
-			} elseif ($logErrors && $resultCode != 404) {
-				$this->log("PeerIndex API error: code ".$resultCode.' '.print_r($params, true));
-				$this->log($responseText);
-			}
-			$twitterUser->peerindex_last_updated = gmdate('Y-m-d H:i:s');
-			$twitterUser->save();
-		}
-	}
 
 	/**
 	 * Fetch back an option

@@ -2,20 +2,16 @@ live:
   db:
     adapter: Pdo_Mysql
     params:
-      host: 212.13.212.68
+      host: 212.13.212.66
       dbname: bcmonitor
       username: a_bcmonitor
       password:
   twitter:
     consumer_key: ***REMOVED***
     consumer_secret: ***REMOVED***
+    access_token: ***REMOVED***
+    access_token_secret: ***REMOVED***
     cache_user_data: 7
-    list_fetch_per_page: 300
-    search_fetch_per_page: 100
-  klout:
-    api_key: ***REMOVED***
-  peerindex:
-    api_key: ***REMOVED***
   facebook:
     appId: ***REMOVED***
     secret: ***REMOVED***

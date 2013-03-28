@@ -40,7 +40,13 @@ class Model_Presence extends Model_Base {
 				$this->popularity = $data['fan_count'];
 				break;
 			case self::TYPE_TWITTER:
-				//todo
+				$token = new Model_TwitterToken();
+				$data = $token->apiRequest('users/show', array('screen_name'=>$this->handle));
+				$this->uid = $data->id_str;
+				$this->image_url = $data->profile_image_url;
+				$this->name = $data->name;
+				$this->page_url = 'http://www.twitter.com/' . $data->screen_name;
+				$this->popularity = $data->followers_count;
 				break;
 		}
 		$this->last_updated = gmdate('Y-m-d H:i:s');

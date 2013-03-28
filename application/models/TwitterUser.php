@@ -303,29 +303,4 @@ class Model_TwitterUser extends Model_Base {
 	}
 
 
-	public static function fetchNoKlout() {
-		return self::fetchNoScore('klout');
-	}
-
-	public static function fetchNoPeerindex() {
-		return self::fetchNoScore('peerindex');
-	}
-
-	private static function fetchNoScore($type) {
-		$config = Zend_Registry::get('config');
-		$db = Zend_Registry::get('db');
-
-		$statement = $db->query('SELECT DISTINCT tu . *
-			FROM twitter_users tu
-			JOIN twitter_tweets tt ON tt.twitter_user_id = tu.id
-			JOIN twitter_lists tl ON tl.id = tt.parent_id
-			WHERE tl.status = 1
-			AND tt.parent_type = \'list\'
-			AND ('.$type.'_last_updated IS NULL
-			OR '.$type.'_last_updated < DATE_SUB(NOW(), INTERVAL ' . $config->twitter->cache_user_data . ' DAY))');
-
-		return self::objectify($statement);
-	}
 }
-
-?>

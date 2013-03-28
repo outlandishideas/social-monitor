@@ -282,52 +282,9 @@ class UserController extends BaseController
 		$this->_helper->redirector->gotoSimple('index');
 	}
 
-	/**
-	 * Redirects to twitter to request access to an account for use in fetching tweets
-	 * @permission twitter_oauth
-	 */
-	public function oauthAction() {
-		$this->_redirect($this->getOauthUrl());
-	}
-
-	/**
-	 * Deauthorises the app against twitter
-	 * @permission twitter_deauth
-	 */
-	public function deauthAction() {
-		$this->view->user->token_id = null;
-		$this->view->user->save();
-		if (isset($this->_request->return_url)) {
-			$this->_redirect($this->_request->return_url);
-		} else {
-			$this->_helper->redirector->gotoSimple('index', 'index');
-		}
-	}
-
-	/**
-	 * Called after authenticating with twitter. Authorises with the user
-	 * @permission twitter_callback
-	 */
-	public function callbackAction() {
-		if ($this->_request->denied) {
-			$this->_helper->FlashMessenger(array('info' => 'Authorization cancelled'));
-		} else {
-			$twitterUser = $this->handleOauthCallback($this->view->user);
-			if ($twitterUser) {
-				$this->_helper->FlashMessenger(array('info' => 'Authorized user with Twitter user @'.$twitterUser->screen_name));
-			}
-		}
-
-		$this->_helper->redirector->gotoSimple('index', 'index');
-	}
-
 	public function statusAction(){
 		$data = array(
-			'logoutUrl' => $this->view->url(array('controller' => 'user', 'action' => 'logout')),
-			'oauthUrl' => '',
-			'deauthUrl' => '',
-			'rateLimits' => array(),
-			'jobs' => array()
+			'logoutUrl' => $this->view->url(array('controller' => 'user', 'action' => 'logout'))
 		);
 
 		$this->apiSuccess($data);

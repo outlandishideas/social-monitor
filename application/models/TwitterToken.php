@@ -12,15 +12,10 @@ class Model_TwitterToken extends Model_Base {
 		$config = Zend_Registry::get('config');
 
 		$connection = new TwitterOAuth($config->twitter->consumer_key,$config->twitter->consumer_secret,
-				$this->oauth_token, $this->oauth_token_secret);
+				$config->twitter->access_token, $config->twitter->access_token_secret);
 		$connection->host = 'https://api.twitter.com/1.1/';
 
 		return $this->connection = $connection;
-	}
-
-	public function getTwitterUser() {
-		$this->twitterUser = Model_TwitterUser::fetchById($this->twitter_user_id);
-		return  $this->twitterUser;
 	}
 
 	public function apiRequest($path, $args = array()) {
@@ -29,15 +24,12 @@ class Model_TwitterToken extends Model_Base {
 		$resultCode = $this->connection->http_code;
 		$this->connection->http_code = null;
 
-		//update rate limit from headers
-		if (isset($this->connection->http_header['x_rate_limit_limit'])) {
-			$rateLimit = array();
-			foreach (array('limit', 'remaining', 'reset') as $type) {
-				$rateLimit[$type] = $this->connection->http_header['x_rate_limit_'.$type];
-			}
-			$this->setRateLimit($path, $rateLimit);
-			$this->save();
-		}
+//		if (isset($this->connection->http_header['x_rate_limit_limit'])) {
+//			$rateLimit = array();
+//			foreach (array('limit', 'remaining', 'reset') as $type) {
+//				$rateLimit[$type] = $this->connection->http_header['x_rate_limit_'.$type];
+//			}
+//		}
 
 		//handle response
 		switch ($resultCode) {
@@ -91,34 +83,4 @@ class Model_TwitterToken extends Model_Base {
 		return $currentUser->twitterToken;
 	}
 
-	public function setRateLimit($path, $rateLimit) {
-		$rateLimits = array_merge($this->getRateLimit(), array($path => $rateLimit));
-		$this->rate_limits = json_encode($rateLimits);
-	}
-
-	public function getRateLimit($path = null, $type = null) {
-		//unpack rates
-		$rateLimits = $this->rate_limits ? json_decode($this->rate_limits, true) : array();
-
-		//reset any limits with reset time in the past
-		foreach ($rateLimits as $p => $limits) {
-			if ($limits['reset'] < time()) {
-				$rateLimits[$p]['remaining'] = $limits['limit'];
-				$rateLimits[$p]['reset'] = 0;
-			}
-		}
-
-		//if no path specified then return all paths
-		if (!$path) {
-			return $rateLimits;
-		}
-
-		//check if record for path doesn't exist or is expired
-		if (!isset($rateLimits[$path])) {
-			return array();
-		}
-
-		//return all rates or just for requested type
-		return $type ? $rateLimits[$path][$type] : $rateLimits[$path];
-	}
 }

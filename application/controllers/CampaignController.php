@@ -163,45 +163,6 @@ class CampaignController extends BaseController
 		$this->_helper->redirector->gotoSimple('index');
 	}
 
-	/**
-	 * Redirects to twitter to request access to an account for use in fetching tweets
-	 * @permission twitter_oauth
-	 */
-	public function oauthAction() {
-		$this->_redirect($this->getOauthUrl());
-	}
-
-	/**
-	 * Called after authenticating with twitter. Authorises with the campaign
-	 * @permission twitter_callback
-	 */
-	public function callbackAction() {
-		if ($this->_request->denied) {
-			$this->_helper->FlashMessenger(array('info' => 'Authorization cancelled'));
-		} else {
-			$twitterUser = $this->handleOauthCallback($this->view->campaign);
-			if ($twitterUser) {
-				$this->_helper->FlashMessenger(array('info' => 'Authorized campaign with Twitter user @' . $twitterUser->screen_name));
-			}
-		}
-
-		$this->_helper->redirector->gotoSimple('index', 'index');
-	}
-
-	/**
-	 * Deauthorises the app against twitter
-	 * @permission twitter_deauth
-	 */
-	public function deauthAction() {
-		$this->view->campaign->token_id = null;
-		$this->view->campaign->save();
-		if (isset($this->_request->return_url)) {
-			$this->redirect($this->_request->return_url);
-		} else {
-			$this->_helper->redirector->gotoSimple('index', 'index');
-		}
-	}
-
 	public function countries() {
 		return array(
 			'AF' => 'Afghanistan',

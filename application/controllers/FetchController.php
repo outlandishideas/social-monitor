@@ -41,16 +41,6 @@ class FetchController extends BaseController
 
 		$this->touchLock();
 
-		//fetch klout for users in lists
-//		$this->log('Updating Klout scores');
-//		$this->fetchKlout(Model_TwitterUser::fetchNoKlout(), true);
-//
-//		$this->touchLock();
-//
-//		//fetch peerindex
-//		$this->log('Updating PeerIndex scores');
-//		$this->fetchPeerindex(Model_TwitterUser::fetchNoPeerindex(), true);
-
 		$this->log('Finished');
 		$this->releaseLock();
 	}
