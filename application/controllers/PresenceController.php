@@ -22,7 +22,7 @@ class PresenceController extends BaseController
 	{
 		$presence = Model_Presence::fetchById($this->_request->id);
 
-		$this->view->title = $presence->name ?: $presence->handle;
+		$this->view->title = $presence->label;
 		$this->view->presence = $presence;
 	}
 

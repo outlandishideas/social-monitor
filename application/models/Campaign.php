@@ -19,6 +19,17 @@ class Model_Campaign extends Model_Base {
 	    return $this->presences;
     }
 
+	function assignPresences($ids) {
+		$this->_db->prepare('DELETE FROM campaign_presences WHERE campaign_id = :cid')->execute(array(':cid'=>$this->id));
+		if ($ids) {
+			$toInsert = array();
+			foreach ($ids as $id) {
+				$toInsert[] = array('campaign_id'=>$this->id, 'presence_id'=>$id);
+			}
+			$this->insertData('campaign_presences', $toInsert);
+		}
+	}
+
 	function getFacebookPages() {
 		return array_filter($this->getPresences(), function($a) { return $a->type == 'facebook'; });
 	}

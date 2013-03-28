@@ -1,1 +1,53 @@
-<?php //todo
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="manage-campaign">
+
+	<fieldset class="inlineLabels">
+		<legend><?php echo $this->campaign->name; ?></legend>
+		<div class="ctrlHolder">
+			<label for="twitter">
+				Available twitter presences
+			</label>
+			<select id="twitter">
+				<option value="">-- Select --</option>
+				<?php foreach ($this->twitterPresences as $p) : ?>
+				<option value="<?php echo $p->id; ?>"><?php echo $p->label; ?></option>
+				<?php endforeach; ?>
+			</select>
+			<button type="button" class="add-presence">Add</button>
+		</div>
+		<div class="ctrlHolder">
+			<label for="facebook">
+				Available facebook presences
+			</label>
+			<select id="facebook">
+				<option value="">-- Select --</option>
+				<?php foreach ($this->facebookPresences as $p) : ?>
+				<option value="<?php echo $p->id; ?>"><?php echo $p->label; ?></option>
+				<?php endforeach; ?>
+			</select>
+			<button type="button" class="add-presence">Add</button>
+		</div>
+		<div class="ctrlHolder">
+			<label>
+				Currently assigned presences
+			</label>
+			<ul id="presences">
+				<?php foreach ($this->campaign->presences as $p) : ?>
+				<li>
+					<input type="hidden" value="<?php echo $p->id; ?>" name="presences[]" />
+					<button type="button" class="remove-presence">Remove</button>
+					<div class="presence <?php echo $p->type; ?>"><?php echo $p->label; ?></div>
+				</li>
+				<?php endforeach; ?>
+				<li class="none-found">
+					No presences assigned
+				</li>
+			</ul>
+		</div>
+	</fieldset>
+
+	<div class="buttonHolder">
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'campaign', 'action'=>'index'), null, true); ?>
+		<input type="submit" value="Save" class="primaryAction">
+	</div>
+</form>
+

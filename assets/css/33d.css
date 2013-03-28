@@ -812,3 +812,22 @@ table.dataTable.dtable p {
 #popup-holder .error-popup p {
 	margin: 0;
 }
+
+.presence {
+	padding-left: 24px;
+	background-position: left top;
+	background-repeat: no-repeat;
+	line-height: 20px;
+	display: inline-block;
+}
+
+.presence.twitter {
+	background-image: url(../img/twitter.png);
+}
+.presence.facebook {
+	background-image: url(../img/facebook.png);
+}
+
+.none-found {
+	display: none;
+}

@@ -133,10 +133,19 @@ class CampaignController extends BaseController
 	 * @permission manage_campaign
 	 */
 	public function manageAction() {
-		//todo
 		$campaign = Model_Campaign::fetchById($this->_request->id);
+		$this->validateData($campaign);
+
+		if ($this->_request->isPost()) {
+			$campaign->assignPresences($this->_request->presences);
+			$this->_helper->FlashMessenger(array('info' => 'Campaign presences updated'));
+			$this->_helper->redirector->gotoSimple('index');
+		}
+
 		$this->view->title = 'Manage Campaign Presences';
 		$this->view->campaign = $campaign;
+		$this->view->twitterPresences = Model_Presence::fetchAllTwitter();
+		$this->view->facebookPresences = Model_Presence::fetchAllFacebook();
 	}
 
 	/**

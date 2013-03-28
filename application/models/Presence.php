@@ -11,6 +11,18 @@ class Model_Presence extends Model_Base {
 	const TYPE_FACEBOOK = 'facebook';
 	const TYPE_TWITTER = 'twitter';
 
+	public static function fetchAllTwitter() {
+		return self::fetchAll('type = :type', array(':type'=>self::TYPE_TWITTER));
+	}
+
+	public static function fetchAllFacebook() {
+		return self::fetchAll('type = :type', array(':type'=>self::TYPE_FACEBOOK));
+	}
+
+	public function getLabel() {
+		return $this->name ?: $this->handle;
+	}
+
 	public function updateInfo() {
 		switch($this->type) {
 			case self::TYPE_FACEBOOK:

@@ -76,9 +76,14 @@ $.extend(app, {
 				</table>\
 				<% } else { %>\
 				<p>No recent requests so rate limits unknown.</p>\
-				<% } %>'
-
-}
+				<% } %>',
+		presence:
+			'<li>\
+				<input type="hidden" value="<%=id%>" name="presences[]" />\
+				<button type="button" class="remove-presence">Remove</button>\
+				<div class="presence <%=type%>"><%=label%></div>\
+			</li>'
+	}
 });
 
 /**
@@ -260,35 +265,46 @@ app.init = {
 		'#readonlyLocationMap': function($item) {
 			app.mapping.initialise($item, false);
 		},
-		'#preset-regions': function($select) {
-			$select.on('change', function() {
-				var val = $select.val();
-				if (val) {
-					app.mapping.updateFromPreset($.parseJSON(val).areas);
-				}
-			});
-		},
-		'#save-new-region': function($item) {
-			$item.on('click', function(e) {
-				var $link = $(this);
-				e.preventDefault();
-				var url = $(this).data('url');
-				var rawData = $('form').serializeArray();
-				var data = [
-					{name: 'name', value: $('#new-region-name').val()}
-				];
-				for (var i=0; i<rawData.length; i++) {
-					var field = rawData[i];
-					if ($.inArray(field.name, ['lat[]', 'lon[]', 'rad[]']) != -1) {
-						data.push(field);
+		'#manage-campaign': function($form) {
+			var canAdd = function(id) {
+				var currentValues = $form.serializeArray();
+				for (var i=0; i<currentValues.length; i++) {
+					if (currentValues[i].name == 'presences[]' && currentValues[i].value == id) {
+						return false;
 					}
 				}
-				app.api.post(url, data).done(function() {
-					var $message = $link.closest('li').find('.ajax-message');
-					$message.show().text('New region saved');
-					setTimeout(function() { $message.fadeOut(); }, 5000);
+				return true;
+			};
+			var updateNoneFound = function() {
+				$form.find('.none-found').toggle($form.find('.presence').length == 0);
+			};
+			var updateAddButton = function() {
+				$(this).closest('.ctrlHolder').find('.add-presence').toggle($(this).val() != '' && canAdd($(this).val()));
+			};
+			var updateAddButtons = function() {
+				$form.find('select').each(updateAddButton);
+			};
+
+			updateNoneFound();
+			updateAddButtons();
+
+			$form
+				.on('change', 'select', updateAddButton)
+				.on('click', '.remove-presence', function() {
+					$(this).closest('li').remove();
+					updateNoneFound();
+					updateAddButtons();
+				})
+				.on('click', '.add-presence', function() {
+					var $selected = $(this).closest('.ctrlHolder').find('select option:selected');
+					var id = $selected.val();
+					if (id != '' && canAdd(id)) {
+						$(_.template(app.templates.presence, {id: id, type: $selected.closest('select').attr('id'), label: $selected.text() }))
+							.appendTo($('#presences'));
+						updateNoneFound();
+						updateAddButtons();
+					}
 				});
-			});
 		}
 	},
 
