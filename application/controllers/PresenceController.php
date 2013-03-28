@@ -68,6 +68,7 @@ class PresenceController extends BaseController
 			if (!$errorMessages) {
 				try {
 					$presence->updateInfo();
+					$presence->last_updated = gmdate('Y-m-d H:i:s');
 					$presence->save();
 
 					$this->_helper->FlashMessenger(array('info' => 'Presence saved'));
@@ -105,6 +106,7 @@ class PresenceController extends BaseController
 		$this->validateData($presence);
 
 		$presence->updateInfo();
+		$presence->last_updated = gmdate('Y-m-d H:i:s');
 		$presence->save();
 
 		$this->_helper->FlashMessenger(array('info'=>'Updated presence info'));

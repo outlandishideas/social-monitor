@@ -3,8 +3,6 @@
 require_once APP_ROOT_PATH.'/lib/twitteroauth/OAuth.php';
 require_once APP_ROOT_PATH.'/lib/twitteroauth/twitteroauth.php';
 
-define('TWITTER_SEARCH_ENDPOINT', 'http://search.twitter.com/search.json');
-
 class Model_TwitterToken extends Model_Base {
 	protected static $tableName = 'twitter_tokens';
 

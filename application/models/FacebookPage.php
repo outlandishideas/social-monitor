@@ -57,7 +57,7 @@ class Model_FacebookPage extends Model_SocialApiBase {
 		}
 
 		$localTimeZone = new DateTimeZone($this->campaign->timezone);
-		$fetchCount = new FetchCount(0, 0, 'post');
+		$fetchCount = new Util_FetchCount(0, 0, 'post');
 
 		//repeat queries for each time frame
 		foreach ($updatedClauses as $updatedClause) {

@@ -35,7 +35,7 @@
             <?php
             $links = $this->gatekeeper()->filterAll(array(
                 '<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$campaign->id),
-                '<a href="%url%">Update info</a>' => array('action'=>'update', 'id'=>$campaign->id),
+//                '<a href="%url%">Update info</a>' => array('action'=>'update', 'id'=>$campaign->id), // todo: this is now done in the fetch controller. is the link still needed?
                 '<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$campaign->id)
             ));
             echo implode(' | ', $links);
