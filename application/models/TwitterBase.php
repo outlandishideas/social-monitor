@@ -60,7 +60,7 @@ abstract class Model_TwitterBase extends Model_SocialApiBase {
 	protected abstract function getTweetListFromApiResult($apiResult);
 
 	protected function createTweetInsertData($tweet) {
-		$parsedTweet = Model_TwitterTweet::parseTweet($tweet);
+		$parsedTweet = Util_Twitter::parseTweet($tweet);
 		return array(
 			'tweet_id' => $tweet->id_str,
 			'parent_type' => $this->type,
@@ -108,11 +108,11 @@ abstract class Model_TwitterBase extends Model_SocialApiBase {
 	 * @param $token
 	 * @param null $minTweetId
 	 * @param null $maxTweetId
-	 * @return FetchCount
+	 * @return Util_FetchCount
 	 */
 	protected function fetchAllTweets($token, $minTweetId = null, $maxTweetId = null) {
 //		echo $minTweetId, ', ', $maxTweetId, "\n";
-		$counts = new FetchCount(0, 0);
+		$counts = new Util_FetchCount(0, 0);
 		$url = $this->fetchUrl;
 		$argsArray = $this->fetchArgsArray;
 		foreach ($argsArray as $args) {
@@ -210,7 +210,7 @@ abstract class Model_TwitterBase extends Model_SocialApiBase {
 		$statement->execute(array(':type' => $this->type, ':id' => $this->id));
 		$oldestTweet = $statement->fetch(PDO::FETCH_OBJ);
 
-		$counts = new FetchCount(0, 0);
+		$counts = new Util_FetchCount(0, 0);
 
 		foreach ($argsArray as $args) {
 			if ($oldestTweet) {
@@ -271,7 +271,7 @@ abstract class Model_TwitterBase extends Model_SocialApiBase {
 
 		}
 
-		return new FetchCount($tweetCount, 0);
+		return new Util_FetchCount($tweetCount, 0);
 	}
 
 

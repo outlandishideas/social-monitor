@@ -13,11 +13,50 @@ class FetchController extends BaseController
 		$this->acquireLock();
 		set_time_limit($this->config->app->fetch_time_limit);
 
-		//fetch lists and searches for each campaign using appropriate tokens
-		$campaigns = Model_Campaign::fetchAll();
+		/** @var $presences Model_Presence[] */
+		$presences = Model_Presence::fetchAll();
+		shuffle($presences);
+		$infoInterval = 1*60*60;// tmp
+//		$infoInterval = 4*60*60;// update info every 4 hours
 
-		//randomise order to avoid one campaign from blocking others
-		shuffle($campaigns);
+		/**
+		 * @var $db PDO
+		 */
+		$db = Zend_Registry::get('db');
+		$infoStmt = $db->prepare('INSERT INTO presence_history (presence_id, datetime, type, value) VALUES (:id, :datetime, :type, :value)');
+		foreach ($presences as $t) {
+			$this->log('Updating presence (' . $t->type . '): ' . $t->handle);
+
+			try {
+				$this->log($t->updateStatuses());
+				$t->last_fetched = gmdate('Y-m-d H:i:s');
+			} catch (Exception $e) {
+				$this->log($e->getMessage());
+			}
+
+			if (time() - strtotime($t->last_updated) > $infoInterval) {
+				try {
+					$t->updateInfo();
+					$t->last_updated = gmdate('Y-m-d H:i:s');
+					$infoStmt->execute(array(
+						':id'       => $t->id,
+						':datetime' => gmdate('Y-m-d H:i:s'),
+						':type'     => 'popularity',
+						':value'    => $t->popularity
+					));
+					$this->log('Updated info');
+				} catch (Exception $e) {
+					$this->log($e->getMessage());
+				}
+			}
+
+			$t->save();
+		}
+//		//fetch lists and searches for each campaign using appropriate tokens
+//		$campaigns = Model_Campaign::fetchAll();
+//
+//		//randomise order to avoid one campaign from blocking others
+//		shuffle($campaigns);
 
 //		$lastToken = null;
 //		foreach ($campaigns as $campaign) {
@@ -49,31 +88,31 @@ class FetchController extends BaseController
 		/**
 		 * @var $pages Model_FacebookPage[]
 		 */
-		$pages = Model_FacebookPage::fetchAll();
-		foreach ($pages as $page) {
-			try {
-				$this->log("Fetching page '{$page->name}'");
-				try {
-					$page->updateInfo();
-					$counts = $page->fetchPosts();
-					$this->log($counts);
-				} catch (FacebookApiException $e) {
-					if ($e->getCode() == 28) {
-						$this->log("Request timed out");
-						continue;
-					}
-				}
-
-				$page->posts_last_24_hours = $page->countPostsSince(gmdate('Y-m-d H:i:s', time() - 3600 * 24));
-				$page->posts_this_month = $page->countPostsSince(gmdate('Y-m-d H:i:s', gmmktime(0, 0, 0, date('m'), 1)));
-				$page->last_fetched = gmdate('Y-m-d H:i:s');
-				$page->save();
-			} catch (RuntimeException $ex) {
-				$this->log('Failed to fetch page: ' . $ex->getMessage());
-			}
-
-			$this->touchLock();
-		}
+//		$pages = Model_FacebookPage::fetchAll();
+//		foreach ($pages as $page) {
+//			try {
+//				$this->log("Fetching page '{$page->name}'");
+//				try {
+//					$page->updateInfo();
+//					$counts = $page->fetchPosts();
+//					$this->log($counts);
+//				} catch (FacebookApiException $e) {
+//					if ($e->getCode() == 28) {
+//						$this->log("Request timed out");
+//						continue;
+//					}
+//				}
+//
+//				$page->posts_last_24_hours = $page->countPostsSince(gmdate('Y-m-d H:i:s', time() - 3600 * 24));
+//				$page->posts_this_month = $page->countPostsSince(gmdate('Y-m-d H:i:s', gmmktime(0, 0, 0, date('m'), 1)));
+//				$page->last_fetched = gmdate('Y-m-d H:i:s');
+//				$page->save();
+//			} catch (RuntimeException $ex) {
+//				$this->log('Failed to fetch page: ' . $ex->getMessage());
+//			}
+//
+//			$this->touchLock();
+//		}
 	}
 
 	/**

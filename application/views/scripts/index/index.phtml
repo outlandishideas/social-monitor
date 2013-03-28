@@ -1,17 +1,20 @@
-<form>
-    <select id="select-kpi" onchange="drawRegionsMap()">
-        <option value="kpi_1">KPI 1</option>
-        <option value="kpi_2">KPI 2</option>
-        <option value="kpi_3">KPI 3</option>
-    </select>
-</form>
+<?php
+    $links = $this->gatekeeper()->filterAll(array(
+        '<a class="button add" href="%url%">Add new Country</a>' => array('action' => 'new', 'type'=>'campaign')
+    ));
+?>
 
-<div id="geo-map" style="height:800px; width: 100%">
-</div>
+<div id="geo-map"></div>
 
-<div id="selected-country" class="key">
-    <h2>Your Selected Country</h2>
-    <ul></ul>
+<div id="overview"></div>
+
+<div>
+    <h2>Countries</h2>
+    <?php if ($links) : ?>
+    <p>
+        <?php echo implode('', $links); ?>
+    </p>
+    <?php endif; ?>
 </div>
 
 

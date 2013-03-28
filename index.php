@@ -42,6 +42,7 @@ $resourceLoader = new Zend_Application_Module_Autoloader(array(
 	'basePath'  => APPLICATION_PATH
 ));
 $resourceLoader->addResourceType('exception', 'exceptions/', 'Exception');
+$resourceLoader->addResourceType('util', 'util/', 'Util');
 
 //load config
 if (!file_exists(APPLICATION_PATH . '/configs/config.yaml')) {
