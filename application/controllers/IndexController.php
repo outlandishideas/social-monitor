@@ -5,7 +5,19 @@ class IndexController extends BaseController
 	public function indexAction() {
 		$this->view->title = 'Home';
 		$this->view->campaigns = Model_Campaign::fetchAll();
-	}
+        $this->view->jsonCountries = $this->campaignsToJson();
+    }
+
+    public function campaignsToJson(){
+        $campaigns = Model_Campaign::fetchAll();
+        $json = array();
+        foreach($campaigns as $campaign){
+            $kpis = $campaign->getKpis();
+            if(!is_array($kpis)) $kpis = array('kpi_1' => $kpis);
+            $json[] = array('name' =>$campaign->country, 'kpis' => $kpis);
+        }
+        return json_encode($json);
+    }
 
 	public function dateRangeAction() {
 		$dateRange = $this->_request->dateRange;

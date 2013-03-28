@@ -37,4 +37,12 @@ class Model_Campaign extends Model_Base {
 	function getTwitterAccounts() {
 		return array_filter($this->getPresences(), function($a) { return $a->type == 'twitter'; });
 	}
+
+    function getKpis($kpi = null){
+        if($kpi){
+            return rand(0,1000);
+        } else {
+            return array('kpi_1'=> rand(0,1000), 'kpi_2' => rand(0,1000), 'kpi_3' => rand(0,1000));
+        }
+    }
 }

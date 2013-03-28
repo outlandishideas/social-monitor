@@ -166,6 +166,12 @@ abstract class Model_Base
 		}
 		return self::fetchBy('id', $id);
 	}
+    public static function fetchByCountryCode($code) {
+        if (!is_scalar($code)) {
+            return null;
+        }
+        return self::fetchBy('country', $code);
+    }
 
 	/**
 	 * @param $col

@@ -19,10 +19,24 @@ class CampaignController extends BaseController
      */
     public function viewAction()
     {
-        $campaign = Model_Campaign::fetchById($this->_request->id);
+        if($this->_request->country) {
+            $campaign = Model_Campaign::fetchByCountryCode($this->_request->country);
+        } else {
+            $campaign = Model_Campaign::fetchById($this->_request->id);
+        }
+
 
         $this->view->title = $campaign->name;
         $this->view->campaign = $campaign;
+
+        $data = array(
+            'name' => $campaign->name,
+            'audience' => number_format($campaign->audience),
+            'pages' => count($campaign->getFacebookPages()),
+            'handles' => count($campaign->getTwitterAccounts())
+        );
+
+        $this->apiSuccess($data);
     }
 
 	/**
