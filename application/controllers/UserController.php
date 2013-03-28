@@ -34,15 +34,6 @@ class UserController extends BaseController
 			$result = $this->auth->authenticate($authAdapter);
 			
 			if ($result->isValid())	{
-				// (in)validate the user's token, and update the last sign-in date
-				$user = Model_User::fetchById($this->auth->getIdentity());
-				$token = $user->getTwitterToken();
-				try {
-					$token->apiRequest('account/verify_credentials');
-				} catch (Exception_TwitterApi $ex) {
-					$user->token_id = null;
-					$this->_helper->FlashMessenger(array('error' => 'Twitter authorisation expired. Please sign in again.'));
-				}
 				$user->last_sign_in = gmdate('Y-m-d H:i:s');
 				$user->save();
 				

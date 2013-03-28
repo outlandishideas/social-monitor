@@ -54,10 +54,6 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 		return new Zend_Auth_Result($code, $id);
 	}
 
-	public function getTwitterToken() {
-		return $this->twitterToken = Model_TwitterToken::fetchById($this->token_id);
-	}
-
 	/**
 	 * Returns an encoded version of the username
 	 */
