@@ -30,15 +30,15 @@ class FetchController extends BaseController
 			if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
 				try {
 					$this->log('Updating info (' . $p->type . '): ' . $p->handle);
-//					$p->updateInfo();
-//					$p->last_updated = gmdate('Y-m-d H:i:s');
-//					$p->save();
-//					$infoStmt->execute(array(
-//						':id'       => $p->id,
-//						':datetime' => gmdate('Y-m-d H:i:s'),
-//						':type'     => 'popularity',
-//						':value'    => $p->popularity
-//					));
+					$p->updateInfo();
+					$p->last_updated = gmdate('Y-m-d H:i:s');
+					$p->save();
+					$infoStmt->execute(array(
+						':id'       => $p->id,
+						':datetime' => gmdate('Y-m-d H:i:s'),
+						':type'     => 'popularity',
+						':value'    => $p->popularity
+					));
 				} catch (Exception_TwitterNotFound $e) {
 					$this->log($e->getMessage());
 					// save the fact that the user doesn't exist, so we don't try again for a while
@@ -58,14 +58,14 @@ class FetchController extends BaseController
 		usort($presences, function($a, $b) { return strcmp($a->last_fetched ?: '000000', $b->last_fetched ?: '000000'); });
 		foreach ($presences as $p) {
 			$this->log('Fetching ' . ($p->type == Model_Presence::TYPE_TWITTER ? 'tweets' : 'posts') . ': ' . $p->handle);
-
-			try {
-				$this->log($p->updateStatuses());
-				$p->last_fetched = gmdate('Y-m-d H:i:s');
-				$p->save();
-			} catch (Exception $e) {
-				$this->log($e->getMessage());
-			}
+			usleep(10000);
+//			try {
+//				$this->log($p->updateStatuses());
+//				$p->last_fetched = gmdate('Y-m-d H:i:s');
+//				$p->save();
+//			} catch (Exception $e) {
+//				$this->log($e->getMessage());
+//			}
 		}
 
 //		//fetch lists and searches for each campaign using appropriate tokens

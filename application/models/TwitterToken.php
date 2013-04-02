@@ -19,7 +19,7 @@ class Model_TwitterToken extends Model_Base {
 	}
 
 	public function apiRequest($path, $args = array()) {
-		if (!empty($this->rateLimit[$path]['remaining'])) {
+		if (!empty($this->rateLimits[$path]) && $this->rateLimits[$path]['remaining'] == '0') {
 			throw new Exception_TwitterRateLimit('Twitter API Error: Rate limit exceeded', Model_TwitterStatusCodes::TOO_MANY_REQUESTS, $path, $this->rateLimit[$path]);
 		}
 
