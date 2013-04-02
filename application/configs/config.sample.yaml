@@ -11,10 +11,12 @@ live:
     consumer_secret: ***REMOVED***
     access_token: ***REMOVED***
     access_token_secret: ***REMOVED***
+    fetch_per_page: 200
     cache_user_data: 7
   facebook:
     appId: ***REMOVED***
     secret: ***REMOVED***
+    fetch_per_page: 200
     cache_user_data: 7
   app:
 # e.g. 7 Feb 2012 for PHP date()
