@@ -42,7 +42,6 @@ class Util_Facebook {
 //		));
 		$max = time();
 		$posts = array();
-		$repeat = false;
 		do {
 			$clauses = array('source_id = ' . $pageId);
 			if ($since) {
@@ -68,6 +67,7 @@ class Util_Facebook {
 				}
 			} catch (Exception_FacebookNotFound $e) {
 				//ignore not-found exceptions
+				$repeat = false;
 			}
 		} while ($repeat);
 
