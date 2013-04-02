@@ -1,6 +1,0 @@
-<p>Select a campaign</p>
-<ul>
-	<?php foreach ($this->user->campaigns as $campaign) : ?>
-	<li><a href="<?php echo $this->url(array('id'=>$campaign->id)); ?>"><?php echo $campaign->name; ?></a></li>
-	<?php endforeach; ?>
-</ul>

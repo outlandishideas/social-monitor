@@ -6,11 +6,11 @@ class PresenceController extends BaseController
 	public function indexAction()
 	{
 		$this->view->title = 'All Presences';
-		if ($this->_request->campaign) {
-			$filter = 'campaign_id='. $this->_request->campaign;
-		} else {
+//		if ($this->_request->campaign) {
+//			$filter = 'campaign_id='. $this->_request->campaign;
+//		} else {
 			$filter = null;
-		}
+//		}
 		$this->view->presences = Model_Presence::fetchAll($filter);
 	}
 

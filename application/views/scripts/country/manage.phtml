@@ -1,7 +1,7 @@
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="manage-campaign">
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="manage-country">
 
 	<fieldset class="inlineLabels">
-		<legend><?php echo $this->campaign->name; ?></legend>
+		<legend><?php echo $this->country->display_name; ?></legend>
 		<div class="ctrlHolder">
 			<label for="twitter">
 				Available twitter presences
@@ -31,7 +31,7 @@
 				Currently assigned presences
 			</label>
 			<ul id="presences">
-				<?php foreach ($this->campaign->presences as $p) : ?>
+				<?php foreach ($this->country->presences as $p) : ?>
 				<li>
 					<input type="hidden" value="<?php echo $p->id; ?>" name="presences[]" />
 					<button type="button" class="remove-presence">Remove</button>
@@ -46,7 +46,7 @@
 	</fieldset>
 
 	<div class="buttonHolder">
-		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'campaign', 'action'=>'index'), null, true); ?>
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'country', 'action'=>'index'), null, true); ?>
 		<input type="submit" value="Save" class="primaryAction">
 	</div>
 </form>

@@ -1,9 +1,12 @@
 home:
   label: Home
   controller: index
-campaign:
-  label: Campaigns
-  controller: campaign
+#campaign:
+#  label: Campaigns
+#  controller: campaign
+country:
+  label: Countries
+  controller: country
 presence:
   label: Presences
   controller: presence

@@ -245,7 +245,7 @@ app.init = {
 		'#readonlyLocationMap': function($item) {
 			app.mapping.initialise($item, false);
 		},
-		'#manage-campaign': function($form) {
+		'#manage-country': function($form) {
 			var canAdd = function(id) {
 				var currentValues = $form.serializeArray();
 				for (var i=0; i<currentValues.length; i++) {
@@ -285,6 +285,17 @@ app.init = {
 						updateAddButtons();
 					}
 				});
+		},
+		'#edit-country': function($form) {
+			$form.on('focus', '#display_name', function() {
+				if (!$(this).val()) {
+					var $select = $form.find('select');
+					if ($select.val()) {
+						$(this).val($select.find('option:selected').text());
+						$(this).select();
+					}
+				}
+			});
 		}
 	},
 

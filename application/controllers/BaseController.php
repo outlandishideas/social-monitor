@@ -135,8 +135,7 @@ class BaseController extends Zend_Controller_Action {
 	}
 
 	/**
-	 * If the item is null or from the wrong campaign, this will trigger a
-	 * redirect (i.e. the action is exited) and an error message
+	 * If the item is null, this will trigger a redirect (i.e. the action is exited) and an error message
 	 * @param $item
 	 * @param null $type
 	 * @param null $action

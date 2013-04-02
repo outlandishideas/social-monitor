@@ -1,0 +1,37 @@
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-country">
+
+	<fieldset class="inlineLabels">
+		<legend>Country details</legend>
+		<div class="ctrlHolder">
+			<label for="country" class="requiredField">
+				Country<span class="asteriskField">*</span>
+			</label>
+			<select name="country" id="country" class="selectInput">
+				<option value="">--Select--</option>
+				<?php foreach ($this->countryCodes as $code => $name) : ?>
+				<option value="<?php echo $code; ?>" <?php if ($this->editingCountry->country == $code) echo 'selected'; ?>><?php echo $name; ?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<div class="ctrlHolder">
+			<label for="display_name" class="requiredField">
+				Display name<span class="asteriskField">*</span>
+			</label>
+			<input name="display_name" value="<?php echo htmlspecialchars($this->editingCountry->display_name); ?>" class="textinput"
+			       maxlength="20" type="text" id="display_name">
+		</div>
+		<div class="ctrlHolder">
+			<label for="audience">
+				Audience size</span>
+			</label>
+			<input name="audience" value="<?php echo htmlspecialchars($this->editingCountry->audience); ?>" class="textinput"
+			       maxlength="20" type="text" id="audience">
+		</div>
+	</fieldset>
+
+	<div class="buttonHolder">
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'country', 'action'=>'index'), null, true); ?>
+		<input type="submit" value="Save" class="primaryAction">
+	</div>
+</form>
+

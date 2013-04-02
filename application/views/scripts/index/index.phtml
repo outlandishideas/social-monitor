@@ -25,18 +25,18 @@
         <th>Pages</th>
         <th></th>
     </tr>
-    <?php foreach ($this->campaigns as $campaign) : ?>
+    <?php foreach ($this->countries as $country) : ?>
     <tr>
-        <td><?php echo $this->gatekeeper()->filter('<a href="%url%">' . $campaign->name . '</a>', array('action'=>'view', 'id'=>$campaign->id)); ?></td>
-        <td><?php echo number_format($campaign->statusCountThisMonth); ?></td>
-        <td><?php echo count($campaign->FacebookPages); ?></td>
+        <td><?php echo $this->gatekeeper()->filter('<a href="%url%">' . $country->display_name . '</a>', array('action'=>'view', 'id'=>$country->id)); ?></td>
+        <td><?php echo number_format($country->statusCountThisMonth); ?></td>
+        <td><?php echo count($country->FacebookPages); ?></td>
         <td>0</td>
         <td>
             <?php
             $links = $this->gatekeeper()->filterAll(array(
-                '<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$campaign->id),
-//                '<a href="%url%">Update info</a>' => array('action'=>'update', 'id'=>$campaign->id), // todo: this is now done in the fetch controller. is the link still needed?
-                '<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$campaign->id)
+                '<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$country->id),
+//                '<a href="%url%">Update info</a>' => array('action'=>'update', 'id'=>$country->id), // todo: this is now done in the fetch controller. is the link still needed?
+                '<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$country->id)
             ));
             echo implode(' | ', $links);
             ?>
