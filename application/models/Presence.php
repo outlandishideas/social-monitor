@@ -58,9 +58,28 @@ class Model_Presence extends Model_Base {
 		switch($this->type) {
 			case self::TYPE_FACEBOOK:
 				$fetchCount->type = 'post';
-				$posts = Util_Facebook::pagePosts($this->uid);
-//				print_r($posts);
-				//todo: save posts to database
+				$stmt = $this->_db->prepare('SELECT created_time FROM facebook_stream WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1');
+				$stmt->execute(array(':id'=>$this->id));
+				$since = $stmt->fetchColumn();
+				if ($since) {
+					$since = strtotime($since);
+				}
+				$posts = Util_Facebook::pagePosts($this->uid, $since);
+				$toInsert = array();
+				while ($posts) {
+					$post = array_shift($posts);
+					$toInsert[$post->post_id] = array(
+						'post_id' => $post->post_id,
+						'presence_id' => $this->id,
+						'message' => $post->message,
+						'created_time' => gmdate('Y-m-d H:i:s', $post->created_time),
+						'actor_id' => $post->actor_id,
+						'permalink' => $post->permalink,
+						'type' => $post->type
+					);
+				}
+				$fetchCount->fetched += count($toInsert);
+				$fetchCount->added += $this->insertData('facebook_stream', $toInsert);
 				break;
 			case self::TYPE_TWITTER:
 				$fetchCount->type = 'tweet';
@@ -68,11 +87,11 @@ class Model_Presence extends Model_Base {
 				$stmt->execute(array(':id'=>$this->id));
 				$lastTweetId = $stmt->fetchColumn();
 				$tweets = Util_Twitter::userTweets($this->uid, $lastTweetId);
-				$tweetData = array();
+				$toInsert = array();
 				while ($tweets) {
 					$tweet = array_shift($tweets);
 					$parsedTweet = Util_Twitter::parseTweet($tweet);
-					$tweetData[$tweet->id_str] = array(
+					$toInsert[$tweet->id_str] = array(
 						'tweet_id' => $tweet->id_str,
 						'presence_id' => $this->id,
 						'text_expanded' => $parsedTweet['text_expanded'],
@@ -83,10 +102,17 @@ class Model_Presence extends Model_Base {
 						'in_reply_to_status_uid' => $tweet->in_reply_to_status_id_str
 					);
 				}
-				$fetchCount->fetched += count($tweetData);
-				$fetchCount->added += $this->insertData('twitter_tweets', $tweetData);
+				$fetchCount->fetched += count($toInsert);
+				$fetchCount->added += $this->insertData('twitter_tweets', $toInsert);
 				break;
 		}
 		return $fetchCount;
 	}
+
+	public function delete() {
+		$this->_db->prepare('DELETE FROM campaign_presences WHERE presence_id = :pid')->execute(array(':pid'=>$this->id));
+		parent::delete();
+	}
+
+
 }

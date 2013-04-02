@@ -50,20 +50,22 @@ class Util_Facebook {
 			if ($max) {
 				$clauses[] = 'created_time < ' . $max;
 			}
-			$fql = 'SELECT ' . implode(',', $fields) . ' FROM stream';
-			$fql .= ' WHERE ' . implode(' AND ', $clauses);
-			$fql .= ' ORDER BY created_time ASC LIMIT ' . $config->facebook->fetch_per_page;
+			$fql = 'SELECT ' . implode(',', $fields) . '
+				FROM stream
+				WHERE ' . implode(' AND ', $clauses) . '
+				ORDER BY created_time ASC
+				LIMIT ' . $config->facebook->fetch_per_page;
 			$newPosts = self::query($fql);
+			foreach ($newPosts as $i=>$post) {
+				$newPosts[$i] = (object)$post;
+			}
 			$posts = array_merge($posts, $newPosts);
 			$repeat = count($newPosts) > 0;
 			if ($repeat) {
-				$since = $newPosts[count($newPosts)-1]['created_time'];
+				$since = $newPosts[count($newPosts)-1]->created_time;
 			}
 		} while ($repeat);
 
-//		foreach ($posts as $i=>$item) {
-//			$posts[$i]['created_time'] = date('Y-m-d H:i:s', $posts[$i]['created_time']);
-//		}
 		return $posts;
 	}
 

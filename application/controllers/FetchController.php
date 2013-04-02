@@ -16,7 +16,7 @@ class FetchController extends BaseController
 		/** @var $presences Model_Presence[] */
 		$presences = Model_Presence::fetchAll();
 		shuffle($presences);
-		$infoInterval = 1*60*60;// tmp
+		$infoInterval = 0.1*60*60;// tmp
 //		$infoInterval = 4*60*60;// update info every 4 hours
 
 		/**
@@ -24,25 +24,25 @@ class FetchController extends BaseController
 		 */
 		$db = Zend_Registry::get('db');
 		$infoStmt = $db->prepare('INSERT INTO presence_history (presence_id, datetime, type, value) VALUES (:id, :datetime, :type, :value)');
-		foreach ($presences as $t) {
-			$this->log('Updating presence (' . $t->type . '): ' . $t->handle);
+		foreach ($presences as $p) {
+			$this->log('Updating presence (' . $p->type . '): ' . $p->handle);
 
 			try {
-				$this->log($t->updateStatuses());
-				$t->last_fetched = gmdate('Y-m-d H:i:s');
+				$this->log($p->updateStatuses());
+				$p->last_fetched = gmdate('Y-m-d H:i:s');
 			} catch (Exception $e) {
 				$this->log($e->getMessage());
 			}
 
-			if (time() - strtotime($t->last_updated) > $infoInterval) {
+			if (time() - strtotime($p->last_updated) > $infoInterval) {
 				try {
-					$t->updateInfo();
-					$t->last_updated = gmdate('Y-m-d H:i:s');
+					$p->updateInfo();
+					$p->last_updated = gmdate('Y-m-d H:i:s');
 					$infoStmt->execute(array(
-						':id'       => $t->id,
+						':id'       => $p->id,
 						':datetime' => gmdate('Y-m-d H:i:s'),
 						':type'     => 'popularity',
-						':value'    => $t->popularity
+						':value'    => $p->popularity
 					));
 					$this->log('Updated info');
 				} catch (Exception $e) {
@@ -50,7 +50,7 @@ class FetchController extends BaseController
 				}
 			}
 
-			$t->save();
+			$p->save();
 		}
 //		//fetch lists and searches for each campaign using appropriate tokens
 //		$campaigns = Model_Campaign::fetchAll();

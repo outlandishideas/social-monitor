@@ -4,7 +4,13 @@ class Model_Campaign extends Model_Base {
 	protected static $tableName = 'campaigns';
 	protected static $sortColumn = 'display_name';
 
-    function getPresences() {
+	public function delete() {
+		$this->_db->prepare('DELETE FROM campaign_presences WHERE campaign_id = :cid')->execute(array(':cid'=>$this->id));
+		parent::delete();
+	}
+
+
+	function getPresences() {
 	    if (!isset($this->presences)) {
 		    $statement = $this->_db->prepare('SELECT presence_id FROM campaign_presences WHERE campaign_id = :cid');
 		    $statement->execute(array(':cid'=>$this->id));
