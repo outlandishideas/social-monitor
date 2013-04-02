@@ -34,6 +34,7 @@ class UserController extends BaseController
 			$result = $this->auth->authenticate($authAdapter);
 			
 			if ($result->isValid())	{
+				$user = Model_User::fetchById($this->auth->getIdentity());
 				$user->last_sign_in = gmdate('Y-m-d H:i:s');
 				$user->save();
 				
