@@ -72,27 +72,37 @@ class Util_Facebook {
 	/**
 	 * Query Facebook API
 	 * @param $fql string FQL query string
+	 * @throws Exception
 	 * @return mixed
 	 */
 	public static function query($fql) {
-		$ret = self::fb()->api( array(
-			'method' => 'fql.query',
-			'query' => $fql,
-		));
-		return $ret;
+		try {
+			$ret = self::fb()->api( array(
+				'method' => 'fql.query',
+				'query' => $fql,
+			));
+			return $ret;
+		} catch (Exception $e) {
+			throw new Exception('Failed to execute FQL: ' . $fql, $e->getCode(), $e);
+		}
 	}
 
 	/**
 	 * Query Facebook API
 	 * @param $queries array FQL query strings
+	 * @throws Exception
 	 * @return mixed
 	 */
 	public static function multiquery($queries) {
-		$ret = self::fb()->api( array(
-			'method' => 'fql.multiquery',
-			'queries' => $queries,
-		));
-		return $ret;
+		try {
+			$ret = self::fb()->api( array(
+				'method' => 'fql.multiquery',
+				'queries' => $queries,
+			));
+			return $ret;
+		} catch (Exception $e) {
+			throw new Exception('Failed to execute multiquery', $e->getCode(), $e);
+		}
 	}
 
 }
