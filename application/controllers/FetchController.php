@@ -30,15 +30,15 @@ class FetchController extends BaseController
 			if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
 				try {
 					$this->log('Updating info (' . $p->type . '): ' . $p->handle);
-					$p->updateInfo();
-					$p->last_updated = gmdate('Y-m-d H:i:s');
-					$p->save();
-					$infoStmt->execute(array(
-						':id'       => $p->id,
-						':datetime' => gmdate('Y-m-d H:i:s'),
-						':type'     => 'popularity',
-						':value'    => $p->popularity
-					));
+//					$p->updateInfo();
+//					$p->last_updated = gmdate('Y-m-d H:i:s');
+//					$p->save();
+//					$infoStmt->execute(array(
+//						':id'       => $p->id,
+//						':datetime' => gmdate('Y-m-d H:i:s'),
+//						':type'     => 'popularity',
+//						':value'    => $p->popularity
+//					));
 				} catch (Exception_TwitterNotFound $e) {
 					$this->log($e->getMessage());
 					// save the fact that the user doesn't exist, so we don't try again for a while
@@ -207,8 +207,11 @@ class FetchController extends BaseController
 		$log = date('H:i:s') . " $message\n";
 
 		if (!$this->_request->getParam('silent') || $ignoreSilent) {
+			ob_start();
 			echo $log;
-			ob_flush();
+			while (ob_get_level()) {
+				ob_end_flush();
+			}
 			flush();
 		}
 
