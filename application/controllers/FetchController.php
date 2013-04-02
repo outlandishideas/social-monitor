@@ -22,8 +22,7 @@ class FetchController extends BaseController
 		$db = Zend_Registry::get('db');
 		$infoStmt = $db->prepare('INSERT INTO presence_history (presence_id, datetime, type, value) VALUES (:id, :datetime, :type, :value)');
 
-		$infoInterval = 1*60*60;// tmp
-//		$infoInterval = 4*60*60;// update info every 4 hours
+		$infoInterval = ($this->config->presence->cache_data_hours ?: 4) * 3600;
 		usort($presences, function($a, $b) { return strcmp($a->last_updated ?: '000000', $b->last_updated ?: '000000'); });
 		foreach ($presences as $p) {
 			$now = time();
