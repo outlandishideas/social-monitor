@@ -24,9 +24,10 @@ class Model_Presence extends Model_Base {
 	public function updateInfo() {
 		switch($this->type) {
 			case self::TYPE_FACEBOOK:
-				$data = Util_Facebook::pageInfo($this->handle);
-				if (!$data) {
-					throw new RuntimeException('Facebook page not found: ' . $this->handle);
+				try {
+					$data = Util_Facebook::pageInfo($this->handle);
+				} catch (Exception_FacebookNotFound $e) {
+					throw new Exception_FacebookNotFound('Facebook page not found: ' . $this->handle, $e->getCode(), $e->getFql(), $e->getErrors());
 				}
 				$this->uid = $data['page_id'];
 				$this->image_url = $data['pic_square'];

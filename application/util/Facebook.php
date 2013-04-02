@@ -24,11 +24,11 @@ class Util_Facebook {
 	 * Gets information about the given facebook page
 	 * @param $name string
 	 * @param $fields array
-	 * @return null
+	 * @return array
 	 */
 	public static function pageInfo($name, $fields = array('page_id', 'name', 'username', 'pic_square', 'page_url', 'fan_count')) {
 		$data = Util_Facebook::query('SELECT ' . implode(',', $fields) . ' FROM page WHERE username = "' . $name.'"');
-		return $data ? $data[0] : null;
+		return $data[0];
 	}
 
 	public static function pagePosts($pageId, $since = null, $fields = array('post_id', 'message', 'created_time', 'actor_id', 'comments', 'likes', 'permalink', 'type')) {
@@ -42,6 +42,7 @@ class Util_Facebook {
 //		));
 		$max = time();
 		$posts = array();
+		$repeat = false;
 		do {
 			$clauses = array('source_id = ' . $pageId);
 			if ($since) {
@@ -55,14 +56,18 @@ class Util_Facebook {
 				WHERE ' . implode(' AND ', $clauses) . '
 				ORDER BY created_time ASC
 				LIMIT ' . $config->facebook->fetch_per_page;
-			$newPosts = self::query($fql);
-			foreach ($newPosts as $i=>$post) {
-				$newPosts[$i] = (object)$post;
-			}
-			$posts = array_merge($posts, $newPosts);
-			$repeat = count($newPosts) > 0;
-			if ($repeat) {
-				$since = $newPosts[count($newPosts)-1]->created_time;
+			try {
+				$newPosts = self::query($fql);
+				foreach ($newPosts as $i=>$post) {
+					$newPosts[$i] = (object)$post;
+				}
+				$posts = array_merge($posts, $newPosts);
+				$repeat = count($newPosts) > 0;
+				if ($repeat) {
+					$since = $newPosts[count($newPosts)-1]->created_time;
+				}
+			} catch (Exception_FacebookNotFound $e) {
+				//ignore not-found exceptions
 			}
 		} while ($repeat);
 
@@ -72,7 +77,8 @@ class Util_Facebook {
 	/**
 	 * Query Facebook API
 	 * @param $fql string FQL query string
-	 * @throws Exception
+	 * @throws Exception_FacebookApi
+	 * @throws Exception_FacebookNotFound
 	 * @return mixed
 	 */
 	public static function query($fql) {
@@ -81,16 +87,20 @@ class Util_Facebook {
 				'method' => 'fql.query',
 				'query' => $fql,
 			));
-			return $ret;
 		} catch (Exception $e) {
-			throw new Exception('Failed to execute FQL: ' . $fql, $e->getCode(), $e);
+			throw new Exception_FacebookApi('Failed to execute query: ' . $e->getMessage(), $e->getCode(), $fql);
 		}
+		if (!$ret) {
+			throw new Exception_FacebookNotFound('Facebook API Error: Not found', -1, $fql);
+		}
+		return $ret;
 	}
 
 	/**
 	 * Query Facebook API
 	 * @param $queries array FQL query strings
-	 * @throws Exception
+	 * @throws Exception_FacebookApi
+	 * @throws Exception_FacebookNotFound
 	 * @return mixed
 	 */
 	public static function multiquery($queries) {
@@ -99,10 +109,13 @@ class Util_Facebook {
 				'method' => 'fql.multiquery',
 				'queries' => $queries,
 			));
-			return $ret;
 		} catch (Exception $e) {
-			throw new Exception('Failed to execute multiquery', $e->getCode(), $e);
+			throw new Exception_FacebookApi('Failed to execute multiquery: ' . $e->getMessage(), $e->getCode(), $queries);
 		}
+		if (!$ret) {
+			throw new Exception_FacebookNotFound('Facebook API Error: Not found', -1, $queries);
+		}
+		return $ret;
 	}
 
 }

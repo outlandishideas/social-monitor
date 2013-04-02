@@ -45,6 +45,11 @@ class FetchController extends BaseController
 					// save the fact that the user doesn't exist, so we don't try again for a while
 					$p->last_updated = gmdate('Y-m-d H:i:s');
 					$p->save();
+				} catch (Exception_FacebookNotFound $e) {
+					$this->log($e->getMessage());
+					// save the fact that the user doesn't exist, so we don't try again for a while
+					$p->last_updated = gmdate('Y-m-d H:i:s');
+					$p->save();
 				} catch (Exception $e) {
 					$this->log($e->getMessage());
 				}
