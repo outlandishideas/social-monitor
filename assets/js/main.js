@@ -416,6 +416,25 @@ app.api = {
 				.done(app.api.callback)
 				.fail(app.api.errorCallback);
 	},
+    getCountryData: function (code) {
+        var url = '/campaign/kpi-data';
+        var args = {code:code};
+
+        return app.api.get(url, args).done(function(response){
+            var list = '';
+
+            console.log(response.data);
+
+            for(var key in response.data){
+                var obj = response.data[key];
+                list += '<li>'+ key +' : '+ obj +'</li>';
+            }
+            var key = $('#selected-country');
+            key.addClass('selected')
+            key.find('h2').html(response.data.name);
+            key.find('ul')[0].html(list);
+        });
+    },
 	getGraphData: function (line_ids, cb) {
 		app.charts.show();
 		$('#charts').showLoader();

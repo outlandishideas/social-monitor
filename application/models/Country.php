@@ -8,4 +8,11 @@ class Model_Country extends Model_Campaign {
 		$clause .= ' is_country = 1';
 		return parent::fetch($clause, $args);
 	}
+
+	public static function fetchByCountryCode($code) {
+		if (!is_scalar($code)) {
+			return null;
+		}
+		return self::fetchBy('country', $code);
+	}
 }

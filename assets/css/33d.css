@@ -105,6 +105,23 @@ fieldset input, fieldset select, fieldset textarea {
 	margin: 0px;
 }
 
+.site-title {
+    font-size: 45px;
+    font-weight: bold;
+    line-height: 1;
+    padding: 20px 0;
+    margin: 0 32px;
+    background: #fff url('../img/British-Council-Logo.png') no-repeat;
+    background-size: contain;
+    color: #065284;
+    padding-left: 282px;
+    text-transform: uppercase;
+}
+
+.site-title span {
+    display: none;
+}
+
 h1 {
 	font-size: 32px;
 	font-weight: bold;
@@ -278,7 +295,6 @@ a:hover, span.link:hover {
 	}
 
 #nav-bar {
-	background: rgba(73, 73, 73, 0.8);
 	position: fixed;
 	top: 0px;
 	left: 0px;
@@ -290,7 +306,7 @@ a:hover, span.link:hover {
 #nav {
 	margin: 0 30px;
 	padding: 0 0 10px;
-	background: #000;
+	background: #065284;
 	height: 26px;
 	display: block;
 	position: relative;
@@ -302,7 +318,7 @@ a:hover, span.link:hover {
 }
 #nav .extra ul {
 	float: right;
-	background: #333;
+	background: #01a6e6;
 	margin-top: -4px;
 	padding-top: 4px;
 }
@@ -325,11 +341,11 @@ a:hover, span.link:hover {
 	color: #efefef;
 	text-decoration: none;
 	margin-bottom: -1px;
-	border-top: 2px solid #000;
+	border-top: 2px solid #065284;
 }
 
 #nav .extra li a {
-	border-color: #333;
+	border-color: #01a6e6;
 }
 
 #nav li a:hover {
@@ -830,4 +846,26 @@ table.dataTable.dtable p {
 
 .none-found {
 	display: none;
+}
+
+/* geo map and key */
+
+#geo-map {
+    width: 100%;
+    height: 800px;
+    position: relative;
+}
+
+.key {
+    top: 200px;
+    position: absolute;
+    width: 200px;
+    border: 4px solid #01a6e6;
+    border-radius: 4px;
+    padding: 20px;
+    display: none;
+}
+
+.key.selected {
+    display: block;
 }
