@@ -208,6 +208,8 @@ class FetchController extends BaseController
 
 		if (!$this->_request->getParam('silent') || $ignoreSilent) {
 			echo $log;
+			ob_flush();
+			flush();
 		}
 
 		file_put_contents($this->logFileName(), $log, FILE_APPEND);
