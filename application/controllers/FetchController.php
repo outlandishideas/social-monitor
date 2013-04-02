@@ -58,14 +58,13 @@ class FetchController extends BaseController
 		usort($presences, function($a, $b) { return strcmp($a->last_fetched ?: '000000', $b->last_fetched ?: '000000'); });
 		foreach ($presences as $p) {
 			$this->log('Fetching ' . ($p->type == Model_Presence::TYPE_TWITTER ? 'tweets' : 'posts') . ': ' . $p->handle);
-			usleep(10000);
-//			try {
-//				$this->log($p->updateStatuses());
-//				$p->last_fetched = gmdate('Y-m-d H:i:s');
-//				$p->save();
-//			} catch (Exception $e) {
-//				$this->log($e->getMessage());
-//			}
+			try {
+				$this->log($p->updateStatuses());
+				$p->last_fetched = gmdate('Y-m-d H:i:s');
+				$p->save();
+			} catch (Exception $e) {
+				$this->log($e->getMessage());
+			}
 		}
 
 //		//fetch lists and searches for each campaign using appropriate tokens
@@ -207,12 +206,13 @@ class FetchController extends BaseController
 		$log = date('H:i:s') . " $message\n";
 
 		if (!$this->_request->getParam('silent') || $ignoreSilent) {
-			ob_start();
+			// todo: disable output buffering. This doesn't work on the beta server
+//			ob_start();
 			echo $log;
-			while (ob_get_level()) {
-				ob_end_flush();
-			}
-			flush();
+//			while (ob_get_level()) {
+//				ob_end_flush();
+//			}
+//			flush();
 		}
 
 		file_put_contents($this->logFileName(), $log, FILE_APPEND);
