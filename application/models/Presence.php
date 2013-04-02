@@ -35,7 +35,11 @@ class Model_Presence extends Model_Base {
 				$this->popularity = $data['fan_count'];
 				break;
 			case self::TYPE_TWITTER:
-				$data = Util_Twitter::userInfo($this->handle);
+				try {
+					$data = Util_Twitter::userInfo($this->handle);
+				} catch (Exception_TwitterNotFound $e) {
+					throw new Exception_TwitterNotFound('Twitter user not found: ' . $this->handle, $e->getCode(), $e->getPath(), $e->getErrors());
+				}
 				$this->uid = $data->id_str;
 				$this->image_url = $data->profile_image_url;
 				$this->name = $data->name;
@@ -111,6 +115,14 @@ class Model_Presence extends Model_Base {
 
 	public function delete() {
 		$this->_db->prepare('DELETE FROM campaign_presences WHERE presence_id = :pid')->execute(array(':pid'=>$this->id));
+		switch($this->type) {
+			case self::TYPE_FACEBOOK:
+				$this->_db->prepare('DELETE FROM facebook_stream WHERE presence_id = :pid')->execute(array(':pid'=>$this->id));
+				break;
+			case self::TYPE_TWITTER:
+				$this->_db->prepare('DELETE FROM twitter_tweets WHERE presence_id = :pid')->execute(array(':pid'=>$this->id));
+				break;
+		}
 		parent::delete();
 	}
 
