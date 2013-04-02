@@ -35,11 +35,7 @@ class Model_Presence extends Model_Base {
 				$this->popularity = $data['fan_count'];
 				break;
 			case self::TYPE_TWITTER:
-				try {
-					$data = Util_Twitter::userInfo($this->handle);
-				} catch (Exception_TwitterNotFound $e) {
-					throw new Exception('Twitter user not found: ' . $this->handle);
-				}
+				$data = Util_Twitter::userInfo($this->handle);
 				$this->uid = $data->id_str;
 				$this->image_url = $data->profile_image_url;
 				$this->name = $data->name;
@@ -54,6 +50,10 @@ class Model_Presence extends Model_Base {
 	}
 
 	public function updateStatuses() {
+		if (!$this->uid) {
+			throw new Exception('Presence not initialised');
+		}
+
 		$fetchCount = new Util_FetchCount(0, 0);
 		switch($this->type) {
 			case self::TYPE_FACEBOOK:

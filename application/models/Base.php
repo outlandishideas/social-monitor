@@ -232,6 +232,7 @@ abstract class Model_Base
 		//chunk up inserts
 		$maxInsertSize = 100;
 		$lastQuery = null;
+		$inserted = 0;
 		for ($cursor = 0; $cursor < $dataSize; $cursor += $maxInsertSize) {
 			$sliceData = array_slice($data, $cursor, $maxInsertSize);
 
@@ -248,10 +249,12 @@ abstract class Model_Base
 			if ($query != $lastQuery) {
 				$statement = Zend_Registry::get('db')->prepare($query);
 			}
+			/** @var $statement PDOStatement */
 			$statement->execute($values);
+			$inserted += $statement->rowCount();
 		}
 
-		return 0;
+		return $inserted;
 	}
 
 	// generates a sql ordering string from array $cols (name=>direction). any whose name
