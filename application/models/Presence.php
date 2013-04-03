@@ -27,6 +27,20 @@ class Model_Presence extends Model_Base {
 		return $this->name ?: $this->handle;
 	}
 
+	public function getCountry() {
+		$country = null;
+		$stmt = $this->_db->prepare('SELECT campaign_id FROM campaign_presences WHERE presence_id = :pid');
+		$stmt->execute(array(':pid'=>$this->id));
+		$campaignIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+		if ($campaignIds) {
+			$countries = Model_Country::fetchAll('id IN (' . implode(',', $campaignIds) . ')');
+			if ($countries) {
+				$country = $countries[0];
+			}
+		}
+		return $country;
+	}
+
 	public function updateInfo() {
 		switch($this->type) {
 			case self::TYPE_FACEBOOK:
@@ -125,9 +139,20 @@ class Model_Presence extends Model_Base {
 		return $fetchCount;
 	}
 
+	/**
+	 * Gets historical information about this presence
+	 * @param string $type the type of data to get, eg 'popularity'
+	 * @param int $days how far back to look
+	 * @return array a series of (date, value) data points
+	 */
 	private function getHistoryData($type, $days = 7) {
 		$date = gmdate('Y-m-d H:i:s', strtotime('-' . $days . ' days'));
-		$stmt = $this->_db->prepare('SELECT datetime, value FROM presence_history WHERE presence_id = :id AND type = :type AND datetime >= :date ORDER BY datetime ASC');
+		$stmt = $this->_db->prepare('SELECT datetime, value
+			FROM presence_history
+			WHERE presence_id = :id
+			AND type = :type
+			AND datetime >= :date
+			ORDER BY datetime ASC');
 		$stmt->execute(array(':id'=>$this->id, ':type'=>$type, ':date'=>$date));
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
@@ -137,31 +162,42 @@ class Model_Presence extends Model_Base {
     }
 
 	/**
-	 * Gets the date at which the target audience size will be reached, based on the current trend
+	 * Gets the date at which the target audience size will be reached, based on the current trend. The date may be in the past
+	 * If any of these conditions are met, this will return null:
+	 * - no target audience size
+	 * - fewer than 2 data points
+	 * - popularity hasn't varied at all
+	 * - the calculated date would be too far in the future (32-bit date problem)
 	 * @return null|string
 	 */
 	public function getTargetAudienceDate() {
-		//todo: Use linear regression (http://www.endmemo.com/statistics/lr.php) to calculate estimated date for reaching audience target
-		$data = $this->getHistoryData('popularity');
 		$date = null;
-		$n = count($data);
-		if ($n > 1) {
-			$meanX = 0;
-			$meanY = 0;
-			$topA = 0;
-			$bottomA = 0;
-			foreach ($data as $row) {
-				$row->datetime = strtotime($row->datetime);
-				$meanX += $row->datetime;
-				$meanY += $row->value;
+		$country = $this->getCountry();
+		if ($country && $country->audience > 0) {
+			$data = $this->getHistoryData('popularity');
+			$n = count($data);
+			if ($n > 1) {
+				// calculate line of best fit (see http://www.endmemo.com/statistics/lr.php)
+				$meanX = $meanY = $sumXY = $sumXX = 0;
+				foreach ($data as $row) {
+					$row->datetime = strtotime($row->datetime);
+					$meanX += $row->datetime;
+					$meanY += $row->value;
+					$sumXY += $row->datetime*$row->value;
+					$sumXX += $row->datetime*$row->datetime;
+				}
+				$meanX /= $n;
+				$meanY /= $n;
+				$a = ($sumXY - $n*$meanX*$meanY)/($sumXX - $n*$meanX*$meanX);
+				$b = $meanY - $a*$meanX;
+				$target = 0.5*$country->audience;
+				if ($a != 0) {
+					$timestamp = ($target - $b)/$a;
+					if ($timestamp < PHP_INT_MAX) {
+						$date = date('Y-m-d', $timestamp);
+					}
+				}
 			}
-			foreach ($data as $row) {
-				$topA += (($row->value*$row->datetime) - ($n*$meanX*$meanY));
-				$bottomA += (($row->datetime*$row->datetime) - ($n*$meanX*$meanX));
-			}
-			$a = $topA/$bottomA;
-			$b = $meanY - $a*$meanX;
-			$date = $a . ', ' . $b;
 		}
 		return $date;
 	}

@@ -2,48 +2,54 @@
 	$links = $this->gatekeeper()->filterAll(array(
 		'<a class="button add" href="%url%">Add new</a>' => array('action' => 'new')
 	));
-	if ($links) :
-
+	if ($links) {
+		echo '<p>' . implode('', $links) . '</p>';
+	}
 ?>
-<p>
-	<?php echo implode('', $links); ?>
-</p>
-<?php endif; ?>
 
-<table class="text">
-	<tr>
-		<th>Handle</th>
-		<th>Popularity</th>
-		<th>Last updated info</th>
-		<th>Last fetched statuses</th>
-		<th>External link</th>
-		<th class="options"></th>
-	</tr>
-	<?php foreach ($this->presences as $presence) : ?>
-	<tr>
-		<td><a class="presence <?php echo $presence->type; ?>" href="<?php echo $this->url(array('action'=>'view', 'id'=>$presence->id)); ?>" title="<?php echo $presence->label; ?>"><?php echo $presence->handle; ?></a></td>
-		<td><?php echo number_format($presence->popularity) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
-		<td><?php echo $this->prettyDate($presence->last_updated, 'Never'); ?></td>
-		<td><?php echo $this->prettyDate($presence->last_fetched, 'Never'); ?></td>
-		<td>
-			<a href="<?php echo $presence->page_url; ?>" target="_blank">
-			<?php if ($presence->image_url) : ?>
-				<img src="<?php echo $presence->image_url; ?>" />
-			<?php else : ?>
-				<?php echo $presence->page_url; ?>
-			<?php endif; ?>
-			</a>
-		</td>
-		<td class="options">
-			<?php
-			$links = $this->gatekeeper()->filterAll(array(
-				'<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$presence->id),
-				'<a href="%url%">Update info</a>' => array('action'=>'update', 'id'=>$presence->id),
-				'<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$presence->id)
-			));
-			echo implode(' | ', $links);
-			?>
-		</td>
-	</tr>
-	<?php endforeach; ?>
+<table class="text" id="all-presences">
+	<thead>
+		<tr>
+			<th>Handle</th>
+			<th>Popularity</th>
+			<th>Last updated info</th>
+			<th>Last fetched statuses</th>
+			<th>External link</th>
+			<th class="options"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach ($this->presences as $presence) : ?>
+		<tr>
+			<td>
+				<a class="presence <?php echo $presence->type; ?>" href="<?php echo $this->url(array('action'=>'view', 'id'=>$presence->id)); ?>" title="<?php echo $presence->label; ?>"><?php echo $presence->handle; ?></a>
+				<?php if (!$presence->uid) : ?>
+				[not found]
+				<?php endif; ?>
+			</td>
+			<td><?php echo number_format($presence->popularity) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
+			<td><?php echo $this->prettyDate($presence->last_updated, 'Never'); ?></td>
+			<td><?php echo $this->prettyDate($presence->last_fetched, 'Never'); ?></td>
+			<td>
+				<a href="<?php echo $presence->page_url; ?>" target="_blank">
+				<?php if ($presence->image_url) : ?>
+					<img src="<?php echo $presence->image_url; ?>" />
+				<?php else : ?>
+					<?php echo $presence->page_url; ?>
+				<?php endif; ?>
+				</a>
+			</td>
+			<td class="options">
+				<?php
+				$links = $this->gatekeeper()->filterAll(array(
+					'<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$presence->id),
+					'<a href="%url%">Update info</a>' => array('action'=>'update', 'id'=>$presence->id),
+					'<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$presence->id)
+				));
+				echo implode(' | ', $links);
+				?>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
 </table>

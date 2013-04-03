@@ -296,6 +296,49 @@ app.init = {
 					}
 				}
 			});
+		},
+		'#all-presences': function($table) {
+			// make the popularity column sortable
+			$.extend($.fn.dataTableExt.oSort, {
+				"popularity-pre": function ( a ) { return parseInt(a.replace(/[^\d]/g, "")); },
+				"popularity-asc": function ( a, b ) { return a - b; },
+				"popularity-desc": function ( a, b ) { return b - a; }
+			});
+
+			$table.dataTable({
+				bScrollInfinite: true,
+				bScrollCollapse: true,
+				sScrollY: '400px',
+				bFilter: false,
+				bInfo: false,
+				aoColumns:[
+					{
+						sName: 'handle',
+						bSortable: true
+					},
+					{
+						sName: 'popularity',
+						bSortable: true,
+						sType: 'popularity'//use popularity sorter above
+					},
+					{
+						sName: 'last_updated',
+						bSortable: true
+					},
+					{
+						sName: 'last_fetched',
+						bSortable: true
+					},
+					{
+						sName: 'link',
+						bSortable: false
+					},
+					{
+						sName: 'options',
+						bSortable: false
+					}
+				]
+			});
 		}
 	},
 

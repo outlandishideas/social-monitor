@@ -403,6 +403,10 @@ table.text {
 	margin-top: 10px;
 }
 
+table.dataTable {
+	margin-top: 0;
+}
+
 table.text th {
 	font-weight: bold;
 	text-align: left;
@@ -617,57 +621,69 @@ table.campaigns {
 
 /* DataTables */
 
-.dataTable tr.selected td {
-	background-color: #B0BED9;
+.dataTable .sorting,
+.dataTable .sorting_asc,
+.dataTable .sorting_desc {
+	cursor: pointer;
+	background-position: right center;
+	background-repeat: no-repeat;
 }
 
-.dataTables_filter {
-	margin-top: -36px;
-}
+.dataTable .sorting { background-image: url(../img/sort_both.png); }
+.dataTable .sorting_asc { background-image: url(../img/sort_asc.png); }
+.dataTable .sorting_desc { background-image: url(../img/sort_desc.png); }
 
-.dataTables_info {
-	margin-top: 10px;
-}
+/*.dataTable tr.selected td {*/
+	/*background-color: #B0BED9;*/
+/*}*/
 
-td.statusPic {
-	vertical-align: top;
-}
+/*.dataTables_filter {*/
+	/*margin-top: -36px;*/
+/*}*/
 
-table.dataTable.dtable h4 {
-	margin: 0 0 5px;
-}
-table.dataTable.dtable h4 span {
-	color: #999;
-	margin-left: 10px;
-	font-size: 11px;
-}
+/*.dataTables_info {*/
+	/*margin-top: 10px;*/
+/*}*/
 
-.statusesDisplay .dataTable p.more {
-	float: right;
-	font-size: 10px;
-	margin-right: 10px;
-	visibility: hidden;
-}
+/*td.statusPic {*/
+	/*vertical-align: top;*/
+/*}*/
 
-.statusesDisplay .dataTable tr:hover p.more {
-	visibility: visible;
-}
+/*table.dataTable.dtable h4 {*/
+	/*margin: 0 0 5px;*/
+/*}*/
+/*table.dataTable.dtable h4 span {*/
+	/*color: #999;*/
+	/*margin-left: 10px;*/
+	/*font-size: 11px;*/
+/*}*/
 
-.dataTable td.lesser {
-	background: #efefef;
-	text-align: center;
-}
+/*.statusesDisplay .dataTable p.more {*/
+	/*float: right;*/
+	/*font-size: 10px;*/
+	/*margin-right: 10px;*/
+	/*visibility: hidden;*/
+/*}*/
 
-.statusesDisplay .dataTable td {
-	padding: 15px 5px;
-}
+/*.statusesDisplay .dataTable tr:hover p.more {*/
+	/*visibility: visible;*/
+/*}*/
 
-table.dataTable.dtable td.retweets {
-	border-left: 1px solid #ccc;
-}
-table.dataTable.dtable p {
-	margin: 0;
-}
+/*.dataTable td.lesser {*/
+	/*background: #efefef;*/
+	/*text-align: center;*/
+/*}*/
+
+/*.statusesDisplay .dataTable td {*/
+	/*padding: 15px 5px;*/
+/*}*/
+
+/*table.dataTable.dtable td.retweets {*/
+	/*border-left: 1px solid #ccc;*/
+/*}*/
+/*table.dataTable.dtable p {*/
+	/*margin: 0;*/
+/*}*/
 
 .data {
 	float: left;
