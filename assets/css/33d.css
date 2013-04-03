@@ -456,15 +456,22 @@ table.campaigns {
 
 /* Charts */
 
-.chart {
-	position: relative;
-	margin: 20px 0;
+#charts {
+    width: 100%;
 }
 
-#mentions, #sentiment, #trends, #api-stats {
-	margin-right: 200px;
+.chart {
+    width: 75%;
 }
-#mentions, #sentiment {
+
+.health {
+    width: 25%;
+}
+
+#mentions, #sentiment, #trends, #api-stats, #reply-time, #popularity {
+	margin-left: 200px;
+}
+#mentions, #sentiment, #reply-time, #popularity {
 	height: 150px;
 }
 #trends, #api-stats {

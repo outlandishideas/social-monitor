@@ -33,11 +33,14 @@
 						<div class="main">
 						<?php echo $this->navigation()->menu()->setMaxDepth(0); ?>
 						</div>
+                            <!-- remove user button
 						<div class="extra">
-						<?php echo $this->navigation()->menu()->render($this->user->isAdmin ? $this->adminMenu : $this->nonAdminMenu); ?>
+						<?php //echo $this->navigation()->menu()->render($this->user->isAdmin ? $this->adminMenu : $this->nonAdminMenu); ?>
 						</div>
+				            -->
 					</div>
 				</div>
+
 				<div id="user-nav" class="dropdown">
 					<a href="" class="dropdown-toggle" data-toggle="dropdown">
 						<span>Logged in as</span>

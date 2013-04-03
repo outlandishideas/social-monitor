@@ -6,18 +6,11 @@
 
 <div id="geo-map"></div>
 
-<div id="overview"></div>
-
-<div>
-    <h2>Countries</h2>
-    <?php if ($links) : ?>
-    <p>
-        <?php echo implode('', $links); ?>
-    </p>
-    <?php endif; ?>
+<div id="overview">
+    <h2></h2>
+    <dl>
+    </dl>
 </div>
-
-
 
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>
@@ -25,7 +18,6 @@
 
 
     var json = <?php echo $this->jsonCountries; ?>;
-    var fromJSON = "['Country', '"+ currentMetric() +"']";
 
 
     function populateDataTableFromJSON(data){
@@ -88,6 +80,7 @@
             var code = data.getValue(row,0);
 
             var ret = app.api.getCountryData(code);
+
 
         }
 

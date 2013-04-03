@@ -39,8 +39,8 @@ app.charts = {
 
 		app.charts.dateFormat = d3.time.format('%Y-%m-%d %H:%M:%S');
 
-		$('#charts div.chart').each(function () {
-			var selector = '#' + $(this).attr('id');
+		$('#charts tr td.chart').each(function () {
+            var selector = '#' + $(this).attr('id');
 			var chart = app.charts.createChart(selector);
 			app.state.charts[selector] = chart;
 			if (selector in app.charts.customSetup) {
@@ -50,14 +50,23 @@ app.charts = {
 
 		//hide charts if we have no lines
 		if (app.state.lineIds.length == 0) {
-			app.charts.hide();
 		} else {
 			// fire off an initial data request
 			app.api.getGraphData(app.state.lineIds, function () {
 				app.api.callback.apply(this, arguments);
 			});
 		}
-
+        /*
+        $('#charts tr td.health').each(function () {
+            var health = {};
+            health.selector = '#' + $(this).data('id');
+            console.log(health.selector);
+            if( health.selector in app.charts.healthDisplay) {
+                app.charts.healthDisplay[health.selector](health);
+                app.charts.createHealth(health);
+            }
+        });
+        */
 	},
 
 	/**
@@ -66,12 +75,19 @@ app.charts = {
 	customSetup: {
 		'#mentions': function(chart) {
 			chart.getData = function (d) {
-				return d.mentions;
+				return d.value;
 			};
 			chart.shouldRescale = true;
 			chart.drawBuckets = true;
 			chart.drawCircles = true;
 		},
+        '#popularity': function(chart) {
+            chart.getData = function (d) {
+                return d.value;
+            };
+            chart.shouldRescale = true;
+            chart.drawCircles = true;
+        },
 		'#sentiment': function(chart) {
 			chart.getData = function (d) {
 				return d.polarity || 0;
@@ -118,6 +134,29 @@ app.charts = {
 			chart.drawCircles = true;
 		}
 	},
+
+    /**
+     * Specific settings for charts
+     */
+    healthDisplay: {
+        '#mentions': function(health) {
+            health.title = 'Posts per Day';
+            health.values = '' ;
+        },
+        '#followers': function(health) {
+            health.title = 'Target Followers';
+            health.values = 31500;
+            health.key.min = 24400;
+            health.key.target = 27700;
+            health.key.string = 'followers';
+        },
+        '#reply-time': function(chart) {
+            health.title = 'Response Time';
+            health.values = '' ;
+        }
+    },
+
+
 	/**
 	 * Show charts and legend
 	 */
@@ -130,45 +169,6 @@ app.charts = {
 	 */
 	hide:function () {
 		$('#charts').slideUp();
-	},
-
-	/**
-	 * Show colour picker which allows choosing a new colour for the dataset on which it is invoked
-	 */
-	chooseColor:function () {
-		//remove any stray colour pickers
-		$('#colorPicker').remove();
-
-		var $dataset = $(this).closest('.dataset');
-		var lineId = $dataset.data('line-id');
-		var originalColor = app.charts.getColor(lineId);
-
-		//create colour picker div
-		$(parseTemplate(app.templates.colorpicker, {color:originalColor}))
-				.appendTo($dataset)
-				.on('click', 'button', function () {
-					$('#colorPicker').remove();
-				})
-				.on('click', 'a', function (e) {
-					e.preventDefault();
-					app.charts.setColor(lineId, originalColor);
-					$('#colorPicker').remove();
-				});
-
-		//listen for changes to colour input box
-		$('#colorValue').bind('change keyup', function () {
-			var color = $(this).val();
-			app.charts.setColor(lineId, color);
-			$.farbtastic('#colorPicker .container').setColor(color);
-		})
-
-		//init farbtastic colour picker
-		$('#colorPicker .container').farbtastic(function (color) {
-			$('#colorValue').val(color);
-			app.charts.setColor(lineId, color);
-		});
-		$.farbtastic('#colorPicker .container').setColor(originalColor);
-
 	},
 
 	/**
@@ -203,13 +203,7 @@ app.charts = {
 	 * @param color
 	 */
 	setColor:function (line_id, color) {
-		app.state.colors[line_id] = color;
-		for (var selector in app.state.charts) {
-			var dataset = app.state.charts[selector].vis.select('.dataset[data-line-id="' + line_id + '"]');
-			dataset.selectAll('path').attr('style', 'stroke:' + color);
-			dataset.selectAll('circle').attr('style', 'stroke:' + color + '; fill:' + color);
-		}
-		$('#legend .dataset[data-line-id="'+line_id+'"] .icon').css('backgroundColor', color);
+		app.state.colors[line_id] = '#000';
 	},
 
 	createChart:function (selector) {
@@ -245,6 +239,10 @@ app.charts = {
 			return parseInt(app.state.charts[selector].getData(d));
 		};
 
+        var yMinFunc = function (d) {
+            return parseInt(app.state.charts[selector].getData(d));
+        };
+
 		vis.append('svg:g')
 				.attr('class', 'axis axis-y')
 				.call(yAxis);
@@ -263,7 +261,7 @@ app.charts = {
 		var line = d3.svg.line()
 				.interpolate('monotone')
 				.x(function (d) {
-					return xMap(app.charts.dateFormat.parse(d.date));
+					return xMap(app.charts.dateFormat.parse(d.datetime));
 				})
 				.y(function (d) {
 					return yMap(app.state.charts[selector].getData(d));
@@ -322,47 +320,12 @@ app.charts = {
 	 * @param data
 	 */
 	renderDataset:function (data) {
-		$('.chart,#legend').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
-		var color = app.charts.getColor(data.line_id);
+		var color = '#000';
 
-		var count = 0;
 		for (var i in data.points) {
-			for (var selector in app.state.charts) {
-				app.charts.addLine(selector, data.points[i], data.line_id, color);
-			}
-			for (var j in data.points[i]) {
-				if (data.points[i][j].mentions) {
-					count += parseInt(data.points[i][j].mentions, 10);
-				}
-			}
+            app.charts.addLine(data.selector, data.points[i], data.line_id, color);
 		}
 
-		$('#legend').append(parseTemplate(app.templates.legendLabel, {
-			name:data.name,
-			count:count,
-			line_id: data.line_id,
-			className: data.line_id == app.state.defaultLineId ? 'all-tweets' : '',
-			color: color
-		}));
-	},
-
-	/**
-	 * Delete lines from chart and text from legend
-	 * @param line_id
-	 */
-	removeDataset:function (line_id) {
-		$('.chart,#legend').find('.dataset[data-line-id="' + line_id + '"]').remove();
-		var i = app.state.lineIds.indexOf(line_id);
-		app.state.lineIds.splice(i, 1);
-		if (app.state.lineIds.length == 0) {
-			if (app.state.defaultLineId) {
-				app.charts.addDataset(app.state.defaultLineId);
-			} else {
-				app.charts.hide();
-			}
-		}
-
-		$(document).trigger('topicsChanged');
 	},
 
 	addLine:function (selector, points, line_id, color) {
@@ -370,6 +333,9 @@ app.charts = {
 
 		//calculate max y value in this dataset (need to cast as int, otherwise 'max' is done alphabetically)
 		var yMax = d3.max(points, c.yMaxFunc);
+        var yMin = d3.min(points, c.yMaxFunc);
+        console.log(yMin);
+
 
 		// create one container per data set
 		var group = c.vis
@@ -383,117 +349,33 @@ app.charts = {
 				.attr("d", c.line(points))
 				.attr('style', 'stroke-width: 2px; fill: none; stroke:' + color);
 
-		// add bucket rects and circles for mentions and sentiment graphs only
-		if (c.drawBuckets || c.drawCircles) {
+        // add bucket rects and circles for mentions and sentiment graphs only
+        if (c.drawCircles) {
+            // add a circle for each point
+            group.selectAll('path.line')
+                .data(points)
+                .enter()
+                .append("svg:circle")
+                .attr('data-values', function (d, i) {
+                    return d.value;
+                })
+                .attr("cx", function (d, i) {
+                    return c.xMap(app.charts.dateFormat.parse(d.datetime));
+                })
+                .attr("cy", function (d, i) {
+                    return c.yMap(c.getData(d));
+                })
+                .style('fill', color)
+                .style('stroke', color)
+                .attr('class', function (d, i) {
+                    return 'node-' + i;
+                })
+                .attr('data-line-id', line_id)
+                .attr("r", function (d) {
+                    return c.getData(d) ? 4 : 0;
+                });
+        }
 
-			if (c.drawBuckets) {
-				// translate by half a bucket width
-				group.attr('transform', 'translate('+ (c.w / points.length * 0.5) +')');
-			}
-
-			if (c.drawCircles) {
-				// add a circle for each point
-				group.selectAll('path.line')
-					.data(points)
-					.enter()
-					.append("svg:circle")
-					.attr('data-mentions', function (d, i) {
-						return d.mentions;
-					})
-					.attr("cx", function (d, i) {
-						return c.xMap(app.charts.dateFormat.parse(d.date));
-					})
-					.attr("cy", function (d, i) {
-						return c.yMap(c.getData(d));
-					})
-					.style('fill', color)
-					.style('stroke', color)
-					.attr('class', function (d, i) {
-						return 'node-' + i;
-					})
-					.attr('data-line-id', line_id)
-					.attr("r", function (d) {
-						return c.getData(d) ? 4 : 0;
-					});
-			}
-
-			if (c.drawBuckets) {
-				// add a clickable rectangle for each bucket
-				group.selectAll('rect')
-					.data(points)
-					.enter()
-					.append("svg:rect")
-					.attr('data-points', JSON.stringify(points))
-					.attr("x", function (d, i) {
-						return c.xMap(app.charts.dateFormat.parse(d.date));
-					})
-					.attr('transform', 'translate(-'+ (c.w / points.length * 0.5) +')')
-					.attr("y", 0)
-					.attr("height", function (d, i) {
-						if (d.mentions == 0) return 0;
-						return c.h;
-					})
-					.attr("width", c.w / points.length)
-					.attr('class', function (d, i) {
-						return 'node-' + i;
-					})
-					.attr('data-line-id', line_id)
-					.on('mouseover', function (d, i) {
-
-						$('div.tipsy').remove();
-
-						//select current rect in all charts
-						var rects = app.charts.getAllBlocks(this).filter(function () {
-							return $(this).data('line-id') == line_id;
-						});
-						rects.classed('hovered', true);
-
-						var showDate = function () {
-							var startDate = Date.parse(points[i].date).toString('d MMM HH:mm');
-							var endDate = Date.parse(points[i+1].date).toString('d MMM HH:mm');
-							return startDate + ' to ' + endDate;
-						}
-
-						$(rects[0]).tipsy({
-							title: showDate,
-							gravity:'s',
-							offsetX:10,
-							trigger:'manual'
-						}).tipsy('show');
-
-
-					}).on('mouseout', function (d, i) {
-
-						var rects = app.charts.getAllBlocks(this).filter(function () {
-							return $(this).data('line-id') == line_id;
-						});
-						rects.classed('hovered', false);
-						$(rects).each(function () {
-							$(this).tipsy("hide");
-						});
-
-
-					}).on('click', function (d, i) {
-
-						var rects = app.charts.getAllBlocks(this).filter(function () {
-							return $(this).data('line-id') == line_id;
-						});
-
-						var start_date = points[i].date;
-						var end_date = points[i+1].date;
-
-						var selecting = !rects.classed('selected');
-						var filterValue = selecting ? 'date:' + start_date + '/' + end_date : '';
-						$('.statusesDisplay .dataTables_filter input')
-								.val(filterValue)
-								.keyup();
-
-						app.charts.getAllBlocks().classed('selected', false);
-						rects.classed('selected', selecting);
-
-					});
-			}
-		}
 	},
 
 	getAllBlocks: function(rect) {
@@ -525,7 +407,7 @@ app.charts = {
 					.transition()
 					.duration(1000)
 					.attr("cx", function (d, i) {
-						return c.xMap(app.charts.dateFormat.parse(d.date));
+						return c.xMap(app.charts.dateFormat.parse(d.datetime));
 					})
 					.style('opacity', 0);
 
@@ -533,13 +415,13 @@ app.charts = {
 				.transition()
 				.duration(1000)
 				.attr("x", function (d, i) {
-					return c.xMap(app.charts.dateFormat.parse(d.date));
+					return c.xMap(app.charts.dateFormat.parse(d.datetime));
 				})
 				.attr('transform', function () {
 					return 'translate(-'+ (c.w / $(this).data('points').length * 0.5) +')';
 				})
 				.attr("height", function (d, i) {
-					if (d.mentions == 0) return 0;
+					if (d.value == 0) return 0;
 					return c.h;
 				})
 				.attr("width", function () {
@@ -596,21 +478,6 @@ app.charts = {
 			}
 		});
 
-	},
-
-	toggleTopic:function () {
-		if ($(this).children('.dataTables_empty').length) return;
-
-		var line_id = $(this).closest('.dataset,tr').data('line-id');
-		var $row = $('.lineSelector tbody tr[data-line-id="' + line_id + '"]');
-
-		if (app.state.lineIds.indexOf(line_id) >= 0) {
-			app.charts.removeDataset(line_id);
-			$row.removeClass('selected');
-		} else {
-			app.charts.addDataset(line_id);
-			$row.addClass('selected');
-		}
 	},
 
 	grabSvgElement:function () {
