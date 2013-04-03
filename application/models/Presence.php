@@ -54,6 +54,11 @@ class Model_Presence extends Model_Base {
 		return ucfirst($this->type);
 	}
 
+	/**
+	 * Fetches the posts/tweets for the presence, and inserts them into the database
+	 * @return Util_FetchCount
+	 * @throws Exception
+	 */
 	public function updateStatuses() {
 		if (!$this->uid) {
 			throw new Exception('Presence not initialised');
@@ -114,8 +119,49 @@ class Model_Presence extends Model_Base {
 		return $fetchCount;
 	}
 
+	private function getHistoryData($type, $days = 7) {
+		$date = gmdate('Y-m-d H:i:s', strtotime('-' . $days . ' days'));
+		$stmt = $this->_db->prepare('SELECT datetime, value FROM presence_history WHERE presence_id = :id AND type = :type AND datetime >= :date ORDER BY datetime ASC');
+		$stmt->execute(array(':id'=>$this->id, ':type'=>$type, ':date'=>$date));
+		return $stmt->fetchAll(PDO::FETCH_OBJ);
+	}
+
+	/**
+	 * Gets the date at which the target audience size will be reached, based on the current trend
+	 * @return null|string
+	 */
+	public function getTargetAudienceDate() {
+		//todo: Use linear regression (http://www.endmemo.com/statistics/lr.php) to calculate estimated date for reaching audience target
+		$data = $this->getHistoryData('popularity');
+		$date = null;
+		$n = count($data);
+		if ($n > 1) {
+			$meanX = 0;
+			$meanY = 0;
+			$topA = 0;
+			$bottomA = 0;
+			foreach ($data as $row) {
+				$row->datetime = strtotime($row->datetime);
+				$meanX += $row->datetime;
+				$meanY += $row->value;
+			}
+			foreach ($data as $row) {
+				$topA += (($row->value*$row->datetime) - ($n*$meanX*$meanY));
+				$bottomA += (($row->datetime*$row->datetime) - ($n*$meanX*$meanX));
+			}
+			$a = $topA/$bottomA;
+			$b = $meanY - $a*$meanX;
+			$date = $a . ', ' . $b;
+		}
+		return $date;
+	}
+
+	/**
+	 * Delete all of the presence's associated data
+	 */
 	public function delete() {
 		$this->_db->prepare('DELETE FROM campaign_presences WHERE presence_id = :pid')->execute(array(':pid'=>$this->id));
+		$this->_db->prepare('DELETE FROM presence_history WHERE presence_id = :pid')->execute(array(':pid'=>$this->id));
 		switch($this->type) {
 			case self::TYPE_FACEBOOK:
 				$this->_db->prepare('DELETE FROM facebook_stream WHERE presence_id = :pid')->execute(array(':pid'=>$this->id));
