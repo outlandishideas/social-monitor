@@ -21,6 +21,7 @@ class PresenceController extends BaseController
 	public function viewAction()
 	{
 		$presence = Model_Presence::fetchById($this->_request->id);
+		$this->validateData($presence);
 
 		$this->view->title = $presence->label;
 		$this->view->presence = $presence;
