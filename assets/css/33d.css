@@ -249,7 +249,7 @@ a:hover, span.link:hover {
 }
 #date-nav {
 	position: absolute;
-	top: 190px;
+	top: 254px;
 	right: 40px;
 	margin-top: -80px;
 	margin-bottom: 5px;
@@ -460,15 +460,23 @@ table.campaigns {
 
 /* Charts */
 
-.chart {
-	position: relative;
-	margin: 20px 0;
+#charts {
+    width: 100%;
 }
 
-#mentions, #sentiment, #trends, #api-stats {
-	margin-right: 200px;
+.chart {
+    width: 75%;
+    position: relative;
 }
-#mentions, #sentiment {
+
+.health {
+    width: 25%;
+}
+
+#mentions, #sentiment, #trends, #api-stats, #reply-time, #popularity {
+	margin-left: 200px;
+}
+#mentions, #sentiment, #reply-time, #popularity {
 	height: 150px;
 }
 #trends, #api-stats {
@@ -584,7 +592,7 @@ table.campaigns {
 
 .downloadChart {
 	position: absolute;
-	top: 100%;
+	bottom: 0;
 	right: 0;
 	display: none;
 }
@@ -884,4 +892,48 @@ table.campaigns {
 
 .key.selected {
     display: block;
+}
+
+/* health box next to chart */
+
+.health h3 {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.health .fieldset {
+    border: 1px solid #666;
+    margin: 0 20%;
+    text-align: center;
+    position: relative;
+    padding: 20px
+}
+
+.health .fieldset h4 {
+    margin: 0;
+    padding: 0 10px;
+    background: #fff;
+    position: absolute;
+    display: inline-block;
+    top: -8px;
+    left: 10px;
+    font-weight: normal;
+    font-size: 12px;
+    color: #666;
+}
+
+.health .fieldset p {
+    font-size: 30px;
+    margin: 0;
+}
+
+.health p .small {
+    font-size: 20px;
+}
+
+.health .target {
+    margin-left: 20%;
+    font-size: 12px;
+    color: #666;
+    font-weight: bold;
 }

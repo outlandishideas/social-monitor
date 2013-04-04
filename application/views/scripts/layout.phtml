@@ -33,11 +33,14 @@
 						<div class="main">
 						<?php echo $this->navigation()->menu()->setMaxDepth(0); ?>
 						</div>
+                            <!-- remove user button
 						<div class="extra">
-						<?php echo $this->navigation()->menu()->render($this->user->isAdmin ? $this->adminMenu : $this->nonAdminMenu); ?>
+						<?php //echo $this->navigation()->menu()->render($this->user->isAdmin ? $this->adminMenu : $this->nonAdminMenu); ?>
 						</div>
+				            -->
 					</div>
 				</div>
+
 				<div id="user-nav" class="dropdown">
 					<a href="" class="dropdown-toggle" data-toggle="dropdown">
 						<span>Logged in as</span>
@@ -75,9 +78,9 @@
 			->appendFile('assets/lib/backbone/underscore.js')
 			->appendFile('assets/lib/bootstrap/bootstrap.js')
 			->appendFile('assets/js/datatables.js')
-			->appendFile('assets/js/mapping.js')
-			->appendFile('assets/js/charts.js')
-			->appendFile('assets/js/main.js')
+            ->appendFile('assets/js/mapping.js')
+            ->appendFile('assets/js/charts.js')
+            ->appendFile('assets/js/main.js')
 	?>
 
 </body>

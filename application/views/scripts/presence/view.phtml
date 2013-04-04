@@ -1,1 +1,12 @@
-<?php print_r($this->presence);
+<?php //print_r($this->presence); ?>
+
+<?php echo $this->render('partials/daterange.phtml'); ?>
+
+<table id="charts" data-controller="presence" data-controller-label="presence" data-default-line-id="<?php echo $this->defaultLineId; ?>">
+    <tr>
+        <td class="health" data-id="popularity"></td><td id="popularity" class="chart" data-y-label="followers"></td>
+    </tr>
+    <tr>
+        <td class="health" data-id="posts"></td><td id="posts" class="chart" data-y-label="posts"></td>
+    </tr>
+</table>

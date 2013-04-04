@@ -464,16 +464,16 @@ app.api = {
         var args = {code:code};
 
         return app.api.get(url, args).done(function(response){
-            var list = '';
 
-            console.log(response.data);
+            var list;
 
             for(var key in response.data){
                 var obj = response.data[key];
-                list += '<li>'+ key +' : '+ obj +'</li>';
+                list += '<dt>'+ key +'</dt><dd>'+ obj +'</dd>';
             }
-            var key = $('#selected-country');
+            var key = $('#overview');
             key.addClass('selected')
+            console.log(response.data);
             key.find('h2').html(response.data.name);
             key.find('ul')[0].html(list);
         });
@@ -490,7 +490,8 @@ app.api = {
 			line_ids:line_ids,
 			dateRange: dateRange
 		};
-		return app.api.get(url, args).done(cb);
+
+        return app.api.get(url, args).done(cb);
 	},
 	callback: function (response) {
 		if (response.request.path.indexOf('graph-data') >= 0) {
