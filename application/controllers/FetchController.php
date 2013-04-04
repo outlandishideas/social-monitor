@@ -15,6 +15,7 @@ class FetchController extends BaseController
 
 		/** @var $presences Model_Presence[] */
 		$presences = Model_Presence::fetchAll();
+		$presenceCount = count($presences);
 
 		/**
 		 * @var $db PDO
@@ -24,12 +25,14 @@ class FetchController extends BaseController
 
 		$infoInterval = ($this->config->presence->cache_data_hours ?: 4) * 3600;
 		usort($presences, function($a, $b) { return strcmp($a->last_updated ?: '000000', $b->last_updated ?: '000000'); });
+		$index = 0;
 		foreach ($presences as $p) {
+			$index++;
 			$now = time();
 			$lastUpdated = strtotime($p->last_updated);
 			if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
 				try {
-					$this->log('Updating info (' . $p->type . '): ' . $p->handle);
+					$this->log('Updating ' . $p->type . ' info (' . $index . '/' . $presenceCount . '): ' . $p->handle);
 					$p->updateInfo();
 					$p->last_updated = gmdate('Y-m-d H:i:s');
 					$p->save();
@@ -56,8 +59,10 @@ class FetchController extends BaseController
 		}
 
 		usort($presences, function($a, $b) { return strcmp($a->last_fetched ?: '000000', $b->last_fetched ?: '000000'); });
+		$index = 0;
 		foreach ($presences as $p) {
-			$this->log('Fetching ' . ($p->type == Model_Presence::TYPE_TWITTER ? 'tweets' : 'posts') . ': ' . $p->handle);
+			$index++;
+			$this->log('Fetching ' . ($p->type == Model_Presence::TYPE_TWITTER ? 'tweets' : 'posts') . ' (' . $index . '/' . $presenceCount . '): ' . $p->handle);
 			try {
 				$this->log($p->updateStatuses());
 				$p->last_fetched = gmdate('Y-m-d H:i:s');
