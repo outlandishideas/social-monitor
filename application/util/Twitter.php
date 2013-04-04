@@ -41,8 +41,8 @@ class Util_Twitter {
 				// since_id is exclusive
 				$args['since_id'] = $minTweetId;
 			}
-			$repeat = true;
-			while ($repeat) {
+
+			do {
 //	    		print_r($args);
 //	    		echo "\n";
 				$result = $token->apiRequest('statuses/user_timeline', $args);
@@ -59,7 +59,7 @@ class Util_Twitter {
 					// max_id is inclusive, so need to subtract 1
 					$args['max_id'] = function_exists('bcsub') ? bcsub($lowestId, 1) : $lowestId - 1;
 				}
-			}
+			} while ($repeat);
 		}
 		return $tweets;
 	}

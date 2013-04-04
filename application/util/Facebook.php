@@ -1,5 +1,7 @@
 <?php
 
+include APP_ROOT_PATH."/lib/facebook/facebook.php";
+
 class Util_Facebook {
 	private static $_fb;
 
@@ -32,44 +34,46 @@ class Util_Facebook {
 	}
 
 	public static function pagePosts($pageId, $since = null, $fields = array('post_id', 'message', 'created_time', 'actor_id', 'comments', 'likes', 'permalink', 'type')) {
-		if (!in_array('post_id', $fields)) {
-			$fields[] = 'post_id';
-		}
-		$config = Zend_Registry::get('config');
-//		$postData = self::multiquery(array(
-//			'posts'=>'SELECT ' . implode(',', $fields) . ' FROM stream WHERE source_id = ' . $pageId . ' LIMIT 30',
-//			'comments'=>'SELECT comments, fromid, id, likes, object_id, post_fbid, post_id, reply_xid, text, time, username, xid FROM comment WHERE post_id IN (SELECT post_id FROM #posts) LIMIT 10'
-//		));
-		$max = time();
 		$posts = array();
-		do {
-			$clauses = array('source_id = ' . $pageId);
-			if ($since) {
-				$clauses[] = 'created_time > ' . $since;
+		if ($pageId) {
+			if (!in_array('post_id', $fields)) {
+				$fields[] = 'post_id';
 			}
-			if ($max) {
-				$clauses[] = 'created_time < ' . $max;
-			}
-			$fql = 'SELECT ' . implode(',', $fields) . '
-				FROM stream
-				WHERE ' . implode(' AND ', $clauses) . '
-				ORDER BY created_time ASC
-				LIMIT ' . $config->facebook->fetch_per_page;
-			try {
-				$newPosts = self::query($fql);
-				foreach ($newPosts as $i=>$post) {
-					$newPosts[$i] = (object)$post;
+			$config = Zend_Registry::get('config');
+	//		$postData = self::multiquery(array(
+	//			'posts'=>'SELECT ' . implode(',', $fields) . ' FROM stream WHERE source_id = ' . $pageId . ' LIMIT 30',
+	//			'comments'=>'SELECT comments, fromid, id, likes, object_id, post_fbid, post_id, reply_xid, text, time, username, xid FROM comment WHERE post_id IN (SELECT post_id FROM #posts) LIMIT 10'
+	//		));
+			$max = time();
+			do {
+				$clauses = array('source_id = ' . $pageId);
+				if ($since) {
+					$clauses[] = 'created_time > ' . $since;
 				}
-				$posts = array_merge($posts, $newPosts);
-				$repeat = count($newPosts) > 0;
-				if ($repeat) {
-					$since = $newPosts[count($newPosts)-1]->created_time;
+				if ($max) {
+					$clauses[] = 'created_time < ' . $max;
 				}
-			} catch (Exception_FacebookNotFound $e) {
-				//ignore not-found exceptions
-				$repeat = false;
-			}
-		} while ($repeat);
+				$fql = 'SELECT ' . implode(',', $fields) . '
+					FROM stream
+					WHERE ' . implode(' AND ', $clauses) . '
+					ORDER BY created_time ASC
+					LIMIT ' . $config->facebook->fetch_per_page;
+				try {
+					$newPosts = self::query($fql);
+					foreach ($newPosts as $i=>$post) {
+						$newPosts[$i] = (object)$post;
+					}
+					$posts = array_merge($posts, $newPosts);
+					$repeat = count($newPosts) > 0;
+					if ($repeat) {
+						$since = $newPosts[count($newPosts)-1]->created_time;
+					}
+				} catch (Exception_FacebookNotFound $e) {
+					//ignore not-found exceptions
+					$repeat = false;
+				}
+			} while ($repeat);
+		}
 
 		return $posts;
 	}
