@@ -13,7 +13,7 @@ class IndexController extends BaseController
         $json = array();
         foreach($campaigns as $campaign){
             $kpis = $campaign->getKpis();
-            $json[] = array('name' =>$campaign->country, 'target' => $campaign->audience/2, 'kpis' => $kpis);
+            $json[$campaign->country] = array('name' =>$campaign->country, 'id'=>$campaign->id, 'target' => $campaign->audience/2, 'kpis' => $kpis);
         }
         return json_encode($json);
     }

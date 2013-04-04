@@ -171,6 +171,10 @@ app.init = {
 			app.charts.setup();
 		},
 
+        '#geo-map': function($item) {
+            app.geochart.setup();
+        },
+
 		'.chart': function($item) {
 			$(app.templates.downloadChart)
 					.on('click', '.link', app.charts.grabSvgElement)

@@ -3,6 +3,9 @@
 class Model_Campaign extends Model_Base {
 	protected static $tableName = 'campaigns';
 	protected static $sortColumn = 'display_name';
+    protected static $kpis = array(
+        'popularityPercentage','popularityTime'
+    );
 
 	public function delete() {
 		$this->_db->prepare('DELETE FROM campaign_presences WHERE campaign_id = :cid')->execute(array(':cid'=>$this->id));
@@ -46,7 +49,7 @@ class Model_Campaign extends Model_Base {
 
     function getKpis(){
         $kpi = $this->getPresencePopularity();
-        return array('popularity' => $kpi);
+        return array('popularityPercentage' => $kpi);
     }
 
     function getPresencePopularity(){
