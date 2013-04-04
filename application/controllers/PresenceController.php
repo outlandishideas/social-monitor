@@ -160,7 +160,7 @@ class PresenceController extends BaseController
 
             $model = $lineProps['modelClass']::fetchById($lineProps['modelId']);
             $selector = '#popularity';
-            $name = 'Popularity for '.$model->name;
+            $name = 'Fans/followers for '.$model->name;
 
             $buckets = $model->getPopularityData($days);
 
