@@ -10,10 +10,14 @@ app.geochart = {
         google.load('visualization', '1', {'packages': ['geochart']});
         google.setOnLoadCallback(app.geochart.drawRegionsMap);
 
+        $('#metric-picker')
+            .on('change', function () {
+                app.geochart.drawRegionsMap();
+            });
 
     },
     currentMetric:function () {
-    var select = document.getElementById('select-kpi');
+    var select = document.getElementById('metric-picker');
     if(select){
         return select.value;
     } else {

@@ -4,7 +4,8 @@ class Model_Campaign extends Model_Base {
 	protected static $tableName = 'campaigns';
 	protected static $sortColumn = 'display_name';
     protected static $kpis = array(
-        'popularityPercentage','popularityTime'
+        'popularityPercentage' => 'Percent of Target Audience',
+        'popularityTime' => 'Months to Target Audience'
     );
 
 	public function delete() {
@@ -47,16 +48,38 @@ class Model_Campaign extends Model_Base {
 		return array_filter($this->getPresences(), function($a) { return $a->type == 'twitter'; });
 	}
 
-    function getKpis(){
-        $kpi = $this->getPresencePopularity();
-        return array('popularityPercentage' => $kpi);
+    static function getKpis(){
+        return static::$kpis;
     }
 
-    function getPresencePopularity(){
+    function getKpiData(){
+        $return = array();
+        foreach(static::getKpis() as $key => $kpi){
+            $method = 'get'.ucfirst($key);
+            $kpi = $this->$method();
+            if($kpi){
+                $return[$key] = $kpi;
+            }
+        }
+
+        return $return;
+    }
+
+    function getPopularityPercentage(){
         $presences = $this->presences;
         $return = array();
         foreach($presences as $presence){
             $return[] = array('name'=>$presence->name, 'popularity' =>$presence->popularity);
+        }
+        return $return;
+    }
+
+    function getPopularityTime(){
+        $presences = $this->presences;
+        $return = array();
+        foreach($presences as $presence){
+            $months = $presence->getTargetAudienceDateDiff()->m;
+            $return[] = array('name'=>$presence->name, 'time' =>$months);
         }
         return $return;
     }
