@@ -20,47 +20,46 @@ class Util_Twitter {
 		return self::token()->apiRequest('users/show', array('screen_name'=>$screenName));
 	}
 
+	/**
+	 * Gets an array of tweets for the given user
+	 * @param $userId
+	 * @param null $minTweetId
+	 * @return array
+	 */
 	public static function userTweets($userId, $minTweetId = null) {
-		$token = self::token();
-		$args = array(
-			'user_id'         => $userId,
-			'count'           => Zend_Registry::get('config')->twitter->fetch_per_page,
-			'exclude_replies' => false,
-			'include_rts'     => true,
-			'trim_user'       => true
-		);
-		if ($minTweetId) {
-			//TODO check whether system is 64-bit
-			$args['since_id'] = function_exists('bcsub') ? bcsub($minTweetId, 1) : $minTweetId - 1;
-		}
-		$repeat = true;
 		$tweets = array();
-		while ($repeat) {
+		if ($userId) {
+			$token = self::token();
+			$args = array(
+				'user_id'         => $userId,
+				'count'           => Zend_Registry::get('config')->twitter->fetch_per_page,
+				'exclude_replies' => false,
+				'include_rts'     => true,
+				'trim_user'       => true
+			);
+			if ($minTweetId) {
+				// since_id is exclusive
+				$args['since_id'] = $minTweetId;
+			}
+			$repeat = true;
+			while ($repeat) {
 //	    		print_r($args);
 //	    		echo "\n";
-			$result = $token->apiRequest('statuses/user_timeline', $args);
+				$result = $token->apiRequest('statuses/user_timeline', $args);
+				$tweets = array_merge($tweets, $result);
 
-			$tweets += $result;
 //	    		$this->logApiResult($result);
 
-			// using 'min_id' or 'max_id' will return a list that includes that tweet (so can't check for empty $result)
-			if (!$minTweetId || count($result) <= 1) {
-				$repeat = false;
-			} else {
-				// look for minTweetId. If not found, need to repeat using a max_id to look back further
-				$repeat = true;
-				foreach ($result as $tweet) {
-					if ($tweet->id_str == $minTweetId) {
-//							echo "found expected tweet\n";
-						$repeat = false;
-						break;
-					}
-				}
+				// if we have a minimum tweet id, and we fetch the exact number we asked for, we likely need to fill in the gap using another request
+				$repeat = ($minTweetId && count($result) == $args['count']);
+
 				if ($repeat) {
-					$args['max_id'] = array_pop($result)->id_str;
+					$lowestId = min(array_map(function($t) { return $t->id_str; }, $result));
+					//TODO check whether system is 64-bit
+					// max_id is inclusive, so need to subtract 1
+					$args['max_id'] = function_exists('bcsub') ? bcsub($lowestId, 1) : $lowestId - 1;
 				}
 			}
-
 		}
 		return $tweets;
 	}

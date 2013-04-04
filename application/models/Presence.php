@@ -78,10 +78,13 @@ class Model_Presence extends Model_Base {
 			throw new Exception('Presence not initialised');
 		}
 
+		$toInsert = array();
+		$tableName = null;
 		$fetchCount = new Util_FetchCount(0, 0);
 		switch($this->type) {
 			case self::TYPE_FACEBOOK:
 				$fetchCount->type = 'post';
+				$tableName = 'facebook_stream';
 				$stmt = $this->_db->prepare('SELECT created_time FROM facebook_stream WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1');
 				$stmt->execute(array(':id'=>$this->id));
 				$since = $stmt->fetchColumn();
@@ -89,7 +92,6 @@ class Model_Presence extends Model_Base {
 					$since = strtotime($since);
 				}
 				$posts = Util_Facebook::pagePosts($this->uid, $since);
-				$toInsert = array();
 				while ($posts) {
 					$post = array_shift($posts);
 					$toInsert[$post->post_id] = array(
@@ -102,16 +104,14 @@ class Model_Presence extends Model_Base {
 						'type' => $post->type
 					);
 				}
-				$fetchCount->fetched += count($toInsert);
-				$fetchCount->added += $this->insertData('facebook_stream', $toInsert);
 				break;
 			case self::TYPE_TWITTER:
 				$fetchCount->type = 'tweet';
+				$tableName = 'twitter_tweets';
 				$stmt = $this->_db->prepare('SELECT tweet_id FROM twitter_tweets WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1');
 				$stmt->execute(array(':id'=>$this->id));
 				$lastTweetId = $stmt->fetchColumn();
 				$tweets = Util_Twitter::userTweets($this->uid, $lastTweetId);
-				$toInsert = array();
 				while ($tweets) {
 					$tweet = array_shift($tweets);
 					$parsedTweet = Util_Twitter::parseTweet($tweet);
@@ -126,10 +126,14 @@ class Model_Presence extends Model_Base {
 						'in_reply_to_status_uid' => $tweet->in_reply_to_status_id_str
 					);
 				}
-				$fetchCount->fetched += count($toInsert);
-				$fetchCount->added += $this->insertData('twitter_tweets', $toInsert);
 				break;
 		}
+
+		if ($toInsert && $tableName) {
+			$fetchCount->fetched += count($toInsert);
+			$fetchCount->added += $this->insertData($tableName, $toInsert);
+		}
+
 		return $fetchCount;
 	}
 
