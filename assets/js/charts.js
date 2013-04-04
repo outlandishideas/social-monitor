@@ -81,6 +81,13 @@ app.charts = {
 			chart.drawBuckets = true;
 			chart.drawCircles = true;
 		},
+        '#posts': function(chart) {
+            chart.getData = function (d) {
+                return d.value;
+            };
+            chart.shouldRescale = true;
+            chart.drawCircles = true;
+        },
         '#popularity': function(chart) {
             chart.getData = function (d) {
                 return d.value;
@@ -335,7 +342,7 @@ app.charts = {
             var html = '<h3>Target Followers</h3>';
             html += '<div class="fieldset">';
             html += '<h4>Current</h4>';
-            html += '<p>'+ lastPoint.value +'</p>';
+            html += '<p><span style="color:'+app.charts.getColorForPercentage(data.timeToTargetPercent)+'">'+ lastPoint.value +'</span></p>';
             html += '</div>';
             html += '<p class="target">Target Followers: '+ data.target +'</p>';
 
@@ -350,16 +357,15 @@ app.charts = {
 		var c = app.state.charts[selector];
 
 		//calculate max y value in this dataset (need to cast as int, otherwise 'max' is done alphabetically)
-		var yMax = d3.max(points, c.yMaxFunc);
-        var yMin = d3.min(points, c.yMaxFunc);
-        console.log(yMin);
-
+		c.yMax = d3.max(points, c.yMaxFunc);
+        c.yMin = d3.min(points, c.yMaxFunc);
 
 		// create one container per data set
 		var group = c.vis
 				.append('svg:g')
 				.attr('data-line-id', line_id)
-				.attr('data-max', yMax)
+				.attr('data-max', c.yMax)
+                .attr('data-min', c.yMin)
 				.attr('data-points', JSON.stringify(points))
 				.attr('class', 'dataset lines');
 
@@ -460,19 +466,12 @@ app.charts = {
 			return;
 		}
 
-		var $datasets = c.$chart.find('.dataset');
+        var $datasets = c.$chart.find('.dataset');
 
-		//get the max value of all datasets
-		if ($datasets.size()) {
-			c.yMax = d3.max($datasets, function (el) {
-				return $(el).data('max');
-			});
-		} else {
-			c.yMax = 0;
-		}
-
-		//update y scale mapping functions
-		c.yMap.domain([0, c.yMax]);
+        if(c.yMax && c.yMin){
+            //update y scale mapping functions
+            c.yMap.domain([c.yMin,c.yMax]);
+        }
 
 		//rescale axes
 		c.vis.transition().select('.axis-y').call(c.yAxis);
@@ -539,5 +538,31 @@ app.charts = {
 				}
 		);
 
-	}
+	},
+    percentColors:[
+        { pct: 0, color: { r: 0x00, g: 0xff, b: 0 } },
+        { pct: 50, color: { r: 0xff, g: 0xff, b: 0 } },
+        { pct: 100, color: { r: 0xff, g: 0x00, b: 0 } }
+    ],
+    getColorForPercentage:function(pct) {
+    var percentColors = app.charts.percentColors;
+    if(pct > 100) pct = 100;
+    for (var i = 0; i < percentColors.length; i++) {
+        if (pct <= percentColors[i].pct) {
+            var lower = percentColors[i - 1];
+            var upper = percentColors[i];
+            var range = upper.pct - lower.pct;
+            var rangePct = (pct - lower.pct) / range;
+            var pctLower = 1 - rangePct;
+            var pctUpper = rangePct;
+            var color = {
+                r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+                g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+                b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+            };
+            return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+            // or output as hex if preferred
+        }
+    }
+}
 };

@@ -146,7 +146,7 @@ class Model_Presence extends Model_Base {
 	 * @return array a series of (date, value) data points
 	 */
 	private function getHistoryData($type, $days = 7) {
-		$date = gmdate('Y-m-d H:i:s', strtotime('-' . $days . ' days'));
+		$date = gmdate('Y-m-d', strtotime('-' . $days . ' days'));
 		$stmt = $this->_db->prepare('SELECT datetime, value
 			FROM presence_history
 			WHERE presence_id = :id
@@ -201,6 +201,18 @@ class Model_Presence extends Model_Base {
 		}
 		return $date;
 	}
+
+    public function getTargetAudienceDatePercent(){
+        $days = 365; //base line for percentage is one year
+
+        $trendDate = new DateTime($this->getTargetAudienceDate());
+        $targetDate = new DateTime("now");
+        $targetDate->add(new DateInterval('P1Y'));
+        $diff = $trendDate->diff($targetDate);
+
+        return ($days/100)*($diff->days);
+
+    }
 
 	/**
 	 * Delete all of the presence's associated data

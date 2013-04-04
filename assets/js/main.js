@@ -490,7 +490,8 @@ app.api = {
 			line_ids:line_ids,
 			dateRange: dateRange
 		};
-		return app.api.get(url, args).done(cb);
+
+        return app.api.get(url, args).done(cb);
 	},
 	callback: function (response) {
 		if (response.request.path.indexOf('graph-data') >= 0) {

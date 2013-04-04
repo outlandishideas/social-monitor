@@ -162,7 +162,7 @@ class PresenceController extends BaseController
             $selector = '#popularity';
             $name = 'Popularity for '.$model->name;
 
-            $buckets = $model->getPopularityData('popularity', $days);
+            $buckets = $model->getPopularityData($days);
 
             //key data by date
             $keyedBuckets = array();
@@ -185,6 +185,7 @@ class PresenceController extends BaseController
                 'line_id' => $lineId,
                 'target' => $target,
                 'timeToTarget' => $model->getTargetAudienceDate(),
+                'timeToTargetPercent' => $model->getTargetAudienceDatePercent(),
                 'points' => array(array_values($keyedBuckets))
             );
         }

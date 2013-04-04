@@ -927,6 +927,10 @@ table.campaigns {
     margin: 0;
 }
 
+.health p .small {
+    font-size: 20px;
+}
+
 .health .target {
     margin-left: 20%;
     font-size: 12px;
