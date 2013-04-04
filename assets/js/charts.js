@@ -326,6 +326,24 @@ app.charts = {
             app.charts.addLine(data.selector, data.points[i], data.line_id, color);
 		}
 
+
+
+        if(data.selector = '#popularity'){
+            var health = $(data.selector).siblings('.health');
+            var lastPoint = data.points[0][data.points[0].length-1];
+
+            var html = '<h3>Target Followers</h3>';
+            html += '<div class="fieldset">';
+            html += '<h4>Current</h4>';
+            html += '<p>'+ lastPoint.value +'</p>';
+            html += '</div>';
+            html += '<p class="target">Target Followers: '+ data.target +'</p>';
+
+            health.empty().html(html);
+
+
+        }
+
 	},
 
 	addLine:function (selector, points, line_id, color) {

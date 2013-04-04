@@ -96,6 +96,7 @@ class PresenceController extends BaseController
 		}
 
 		$this->view->types = array(Model_Presence::TYPE_TWITTER=>'Twitter', Model_Presence::TYPE_FACEBOOK=>'Facebook');
+        $this->view->countries = Model_Campaign::fetchAll();
 		$this->view->presence = $presence;
 		$this->view->title = 'Edit Presence';
 	}
@@ -169,6 +170,12 @@ class PresenceController extends BaseController
                 //$bucket['date'] = Model_Base::localeDate($bucket['date']);
                 $keyedBuckets[$bucket->datetime] = $bucket;
             }
+            $country = $model->getCountry();
+            if($country){
+                $target =0.5*$country->audience;
+            } else {
+                $target = 30000;
+            }
 
             //combine arrays
             ksort($keyedBuckets);
@@ -176,6 +183,8 @@ class PresenceController extends BaseController
                 'name' => $name,
                 'selector' => $selector,
                 'line_id' => $lineId,
+                'target' => $target,
+                'timeToTarget' => $model->getTargetAudienceDate(),
                 'points' => array(array_values($keyedBuckets))
             );
         }
