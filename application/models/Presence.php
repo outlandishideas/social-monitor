@@ -163,6 +163,18 @@ class Model_Presence extends Model_Base {
         return $this->getHistoryData('popularity', $days);
     }
 
+	public function getPostsPerDayData($days) {
+		$date = gmdate('Y-m-d', strtotime('-' . $days . ' days'));
+		$tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
+		$stmt = $this->_db->prepare(
+			"SELECT date, COUNT(date) AS post_count FROM
+			(SELECT DATE(created_time) AS date FROM $tableName WHERE presence_id = :pid AND created_time >= :date) AS tmp
+			GROUP BY date"
+		);
+		$stmt->execute(array(':pid'=>$this->id, ':date'=>$date));
+		return $stmt->fetchAll(PDO::FETCH_OBJ);
+	}
+
     public function getRecentPopularityData(){
         $stmt = $this->_db->prepare('SELECT popularity, handle
 			FROM presences
@@ -170,6 +182,15 @@ class Model_Presence extends Model_Base {
         $stmt->execute(array(':id'=>$this->id));
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+
+	public function getTargetAudience() {
+		$target = 30000;
+		$country = $this->getCountry();
+		if ($country && $country->audience > 0) {
+			$target = 0.5*$country->audience;
+		}
+		return $target;
+	}
 
 	/**
 	 * Gets the date at which the target audience size will be reached, based on the current trend. The date may be in the past
@@ -182,8 +203,8 @@ class Model_Presence extends Model_Base {
 	 */
 	public function getTargetAudienceDate() {
 		$date = null;
-		$country = $this->getCountry();
-		if ($country && $country->audience > 0) {
+		$target = $this->getTargetAudience();
+		if ($target > 0) {
 			$data = $this->getHistoryData('popularity');
 			$n = count($data);
 			if ($n > 1) {
@@ -200,7 +221,6 @@ class Model_Presence extends Model_Base {
 				$meanY /= $n;
 				$a = ($sumXY - $n*$meanX*$meanY)/($sumXX - $n*$meanX*$meanX);
 				$b = $meanY - $a*$meanX;
-				$target = 0.5*$country->audience;
 				if ($a != 0) {
 					$timestamp = ($target - $b)/$a;
 					if ($timestamp < PHP_INT_MAX) {

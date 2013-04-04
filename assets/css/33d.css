@@ -466,6 +466,7 @@ table.campaigns {
 
 .chart {
     width: 75%;
+	height: 200px;
     position: relative;
 }
 
@@ -473,122 +474,12 @@ table.campaigns {
     width: 25%;
 }
 
-#mentions, #sentiment, #trends, #api-stats, #reply-time, #popularity {
-	margin-left: 200px;
-}
-#mentions, #sentiment, #reply-time, #popularity {
-	height: 150px;
-}
-#trends, #api-stats {
-	height: 300px;
-}
-
-#legend, #api-calendar {
-	float: right;
-	clear: right;
-	width: 180px;
-	padding: 10px;
-}
-
-#legend .dataset {
-	margin: 5px 0;
-	cursor: pointer;
-	position: relative;
-}
-
-#legend .dataset.all-tweets {
-	font-weight: bold;
-	cursor: default;
-}
-
-#legend .choose, #legend .close {
-	width: 16px;
-	height: 16px;
-	display: inline-block;
-	vertical-align: top;
-}
-
-#legend .text {
-	margin-left: 5px;
-}
-
-#legend .buttons {
-	display: none;
-	position: absolute;
-	right: 0;
-	top: 0;
-	background-color: #fff;
-}
-
-#legend .dataset:hover .buttons {
-	display: block;
-}
-
-#legend .choose, #legend .close {
-	cursor: pointer;
-	margin-left: 5px;
-}
-
-#legend .choose {
-	background-image: url(../img/color_wheel.png);
-}
-
-#legend .close {
-	background-image: url(../img/cross.png);
-}
-
-#api-calendar .dates {
-	height: 280px;
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-
-#api-calendar .dates ul.years {
-	padding-left: 0;
-	list-style: none;
-}
-
-#api-calendar .dates ul.months {
-	padding-left: 30px;
-	margin: 0;
-}
-
-#api-calendar .dates ul.months li {
-	cursor: pointer;
-}
-
-#api-calendar .dates ul.months li:hover {
-	text-decoration: underline;
-}
-
-#api-calendar li.selected {
-	font-weight: bold;
-}
-
-#colorPicker {
-	position: absolute;
-	top: 0;
-	margin-left: 20px;
-	background: #fff;
-	border: 1px solid #ccc;
-	z-index: 10;
-	cursor: default;
-}
-
-#colorPicker .container {
-	margin: 10px;
-}
-
-#colorPicker .toolbar {
-	background-color: #f2f2f2;
-	border-top: 1px solid #ccc;
-	padding: 10px;
-}
-
-#colorValue {
-	width: 70px;
-	margin-left: 20px;
-}
+/*#mentions, #sentiment, #trends, #api-stats, #reply-time, #popularity {*/
+	/*margin-left: 200px;*/
+/*}*/
+/*#mentions, #sentiment, #reply-time, #popularity {*/
+	/*height: 150px;*/
+/*}*/
 
 .downloadChart {
 	position: absolute;
@@ -599,11 +490,6 @@ table.campaigns {
 
 .chart:hover .downloadChart {
 	display: block;
-}
-
-.lineSelector {
-	float: left;
-	width: 400px;
 }
 
 .statusesDisplay {
@@ -650,14 +536,6 @@ table.campaigns {
 	/*vertical-align: top;*/
 /*}*/
 
-/*table.dataTable.dtable h4 {*/
-	/*margin: 0 0 5px;*/
-/*}*/
-/*table.dataTable.dtable h4 span {*/
-	/*color: #999;*/
-	/*margin-left: 10px;*/
-	/*font-size: 11px;*/
-/*}*/
 
 /*.statusesDisplay .dataTable p.more {*/
 	/*float: right;*/
@@ -679,12 +557,6 @@ table.campaigns {
 	/*padding: 15px 5px;*/
 /*}*/
 
-/*table.dataTable.dtable td.retweets {*/
-	/*border-left: 1px solid #ccc;*/
-/*}*/
-/*table.dataTable.dtable p {*/
-	/*margin: 0;*/
-/*}*/
 
 .data {
 	float: left;

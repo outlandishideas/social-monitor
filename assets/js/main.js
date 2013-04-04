@@ -40,8 +40,6 @@ $.extend(app, {
 				'<%}else{%>' +
 				'<h4>Unknown author</h4>' +
 				'<%}%><p><%=message.replace(/\\n/g, "<br />")%></p>',
-		colorpicker:'<div id="colorPicker" xmlns="http://www.w3.org/1999/html"><div class="container"></div>' +
-				'<div class="toolbar"><button>OK</button> <a href="">Cancel</a> <input type="text" id="colorValue" value="<%=color%>"></div></div>',
 		searchArea: '<li class="area">\
 						<div class="marker <%=className%>"></div>\
 						<input type="hidden" class="lat" name="lat[]" value="<%=lat%>" />\
@@ -184,35 +182,8 @@ app.init = {
 			});
 		},
 
-		'#searches, #lists': function($item) {
-			$('.lineSelector .dtable').dataTable({
-				bPaginate:false,
-				aaSorting:[
-					[1, 'desc']
-				]
-			});
-		},
-
 		'#api-status': function($item) {
 			$item.find('span').mouseover(app.apiStatus.show).mouseout(app.apiStatus.hide);
-		},
-
-		'#api-calendar ul.months': function($item) {
-			$item.on('click', 'li', function() {
-				var $activeMonth = $('#api-calendar ul.months li.selected');
-
-				var newRange = $(this).data('date-range');
-				var newLineId = $(this).data('line-id');
-				var oldLineId = $activeMonth.data('line-id');
-
-				app.charts.addDataset(newLineId);
-				app.charts.removeDataset(oldLineId);
-				$activeMonth.removeClass('selected');
-				$(this).addClass('selected');
-
-				app.state.dateRange = newRange;
-				$(document).trigger('dateRangeUpdated');
-			});
 		},
 
 		'.toggler': function($items) {
@@ -433,17 +404,9 @@ app.date = {
 			return $.datepicker.formatDate(jsConfig.dateFormat, Date.parse(d));
 		});
 		$('#date-picker').val(stringDates.join(' - '));
-
-		// for campaign API page
-		if ($('#api-calendar').length > 0) {
-			$('#api-calendar li.selected').removeClass('selected');
-			app.state.lineIds.forEach(function(x) {
-				$('#api-calendar li[data-line-id="' + x + '"]').addClass('selected');
-			});
-		}
 	}
 
-}
+};
 
 /**
  * Client-server API convenience functions

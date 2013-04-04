@@ -27,7 +27,6 @@ class PresenceController extends BaseController
 
 		$this->view->title = $presence->label;
 		$this->view->presence = $presence;
-        $this->view->defaultLineId = self::makeLineId('Model_Presence', $presence->id);
 	}
 
 
@@ -96,7 +95,7 @@ class PresenceController extends BaseController
 		}
 
 		$this->view->types = array(Model_Presence::TYPE_TWITTER=>'Twitter', Model_Presence::TYPE_FACEBOOK=>'Facebook');
-        $this->view->countries = Model_Campaign::fetchAll();
+		$this->view->countries = Model_Campaign::fetchAll();
 		$this->view->presence = $presence;
 		$this->view->title = 'Edit Presence';
 	}
@@ -134,146 +133,154 @@ class PresenceController extends BaseController
 		$this->_helper->redirector->gotoSimple('index');
 	}
 
-    //fetch mentions data for line graph
-    public function graphDataAction() {
-        Zend_Session::writeClose(); //release session on long running actions
+	/**
+	 * Gets all of the graph data for the requested presence
+	 */
+	public function graphDataAction() {
+		Zend_Session::writeClose(); //release session on long running actions
 
-        $dateRange = $this->getRequestDateRange();
-        if (!$dateRange) {
-            $this->apiError('Missing date range');
-        }
+		$dateRange = $this->getRequestDateRange();
+		if (!$dateRange) {
+			$this->apiError('Missing date range');
+		}
+		/** @var $presence Model_Presence */
+		$lineIds = $this->_request->line_ids;
+		if (!$lineIds) {
+			$this->apiError('Missing line IDs');
+		}
 
-        if (empty($this->_request->line_ids)) {
-            $this->apiError('Missing line ID(s)');
-        }
+		$startDate = new DateTime($dateRange[0]);
+		$endDate = new DateTime($dateRange[1]);
 
-        $startDate = new DateTime($dateRange[0]);
-        $endDate = new DateTime($dateRange[1]);
+		$days = $startDate->diff($endDate)->days;
 
-        $days = $startDate->diff($endDate)->days;
+		$series = array();
 
-        $series = array();
-        $lineIds = is_array($this->_request->line_ids) ? $this->_request->line_ids : array($this->_request->line_ids);
+		foreach ($lineIds as $lineId) {
+			list($selector, $presenceId) = explode(':', $lineId);
+			$presence = Model_Presence::fetchById($presenceId);
+			if ($presence) {
+				switch ($selector) {
+					case 'popularity':
+						$buckets = $presence->getPopularityData($days);
 
-        foreach ($lineIds as $lineId) {
-            $lineProps = self::parseLineId($lineId);
+						//key data by date
+						$keyedBuckets = array();
+						foreach ($buckets as $bucket) {
+							//$bucket['date'] = Model_Base::localeDate($bucket['date']);
+							$keyedBuckets[$bucket->datetime] = $bucket;
+						}
 
-            $model = $lineProps['modelClass']::fetchById($lineProps['modelId']);
-            $selector = '#popularity';
-            $name = 'Popularity for '.$model->name;
+						//combine arrays
+						ksort($keyedBuckets);
+						$series[] = array(
+							'name' => 'Popularity for ' . $presence->name,
+							'selector' => '#' . $selector,
+							'target' => $presence->getTargetAudience(),
+							'timeToTarget' => $presence->getTargetAudienceDate(),
+							'timeToTargetPercent' => $presence->getTargetAudienceDatePercent(),
+							'points' => array_values($keyedBuckets)
+						);
+						break;
+					case 'posts_per_day':
+						$data = $presence->getPostsPerDayData($days);
+						usort($data, function($a, $b) { return strcmp($a->date, $b->date); });
 
-            $buckets = $model->getPopularityData($days);
+						$series[] = array(
+							'name' => 'Posts per day for ' . $presence->name,
+							'selector' => '#' . $selector,
+							'target' => 5,
+							'points' => $data
+						);
+						break;
+				}
+			}
+		}
 
-            //key data by date
-            $keyedBuckets = array();
-            foreach ($buckets as $bucket) {
-                //$bucket['date'] = Model_Base::localeDate($bucket['date']);
-                $keyedBuckets[$bucket->datetime] = $bucket;
-            }
-            $country = $model->getCountry();
-            if($country){
-                $target =0.5*$country->audience;
-            } else {
-                $target = 30000;
-            }
+		$this->apiSuccess($series);
+	}
 
-            //combine arrays
-            ksort($keyedBuckets);
-            $series[] = array(
-                'name' => $name,
-                'selector' => $selector,
-                'line_id' => $lineId,
-                'target' => $target,
-                'timeToTarget' => $model->getTargetAudienceDate(),
-                'timeToTargetPercent' => $model->getTargetAudienceDatePercent(),
-                'points' => array(array_values($keyedBuckets))
-            );
-        }
+	public static function getStatusType($id){
+		return Model_Presence::fetchById($id)->typeLabel;
+	}
 
-        return $this->apiSuccess($series);
-    }
+	// AJAX function for fetching the posts/tweets for a page/list/search
+	public function statusesAction() {
+		Zend_Session::writeClose(); //release session on long running actions
 
-    public static function getStatusType($id){
-        return Model_Presence::fetchById($id)->typeLabel;
-    }
+		$dateRange = $this->getRequestDateRange();
+		if (!$dateRange) {
+			$this->apiError('Missing date range');
+		}
 
-    // AJAX function for fetching the posts/tweets for a page/list/search
-    public function statusesAction() {
-        Zend_Session::writeClose(); //release session on long running actions
+		$lineIds = explode(',', $this->_request->line_ids);
+		$linePropsArray = array();
+		foreach ($lineIds as $lineId) {
+			if ($lineId) $linePropsArray[] = self::parseLineId($lineId);
+		}
 
-        $dateRange = $this->getRequestDateRange();
-        if (!$dateRange) {
-            $this->apiError('Missing date range');
-        }
+		$tableData = array();
+		$count = 0;
+		if ($linePropsArray) {
+			$modelClass = $linePropsArray[0]['modelClass'];
+			$statusType = $modelClass::getStatusType($linePropsArray[0]['modelId']);
+			$statuses = $modelClass::getStatusesForModelIds(
+				Zend_Registry::get('db'),
+				$linePropsArray,
+				$dateRange,
+				$this->getRequestSearchQuery(),
+				$this->getRequestOrdering(),
+				$this->getRequestLimit(),
+				$this->getRequestOffset()
+			);
 
-        $lineIds = explode(',', $this->_request->line_ids);
-        $linePropsArray = array();
-        foreach ($lineIds as $lineId) {
-            if ($lineId) $linePropsArray[] = self::parseLineId($lineId);
-        }
+			// convert statuses to appropriate datatables.js format
+			if ($statusType == 'tweet') {
+				foreach ($statuses->data as $tweet) {
 
-        $tableData = array();
-        $count = 0;
-        if ($linePropsArray) {
-            $modelClass = $linePropsArray[0]['modelClass'];
-            $statusType = $modelClass::getStatusType($linePropsArray[0]['modelId']);
-            $statuses = $modelClass::getStatusesForModelIds(
-                Zend_Registry::get('db'),
-                $linePropsArray,
-                $dateRange,
-                $this->getRequestSearchQuery(),
-                $this->getRequestOrdering(),
-                $this->getRequestLimit(),
-                $this->getRequestOffset()
-            );
+					$tableData[] = array(
+						'user_name'=>$tweet->user_name,
+						'screen_name'=>$tweet->screen_name,
+						'tweet'=> $this->_request->format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
+						'retweet_count'=>$tweet->retweet_count,
+						'average_sentiment'=>($tweet->average_sentiment ? $tweet->average_sentiment : 0),
+						'date'=>Model_Base::localeDate($tweet->created_time),
+						'twitter_url'=>Model_TwitterTweet::getTwitterUrl($tweet->screen_name, $tweet->tweet_id),
+						'profile_image_url'=>$tweet->profile_image_url
+					);
+				}
+			} else {
+				foreach ($statuses->data as $post) {
+					$tableData[] = array(
+						'actor_type'=>$post->actor_type,
+						'actor_name' => $post->actor_name,
+						'pic_url' => $post->pic_url,
+						'profile_url' => $post->profile_url,
+						'message'=>$post->message,
+						'average_sentiment'=>($post->average_sentiment ? $post->average_sentiment : 0),
+						'comments'=>$post->comments,
+						'likes'=>$post->likes,
+						'date'=> Model_Base::localeDate($post->created_time)
+					);
+				}
+			}
+			$count = $statuses->count;
+		}
 
-            // convert statuses to appropriate datatables.js format
-            if ($statusType == 'tweet') {
-                foreach ($statuses->data as $tweet) {
+		//return CSV or JSON?
+		if ($this->_request->format == 'csv') {
+			$this->returnCsv($tableData, $statusType.'s.csv');
+		} else {
+			$apiResult = array(
+				'sEcho' => $this->_request->sEcho,
+				'iTotalRecords' => $count,
+				'iTotalDisplayRecords' => $count,
+				'aaData' => $tableData
+			);
+			$this->apiSuccess($apiResult);
+		}
 
-                    $tableData[] = array(
-                        'user_name'=>$tweet->user_name,
-                        'screen_name'=>$tweet->screen_name,
-                        'tweet'=> $this->_request->format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
-                        'retweet_count'=>$tweet->retweet_count,
-                        'average_sentiment'=>($tweet->average_sentiment ? $tweet->average_sentiment : 0),
-                        'date'=>Model_Base::localeDate($tweet->created_time),
-                        'twitter_url'=>Model_TwitterTweet::getTwitterUrl($tweet->screen_name, $tweet->tweet_id),
-                        'profile_image_url'=>$tweet->profile_image_url
-                    );
-                }
-            } else {
-                foreach ($statuses->data as $post) {
-                    $tableData[] = array(
-                        'actor_type'=>$post->actor_type,
-                        'actor_name' => $post->actor_name,
-                        'pic_url' => $post->pic_url,
-                        'profile_url' => $post->profile_url,
-                        'message'=>$post->message,
-                        'average_sentiment'=>($post->average_sentiment ? $post->average_sentiment : 0),
-                        'comments'=>$post->comments,
-                        'likes'=>$post->likes,
-                        'date'=> Model_Base::localeDate($post->created_time)
-                    );
-                }
-            }
-            $count = $statuses->count;
-        }
-
-        //return CSV or JSON?
-        if ($this->_request->format == 'csv') {
-            $this->returnCsv($tableData, $statusType.'s.csv');
-        } else {
-            $apiResult = array(
-                'sEcho' => $this->_request->sEcho,
-                'iTotalRecords' => $count,
-                'iTotalDisplayRecords' => $count,
-                'aaData' => $tableData
-            );
-            $this->apiSuccess($apiResult);
-        }
-
-    }
+	}
 
 
 }

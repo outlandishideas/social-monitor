@@ -2,11 +2,13 @@
 
 <?php echo $this->render('partials/daterange.phtml'); ?>
 
-<table id="charts" data-controller="presence" data-controller-label="presence" data-default-line-id="<?php echo $this->defaultLineId; ?>">
+<table id="charts" data-controller="presence" data-controller-label="presence">
     <tr>
-        <td class="health" data-id="popularity"></td><td id="popularity" class="chart" data-y-label="followers"></td>
+        <td class="health" data-id="popularity"></td>
+	    <td id="popularity" class="chart" data-y-label="followers" data-line-id="popularity:<?php echo $this->presence->id; ?>"></td>
     </tr>
     <tr>
-        <td class="health" data-id="posts"></td><td id="posts" class="chart" data-y-label="posts"></td>
+        <td class="health" data-id="posts_per_day"></td>
+	    <td id="posts_per_day" class="chart" data-y-label="posts-per-day" data-line-id="posts_per_day:<?php echo $this->presence->id; ?>"></td>
     </tr>
 </table>
