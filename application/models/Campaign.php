@@ -44,11 +44,17 @@ class Model_Campaign extends Model_Base {
 		return array_filter($this->getPresences(), function($a) { return $a->type == 'twitter'; });
 	}
 
-    function getKpis($kpi = null){
-        if($kpi){
-            return rand(0,1000);
-        } else {
-            return array('kpi_1'=> rand(0,1000), 'kpi_2' => rand(0,1000), 'kpi_3' => rand(0,1000));
+    function getKpis(){
+        $kpi = $this->getPresencePopularity();
+        return array('popularity' => $kpi);
+    }
+
+    function getPresencePopularity(){
+        $presences = $this->presences;
+        $return = array();
+        foreach($presences as $presence){
+            $return[] = array('name'=>$presence->name, 'popularity' =>$presence->popularity);
         }
+        return $return;
     }
 }

@@ -27,12 +27,20 @@
             for(var key in obj){
                 var attrValue = obj[key];
                 if(key == 'name'){
-                    var country = attrValue
+                    var country = attrValue;
+                } else if (key == 'target') {
+                    var target = attrValue;
                 } else if (key == 'kpis'){
                     for(var kpi in attrValue){
                         var current = currentMetric();
                         if(kpi == current){
-                            var metric = attrValue[kpi];
+                            var value = 0;
+                            for (var p in attrValue[kpi]){
+                                value += parseInt(attrValue[kpi][p].popularity);
+                            }
+                            var length = attrValue[kpi].length;
+                            value = value/length;
+                            var metric = Math.floor((value/target)*100);
                         }
                     }
                 }
@@ -51,7 +59,7 @@
             console.log(select.value);
             return select.value;
         } else {
-            return 'kpi_1';
+            return 'popularity';
         }
 
     }
@@ -62,11 +70,11 @@
 
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Employee Name');
-        data.addColumn('number', currentMetric());
+        data.addColumn('number', currentMetric() +' (in %)');
 
         data = populateDataTableFromJSON(data);
 
-        var options = {colorAxis: {minValue: 0, maxValue: 1000, colors: ['orange', 'green']}};
+        var options = {colorAxis: {minValue: 0, maxValue: 100, colors: ['orange', 'green']}};
 
         var chart = new google.visualization.GeoChart(document.getElementById('geo-map'));
         chart.draw(data, options);

@@ -161,6 +161,14 @@ class Model_Presence extends Model_Base {
         return $this->getHistoryData('popularity', $days);
     }
 
+    public function getRecentPopularityData(){
+        $stmt = $this->_db->prepare('SELECT popularity, handle
+			FROM presences
+			WHERE presence_id = :id');
+        $stmt->execute(array(':id'=>$this->id));
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
 	/**
 	 * Gets the date at which the target audience size will be reached, based on the current trend. The date may be in the past
 	 * If any of these conditions are met, this will return null:
