@@ -31,11 +31,10 @@ class FetchController extends BaseController
 			$now = time();
 			$lastUpdated = strtotime($p->last_updated);
 			if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
+				$saveLastUpdated = true;
 				try {
 					$this->log('Updating ' . $p->type . ' info (' . $index . '/' . $presenceCount . '): ' . $p->handle);
 					$p->updateInfo();
-					$p->last_updated = gmdate('Y-m-d H:i:s');
-					$p->save();
 					$infoStmt->execute(array(
 						':id'       => $p->id,
 						':datetime' => gmdate('Y-m-d H:i:s'),
@@ -44,16 +43,16 @@ class FetchController extends BaseController
 					));
 				} catch (Exception_TwitterNotFound $e) {
 					$this->log($e->getMessage());
-					// save the fact that the user doesn't exist, so we don't try again for a while
-					$p->last_updated = gmdate('Y-m-d H:i:s');
-					$p->save();
 				} catch (Exception_FacebookNotFound $e) {
 					$this->log($e->getMessage());
-					// save the fact that the user doesn't exist, so we don't try again for a while
-					$p->last_updated = gmdate('Y-m-d H:i:s');
-					$p->save();
 				} catch (Exception $e) {
 					$this->log($e->getMessage());
+					$saveLastUpdated = false;
+				}
+
+				if ($saveLastUpdated) {
+					$p->last_updated = gmdate('Y-m-d H:i:s');
+					$p->save();
 				}
 			}
 		}
