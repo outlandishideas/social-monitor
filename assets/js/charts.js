@@ -207,14 +207,16 @@ app.charts = {
 
 		if(data.selector == '#popularity'){
 			var $health = $(data.selector).siblings('.health');
-			var lastPoint = data.points[data.points.length-1];
+			var currentValue = data.points[data.points.length-1].value;
 
 			// work out the health of the timeToTarget
 			// < 1 year => 100%
 			// > 2 years => 0%
 			// else somewhere in between
 			var percent = 0;
-			if (data.timeToTarget) {
+			if (currentValue >= data.target) {
+				percent = 100;
+			} else if (data.timeToTarget) {
 				var minDays = 365;
 				var maxDays = 730;
 				var targetDate = new Date(data.timeToTarget);
@@ -229,12 +231,15 @@ app.charts = {
 
 			$health.empty();
 			$health.append('<h3>Target Followers</h3>');
-			var $fieldset = $('<div class="fieldset"></div>').appendTo($health);
-			$fieldset.append('<h4>Current</h4>');
-			$('<p>' + app.utils.numberFormat(lastPoint.value) + '</p>')
-				.css('color', app.charts.getColorForPercentage(percent))
-				.attr('title', 'Estimated date to reach target: ' + data.timeToTarget)
-				.appendTo($fieldset);
+			var $target = $('<p>' + app.utils.numberFormat(currentValue) + '</p>');
+			$target.css('color', app.charts.getColorForPercentage(percent));
+			if (data.timeToTarget) {
+				$target.attr('title', 'Estimated date to reach target: ' + data.timeToTarget)
+			}
+			$('<div class="fieldset"></div>')
+				.append('<h4>Current</h4>')
+				.append($target)
+				.appendTo($health);
 			$health.append('<p class="target">Target Followers: '+ app.utils.numberFormat(data.target) +'</p>');
 		}
 	},
@@ -242,13 +247,14 @@ app.charts = {
 	addLine: function (selector, points, line_id, color) {
 		var c = app.state.charts[selector];
 
-		//calculate min/max y value in this dataset (need to cast as int, otherwise 'max' is done alphabetically)
+		//calculate min/max y value in this dataset (need to convert to integer, otherwise 'max' is done alphabetically)
 		var f = function(d) { return parseInt(c.getYValue(d)); };
 		c.yMax = d3.max(points, f);
 		c.yMin = d3.min(points, f);
 
+		// make sure the y axis has a decent range of values
 		var range = c.yMax - c.yMin;
-		var minRange = 10;
+		var minRange = 12;
 		if (range < minRange) {
 			c.yMin = Math.max(0, c.yMin-(minRange - range)/2);
 			c.yMax = c.yMin + minRange;
