@@ -247,9 +247,10 @@ app.charts = {
 		c.yMax = d3.max(points, f);
 		c.yMin = d3.min(points, f);
 
+		var range = c.yMax - c.yMin;
 		var minRange = 10;
-		if (c.yMax - c.yMin < minRange) {
-			c.yMin = Math.max(0, c.yMin-minRange/2, c.yMax-minRange);
+		if (range < minRange) {
+			c.yMin = Math.max(0, c.yMin-range/2);
 			c.yMax = c.yMin + minRange;
 		}
 
