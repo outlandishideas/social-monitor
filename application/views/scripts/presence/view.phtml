@@ -3,12 +3,10 @@
 <?php echo $this->render('partials/daterange.phtml'); ?>
 
 <table id="charts" data-controller="presence" data-controller-label="presence">
-    <tr>
-        <td class="health" data-id="popularity"></td>
-	    <td id="popularity" class="chart" data-y-label="followers" data-line-id="popularity:<?php echo $this->presence->id; ?>"></td>
-    </tr>
-    <tr>
-        <td class="health" data-id="posts_per_day"></td>
-	    <td id="posts_per_day" class="chart" data-y-label="posts-per-day" data-line-id="posts_per_day:<?php echo $this->presence->id; ?>"></td>
-    </tr>
+	<?php foreach ($this->graphs as $graph) : ?>
+	<tr>
+		<td class="health"></td>
+		<td id="<?php echo $graph->id; ?>" class="chart" data-y-label="<?php echo $graph->yAxisLabel; ?>" data-line-id="<?php echo $graph->lineId; ?>"></td>
+	</tr>
+	<?php endforeach; ?>
 </table>

@@ -25,8 +25,21 @@ class PresenceController extends BaseController
 		$presence = Model_Presence::fetchById($this->_request->id);
 		$this->validateData($presence);
 
+		$graphs = array();
+		$graphs[] = (object)array(
+			'id' => 'popularity',
+			'yAxisLabel' => 'fans/followers',
+			'lineId' => 'popularity:' . $presence->id
+		);
+		$graphs[] = (object)array(
+			'id' => 'posts_per_day',
+			'yAxisLabel' => 'posts-per-day',
+			'lineId' => 'posts_per_day:' . $presence->id
+		);
+
 		$this->view->title = $presence->label;
 		$this->view->presence = $presence;
+		$this->view->graphs = $graphs;
 	}
 
 
@@ -149,10 +162,8 @@ class PresenceController extends BaseController
 			$this->apiError('Missing line IDs');
 		}
 
-		$startDate = new DateTime($dateRange[0]);
-		$endDate = new DateTime($dateRange[1]);
-
-		$days = $startDate->diff($endDate)->days;
+		$startDate = $dateRange[0];
+		$endDate = $dateRange[1];
 
 		$series = array();
 
@@ -162,7 +173,7 @@ class PresenceController extends BaseController
 			if ($presence) {
 				switch ($selector) {
 					case 'popularity':
-						$buckets = $presence->getPopularityData($days);
+						$buckets = $presence->getPopularityData($startDate, $endDate);
 
 						//key data by date
 						$keyedBuckets = array();
@@ -174,19 +185,20 @@ class PresenceController extends BaseController
 						//combine arrays
 						ksort($keyedBuckets);
 						$series[] = array(
+							'line_id' => $lineId,
 							'name' => 'Popularity for ' . $presence->name,
 							'selector' => '#' . $selector,
 							'target' => $presence->getTargetAudience(),
 							'timeToTarget' => $presence->getTargetAudienceDate(),
-							'timeToTargetPercent' => $presence->getTargetAudienceDatePercent(),
 							'points' => array_values($keyedBuckets)
 						);
 						break;
 					case 'posts_per_day':
-						$data = $presence->getPostsPerDayData($days);
+						$data = $presence->getPostsPerDayData($startDate, $endDate);
 						usort($data, function($a, $b) { return strcmp($a->date, $b->date); });
 
 						$series[] = array(
+							'line_id' => $lineId,
 							'name' => 'Posts per day for ' . $presence->name,
 							'selector' => '#' . $selector,
 							'target' => 5,

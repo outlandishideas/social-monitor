@@ -467,7 +467,7 @@ app.api = {
 		if (response.messages) {
 			_.each(response.messages, function(messageData) {
 				var keys = _.keys(messageData);
-				var vals = _.values(messageData)
+				var vals = _.values(messageData);
 				app.flashMessenger.show(vals[0], keys[0]);
 			})
 		}

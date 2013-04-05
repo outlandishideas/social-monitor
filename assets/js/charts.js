@@ -42,21 +42,8 @@ app.charts = {
 			$charts.hide();
 		} else {
 			// fire off an initial data request
-			app.api.getGraphData(app.state.lineIds, function () {
-				app.api.callback.apply(this, arguments);
-			});
+			app.api.getGraphData(app.state.lineIds);
 		}
-		/*
-		$('#charts tr td.health').each(function () {
-			var health = {};
-			health.selector = '#' + $(this).data('id');
-			console.log(health.selector);
-			if( health.selector in app.charts.healthDisplay) {
-				app.charts.healthDisplay[health.selector](health);
-				app.charts.createHealth(health);
-			}
-		});
-		*/
 	},
 
 	/**
@@ -129,7 +116,7 @@ app.charts = {
 	},
 
 	createChart:function (selector) {
-		var borders = {t:10, r:10, b:30, l:40};
+		var borders = {t:10, r:10, b:30, l:70};
 		var c = {
 			$chart: $(selector),
 			shouldRescale: false,
@@ -165,30 +152,21 @@ app.charts = {
 			.tickSize(4)
 			.ticks(10)
 			.orient('bottom');
+		c.vis.append('svg:g')
+			.attr('class', 'axis axis-x')
+			.attr('transform', 'translate(0, ' + c.yMap(0) + ')')
+			.call(c.xAxis);
+
 		c.yAxis = d3.svg.axis()
 			.scale(c.yMap)
 			.tickSize(-c.w, 0)
 			.ticks(yTicks)
 			.tickSubdivide(false)
 			.orient('left')
-			.tickFormat(d3.format('d'));
-
-		// todo: what do these do?
-		c.yMaxFunc = function (d) {
-			return parseInt(c.getYValue(d));
-		};
-
-		c.yMinFunc = function (d) {
-			return parseInt(c.getYValue(d));
-		};
-
+			.tickFormat(d3.format(',d'));//separate 1000s with commas
 		c.vis.append('svg:g')
 			.attr('class', 'axis axis-y')
 			.call(c.yAxis);
-		c.vis.append('svg:g')
-			.attr('class', 'axis axis-x')
-			.attr('transform', 'translate(0, ' + c.yMap(0) + ')')
-			.call(c.xAxis);
 
 		// add a y-axis label
 		c.vis.select('g.axis-y').append('text')
@@ -223,50 +201,70 @@ app.charts = {
 	 * Add data received from the server to the charts
 	 * @param data
 	 */
-	renderDataset:function (data) {
-		var color = '#000';
-
-		app.charts.addLine(data.selector, data.points, data.line_id, color);
-
-
+	renderDataset: function(data) {
+		$('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
+		app.charts.addLine(data.selector, data.points, data.line_id, '#000');
 
 		if(data.selector == '#popularity'){
-			var health = $(data.selector).siblings('.health');
+			var $health = $(data.selector).siblings('.health');
 			var lastPoint = data.points[data.points.length-1];
 
-			var html = '<h3>Target Followers</h3>';
-			html += '<div class="fieldset">';
-			html += '<h4>Current</h4>';
-			html += '<p><span style="color:'+app.charts.getColorForPercentage(data.timeToTargetPercent)+'">'+ lastPoint.value +'</span></p>';
-			html += '</div>';
-			html += '<p class="target">Target Followers: '+ data.target +'</p>';
+			// work out the health of the timeToTarget
+			// < 1 year => 100%
+			// > 2 years => 0%
+			// else somewhere in between
+			var percent = 0;
+			if (data.timeToTarget) {
+				var minDays = 365;
+				var maxDays = 730;
+				var targetDate = new Date(data.timeToTarget);
+				var now = new Date();
+				var daysDiff = (targetDate - now)/(1000*60*60*24);
+				if (daysDiff <= minDays) {
+					percent = 100;
+				} else if (daysDiff < maxDays) {
+					percent = 100*(daysDiff - minDays)/(maxDays - minDays);
+				}
+			}
 
-			health.empty().html(html);
-
-
+			$health.empty();
+			$health.append('<h3>Target Followers</h3>');
+			var $fieldset = $('<div class="fieldset"></div>').appendTo($health);
+			$fieldset.append('<h4>Current</h4>');
+			$('<p>' + app.utils.numberFormat(lastPoint.value) + '</p>')
+				.css('color', app.charts.getColorForPercentage(percent))
+				.attr('title', 'Estimated date to reach target: ' + data.timeToTarget)
+				.appendTo($fieldset);
+			$health.append('<p class="target">Target Followers: '+ app.utils.numberFormat(data.target) +'</p>');
 		}
-
 	},
 
-	addLine:function (selector, points, line_id, color) {
+	addLine: function (selector, points, line_id, color) {
 		var c = app.state.charts[selector];
 
-		//calculate max y value in this dataset (need to cast as int, otherwise 'max' is done alphabetically)
-		c.yMax = d3.max(points, c.yMaxFunc);
-		c.yMin = d3.min(points, c.yMaxFunc);
+		//calculate min/max y value in this dataset (need to cast as int, otherwise 'max' is done alphabetically)
+		var f = function(d) { return parseInt(c.getYValue(d)); };
+		c.yMax = d3.max(points, f);
+		c.yMin = d3.min(points, f);
+
+		var minRange = 10;
+		if (c.yMax - c.yMin < minRange) {
+			c.yMin = Math.max(0, c.yMin-minRange/2);
+			c.yMax = c.yMin + minRange;
+		}
 
 		// create one container per data set
 		var group = c.vis
-				.append('svg:g')
-				.attr('data-line-id', line_id)
-				.attr('data-max', c.yMax)
-				.attr('data-min', c.yMin)
-				.attr('data-points', JSON.stringify(points))
-				.attr('class', 'dataset lines');
+			.append('svg:g')
+			.attr('data-line-id', line_id)
+			.attr('data-max', c.yMax)
+			.attr('data-min', c.yMin)
+			.attr('data-points', JSON.stringify(points))
+			.attr('class', 'dataset lines');
 
 		group.append("svg:path")
-				.attr("d", c.line(points))
-				.attr('style', 'stroke-width: 2px; fill: none; stroke:' + color);
+			.attr("d", c.line(points))
+			.attr('style', 'stroke-width: 2px; fill: none; stroke:' + color);
 
 		// add bucket rects and circles for mentions and sentiment graphs only
 		if (c.drawCircles) {
@@ -291,7 +289,7 @@ app.charts = {
 				})
 				.attr('data-line-id', line_id)
 				.attr("r", function (d) {
-					return c.getYValue(d) ? 4 : 0;
+					return 4;//c.getYValue(d) ? 4 : 2;
 				});
 		}
 
@@ -363,10 +361,8 @@ app.charts = {
 
 		var $datasets = c.$chart.find('.dataset');
 
-		if(c.yMax && c.yMin){
-			//update y scale mapping functions
-			c.yMap.domain([c.yMin,c.yMax]);
-		}
+		//update y scale mapping functions
+		c.yMap.domain([c.yMin, c.yMax]);
 
 		//rescale axes
 		c.vis.transition().select('.axis-y').call(c.yAxis);
@@ -398,7 +394,7 @@ app.charts = {
 			$chart = $link.closest('.chart'),
 			$svg = $chart.find('svg');
 
-		$chart.showLoader();
+		$chart.showLoader({});
 
 		// let's inline the css first
 		var properties = ['stroke', 'stroke-width', 'stroke-opacity', 'fill', 'font', 'opacity'];
@@ -435,29 +431,30 @@ app.charts = {
 
 	},
 	percentColors:[
-		{ pct: 0, color: { r: 0x00, g: 0xff, b: 0 } },
-		{ pct: 50, color: { r: 0xff, g: 0xff, b: 0 } },
-		{ pct: 100, color: { r: 0xff, g: 0x00, b: 0 } }
+		{ pct: 0, color: { r: 0xd0, g: 0x69, b: 0x59 } }, //red
+		{ pct: 50, color: { r: 0xf1, g: 0xdc, b: 0x63 } }, //amber
+		{ pct: 100, color: { r: 0x84, g: 0xaf, b: 0x5b } } //green
 	],
 	getColorForPercentage:function(pct) {
-	var percentColors = app.charts.percentColors;
-	if(pct > 100) pct = 100;
-	for (var i = 0; i < percentColors.length; i++) {
-		if (pct <= percentColors[i].pct) {
-			var lower = percentColors[i - 1];
-			var upper = percentColors[i];
-			var range = upper.pct - lower.pct;
-			var rangePct = (pct - lower.pct) / range;
-			var pctLower = 1 - rangePct;
-			var pctUpper = rangePct;
-			var color = {
-				r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
-				g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
-				b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
-			};
-			return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
-			// or output as hex if preferred
+		var percentColors = app.charts.percentColors;
+		if(pct > 100) pct = 100;
+		if(pct < 0) pct = 0;
+		for (var i = 0; i < percentColors.length; i++) {
+			if (pct <= percentColors[i].pct) {
+				var lower = (i === 0) ? percentColors[i] : percentColors[i - 1];
+				var upper = (i === 0) ? percentColors[i + 1] : percentColors[i];
+				var range = upper.pct - lower.pct;
+				var pctUpper = (pct - lower.pct) / range;
+				var pctLower = 1 - pctUpper;
+				var color = {
+					r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+					g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+					b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+				};
+				return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+				// or output as hex if preferred
+			}
 		}
+		return '';
 	}
-}
 };

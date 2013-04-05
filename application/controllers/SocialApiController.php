@@ -21,7 +21,7 @@ abstract class SocialApiController extends BaseController
 		$startDate = new DateTime($dateRange[0]);
 		$endDate = new DateTime($dateRange[1]);
 		$rangeInterval = $startDate->diff($endDate);
-		// cannot use $rangeInterval->days, as this is broken in php 5.3
+		// cannot use $rangeInterval->days, as this is broken in php 5.3 on windows
 		if ($rangeInterval->y > 0 || $rangeInterval->m > 0 || $rangeInterval->d > 14) {
 			$bucketCol = 'bucket_day';
 		} else if ($rangeInterval->d <= 2) {

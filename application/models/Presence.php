@@ -144,44 +144,53 @@ class Model_Presence extends Model_Base {
 	/**
 	 * Gets historical information about this presence
 	 * @param string $type the type of data to get, eg 'popularity'
-	 * @param int $days how far back to look
+	 * @param $startDate
+	 * @param $endDate
 	 * @return array a series of (date, value) data points
 	 */
-	private function getHistoryData($type, $days = 7) {
-		$date = gmdate('Y-m-d', strtotime('-' . $days . ' days'));
+	private function getHistoryData($type, $startDate, $endDate) {
 		$stmt = $this->_db->prepare('SELECT datetime, value
 			FROM presence_history
 			WHERE presence_id = :id
 			AND type = :type
-			AND datetime >= :date
+			AND datetime >= :start_date
+			AND datetime <= :end_date
 			ORDER BY datetime ASC');
-		$stmt->execute(array(':id'=>$this->id, ':type'=>$type, ':date'=>$date));
+		$stmt->execute(array(':id'=>$this->id, ':type'=>$type, ':start_date'=>$startDate, ':end_date'=>$endDate));
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
 
-    public function getPopularityData($days){
-        return $this->getHistoryData('popularity', $days);
+    public function getPopularityData($startDate, $endDate){
+        return $this->getHistoryData('popularity', $startDate, $endDate);
     }
 
-	public function getPostsPerDayData($days) {
-		$date = gmdate('Y-m-d', strtotime('-' . $days . ' days'));
+	public function getPostsPerDayData($startDate, $endDate) {
 		$tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
 		$stmt = $this->_db->prepare(
 			"SELECT date, COUNT(date) AS post_count FROM
-			(SELECT DATE(created_time) AS date FROM $tableName WHERE presence_id = :pid AND created_time >= :date) AS tmp
+			(SELECT DATE(created_time) AS date FROM $tableName WHERE presence_id = :pid AND created_time >= :start_date AND created_time <= :end_date) AS tmp
 			GROUP BY date"
 		);
-		$stmt->execute(array(':pid'=>$this->id, ':date'=>$date));
-		return $stmt->fetchAll(PDO::FETCH_OBJ);
+		$stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
+		$counts = array();
+		$date = gmdate('Y-m-d', strtotime($startDate));
+		while ($date <= $endDate) {
+			$counts[$date] = (object)array('date'=>$date, 'post_count'=>0);
+			$date = gmdate('Y-m-d', strtotime($date . '+1 day'));
+		}
+		foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
+			$counts[$row->date] = $row;
+		}
+		return $counts;
 	}
 
-    public function getRecentPopularityData(){
-        $stmt = $this->_db->prepare('SELECT popularity, handle
-			FROM presences
-			WHERE presence_id = :id');
-        $stmt->execute(array(':id'=>$this->id));
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
-    }
+//    public function getRecentPopularityData(){
+//        $stmt = $this->_db->prepare('SELECT popularity, handle
+//			FROM presences
+//			WHERE presence_id = :id');
+//        $stmt->execute(array(':id'=>$this->id));
+//        return $stmt->fetchAll(PDO::FETCH_OBJ);
+//    }
 
 	public function getTargetAudience() {
 		$target = 30000;
@@ -197,15 +206,16 @@ class Model_Presence extends Model_Base {
 	 * If any of these conditions are met, this will return null:
 	 * - no target audience size
 	 * - fewer than 2 data points
-	 * - popularity hasn't varied at all
+	 * - popularity has never varied
 	 * - the calculated date would be too far in the future (32-bit date problem)
+	 * - the calculated date is in the past
 	 * @return null|string
 	 */
 	public function getTargetAudienceDate() {
 		$date = null;
 		$target = $this->getTargetAudience();
 		if ($target > 0) {
-			$data = $this->getHistoryData('popularity');
+			$data = $this->getPopularityData(gmdate('Y-m-d H:i:s', strtotime('-7 days')), gmdate('Y-m-d H:i:s'));
 			$n = count($data);
 			if ($n > 1) {
 				// calculate line of best fit (see http://www.endmemo.com/statistics/lr.php)
@@ -221,9 +231,9 @@ class Model_Presence extends Model_Base {
 				$meanY /= $n;
 				$a = ($sumXY - $n*$meanX*$meanY)/($sumXX - $n*$meanX*$meanX);
 				$b = $meanY - $a*$meanX;
-				if ($a != 0) {
+				if ($a > 0) {
 					$timestamp = ($target - $b)/$a;
-					if ($timestamp < PHP_INT_MAX) {
+					if ($timestamp < PHP_INT_MAX && $timestamp > 0) {
 						$date = date('Y-m-d', $timestamp);
 					}
 				}
@@ -231,18 +241,6 @@ class Model_Presence extends Model_Base {
 		}
 		return $date;
 	}
-
-    public function getTargetAudienceDatePercent(){
-        $days = 365; //base line for percentage is one year
-
-        $trendDate = new DateTime($this->getTargetAudienceDate());
-        $targetDate = new DateTime("now");
-        $targetDate->add(new DateInterval('P1Y'));
-        $diff = $trendDate->diff($targetDate);
-
-        return ($days/100)*($diff->days);
-
-    }
 
 	/**
 	 * Delete all of the presence's associated data
