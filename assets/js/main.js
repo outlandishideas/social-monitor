@@ -54,7 +54,7 @@ $.extend(app, {
 						</div>\
 					</div>',
 		message: '<li class="<%=type%>"><%=msg%></li>',
-		userStatus: '<div><a href="<%=logoutUrl%>">Logout</a> of Listening Post</div>',
+		userStatus: '<div><a href="<%=logoutUrl%>">Logout</a> of Social Media Monitor</div>',
 		presence:
 			'<li>\
 				<input type="hidden" value="<%=id%>" name="presences[]" />\
@@ -168,6 +168,10 @@ app.init = {
 			app.init.permalinks();
 			app.charts.setup();
 		},
+
+        '#geo-map': function($item) {
+            app.geochart.setup();
+        },
 
 		'.chart': function($item) {
 			$(app.templates.downloadChart)

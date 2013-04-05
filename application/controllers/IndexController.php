@@ -12,8 +12,8 @@ class IndexController extends BaseController
         $campaigns = Model_Campaign::fetchAll();
         $json = array();
         foreach($campaigns as $campaign){
-            $kpis = $campaign->getKpis();
-            $json[] = array('name' =>$campaign->country, 'target' => $campaign->audience/2, 'kpis' => $kpis);
+            $kpis = $campaign->getKpiData();
+            $json[$campaign->country] = array('name' =>$campaign->country, 'id'=>$campaign->id, 'target' => $campaign->audience/2, 'kpis' => $kpis);
         }
         return json_encode($json);
     }
