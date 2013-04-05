@@ -250,7 +250,7 @@ app.charts = {
 		var range = c.yMax - c.yMin;
 		var minRange = 10;
 		if (range < minRange) {
-			c.yMin = Math.max(0, c.yMin-range/2);
+			c.yMin = Math.max(0, c.yMin-(minRange - range)/2);
 			c.yMax = c.yMin + minRange;
 		}
 
