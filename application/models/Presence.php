@@ -233,8 +233,11 @@ class Model_Presence extends Model_Base {
 				$b = $meanY - $a*$meanX;
 				if ($a > 0) {
 					$timestamp = ($target - $b)/$a;
-					if ($timestamp < PHP_INT_MAX && $timestamp > 0) {
+					if ($timestamp < PHP_INT_MAX) {
 						$date = date('Y-m-d', $timestamp);
+						if ($date < date('Y-m-d')) {
+							$date = null;
+						}
 					}
 				}
 			}

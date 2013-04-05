@@ -186,7 +186,6 @@ class PresenceController extends BaseController
 						ksort($keyedBuckets);
 						$series[] = array(
 							'line_id' => $lineId,
-							'name' => 'Popularity for ' . $presence->name,
 							'selector' => '#' . $selector,
 							'target' => $presence->getTargetAudience(),
 							'timeToTarget' => $presence->getTargetAudienceDate(),
@@ -199,9 +198,7 @@ class PresenceController extends BaseController
 
 						$series[] = array(
 							'line_id' => $lineId,
-							'name' => 'Posts per day for ' . $presence->name,
 							'selector' => '#' . $selector,
-							'target' => 5,
 							'points' => $data
 						);
 						break;
