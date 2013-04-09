@@ -83,11 +83,11 @@ app.charts = {
 	 * Specific settings for charts
 	 */
 	healthDisplay: {
-		'#mentions': function(health) {
+		'#posts_per_day': function(health) {
 			health.title = 'Posts per Day';
 			health.values = '' ;
 		},
-		'#followers': function(health) {
+		'#popularity': function(health) {
 			health.title = 'Target Followers';
 			health.values = 31500;
 			health.key.min = 24400;
@@ -203,8 +203,8 @@ app.charts = {
 	 */
 	renderDataset: function(data) {
         var percent = 0;
+        var $health = $(data.selector).siblings('.health');
 		if(data.selector == '#popularity'){
-			var $health = $(data.selector).siblings('.health');
 			var currentValue = data.points[data.points.length-1].value;
 
 			// work out the health of the timeToTarget
@@ -238,7 +238,27 @@ app.charts = {
 				.append($target)
 				.appendTo($health);
 			$health.append('<p class="target">Target Followers: '+ app.utils.numberFormat(data.target) +'</p>');
-		}
+		} else if (data.selector ='#posts_per_day') {
+            var value = 0;
+            console.log(data.points);
+            for(var i in data.points) {
+                value += parseFloat(data.points[i].post_count);
+            }
+            var average = value/data.points.length;
+
+            $health.empty();
+            $health.append('<h3>Posts Per Day</h3>');
+            var $target = $('<p>' + parseFloat(app.utils.numberFixedDecimal(average, 2)) + '</p>');
+            $target.css('color', app.charts.getColorForPercentage(percent));
+            if (data.timeToTarget) {
+                $target.attr('title', 'Estimated date to reach target: ' + data.timeToTarget)
+            }
+            $('<div class="fieldset"></div>')
+                .append('<h4>Average</h4>')
+                .append($target)
+                .appendTo($health);
+            //$health.append('<p class="target">Target Followers: '+ app.utils.numberFormat(data.target) +'</p>');
+        }
         $('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
         app.charts.addLine(data.selector, data.points, data.line_id, app.charts.getColorForPercentage(percent));
 	},

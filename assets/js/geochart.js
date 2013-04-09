@@ -27,12 +27,6 @@ app.geochart = {
     },
     kpiSettings:{
         'popularityPercentage':function(map){
-            map.options.colorAxis.minValue = 0;
-            map.options.colorAxis.maxValue = 100;
-            map.columns = [
-                {name:'Country', type:'string'},
-                {name:'Percent of Target Audience', type:'number'}
-            ];
             map.metricData = function(d, target){
                 var value = 0;
                 var length = d.length;
@@ -44,9 +38,25 @@ app.geochart = {
                 value = value/length;
 
                 return Math.floor((value/target)*100);
-            }
+            };
+            map.options.colorAxis.minValue = 0;
+            map.options.colorAxis.maxValue = 100;
+            map.columns = [
+                {name:'Country', type:'string'},
+                {name:'Percent of Target Audience', type:'number'}
+            ];
         },
         'popularityTime':function(map){
+            map.metricData = function(d, target){
+                var value = 0;
+                var length = d.length;
+
+                for (var p in d){
+                    value += parseInt(d[p].value);
+                }
+
+                return parseFloat(app.utils.numberFixedDecimal(value/length,2));
+            };
             var min = 12; var max = 24;
             map.options.colorAxis.minValue = 0;
             if(app.geochart.maxValue(map)<24) {
@@ -60,6 +70,8 @@ app.geochart = {
                 {name:'Country', type:'string'},
                 {name:'Months To Hit Target Audience', type:'number'}
             ];
+        },
+        'postsPerDay':function(map){
             map.metricData = function(d, target){
                 var value = 0;
                 var length = d.length;
@@ -67,35 +79,23 @@ app.geochart = {
                 for (var p in d){
                     value += parseInt(d[p].value);
                 }
-
-                return parseFloat(app.utils.numberFixedDecimal(value/length,2));
-            }
-        },
-        'postsPerDay':function(map){
+                return parseFloat(app.utils.numberFixedDecimal(value/length, 2));
+            };
             map.options.colorAxis.maxValue = app.geochart.maxValue(map)
             map.options.colorAxis.colors = ['orange', 'green'];
             map.columns = [
                 {name:'Country', type:'string'},
                 {name:'Average Posts Per Day', type:'number'}
             ];
-            map.metricData = function(d, target){
-                var value = 0;
-                var length = d.length;
-
-                for (var p in d){
-                    value += parseInt(d[p].value);
-                }
-                var num = parseFloat(app.utils.numberFixedDecimal(value/length, 2));
-                return num;
-            }
         }
     },
     maxValue:function (map) {
         var max = 0;
+        var value = 0;
         for(var c in json){
             var kpi = json[c]['kpis'][map.metric];
-            for(var i in kpi){
-                var num = parseFloat(kpi[i].value);
+            if(kpi){
+                num = map.metricData(kpi, json[c].target);
                 if(num > max) max = num;
             }
         }
