@@ -202,9 +202,7 @@ app.charts = {
 	 * @param data
 	 */
 	renderDataset: function(data) {
-		$('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
-		app.charts.addLine(data.selector, data.points, data.line_id, '#000');
-
+        var percent = 0;
 		if(data.selector == '#popularity'){
 			var $health = $(data.selector).siblings('.health');
 			var currentValue = data.points[data.points.length-1].value;
@@ -213,7 +211,6 @@ app.charts = {
 			// < 1 year => 100%
 			// > 2 years => 0%
 			// else somewhere in between
-			var percent = 0;
 			if (currentValue >= data.target) {
 				percent = 100;
 			} else if (data.timeToTarget) {
@@ -242,6 +239,8 @@ app.charts = {
 				.appendTo($health);
 			$health.append('<p class="target">Target Followers: '+ app.utils.numberFormat(data.target) +'</p>');
 		}
+        $('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
+        app.charts.addLine(data.selector, data.points, data.line_id, app.charts.getColorForPercentage(percent));
 	},
 
 	addLine: function (selector, points, line_id, color) {

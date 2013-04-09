@@ -3,10 +3,11 @@
 class Model_Campaign extends Model_Base {
 	protected static $tableName = 'campaigns';
 	protected static $sortColumn = 'display_name';
-	protected static $kpis = array(
-		'popularityPercentage' => 'Percent of Target Audience',
-		'popularityTime' => 'Months to Target Audience'
-	);
+    protected static $kpis = array(
+        'popularityPercentage' => 'Percent of Target Audience',
+        'popularityTime' => 'Months to Target Audience',
+        'postsPerDay' => 'Average Number of Posts Per Day'
+    );
 
 	public function delete() {
 		$this->_db->prepare('DELETE FROM campaign_presences WHERE campaign_id = :cid')->execute(array(':cid'=>$this->id));
@@ -69,7 +70,7 @@ class Model_Campaign extends Model_Base {
 		$presences = $this->presences;
 		$return = array();
 		foreach($presences as $presence){
-			$return[] = array('name'=>$presence->name, 'popularity' =>$presence->popularity);
+			$return[] = array('name'=>$presence->name, 'value' =>$presence->popularity);
 		}
 		return $return;
 	}
@@ -82,8 +83,21 @@ class Model_Campaign extends Model_Base {
 		foreach($presences as $presence){
 			$diff = $now->diff(new DateTime($presence->getTargetAudienceDate()));
 			$months = $diff->m + 12*$diff->y;
-			$return[] = array('name'=>$presence->name, 'time' =>$months);
+			$return[] = array('name'=>$presence->name, 'value' =>$months);
 		}
 		return $return;
 	}
+
+    function getPostsPerDay(){
+        $presences = $this->presences;
+        $return = array();
+        foreach($presences as $presence){
+            $data = $presence->getPostsPerDayData('2013-03-27', '2013-04-09');
+            foreach($data as $date){
+                $return[] = array('name'=>$presence->name, 'value' => $date->post_count);
+            }
+
+        }
+        return $return;
+    }
 }

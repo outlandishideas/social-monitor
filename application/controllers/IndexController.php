@@ -9,11 +9,12 @@ class IndexController extends BaseController
 	}
 
     public function campaignsToJson(){
-        $campaigns = Model_Campaign::fetchAll();
+        $countries = Model_Country::fetchAll();
         $json = array();
-        foreach($campaigns as $campaign){
-            $kpis = $campaign->getKpiData();
-            $json[$campaign->country] = array('name' =>$campaign->country, 'id'=>$campaign->id, 'target' => $campaign->audience/2, 'kpis' => $kpis);
+        foreach($countries as $country){
+            $kpis = $country->getKpiData();
+            $name = $country->getNameFromCode($country->country);
+            $json[$name] = array('name' =>$name, 'id'=>$country->id, 'target' => $country->audience/2, 'kpis' => $kpis);
         }
         return json_encode($json);
     }
