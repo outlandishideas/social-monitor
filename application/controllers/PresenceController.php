@@ -175,21 +175,23 @@ class PresenceController extends BaseController
 					case 'popularity':
 						$buckets = $presence->getPopularityData($startDate, $endDate);
 
-						//key data by date
 						$keyedBuckets = array();
-						foreach ($buckets as $bucket) {
-							//$bucket['date'] = Model_Base::localeDate($bucket['date']);
-							$keyedBuckets[$bucket->datetime] = $bucket;
+						if ($buckets) {
+							//key data by date
+							foreach ($buckets as $bucket) {
+								//$bucket['date'] = Model_Base::localeDate($bucket['date']);
+								$keyedBuckets[$bucket->datetime] = $bucket;
+							}
+							ksort($keyedBuckets);
 						}
 
-						//combine arrays
-						ksort($keyedBuckets);
 						$series[] = array(
 							'line_id' => $lineId,
 							'selector' => '#' . $selector,
 							'target' => $presence->getTargetAudience(),
 							'timeToTarget' => $presence->getTargetAudienceDate(),
-							'points' => array_values($keyedBuckets)
+							'points' => array_values($keyedBuckets),
+							'current' => intval($presence->popularity)
 						);
 						break;
 					case 'posts_per_day':

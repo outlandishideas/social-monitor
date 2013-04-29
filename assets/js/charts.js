@@ -203,11 +203,13 @@ app.charts = {
 	 */
 	renderDataset: function(data) {
 		$('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
-		app.charts.addLine(data.selector, data.points, data.line_id, '#000');
+		if (data.points.length > 0) {
+			app.charts.addLine(data.selector, data.points, data.line_id, '#000');
+		}
 
 		if(data.selector == '#popularity'){
 			var $health = $(data.selector).siblings('.health');
-			var currentValue = data.points[data.points.length-1].value;
+			var currentValue = data.current;
 
 			// work out the health of the timeToTarget
 			// < 1 year => 100%
@@ -229,13 +231,14 @@ app.charts = {
 				}
 			}
 
-			$health.empty();
-			$health.append('<h3>Target Followers</h3>');
 			var $target = $('<p>' + app.utils.numberFormat(currentValue) + '</p>');
 			$target.css('color', app.charts.getColorForPercentage(percent));
 			if (data.timeToTarget) {
 				$target.attr('title', 'Estimated date to reach target: ' + data.timeToTarget)
 			}
+
+			$health.empty();
+			$health.append('<h3>Target Followers</h3>');
 			$('<div class="fieldset"></div>')
 				.append('<h4>Current</h4>')
 				.append($target)
@@ -368,6 +371,10 @@ app.charts = {
 
 		var $datasets = c.$chart.find('.dataset');
 
+		if ($datasets.length == 0) {
+			return;
+		}
+		
 		//update y scale mapping functions
 		c.yMap.domain([c.yMin, c.yMax]);
 
