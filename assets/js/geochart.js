@@ -27,6 +27,18 @@ app.geochart = {
     },
     kpiSettings:{
         'popularityPercentage':function(map){
+            map.metricData = function(d, target){
+                var value = 0;
+                var length = d.length;
+
+                for (var p in d){
+                    value += parseInt(d[p].value);
+                }
+
+                value = value/length;
+
+                return Math.floor((value/target)*100);
+            };
             map.options.colorAxis.minValue = 0;
             map.options.colorAxis.maxValue = 100;
             map.columns = [
@@ -35,8 +47,69 @@ app.geochart = {
             ];
         },
         'popularityTime':function(map){
+            map.metricData = function(d, target){
+                var value = 0;
+                var length = d.length;
 
+                for (var p in d){
+                    value += parseInt(d[p].value);
+                }
+
+                return parseFloat(app.utils.numberFixedDecimal(value/length,2));
+            };
+            var min = 12; var max = 24;
+            map.options.colorAxis.minValue = 0;
+            if(app.geochart.maxValue(map)<24) {
+                map.options.colorAxis.maxValue = 24
+            } else {
+                map.options.colorAxis.maxValue = app.geochart.maxValue(map)
+            }
+            map.options.colorAxis.values = [map.options.colorAxis.minValue, 12, 24, map.options.colorAxis.maxValue]
+            map.options.colorAxis.colors = ['green', 'green', 'orange', 'orange'];
+            map.columns = [
+                {name:'Country', type:'string'},
+                {name:'Months To Hit Target Audience', type:'number'}
+            ];
+        },
+        'postsPerDay':function(map){
+            map.metricData = function(d, target){
+                var value = 0;
+                var length = d.length;
+
+                for (var p in d){
+                    value += parseInt(d[p].value);
+                }
+                return parseFloat(app.utils.numberFixedDecimal(value/length, 2));
+            };
+            map.options.colorAxis.maxValue = app.geochart.maxValue(map)
+            map.options.colorAxis.colors = ['orange', 'green'];
+            map.columns = [
+                {name:'Country', type:'string'},
+                {name:'Average Posts Per Day', type:'number'}
+            ];
         }
+    },
+    maxValue:function (map) {
+        var max = 0;
+        var value = 0;
+        for(var c in json){
+            var kpi = json[c]['kpis'][map.metric];
+            if(kpi){
+                num = map.metricData(kpi, json[c].target);
+                if(num > max) max = num;
+            }
+        }
+        return max;
+    },
+    minValue:function (map) {
+        var min = 0;
+        for(var c in json){
+            var kpi = json[c]['kpis'][map.metric];
+            for(var i in kpi){
+                if(kpi[i].value < min) min = kpi[i].value;
+            }
+        }
+        return min;
     },
     drawRegionsMap:function (map) {
 
@@ -44,6 +117,7 @@ app.geochart = {
         map.metric = app.geochart.currentMetric();
         if (map.metric in app.geochart.kpiSettings) {
             map.options = {
+                datalessRegionColor: '#D5D5D5',
                 colorAxis: {minValue: 0, maxValue: 15, colors: ['orange', 'green']}
             };
             app.geochart.kpiSettings[map.metric](map);
@@ -54,8 +128,6 @@ app.geochart = {
             }
 
             data = app.geochart.buildDataTable(data, map);
-
-            console.log(data);
 
             map.draw(data, map.options);
 
@@ -82,35 +154,19 @@ app.geochart = {
 
     },
     buildDataTable:function(data, map){
-
         for(var c in json){
-            var obj = json[c];
-            for(var key in obj){
-                var attrValue = obj[key];
-                if(key == 'name'){
-                    var country = attrValue;
-                } else if (key == 'target') {
-                    var target = attrValue;
-                } else if (key == 'kpis'){
-                    for(var kpi in attrValue){
-                        console.log(kpi,map.metric);
-                        if(kpi == map.metric){
-                            var value = 0;
-                            for (var p in attrValue[kpi]){
-                                value += parseInt(attrValue[kpi][p].popularity);
-                            }
-                            var length = attrValue[kpi].length;
-                            value = value/length;
-                            var metric = Math.floor((value/target)*100);
-                        }
-                    }
-                }
 
-            }
-            console.log(country, metric);
-            if(country && metric){
+            var obj = json[c];
+
+            var country = obj['name'];
+            var target = obj['target'];
+            var kpi = obj['kpis'][map.metric];
+
+            if(country && kpi){
+                var metric = map.metricData(kpi,target);
                 data.addRow([country, metric]);
             }
+
         }
         return data;
     }

@@ -544,7 +544,11 @@ app.utils = {
 		var parts = x.toString().split(".");
 		parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		return parts.join(".");
-	}
+	},
+    numberFixedDecimal: function (x,n){
+        var p = Math.pow(10,n);
+        return parseFloat(Math.round(x * p) / p).toFixed(n);
+    }
 };
 
 //start it up

@@ -5,8 +5,46 @@
 <table id="charts" data-controller="presence" data-controller-label="presence">
 	<?php foreach ($this->graphs as $graph) : ?>
 	<tr>
-		<td class="health"></td>
+		<td class="health">
+			<h3></h3>
+			<div class="fieldset">
+				<h4></h4>
+				<p></p>
+			</div>
+			<p class="target"></p>
+		</td>
 		<td id="<?php echo $graph->id; ?>" class="chart" data-y-label="<?php echo $graph->yAxisLabel; ?>" data-line-id="<?php echo $graph->lineId; ?>"></td>
 	</tr>
 	<?php endforeach; ?>
 </table>
+
+<div id="topics" class="lineSelector">
+    <h3>Topics</h3>
+    <table class="dtable">
+        <thead>
+        <tr>
+            <th class="topic">Topic</th>
+            <th class="mentions">Mentions</th>
+            <th class="sentiment"><abbr title="Sentiment">+/-</abbr></th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<div id="statuses" class="statusesDisplay">
+    <div class="inner">
+        <h3>Statuses</h3>
+        <table class="dtable">
+            <thead>
+            <tr>
+                <th class="user">User</th>
+                <th class="tweet">Message</th>
+                <th class="date">Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>

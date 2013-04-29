@@ -83,11 +83,11 @@ app.charts = {
 	 * Specific settings for charts
 	 */
 	healthDisplay: {
-		'#mentions': function(health) {
+		'#posts_per_day': function(health) {
 			health.title = 'Posts per Day';
 			health.values = '' ;
 		},
-		'#followers': function(health) {
+		'#popularity': function(health) {
 			health.title = 'Target Followers';
 			health.values = 31500;
 			health.key.min = 24400;
@@ -202,20 +202,15 @@ app.charts = {
 	 * @param data
 	 */
 	renderDataset: function(data) {
-		$('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
-		if (data.points.length > 0) {
-			app.charts.addLine(data.selector, data.points, data.line_id, '#000');
-		}
-
+        var percent = 0;
+		var $health = $(data.selector).siblings('.health');
 		if(data.selector == '#popularity'){
-			var $health = $(data.selector).siblings('.health');
 			var currentValue = data.current;
 
 			// work out the health of the timeToTarget
 			// < 1 year => 100%
 			// > 2 years => 0%
 			// else somewhere in between
-			var percent = 0;
 			if (currentValue >= data.target) {
 				percent = 100;
 			} else if (data.timeToTarget) {
@@ -231,19 +226,33 @@ app.charts = {
 				}
 			}
 
-			var $target = $('<p>' + app.utils.numberFormat(currentValue) + '</p>');
-			$target.css('color', app.charts.getColorForPercentage(percent));
-			if (data.timeToTarget) {
-				$target.attr('title', 'Estimated date to reach target: ' + data.timeToTarget)
+			$health.find('h3').text('Target Followers');
+			$health.find('.fieldset h3').text('Current');
+			$health.find('.fieldset p')
+				.text(app.utils.numberFormat(currentValue))
+				.css('color', app.charts.getColorForPercentage(percent))
+				.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
+			$health.find('.target').text('Target Followers: '+ app.utils.numberFormat(data.target));
+		} else if (data.selector == '#posts_per_day') {
+            var value = 0;
+            console.log(data.points);
+            for(var i in data.points) {
+                value += parseFloat(data.points[i].post_count);
 			}
+            var average = value/data.points.length;
 
-			$health.empty();
-			$health.append('<h3>Target Followers</h3>');
-			$('<div class="fieldset"></div>')
-				.append('<h4>Current</h4>')
-				.append($target)
-				.appendTo($health);
-			$health.append('<p class="target">Target Followers: '+ app.utils.numberFormat(data.target) +'</p>');
+			$health.find('h3').text('Posts Per Day');
+			$health.find('.fieldset h3').text('Average');
+			$health.find('.fieldset p')
+				.text(parseFloat(app.utils.numberFixedDecimal(average, 2)))
+				.css('color', app.charts.getColorForPercentage(percent));
+//				.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
+//			$health.find('.target').text('Target Followers: '+ app.utils.numberFormat(data.target));
+        }
+
+        $('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
+		if (data.points.length > 0) {
+	        app.charts.addLine(data.selector, data.points, data.line_id, app.charts.getColorForPercentage(percent));
 		}
 	},
 

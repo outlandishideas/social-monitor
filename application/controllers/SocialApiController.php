@@ -176,7 +176,6 @@ abstract class SocialApiController extends BaseController
 						'screen_name'=>$tweet->screen_name,
 						'tweet'=> $this->_request->format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
 						'retweet_count'=>$tweet->retweet_count,
-						'average_sentiment'=>($tweet->average_sentiment ? $tweet->average_sentiment : 0),
 						'date'=>Model_Base::localeDate($tweet->created_time),
 						'twitter_url'=>Model_TwitterTweet::getTwitterUrl($tweet->screen_name, $tweet->tweet_id),
 						'profile_image_url'=>$tweet->profile_image_url
@@ -190,7 +189,6 @@ abstract class SocialApiController extends BaseController
 						'pic_url' => $post->pic_url,
 						'profile_url' => $post->profile_url,
 						'message'=>$post->message,
-						'average_sentiment'=>($post->average_sentiment ? $post->average_sentiment : 0),
 						'comments'=>$post->comments,
 						'likes'=>$post->likes,
 						'date'=> Model_Base::localeDate($post->created_time)
