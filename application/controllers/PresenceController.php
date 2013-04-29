@@ -29,12 +29,16 @@ class PresenceController extends BaseController
 		$graphs[] = (object)array(
 			'id' => 'popularity',
 			'yAxisLabel' => 'fans/followers',
-			'lineId' => 'popularity:' . $presence->id
+			'lineId' => 'popularity:' . $presence->id,
+			'title' => 'Target Followers',
+			'legend' => 'Current'
 		);
 		$graphs[] = (object)array(
 			'id' => 'posts_per_day',
 			'yAxisLabel' => 'posts-per-day',
-			'lineId' => 'posts_per_day:' . $presence->id
+			'lineId' => 'posts_per_day:' . $presence->id,
+			'title' => 'Posts Per Day',
+			'legend' => 'Average'
 		);
 
 		$this->view->title = $presence->label;

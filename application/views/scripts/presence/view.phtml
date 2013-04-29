@@ -6,10 +6,10 @@
 	<?php foreach ($this->graphs as $graph) : ?>
 	<tr>
 		<td class="health">
-			<h3></h3>
+			<h3><?php echo $graph->title; ?></h3>
 			<div class="fieldset">
-				<h4></h4>
-				<p></p>
+				<h4><?php echo $graph->legend; ?></h4>
+				<p class="value"></p>
 			</div>
 			<p class="target"></p>
 		</td>

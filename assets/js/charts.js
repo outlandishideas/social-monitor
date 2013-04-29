@@ -226,9 +226,7 @@ app.charts = {
 				}
 			}
 
-			$health.find('h3').text('Target Followers');
-			$health.find('.fieldset h3').text('Current');
-			$health.find('.fieldset p')
+			$health.find('.value')
 				.text(app.utils.numberFormat(currentValue))
 				.css('color', app.charts.getColorForPercentage(percent))
 				.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
@@ -241,9 +239,7 @@ app.charts = {
 			}
             var average = value/data.points.length;
 
-			$health.find('h3').text('Posts Per Day');
-			$health.find('.fieldset h3').text('Average');
-			$health.find('.fieldset p')
+			$health.find('.value')
 				.text(parseFloat(app.utils.numberFixedDecimal(average, 2)))
 				.css('color', app.charts.getColorForPercentage(percent));
 //				.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
