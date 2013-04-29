@@ -16,6 +16,9 @@ app.charts = {
 		$charts.find('.chart').each(function() {
 			app.state.lineIds.push($(this).data('line-id'));
 		});
+        if ($('.dtable').length > 0) {
+            app.datatables.init();
+        }
 
 		$(document)
 			.on('dateRangeUpdated', function () {
@@ -233,17 +236,35 @@ app.charts = {
 			$health.find('.target').text('Target Followers: '+ app.utils.numberFormat(data.target));
 		} else if (data.selector == '#posts_per_day') {
             var value = 0;
+            var target = 5;
             console.log(data.points);
             for(var i in data.points) {
                 value += parseFloat(data.points[i].post_count);
 			}
             var average = value/data.points.length;
+            if(average>target){
+                percent = 100;
+            } else {
+                percent = (average/target)*100;
+            }
 
 			$health.find('.value')
 				.text(parseFloat(app.utils.numberFixedDecimal(average, 2)))
 				.css('color', app.charts.getColorForPercentage(percent));
 //				.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
 //			$health.find('.target').text('Target Followers: '+ app.utils.numberFormat(data.target));
+            $health.empty();
+            $health.append('<h3>Posts Per Day</h3>');
+            var $target = $('<p>' + parseFloat(app.utils.numberFixedDecimal(average, 2)) + '</p>');
+            $target.css('color', app.charts.getColorForPercentage(percent));
+            if (data.timeToTarget) {
+                $target.attr('title', 'Estimated date to reach target: ' + data.timeToTarget)
+            }
+            $('<div class="fieldset"></div>')
+                .append('<h4>Average</h4>')
+                .append($target)
+                .appendTo($health);
+            $health.append('<p class="target">Target Posts Per Day: '+ app.utils.numberFormat(5) +'</p>');
         }
 
         $('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
@@ -376,10 +397,6 @@ app.charts = {
 
 		var $datasets = c.$chart.find('.dataset');
 
-		if ($datasets.length == 0) {
-			return;
-		}
-		
 		//update y scale mapping functions
 		c.yMap.domain([c.yMin, c.yMax]);
 

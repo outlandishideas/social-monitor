@@ -59,12 +59,12 @@ app.geochart = {
             };
             var min = 12; var max = 24;
             map.options.colorAxis.minValue = 0;
-            if(app.geochart.maxValue(map)<24) {
-                map.options.colorAxis.maxValue = 24
+            if(app.geochart.maxValue(map)<max) {
+                map.options.colorAxis.maxValue = max
             } else {
                 map.options.colorAxis.maxValue = app.geochart.maxValue(map)
             }
-            map.options.colorAxis.values = [map.options.colorAxis.minValue, 12, 24, map.options.colorAxis.maxValue]
+            map.options.colorAxis.values = [map.options.colorAxis.minValue, min, max, map.options.colorAxis.maxValue]
             map.options.colorAxis.colors = ['green', 'green', 'orange', 'orange'];
             map.columns = [
                 {name:'Country', type:'string'},
@@ -81,8 +81,16 @@ app.geochart = {
                 }
                 return parseFloat(app.utils.numberFixedDecimal(value/length, 2));
             };
-            map.options.colorAxis.maxValue = app.geochart.maxValue(map)
-            map.options.colorAxis.colors = ['orange', 'green'];
+
+            var min = 0; var max = 5;
+            map.options.colorAxis.minValue = min;
+            if(app.geochart.maxValue(map)<max) {
+                map.options.colorAxis.maxValue = max
+            } else {
+                map.options.colorAxis.maxValue = app.geochart.maxValue(map)
+            }
+            map.options.colorAxis.values = [map.options.colorAxis.minValue, max, map.options.colorAxis.maxValue]
+            map.options.colorAxis.colors = ['orange', 'green', 'green'];
             map.columns = [
                 {name:'Country', type:'string'},
                 {name:'Average Posts Per Day', type:'number'}

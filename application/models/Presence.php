@@ -164,6 +164,46 @@ class Model_Presence extends Model_Base {
         return $this->getHistoryData('popularity', $startDate, $endDate);
     }
 
+    public function getStatuses($startDate, $endDate){
+        $tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
+        $stmt = $this->_db->prepare(
+            "SELECT * FROM $tableName WHERE presence_id = :pid AND created_time >= :start_date AND created_time <= :end_date"
+        );
+        $stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
+        if($this->type == self::TYPE_TWITTER){
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
+        } else {
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
+            /*
+            $actorIds = array();
+            foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row){
+                $actorIds[$row->actor_id] = $row->actor_id;
+            }
+            $actors = $this->getActors($actorIds);
+            $return = array();
+            foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row){
+                $row->actor = $actors[$row->actor_id];
+                $return[] = $row + $actors[$row->actor_id];
+            }
+            return $return;
+            */
+        }
+
+    }
+
+    public function getActors($actorIds = array()){
+        $actorIds = implode(',', $actorIds);
+        $stmt = $this->_db->prepare(
+            "SELECT * FROM facebook_actors WHERE actor_id IN ( $actorIds )"
+        );
+        $stmt->execute();
+        $return = array();
+        foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
+            $return[$row->actor_id] = $row;
+        }
+        return $return;
+    }
+
 	public function getPostsPerDayData($startDate, $endDate) {
 		$tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
 		$stmt = $this->_db->prepare(

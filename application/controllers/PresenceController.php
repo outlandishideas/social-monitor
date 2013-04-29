@@ -237,52 +237,45 @@ class PresenceController extends BaseController
 		$tableData = array();
 		$count = 0;
 		if ($linePropsArray) {
-			$modelClass = $linePropsArray[0]['modelClass'];
-			$statusType = $modelClass::getStatusType($linePropsArray[0]['modelId']);
-			$statuses = $modelClass::getStatusesForModelIds(
-				Zend_Registry::get('db'),
-				$linePropsArray,
-				$dateRange,
-				$this->getRequestSearchQuery(),
-				$this->getRequestOrdering(),
-				$this->getRequestLimit(),
-				$this->getRequestOffset()
-			);
+			$presence = Model_Presence::fetchById($linePropsArray[0]['modelId']);
+			$statuses = $presence->getStatuses($dateRange[0],$dateRange[1]);
 
 			// convert statuses to appropriate datatables.js format
-			if ($statusType == 'tweet') {
-				foreach ($statuses->data as $tweet) {
+			if ($presence->type == Model_Presence::TYPE_TWITTER) {
+				foreach ($statuses as $tweet) {
 
 					$tableData[] = array(
 						'user_name'=>$tweet->user_name,
 						'screen_name'=>$tweet->screen_name,
-						'tweet'=> $this->_request->format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
-						'retweet_count'=>$tweet->retweet_count,
+						'message'=> $this->_request->format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
+						'likes'=>$tweet->retweet_count,
 						'date'=>Model_Base::localeDate($tweet->created_time),
-						'twitter_url'=>Model_TwitterTweet::getTwitterUrl($tweet->screen_name, $tweet->tweet_id),
+						'profile_url'=>Model_TwitterTweet::getTwitterUrl($tweet->screen_name, $tweet->tweet_id),
 						'profile_image_url'=>$tweet->profile_image_url
 					);
 				}
 			} else {
-				foreach ($statuses->data as $post) {
-					$tableData[] = array(
-						'actor_type'=>$post->actor_type,
-						'actor_name' => $post->actor_name,
-						'pic_url' => $post->pic_url,
-						'profile_url' => $post->profile_url,
-						'message'=>$post->message,
-						'comments'=>$post->comments,
-						'likes'=>$post->likes,
-						'date'=> Model_Base::localeDate($post->created_time)
-					);
+				foreach ($statuses as $post) {
+                    if($post->message){
+                        $tableData[] = array(
+                            'actor_type'=>'type',//$post->actor->actor_type
+                            'actor_name' => $post->actor_id,//$post->actor->name
+                            'pic_url' => '../../../assets/img/facebook.img',//$post->actor->pic_url
+                            'profile_url' => 'http://www.facebook.com',//$post->actor->profile_url
+                            'message'=>$post->message,
+                            'comments'=>$post->comments,
+                            'likes'=>$post->likes,
+                            'date'=> Model_Base::localeDate($post->created_time)
+                        );
+                    }
 				}
 			}
-			$count = $statuses->count;
+			$count = count($statuses);
 		}
 
 		//return CSV or JSON?
 		if ($this->_request->format == 'csv') {
-			$this->returnCsv($tableData, $statusType.'s.csv');
+			$this->returnCsv($tableData, $presence->type.'s.csv');
 		} else {
 			$apiResult = array(
 				'sEcho' => $this->_request->sEcho,

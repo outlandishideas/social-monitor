@@ -102,12 +102,6 @@ app.datatables = {
 					asSorting:['desc', 'asc']
 				},
 				{
-					aTargets:['sentiment'],
-					mDataProp:'average_sentiment',
-					sClass:'retweets lesser',
-					asSorting:['desc', 'asc']
-				},
-				{
 					aTargets:['date'],
 					mDataProp:'date',
 					fnRender:function (o, val) {
@@ -129,7 +123,7 @@ app.datatables = {
 				{
 					mDataProp:'actor_name',
 					fnRender:function (o, val) {
-						return o.aData.pic_url ? '<img data-src="' + o.aData.pic_url + '" width="50px" class="async-load" />' : '';
+                        return o.aData.pic_url ? '<img data-src="' + o.aData.pic_url + '" width="50px" class="async-load" />' : '';
 					},
 					sClass:'statusPic',
 					bUseRendered:false
@@ -137,23 +131,14 @@ app.datatables = {
 				{
 					mDataProp:'message',
 					fnRender:function (o) {
-						return parseTemplate(app.templates.post, o.aData);
+                        console.log(o.aData.message, o.aData.id);
+                        return parseTemplate(app.templates.post, o.aData);
 					},
 					bSortable:false,
 					bUseRendered:false
 				},
 				{
 					mDataProp:'comments',
-					sClass:'retweets lesser',
-					asSorting:['desc', 'asc']
-				},
-				{
-					mDataProp:'likes',
-					sClass:'retweets lesser',
-					asSorting:['desc', 'asc']
-				},
-				{
-					mDataProp:'average_sentiment',
 					sClass:'retweets lesser',
 					asSorting:['desc', 'asc']
 				},
@@ -169,13 +154,6 @@ app.datatables = {
 			],
 			oLanguage:generateLanguageFn('post')
 		};
-
-		//show manual search option
-		topicsArgs.fnDrawCallback = function (dtable) {
-			if ($('#topics .dataTables_filter input').val()) {
-				$(dtable.nTBody).append(parseTemplate(app.templates.addTextSearch, {colspan:3}));
-			}
-		}
 
 		function reloadAvatars(dtable) {
 
@@ -199,18 +177,14 @@ app.datatables = {
 		postsArgs.fnDrawCallback = reloadAvatars;
 		tweetsArgs.fnDrawCallback = reloadAvatars;
 
-		var statusesTable = $('#tweets .dtable')
-				.dataTable($.extend({}, commonDatatableArgs, tweetsArgs))
+		var statusesTable = $('#statuses .dtable')
+				.dataTable($.extend({}, commonDatatableArgs, postsArgs))
 				.fnSetFilteringDelay(250);
-		if (!statusesTable.size()) {
-			statusesTable = $('#posts .dtable')
-					.dataTable($.extend({}, commonDatatableArgs, postsArgs))
-					.fnSetFilteringDelay(250);
-		}
 
 		$(document)
 				.on('dateRangeUpdated', function () {
 					// statuses tables
+                    console.log(statusesTable);
 					if (statusesTable.length) {
 						statusesTable.fnClearTable(false);
 						statusesTable.fnDraw();
