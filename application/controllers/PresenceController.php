@@ -173,128 +173,178 @@ class PresenceController extends BaseController
 			list($selector, $presenceId) = explode(':', $lineId);
 			$presence = Model_Presence::fetchById($presenceId);
 			if ($presence) {
+				$line = null;
 				switch ($selector) {
 					case 'popularity':
-						// subtract 1 from the first day, as we're calculating a daily difference
-						$thisStartDate = date('Y-m-d', strtotime($startDate . ' -1 day'));
-
-						$data = $presence->getPopularityData($thisStartDate, $endDate);
-						$points = array();
-						$target = $presence->getTargetAudience();
-						$targetDate = $presence->getTargetAudienceDate($thisStartDate, $endDate);
-						$graphHealth = 100;
-						$requiredRates = null;
-						$timeToTarget = null;
-
-						if ($data) {
-							$current = $data[count($data)-1];
-
-							// choose the health intervals
-							$healthParams = new stdClass();
-							$healthParams->targetDiff = 0;
-							$healthParams->best = 30; // finish <1 month => excellent
-							$healthParams->good = 365; // finish <1 year => ok
-							$healthParams->bad = 2*365; // finish >2 years => awful
-
-							// convert the health measures to work with daily changes
-							$targetDiff = $target - $current->value;
-							$healthParams->targetDiff = $targetDiff;
-							$healthParams->bestRate = $targetDiff/$healthParams->best;
-							$healthParams->goodRate = $targetDiff/$healthParams->good;
-							$healthParams->badRate = $targetDiff/$healthParams->bad;
-							if ($healthParams->bestRate > 0) {
-								$requiredRates[] = array($healthParams->bestRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->best . ' days')));
-							}
-							if ($healthParams->goodRate > 0) {
-								$requiredRates[] = array($healthParams->goodRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->good . ' days')));
-							}
-							if ($healthParams->badRate > 0) {
-								$requiredRates[] = array($healthParams->badRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->bad . ' days')));
-							}
-
-							// this calculates a value between 0 and 100 for a given daily change
-							$healthCalc = function($value) use ($healthParams) {
-								if ($value < 0 || $value <= $healthParams->badRate) {
-									return 0;
-								} else if ($healthParams->targetDiff < 0 || $value >= $healthParams->bestRate) {
-									return 100;
-								} else if ($value >= $healthParams->goodRate) {
-									return 50 + 50*($value - $healthParams->goodRate)/($healthParams->bestRate - $healthParams->goodRate);
-								} else {
-									return 50*($value - $healthParams->badRate)/($healthParams->goodRate - $healthParams->badRate);
-								}
-							};
-
-							if ($targetDate) {
-								$interval = date_create($targetDate)->diff(date_create($thisStartDate));
-								$timeToTarget = array('y'=>$interval->y, 'm'=>$interval->m);
-								$graphHealth = $healthCalc($targetDiff/$interval->days);
-							}
-
-							foreach ($data as $point) {
-								$key = gmdate('Y-m-d', strtotime($point->datetime));
-								$points[$key] = $point->value; // overwrite any previous value, as data is sorted by datetime ASC
-							}
-
-							foreach ($points as $key=>$value) {
-								$points[$key] = (object)array('date'=>$key, 'total'=>$value);
-							}
-
-							foreach ($points as $key=>$point) {
-								$prevDay = date('Y-m-d', strtotime($key . ' -1 day'));
-								if (array_key_exists($prevDay, $points)) {
-									$point->value = $point->total - $points[$prevDay]->total;
-									$point->health = $healthCalc($point->value);
-								} else {
-									$point->value = 0;
-								}
-							}
-
-							// fill in the gaps
-							$currentDate = $thisStartDate;
-							while ($currentDate < $endDate) {
-								if (!array_key_exists($currentDate, $points)) {
-									$points[$currentDate] = (object)array('date'=>$currentDate, 'value'=>0);
-								}
-								$currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
-							}
-							ksort($points);
-							$points = array_values($points);
-
-							$current = array(
-								'value'=>$current->value,
-								'date'=>gmdate('d F Y', strtotime($current->datetime))
-							);
-						} else {
-							$current = null;
-						}
-
-						$series[] = array(
-							'line_id' => $lineId,
-							'selector' => '#' . $selector,
-							'target' => $target,
-							'timeToTarget' => $timeToTarget,
-							'points' => $points,
-							'current' => $current,
-							'health' => $graphHealth,
-							'requiredRates' => $requiredRates
-						);
+						$line = $this->generatePopularityGraphData($presence, $startDate, $endDate);
 						break;
 					case 'posts_per_day':
-						$data = $presence->getPostsPerDayData($startDate, $endDate);
-						usort($data, function($a, $b) { return strcmp($a->date, $b->date); });
-
-						$series[] = array(
-							'line_id' => $lineId,
-							'selector' => '#' . $selector,
-							'points' => $data
-						);
+						$line = $this->generatePostsPerDayGraphData($presence, $startDate, $endDate);
 						break;
+				}
+				if ($line) {
+					$line['line_id'] = $lineId;
+					$line['selector'] = '#' . $selector;
+					$series[] = $line;
 				}
 			}
 		}
 
 		$this->apiSuccess($series);
+	}
+
+	/**
+	 * @param Model_Presence $presence
+	 * @param $startDate
+	 * @param $endDate
+	 * @return array
+	 */
+	private function generatePopularityGraphData($presence, $startDate, $endDate)
+	{
+		// subtract 1 from the first day, as we're calculating a daily difference
+		$startDate = date('Y-m-d', strtotime($startDate . ' -1 day'));
+
+		$data = $presence->getPopularityData($startDate, $endDate);
+		$points = array();
+		$target = $presence->getTargetAudience();
+		$targetDate = $presence->getTargetAudienceDate($startDate, $endDate);
+		$graphHealth = 100;
+		$requiredRates = null;
+		$timeToTarget = null;
+
+		if ($data) {
+			$current = $data[count($data)-1];
+
+			// choose the health intervals
+			$healthParams = new stdClass();
+			$healthParams->targetDiff = 0;
+			$healthParams->best = 30; // finish <1 month => excellent
+			$healthParams->good = 365; // finish <1 year => ok
+			$healthParams->bad = 2*365; // finish >2 years => awful
+
+			// convert the health measures to work with daily changes
+			$targetDiff = $target - $current->value;
+			$healthParams->targetDiff = $targetDiff;
+			$healthParams->bestRate = $targetDiff/$healthParams->best;
+			$healthParams->goodRate = $targetDiff/$healthParams->good;
+			$healthParams->badRate = $targetDiff/$healthParams->bad;
+			if ($healthParams->bestRate > 0) {
+				$requiredRates[] = array($healthParams->bestRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->best . ' days')));
+			}
+			if ($healthParams->goodRate > 0) {
+				$requiredRates[] = array($healthParams->goodRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->good . ' days')));
+			}
+			if ($healthParams->badRate > 0) {
+				$requiredRates[] = array($healthParams->badRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->bad . ' days')));
+			}
+
+			// this calculates a value between 0 and 100 for a given daily change
+			$healthCalc = function($value) use ($healthParams) {
+				if ($value < 0 || $value <= $healthParams->badRate) {
+					return 0;
+				} else if ($healthParams->targetDiff < 0 || $value >= $healthParams->bestRate) {
+					return 100;
+				} else if ($value >= $healthParams->goodRate) {
+					return 50 + 50*($value - $healthParams->goodRate)/($healthParams->bestRate - $healthParams->goodRate);
+				} else {
+					return 50*($value - $healthParams->badRate)/($healthParams->goodRate - $healthParams->badRate);
+				}
+			};
+
+			if ($targetDate) {
+				$interval = date_create($targetDate)->diff(date_create($startDate));
+				$timeToTarget = array('y'=>$interval->y, 'm'=>$interval->m);
+				$graphHealth = $healthCalc($targetDiff/$interval->days);
+			}
+
+			foreach ($data as $point) {
+				$key = gmdate('Y-m-d', strtotime($point->datetime));
+				$points[$key] = $point->value; // overwrite any previous value, as data is sorted by datetime ASC
+			}
+
+			foreach ($points as $key=>$value) {
+				$points[$key] = (object)array('date'=>$key, 'total'=>$value);
+			}
+
+			foreach ($points as $key=>$point) {
+				$prevDay = date('Y-m-d', strtotime($key . ' -1 day'));
+				if (array_key_exists($prevDay, $points)) {
+					$point->value = $point->total - $points[$prevDay]->total;
+					$point->health = $healthCalc($point->value);
+				} else {
+					$point->value = 0;
+				}
+			}
+
+			// fill in the gaps
+			$currentDate = $startDate;
+			while ($currentDate < $endDate) {
+				if (!array_key_exists($currentDate, $points)) {
+					$points[$currentDate] = (object)array('date'=>$currentDate, 'value'=>0);
+				}
+				$currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+			}
+			ksort($points);
+			$points = array_values($points);
+
+			$current = array(
+				'value'=>$current->value,
+				'date'=>gmdate('d F Y', strtotime($current->datetime))
+			);
+		} else {
+			$current = null;
+		}
+
+		return array(
+			'target' => $target,
+			'timeToTarget' => $timeToTarget,
+			'points' => $points,
+			'current' => $current,
+			'health' => $graphHealth,
+			'requiredRates' => $requiredRates
+		);
+	}
+
+	/**
+	 * @param Model_Presence $presence
+	 * @param $startDate
+	 * @param $endDate
+	 * @return array
+	 */
+	private function generatePostsPerDayGraphData($presence, $startDate, $endDate) {
+		$data = $presence->getPostsPerDayData($startDate, $endDate);
+		usort($data, function($a, $b) { return strcmp($a->date, $b->date); });
+
+		$target = 5; // todo: configure this somewhere
+		$average = 0;
+		if ($data) {
+			$total = 0;
+			foreach ($data as $row) {
+				$total += $row->post_count;
+				$targetDiff = abs($row->post_count - $target);
+				if ($targetDiff <= 1) {
+					$row->health = 100;
+				} else if ($targetDiff <= 3) {
+					$row->health = 50;
+				} else {
+					$row->health = 0;
+				}
+			}
+			$average = $total/count($data);
+		}
+
+		if($average > $target){
+			$graphHealth = 100;
+		} else {
+			$graphHealth = ($average/$target)*100;
+		}
+
+		return array(
+			'average' => $average,
+			'target' => $target,
+			'points' => $data,
+			'health' => $graphHealth
+		);
 	}
 
 	public static function getStatusType($id){
@@ -370,8 +420,5 @@ class PresenceController extends BaseController
 		}
 
 	}
-
-
-
 
 }

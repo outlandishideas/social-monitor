@@ -204,73 +204,58 @@ app.charts = {
 	 * @param data
 	 */
 	renderDataset: function(data) {
-        var percent = 0;
 		var $health = $(data.selector).siblings('.health');
-		if(data.selector == '#popularity'){
-			$('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
-			if (data.points.length > 0) {
-				percent = data.health;
 
-				$health.find('.value')
-					.text(app.utils.numberFormat(data.current.value))
-					.css('color', app.charts.getColorForPercentage(percent));
-				$health.find('.legend').text('As of ' + data.current.date);
-				var targetText = 'Target Fans/Followers: '+ app.utils.numberFormat(data.target);
-				if (data.timeToTarget) {
-					var components = [];
-					var val = data.timeToTarget.y;
-					if (val) {
-						components.push(val + ' year' + (val == 1 ? '' : 's'));
-					}
-					val = data.timeToTarget.m;
-					if (val) {
-						components.push(val + ' month' + (val == 1 ? '' : 's'));
-					}
-					targetText += '<br />Projected target achievement: ' + components.join(', ');
-					if (data.requiredRates) {
-						targetText += '<table><thead><tr><th>Target date</th><th>Required increase per day</th></tr></thead><tbody>';
-						for (var i=0; i<data.requiredRates.length; i++) {
-							targetText += '<tr><td>' + data.requiredRates[i][1] + '</td><td>' + app.utils.numberFixedDecimal(data.requiredRates[i][0], 1) + '</td></tr>';
-						}
-						targetText += '</tbody></table>';
-					}
-				} else {
-					targetText += '<br />Target reached';
-				}
-				$health.find('.target').html(targetText);
+		$('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
 
-				app.charts.addBars(data.selector, data.points, data.line_id, app.charts.getColorForPercentage(percent));
-			} else {
-				$health.find('.value')
-					.text('No data found')
-					.css('color', app.charts.getColorForPercentage(0));
-				$health.find('.legend').text('');
-				$health.find('.target').html('');
-			}
-		} else if (data.selector == '#posts_per_day') {
-            var value = 0;
-            var target = 5;
-//            console.log(data.points);
-			var pointCount = data.points.length;
-			for (var i=0; i<pointCount; i++) {
-                value += parseFloat(data.points[i].post_count);
-			}
-            var average = value/pointCount;
-            if(average>target){
-                percent = 100;
-            } else {
-                percent = (average/target)*100;
-            }
-
+		if (data.points.length == 0) {
 			$health.find('.value')
-				.text(parseFloat(app.utils.numberFixedDecimal(average, 2)))
-				.css('color', app.charts.getColorForPercentage(percent))
-				.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
-			$health.find('.target').text('Target Posts Per Day: ' + target);
+				.text('No data found')
+				.css('color', app.charts.getColorForPercentage(0));
+			$health.find('.legend').text('');
+			$health.find('.target').html('');
+		} else {
+			switch (data.selector) {
+				case '#popularity':
+					$health.find('.value')
+						.text(app.utils.numberFormat(data.current.value))
+						.css('color', app.charts.getColorForPercentage(data.health));
+					$health.find('.legend').text('As of ' + data.current.date);
+					var targetText = 'Target Fans/Followers: '+ app.utils.numberFormat(data.target);
+					if (data.timeToTarget) {
+						var components = [];
+						var val = data.timeToTarget.y;
+						if (val) {
+							components.push(val + ' year' + (val == 1 ? '' : 's'));
+						}
+						val = data.timeToTarget.m;
+						if (val) {
+							components.push(val + ' month' + (val == 1 ? '' : 's'));
+						}
+						targetText += '<br />Projected target achievement: ' + components.join(', ');
+						if (data.requiredRates) {
+							targetText += '<table><thead><tr><th>Target date</th><th>Required increase per day</th></tr></thead><tbody>';
+							for (var i=0; i<data.requiredRates.length; i++) {
+								targetText += '<tr><td>' + data.requiredRates[i][1] + '</td><td>' + app.utils.numberFixedDecimal(data.requiredRates[i][0], 1) + '</td></tr>';
+							}
+							targetText += '</tbody></table>';
+						}
+					} else {
+						targetText += '<br />Target reached';
+					}
+					$health.find('.target').html(targetText);
 
-			$('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
-			if (data.points.length > 0) {
-				app.charts.addLine(data.selector, data.points, data.line_id, app.charts.getColorForPercentage(percent));
+					app.charts.addBars(data.selector, data.points, data.line_id, app.charts.getColorForPercentage(data.health));
+					break;
+				case '#posts_per_day':
+					$health.find('.value')
+						.text(app.utils.numberFixedDecimal(data.average, 2))
+						.css('color', app.charts.getColorForPercentage(data.health))
+						.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
+					$health.find('.target').text('Target Posts Per Day: ' + data.target);
+
+					app.charts.addBars(data.selector, data.points, data.line_id, app.charts.getColorForPercentage(data.health));
+					break;
 			}
         }
 
@@ -375,6 +360,27 @@ app.charts = {
 					return app.charts.getColorForPercentage(d.health);
 				}
 				return color;
+			})
+			.style('stroke', function(d, i) {
+				if ('health' in d) {
+					return app.charts.getColorForPercentage(d.health);
+				}
+				return color;
+			})
+			.attr('title', function(d, i) {
+				return c.getYValue(d);
+			})
+			.on('mouseover', function (d, i) {
+				$('div.tipsy').remove();
+
+				$(this).tipsy({
+					gravity:'s',
+					offsetX:10,
+					trigger:'manual'
+				}).tipsy('show');
+			})
+			.on('mouseout', function (d, i) {
+				$('div.tipsy').remove();
 			});
 	},
 
