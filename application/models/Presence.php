@@ -148,16 +148,25 @@ class Model_Presence extends Model_Base {
 	 * @param $endDate
 	 * @return array a series of (date, value) data points
 	 */
-	private function getHistoryData($type, $startDate, $endDate) {
-		$stmt = $this->_db->prepare('SELECT datetime, value
+	private function getHistoryData($type, $startDate = null, $endDate = null) {
+		$clauses = array('presence_id = :id', 'type = :type');
+		$args = array(':id'=>$this->id, ':type'=>$type);
+		if ($startDate) {
+			$clauses[] = 'datetime >= :start_date';
+			$args[':start_date'] = $startDate;
+		}
+		if ($endDate) {
+			$clauses[] = 'datetime <= :end_date';
+			$args[':end_date'] = $endDate;
+		}
+		$sql = 'SELECT datetime, value
 			FROM presence_history
-			WHERE presence_id = :id
-			AND type = :type
-			AND datetime >= :start_date
-			AND datetime <= :end_date
-			ORDER BY datetime ASC');
-		$stmt->execute(array(':id'=>$this->id, ':type'=>$type, ':start_date'=>$startDate, ':end_date'=>$endDate));
-		return $stmt->fetchAll(PDO::FETCH_OBJ);
+			WHERE ' . implode(' AND ', $clauses) . '
+			ORDER BY datetime ASC';
+		$stmt = $this->_db->prepare($sql);
+		$stmt->execute($args);
+		$data = $stmt->fetchAll(PDO::FETCH_OBJ);
+		return $data;
 	}
 
     public function getPopularityData($startDate, $endDate){
@@ -242,21 +251,23 @@ class Model_Presence extends Model_Base {
 	}
 
 	/**
-	 * Gets the date at which the target audience size will be reached, based on the current trend. The date may be in the past
+	 * Gets the date at which the target audience size will be reached, based on the trend over the given time period. The date may be in the past
 	 * If any of these conditions are met, this will return null:
 	 * - no target audience size
 	 * - fewer than 2 data points
 	 * - popularity has never varied
 	 * - the calculated date would be too far in the future (32-bit date problem)
 	 * - the calculated date is in the past
+	 * @param $startDate
+	 * @param $endDate
 	 * @return null|string
 	 */
-	public function getTargetAudienceDate() {
+	public function getTargetAudienceDate($startDate, $endDate) {
+		// todo: change this to throw exceptions for the different reasons listed above
 		$date = null;
 		$target = $this->getTargetAudience();
 		if ($target > 0) {
-			$latest = $this->last_fetched;
-			$data = $this->getPopularityData(gmdate('Y-m-d H:i:s', strtotime($latest . ' -7 days')), $latest);
+			$data = $this->getPopularityData($startDate, $endDate);
 			$n = count($data);
 			if ($n > 1) {
 				// calculate line of best fit (see http://www.endmemo.com/statistics/lr.php)

@@ -81,7 +81,8 @@ class Model_Campaign extends Model_Base {
 		$return = array();
 		$now = new DateTime();
 		foreach($presences as $presence){
-			$diff = $now->diff(new DateTime($presence->getTargetAudienceDate()));
+			$targetDate = $presence->getTargetAudienceDate($now->sub(date_interval_create_from_date_string('1 month'))->format('Y-m-d'), $now->format('Y-m-d'));
+			$diff = $now->diff(new DateTime($targetDate));
 			$months = $diff->m + 12*$diff->y;
 			$return[] = array('name'=>$presence->name, 'value' =>$months);
 		}

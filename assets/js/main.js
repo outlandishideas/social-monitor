@@ -84,7 +84,11 @@ app.init = {
 
 		$(window).on('beforeunload', function(){
 			app.state.unloading = true;
-		})
+		});
+
+		if ($('.dtable').length > 0) {
+			app.datatables.init();
+		}
 	},
 
 	//selector-based init functions, called from bootstrap
@@ -458,16 +462,19 @@ app.api = {
 			dateRange: dateRange
 		};
 
-        return app.api.get(url, args).done(cb);
+        return app.api.get(url, args).done(function(response) {
+	        for (var i in response.data) {
+		        app.charts.renderDataset(response.data[i]);
+	        }
+	        app.charts.updateYAxis();
+	        $('#charts').hideLoader();
+
+	        if (cb) {
+		        cb();
+	        }
+        });
 	},
 	callback: function (response) {
-		if (response.request.path.indexOf('graph-data') >= 0) {
-			for (var i in response.data) {
-				app.charts.renderDataset(response.data[i]);
-			}
-			app.charts.updateYAxis();
-			$('#charts').hideLoader();
-		}
 		if (response.messages) {
 			_.each(response.messages, function(messageData) {
 				var keys = _.keys(messageData);

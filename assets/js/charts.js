@@ -16,9 +16,6 @@ app.charts = {
 		$charts.find('.chart').each(function() {
 			app.state.lineIds.push($(this).data('line-id'));
 		});
-        if ($('.dtable').length > 0) {
-            app.datatables.init();
-        }
 
 		$(document)
 			.on('dateRangeUpdated', function () {
@@ -62,7 +59,7 @@ app.charts = {
 //		},
 		'#popularity': function(chart) {
 			chart.getXValue = function (d) {
-				return app.charts.datetimeFormat.parse(d.datetime);
+				return app.charts.dateFormat.parse(d.date);
 			};
 			chart.getYValue = function (d) {
 				return d.value;
@@ -149,6 +146,8 @@ app.charts = {
 
 		c.xMap = d3.time.scale().range([0, c.w]).domain(dates);
 		c.yMap = d3.scale.linear().range([c.h, 0]);
+		c.yMin = Infinity;
+		c.yMax = -Infinity;
 
 		c.xAxis = d3.svg.axis()
 			.scale(c.xMap)
@@ -208,40 +207,55 @@ app.charts = {
         var percent = 0;
 		var $health = $(data.selector).siblings('.health');
 		if(data.selector == '#popularity'){
-			var currentValue = data.current;
+			$('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
+			if (data.points.length > 0) {
+				percent = data.health;
 
-			// work out the health of the timeToTarget
-			// < 1 year => 100%
-			// > 2 years => 0%
-			// else somewhere in between
-			if (currentValue >= data.target) {
-				percent = 100;
-			} else if (data.timeToTarget) {
-				var minDays = 365;
-				var maxDays = 730;
-				var targetDate = new Date(data.timeToTarget);
-				var now = new Date();
-				var daysDiff = (targetDate - now)/(1000*60*60*24);
-				if (daysDiff <= minDays) {
-					percent = 100;
-				} else if (daysDiff < maxDays) {
-					percent = 100*(daysDiff - minDays)/(maxDays - minDays);
+				$health.find('.value')
+					.text(app.utils.numberFormat(data.current.value))
+					.css('color', app.charts.getColorForPercentage(percent));
+				$health.find('.legend').text('As of ' + data.current.date);
+				var targetText = 'Target Fans/Followers: '+ app.utils.numberFormat(data.target);
+				if (data.timeToTarget) {
+					var components = [];
+					var val = data.timeToTarget.y;
+					if (val) {
+						components.push(val + ' year' + (val == 1 ? '' : 's'));
+					}
+					val = data.timeToTarget.m;
+					if (val) {
+						components.push(val + ' month' + (val == 1 ? '' : 's'));
+					}
+					targetText += '<br />Projected target achievement: ' + components.join(', ');
+					if (data.requiredRates) {
+						targetText += '<table><thead><tr><th>Target date</th><th>Required increase per day</th></tr></thead><tbody>';
+						for (var i=0; i<data.requiredRates.length; i++) {
+							targetText += '<tr><td>' + data.requiredRates[i][1] + '</td><td>' + app.utils.numberFixedDecimal(data.requiredRates[i][0], 1) + '</td></tr>';
+						}
+						targetText += '</tbody></table>';
+					}
+				} else {
+					targetText += '<br />Target reached';
 				}
-			}
+				$health.find('.target').html(targetText);
 
-			$health.find('.value')
-				.text(app.utils.numberFormat(currentValue))
-				.css('color', app.charts.getColorForPercentage(percent))
-				.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
-			$health.find('.target').text('Target Followers: '+ app.utils.numberFormat(data.target));
+				app.charts.addBars(data.selector, data.points, data.line_id, app.charts.getColorForPercentage(percent));
+			} else {
+				$health.find('.value')
+					.text('No data found')
+					.css('color', app.charts.getColorForPercentage(0));
+				$health.find('.legend').text('');
+				$health.find('.target').html('');
+			}
 		} else if (data.selector == '#posts_per_day') {
             var value = 0;
             var target = 5;
-            console.log(data.points);
-            for(var i in data.points) {
+//            console.log(data.points);
+			var pointCount = data.points.length;
+			for (var i=0; i<pointCount; i++) {
                 value += parseFloat(data.points[i].post_count);
 			}
-            var average = value/data.points.length;
+            var average = value/pointCount;
             if(average>target){
                 percent = 100;
             } else {
@@ -250,57 +264,52 @@ app.charts = {
 
 			$health.find('.value')
 				.text(parseFloat(app.utils.numberFixedDecimal(average, 2)))
-				.css('color', app.charts.getColorForPercentage(percent));
-//				.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
-//			$health.find('.target').text('Target Followers: '+ app.utils.numberFormat(data.target));
-            $health.empty();
-            $health.append('<h3>Posts Per Day</h3>');
-            var $target = $('<p>' + parseFloat(app.utils.numberFixedDecimal(average, 2)) + '</p>');
-            $target.css('color', app.charts.getColorForPercentage(percent));
-            if (data.timeToTarget) {
-                $target.attr('title', 'Estimated date to reach target: ' + data.timeToTarget)
-            }
-            $('<div class="fieldset"></div>')
-                .append('<h4>Average</h4>')
-                .append($target)
-                .appendTo($health);
-            $health.append('<p class="target">Target Posts Per Day: '+ app.utils.numberFormat(5) +'</p>');
+				.css('color', app.charts.getColorForPercentage(percent))
+				.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
+			$health.find('.target').text('Target Posts Per Day: ' + target);
+
+			$('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
+			if (data.points.length > 0) {
+				app.charts.addLine(data.selector, data.points, data.line_id, app.charts.getColorForPercentage(percent));
+			}
         }
 
-        $('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
-		if (data.points.length > 0) {
-	        app.charts.addLine(data.selector, data.points, data.line_id, app.charts.getColorForPercentage(percent));
-		}
 	},
 
-	addLine: function (selector, points, line_id, color) {
-		var c = app.state.charts[selector];
-
+	addGroup: function(c, points, line_id) {
 		//calculate min/max y value in this dataset (need to convert to integer, otherwise 'max' is done alphabetically)
 		var f = function(d) { return parseInt(c.getYValue(d)); };
-		c.yMax = d3.max(points, f);
-		c.yMin = d3.min(points, f);
+		c.yMax = Math.max(c.yMax, d3.max(points, f));
+		c.yMin = Math.min(c.yMin, d3.min(points, f));
 
 		// make sure the y axis has a decent range of values
 		var range = c.yMax - c.yMin;
 		var minRange = 12;
 		if (range < minRange) {
-			c.yMin = Math.max(0, c.yMin-(minRange - range)/2);
+			c.yMin = Math.min(c.yMin, Math.max(0, c.yMin-(minRange - range)/2));
 			c.yMax = c.yMin + minRange;
 		}
 
 		// create one container per data set
-		var group = c.vis
+		return c.vis
 			.append('svg:g')
 			.attr('data-line-id', line_id)
 			.attr('data-max', c.yMax)
 			.attr('data-min', c.yMin)
 			.attr('data-points', JSON.stringify(points))
 			.attr('class', 'dataset lines');
+	},
+
+	addLine: function (selector, points, line_id, color) {
+		var c = app.state.charts[selector];
+		var group = app.charts.addGroup(c, points, line_id);
 
 		group.append("svg:path")
 			.attr("d", c.line(points))
-			.attr('style', 'stroke-width: 2px; fill: none; stroke:' + color);
+			.attr('style', 'stroke-width: 2px; fill: none; stroke: ' + color);
+//			.style('stroke', color)
+//			.style('stroke-width', 2)
+//			.style('fill', 'none');
 
 		// add bucket rects and circles for mentions and sentiment graphs only
 		if (c.drawCircles) {
@@ -318,17 +327,55 @@ app.charts = {
 				.attr("cy", function (d, i) {
 					return c.yMap(c.getYValue(d));
 				})
-				.style('fill', color)
-				.style('stroke', color)
-				.attr('class', function (d, i) {
-					return 'node-' + i;
+				.style('fill', function(d, i) {
+					if ('health' in d) {
+						return app.charts.getColorForPercentage(d.health);
+					}
+					return color;
+				})
+				.style('stroke', function(d, i) {
+					if ('health' in d) {
+						return app.charts.getColorForPercentage(d.health);
+					}
+					return color;
 				})
 				.attr('data-line-id', line_id)
-				.attr("r", function (d) {
-					return 4;//c.getYValue(d) ? 4 : 2;
-				});
+				.attr("r", 4);
 		}
+	},
 
+	addBars: function (selector, points, line_id, color) {
+		var c = app.state.charts[selector];
+		var group = app.charts.addGroup(c, points, line_id);
+
+		var maxWidth = c.w/points.length;
+		var width = maxWidth*0.8;
+
+		// translate by half a column width
+		group.attr('transform', 'translate('+ maxWidth/2 +')');
+
+		group.selectAll('rect')
+			.data(points)
+			.enter()
+			.append("svg:rect")
+			.attr("x", function (d, i) {
+				return c.xMap(c.getXValue(d));
+			})
+			.attr('transform', 'translate(-' + width/2 + ')')
+			.attr('y', function(d, i) {
+				return c.yMap(Math.max(0, c.getYValue(d)));
+			})
+			.attr("height", function (d, i) {
+				return Math.abs(c.yMap(0) - c.yMap(c.getYValue(d)));
+			})
+			.attr("width", width)
+			.attr('data-line-id', line_id)
+			.style('fill', function(d, i) {
+				if ('health' in d) {
+					return app.charts.getColorForPercentage(d.health);
+				}
+				return color;
+			});
 	},
 
 	getAllBlocks: function(rect) {
@@ -350,36 +397,31 @@ app.charts = {
 		var $datasets = c.$chart.find('.dataset');
 		c.vis.transition().select('.axis-x').call(c.xAxis);
 
+		var duration = 1000;
 		$datasets.each(function () {
+			var $dataset = $(this);
 			d3.select(this).selectAll('path')
 					.transition()
-					.duration(1000)
+					.duration(duration)
 					.attr("d", c.line($(this).data('points')));
 
 			d3.select(this).selectAll('circle')
 					.transition()
-					.duration(1000)
+					.duration(duration)
 					.attr("cx", function (d, i) {
 						return c.xMap(c.getXValue(d));
 					})
 					.style('opacity', 0);
 
+			var width = 0.8*c.w/$dataset.data('points').length;
 			d3.select(this).selectAll('rect')
 				.transition()
-				.duration(1000)
+				.duration(duration)
 				.attr("x", function (d, i) {
 					return c.xMap(c.getXValue(d));
 				})
-				.attr('transform', function () {
-					return 'translate(-'+ (c.w / $(this).data('points').length * 0.5) +')';
-				})
-				.attr("height", function (d, i) {
-					if (d.value == 0) return 0;
-					return c.h;
-				})
-				.attr("width", function () {
-					return c.w / $(this).data('points').length
-				})
+				.attr('transform', 'translate(-'+ width/2 +')')
+				.attr("width", width);
 		});
 	},
 
@@ -397,28 +439,43 @@ app.charts = {
 
 		var $datasets = c.$chart.find('.dataset');
 
+		if ($datasets.length == 0) {
+			return;
+		}
+
 		//update y scale mapping functions
-		c.yMap.domain([c.yMin, c.yMax]);
+		c.yMap.domain([Math.min(0, c.yMin), c.yMax]);
 
 		//rescale axes
 		c.vis.transition().select('.axis-y').call(c.yAxis);
 
 		//rescale lines
+		var duration = 600;
 		$datasets.each(function () {
 			var points = $(this).data('points');
 			if (typeof points != 'undefined') {
 
 				d3.select(this).selectAll('path')
-						.transition()
-						.duration(600)
-						.attr("d", c.line(points));
+					.transition()
+					.duration(duration)
+					.attr("d", c.line(points));
 
 				d3.select(this).selectAll('circle')
-						.transition()
-						.duration(600)
-						.attr("cy", function (d) {
-							return c.yMap(c.getYValue(d));
-						});
+					.transition()
+					.duration(duration)
+					.attr("cy", function (d) {
+						return c.yMap(c.getYValue(d));
+					});
+
+				d3.select(this).selectAll('rect')
+					.transition()
+					.duration(duration)
+					.attr('y', function(d) {
+						return c.yMap(Math.max(0, c.getYValue(d)));
+					})
+					.attr('height', function(d) {
+						return Math.abs(c.yMap(0) - c.yMap(c.getYValue(d)));
+					});
 			}
 		});
 

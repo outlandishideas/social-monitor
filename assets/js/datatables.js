@@ -131,7 +131,7 @@ app.datatables = {
 				{
 					mDataProp:'message',
 					fnRender:function (o) {
-                        console.log(o.aData.message, o.aData.id);
+//                        console.log(o.aData.message, o.aData.id);
                         return parseTemplate(app.templates.post, o.aData);
 					},
 					bSortable:false,
@@ -184,7 +184,7 @@ app.datatables = {
 		$(document)
 				.on('dateRangeUpdated', function () {
 					// statuses tables
-                    console.log(statusesTable);
+//                    console.log(statusesTable);
 					if (statusesTable.length) {
 						statusesTable.fnClearTable(false);
 						statusesTable.fnDraw();

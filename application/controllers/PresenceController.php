@@ -28,17 +28,15 @@ class PresenceController extends BaseController
 		$graphs = array();
 		$graphs[] = (object)array(
 			'id' => 'popularity',
-			'yAxisLabel' => 'fans/followers',
+			'yAxisLabel' => ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers') . ' per day',
 			'lineId' => 'popularity:' . $presence->id,
-			'title' => 'Target Followers',
-			'legend' => 'Current'
+			'title' => 'Popularity Rate'
 		);
 		$graphs[] = (object)array(
 			'id' => 'posts_per_day',
 			'yAxisLabel' => 'posts-per-day',
 			'lineId' => 'posts_per_day:' . $presence->id,
-			'title' => 'Posts Per Day',
-			'legend' => 'Average'
+			'title' => 'Posts Per Day'
 		);
 
 		$this->view->title = $presence->label;
@@ -177,25 +175,109 @@ class PresenceController extends BaseController
 			if ($presence) {
 				switch ($selector) {
 					case 'popularity':
-						$buckets = $presence->getPopularityData($startDate, $endDate);
+						// subtract 1 from the first day, as we're calculating a daily difference
+						$startDate = date('Y-m-d', strtotime($startDate . ' -1 day'));
 
-						$keyedBuckets = array();
-						if ($buckets) {
-							//key data by date
-							foreach ($buckets as $bucket) {
-								//$bucket['date'] = Model_Base::localeDate($bucket['date']);
-								$keyedBuckets[$bucket->datetime] = $bucket;
+						$data = $presence->getPopularityData($startDate, $endDate);
+						$points = array();
+						$target = $presence->getTargetAudience();
+						$targetDate = $presence->getTargetAudienceDate($startDate, $endDate);
+						$graphHealth = 100;
+						$requiredRates = null;
+						$timeToTarget = null;
+
+						if ($data) {
+							$current = $data[count($data)-1];
+
+							// choose the health intervals
+							$healthParams = new stdClass();
+							$healthParams->targetDiff = 0;
+							$healthParams->best = 30; // finish <1 month => excellent
+							$healthParams->good = 365; // finish <1 year => ok
+							$healthParams->bad = 2*365; // finish >2 years => awful
+
+							// convert the health measures to work with daily changes
+							$targetDiff = $target - $current->value;
+							$healthParams->targetDiff = $targetDiff;
+							$healthParams->bestRate = $targetDiff/$healthParams->best;
+							$healthParams->goodRate = $targetDiff/$healthParams->good;
+							$healthParams->badRate = $targetDiff/$healthParams->bad;
+							if ($healthParams->bestRate > 0) {
+								$requiredRates[] = array($healthParams->bestRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->best . ' days')));
 							}
-							ksort($keyedBuckets);
+							if ($healthParams->goodRate > 0) {
+								$requiredRates[] = array($healthParams->goodRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->good . ' days')));
+							}
+							if ($healthParams->badRate > 0) {
+								$requiredRates[] = array($healthParams->badRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->bad . ' days')));
+							}
+
+							// this calculates a value between 0 and 100 for a given daily change
+							$healthCalc = function($value) use ($healthParams) {
+								if ($value < 0 || $value <= $healthParams->badRate) {
+									return 0;
+								} else if ($healthParams->targetDiff < 0 || $value >= $healthParams->bestRate) {
+									return 100;
+								} else if ($value >= $healthParams->goodRate) {
+									return 50 + 50*($value - $healthParams->goodRate)/($healthParams->bestRate - $healthParams->goodRate);
+								} else {
+									return 50*($value - $healthParams->badRate)/($healthParams->goodRate - $healthParams->badRate);
+								}
+							};
+
+							if ($targetDate) {
+								$interval = date_create($targetDate)->diff(date_create($startDate));
+								$timeToTarget = array('y'=>$interval->y, 'm'=>$interval->m);
+								$graphHealth = $healthCalc($targetDiff/$interval->days);
+							}
+
+							foreach ($data as $point) {
+								$key = gmdate('Y-m-d', strtotime($point->datetime));
+								$points[$key] = $point->value; // overwrite any previous value, as data is sorted by datetime ASC
+							}
+
+							foreach ($points as $key=>$value) {
+								$points[$key] = (object)array('date'=>$key, 'total'=>$value);
+							}
+
+							foreach ($points as $key=>$point) {
+								$prevDay = date('Y-m-d', strtotime($key . ' -1 day'));
+								if (array_key_exists($prevDay, $points)) {
+									$point->value = $point->total - $points[$prevDay]->total;
+									$point->health = $healthCalc($point->value);
+								} else {
+									$point->value = 0;
+								}
+							}
+
+							// fill in the gaps
+							$currentDate = $startDate;
+							while ($currentDate < $endDate) {
+								if (!array_key_exists($currentDate, $points)) {
+									$points[$currentDate] = (object)array('date'=>$currentDate, 'value'=>0);
+								}
+								$currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+							}
+							ksort($points);
+							$points = array_values($points);
+
+							$current = array(
+								'value'=>$current->value,
+								'date'=>gmdate('d F Y', strtotime($current->datetime))
+							);
+						} else {
+							$current = null;
 						}
 
 						$series[] = array(
 							'line_id' => $lineId,
 							'selector' => '#' . $selector,
-							'target' => $presence->getTargetAudience(),
-							'timeToTarget' => $presence->getTargetAudienceDate(),
-							'points' => array_values($keyedBuckets),
-							'current' => intval($presence->popularity)
+							'target' => $target,
+							'timeToTarget' => $timeToTarget,
+							'points' => $points,
+							'current' => $current,
+							'health' => $graphHealth,
+							'requiredRates' => $requiredRates
 						);
 						break;
 					case 'posts_per_day':
@@ -237,6 +319,7 @@ class PresenceController extends BaseController
 		$tableData = array();
 		$count = 0;
 		if ($linePropsArray) {
+			/** @var $presence Model_Presence */
 			$presence = Model_Presence::fetchById($linePropsArray[0]['modelId']);
 			$statuses = $presence->getStatuses($dateRange[0],$dateRange[1]);
 
@@ -245,13 +328,13 @@ class PresenceController extends BaseController
 				foreach ($statuses as $tweet) {
 
 					$tableData[] = array(
-						'user_name'=>$tweet->user_name,
-						'screen_name'=>$tweet->screen_name,
+						'user_name'=>'',//$tweet->user_name,
+						'screen_name'=>'',//$tweet->screen_name,
 						'message'=> $this->_request->format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
 						'likes'=>$tweet->retweet_count,
 						'date'=>Model_Base::localeDate($tweet->created_time),
-						'profile_url'=>Model_TwitterTweet::getTwitterUrl($tweet->screen_name, $tweet->tweet_id),
-						'profile_image_url'=>$tweet->profile_image_url
+						'profile_url'=>'',//Model_TwitterTweet::getTwitterUrl($tweet->screen_name, $tweet->tweet_id),
+						'profile_image_url'=>''//$tweet->profile_image_url
 					);
 				}
 			} else {
