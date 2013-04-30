@@ -384,14 +384,6 @@ app.charts = {
 			});
 	},
 
-	getAllBlocks: function(rect) {
-		var classNames = '';
-		if (typeof rect !== 'undefined') {
-			classNames = '.' + $(rect).attr('class').split(' ')[0];
-		}
-		return d3.selectAll('#charts rect' + classNames);
-	},
-
 	updateXAxis:function () {
 		for (var selector in app.state.charts) {
 			app.charts.rescaleChartX(app.state.charts[selector]);

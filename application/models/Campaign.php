@@ -3,11 +3,6 @@
 class Model_Campaign extends Model_Base {
 	protected static $tableName = 'campaigns';
 	protected static $sortColumn = 'display_name';
-    protected static $kpis = array(
-        'popularityPercentage' => 'Percent of Target Audience',
-        'popularityTime' => 'Months to Target Audience',
-        'postsPerDay' => 'Average Number of Posts Per Day'
-    );
 
 	public function delete() {
 		$this->_db->prepare('DELETE FROM campaign_presences WHERE campaign_id = :cid')->execute(array(':cid'=>$this->id));
@@ -50,16 +45,21 @@ class Model_Campaign extends Model_Base {
 	}
 
 	static function getKpis(){
-		return static::$kpis;
+		return array(
+			'popularityPercentage' => 'Percent of Target Audience',
+			'popularityTime' => 'Months to Target Audience',
+			'postsPerDay' => 'Average Number of Posts Per Day'
+		);
 	}
 
 	function getKpiData(){
 		$return = array();
 		foreach(static::getKpis() as $key => $kpi){
-			$method = 'get'.ucfirst($key);
-			$kpi = $this->$method();
+			$kpi = $this->$key;
 			if($kpi){
 				$return[$key] = $kpi;
+			} else {
+				$return[$key] = array();
 			}
 		}
 

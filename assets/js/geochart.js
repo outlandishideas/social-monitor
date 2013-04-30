@@ -4,178 +4,102 @@ var app = app || {};
  * D3 chart functions
  */
 app.geochart = {
+	map: null,
+	data: null,
+	setup:function () {
 
-    setup:function () {
+		google.load('visualization', '1', {'packages': ['geochart']});
+		google.setOnLoadCallback(function() {
+			app.geochart.map = new google.visualization.GeoChart(document.getElementById('geo-map'));
+			app.geochart.map.options = {
+				datalessRegionColor: '#D5D5D5',
+				colorAxis: {minValue: 0, maxValue: 15, colors: ['orange', 'green']}
+			};
+			google.visualization.events.addListener(app.geochart.map, 'select', app.geochart.selectHandler);
+			app.geochart.refreshMap();
+		});
 
-        google.load('visualization', '1', {'packages': ['geochart']});
-        google.setOnLoadCallback(app.geochart.drawRegionsMap);
+		$('#metric-picker')
+			.on('change', app.geochart.refreshMap);
 
-        $('#metric-picker')
-            .on('change', function () {
-                app.geochart.drawRegionsMap();
-            });
+	},
+	currentMetric:function () {
+		return $('#metric-picker').val();
+	},
+	refreshMap:function () {
+		app.geochart.buildDataTable();
+		app.geochart.map.draw(app.geochart.data, app.geochart.map.options);
+	},
+	selectHandler: function (e) {
+		var selection = app.geochart.map.getSelection();
+		var row = selection[0].row;
+		var code = app.geochart.data.getValue(row, 0);
+		var id = app.mapData[code].id;
 
-    },
-    currentMetric:function () {
-    var select = document.getElementById('metric-picker');
-    if(select){
-        return select.value;
-    } else {
-        return 'popularityPercentage';
-    }
+		window.location.href = 'country/view/id/'+id;
+	},
+	buildDataTable:function(){
+		app.geochart.data = new google.visualization.DataTable();
+		app.geochart.data.addColumn('string', 'Country');
+		if (app.mapData.length == 0) {
+			return;
+		}
 
-    },
-    kpiSettings:{
-        'popularityPercentage':function(map){
-            map.metricData = function(d, target){
-                var value = 0;
-                var length = d.length;
+		var kpiAverage = function(country, m) {
+			var total = 0;
+			var kpiValues = country.kpis[m];
+			if (kpiValues.length > 0) {
+				for (var i=0; i<kpiValues.length; i++){
+					total += parseInt(kpiValues[i].value);
+				}
+				return total/kpiValues.length;
+			} else {
+				throw 'No KPI values';
+			}
+		};
 
-                for (var p in d){
-                    value += parseInt(d[p].value);
-                }
+		var averageFunc = kpiAverage;
 
-                value = value/length;
+		var metric = app.geochart.currentMetric();
+		switch (metric) {
+			case 'popularityPercentage':
+				averageFunc = function(country, m) {
+					return 100*kpiAverage(country, m)/country.target;
+				};
+				app.geochart.data.addColumn('number', 'Percent of Target Audience');
+				app.geochart.map.options.colorAxis.values = [0, 100];
+				app.geochart.map.options.colorAxis.colors = ['orange', 'green'];
+				break;
+			case 'popularityTime':
+				var max = 24;
+				for(var c in app.mapData){
+					try {
+						max = Math.max(max, averageFunc(app.mapData[c], metric));
+					} catch (err) { }
+				}
+				app.geochart.data.addColumn('number', 'Months To Hit Target Audience');
+				app.geochart.map.options.colorAxis.values = [0, 12, 24, max];
+				app.geochart.map.options.colorAxis.colors = ['green', 'green', 'orange', 'orange'];
+				break;
+			case 'postsPerDay':
+				var max = 5;
+				for(var c in app.mapData){
+					try {
+						max = Math.max(max, averageFunc(app.mapData[c], metric));
+					} catch (err) { }
+				}
+				app.geochart.data.addColumn('number', 'Average Posts Per Day');
+				app.geochart.map.options.colorAxis.values = [0, 5, max];
+				app.geochart.map.options.colorAxis.colors = ['orange', 'green', 'green'];
+				break;
+		}
 
-                return Math.floor((value/target)*100);
-            };
-            map.options.colorAxis.minValue = 0;
-            map.options.colorAxis.maxValue = 100;
-            map.columns = [
-                {name:'Country', type:'string'},
-                {name:'Percent of Target Audience', type:'number'}
-            ];
-        },
-        'popularityTime':function(map){
-            map.metricData = function(d, target){
-                var value = 0;
-                var length = d.length;
-
-                for (var p in d){
-                    value += parseInt(d[p].value);
-                }
-
-                return parseFloat(app.utils.numberFixedDecimal(value/length,2));
-            };
-            var min = 12; var max = 24;
-            map.options.colorAxis.minValue = 0;
-            if(app.geochart.maxValue(map)<max) {
-                map.options.colorAxis.maxValue = max
-            } else {
-                map.options.colorAxis.maxValue = app.geochart.maxValue(map)
-            }
-            map.options.colorAxis.values = [map.options.colorAxis.minValue, min, max, map.options.colorAxis.maxValue]
-            map.options.colorAxis.colors = ['green', 'green', 'orange', 'orange'];
-            map.columns = [
-                {name:'Country', type:'string'},
-                {name:'Months To Hit Target Audience', type:'number'}
-            ];
-        },
-        'postsPerDay':function(map){
-            map.metricData = function(d, target){
-                var value = 0;
-                var length = d.length;
-
-                for (var p in d){
-                    value += parseInt(d[p].value);
-                }
-                return parseFloat(app.utils.numberFixedDecimal(value/length, 2));
-            };
-
-            var min = 0; var max = 5;
-            map.options.colorAxis.minValue = min;
-            if(app.geochart.maxValue(map)<max) {
-                map.options.colorAxis.maxValue = max
-            } else {
-                map.options.colorAxis.maxValue = app.geochart.maxValue(map)
-            }
-            map.options.colorAxis.values = [map.options.colorAxis.minValue, max, map.options.colorAxis.maxValue]
-            map.options.colorAxis.colors = ['orange', 'green', 'green'];
-            map.columns = [
-                {name:'Country', type:'string'},
-                {name:'Average Posts Per Day', type:'number'}
-            ];
-        }
-    },
-    maxValue:function (map) {
-        var max = 0;
-        var value = 0;
-        for(var c in json){
-            var kpi = json[c]['kpis'][map.metric];
-            if(kpi){
-                num = map.metricData(kpi, json[c].target);
-                if(num > max) max = num;
-            }
-        }
-        return max;
-    },
-    minValue:function (map) {
-        var min = 0;
-        for(var c in json){
-            var kpi = json[c]['kpis'][map.metric];
-            for(var i in kpi){
-                if(kpi[i].value < min) min = kpi[i].value;
-            }
-        }
-        return min;
-    },
-    drawRegionsMap:function (map) {
-
-        var map = new google.visualization.GeoChart(document.getElementById('geo-map'));
-        map.metric = app.geochart.currentMetric();
-        if (map.metric in app.geochart.kpiSettings) {
-            map.options = {
-                datalessRegionColor: '#D5D5D5',
-                colorAxis: {minValue: 0, maxValue: 15, colors: ['orange', 'green']}
-            };
-            app.geochart.kpiSettings[map.metric](map);
-            var data = new google.visualization.DataTable();
-            for(var i in map.columns){
-                var column = map.columns[i];
-                data.addColumn(column.type, column.name);
-            }
-
-            data = app.geochart.buildDataTable(data, map);
-
-            map.draw(data, map.options);
-
-            google.visualization.events.addListener(map, 'select',
-                selectHandler);
-
-
-            function selectHandler(e) {
-                var selection = map.getSelection();
-                var row=selection[0].row;
-                var code = data.getValue(row,0);
-                var id = json[code].id;
-
-                var url = 'country/view/id/'+id;
-
-                window.location.href = url;
-            }
-
-        } else {
-
-            return;
-
-        }
-
-    },
-    buildDataTable:function(data, map){
-        for(var c in json){
-
-            var obj = json[c];
-
-            var country = obj['name'];
-            var target = obj['target'];
-            var kpi = obj['kpis'][map.metric];
-
-            if(country && kpi){
-                var metric = map.metricData(kpi,target);
-                data.addRow([country, metric]);
-            }
-
-        }
-        return data;
-    }
+		for(var c in app.mapData){
+			var obj = app.mapData[c];
+			try {
+				var score = averageFunc(obj, metric);
+				app.geochart.data.addRow([obj.name, Math.round(score*100)/100]);
+			} catch (err) { }
+		}
+	}
 };

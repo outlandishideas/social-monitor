@@ -16,7 +16,15 @@ class Model_Country extends Model_Campaign {
 		return self::fetchBy('country', $code);
 	}
 
-    public function getNameFromCode($code){
+	public function getName() {
+		return self::getNameFromCode($this->country);
+	}
+
+	public function getTargetAudience() {
+		return $this->audience*0.5;
+	}
+
+	public static function getNameFromCode($code){
         $countries = static::countryCodes();
         if(array_key_exists($code, $countries)){
             return $countries[$code];

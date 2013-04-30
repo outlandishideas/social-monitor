@@ -3,21 +3,24 @@
 class IndexController extends BaseController
 {
 	public function indexAction() {
+		/** @var Model_Country[] $countries */
+		$countries = Model_Country::fetchAll();
+		$json = array();
+		foreach($countries as $country){
+			$kpis = $country->getKpiData();
+			$name = $country->getName();
+			$json[$name] = array(
+				'name' =>$name,
+				'id'=>intval($country->id),
+				'target' => $country->getTargetAudience(),
+				'kpis' => $kpis
+			);
+		}
+
 		$this->view->title = 'Home';
 		$this->view->countries = Model_Country::fetchAll();
-        $this->view->jsonCountries = $this->campaignsToJson();
+        $this->view->jsonCountries = json_encode($json);
 	}
-
-    public function campaignsToJson(){
-        $countries = Model_Country::fetchAll();
-        $json = array();
-        foreach($countries as $country){
-            $kpis = $country->getKpiData();
-            $name = $country->getNameFromCode($country->country);
-            $json[$name] = array('name' =>$name, 'id'=>$country->id, 'target' => $country->audience/2, 'kpis' => $kpis);
-        }
-        return json_encode($json);
-    }
 
 	public function dateRangeAction() {
 		$dateRange = $this->_request->dateRange;
