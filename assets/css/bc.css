@@ -833,3 +833,7 @@ table.campaigns {
     color: #666;
     font-weight: bold;
 }
+
+.test {
+	display: none;
+}
