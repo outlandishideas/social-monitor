@@ -176,12 +176,12 @@ class PresenceController extends BaseController
 				switch ($selector) {
 					case 'popularity':
 						// subtract 1 from the first day, as we're calculating a daily difference
-						$startDate = date('Y-m-d', strtotime($startDate . ' -1 day'));
+						$thisStartDate = date('Y-m-d', strtotime($startDate . ' -1 day'));
 
-						$data = $presence->getPopularityData($startDate, $endDate);
+						$data = $presence->getPopularityData($thisStartDate, $endDate);
 						$points = array();
 						$target = $presence->getTargetAudience();
-						$targetDate = $presence->getTargetAudienceDate($startDate, $endDate);
+						$targetDate = $presence->getTargetAudienceDate($thisStartDate, $endDate);
 						$graphHealth = 100;
 						$requiredRates = null;
 						$timeToTarget = null;
@@ -226,7 +226,7 @@ class PresenceController extends BaseController
 							};
 
 							if ($targetDate) {
-								$interval = date_create($targetDate)->diff(date_create($startDate));
+								$interval = date_create($targetDate)->diff(date_create($thisStartDate));
 								$timeToTarget = array('y'=>$interval->y, 'm'=>$interval->m);
 								$graphHealth = $healthCalc($targetDiff/$interval->days);
 							}
@@ -251,7 +251,7 @@ class PresenceController extends BaseController
 							}
 
 							// fill in the gaps
-							$currentDate = $startDate;
+							$currentDate = $thisStartDate;
 							while ($currentDate < $endDate) {
 								if (!array_key_exists($currentDate, $points)) {
 									$points[$currentDate] = (object)array('date'=>$currentDate, 'value'=>0);
