@@ -58,8 +58,6 @@ class Model_Campaign extends Model_Base {
 			$kpi = $this->$key;
 			if($kpi){
 				$return[$key] = $kpi;
-			} else {
-				$return[$key] = array();
 			}
 		}
 

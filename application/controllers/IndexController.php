@@ -8,13 +8,15 @@ class IndexController extends BaseController
 		$json = array();
 		foreach($countries as $country){
 			$kpis = $country->getKpiData();
-			$name = $country->getName();
-			$json[$name] = array(
-				'name' =>$name,
-				'id'=>intval($country->id),
-				'target' => $country->getTargetAudience(),
-				'kpis' => $kpis
-			);
+			if ($kpis) {
+				$name = $country->getName();
+				$json[$name] = array(
+					'name' =>$name,
+					'id'=>intval($country->id),
+					'target' => $country->getTargetAudience(),
+					'kpis' => $kpis
+				);
+			}
 		}
 
 		$this->view->title = 'Home';

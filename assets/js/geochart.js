@@ -6,8 +6,16 @@ var app = app || {};
 app.geochart = {
 	map: null,
 	data: null,
+	metrics: {},
 	setup:function () {
-
+		var $picker = $('#metric-picker');
+		$picker.find('option').each(function() {
+			app.geochart.metrics[$(this).attr('value')] = {
+				label: $(this).text(),
+				key: $(this).attr('value')
+			};
+		});
+		console.log(app.geochart.metrics);
 		google.load('visualization', '1', {'packages': ['geochart']});
 		google.setOnLoadCallback(function() {
 			app.geochart.map = new google.visualization.GeoChart(document.getElementById('geo-map'));
@@ -16,90 +24,125 @@ app.geochart = {
 				colorAxis: {minValue: 0, maxValue: 15, colors: ['orange', 'green']}
 			};
 			google.visualization.events.addListener(app.geochart.map, 'select', app.geochart.selectHandler);
+			app.geochart.buildDataTable();
 			app.geochart.refreshMap();
 		});
 
-		$('#metric-picker')
-			.on('change', app.geochart.refreshMap);
+		$picker.on('change', app.geochart.refreshMap);
 
 	},
 	currentMetric:function () {
 		return $('#metric-picker').val();
 	},
-	refreshMap:function () {
-		app.geochart.buildDataTable();
-		app.geochart.map.draw(app.geochart.data, app.geochart.map.options);
-	},
-	selectHandler: function (e) {
-		var selection = app.geochart.map.getSelection();
-		var row = selection[0].row;
-		var code = app.geochart.data.getValue(row, 0);
-		var id = app.mapData[code].id;
-
-		window.location.href = 'country/view/id/'+id;
-	},
-	buildDataTable:function(){
-		app.geochart.data = new google.visualization.DataTable();
-		app.geochart.data.addColumn('string', 'Country');
-		if (app.mapData.length == 0) {
-			return;
-		}
-
-		var kpiAverage = function(country, m) {
-			var total = 0;
-			var kpiValues = country.kpis[m];
-			if (kpiValues.length > 0) {
-				for (var i=0; i<kpiValues.length; i++){
-					total += parseInt(kpiValues[i].value);
-				}
-				return total/kpiValues.length;
-			} else {
-				throw 'No KPI values';
+	// calculates the average value for a given kpi across the presences for 1 country
+	kpiAverage: function(country, m) {
+		var total = 0;
+		var kpiValues = country.kpis[m];
+		if (kpiValues.length > 0) {
+			for (var i=0; i<kpiValues.length; i++){
+				total += parseInt(kpiValues[i].value);
 			}
-		};
-
-		var averageFunc = kpiAverage;
-
+			return total/kpiValues.length;
+		} else {
+			throw 'No KPI values';
+		}
+	},
+	refreshMap:function () {
+		// make a view of the data, which only consists of the first column and the column for the chosen metric
 		var metric = app.geochart.currentMetric();
+		var axis = app.geochart.map.options.colorAxis;
 		switch (metric) {
 			case 'popularityPercentage':
-				averageFunc = function(country, m) {
-					return 100*kpiAverage(country, m)/country.target;
-				};
-				app.geochart.data.addColumn('number', 'Percent of Target Audience');
-				app.geochart.map.options.colorAxis.values = [0, 100];
-				app.geochart.map.options.colorAxis.colors = ['orange', 'green'];
+				axis.values = [0, 100];
+				axis.colors = ['orange', 'green'];
 				break;
 			case 'popularityTime':
 				var max = 24;
 				for(var c in app.mapData){
 					try {
-						max = Math.max(max, averageFunc(app.mapData[c], metric));
+						max = Math.max(max, app.geochart.kpiAverage(app.mapData[c], metric));
 					} catch (err) { }
 				}
-				app.geochart.data.addColumn('number', 'Months To Hit Target Audience');
-				app.geochart.map.options.colorAxis.values = [0, 12, 24, max];
-				app.geochart.map.options.colorAxis.colors = ['green', 'green', 'orange', 'orange'];
+				axis.values = [0, 12, 24, max];
+				axis.colors = ['green', 'green', 'orange', 'orange'];
 				break;
 			case 'postsPerDay':
 				var max = 5;
 				for(var c in app.mapData){
 					try {
-						max = Math.max(max, averageFunc(app.mapData[c], metric));
+						max = Math.max(max, app.geochart.kpiAverage(app.mapData[c], metric));
 					} catch (err) { }
 				}
-				app.geochart.data.addColumn('number', 'Average Posts Per Day');
-				app.geochart.map.options.colorAxis.values = [0, 5, max];
-				app.geochart.map.options.colorAxis.colors = ['orange', 'green', 'green'];
+				axis.values = [0, 5, max];
+				axis.colors = ['orange', 'green', 'green'];
 				break;
 		}
 
-		for(var c in app.mapData){
-			var obj = app.mapData[c];
-			try {
-				var score = averageFunc(obj, metric);
-				app.geochart.data.addRow([obj.name, Math.round(score*100)/100]);
-			} catch (err) { }
+		var columnIndex = app.geochart.metrics[metric].columnIndex;
+
+		var view = new google.visualization.DataView(app.geochart.data);
+		view.setColumns([0, columnIndex]);
+
+		app.geochart.map.draw(view, app.geochart.map.options);
+	},
+	selectHandler: function (e) {
+		var selection = app.geochart.map.getSelection();
+		if (selection.length > 0) {
+			var id = app.geochart.data.getValue(selection[0].row, 1);
+			window.location.href = 'country/view/id/'+id;
+		}
+	},
+	buildDataTable:function(){
+		if (app.mapData.length == 0) {
+			return;
+		}
+
+		app.geochart.data = new google.visualization.DataTable();
+		app.geochart.data.addColumn('string', 'Country');
+		app.geochart.data.addColumn('number', 'id');
+		var columnIndex = 2;
+		for (var m in app.geochart.metrics) {
+			var metric = app.geochart.metrics[m];
+			metric.columnIndex = columnIndex;
+			app.geochart.data.addColumn('number', metric.label);
+			app.geochart.data.addColumn('string', metric.key + '-extra');
+			columnIndex += 2;
+		}
+
+		for (var c in app.mapData) {
+			var country = app.mapData[c];
+			var row = [country.name, country.id];
+			if (country.kpis) {
+				for (var metric in app.geochart.metrics) {
+					console.log('metric', metric);
+					try {
+						var score = app.geochart.kpiAverage(country, metric);
+						var extra = '';
+						if (metric == 'popularityPercentage') {
+							score = 100*score/country.target;
+							extra = '%';
+						}
+						row.push(Math.round(100*score)/100);
+//						var kpi = country.kpis[metric];
+//						for (var i=0; i<kpi.length; i++) {
+//							extra += "\n" + kpi[i].name + ': ' + kpi[i].value;
+//						}
+						row.push(extra);
+					} catch (err) {
+						row.push(0);
+						row.push('');
+					}
+				}
+				console.log(row);
+				app.geochart.data.addRow(row);
+			}
+		}
+
+		// append the 'extra' column value to the actual value
+		var formatter = new google.visualization.PatternFormat('{0}{1}');
+		for (var i in app.geochart.metrics) {
+			var ci = app.geochart.metrics[i].columnIndex;
+			formatter.format(app.geochart.data, [ci, ci+1]);
 		}
 	}
 };
