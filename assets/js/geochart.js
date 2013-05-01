@@ -127,7 +127,6 @@ app.geochart = {
 				try {
 					var extra = '';
 					var score = app.geochart.kpiAverage(country, metric);
-					score = Math.round(100*score)/100;
 					app.geochart.metrics[metric].presenceMax = Math.max(app.geochart.metrics[metric].presenceMax, score);
 					switch (metric) {
 						case 'popularityPercentage':
@@ -137,19 +136,24 @@ app.geochart = {
 							if (score == 0) {
 								extra = '[target already reached]';
 							} else {
-								var months = score%12;
-								var years = (score - months)/12;
+								// convert to years and months
+								var tmp = Math.floor(score);
+								var fraction = score - tmp;
+								var months = tmp%12;
+								var years = (tmp - months)/12;
+								months = Math.round((months + fraction)*10)/10;
 								var components = [];
-								if (years) {
+								if (years != 0) {
 									components.push('' + years + ' year' + (years == 1 ? '' : 's'));
 								}
-								if (months) {
+								if (months != 0) {
 									components.push('' + months + ' month' + (months == 1 ? '' : 's'));
 								}
 								extra = components.join(', ');
 							}
 							break;
 					}
+					score = Math.round(100*score)/100;
 					row.push(score);
 //					var kpi = country.kpis[metric];
 //					for (var i=0; i<kpi.length; i++) {
