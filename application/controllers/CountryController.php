@@ -10,7 +10,6 @@ class CountryController extends CampaignController {
 
 		$this->view->title = 'Countries';
 		$this->view->countries = Model_Country::fetchAll();
-		$this->view->countryCodes = Model_Country::countryCodes();
 	}
 
 	/**
