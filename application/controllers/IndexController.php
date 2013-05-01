@@ -7,14 +7,14 @@ class IndexController extends BaseController
 		$countries = Model_Country::fetchAll();
 		$json = array();
 		foreach($countries as $country){
-			$kpis = $country->getKpiData();
-			if ($kpis) {
+			$presences = $country->getKpiData();
+			if ($presences) {
 				$name = $country->getName();
 				$json[$name] = array(
 					'name' =>$name,
 					'id'=>intval($country->id),
-					'target' => $country->getTargetAudience(),
-					'kpis' => $kpis
+					'targetAudience' => $country->getTargetAudience(),
+					'presences' => $presences
 				);
 			}
 		}

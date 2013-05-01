@@ -4,6 +4,10 @@ class Model_Campaign extends Model_Base {
 	protected static $tableName = 'campaigns';
 	protected static $sortColumn = 'display_name';
 
+	const KPI_POPULARITY_PERCENTAGE = 'popularityPercentage';
+	const KPI_POPULARITY_TIME = 'popularityTime';
+	const KPI_POSTS_PER_DAY = 'postsPerDay';
+
 	public function delete() {
 		$this->_db->prepare('DELETE FROM campaign_presences WHERE campaign_id = :cid')->execute(array(':cid'=>$this->id));
 		parent::delete();
@@ -49,57 +53,48 @@ class Model_Campaign extends Model_Base {
 
 	static function getKpis(){
 		return array(
-			'popularityPercentage' => 'Percent of Target Audience',
-			'popularityTime' => 'Months to Target Audience',
-			'postsPerDay' => 'Average Number of Posts Per Day'
+			self::KPI_POPULARITY_PERCENTAGE => 'Percent of Target Audience',
+			self::KPI_POPULARITY_TIME => 'Months to Target Audience',
+			self::KPI_POSTS_PER_DAY => 'Average Number of Posts Per Day'
 		);
 	}
 
 	function getKpiData(){
 		$return = array();
-		foreach(static::getKpis() as $key => $kpi){
-			$kpi = $this->$key;
-			if($kpi){
-				$return[$key] = $kpi;
-			}
-		}
 
-		return $return;
-	}
-
-	function getPopularityPercentage(){
-		$presences = $this->presences;
-		$return = array();
-		foreach($presences as $presence){
-			$return[] = array('name'=>$presence->name, 'value' =>$presence->popularity);
-		}
-		return $return;
-	}
-
-	function getPopularityTime(){
-		/** @var $presences Model_Presence[] */
-		$presences = $this->presences;
-		$return = array();
+		// some KPIs need to be based on a date range. Use the last month's worth(?)
 		$now = new DateTime();
-		foreach($presences as $presence){
-			$targetDate = $presence->getTargetAudienceDate($now->sub(date_interval_create_from_date_string('1 month'))->format('Y-m-d'), $now->format('Y-m-d'));
-			$diff = $now->diff(new DateTime($targetDate));
-			$months = $diff->m + 12*$diff->y;
-			$return[] = array('name'=>$presence->name, 'value' =>$months);
+		$nowString = $now->format('Y-m-d');
+		$date = new DateTime();
+		$date->sub(DateInterval::createFromDateString('1 month'));
+		$monthAgo = $date->format('Y-m-d');
+
+		$kpis = static::getKpis();
+		foreach ($this->getPresences() as $presence) {
+			$row = array('name'=>$presence->name, 'id'=>$presence->id);
+			foreach($kpis as $key => $label){
+				switch ($key) {
+					case self::KPI_POPULARITY_PERCENTAGE:
+						$target = $presence->getTargetAudience();
+						$row[$key] = $target ? 100*$presence->popularity/$target : 100;
+						break;
+					case self::KPI_POPULARITY_TIME:
+						$targetDate = $presence->getTargetAudienceDate($monthAgo, $nowString);
+						if ($targetDate) {
+							$diff = $now->diff(new DateTime($targetDate));
+							$months = $diff->m + 12*$diff->y;
+							$row[$key] = $months;
+						}
+						break;
+					case self::KPI_POSTS_PER_DAY:
+						$row[$key] = $presence->getAveragePostsPerDay($monthAgo, $nowString);
+						break;
+				}
+			}
+			$return[] = $row;
 		}
+
 		return $return;
 	}
 
-    function getPostsPerDay(){
-        $presences = $this->presences;
-        $return = array();
-        foreach($presences as $presence){
-            $data = $presence->getPostsPerDayData('2013-03-27', '2013-04-09');
-            foreach($data as $date){
-                $return[] = array('name'=>$presence->name, 'value' => $date->post_count);
-            }
-
-        }
-        return $return;
-    }
 }

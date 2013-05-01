@@ -35,15 +35,19 @@ app.geochart = {
 	},
 	// calculates the average value for a given kpi across the presences for 1 country
 	kpiAverage: function(country, m) {
-		var total = 0;
-		var kpiValues = country.kpis[m];
-		if (kpiValues.length > 0) {
-			for (var i=0; i<kpiValues.length; i++){
-				total += parseInt(kpiValues[i].value);
+		var presences = country.presences;
+		if (presences.length > 0) {
+			var count = 0;
+			var total = 0;
+			for (var i=0; i<presences.length; i++){
+				if (m in presences[i]) {
+					total += parseFloat(presences[i][m]);
+					count++;
+				}
 			}
-			return total/kpiValues.length;
+			return total/count;
 		} else {
-			throw 'No KPI values';
+			throw 'No presences';
 		}
 	},
 	refreshMap:function () {
@@ -111,28 +115,25 @@ app.geochart = {
 		for (var c in app.mapData) {
 			var country = app.mapData[c];
 			var row = [country.name, country.id];
-			if (country.kpis) {
-				for (var metric in app.geochart.metrics) {
-					try {
-						var score = app.geochart.kpiAverage(country, metric);
-						var extra = '';
-						if (metric == 'popularityPercentage') {
-							score = 100*score/country.target;
-							extra = '%';
-						}
-						row.push(Math.round(100*score)/100);
-//						var kpi = country.kpis[metric];
-//						for (var i=0; i<kpi.length; i++) {
-//							extra += "\n" + kpi[i].name + ': ' + kpi[i].value;
-//						}
-						row.push(extra);
-					} catch (err) {
-						row.push(0);
-						row.push('');
+			for (var metric in app.geochart.metrics) {
+				try {
+					var extra = '';
+					if (metric == 'popularityPercentage') {
+						extra = '% (of ' + country.targetAudience + ')';
 					}
+					var score = app.geochart.kpiAverage(country, metric);
+					row.push(Math.round(100*score)/100);
+//					var kpi = country.kpis[metric];
+//					for (var i=0; i<kpi.length; i++) {
+//						extra += "\n" + kpi[i].name + ': ' + kpi[i].value;
+//					}
+					row.push(extra);
+				} catch (err) {
+					row.push(0);
+					row.push('');
 				}
-				app.geochart.data.addRow(row);
 			}
+			app.geochart.data.addRow(row);
 		}
 
 		// append the 'extra' column value to the actual value

@@ -213,6 +213,13 @@ class Model_Presence extends Model_Base {
         return $return;
     }
 
+	public function getAveragePostsPerDay($startDate, $endDate) {
+		$tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
+		$stmt = $this->_db->prepare("SELECT COUNT(1)/DATEDIFF(:end_date, :start_date) AS av FROM $tableName WHERE presence_id = :pid AND created_time >= :start_date AND created_time <= :end_date");
+		$stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
+		return floatval($stmt->fetchColumn());
+	}
+
 	public function getPostsPerDayData($startDate, $endDate) {
 		$tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
 		$stmt = $this->_db->prepare(
