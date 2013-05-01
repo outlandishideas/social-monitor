@@ -119,7 +119,7 @@ app.geochart = {
 				try {
 					var extra = '';
 					if (metric == 'popularityPercentage') {
-						extra = '% (of ' + country.targetAudience + ')';
+						extra = '% (of ' + app.utils.numberFormat(country.targetAudience) + ')';
 					}
 					var score = app.geochart.kpiAverage(country, metric);
 					row.push(Math.round(100*score)/100);
