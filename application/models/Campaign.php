@@ -77,6 +77,7 @@ class Model_Campaign extends Model_Base {
 					case self::KPI_POPULARITY_PERCENTAGE:
 						$target = $presence->getTargetAudience();
 						$row[$key] = $target ? 100*$presence->popularity/$target : 100;
+						$row[$key . '-target'] = $target;
 						break;
 					case self::KPI_POPULARITY_TIME:
 						$targetDate = $presence->getTargetAudienceDate($monthAgo, $nowString);

@@ -25,6 +25,9 @@ class Model_Presence extends Model_Base {
 		return $this->name ?: $this->handle;
 	}
 
+	/**
+	 * @return Model_Country
+	 */
 	public function getCountry() {
 		$country = null;
 		$stmt = $this->_db->prepare('SELECT campaign_id FROM campaign_presences WHERE presence_id = :pid');
@@ -253,6 +256,7 @@ class Model_Presence extends Model_Base {
 		$country = $this->getCountry();
 		if ($country) {
 			$target = $country->getTargetAudience();
+			$target *= ($this->type == self::TYPE_FACEBOOK ? 0.1 : 0.016);
 		}
 		return $target;
 	}

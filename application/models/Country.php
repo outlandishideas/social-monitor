@@ -21,7 +21,7 @@ class Model_Country extends Model_Campaign {
 	}
 
 	public function getTargetAudience() {
-		return $this->audience*0.5;
+		return $this->audience;
 	}
 
 	public static function getNameFromCode($code){
