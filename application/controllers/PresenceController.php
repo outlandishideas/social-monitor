@@ -28,7 +28,7 @@ class PresenceController extends BaseController
 		$graphs = array();
 		$graphs[] = (object)array(
 			'id' => 'popularity',
-			'yAxisLabel' => ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers') . ' per day',
+			'yAxisLabel' => ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers') . ' gained per day',
 			'lineId' => 'popularity:' . $presence->id,
 			'title' => 'Popularity Rate'
 		);
@@ -215,28 +215,28 @@ class PresenceController extends BaseController
 		if ($data) {
 			$current = $data[count($data)-1];
 
-			$daysPerMonth = 365/12;
 			// choose the health intervals
 			$healthParams = new stdClass();
 			$healthParams->targetDiff = 0;
-			$healthParams->best = $this->getOption('achieve_audience_best')*$daysPerMonth;
-			$healthParams->good = $this->getOption('achieve_audience_good')*$daysPerMonth;
-			$healthParams->bad = $this->getOption('achieve_audience_bad')*$daysPerMonth;
+			$healthParams->best = $this->getOption('achieve_audience_best');
+			$healthParams->good = $this->getOption('achieve_audience_good');
+			$healthParams->bad = $this->getOption('achieve_audience_bad');
 
 			// convert the health measures to work with daily changes
 			$targetDiff = $target - $current->value;
+			$daysPerMonth = round(365/12);
 			$healthParams->targetDiff = $targetDiff;
-			$healthParams->bestRate = $targetDiff/$healthParams->best;
-			$healthParams->goodRate = $targetDiff/$healthParams->good;
-			$healthParams->badRate = $targetDiff/$healthParams->bad;
+			$healthParams->bestRate = $targetDiff/($daysPerMonth*$healthParams->best);
+			$healthParams->goodRate = $targetDiff/($daysPerMonth*$healthParams->good);
+			$healthParams->badRate = $targetDiff/($daysPerMonth*$healthParams->bad);
 			if ($healthParams->bestRate > 0) {
-				$requiredRates[] = array($healthParams->bestRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->best . ' days')));
+				$requiredRates[] = array($healthParams->bestRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->best . ' months')));
 			}
 			if ($healthParams->goodRate > 0) {
-				$requiredRates[] = array($healthParams->goodRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->good . ' days')));
+				$requiredRates[] = array($healthParams->goodRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->good . ' months')));
 			}
 			if ($healthParams->badRate > 0) {
-				$requiredRates[] = array($healthParams->badRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->bad . ' days')));
+				$requiredRates[] = array($healthParams->badRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->bad . ' months')));
 			}
 
 			// this calculates a value between 0 and 100 for a given daily change

@@ -123,26 +123,16 @@ app.init = {
 				},
 				presetRanges: [
 					{
-						text:'Today',
-						dateStart:'Today',
+						text:'Last 30 days',
+						dateStart:function () {
+							return Date.today().addMonths(-1);
+						},
 						dateEnd:'Today'
-					},
-					{
-						text:'Yesterday',
-						dateStart:'Yesterday',
-						dateEnd:'Yesterday'
 					},
 					{
 						text:'Last 7 days',
 						dateStart:'-6 days',
 						dateEnd:'Today'
-					},
-					{
-						text:'Last week',
-						dateStart:function () {
-							return Date.today().moveToDayOfWeek(1, -1).addDays(-7);
-						},
-						dateEnd:'Last sunday'
 					},
 					{
 						text:'Month to date',
