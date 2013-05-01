@@ -266,10 +266,9 @@ class Model_Presence extends Model_Base {
 	 * Gets the date at which the target audience size will be reached, based on the trend over the given time period. The date may be in the past
 	 * If any of these conditions are met, this will return null:
 	 * - no target audience size
-	 * - fewer than 2 data points
 	 * - popularity has never varied
 	 * - the calculated date is in the past
-	 * If the calculated date would be too far in the future (32-bit date problem), this will return the maximum date possible
+	 * If there are fewer than 2 data points, or the calculated date would be too far in the future (32-bit date problem), this will return the maximum date possible
 	 * @param $startDate
 	 * @param $endDate
 	 * @return null|string
@@ -299,14 +298,13 @@ class Model_Presence extends Model_Base {
 					$timestamp = ($target - $b)/$a;
 					if ($timestamp < PHP_INT_MAX) {
 						$date = date('Y-m-d', $timestamp);
-						if ($date < date('Y-m-d')) {
-							$date = null;
-						}
 					}
-					if (!$date) {
+					if (!$date || $date < date('Y-m-d')) {
 						$date = date('Y-m-d', PHP_INT_MAX);
 					}
 				}
+			} else {
+				$date = date('Y-m-d', PHP_INT_MAX);
 			}
 		}
 		return $date;
