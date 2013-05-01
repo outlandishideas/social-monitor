@@ -100,7 +100,7 @@ app.geochart = {
 					metric.format = '{1}';
 					metric.max = 24;
 					metric.applyToAxis = function(axis) {
-						axis.values = [0, 12, this.max, this.presenceMax];
+						axis.values = [0, 12, this.max, Math.min(200, this.presenceMax)];
 						axis.colors = ['green', 'green', 'yellow', 'red'];
 					};
 					break;
