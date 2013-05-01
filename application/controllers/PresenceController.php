@@ -215,12 +215,13 @@ class PresenceController extends BaseController
 		if ($data) {
 			$current = $data[count($data)-1];
 
+			$daysPerMonth = 365/12;
 			// choose the health intervals
 			$healthParams = new stdClass();
 			$healthParams->targetDiff = 0;
-			$healthParams->best = 30; // finish <1 month => excellent
-			$healthParams->good = 365; // finish <1 year => ok
-			$healthParams->bad = 2*365; // finish >2 years => awful
+			$healthParams->best = $this->getOption('achieve_audience_best')*$daysPerMonth;
+			$healthParams->good = $this->getOption('achieve_audience_good')*$daysPerMonth;
+			$healthParams->bad = $this->getOption('achieve_audience_bad')*$daysPerMonth;
 
 			// convert the health measures to work with daily changes
 			$targetDiff = $target - $current->value;
@@ -315,16 +316,18 @@ class PresenceController extends BaseController
 		$data = $presence->getPostsPerDayData($startDate, $endDate);
 		usort($data, function($a, $b) { return strcmp($a->date, $b->date); });
 
-		$target = 5; // todo: configure this somewhere
+		$target = BaseController::getOption('updates_per_day');
+		$okRange = BaseController::getOption('updates_per_day_ok_range');
+		$badRange = BaseController::getOption('updates_per_day_bad_range');
 		$average = 0;
 		if ($data) {
 			$total = 0;
 			foreach ($data as $row) {
 				$total += $row->post_count;
 				$targetDiff = abs($row->post_count - $target);
-				if ($targetDiff <= 1) {
+				if ($targetDiff <= $okRange) {
 					$row->health = 100;
-				} else if ($targetDiff <= 3) {
+				} else if ($targetDiff <= $badRange) {
 					$row->health = 50;
 				} else {
 					$row->health = 0;

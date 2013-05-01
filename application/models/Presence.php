@@ -256,7 +256,8 @@ class Model_Presence extends Model_Base {
 		$country = $this->getCountry();
 		if ($country) {
 			$target = $country->getTargetAudience();
-			$target *= ($this->type == self::TYPE_FACEBOOK ? 0.1 : 0.016);
+			$target *= BaseController::getOption($this->type == self::TYPE_FACEBOOK ? 'fb_min' : 'tw_min');
+			$target /= 100;
 		}
 		return $target;
 	}
@@ -267,8 +268,8 @@ class Model_Presence extends Model_Base {
 	 * - no target audience size
 	 * - fewer than 2 data points
 	 * - popularity has never varied
-	 * - the calculated date would be too far in the future (32-bit date problem)
 	 * - the calculated date is in the past
+	 * If the calculated date would be too far in the future (32-bit date problem), this will return the maximum date possible
 	 * @param $startDate
 	 * @param $endDate
 	 * @return null|string
@@ -301,6 +302,9 @@ class Model_Presence extends Model_Base {
 						if ($date < date('Y-m-d')) {
 							$date = null;
 						}
+					}
+					if (!$date) {
+						$date = date('Y-m-d', PHP_INT_MAX);
 					}
 				}
 			}

@@ -9,9 +9,9 @@ class IndexController extends BaseController
 		foreach($countries as $country){
 			$presences = $country->getKpiData();
 			if ($presences) {
-				$name = $country->getName();
-				$json[$name] = array(
-					'name' =>$name,
+				$json[] = array(
+					'country' => $country->country,
+					'name' => $country->display_name,
 					'id'=>intval($country->id),
 					'targetAudience' => $country->getTargetAudience(),
 					'presences' => $presences

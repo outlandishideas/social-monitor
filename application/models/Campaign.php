@@ -76,15 +76,20 @@ class Model_Campaign extends Model_Base {
 				switch ($key) {
 					case self::KPI_POPULARITY_PERCENTAGE:
 						$target = $presence->getTargetAudience();
-						$row[$key] = $target ? 100*$presence->popularity/$target : 100;
+						$row[$key] = $target ? min(100, 100*$presence->popularity/$target) : 100;
 						$row[$key . '-target'] = $target;
 						break;
 					case self::KPI_POPULARITY_TIME:
-						$targetDate = $presence->getTargetAudienceDate($monthAgo, $nowString);
-						if ($targetDate) {
-							$diff = $now->diff(new DateTime($targetDate));
-							$months = $diff->m + 12*$diff->y;
-							$row[$key] = $months;
+						$target = $presence->getTargetAudience();
+						if ($presence->popularity >= $target) {
+							$row[$key] = 0; // already achieved
+						} else {
+							$targetDate = $presence->getTargetAudienceDate($monthAgo, $nowString);
+							if ($targetDate) {
+								$diff = $now->diff(new DateTime($targetDate));
+								$months = $diff->m + 12*$diff->y;
+								$row[$key] = $months;
+							}
 						}
 						break;
 					case self::KPI_POSTS_PER_DAY:
