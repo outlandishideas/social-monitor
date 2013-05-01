@@ -1,3 +1,7 @@
-user:
-  label: Users
-  controller: user
+#user:
+#  label: Users
+#  controller: user
+
+config:
+  label: Settings
+  controller: config
