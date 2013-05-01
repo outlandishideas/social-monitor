@@ -65,7 +65,7 @@ app.geochart = {
 	selectHandler: function (e) {
 		var selection = app.geochart.map.getSelection();
 		if (selection.length > 0) {
-			var id = app.geochart.data.getValue(selection[0].row, 1);
+			var id = app.geochart.data.getValue(selection[0].row, 3);
 			window.location.href = 'country/view/id/'+id;
 		}
 	},
