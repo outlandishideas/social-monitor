@@ -23,7 +23,8 @@
   font-style: normal;
   font-weight: bold;
 }
-.uniForm .inlineLabels .formHint {
+.uniForm .inlineLabels .formHint,
+.uniForm .inlineLabels .formError {
   padding-top: .5em;
 }
 .uniForm .buttonHolder {
@@ -139,6 +140,21 @@
 .uniForm .formHint {
   font-size: .85em;
   color: #777;
+}
+.uniForm .formError {
+	font-size: .85em;
+	color: #b94a48;
+	float: right;
+	width: 43%;
+	margin: 0;
+	clear: none;
+}
+.uniForm .inlineLabels .formError {
+	clear: both;
+	float: none;
+	width: auto;
+	margin-left: 34%;
+	position: static;
 }
 .uniForm #okMsg {
   background: #c8ffbf;
