@@ -15,7 +15,6 @@ app.geochart = {
 				key: $(this).attr('value')
 			};
 		});
-		console.log(app.geochart.metrics);
 		google.load('visualization', '1', {'packages': ['geochart']});
 		google.setOnLoadCallback(function() {
 			app.geochart.map = new google.visualization.GeoChart(document.getElementById('geo-map'));
@@ -114,7 +113,6 @@ app.geochart = {
 			var row = [country.name, country.id];
 			if (country.kpis) {
 				for (var metric in app.geochart.metrics) {
-					console.log('metric', metric);
 					try {
 						var score = app.geochart.kpiAverage(country, metric);
 						var extra = '';
@@ -133,7 +131,6 @@ app.geochart = {
 						row.push('');
 					}
 				}
-				console.log(row);
 				app.geochart.data.addRow(row);
 			}
 		}

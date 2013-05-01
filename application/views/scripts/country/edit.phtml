@@ -1,3 +1,7 @@
+<p>
+	<?php echo $this->gatekeeper()->filter('<a class="button" href="%url%">Manage Presences</a>', array('controller'=>'country', 'action'=>'manage')); ?>
+</p>
+
 <form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-country">
 
 	<fieldset class="inlineLabels">

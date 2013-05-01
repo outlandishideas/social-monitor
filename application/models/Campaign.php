@@ -10,6 +10,9 @@ class Model_Campaign extends Model_Base {
 	}
 
 
+	/**
+	 * @return Model_Presence[]
+	 */
 	function getPresences() {
 		if (!isset($this->presences)) {
 			$statement = $this->_db->prepare('SELECT presence_id FROM campaign_presences WHERE campaign_id = :cid');

@@ -5,18 +5,22 @@
 		<th>Name</th>
 		<th>Country</th>
 		<th>Audience Size</th>
-		<th>Facebook pages</th>
-		<th>Twitter accounts</th>
+		<th>Presences</th>
 		<th class="options"></th>
 	</tr>
 	<?php /** @var $country Model_Country */ ?>
 	<?php foreach ($this->countries as $country) : ?>
 	<tr>
+		<?php
+			$presenceLinks = array();
+			foreach($country->getPresences() as $p) {
+				$presenceLinks[] = '<a href="' . $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)) . '" class="presence ' . $p->type . '" title="' . $p->name . '">' . $p->handle . '</a>';
+			}
+		?>
 		<td><a href="<?php echo $this->url(array('action'=>'view', 'id'=>$country->id)); ?>"><?php echo $country->display_name; ?></a></td>
 		<td><?php echo $this->countryCodes[$country->country]; ?></td>
 		<td><?php echo number_format($country->audience); ?></td>
-		<td><?php echo number_format(count($country->getFacebookPages())); ?></td>
-		<td><?php echo number_format(count($country->getTwitterAccounts())); ?></td>
+		<td><?php echo $presenceLinks ? implode('<br />', $presenceLinks) : '-'; ?></td>
 		<td class="options">
 			<?php
 				$actions = $this->gatekeeper()->filterAll(array(
