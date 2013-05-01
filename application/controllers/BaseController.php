@@ -4,6 +4,8 @@ class BaseController extends Zend_Controller_Action {
 
 	protected $publicActions = array();
 
+	static $optionCache = array();
+
 	/**
 	 * @var Zend_Config
 	 */
@@ -301,7 +303,6 @@ class BaseController extends Zend_Controller_Action {
 		);
 	}
 
-
 	/**
 	 * Fetch back an option
 	 * @static
@@ -309,10 +310,15 @@ class BaseController extends Zend_Controller_Action {
 	 * @return string|bool The stored value or false if no value exists
 	 */
 	public static function getOption($name) {
+		if (array_key_exists($name, BaseController::$optionCache)) {
+			return BaseController::$optionCache[$name];
+		}
 		$sql = 'SELECT value FROM options WHERE name = :name LIMIT 1';
 		$statement = Zend_Registry::get('db')->prepare($sql);
 		$statement->execute(array(':name' => $name));
-		return $statement->fetchColumn();
+		$value = $statement->fetchColumn();
+		BaseController::$optionCache[$name] = $value;
+		return $value;
 	}
 
 	/**
@@ -325,6 +331,9 @@ class BaseController extends Zend_Controller_Action {
 	public static function setOption($name, $value) {
 		$statement = Zend_Registry::get('db')->prepare('REPLACE INTO options (name, value) VALUES (:name, :value)');
 		$statement->execute(array(':name' => $name, ':value' => $value));
+		if (array_key_exists($name, BaseController::$optionCache)) {
+			unset(BaseController::$optionCache[$name]);
+		}
 	}
 
 	/**
