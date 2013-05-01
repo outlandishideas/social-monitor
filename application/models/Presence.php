@@ -249,9 +249,9 @@ class Model_Presence extends Model_Base {
 //    }
 
 	public function getTargetAudience() {
-		$target = 30000;
+		$target = 0;
 		$country = $this->getCountry();
-		if ($country && $country->getTargetAudience() > 0) {
+		if ($country) {
 			$target = $country->getTargetAudience();
 		}
 		return $target;
