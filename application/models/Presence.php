@@ -258,6 +258,7 @@ class Model_Presence extends Model_Base {
 			$target = $country->getTargetAudience();
 			$target *= BaseController::getOption($this->type == self::TYPE_FACEBOOK ? 'fb_min' : 'tw_min');
 			$target /= 100;
+			$target = round($target);
 		}
 		return $target;
 	}
