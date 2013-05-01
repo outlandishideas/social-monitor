@@ -1,7 +1,7 @@
 <div id="metric-nav" class="picker">
 
 	Metric: <select id="metric-picker">
-        <?php foreach(Model_Campaign::getKpis(false) as $key => $value) : ?>
+        <?php foreach(Model_Campaign::getKpis() as $key => $value) : ?>
             <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
         <?php endforeach;?>
 	</select>

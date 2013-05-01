@@ -54,7 +54,7 @@ class Model_Campaign extends Model_Base {
 	static function getKpis(){
 		return array(
 			self::KPI_POPULARITY_PERCENTAGE => 'Percent of Target Audience',
-			self::KPI_POPULARITY_TIME => 'Months to Target Audience',
+			self::KPI_POPULARITY_TIME => 'Time to Target Audience',
 			self::KPI_POSTS_PER_DAY => 'Average Number of Posts Per Day'
 		);
 	}
