@@ -252,10 +252,14 @@ class PresenceController extends BaseController
 				}
 			};
 
-			if ($targetDate) {
-				$interval = date_create($targetDate)->diff(date_create($startDate));
-				$timeToTarget = array('y'=>$interval->y, 'm'=>$interval->m);
-				$graphHealth = $healthCalc($targetDiff/$interval->days);
+			if ($targetDiff > 0) {
+				if ($targetDate) {
+					$interval = date_create($targetDate)->diff(date_create($startDate));
+					$timeToTarget = array('y'=>$interval->y, 'm'=>$interval->m);
+					$graphHealth = $healthCalc($targetDiff/$interval->days);
+				}
+			} else {
+				$graphHealth = 100;
 			}
 
 			foreach ($data as $point) {
