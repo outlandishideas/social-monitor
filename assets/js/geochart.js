@@ -8,13 +8,16 @@ app.geochart = {
 	data: null,
 	metrics: {},
 	setup:function () {
-		var $picker = $('#metric-picker');
-		$picker.find('option').each(function() {
-			app.geochart.metrics[$(this).attr('value')] = {
-				label: $(this).text(),
-				key: $(this).attr('value')
-			};
-		});
+		// copy the provided metrics to app.geochart, and populate values
+		app.geochart.metrics = app.metrics;
+		for (var i in app.geochart.metrics) {
+			var metric = app.geochart.metrics[i];
+			metric.key = i;
+			for (var j=0; j<metric.range.length; j++) {
+				metric.range[j] = parseInt(metric.range[j]);
+			}
+		}
+
 		google.load('visualization', '1', {'packages': ['geochart']});
 		google.setOnLoadCallback(function() {
 			app.geochart.map = new google.visualization.GeoChart(document.getElementById('geo-map'));
@@ -27,8 +30,7 @@ app.geochart = {
 			app.geochart.refreshMap();
 		});
 
-		$picker.on('change', app.geochart.refreshMap);
-
+		$('#metric-picker').on('change', app.geochart.refreshMap);
 	},
 	currentMetric:function () {
 		return $('#metric-picker').val();
@@ -54,7 +56,8 @@ app.geochart = {
 	refreshMap:function () {
 		var metric = app.geochart.metrics[app.geochart.currentMetric()];
 
-		metric.applyToAxis(app.geochart.map.options.colorAxis);
+		app.geochart.map.options.colorAxis.values = metric.range;
+		app.geochart.map.options.colorAxis.colors = metric.colors;
 
 		// make a view of the data, which only consists of the first column and the column for the chosen metric
 		var view = new google.visualization.DataView(app.geochart.data);
@@ -81,39 +84,22 @@ app.geochart = {
 		app.geochart.data.addColumn('number', 'id');
 		var columnIndex = app.geochart.data.getNumberOfColumns();
 
-		app.geochart.metrics.popularityPercentage.max = 100;
-		app.geochart.metrics.popularityTime.max = 24;
-		app.geochart.metrics.postsPerDay.max = 5;
-
 		for (var m in app.geochart.metrics) {
 			var metric = app.geochart.metrics[m];
 			switch (m) {
 				case 'popularityPercentage':
 					metric.format = '{0}{1}';
-					metric.max = 100;
-					metric.applyToAxis = function(axis) {
-						axis.values = [0, this.max];
-						axis.colors = ['orange', 'green'];
-					};
+					metric.colors = ['orange', 'green'];
 					break;
 				case 'popularityTime':
 					metric.format = '{1}';
-					metric.max = 24;
-					metric.applyToAxis = function(axis) {
-						axis.values = [0, 12, this.max, Math.min(200, this.presenceMax)];
-						axis.colors = ['green', 'yellow', 'orange', 'red'];
-					};
+					metric.colors = ['green', 'yellow', 'orange', 'red'];
 					break;
 				case 'postsPerDay':
 					metric.format = '{0}{1}';
-					metric.max = 5;
-					metric.applyToAxis = function(axis) {
-						axis.values = [0, this.max, this.presenceMax];
-						axis.colors = ['red', 'orange', 'green'];
-					};
+					metric.colors = ['red', 'orange', 'green', 'green', 'orange', 'red'];
 					break;
 			}
-			metric.presenceMax = metric.max;
 			metric.columnIndex = columnIndex;
 			app.geochart.data.addColumn('number', metric.label);
 			app.geochart.data.addColumn('string', metric.key + '-extra');
@@ -123,12 +109,17 @@ app.geochart = {
 		for (var c in app.mapData) {
 			var country = app.mapData[c];
 			var row = [country.country, country.name, country.presences.length, country.id];
-			for (var metric in app.geochart.metrics) {
+			for (var m in app.geochart.metrics) {
 				try {
 					var extra = '';
-					var score = app.geochart.kpiAverage(country, metric);
-					app.geochart.metrics[metric].presenceMax = Math.max(app.geochart.metrics[metric].presenceMax, score);
-					switch (metric) {
+					var score = app.geochart.kpiAverage(country, m);
+					var metric = app.geochart.metrics[m];
+
+					// update the last value of the range
+					var last = metric.range.pop();
+					metric.range.push(Math.min(metric.max, Math.max(last, Math.round(score))));
+
+					switch (m) {
 						case 'popularityPercentage':
 							extra = '% (total audience: ' + app.utils.numberFormat(country.targetAudience) + ')';
 							break;

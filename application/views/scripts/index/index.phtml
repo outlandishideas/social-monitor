@@ -17,6 +17,7 @@
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>
     var app = {
-	    mapData: <?php echo $this->jsonCountries; ?>
+	    mapData: <?php echo json_encode($this->kpiData); ?>,
+	    metrics: <?php echo json_encode($this->metrics); ?>
     }
 </script>
