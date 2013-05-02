@@ -3,6 +3,7 @@
 class Model_Presence extends Model_Base {
 	protected static $tableName = 'presences';
 	protected static $sortColumn = 'handle';
+
     public static $bucketSizes = array(
         'bucket_half_hour' => 1800, // 30*60
         'bucket_4_hours' => 14400, // 4*60*60
@@ -40,6 +41,49 @@ class Model_Presence extends Model_Base {
 			}
 		}
 		return $country;
+	}
+
+	/**
+	 * Calculates the KPIs for this presence, based on the given start and end dates.
+	 * If not given, calculates using the last month's worth of data
+	 * @param null $startDate
+	 * @param null $endDate
+	 * @return array
+	 */
+	public function getKpiData($startDate = null, $endDate = null) {
+		$kpis = array();
+
+		if (!$startDate || !$endDate) {
+			$endDate = new DateTime();
+			$startDate = new DateTime();
+			$startDate->sub(DateInterval::createFromDateString('1 month'));
+		}
+
+		$endDateString = $endDate->format('Y-m-d');
+		$startDateString = $startDate->format('Y-m-d');
+
+		$currentAudience = $this->popularity;
+		$targetAudience = $this->getTargetAudience();
+		$targetAudienceDate = $this->getTargetAudienceDate($startDateString, $endDateString);
+
+		// target audience %
+		$kpis[Model_Campaign::KPI_POPULARITY_PERCENTAGE] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
+
+		// target audience rate
+		if ($currentAudience >= $targetAudience) {
+			$kpis[Model_Campaign::KPI_POPULARITY_TIME] = 0; // already achieved
+		} else {
+			if ($targetAudienceDate) {
+				$diff = $endDate->diff(new DateTime($targetAudienceDate));
+				$months = $diff->m + 12*$diff->y;
+				$kpis[Model_Campaign::KPI_POPULARITY_TIME] = $months;
+			}
+		}
+
+		//posts per day
+		$kpis[Model_Campaign::KPI_POSTS_PER_DAY] = $this->getAveragePostsPerDay($startDateString, $endDateString);
+
+		return $kpis;
 	}
 
 	public function updateInfo() {

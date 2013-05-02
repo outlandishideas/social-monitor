@@ -215,48 +215,16 @@ class PresenceController extends BaseController
 		if ($data) {
 			$current = $data[count($data)-1];
 
-			// choose the health intervals
-			$healthParams = new stdClass();
-			$healthParams->targetDiff = 0;
-			$healthParams->best = $this->getOption('achieve_audience_best');
-			$healthParams->good = $this->getOption('achieve_audience_good');
-			$healthParams->bad = $this->getOption('achieve_audience_bad');
-
-			// convert the health measures to work with daily changes
 			$targetDiff = $target - $current->value;
-			$daysPerMonth = round(365/12);
-			$healthParams->targetDiff = $targetDiff;
-			$healthParams->bestRate = $targetDiff/($daysPerMonth*$healthParams->best);
-			$healthParams->goodRate = $targetDiff/($daysPerMonth*$healthParams->good);
-			$healthParams->badRate = $targetDiff/($daysPerMonth*$healthParams->bad);
-			if ($healthParams->bestRate > 0) {
-				$requiredRates[] = array($healthParams->bestRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->best . ' months')));
-			}
-			if ($healthParams->goodRate > 0) {
-				$requiredRates[] = array($healthParams->goodRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->good . ' months')));
-			}
-			if ($healthParams->badRate > 0) {
-				$requiredRates[] = array($healthParams->badRate, date('F Y', strtotime($current->datetime . ' +' . $healthParams->bad . ' months')));
-			}
 
-			// this calculates a value between 0 and 100 for a given daily change
-			$healthCalc = function($value) use ($healthParams) {
-				if ($value < 0 || $value <= $healthParams->badRate) {
-					return 0;
-				} else if ($healthParams->targetDiff < 0 || $value >= $healthParams->bestRate) {
-					return 100;
-				} else if ($value >= $healthParams->goodRate) {
-					return 50 + 50*($value - $healthParams->goodRate)/($healthParams->bestRate - $healthParams->goodRate);
-				} else {
-					return 50*($value - $healthParams->badRate)/($healthParams->goodRate - $healthParams->badRate);
-				}
-			};
+			$healthCalc = new Util_HealthCalculator($targetDiff);
+			$requiredRates = $healthCalc->requiredRates($current->datetime);
 
 			if ($targetDiff > 0) {
 				if ($targetDate) {
 					$interval = date_create($targetDate)->diff(date_create($startDate));
 					$timeToTarget = array('y'=>$interval->y, 'm'=>$interval->m);
-					$graphHealth = $healthCalc($targetDiff/$interval->days);
+					$graphHealth = $healthCalc->getHealth($targetDiff/$interval->days);
 				}
 			} else {
 				$graphHealth = 100;
@@ -275,7 +243,7 @@ class PresenceController extends BaseController
 				$prevDay = date('Y-m-d', strtotime($key . ' -1 day'));
 				if (array_key_exists($prevDay, $points)) {
 					$point->value = $point->total - $points[$prevDay]->total;
-					$point->health = $healthCalc($point->value);
+					$point->health = $healthCalc->getHealth($point->value);
 				} else {
 					$point->value = 0;
 				}
