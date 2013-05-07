@@ -112,6 +112,7 @@ app.geochart = {
 			return;
 		}
 
+		// define the columns
 		app.geochart.data = new google.visualization.DataTable();
 		app.geochart.data.addColumn('string', 'Country');
 		app.geochart.data.addColumn('string', 'Display Name');
@@ -119,16 +120,16 @@ app.geochart = {
 		app.geochart.data.addColumn('number', 'id');
 		var columnIndex = app.geochart.data.getNumberOfColumns();
 
-		var colors = app.geochart.colors;
+		// add 2 columns per metric (value & label)
 		for (var m in app.geochart.metrics) {
 			var metric = app.geochart.metrics[m];
-			metric.format = '{1}';
 			metric.columnIndex = columnIndex;
 			app.geochart.data.addColumn('number', metric.label);
 			app.geochart.data.addColumn('string', metric.key + '-label');
 			columnIndex += 2;
 		}
 
+		// add one row per country
 		for (var c in mapData) {
 			var country = mapData[c];
 			var row = [country.country, country.name, country.presenceCount, country.id];
@@ -139,12 +140,13 @@ app.geochart = {
 			app.geochart.data.addRow(row);
 		}
 
+		// apply the tooltip formatters for each metric
 		var titleFormatter = new google.visualization.PatternFormat('{1} (Presences: {2})');
 		titleFormatter.format(app.geochart.data, [0, 1, 2], 0);
+		var kpiFormatter = new google.visualization.PatternFormat('{1}');
 		for (var i in app.geochart.metrics) {
 			var metric = app.geochart.metrics[i];
 			var ci = metric.columnIndex;
-			var kpiFormatter = new google.visualization.PatternFormat(metric.format);
 			kpiFormatter.format(app.geochart.data, [ci, ci+1]);
 		}
 	}
