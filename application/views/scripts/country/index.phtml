@@ -14,13 +14,13 @@
 		<?php
 			$presenceLinks = array();
 			foreach($country->getPresences() as $p) {
-				$presenceLinks[] = '<a href="' . $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)) . '" class="presence ' . $p->type . '" title="' . $p->name . '">' . $p->handle . '</a>';
+				$presenceLinks[] = '<div class="presence ' . $p->type . '" title="' . $p->name . '"><a href="' . $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)) . '">' . $p->handle . '</a></div>';
 			}
 		?>
 		<td><a href="<?php echo $this->url(array('action'=>'view', 'id'=>$country->id)); ?>"><?php echo $country->display_name; ?></a></td>
 		<td><?php echo $country->getName() . ' (' . $country->country . ')'; ?></td>
 		<td><?php echo number_format($country->audience); ?></td>
-		<td><?php echo $presenceLinks ? implode('<br />', $presenceLinks) : '-'; ?></td>
+		<td><?php echo $presenceLinks ? implode('', $presenceLinks) : '-'; ?></td>
 		<td class="options">
 			<?php
 				$actions = $this->gatekeeper()->filterAll(array(

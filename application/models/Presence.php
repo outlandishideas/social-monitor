@@ -69,7 +69,7 @@ class Model_Presence extends Model_Base {
 		// target audience %
 		$kpis[Model_Campaign::KPI_POPULARITY_PERCENTAGE] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
 
-		// target audience rate
+		// target audience rate (months until reaching target)
 		if ($currentAudience >= $targetAudience) {
 			$kpis[Model_Campaign::KPI_POPULARITY_TIME] = 0; // already achieved
 		} else {

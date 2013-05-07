@@ -1,0 +1,24 @@
+<div class="country">
+	<div class="close"><a href="#">Close</a></div>
+	<h3><a href="<?php echo $this->url(array('action'=>'view', 'controller'=>'country', 'id'=>$this->country->id)); ?>"><?php echo $this->country->display_name; ?></a></h3>
+	<div class="audience">Audience size: <?php echo number_format($this->country->audience) ?: 'None set'; ?></div>
+	<h4>Presences</h4>
+	<?php if ($this->country->presences) : ?>
+	<ul class="presence-list">
+		<?php /** @var $presence Model_Presence */ ?>
+		<?php foreach ($this->country->presences as $presence) : ?>
+			<?php
+			$kpiData = $presence->getKpiData();
+			$metricValue = $kpiData[$this->metric];
+			?>
+		<li class="presence <?php echo $presence->type; ?>">
+			<div class="traffic-light" style="background-color: <?php echo $this->trafficLight()->color($metricValue, $this->metric); ?>;"
+			     title="<?php echo $this->trafficLight()->label($metricValue, $this->metric); ?>"></div>
+			<a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>"><?php echo $presence->getLabel(); ?></a>
+		</li>
+		<?php endforeach; ?>
+	</ul>
+	<?php else : ?>
+		None assigned
+	<?php endif; ?>
+</div>

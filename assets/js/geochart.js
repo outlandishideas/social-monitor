@@ -7,9 +7,14 @@ app.geochart = {
 	map: null,
 	data: null,
 	metrics: {},
-	setup:function () {
+	setup:function ($mapDiv) {
+		$mapDiv.on('click', '.country .close', function(e) {
+			e.preventDefault();
+			$(this).closest('.country').remove();
+		});
+
 		// copy the provided metrics to app.geochart, and populate values
-		app.geochart.metrics = app.metrics;
+		app.geochart.metrics = metrics;
 		for (var i in app.geochart.metrics) {
 			var metric = app.geochart.metrics[i];
 			metric.key = i;
@@ -23,14 +28,21 @@ app.geochart = {
 			app.geochart.map = new google.visualization.GeoChart(document.getElementById('geo-map'));
 			app.geochart.map.options = {
 				datalessRegionColor: '#D5D5D5',
-				colorAxis: {minValue: 0, maxValue: 15, colors: ['orange', 'green']}
+				colorAxis: {}
 			};
 			google.visualization.events.addListener(app.geochart.map, 'select', app.geochart.selectHandler);
 			app.geochart.buildDataTable();
 			app.geochart.refreshMap();
 		});
 
-		$('#metric-picker').on('change', app.geochart.refreshMap);
+		$('#metric-picker').on('change', function() {
+			var $country = $mapDiv.find('.country');
+			if ($country.length > 0) {
+				app.geochart.loadCountryStats($country.data('id'));
+				$country.remove();
+			}
+			app.geochart.refreshMap();
+		});
 	},
 	currentMetric:function () {
 		return $('#metric-picker').val();
@@ -65,15 +77,38 @@ app.geochart = {
 
 		app.geochart.map.draw(view, app.geochart.map.options);
 	},
-	selectHandler: function (e) {
+	/**
+	 * Called when a country is clicked
+	 * @param e
+	 */
+ 	selectHandler: function (e) {
 		var selection = app.geochart.map.getSelection();
 		if (selection.length > 0) {
 			var id = app.geochart.data.getValue(selection[0].row, 3);
-			window.location.href = 'country/view/id/'+id;
+			app.geochart.loadCountryStats(id);
 		}
 	},
+	/**
+	 * Fetches the country summary over ajax, and appends it to the map.
+	 * @param id
+	 */
+	loadCountryStats: function(id) {
+		var $map = $('#map');
+		var $loading = $map.find('.loading');
+		$loading.show();
+		$map.find('.country').remove();
+		$.get('index/country-stats/', {id: id, metric: app.geochart.currentMetric()})
+			.done(function(data) {
+				var $country = $(data);
+				$country.data('id', id);
+				$map.append($country);
+			})
+			.always(function() {
+				$loading.hide();
+			});
+	},
 	buildDataTable:function(){
-		if (app.mapData.length == 0) {
+		if (typeof mapData == 'undefined' || mapData.length == 0) {
 			return;
 		}
 
@@ -84,40 +119,46 @@ app.geochart = {
 		app.geochart.data.addColumn('number', 'id');
 		var columnIndex = app.geochart.data.getNumberOfColumns();
 
+		var colors = app.geochart.colors;
 		for (var m in app.geochart.metrics) {
 			var metric = app.geochart.metrics[m];
 			switch (m) {
 				case 'popularityPercentage':
 					metric.format = '{0}{1}';
-					metric.colors = ['orange', 'green'];
 					break;
 				case 'popularityTime':
 					metric.format = '{1}';
-					metric.colors = ['green', 'yellow', 'orange', 'red'];
 					break;
 				case 'postsPerDay':
 					metric.format = '{0}{1}';
-					metric.colors = ['red', 'orange', 'green', 'green', 'orange', 'red'];
 					break;
 			}
+
+			// convert each hex string to rgb values
+//			metric.colorRgb = [];
+//			for (var i=0; i<metric.colors.length; i++) {
+//				var hex = metric.colors[i];
+//				var rgb = [];
+//				for (var j=1; j<6; j+=2) {
+//					rgb.push(parseInt(hex.substring(j, j+2), 16));
+//				}
+//				metric.colorRgb.push(rgb);
+//			}
+
 			metric.columnIndex = columnIndex;
 			app.geochart.data.addColumn('number', metric.label);
 			app.geochart.data.addColumn('string', metric.key + '-extra');
 			columnIndex += 2;
 		}
 
-		for (var c in app.mapData) {
-			var country = app.mapData[c];
+		for (var c in mapData) {
+			var country = mapData[c];
 			var row = [country.country, country.name, country.presences.length, country.id];
 			for (var m in app.geochart.metrics) {
 				try {
 					var extra = '';
 					var score = app.geochart.kpiAverage(country, m);
 					var metric = app.geochart.metrics[m];
-
-					// update the last value of the range
-					var last = metric.range.pop();
-					metric.range.push(Math.min(metric.max, Math.max(last, Math.round(score))));
 
 					switch (m) {
 						case 'popularityPercentage':

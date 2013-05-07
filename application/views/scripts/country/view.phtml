@@ -1,13 +1,20 @@
-<?php // this is currently almost identical to scripts/presence/index, and is just temporary ?>
+<?php $kpis = Model_Campaign::getKpis(); ?>
+
+Audience size: <?php echo $this->country->audience; ?>
 
 <table class="text">
 	<tr>
 		<th>Handle</th>
 		<th>Fans/followers</th>
-		<th>Last updated info</th>
-		<th>Last fetched statuses</th>
+		<th>Target audience</th>
+		<?php foreach ($kpis as $key=>$label) : ?>
+		<th><?php echo $label; ?></th>
+		<?php endforeach; ?>
+<!--		<th>Last updated info</th>-->
+<!--		<th>Last fetched statuses</th>-->
 		<th>External link</th>
 	</tr>
+	<?php /** @var $presence Model_Presence */ ?>
 	<?php foreach ($this->country->presences as $presence) : ?>
 	<tr>
 		<td>
@@ -15,8 +22,15 @@
 			<?php echo $this->gatekeeper()->filter('<a href="%url%">' . $presence->handle . '</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>
 		</td>
 		<td><?php echo number_format($presence->popularity) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
-		<td><?php echo $this->prettyDate($presence->last_updated, 'Never'); ?></td>
-		<td><?php echo $this->prettyDate($presence->last_fetched, 'Never'); ?></td>
+		<td><?php echo number_format($presence->getTargetAudience()); ?></td>
+		<?php foreach ($presence->getKpiData() as $key=>$value) : ?>
+		<td>
+			<div class="traffic-light" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
+			<?php echo $this->trafficLight()->label($value, $key); ?>
+		</td>
+		<?php endforeach; ?>
+<!--		<td>--><?php //echo $this->prettyDate($presence->last_updated, 'Never'); ?><!--</td>-->
+<!--		<td>--><?php //echo $this->prettyDate($presence->last_fetched, 'Never'); ?><!--</td>-->
 		<td>
 			<a href="<?php echo $presence->page_url; ?>">
 				<?php if ($presence->image_url) : ?>

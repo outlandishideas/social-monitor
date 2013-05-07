@@ -22,22 +22,6 @@ class IndexController extends BaseController
 		$this->view->title = 'Home';
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->kpiData = $kpiData;
-		$metrics = array();
-		foreach (Model_Campaign::getKpis() as $key=>$label) {
-			$metrics[$key] = (object)array('label'=>$label);
-		}
-		$metrics[Model_Campaign::KPI_POPULARITY_PERCENTAGE]->range = array(0, 100);
-		$metrics[Model_Campaign::KPI_POPULARITY_PERCENTAGE]->max = 100;
-		$metrics[Model_Campaign::KPI_POPULARITY_TIME]->range = array(self::getOption('achieve_audience_best'), self::getOption('achieve_audience_good'), self::getOption('achieve_audience_bad'), self::getOption('achieve_audience_bad'));
-		$metrics[Model_Campaign::KPI_POPULARITY_TIME]->max = 200;
-
-		$postsPerDay = self::getOption('updates_per_day');
-		$postsPerDayOk = self::getOption('updates_per_day_ok_range');
-		$postsPerDayBad = self::getOption('updates_per_day_bad_range');
-		$metrics[Model_Campaign::KPI_POSTS_PER_DAY]->range = array(0, $postsPerDay - $postsPerDayBad, $postsPerDay - $postsPerDayOk, $postsPerDay + $postsPerDayOk, $postsPerDay + $postsPerDayBad, $postsPerDay + $postsPerDayBad);
-		$metrics[Model_Campaign::KPI_POSTS_PER_DAY]->max = 100;
-
-		$this->view->metrics = $metrics;
 	}
 
 	public function dateRangeAction() {
@@ -49,6 +33,17 @@ class IndexController extends BaseController
 		} else {
 			$this->apiError('Invalid date range');
 		}
+	}
+
+	public function countryStatsAction() {
+		$country = Model_Country::fetchById($this->_request->id);
+		if ($country) {
+			$this->view->country = $country;
+			$this->view->metric = $this->_request->metric;
+		} else {
+			$this->_helper->viewRenderer->setNoRender(true);
+		}
+		$this->_helper->layout()->disableLayout();
 	}
 
 	public function downloadimageAction () {

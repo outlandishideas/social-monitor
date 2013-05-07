@@ -163,8 +163,8 @@ app.init = {
 			app.charts.setup();
 		},
 
-        '#geo-map': function($item) {
-            app.geochart.setup();
+        '#map': function($item) {
+            app.geochart.setup($item);
         },
 
 		'.chart': function($item) {
@@ -420,25 +420,6 @@ app.api = {
 				.done(app.api.callback)
 				.fail(app.api.errorCallback);
 	},
-    getCountryData: function (code) {
-        var url = '/campaign/kpi-data';
-        var args = {code:code};
-
-        return app.api.get(url, args).done(function(response){
-
-            var list;
-
-            for(var key in response.data){
-                var obj = response.data[key];
-                list += '<dt>'+ key +'</dt><dd>'+ obj +'</dd>';
-            }
-            var key = $('#overview');
-            key.addClass('selected')
-            console.log(response.data);
-            key.find('h2').html(response.data.name);
-            key.find('ul')[0].html(list);
-        });
-    },
 	getGraphData: function (line_ids, cb) {
 		app.charts.show();
 		$('#charts').showLoader();
