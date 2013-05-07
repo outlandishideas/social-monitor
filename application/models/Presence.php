@@ -72,12 +72,12 @@ class Model_Presence extends Model_Base {
 		// target audience rate (months until reaching target)
 		if ($currentAudience >= $targetAudience) {
 			$kpis[Model_Campaign::KPI_POPULARITY_TIME] = 0; // already achieved
+		} else if ($targetAudienceDate) {
+			$diff = $endDate->diff(new DateTime($targetAudienceDate));
+			$months = $diff->m + 12*$diff->y;
+			$kpis[Model_Campaign::KPI_POPULARITY_TIME] = $months;
 		} else {
-			if ($targetAudienceDate) {
-				$diff = $endDate->diff(new DateTime($targetAudienceDate));
-				$months = $diff->m + 12*$diff->y;
-				$kpis[Model_Campaign::KPI_POPULARITY_TIME] = $months;
-			}
+			$kpis[Model_Campaign::KPI_POPULARITY_TIME] = null;
 		}
 
 		//posts per day

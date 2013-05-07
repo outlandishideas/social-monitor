@@ -58,8 +58,11 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
 				if ($value == 0) {
 					$label = 'Target already reached';
 				} else {
-					$months = $value%12;
-					$years = ($value - $months)/12;
+					$tmp = floor($value);
+					$fraction = $value - $tmp;
+					$months = $tmp%12;
+					$years = ($tmp - $months)/12;
+					$months = round(($months + $fraction)*10)/10;
 					$components = array();
 					if ($years != 0) {
 						$components[] = $years . ' year' . ($years == 1 ? '' : 's');

@@ -5,18 +5,42 @@ class IndexController extends BaseController
 	public function indexAction() {
 		/** @var Model_Country[] $countries */
 		$countries = Model_Country::fetchAll();
+		$kpiKeys = array_keys(Model_Campaign::getKpis());
 		$kpiData = array();
 		foreach($countries as $country){
-			$presences = $country->getKpiData();
-			if ($presences) {
-				$kpiData[] = array(
-					'country' => $country->country,
-					'name' => $country->display_name,
-					'id'=>intval($country->id),
-					'targetAudience' => $country->getTargetAudience(),
-					'presences' => $presences
+			$presenceKpis = $country->getKpiData();
+			$row = array(
+				'country' => $country->country,
+				'name' => $country->display_name,
+				'id'=>intval($country->id),
+				'targetAudience' => $country->getTargetAudience(),
+				'presenceCount' => count($presenceKpis)
+			);
+			$scores = array();
+			foreach ($kpiKeys as $key) {
+				$scores[$key] = array();
+			}
+			foreach ($presenceKpis as $p) {
+				foreach ($kpiKeys as $key) {
+					$scores[$key][] = $p[$key];
+				}
+			}
+			foreach ($kpiKeys as $key) {
+				$total = 0;
+				$count = 0;
+				foreach ($scores[$key] as $value) {
+					if ($value !== null) {
+						$total += $value;
+						$count++;
+					}
+				}
+				$average = $count > 0 ? $total/$count : null;
+				$row[$key] = array(
+					'average'=>$average,
+					'label'=>$this->view->trafficLight()->label($average, $key)
 				);
 			}
+			$kpiData[] = $row;
 		}
 
 		$this->view->title = 'Home';

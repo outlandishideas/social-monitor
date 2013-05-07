@@ -122,80 +122,19 @@ app.geochart = {
 		var colors = app.geochart.colors;
 		for (var m in app.geochart.metrics) {
 			var metric = app.geochart.metrics[m];
-			switch (m) {
-				case 'popularityPercentage':
-					metric.format = '{0}{1}';
-					break;
-				case 'popularityTime':
-					metric.format = '{1}';
-					break;
-				case 'postsPerDay':
-					metric.format = '{0}{1}';
-					break;
-			}
-
-			// convert each hex string to rgb values
-//			metric.colorRgb = [];
-//			for (var i=0; i<metric.colors.length; i++) {
-//				var hex = metric.colors[i];
-//				var rgb = [];
-//				for (var j=1; j<6; j+=2) {
-//					rgb.push(parseInt(hex.substring(j, j+2), 16));
-//				}
-//				metric.colorRgb.push(rgb);
-//			}
-
+			metric.format = '{1}';
 			metric.columnIndex = columnIndex;
 			app.geochart.data.addColumn('number', metric.label);
-			app.geochart.data.addColumn('string', metric.key + '-extra');
+			app.geochart.data.addColumn('string', metric.key + '-label');
 			columnIndex += 2;
 		}
 
 		for (var c in mapData) {
 			var country = mapData[c];
-			var row = [country.country, country.name, country.presences.length, country.id];
+			var row = [country.country, country.name, country.presenceCount, country.id];
 			for (var m in app.geochart.metrics) {
-				try {
-					var extra = '';
-					var score = app.geochart.kpiAverage(country, m);
-					var metric = app.geochart.metrics[m];
-
-					switch (m) {
-						case 'popularityPercentage':
-							extra = '% (total audience: ' + app.utils.numberFormat(country.targetAudience) + ')';
-							break;
-						case 'popularityTime':
-							if (score == 0) {
-								extra = '[target already reached]';
-							} else {
-								// convert to years and months
-								var tmp = Math.floor(score);
-								var fraction = score - tmp;
-								var months = tmp%12;
-								var years = (tmp - months)/12;
-								months = Math.round((months + fraction)*10)/10;
-								var components = [];
-								if (years != 0) {
-									components.push('' + years + ' year' + (years == 1 ? '' : 's'));
-								}
-								if (months != 0) {
-									components.push('' + months + ' month' + (months == 1 ? '' : 's'));
-								}
-								extra = components.join(', ');
-							}
-							break;
-					}
-					score = Math.round(100*score)/100;
-					row.push(score);
-//					var kpi = country.kpis[metric];
-//					for (var i=0; i<kpi.length; i++) {
-//						extra += "\n" + kpi[i].name + ': ' + kpi[i].value;
-//					}
-					row.push(extra);
-				} catch (err) {
-					row.push(null);
-					row.push(null);
-				}
+				row.push(country[m].average);
+				row.push('' + country[m].label);
 			}
 			app.geochart.data.addRow(row);
 		}

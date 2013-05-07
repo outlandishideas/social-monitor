@@ -114,7 +114,7 @@ class BaseController extends Zend_Controller_Action {
 		$audienceBest = self::getOption('achieve_audience_best');
 		$audienceGood = self::getOption('achieve_audience_good');
 		$audienceBad = self::getOption('achieve_audience_bad');
-		$metrics[Model_Campaign::KPI_POPULARITY_TIME]->range = array($audienceBest, $audienceGood, $audienceBad, max($audienceBad+1, 2*$audienceGood));
+		$metrics[Model_Campaign::KPI_POPULARITY_TIME]->range = array($audienceBest, $audienceGood, $audienceBad, $audienceGood+$audienceBad);
 		$metrics[Model_Campaign::KPI_POPULARITY_TIME]->colors = array($colors->green, $colors->yellow, $colors->orange, $colors->red);
 
 		$postsPerDay = self::getOption('updates_per_day');
