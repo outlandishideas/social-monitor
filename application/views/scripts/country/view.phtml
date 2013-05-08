@@ -1,6 +1,18 @@
-<?php $kpis = Model_Campaign::getKpis(); ?>
+<?php
+$kpis = Model_Campaign::getKpis();
+/** @var $presences Model_Presence[] */
+$presences = $this->country->presences;
+?>
 
-Audience size: <?php echo $this->country->audience; ?>
+Audience size: <?php echo number_format($this->country->audience); ?>
+
+<?php if (!$presences) : ?>
+
+<h3>No presences found</h3>
+
+<?php else : ?>
+
+<h3>Presences: <?php echo count($presences); ?></h3>
 
 <table class="text">
 	<tr>
@@ -14,8 +26,8 @@ Audience size: <?php echo $this->country->audience; ?>
 <!--		<th>Last fetched statuses</th>-->
 		<th>External link</th>
 	</tr>
-	<?php /** @var $presence Model_Presence */ ?>
-	<?php foreach ($this->country->presences as $presence) : ?>
+
+	<?php foreach ($presences as $presence) : ?>
 	<tr>
 		<td>
 			<img src="<?php echo $this->baseUrl('assets/img/' . $presence->type . '.png'); ?>" />
@@ -42,4 +54,33 @@ Audience size: <?php echo $this->country->audience; ?>
 		</td>
 	</tr>
 	<?php endforeach; ?>
+
+	<?php
+	if (count($presences) > 1) :
+	$totalPop = 0;
+	$totalTarget = 0;
+	foreach ($presences as $p) {
+		$totalPop += $p->popularity;
+		$totalTarget += $p->getTargetAudience();
+	}
+	$avPop = round(100*$totalPop/count($presences))/100;
+	$avTarget = round(100*$totalTarget/count($presences))/100;
+	?>
+
+	<tr class="average">
+		<td>Country Average</td>
+		<td><?php echo number_format($avPop) . ' fans/followers'; ?></td>
+		<td><?php echo number_format($avTarget); ?></td>
+		<?php foreach ($this->country->getKpiAverages() as $key=>$value) : ?>
+			<td>
+				<div class="traffic-light" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
+				<?php echo $this->trafficLight()->label($value, $key); ?>
+			</td>
+		<?php endforeach; ?>
+		<td></td>
+	</tr>
+	<?php endif; ?>
+
 </table>
+
+<?php endif; ?>

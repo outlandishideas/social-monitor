@@ -76,4 +76,32 @@ class Model_Campaign extends Model_Base {
 		return $return;
 	}
 
+	function getKpiAverages() {
+		$kpiKeys = array_keys(Model_Campaign::getKpis());
+
+		$scores = array();
+		foreach ($kpiKeys as $key) {
+			$scores[$key] = array();
+		}
+		foreach ($this->getKpiData() as $p) {
+			foreach ($kpiKeys as $key) {
+				$scores[$key][] = $p[$key];
+			}
+		}
+		$averages = array();
+		foreach ($kpiKeys as $key) {
+			$total = 0;
+			$count = 0;
+			foreach ($scores[$key] as $value) {
+				if ($value !== null) {
+					$total += $value;
+					$count++;
+				}
+			}
+			$average = $count > 0 ? $total/$count : null;
+			$averages[$key] = $average;
+		}
+
+		return $averages;
+	}
 }

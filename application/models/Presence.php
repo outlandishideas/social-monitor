@@ -308,21 +308,21 @@ class Model_Presence extends Model_Base {
 	}
 
 	/**
-	 * Gets the date at which the target audience size will be reached, based on the trend over the given time period. The date may be in the past
-	 * If any of these conditions are met, this will return null:
-	 * - no target audience size
+	 * Gets the date at which the target audience size will be reached, based on the trend over the given time period.
+	 * If the target is already reached, or there is no target, this will return null.
+	 * If any of these conditions are met, this will return the maximum date possible:
 	 * - popularity has never varied
 	 * - the calculated date is in the past
-	 * If there are fewer than 2 data points, or the calculated date would be too far in the future (32-bit date problem), this will return the maximum date possible
+	 * - there are fewer than 2 data points
+	 * - the calculated date would be too far in the future (32-bit date problem)
 	 * @param $startDate
 	 * @param $endDate
 	 * @return null|string
 	 */
 	public function getTargetAudienceDate($startDate, $endDate) {
-		// todo: change this to throw exceptions for the different reasons listed above
 		$date = null;
 		$target = $this->getTargetAudience();
-		if ($target > 0) {
+		if ($target > 0 && $this->popularity < $target) {
 			$data = $this->getPopularityData($startDate, $endDate);
 			$n = count($data);
 			if ($n > 1) {
@@ -344,11 +344,10 @@ class Model_Presence extends Model_Base {
 					if ($timestamp < PHP_INT_MAX) {
 						$date = date('Y-m-d', $timestamp);
 					}
-					if (!$date || $date < date('Y-m-d')) {
-						$date = date('Y-m-d', PHP_INT_MAX);
-					}
 				}
-			} else {
+			}
+
+			if (!$date || $date < date('Y-m-d')) {
 				$date = date('Y-m-d', PHP_INT_MAX);
 			}
 		}

@@ -456,6 +456,12 @@ table tr td {
 	border-bottom: 1px solid #F5F5F5;
 }
 
+table tr.average td {
+	border-top: 2px solid #ddd;
+	border-bottom: 2px solid #ddd;
+	font-style: italic;
+}
+
 table.hoverable tr:hover td {
 	background: #dde7ee;
 }
