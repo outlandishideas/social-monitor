@@ -5,10 +5,10 @@ class ConfigController extends BaseController {
 	function indexAction() {
 		$this->view->title = 'Settings';
 		$values = array(
-			'fb_min'=>array('label'=>'Facebook Minimum (%)'),
-			'fb_opt'=>array('label'=>'Facebook Optimum (%)'),
-			'tw_min'=>array('label'=>'Twitter Minimum (%)'),
-			'tw_opt'=>array('label'=>'Twitter Optimum (%)'),
+			'fb_min'=>array('label'=>'Facebook Minimum Audience (% of total)'),
+			'fb_opt'=>array('label'=>'Facebook Optimum Audience (% of total)'),
+			'tw_min'=>array('label'=>'Twitter Minimum Audience (% of total)'),
+			'tw_opt'=>array('label'=>'Twitter Optimum Audience (% of total)'),
 			'updates_per_day'=>array('label'=>'Updates Per Day'),
 			'updates_per_day_ok_range'=>array('label'=>'Updates Per Day OK range', 'hint'=>'Number above or below [updates per day] that is considered OK'),
 			'updates_per_day_bad_range'=>array('label'=>'Updates Per Day bad range', 'hint'=>'Number above or below [updates per day] that is considered too much or too little'),
