@@ -848,7 +848,7 @@ form.autoConfirm {
 	border-width: 1px;
 }
 
-#all-presences .traffic-light {
+table .traffic-light {
 	float: left;
 	margin-right: 5px;
 }

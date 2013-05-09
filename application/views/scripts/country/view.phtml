@@ -2,7 +2,18 @@
 $kpis = Model_Campaign::getKpis();
 /** @var $presences Model_Presence[] */
 $presences = $this->country->presences;
+
+$buttons = $this->gatekeeper()->filterAll(array(
+	'<a class="button" href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$this->country->id),
+	'<a class="button" href="%url%">Manage Presences</a>' => array('action'=>'manage', 'id'=>$this->country->id)
+));
 ?>
+
+<?php if ($buttons) : ?>
+<p>
+	<?php echo implode('', $buttons); ?>
+</p>
+<?php endif; ?>
 
 Audience size: <?php echo number_format($this->country->audience); ?>
 
@@ -59,7 +70,7 @@ Audience size: <?php echo number_format($this->country->audience); ?>
 	<tr class="average">
 		<td>Country Average</td>
 		<td><?php echo number_format($avPop) . ' fans/followers'; ?></td>
-		<td><?php echo number_format($avTarget); ?></td>
+		<td><?php echo number_format($avTarget) . ' fans/followers'; ?></td>
 		<?php foreach ($this->country->getKpiAverages() as $key=>$value) : ?>
 			<td>
 				<div class="traffic-light" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>

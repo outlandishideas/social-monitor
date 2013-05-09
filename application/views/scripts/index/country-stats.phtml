@@ -1,8 +1,6 @@
 <div class="country">
 	<div class="close"><a href="#">Close</a></div>
 	<h3><a href="<?php echo $this->url(array('action'=>'view', 'controller'=>'country', 'id'=>$this->country->id)); ?>"><?php echo $this->country->display_name; ?></a></h3>
-	<div class="audience">Audience size: <?php echo number_format($this->country->audience) ?: 'None set'; ?></div>
-	<h4>Presences</h4>
 	<?php if ($this->country->presences) : ?>
 	<ul class="presence-list">
 		<?php /** @var $presence Model_Presence */ ?>
