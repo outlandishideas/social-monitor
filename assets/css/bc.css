@@ -543,11 +543,28 @@ form.autoConfirm {
 .statusesDisplay td.lesser,
 .statusesDisplay td.statusPic {
 	width: 10%;
+	text-align: center;
+	background: #efefef;
 }
 .statusesDisplay .dataTables_info {
 	position: absolute;
 	top: 20px;
 	right: 0;
+}
+
+.statusesDisplay .dataTable p.more {
+	float: right;
+	font-size: 10px;
+	margin-right: 10px;
+	visibility: hidden;
+}
+
+.statusesDisplay .dataTable tr:hover p.more {
+	visibility: visible;
+}
+
+.statusesDisplay .dataTable thead th {
+	border-bottom: 1px solid black;
 }
 
 /* DataTables */
@@ -556,6 +573,7 @@ form.autoConfirm {
 .dataTable .sorting_asc,
 .dataTable .sorting_desc {
 	cursor: pointer;
+	*cursor: hand;
 	background-position: right center;
 	background-repeat: no-repeat;
 }
@@ -563,6 +581,11 @@ form.autoConfirm {
 .dataTable .sorting { background-image: url(../img/sort_both.png); }
 .dataTable .sorting_asc { background-image: url(../img/sort_asc.png); }
 .dataTable .sorting_desc { background-image: url(../img/sort_desc.png); }
+
+.dataTable thead th:active,
+.dataTable thead td:active {
+	outline: none;
+}
 
 .data {
 	float: left;

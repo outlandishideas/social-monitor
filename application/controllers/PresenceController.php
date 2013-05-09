@@ -370,7 +370,7 @@ class PresenceController extends BaseController
 					$tableData[] = array(
 						'message'=> $this->_request->format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
 						'date'=>Model_Base::localeDate($tweet->created_time),
-						'twitter_url'=>''
+						'twitter_url'=>Model_TwitterTweet::getTwitterUrl($presence->handle, $tweet->tweet_id)
 					);
 				}
 			} else {
