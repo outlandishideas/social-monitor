@@ -220,16 +220,57 @@ class Model_Presence extends Model_Base {
         return $this->getHistoryData('popularity', $startDate, $endDate);
     }
 
-    public function getStatuses($startDate, $endDate){
+    public function getStatuses($startDate, $endDate, $search, $order, $limit, $offset){
         $tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
-        $stmt = $this->_db->prepare(
-            "SELECT * FROM $tableName WHERE presence_id = :pid AND created_time >= :start_date AND created_time <= :end_date"
-        );
-        $stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
-        if($this->type == self::TYPE_TWITTER){
-            return $stmt->fetchAll(PDO::FETCH_OBJ);
-        } else {
-            return $stmt->fetchAll(PDO::FETCH_OBJ);
+	    $clauses = array(
+		    'presence_id = :pid',
+		    'created_time >= :start_date',
+		    'created_time <= :end_date'
+	    );
+	    $args = array(
+		    ':pid'=>$this->id,
+		    ':start_date'=>$startDate,
+		    ':end_date'=>$endDate
+	    );
+
+	    if ($search) {
+		    //parse special search filters
+		    $searchBits = explode(':', $search, 2);
+		    if (count($searchBits) > 1 && $searchBits[0] == 'date') {
+			    $dates = explode('/', $searchBits[1]);
+			    $clauses[] = 'created_time >= :filter_min_date';
+			    $clauses[] = 'created_time < :filter_max_date';
+			    $args[':filter_min_date'] = gmdate('Y-m-d H:i:s', strtotime($dates[0]));
+			    $args[':filter_max_date'] = gmdate('Y-m-d H:i:s', strtotime($dates[1]));
+		    } else {
+			    $textMatchColumn = ($this->type == self::TYPE_TWITTER ? 'text_expanded' : 'message');
+			    $textMatches = array("$textMatchColumn LIKE :search");
+			    if ($this->type == self::TYPE_TWITTER) {
+				    $textMatches[] = 'user.name LIKE :search';
+				    $textMatches[] = 'user.screen_name LIKE :search';
+			    } else {
+				    $textMatches[] = 'actor.name LIKE :search';
+			    }
+			    $clauses[] = '(' . implode(' OR ', $textMatches) . ')';
+			    $args[':search'] = "%$search%";
+		    }
+	    }
+
+	    // todo: add sorting
+	    
+	    $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM $tableName WHERE " . implode (' AND ', $clauses);
+	    if ($limit != -1) {
+		    $sql .= ' LIMIT '.$limit;
+	    }
+	    if ($offset != -1) {
+		    $sql .= ' OFFSET '.$offset;
+	    }
+
+	    $stmt = $this->_db->prepare($sql);
+        $stmt->execute($args);
+	    $statuses = $stmt->fetchAll(PDO::FETCH_OBJ);
+	    $total = $this->_db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
+        if($this->type == self::TYPE_FACEBOOK){
             /*
             $actorIds = array();
             foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row){
@@ -241,10 +282,9 @@ class Model_Presence extends Model_Base {
                 $row->actor = $actors[$row->actor_id];
                 $return[] = $row + $actors[$row->actor_id];
             }
-            return $return;
             */
         }
-
+		return (object)array('statuses'=>$statuses, 'total'=>$total);
     }
 
     public function getActors($actorIds = array()){

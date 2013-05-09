@@ -28,12 +28,8 @@ $.extend(app, {
 				'<a href="<%=url%>">Deauthorise <%=type%></a></div>',
 		addTextSearch: '<tr><td valign="top" colspan="<%=colspan%>" class="dataTables_empty"><span class="add-manual-search link">Add manual search</span></td></tr>',
 		downloadChart: '<div class="downloadChart">Download as <span class="link">PNG</span> or <span class="link">SVG</span></div>',
-		tweet:'<%if(screen_name){%>' +
-				'<p class="more"><a href="<%=twitter_url%>" target="_blank">View on Twitter</a></p>' +
-				'<h4><%=user_name%><span><a href="http://twitter.com/#!/<%=screen_name%>" target="_blank">@<%=screen_name%></a></span></h4>' +
-				'<%}else{%>' +
-				'<h4>Unknown user</h4>' +
-				'<%}%><p><%=tweet%></p>',
+		tweet:'<p class="more"><a href="<%=twitter_url%>" target="_blank">View on Twitter</a></p>' +
+				'<p><%=message%></p>',
 		post:'<%if(actor_name){%>' +
 				//'<p class="more"><a href="<%=twitter_url%>" target="_blank">View on Twitter</a></p>' +
 				'<h4 title="<%=actor_name%> is a Facebook <%=actor_type%>"><a href="<%=profile_url%>" target="_blank"><%=actor_name%></a></h4>' +
@@ -86,9 +82,7 @@ app.init = {
 			app.state.unloading = true;
 		});
 
-		if ($('.dtable').length > 0) {
-			app.datatables.init();
-		}
+		app.datatables.init();
 	},
 
 	//selector-based init functions, called from bootstrap
@@ -264,49 +258,6 @@ app.init = {
 						$(this).select();
 					}
 				}
-			});
-		},
-		'#all-presences': function($table) {
-			// make the popularity column sortable
-			$.extend($.fn.dataTableExt.oSort, {
-				"popularity-pre": function ( a ) { return parseInt(a.replace(/[^\d]/g, "")); },
-				"popularity-asc": function ( a, b ) { return a - b; },
-				"popularity-desc": function ( a, b ) { return b - a; }
-			});
-
-			$table.dataTable({
-				bScrollInfinite: true,
-				bScrollCollapse: true,
-				sScrollY: '400px',
-				bFilter: false,
-				bInfo: false,
-				aoColumns:[
-					{
-						sName: 'handle',
-						bSortable: true
-					},
-					{
-						sName: 'popularity',
-						bSortable: true,
-						sType: 'popularity'//use popularity sorter above
-					},
-					{
-						sName: 'last_updated',
-						bSortable: true
-					},
-					{
-						sName: 'last_fetched',
-						bSortable: true
-					},
-					{
-						sName: 'link',
-						bSortable: false
-					},
-					{
-						sName: 'options',
-						bSortable: false
-					}
-				]
 			});
 		}
 	},

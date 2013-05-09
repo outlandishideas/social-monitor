@@ -159,15 +159,12 @@ a:hover, span.link:hover {
 	display: inline-block;
 	vertical-align: top;
 	cursor: pointer;
+	background-repeat: no-repeat;
 }
 
-.icon.add {
-	background-image: url(../img/add.png);
-}
-
-.icon.remove {
-	background-image: url(../img/delete.png);
-}
+.icon.add { background-image: url(../img/add.png); }
+.icon.remove { background-image: url(../img/delete.png); }
+.icon.external { background-image: url(../img/external_link.png); }
 
 #wrapper,
 #content {
@@ -194,6 +191,10 @@ a:hover, span.link:hover {
 
 #main-header h1 {
 	margin: 0 0 5px;
+}
+
+#main-header h1 img {
+	margin-right: 10px;
 }
 
 #campaign-switcher {
@@ -320,11 +321,10 @@ a:hover, span.link:hover {
 
 #nav-bar {
 	position: fixed;
-	top: 0px;
-	left: 0px;
+	top: 0;
+	left: 0;
 	z-index: 999;
 	width: 100%;
-	padding-top: 4px;
 }
 
 #nav {
@@ -475,10 +475,6 @@ form.autoConfirm {
 	/* counter the border and padding */
 	margin-top: -3px;
 	margin-bottom: -3px;
-}
-
-table.campaigns {
-	float: left;
 }
 
 /* Columns */
@@ -851,6 +847,11 @@ table.campaigns {
 	-webkit-border-radius: 16px;
 	-moz-border-radius: 16px;
 	border-width: 1px;
+}
+
+#all-presences .traffic-light {
+	float: left;
+	margin-right: 5px;
 }
 
 .key {

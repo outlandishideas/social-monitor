@@ -17,45 +17,34 @@ Audience size: <?php echo number_format($this->country->audience); ?>
 <table class="text">
 	<tr>
 		<th>Handle</th>
-		<th>Fans/followers</th>
+		<th>Audience</th>
 		<th>Target audience</th>
 		<?php foreach ($kpis as $key=>$label) : ?>
 		<th><?php echo $label; ?></th>
 		<?php endforeach; ?>
-<!--		<th>Last updated info</th>-->
-<!--		<th>Last fetched statuses</th>-->
-		<th>External link</th>
 	</tr>
 
 	<?php foreach ($presences as $presence) : ?>
 	<tr>
 		<td>
-			<img src="<?php echo $this->baseUrl('assets/img/' . $presence->type . '.png'); ?>" />
-			<?php echo $this->gatekeeper()->filter('<a href="%url%">' . $presence->handle . '</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>
+			<div class="presence <?php echo $presence->type; ?>">
+				<?php echo $this->gatekeeper()->filter('<a href="%url%">' . $presence->handle . '</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>
+				<a href="<?php echo $presence->page_url; ?>" target="_blank" class="icon external"></a>
+			</div>
 		</td>
 		<td><?php echo number_format($presence->popularity) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
 		<td><?php echo number_format($presence->getTargetAudience()); ?></td>
-		<?php foreach ($presence->getKpiData() as $key=>$value) : ?>
+		<?php $kpiData = $presence->getKpiData(); foreach ($kpis as $key=>$label) : $value = $kpiData[$key]; ?>
 		<td>
 			<div class="traffic-light" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
 			<?php echo $this->trafficLight()->label($value, $key); ?>
 		</td>
 		<?php endforeach; ?>
-<!--		<td>--><?php //echo $this->prettyDate($presence->last_updated, 'Never'); ?><!--</td>-->
-<!--		<td>--><?php //echo $this->prettyDate($presence->last_fetched, 'Never'); ?><!--</td>-->
-		<td>
-			<a href="<?php echo $presence->page_url; ?>">
-				<?php if ($presence->image_url) : ?>
-				<img src="<?php echo $presence->image_url; ?>" />
-				<?php else : ?>
-				<?php echo $presence->page_url; ?>
-				<?php endif; ?>
-			</a>
-		</td>
 	</tr>
 	<?php endforeach; ?>
 
 	<?php
+	// add row for country average
 	if (count($presences) > 1) :
 	$totalPop = 0;
 	$totalTarget = 0;

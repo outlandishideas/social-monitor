@@ -3,7 +3,7 @@ table.dataTable td {
 	border-bottom: 1px solid #ccc;
 }
 
-table.dataTable.dtable tr td.sorting_1, table.dataTable.dtable tr td.sorting_2 {
+table.dataTable tr td.sorting_1, table.dataTable tr td.sorting_2 {
 	background: #e2e2e2;
 }
 

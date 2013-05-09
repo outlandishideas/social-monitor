@@ -22,6 +22,7 @@ class PresenceController extends BaseController
 	 */
 	public function viewAction()
 	{
+		/** @var Model_Presence $presence */
 		$presence = Model_Presence::fetchById($this->_request->id);
 		$this->validateData($presence);
 
@@ -39,7 +40,15 @@ class PresenceController extends BaseController
 			'title' => 'Posts Per Day'
 		);
 
-		$this->view->title = $presence->label;
+		$title = '';
+		if ($presence->image_url) {
+			$title .= '<img src="' . $presence->image_url . '" alt="' . $presence->getLabel() . '"/>';
+		}
+		$title .= $presence->getLabel();
+		if ($presence->getLabel() != $presence->handle) {
+			$title .= ' (' . $presence->handle . ')';
+		}
+		$this->view->title = $title;
 		$this->view->presence = $presence;
 		$this->view->graphs = $graphs;
 	}
@@ -326,7 +335,9 @@ class PresenceController extends BaseController
 		return Model_Presence::fetchById($id)->typeLabel;
 	}
 
-	// AJAX function for fetching the posts/tweets for a page/list/search
+	/**
+	 * AJAX function for fetching the posts/tweets for a presence
+	 */
 	public function statusesAction() {
 		Zend_Session::writeClose(); //release session on long running actions
 
@@ -343,27 +354,30 @@ class PresenceController extends BaseController
 
 		$tableData = array();
 		$count = 0;
+		$data = null;
 		if ($linePropsArray) {
 			/** @var $presence Model_Presence */
 			$presence = Model_Presence::fetchById($linePropsArray[0]['modelId']);
-			$statuses = $presence->getStatuses($dateRange[0],$dateRange[1]);
+			$data = $presence->getStatuses(
+				$dateRange[0],
+				$dateRange[1],
+				$this->getRequestSearchQuery(),
+				$this->getRequestOrdering(),
+				$this->getRequestLimit(),
+				$this->getRequestOffset()
+			);
 
 			// convert statuses to appropriate datatables.js format
 			if ($presence->type == Model_Presence::TYPE_TWITTER) {
-				foreach ($statuses as $tweet) {
-
+				foreach ($data->statuses as $tweet) {
 					$tableData[] = array(
-						'user_name'=>'',//$tweet->user_name,
-						'screen_name'=>'',//$tweet->screen_name,
 						'message'=> $this->_request->format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
-						'likes'=>$tweet->retweet_count,
 						'date'=>Model_Base::localeDate($tweet->created_time),
-						'profile_url'=>'',//Model_TwitterTweet::getTwitterUrl($tweet->screen_name, $tweet->tweet_id),
-						'profile_image_url'=>''//$tweet->profile_image_url
+						'twitter_url'=>''
 					);
 				}
 			} else {
-				foreach ($statuses as $post) {
+				foreach ($data->statuses as $post) {
                     if($post->message){
                         $tableData[] = array(
                             'actor_type'=>'type',//$post->actor->actor_type
@@ -378,7 +392,7 @@ class PresenceController extends BaseController
                     }
 				}
 			}
-			$count = count($statuses);
+			$count = count($data->statuses);
 		}
 
 		//return CSV or JSON?
@@ -388,7 +402,7 @@ class PresenceController extends BaseController
 			$apiResult = array(
 				'sEcho' => $this->_request->sEcho,
 				'iTotalRecords' => $count,
-				'iTotalDisplayRecords' => $count,
+				'iTotalDisplayRecords' => $data->total,
 				'aaData' => $tableData
 			);
 			$this->apiSuccess($apiResult);

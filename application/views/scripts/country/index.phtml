@@ -1,36 +1,40 @@
 <?php echo $this->gatekeeper()->filter('<p><a class="button add" href="%url%">Add new</a></p>', array('action'=>'new')); ?>
 
-<table class="campaigns text hoverable">
-	<tr>
-		<th>Name</th>
-		<th>Country</th>
-		<th>Audience Size</th>
-		<th>Presences</th>
-		<th class="options"></th>
-	</tr>
-	<?php /** @var $country Model_Country */ ?>
-	<?php foreach ($this->countries as $country) : ?>
-	<tr>
-		<?php
-			$presenceLinks = array();
-			foreach($country->getPresences() as $p) {
-				$presenceLinks[] = '<div class="presence ' . $p->type . '" title="' . $p->name . '"><a href="' . $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)) . '">' . $p->handle . '</a></div>';
-			}
-		?>
-		<td><a href="<?php echo $this->url(array('action'=>'view', 'id'=>$country->id)); ?>"><?php echo $country->display_name; ?></a></td>
-		<td><?php echo $country->getName() . ' (' . $country->country . ')'; ?></td>
-		<td><?php echo number_format($country->audience); ?></td>
-		<td><?php echo $presenceLinks ? implode('', $presenceLinks) : '-'; ?></td>
-		<td class="options">
+<table class="text hoverable" id="all-countries">
+	<thead>
+		<tr>
+			<th data-name="name" data-sort="auto">Name</th>
+			<th data-name="country" data-sort="auto">Country</th>
+			<th data-name="audience" data-sort="fuzzy-numeric">Audience Size</th>
+			<th data-name="presences">Presences</th>
+			<th data-name="options" class="options"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php /** @var $country Model_Country */ ?>
+		<?php foreach ($this->countries as $country) : ?>
+		<tr>
 			<?php
-				$actions = $this->gatekeeper()->filterAll(array(
-					'<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$country->id),
-					'<a href="%url%">Presences</a>' => array('action'=>'manage', 'id'=>$country->id),
-					'<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$country->id)
-				));
-				echo implode(' | ', $actions);
+				$presenceLinks = array();
+				foreach($country->getPresences() as $p) {
+					$presenceLinks[] = '<div class="presence ' . $p->type . '" title="' . $p->name . '"><a href="' . $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)) . '">' . $p->handle . '</a></div>';
+				}
 			?>
-		</td>
-	</tr>
-	<?php endforeach; ?>
+			<td><a href="<?php echo $this->url(array('action'=>'view', 'id'=>$country->id)); ?>"><?php echo $country->display_name; ?></a></td>
+			<td><?php echo $country->getName() . ' (' . $country->country . ')'; ?></td>
+			<td><?php echo number_format($country->audience); ?></td>
+			<td><?php echo $presenceLinks ? implode('', $presenceLinks) : '-'; ?></td>
+			<td class="options">
+				<?php
+					$actions = $this->gatekeeper()->filterAll(array(
+						'<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$country->id),
+						'<a href="%url%">Presences</a>' => array('action'=>'manage', 'id'=>$country->id),
+						'<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$country->id)
+					));
+					echo implode(' | ', $actions);
+				?>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
 </table>
