@@ -194,7 +194,7 @@ abstract class Model_Base
 		$statement = $this->_db->prepare($sql);
 		$statement->execute($args);
 		
-		return $this->objectify($statement);
+		return $this->objectify($statement->fetchAll(PDO::FETCH_ASSOC));
 	}
 
 	/**
