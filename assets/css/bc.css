@@ -47,7 +47,6 @@ body {
 .loader-shield {
 	background-color: rgba(255, 255, 255, 0.6);
 	position: absolute;
-	padding: 10px;
 }
 .loader {
 	-moz-border-radius: 25px;
@@ -60,7 +59,8 @@ body {
 	height: 50px;
 	top: 50%;
 	left: 50%;
-	margin: -25px 0px 0px -25px;
+	margin-top: -25px;
+	margin-left: -25px;
 }
 .loader-shield.dead,
 .loader.dead {
@@ -494,14 +494,23 @@ form.autoConfirm {
     width: 100%;
 }
 
+.chart-container {
+	clear: both;
+	border: 1px solid #ddd;
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
 .chart {
     width: 75%;
-	height: 200px;
+	height: 250px;
     position: relative;
+	float:right;
 }
 
 .health {
     width: 25%;
+	float: left;
 }
 
 /*#mentions, #sentiment, #trends, #api-stats, #reply-time, #popularity {*/
@@ -523,17 +532,22 @@ form.autoConfirm {
 }
 
 .statusesDisplay {
-	margin-left: 410px;
+	clear: both;
+	position: relative;
 }
 
 .statusesDisplay .inner {
-	float: left;
 	width: 100%;
 }
 
 .statusesDisplay td.lesser,
 .statusesDisplay td.statusPic {
 	width: 10%;
+}
+.statusesDisplay .dataTables_info {
+	position: absolute;
+	top: 20px;
+	right: 0;
 }
 
 /* DataTables */
@@ -549,44 +563,6 @@ form.autoConfirm {
 .dataTable .sorting { background-image: url(../img/sort_both.png); }
 .dataTable .sorting_asc { background-image: url(../img/sort_asc.png); }
 .dataTable .sorting_desc { background-image: url(../img/sort_desc.png); }
-
-/*.dataTable tr.selected td {*/
-	/*background-color: #B0BED9;*/
-/*}*/
-
-/*.dataTables_filter {*/
-	/*margin-top: -36px;*/
-/*}*/
-
-/*.dataTables_info {*/
-	/*margin-top: 10px;*/
-/*}*/
-
-/*td.statusPic {*/
-	/*vertical-align: top;*/
-/*}*/
-
-
-/*.statusesDisplay .dataTable p.more {*/
-	/*float: right;*/
-	/*font-size: 10px;*/
-	/*margin-right: 10px;*/
-	/*visibility: hidden;*/
-/*}*/
-
-/*.statusesDisplay .dataTable tr:hover p.more {*/
-	/*visibility: visible;*/
-/*}*/
-
-/*.dataTable td.lesser {*/
-	/*background: #efefef;*/
-	/*text-align: center;*/
-/*}*/
-
-/*.statusesDisplay .dataTable td {*/
-	/*padding: 15px 5px;*/
-/*}*/
-
 
 .data {
 	float: left;
@@ -906,10 +882,27 @@ form.autoConfirm {
 }
 
 .health .target {
-    margin-left: 20%;
     font-size: 12px;
     color: #666;
     font-weight: bold;
+}
+
+.health .target table {
+	margin-top: 10px;
+}
+
+.health .target table th,
+.health .target table td {
+	padding: 2px 6px;
+	vertical-align: top;
+}
+
+.health .target table th {
+	text-align: right;
+}
+
+.health .target table td {
+	font-weight: normal;
 }
 
 .test {

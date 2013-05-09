@@ -109,7 +109,6 @@ app.datatables = {
 					{
 						mDataProp:'message',
 						fnRender:function (o) {
-							//                        console.log(o.aData.message, o.aData.id);
 							return parseTemplate(app.templates.post, o.aData);
 						},
 						bSortable:false,
@@ -191,7 +190,7 @@ app.datatables = {
 				aoData.push({ name:"line_ids", value:app.state.lineIds });
 			},
 			fnServerData:function (sSource, aoData, fnCallback) {
-				var $wrapper = $(this).closest('.dataTables_wrapper');
+				var $wrapper = $(this).closest('.inner');
 				$wrapper.showLoader();
 				$.getJSON(sSource, aoData,
 					function (e) {

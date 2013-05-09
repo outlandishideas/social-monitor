@@ -257,7 +257,7 @@ class Model_Presence extends Model_Base {
 	    }
 
 	    // todo: add sorting
-	    
+
 	    $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM $tableName WHERE " . implode (' AND ', $clauses);
 	    if ($limit != -1) {
 		    $sql .= ' LIMIT '.$limit;

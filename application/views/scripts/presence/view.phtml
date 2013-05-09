@@ -2,27 +2,32 @@
 
 <?php echo $this->render('partials/daterange.phtml'); ?>
 
+<div id="share-box"><span class="link">Link to this page</span></div>
+
 <div class="presence <?php echo $this->presence->type; ?>">
 	<a href="<?php echo $this->presence->page_url; ?>" target="_blank"><?php echo $this->presence->page_url; ?></a>
 </div>
 <p>Info last updated: <?php echo $this->prettyDate($this->presence->last_updated, 'Never'); ?></p>
 <p>Statuses last updated: <?php echo $this->prettyDate($this->presence->last_fetched, 'Never'); ?></p>
 
-<table id="charts" data-controller="presence" data-controller-label="presence">
+<div id="charts" data-controller="presence" data-controller-label="presence">
 	<?php foreach ($this->graphs as $graph) : ?>
-	<tr>
-		<td class="health">
+	<div class="chart-container">
+		<div class="health">
 			<h3 class="title"><?php echo $graph->title; ?></h3>
 			<div class="fieldset">
 				<h4 class="legend"></h4>
 				<p class="value"></p>
 			</div>
 			<p class="target"></p>
-		</td>
-		<td id="<?php echo $graph->id; ?>" class="chart" data-y-label="<?php echo $graph->yAxisLabel; ?>" data-line-id="<?php echo $graph->lineId; ?>"></td>
-	</tr>
+		</div>
+		<div id="<?php echo $graph->id; ?>" class="chart" data-y-label="<?php echo $graph->yAxisLabel; ?>" data-line-id="<?php echo $graph->lineId; ?>">
+			<div class="downloadChart">Download as <span class="link">PNG</span> or <span class="link">SVG</span></div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
 	<?php endforeach; ?>
-</table>
+</div>
 
 <div id="statuses" class="statusesDisplay <?php echo $this->presence->type; ?>">
 	<div class="inner">

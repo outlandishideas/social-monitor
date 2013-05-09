@@ -29,13 +29,13 @@ class PresenceController extends BaseController
 		$graphs = array();
 		$graphs[] = (object)array(
 			'id' => 'popularity',
-			'yAxisLabel' => ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers') . ' gained per day',
+			'yAxisLabel' => ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'Fans' : 'Followers') . ' gained per day',
 			'lineId' => 'popularity:' . $presence->id,
-			'title' => 'Popularity Rate'
+			'title' => 'Audience Rate'
 		);
 		$graphs[] = (object)array(
 			'id' => 'posts_per_day',
-			'yAxisLabel' => 'posts-per-day',
+			'yAxisLabel' => 'Posts per day',
 			'lineId' => 'posts_per_day:' . $presence->id,
 			'title' => 'Posts Per Day'
 		);

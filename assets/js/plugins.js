@@ -12,37 +12,31 @@
 		var id = 'loader_' + id_count;
 		$this.data('loader_id', id);
 		return id;
-	}
+	};
 
 	$.fn.showLoader = function(settings) {
 
 		return this.each(function () {
+			var $toCover = $(this);
+			var offset = $toCover.offset();
 
-			var $this = $(this);
-
-			var id = $this.getLoaderId();
+			var id = $toCover.getLoaderId();
 			var $spinner = $('div#' + id);
 			var $shield = $('div#shield-' + id);
+
 			if ($spinner.length == 0) {
-
-
 				$shield = $('<div />')
 					.attr('id', 'shield-' + id)
-					.addClass('dead loader-shield')
-					.width($this.outerWidth())
-					.height($this.outerHeight())
+					.addClass('loader-shield')
+					.width($toCover.outerWidth())
+					.height($toCover.outerHeight())
+					.offset(offset)
 					.appendTo('body');
-				$shield.position({
-					at: 'top left',
-					of: $this,
-					my: 'top left'
-				});
 
 				$spinner = $('<div />')
 					.attr('id', id)
-					.addClass('dead')
 					.addClass('loader')
-					.appendTo('body')
+					.appendTo($shield)
 					.spinner({ 
 						colour : '255,255,255',
 						spokeCount : 10,
@@ -54,24 +48,19 @@
 						},
 						centered : false
 					});
-
-				$spinner.position({
-					at: 'center center',
-					of: $this,
-					my: 'center center'
-				});
 			}
-			$spinner.removeClass('dead');
-			$shield.removeClass('dead');
 
+			$shield
+				.removeClass('dead')
+				.width($toCover.outerWidth())
+				.height($toCover.outerHeight())
+				.offset(offset);
 		});
+	};
 
- 
-	}
 	$.fn.hideLoader = function(skip) {
 
 		return this.each(function () {
-
 			var $this = $(this);
 
 			var id = $this.getLoaderId();
@@ -84,7 +73,7 @@
 
 			var delay = !skip ? 800 : 0;
 			setTimeout(function () {
-				$spinner.addClass('dead');
+//				$spinner.addClass('dead');
 				$shield.addClass('dead');
 			}, delay);
 

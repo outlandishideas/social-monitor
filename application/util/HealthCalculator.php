@@ -41,13 +41,13 @@ class Util_HealthCalculator {
 	function requiredRates($date) {
 		$rates = array();
 		if ($this->bestRate > 0) {
-			$rates[] = array($this->bestRate, date('F Y', strtotime($date . ' +' . $this->best . ' months')));
+			$rates[] = array('rate'=>$this->bestRate, 'date'=>date('F Y', strtotime($date . ' +' . $this->best . ' months')));
 		}
 		if ($this->goodRate > 0) {
-			$rates[] = array($this->goodRate, date('F Y', strtotime($date . ' +' . $this->good . ' months')));
+			$rates[] = array('rate'=>$this->goodRate, 'date'=>date('F Y', strtotime($date . ' +' . $this->good . ' months')));
 		}
 		if ($this->badRate > 0) {
-			$rates[] = array($this->badRate, date('F Y', strtotime($date . ' +' . $this->bad . ' months')));
+			$rates[] = array('rate'=>$this->badRate, 'date'=>date('F Y', strtotime($date . ' +' . $this->bad . ' months')));
 		}
 		return $rates;
 	}

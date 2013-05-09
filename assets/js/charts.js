@@ -28,7 +28,7 @@ app.charts = {
 				app.charts.updateXAxis();
 			});
 
-		$charts.find('tr td.chart').each(function () {
+		$charts.find('.chart').each(function () {
 			var selector = '#' + $(this).attr('id');
 			var chart = app.charts.createChart(selector);
 			app.state.charts[selector] = chart;
@@ -221,7 +221,7 @@ app.charts = {
 						.text(app.utils.numberFormat(data.current.value))
 						.css('color', app.charts.getColorForPercentage(data.health));
 					$health.find('.legend').text('As of ' + data.current.date);
-					var targetText = 'Target Fans/Followers: '+ app.utils.numberFormat(data.target);
+					var targetText = 'Target audience: '+ app.utils.numberFormat(data.target);
 					if (data.timeToTarget) {
 						var components = [];
 						var val = data.timeToTarget.y;
@@ -234,11 +234,7 @@ app.charts = {
 						}
 						targetText += '<br />Projected target achievement: ' + components.join(', ');
 						if (data.requiredRates) {
-							targetText += '<table><thead><tr><th>Target date</th><th>Required increase per day</th></tr></thead><tbody>';
-							for (var i=0; i<data.requiredRates.length; i++) {
-								targetText += '<tr><td>' + data.requiredRates[i][1] + '</td><td>' + app.utils.numberFixedDecimal(data.requiredRates[i][0], 1) + '</td></tr>';
-							}
-							targetText += '</tbody></table>';
+							targetText += _.template(app.templates.audienceTargetRates, data);
 						}
 					} else {
 						targetText += '<br />Target reached';

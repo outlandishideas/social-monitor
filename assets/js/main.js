@@ -22,14 +22,12 @@ $.extend(app, {
 				<span class="icon" style="background-color: <%=color%>"></span>\
 				<span class="text"><%=name%><% if(count) {%> (<%=count%>)<% } %></span>\
 				<div class="buttons"><span class="choose"></span><span class="close"></span></div></div>',
-		shareLink: '<div id="share-box"><span class="link">Link to this page</span></div>',
 		statusOverlay: '<div id="status-overlay"><b>Twitter API status for <%=type%></b><br>'+
 				'<%if(status!="unknown"){%><%=hits%> hits remaining<br>Reset in <%=reset%> minutes<%}else{%>Status is unknown because there have been no recent requests<%}%><br>' +
 				'<a href="<%=url%>">Deauthorise <%=type%></a></div>',
 		addTextSearch: '<tr><td valign="top" colspan="<%=colspan%>" class="dataTables_empty"><span class="add-manual-search link">Add manual search</span></td></tr>',
-		downloadChart: '<div class="downloadChart">Download as <span class="link">PNG</span> or <span class="link">SVG</span></div>',
 		tweet:'<p class="more"><a href="<%=twitter_url%>" target="_blank">View on Twitter</a></p>' +
-				'<p><%=message%></p>',
+				'<p><%=message.replace(/\\n/g, "<br />")%></p>',
 		post:'<%if(actor_name){%>' +
 				//'<p class="more"><a href="<%=twitter_url%>" target="_blank">View on Twitter</a></p>' +
 				'<h4 title="<%=actor_name%> is a Facebook <%=actor_type%>"><a href="<%=profile_url%>" target="_blank"><%=actor_name%></a></h4>' +
@@ -56,8 +54,14 @@ $.extend(app, {
 				<input type="hidden" value="<%=id%>" name="presences[]" />\
 				<button type="button" class="remove-presence">Remove</button>\
 				<div class="presence <%=type%>"><%=label%></div>\
-			</li>'
+			</li>',
+		audienceTargetRates:
+			'<table>\
+				<tr><th>Target date</th><% _.each(requiredRates, function(r){ %><td><%=r.date%></td><%})%></tr>\
+				<tr><th>Required gain<br />per day</th><% _.each(requiredRates, function(r){ %><td><%=app.utils.numberFixedDecimal(r.rate)%></td><%})%></tr>\
+			</table>'
 	}
+
 });
 
 /**
@@ -87,6 +91,10 @@ app.init = {
 
 	//selector-based init functions, called from bootstrap
 	selectors: {
+
+		'.downloadChart': function($item) {
+			$item.on('click', '.link', app.charts.grabSvgElement);
+		},
 
 		'form.uniForm': function ($item) {
 			$item.uniform();
@@ -153,19 +161,12 @@ app.init = {
 		},
 
 		'#charts': function($item) {
-			app.init.permalinks();
 			app.charts.setup();
 		},
 
         '#map': function($item) {
             app.geochart.setup($item);
         },
-
-		'.chart': function($item) {
-			$(app.templates.downloadChart)
-					.on('click', '.link', app.charts.grabSvgElement)
-					.appendTo($item);
-		},
 
 		'input#query, input#slug': function($item) {
 			//set list/search name to slug/query value when creating it
@@ -259,31 +260,27 @@ app.init = {
 					}
 				}
 			});
-		}
-	},
+		},
+		'#share-box': function($item) {
+			//init manager
+			var pm = new Scotty(window.location.hash);
 
-	permalinks: function() {
-		//init manager
-		var pm = new Scotty(window.location.hash);
+			//check if we're loading a bookmarked URL
+			if (window.location.hash) {
+				app.state.lineIds = JSON.parse(pm.getValue('lineIds'));
+				app.state.dateRange = pm.getValue('dateRange').split(',');
+				app.date.syncFromState();
+			}
 
-		//check if we're loading a bookmarked URL
-		if (window.location.hash) {
-			app.state.lineIds = JSON.parse(pm.getValue('lineIds'));
-			app.state.dateRange = pm.getValue('dateRange').split(',');
-			app.date.syncFromState();
-		}
-
-		//add bookmark link and lister to generate URL
-		$(parseTemplate(app.templates.shareLink, {}))
-			.insertBefore('#charts')
-			.click(function(){
-					pm.setValues({
-						dateRange: app.state.dateRange,
-						lineIds: JSON.stringify(app.state.lineIds)
-					});
-					var keyCombo = navigator.platform.indexOf('Mac') > 0 ? 'Cmd+C' : 'Ctrl+C';
-					window.prompt('Press '+keyCombo+' to copy the URL to the clipboard', pm.toString());
+			$item.on('click', '.link', function(){
+				pm.setValues({
+					dateRange: app.state.dateRange,
+					lineIds: JSON.stringify(app.state.lineIds)
+				});
+				var keyCombo = navigator.platform.indexOf('Mac') > 0 ? 'Cmd+C' : 'Ctrl+C';
+				window.prompt('Press '+keyCombo+' to copy the URL to the clipboard', pm.toString());
 			});
+		}
 	}
 };
 
@@ -373,7 +370,7 @@ app.api = {
 	},
 	getGraphData: function (line_ids, cb) {
 		app.charts.show();
-		$('#charts').showLoader();
+		$('.chart-container').showLoader();
 
 		var url = app.state.controller + '/graph-data';
 		var dateRange = app.state.dateRange.map(function(d){
@@ -389,7 +386,7 @@ app.api = {
 		        app.charts.renderDataset(response.data[i]);
 	        }
 	        app.charts.updateYAxis();
-	        $('#charts').hideLoader();
+	        $('.chart-container').hideLoader();
 
 	        if (cb) {
 		        cb();
@@ -475,6 +472,9 @@ app.utils = {
 		return parts.join(".");
 	},
     numberFixedDecimal: function (x,n){
+	    if (typeof(n) == 'undefined') {
+		    n = 1;
+	    }
         var p = Math.pow(10,n);
         return parseFloat(Math.round(x * p) / p).toFixed(n);
     }
