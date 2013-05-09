@@ -175,11 +175,14 @@ a:hover, span.link:hover {
 	padding: 20px;
 }
 
+#content p:first-child {
+	margin-top: 0;
+}
+
 #main-header {
 	background: #F2F2F2;
 	border-bottom: 1px solid #CCCCCC;
 	padding: 20px;
-	margin-bottom: 20px;
 	padding-top: 150px;
 }
 
@@ -191,10 +194,18 @@ a:hover, span.link:hover {
 
 #main-header h1 {
 	margin: 0 0 5px;
+	line-height: 56px;
+	height: 56px;
 }
 
 #main-header h1 img {
 	margin-right: 10px;
+	width: 50px;
+	height: 50px;
+	border: 3px solid #ccc;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 }
 
 #campaign-switcher {
@@ -251,11 +262,17 @@ a:hover, span.link:hover {
 
 .picker {
     position: absolute;
-    margin-top: -80px;
+    margin-top: -76px;
     margin-bottom: 5px;
     padding: 20px;
     background: #e4e4e4;
     border: 1px solid #ccc;
+}
+
+.picker label {
+	font-size: 16px;
+	font-weight: bold;
+	color: #555;
 }
 
 #metric-nav {
@@ -266,8 +283,8 @@ a:hover, span.link:hover {
     #metric-nav select {
         border: 2px solid #555;
         outline: none;
-        line-height: 30px;
-        height: 30px;
+        line-height: 34px;
+        height: 34px;
         color: #888;
         padding: 0 0 0 5px;
         margin-left: 10px;
@@ -299,7 +316,7 @@ a:hover, span.link:hover {
 #share-box {
 	float: right;
 	clear: right;
-	margin-bottom: 20px;
+	margin-top: 20px;
 }
 	#share-box label {
 
@@ -389,27 +406,6 @@ a:hover, span.link:hover {
 #user-nav {
 	float: right;
 	z-index: 1;
-}
-
-.button {
-	background: #eee;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	border: 1px solid #ddd;
-	padding: 5px;
-	text-decoration: none;
-	display: inline-block;
-	color: #666;
-	margin: 10px;
-}
-
-.button:hover {
-	border-color: #aaa;
-}
-
-.button.add {
-	/*float: left;*/
 }
 
 table {
@@ -568,6 +564,14 @@ form.autoConfirm {
 }
 
 /* DataTables */
+
+/* hide datatables until fully loaded, to avoid jerky loading */
+table.dtable {
+	display: none;
+}
+table.dtable.dataTable {
+	display: table;
+}
 
 .dataTable .sorting,
 .dataTable .sorting_asc,
@@ -789,6 +793,7 @@ form.autoConfirm {
 #map {
     width: 100%;
     position: relative;
+	margin-top: 20px;
 }
 
 #geo-map {
@@ -808,7 +813,7 @@ form.autoConfirm {
 #map .country {
 	position: absolute;
 	top: 0;
-	right: 0;
+	right: -10px;
 	width: 400px;
 	background: #F2F2F2;
 	border: 1px solid #ccc;
@@ -928,6 +933,49 @@ table .traffic-light {
 	font-weight: normal;
 }
 
-.test {
-	display: none;
+/* date picker */
+
+body .ui-daterangepickercontain .ui-daterangepicker {
+	margin-top: -2px;
+	border-width: 1px 2px 2px;
+	border-color: #24abf8;
+	border-top-color: #CCCCCC;
 }
+
+body .ui-daterangepicker ul {
+	width: 206px;
+}
+
+/* buttons */
+
+body .button {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border: 0;
+	border-radius: 5px;
+	text-decoration: none;
+	display: inline-block;
+	background: #BBB;
+	color: #fff;
+	padding: 10px 15px;
+	margin: 0 10px 0 0;
+	cursor: pointer;
+}
+
+body .button:hover {
+	background-color: #24abf8;
+}
+
+body .button.add {
+	background: #191919;
+}
+
+body .button-right {
+	text-align: right;
+}
+
+body .button-right .button {
+	margin-left: 10px;
+	margin-right: 0;
+}
+

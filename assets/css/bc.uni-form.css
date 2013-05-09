@@ -98,11 +98,21 @@
   border: 1px solid #aaa;
   background: #fff;
 }
+.uniForm .inlineLabels .selectInput,
+.uniForm .inlineLabels .textInput {
+	width: 300px;
+	box-sizing: border-box;
+}
 .uniForm textarea {
   height: 12em;
 }
 .uniForm select {
-  max-width: 200px;
+	border: 1px solid #aaa;
+	outline: none;
+	line-height: 36px;
+	height: 36px;
+	margin-right: 10px;
+	padding-left: 5px;
 }
 .uniForm ul li label {
   font-size: .85em;
