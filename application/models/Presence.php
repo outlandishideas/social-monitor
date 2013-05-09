@@ -51,39 +51,42 @@ class Model_Presence extends Model_Base {
 	 * @return array
 	 */
 	public function getKpiData($startDate = null, $endDate = null) {
-		$kpis = array();
+		if (!isset($this->kpiData)) {
+			$kpiData = array();
 
-		if (!$startDate || !$endDate) {
-			$endDate = new DateTime();
-			$startDate = new DateTime();
-			$startDate->sub(DateInterval::createFromDateString('1 month'));
+			if (!$startDate || !$endDate) {
+				$endDate = new DateTime();
+				$startDate = new DateTime();
+				$startDate->sub(DateInterval::createFromDateString('1 month'));
+			}
+
+			$endDateString = $endDate->format('Y-m-d');
+			$startDateString = $startDate->format('Y-m-d');
+
+			$currentAudience = $this->popularity;
+			$targetAudience = $this->getTargetAudience();
+			$targetAudienceDate = $this->getTargetAudienceDate($startDateString, $endDateString);
+
+			// target audience %
+			$kpiData[Model_Campaign::KPI_POPULARITY_PERCENTAGE] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
+
+			// target audience rate (months until reaching target)
+			if ($currentAudience >= $targetAudience) {
+				$kpiData[Model_Campaign::KPI_POPULARITY_TIME] = 0; // already achieved
+			} else if ($targetAudienceDate) {
+				$diff = strtotime($targetAudienceDate) - $endDate->getTimestamp();
+				$months = $diff/(60*60*24*365/12);
+				$kpiData[Model_Campaign::KPI_POPULARITY_TIME] = $months;
+			} else {
+				$kpiData[Model_Campaign::KPI_POPULARITY_TIME] = null;
+			}
+
+			//posts per day
+			$kpiData[Model_Campaign::KPI_POSTS_PER_DAY] = $this->getAveragePostsPerDay($startDateString, $endDateString);
+			$this->kpiData = $kpiData;
 		}
 
-		$endDateString = $endDate->format('Y-m-d');
-		$startDateString = $startDate->format('Y-m-d');
-
-		$currentAudience = $this->popularity;
-		$targetAudience = $this->getTargetAudience();
-		$targetAudienceDate = $this->getTargetAudienceDate($startDateString, $endDateString);
-
-		// target audience %
-		$kpis[Model_Campaign::KPI_POPULARITY_PERCENTAGE] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
-
-		// target audience rate (months until reaching target)
-		if ($currentAudience >= $targetAudience) {
-			$kpis[Model_Campaign::KPI_POPULARITY_TIME] = 0; // already achieved
-		} else if ($targetAudienceDate) {
-			$diff = $endDate->diff(new DateTime($targetAudienceDate));
-			$months = $diff->m + 12*$diff->y;
-			$kpis[Model_Campaign::KPI_POPULARITY_TIME] = $months;
-		} else {
-			$kpis[Model_Campaign::KPI_POPULARITY_TIME] = null;
-		}
-
-		//posts per day
-		$kpis[Model_Campaign::KPI_POSTS_PER_DAY] = $this->getAveragePostsPerDay($startDateString, $endDateString);
-
-		return $kpis;
+		return $this->kpiData;
 	}
 
 	public function updateInfo() {

@@ -573,9 +573,9 @@ form.autoConfirm {
 .dataTable .sorting_asc,
 .dataTable .sorting_desc {
 	cursor: pointer;
-	*cursor: hand;
-	background-position: right center;
+	background-position: center right;
 	background-repeat: no-repeat;
+	*cursor: hand;
 }
 
 .dataTable .sorting { background-image: url(../img/sort_both.png); }
