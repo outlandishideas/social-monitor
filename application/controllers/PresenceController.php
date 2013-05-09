@@ -300,34 +300,31 @@ class PresenceController extends BaseController
 		$target = BaseController::getOption('updates_per_day');
 		$okRange = BaseController::getOption('updates_per_day_ok_range');
 		$badRange = BaseController::getOption('updates_per_day_bad_range');
+		$healthCalc = function($value) use ($target, $okRange, $badRange) {
+			$targetDiff = abs($value - $target);
+			if ($targetDiff <= $okRange) {
+				return 100;
+			} else if ($targetDiff <= $badRange) {
+				return 50;
+			} else {
+				return 0;
+			}
+		};
 		$average = 0;
 		if ($data) {
 			$total = 0;
 			foreach ($data as $row) {
 				$total += $row->post_count;
-				$targetDiff = abs($row->post_count - $target);
-				if ($targetDiff <= $okRange) {
-					$row->health = 100;
-				} else if ($targetDiff <= $badRange) {
-					$row->health = 50;
-				} else {
-					$row->health = 0;
-				}
+				$row->health = $healthCalc($row->post_count);
 			}
 			$average = $total/count($data);
-		}
-
-		if($average > $target){
-			$graphHealth = 100;
-		} else {
-			$graphHealth = ($average/$target)*100;
 		}
 
 		return array(
 			'average' => $average,
 			'target' => $target,
 			'points' => $data,
-			'health' => $graphHealth
+			'health' => $healthCalc($average)
 		);
 	}
 
