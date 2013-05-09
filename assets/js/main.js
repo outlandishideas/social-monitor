@@ -51,7 +51,7 @@ $.extend(app, {
 		presence:
 			'<li>\
 				<input type="hidden" value="<%=id%>" name="presences[]" />\
-				<button type="button" class="remove-presence">Remove</button>\
+				<button type="button" class="button remove-presence">Remove</button>\
 				<div class="presence <%=type%>"><%=label%></div>\
 			</li>',
 		audienceTargetRates:
