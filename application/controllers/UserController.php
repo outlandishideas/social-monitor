@@ -96,6 +96,7 @@ class UserController extends BaseController
 				}
 			}
 		}
+		$this->view->title = 'Forgotten password';
 		$this->_helper->layout()->setLayout('notabs');
 	}
 
@@ -140,6 +141,7 @@ class UserController extends BaseController
 			$this->_helper->FlashMessenger(array('error' => 'Incorrect user/key combination for password reset'));
 			$this->_helper->redirector->gotoSimple('index', 'index');
 		}
+		$this->view->title = 'Reset password';
 		$this->_helper->layout()->setLayout('notabs');
 	}
 
