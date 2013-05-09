@@ -12,7 +12,7 @@
 				<option value="<?php echo $p->id; ?>"><?php echo $p->label . ' (@' . $p->handle . ')'; ?></option>
 				<?php endforeach; ?>
 			</select>
-			<button type="button" class="add-presence">Add</button>
+			<button type="button" class="button add-presence">Add</button>
 		</div>
 		<div class="ctrlHolder">
 			<label for="facebook">
@@ -24,7 +24,7 @@
 				<option value="<?php echo $p->id; ?>"><?php echo $p->label . ' (' . $p->handle . ')'; ?></option>
 				<?php endforeach; ?>
 			</select>
-			<button type="button" class="add-presence">Add</button>
+			<button type="button" class="button add-presence">Add</button>
 		</div>
 		<div class="ctrlHolder">
 			<label>
@@ -34,7 +34,7 @@
 				<?php foreach ($this->country->presences as $p) : ?>
 				<li>
 					<input type="hidden" value="<?php echo $p->id; ?>" name="presences[]" />
-					<button type="button" class="remove-presence">Remove</button>
+					<button type="button" class="button remove-presence">Remove</button>
 					<div class="presence <?php echo $p->type; ?>"><?php echo $p->label . ' (' . ($p->type == Model_Presence::TYPE_TWITTER ? '@' : '') . $p->handle . ')'; ?></div>
 				</li>
 				<?php endforeach; ?>
