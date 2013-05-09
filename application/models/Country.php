@@ -9,6 +9,13 @@ class Model_Country extends Model_Campaign {
 		return parent::fetch($clause, $args);
 	}
 
+	public function fromArray($data) {
+		if (array_key_exists('audience', $data)) {
+			$data['audience'] = str_replace(',', '', $data['audience']);
+		}
+		parent::fromArray($data);
+	}
+
 	public static function fetchByCountryCode($code) {
 		if (!is_scalar($code)) {
 			return null;
