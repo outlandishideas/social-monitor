@@ -4,7 +4,7 @@ $kpis = Model_Campaign::getKpis();
 $presences = $this->country->presences;
 
 $buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button" href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$this->country->id),
+	'<a class="button" href="%url%">Edit Country</a>' => array('action'=>'edit', 'id'=>$this->country->id),
 	'<a class="button" href="%url%">Manage Presences</a>' => array('action'=>'manage', 'id'=>$this->country->id)
 ));
 ?>
@@ -15,7 +15,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
 </p>
 <?php endif; ?>
 
-Audience size: <?php echo number_format($this->country->audience); ?>
+Available audience size: <?php echo number_format($this->country->audience); ?>
 
 <?php if (!$presences) : ?>
 
@@ -28,7 +28,7 @@ Audience size: <?php echo number_format($this->country->audience); ?>
 <table class="text">
 	<tr>
 		<th>Handle</th>
-		<th>Audience</th>
+		<th>Audience size</th>
 		<th>Target audience</th>
 		<?php foreach ($kpis as $key=>$label) : ?>
 		<th><?php echo $label; ?></th>
