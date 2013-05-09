@@ -1,6 +1,14 @@
+<?php
+$buttons = $this->gatekeeper()->filterAll(array(
+	'<a class="button" href="%url%">View Country</a>' => array('controller'=>'country', 'action'=>'view'),
+	'<a class="button" href="%url%">Manage Presences</a>' => array('controller'=>'country', 'action'=>'manage')
+));
+if ($buttons) :
+?>
 <p>
-	<?php echo $this->gatekeeper()->filter('<a class="button" href="%url%">Manage Presences</a>', array('controller'=>'country', 'action'=>'manage')); ?>
+	<?php echo implode('', $buttons); ?>
 </p>
+<?php endif; ?>
 
 <form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-country">
 
@@ -21,14 +29,14 @@
 			<label for="display_name" class="requiredField">
 				Display name<span class="asteriskField">*</span>
 			</label>
-			<input name="display_name" value="<?php echo htmlspecialchars($this->editingCountry->display_name); ?>" class="textinput"
+			<input name="display_name" value="<?php echo htmlspecialchars($this->editingCountry->display_name); ?>" class="textInput"
 			       type="text" id="display_name">
 		</div>
 		<div class="ctrlHolder">
 			<label for="audience">
-				Audience size
+				Available audience size
 			</label>
-			<input name="audience" value="<?php echo htmlspecialchars($this->editingCountry->audience); ?>" class="textinput"
+			<input name="audience" value="<?php echo htmlspecialchars($this->editingCountry->audience); ?>" class="textInput"
 			       type="text" id="audience">
 		</div>
 	</fieldset>
