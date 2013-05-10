@@ -8,7 +8,6 @@ class FetchController extends BaseController
 	 * Fetches all tweets/trends/facebook pages etc
 	 */
 	public function indexAction() {
-
 		$this->setupConsoleOutput();
 		$this->acquireLock();
 		set_time_limit($this->config->app->fetch_time_limit);
@@ -17,10 +16,7 @@ class FetchController extends BaseController
 		$presences = Model_Presence::fetchAll();
 		$presenceCount = count($presences);
 
-		/**
-		 * @var $db PDO
-		 */
-		$db = Zend_Registry::get('db');
+		$db = self::db();
 		$infoStmt = $db->prepare('INSERT INTO presence_history (presence_id, datetime, type, value) VALUES (:id, :datetime, :type, :value)');
 
 		$infoInterval = ($this->config->presence->cache_data_hours ?: 4) * 3600;
@@ -55,6 +51,7 @@ class FetchController extends BaseController
 					$p->save();
 				}
 			}
+			$this->touchLock();
 		}
 
 		usort($presences, function($a, $b) { return strcmp($a->last_fetched ?: '000000', $b->last_fetched ?: '000000'); });
@@ -69,7 +66,12 @@ class FetchController extends BaseController
 			} catch (Exception $e) {
 				$this->log($e->getMessage());
 			}
+			$this->touchLock();
 		}
+
+		$this->log('Updating facebook actors');
+		$inserted = $this->updateFacebookActors();
+		$this->log('Updated ' . count($inserted));
 
 //		//fetch lists and searches for each campaign using appropriate tokens
 //		$campaigns = Model_Campaign::fetchAll();
@@ -101,6 +103,84 @@ class FetchController extends BaseController
 
 		$this->log('Finished');
 		$this->releaseLock();
+	}
+
+	/**
+	 * Fetches any 'actors' (users/groups/events/pages) for records in the facebook stream that don't exist, or are outdated
+	 */
+	public function updateFacebookActors($limit = 250) {
+		$db = self::db();
+		$actorQuery = $db->prepare('SELECT DISTINCT actor_id
+			FROM facebook_stream AS stream
+			LEFT OUTER JOIN facebook_actors AS actors ON stream.actor_id = actors.id
+			WHERE actors.last_fetched IS NULL OR actors.last_fetched < NOW() - INTERVAL ' . $this->config->facebook->cache_user_data . ' DAY
+			ORDER BY RAND()
+			LIMIT ' . $limit);
+		$actorQuery->execute();
+		$actorIds = $actorQuery->fetchAll(PDO::FETCH_COLUMN);
+		$inserted = array();
+		if ($actorIds) {
+			$insertActor = $db->prepare('REPLACE INTO facebook_actors (id, username, name, pic_url, profile_url, type, last_fetched)
+				VALUES (:id, :username, :name, :pic_url, :profile_url, :type, :last_fetched)');
+
+			$actorIdsString = ' IN (' . implode(',', $actorIds) . ')';
+			$mq = Util_Facebook::multiquery(array(
+				'user'=>'SELECT uid, username, name, pic_square, profile_url FROM user WHERE uid' . $actorIdsString,
+				'page'=>'SELECT page_id, username, name, pic_square FROM page WHERE page_id' . $actorIdsString,
+				'group'=>'SELECT gid, name, pic_small FROM group WHERE gid' . $actorIdsString,
+				'event'=>'SELECT eid, name, pic_square FROM event WHERE eid' . $actorIdsString
+			));
+
+			$now = gmdate('Y-m-d H:i:s');
+			foreach ($mq as $group) {
+				$type = $group['name'];
+				foreach ($group['fql_result_set'] as $item) {
+					$args = array(
+						':id'=>null,
+						':username'=>null,
+						':name'=>null,
+						':pic_url'=>null,
+						':profile_url'=>null,
+						':type'=>$type,
+						':last_fetched'=>$now
+					);
+
+					switch ($type) {
+						case 'user':
+							$args[':id'] = $item['uid'];
+							$args[':username'] = $item['username'];
+							$args[':name'] = $item['name'];
+							$args[':pic_url'] = $item['pic_square'];
+							$args[':profile_url'] = $item['profile_url'];
+							break;
+						case 'page':
+							$args[':id'] = $item['page_id'];
+							$args[':username'] = $item['username'];
+							$args[':name'] = $item['name'];
+							$args[':pic_url'] = $item['pic_square'];
+							break;
+						case 'group':
+							$args[':id'] = $item['gid'];
+							$args[':name'] = $item['name'];
+							$args[':pic_url'] = $item['pic_small'];
+							break;
+						case 'event':
+							$args[':id'] = $item['eid'];
+							$args[':name'] = $item['name'];
+							$args[':pic_url'] = $item['pic_square'];
+							break;
+					}
+
+					if ($args[':id']) {
+						$insertActor->execute($args);
+						$inserted[] = $args[':id'];
+					}
+				}
+			}
+		}
+//		$diff = array_diff($actorIds, $inserted);
+
+		return $inserted;
 	}
 
 	private function fetchAllPages() {

@@ -342,6 +342,13 @@ class BaseController extends Zend_Controller_Action {
 	}
 
 	/**
+	 * @return PDO
+	 */
+	public static function db() {
+		return Zend_Registry::get('db');
+	}
+
+	/**
 	 * Fetch back an option
 	 * @static
 	 * @param $name string Option name
@@ -352,7 +359,7 @@ class BaseController extends Zend_Controller_Action {
 			return BaseController::$optionCache[$name];
 		}
 		$sql = 'SELECT value FROM options WHERE name = :name LIMIT 1';
-		$statement = Zend_Registry::get('db')->prepare($sql);
+		$statement = self::db()->prepare($sql);
 		$statement->execute(array(':name' => $name));
 		$value = $statement->fetchColumn();
 		BaseController::$optionCache[$name] = $value;
@@ -367,7 +374,7 @@ class BaseController extends Zend_Controller_Action {
 	 * @return void
 	 */
 	public static function setOption($name, $value) {
-		$statement = Zend_Registry::get('db')->prepare('REPLACE INTO options (name, value) VALUES (:name, :value)');
+		$statement = self::db()->prepare('REPLACE INTO options (name, value) VALUES (:name, :value)');
 		$statement->execute(array(':name' => $name, ':value' => $value));
 		if (array_key_exists($name, BaseController::$optionCache)) {
 			unset(BaseController::$optionCache[$name]);

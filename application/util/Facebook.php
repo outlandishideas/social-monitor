@@ -33,6 +33,13 @@ class Util_Facebook {
 		return $data[0];
 	}
 
+	/**
+	 * Fetches facebook posts from the given page
+	 * @param $pageId
+	 * @param null $since
+	 * @param array $fields
+	 * @return array
+	 */
 	public static function pagePosts($pageId, $since = null, $fields = array('post_id', 'message', 'created_time', 'actor_id', 'comments', 'likes', 'permalink', 'type')) {
 		$posts = array();
 		if ($pageId) {
