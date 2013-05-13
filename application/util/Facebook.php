@@ -85,6 +85,28 @@ class Util_Facebook {
 		return $posts;
 	}
 
+	public static function responses($pageId, $postIds = array(), $fields = array('post_id', 'text', 'time', 'id', 'fromid')) {
+		$replies = array();
+		if ($pageId && $postIds) {
+			$postIds = array_map(function($a) { return "'" . $a . "'"; }, $postIds);
+			if (!in_array('post_id', $fields)) {
+				$fields[] = 'post_id';
+			}
+			$fql = 'SELECT ' . implode(',', $fields) . '
+					FROM comment
+					WHERE post_id IN (' . implode(',', $postIds) . ')
+					AND fromid = \'' . $pageId . '\'';
+			try {
+				$replies = self::query($fql);
+				foreach ($replies as $i=>$post) {
+					$replies[$i] = (object)$post;
+				}
+			} catch (Exception_FacebookNotFound $e) {
+			}
+		}
+		return $replies;
+	}
+
 	/**
 	 * Query Facebook API
 	 * @param $fql string FQL query string

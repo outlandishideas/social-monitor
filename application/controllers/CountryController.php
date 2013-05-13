@@ -19,6 +19,7 @@ class CountryController extends CampaignController {
 	public function viewAction()
 	{
 		$country = Model_Country::fetchById($this->_request->id);
+		$this->validateData($country);
 
 		$this->view->title = $country->display_name;
 		$this->view->country = $country;

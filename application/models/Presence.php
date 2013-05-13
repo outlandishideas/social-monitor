@@ -141,6 +141,7 @@ class Model_Presence extends Model_Base {
 		}
 
 		$toInsert = array();
+		$responses = array();
 		$tableName = null;
 		$fetchCount = new Util_FetchCount(0, 0);
 		switch($this->type) {
@@ -165,6 +166,38 @@ class Model_Presence extends Model_Base {
 						'permalink' => $post->permalink,
 						'type' => $post->type,
 						'posted_by_owner' => $post->actor_id == $this->uid
+					);
+				}
+
+				// update the responses for any non-page posts that don't have a response yet.
+				// Only get those that explicitly need one, or were posted in the last 3 days
+				$since = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -3 days'));
+				$stmt = $this->_db->prepare("SELECT DISTINCT a.post_id
+					FROM (
+						SELECT * FROM $tableName
+						WHERE presence_id = :id
+						AND in_response_to IS NULL
+						AND (
+							needs_response = 1
+							OR (posted_by_owner = 0 AND message <> '' AND message IS NOT NULL AND created_time > :since)
+						)
+					) as a
+					LEFT OUTER JOIN $tableName AS b
+						ON b.presence_id = a.presence_id
+						AND b.in_response_to = a.post_id
+					WHERE b.id IS NULL");
+				$stmt->execute(array(':id'=>$this->id, ':since'=>$since));
+				$postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+				$newResponses = Util_Facebook::responses($this->uid, $postIds);
+				foreach ($newResponses as $response) {
+					$responses[$response->id] = array(
+						'post_id' => $response->id,
+						'presence_id' => $this->id,
+						'message' => $response->text,
+						'created_time' => gmdate('Y-m-d H:i:s', $response->time),
+						'actor_id' => $response->fromid,
+						'posted_by_owner' => true,
+						'in_response_to' => $response->post_id
 					);
 				}
 				break;
@@ -192,9 +225,14 @@ class Model_Presence extends Model_Base {
 				break;
 		}
 
-		if ($toInsert && $tableName) {
-			$fetchCount->fetched += count($toInsert);
-			$fetchCount->added += $this->insertData($tableName, $toInsert);
+		if ($tableName) {
+			if ($toInsert) {
+				$fetchCount->fetched += count($toInsert);
+				$fetchCount->added += $this->insertData($tableName, $toInsert);
+			}
+			if ($responses) {
+				$this->insertData($tableName, $responses);
+			}
 		}
 
 		return $fetchCount;
@@ -237,7 +275,8 @@ class Model_Presence extends Model_Base {
 		$clauses = array(
 			'presence_id = :pid',
 			'created_time >= :start_date',
-			'created_time <= :end_date'
+			'created_time <= :end_date',
+			'in_response_to IS NULL'
 		);
 		$args = array(
 			':pid'=>$this->id,
@@ -338,7 +377,8 @@ class Model_Presence extends Model_Base {
 		$clauses = array(
 			'presence_id = :pid',
 			'created_time >= :start_date',
-			'created_time <= :end_date'
+			'created_time <= :end_date',
+			'in_response_to IS NULL'
 		);
 		if ($this->isForTwitter()) {
 			$tableName = 'twitter_tweets';
@@ -357,7 +397,8 @@ class Model_Presence extends Model_Base {
 		$clauses = array(
 			'presence_id = :pid',
 			'created_time >= :start_date',
-			'created_time <= :end_date'
+			'created_time <= :end_date',
+			'in_response_to IS NULL'
 		);
 		if ($this->isForTwitter()) {
 			$tableName = 'twitter_tweets';
