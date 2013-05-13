@@ -365,7 +365,7 @@ class PresenceController extends BaseController
 			);
 
 			// convert statuses to appropriate datatables.js format
-			if ($presence->type == Model_Presence::TYPE_TWITTER) {
+			if ($presence->isForTwitter()) {
 				foreach ($data->statuses as $tweet) {
 					$tableData[] = array(
 						'message'=> $this->_request->format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,

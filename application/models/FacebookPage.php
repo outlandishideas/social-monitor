@@ -25,15 +25,6 @@ class Model_FacebookPage extends Model_SocialApiBase {
 		$this->last_updated = gmdate('Y-m-d H:i:s');
 	}
 
-	public function countPostsSince($date) {
-		$statement = $this->_db->prepare("SELECT COUNT(*) FROM facebook_stream
-			WHERE facebook_page_id = :id
-			AND created_time > :date");
-
-		$statement->execute(array(':id' => $this->id, ':date' => $date));
-		return $statement->fetchColumn();
-	}
-
 	/**
 	 * Fetch posts (and their comments) for page from FB
 	 * @return int number of posts inserted
@@ -227,9 +218,6 @@ class Model_FacebookPage extends Model_SocialApiBase {
 		$deleteCommentsQuery = $this->_db->prepare('DELETE FROM facebook_comments WHERE post_id IN
 			(SELECT post_id FROM facebook_stream WHERE facebook_page_id = :page_id)');
 		$deleteCommentsQuery->execute($args);
-		$deleteTopicsQuery = $this->_db->prepare('DELETE FROM facebook_post_topics WHERE facebook_stream_id IN
-			(SELECT id FROM facebook_stream WHERE facebook_page_id = :page_id)');
-		$deleteTopicsQuery->execute($args);
 		$deleteStreamQuery = $this->_db->prepare('DELETE FROM facebook_stream WHERE facebook_page_id = :page_id');
 		$deleteStreamQuery->execute($args);
 		parent::delete();

@@ -35,7 +35,7 @@
 				<li>
 					<input type="hidden" value="<?php echo $p->id; ?>" name="presences[]" />
 					<button type="button" class="button remove-presence">Remove</button>
-					<div class="presence <?php echo $p->type; ?>"><?php echo $p->label . ' (' . ($p->type == Model_Presence::TYPE_TWITTER ? '@' : '') . $p->handle . ')'; ?></div>
+					<div class="presence <?php echo $p->type; ?>"><?php echo $p->label . ' (' . ($p->isForTwitter() ? '@' : '') . $p->handle . ')'; ?></div>
 				</li>
 				<?php endforeach; ?>
 				<li class="none-found">

@@ -26,6 +26,14 @@ class Model_Presence extends Model_Base {
 		return $this->name ?: $this->handle;
 	}
 
+	public function isForTwitter() {
+		return $this->type == self::TYPE_TWITTER;
+	}
+
+	public function isForFacebook() {
+		return $this->type == self::TYPE_FACEBOOK;
+	}
+
 	/**
 	 * @return Model_Country
 	 */
@@ -139,7 +147,7 @@ class Model_Presence extends Model_Base {
 			case self::TYPE_FACEBOOK:
 				$fetchCount->type = 'post';
 				$tableName = 'facebook_stream';
-				$stmt = $this->_db->prepare('SELECT created_time FROM facebook_stream WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1');
+				$stmt = $this->_db->prepare("SELECT created_time FROM $tableName WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
 				$stmt->execute(array(':id'=>$this->id));
 				$since = $stmt->fetchColumn();
 				if ($since) {
@@ -155,14 +163,15 @@ class Model_Presence extends Model_Base {
 						'created_time' => gmdate('Y-m-d H:i:s', $post->created_time),
 						'actor_id' => $post->actor_id,
 						'permalink' => $post->permalink,
-						'type' => $post->type
+						'type' => $post->type,
+						'posted_by_owner' => $post->actor_id == $this->uid
 					);
 				}
 				break;
 			case self::TYPE_TWITTER:
 				$fetchCount->type = 'tweet';
 				$tableName = 'twitter_tweets';
-				$stmt = $this->_db->prepare('SELECT tweet_id FROM twitter_tweets WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1');
+				$stmt = $this->_db->prepare("SELECT tweet_id FROM $tableName WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
 				$stmt->execute(array(':id'=>$this->id));
 				$lastTweetId = $stmt->fetchColumn();
 				$tweets = Util_Twitter::userTweets($this->uid, $lastTweetId);
@@ -224,7 +233,7 @@ class Model_Presence extends Model_Base {
 	}
 
 	public function getStatuses($startDate, $endDate, $search, $order, $limit, $offset){
-		$tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
+		$tableName = $this->isForTwitter() ? 'twitter_tweets' : 'facebook_stream';
 		$clauses = array(
 			'presence_id = :pid',
 			'created_time >= :start_date',
@@ -246,9 +255,9 @@ class Model_Presence extends Model_Base {
 				$args[':filter_min_date'] = gmdate('Y-m-d H:i:s', strtotime($dates[0]));
 				$args[':filter_max_date'] = gmdate('Y-m-d H:i:s', strtotime($dates[1]));
 			} else {
-				$textMatchColumn = ($this->type == self::TYPE_TWITTER ? 'text_expanded' : 'message');
+				$textMatchColumn = ($this->isForTwitter() ? 'text_expanded' : 'message');
 				$textMatches = array("$textMatchColumn LIKE :search");
-				if ($this->type == self::TYPE_TWITTER) {
+				if ($this->isForTwitter()) {
 					$textMatches[] = 'user.name LIKE :search';
 					$textMatches[] = 'user.screen_name LIKE :search';
 				} else {
@@ -326,19 +335,44 @@ class Model_Presence extends Model_Base {
 	}
 
 	public function getAveragePostsPerDay($startDate, $endDate) {
-		$tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
-		$stmt = $this->_db->prepare("SELECT COUNT(1)/DATEDIFF(:end_date, :start_date) AS av FROM $tableName WHERE presence_id = :pid AND created_time >= :start_date AND created_time <= :end_date");
+		$clauses = array(
+			'presence_id = :pid',
+			'created_time >= :start_date',
+			'created_time <= :end_date'
+		);
+		if ($this->isForTwitter()) {
+			$tableName = 'twitter_tweets';
+		} else {
+			$tableName = 'facebook_stream';
+			$clauses[] =  'posted_by_owner = 1';
+		}
+
+		$sql = 'SELECT COUNT(1)/DATEDIFF(:end_date, :start_date) AS av FROM ' . $tableName . ' WHERE ' . implode(' AND ', $clauses);
+		$stmt = $this->_db->prepare($sql);
 		$stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
 		return floatval($stmt->fetchColumn());
 	}
 
 	public function getPostsPerDayData($startDate, $endDate) {
-		$tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
-		$stmt = $this->_db->prepare(
-			"SELECT date, COUNT(date) AS post_count FROM
-			(SELECT DATE(created_time) AS date FROM $tableName WHERE presence_id = :pid AND created_time >= :start_date AND created_time <= :end_date) AS tmp
-			GROUP BY date"
+		$clauses = array(
+			'presence_id = :pid',
+			'created_time >= :start_date',
+			'created_time <= :end_date'
 		);
+		if ($this->isForTwitter()) {
+			$tableName = 'twitter_tweets';
+		} else {
+			$tableName = 'facebook_stream';
+			$clauses[] =  'posted_by_owner = 1';
+		}
+
+		$sql = 'SELECT date, COUNT(date) AS post_count
+			FROM (
+				SELECT DATE(created_time) AS date
+				FROM ' . $tableName . '
+				WHERE ' . implode(' AND ', $clauses) . '
+			) AS tmp GROUP BY date';
+		$stmt = $this->_db->prepare($sql);
 		$stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
 		$counts = array();
 		$date = gmdate('Y-m-d', strtotime($startDate));

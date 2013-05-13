@@ -58,7 +58,7 @@ class FetchController extends BaseController
 		$index = 0;
 		foreach ($presences as $p) {
 			$index++;
-			$this->log('Fetching ' . ($p->type == Model_Presence::TYPE_TWITTER ? 'tweets' : 'posts') . ' (' . $index . '/' . $presenceCount . '): ' . $p->handle);
+			$this->log('Fetching ' . ($p->isForTwitter() ? 'tweets' : 'posts') . ' (' . $index . '/' . $presenceCount . '): ' . $p->handle);
 			try {
 				$this->log($p->updateStatuses());
 				$p->last_fetched = gmdate('Y-m-d H:i:s');
@@ -196,37 +196,6 @@ class FetchController extends BaseController
 		}
 
 		return $inserted;
-	}
-
-	private function fetchAllPages() {
-		/**
-		 * @var $pages Model_FacebookPage[]
-		 */
-//		$pages = Model_FacebookPage::fetchAll();
-//		foreach ($pages as $page) {
-//			try {
-//				$this->log("Fetching page '{$page->name}'");
-//				try {
-//					$page->updateInfo();
-//					$counts = $page->fetchPosts();
-//					$this->log($counts);
-//				} catch (FacebookApiException $e) {
-//					if ($e->getCode() == 28) {
-//						$this->log("Request timed out");
-//						continue;
-//					}
-//				}
-//
-//				$page->posts_last_24_hours = $page->countPostsSince(gmdate('Y-m-d H:i:s', time() - 3600 * 24));
-//				$page->posts_this_month = $page->countPostsSince(gmdate('Y-m-d H:i:s', gmmktime(0, 0, 0, date('m'), 1)));
-//				$page->last_fetched = gmdate('Y-m-d H:i:s');
-//				$page->save();
-//			} catch (RuntimeException $ex) {
-//				$this->log('Failed to fetch page: ' . $ex->getMessage());
-//			}
-//
-//			$this->touchLock();
-//		}
 	}
 
 	/**
