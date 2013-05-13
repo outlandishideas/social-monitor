@@ -116,10 +116,10 @@ app.datatables = {
 					{
 						mDataProp:'message',
 						fnRender:function (o) {
-							console.log(o.aData);
 							if (typeof o.aData.message == 'undefined') {
 								o.aData.message = '';
 							}
+							console.log(o.aData, typeof(o.aData.message));
 							return parseTemplate(app.templates.post, o.aData);
 						},
 						bSortable:false,
