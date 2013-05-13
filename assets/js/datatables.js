@@ -9,7 +9,7 @@ app.datatables = {
 	init:function () {
 		// add a 'fuzzy numeric' sort type, which just ignores all non-numeric characters
 		$.extend($.fn.dataTableExt.oSort, {
-			"fuzzy-numeric-pre": function ( a ) { return parseInt(a.replace(/[^\d]/g, "")); },
+			"fuzzy-numeric-pre": function ( a ) { if (typeof(a) == 'string') { return parseInt(a.replace(/[^\d]/g, "")); } else { return 0; }},
 			"fuzzy-numeric-asc": function ( a, b ) { return a - b; },
 			"fuzzy-numeric-desc": function ( a, b ) { return b - a; }
 		});
@@ -115,6 +115,7 @@ app.datatables = {
 					{
 						mDataProp:'message',
 						fnRender:function (o) {
+							console.log(o.aData);
 							return parseTemplate(app.templates.post, o.aData);
 						},
 						bSortable:false,
