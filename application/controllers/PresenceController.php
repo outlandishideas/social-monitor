@@ -380,10 +380,9 @@ class PresenceController extends BaseController
 							'actor_type'=>$post->actor->type,
 							'actor_name' => $post->actor->name,
 							'pic_url' => $post->actor->pic_url,
+							'facebook_url' => $post->permalink,
 							'profile_url' => $post->actor->profile_url,
-							'message'=>$post->message,
-							'comments'=>$post->comments,
-							'likes'=>$post->likes,
+							'message'=>$post->message ?: '',
 							'date'=> Model_Base::localeDate($post->created_time)
 						);
 					}

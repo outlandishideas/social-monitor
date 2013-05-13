@@ -101,7 +101,7 @@ app.datatables = {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + app.state.controller + "/statuses",
 				aaSorting:[
-					[3, 'desc']
+					[2, 'desc']
 				],
 				aoColumns:[
 					{
@@ -115,16 +115,10 @@ app.datatables = {
 					{
 						mDataProp:'message',
 						fnRender:function (o) {
-							console.log(o.aData);
 							return parseTemplate(app.templates.post, o.aData);
 						},
 						bSortable:false,
 						bUseRendered:false
-					},
-					{
-						mDataProp:'comments',
-						sClass:'retweets lesser',
-						asSorting:['desc', 'asc']
 					},
 					{
 						mDataProp:'date',
