@@ -346,9 +346,9 @@ a:hover, span.link:hover {
 
 #nav {
 	margin: 0 30px;
-	padding: 0 0 10px;
+	padding: 0;
 	background: #065284;
-	height: 26px;
+	height: 36px;
 	display: block;
 	position: relative;
 }
@@ -363,11 +363,14 @@ a:hover, span.link:hover {
 	margin-top: -4px;
 	padding-top: 4px;
 }
+#nav .extra ul a {
+	height: 19px;
+}
 
 #nav ul {	
 	list-style: none;
-	margin: 0px;
-	padding: 0px 10px;
+	margin: 0;
+	padding: 0 10px;
 }
 
 #nav li {
@@ -378,7 +381,7 @@ a:hover, span.link:hover {
 #nav li a {
 	display: block;
 	padding: 8px 10px 12px 10px;
-	height: 20px;
+	height: 14px;
 	color: #efefef;
 	text-decoration: none;
 	margin-bottom: -1px;
@@ -395,7 +398,7 @@ a:hover, span.link:hover {
 
 #nav .notab {
 	padding-top: 6px;
-	border: 0px;
+	border: 0;
 	border-bottom: 1px solid #bbb;
 }
 
@@ -561,6 +564,17 @@ form.autoConfirm {
 
 .statusesDisplay .dataTable thead th {
 	border-bottom: 1px solid black;
+}
+
+.statusesDisplay .facebook-actor {
+	width: 50px;
+	height: 50px;
+	background: url(../img/facebook-placeholder.png) no-repeat center center;
+	background-size: 100%;
+	border: 3px solid #ccc;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 }
 
 /* DataTables */

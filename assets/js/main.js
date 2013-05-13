@@ -29,7 +29,7 @@ $.extend(app, {
 		tweet:'<p class="more"><a href="<%=twitter_url%>" target="_blank">View on Twitter</a></p>' +
 				'<p><%=message.replace(/\\n/g, "<br />")%></p>',
 		post:'<%if(actor_name){%>' +
-				'<h4 title="<%=actor_name%> is a Facebook <%=actor_type%>"><a href="<%=profile_url%>" target="_blank"><%=actor_name%></a></h4>' +
+				'<h4><%if(profile_url){%><a href="<%=profile_url%>" target="_blank"><%=actor_name%></a><%}else{%><%=actor_name%><%}%></h4>' +
 				'<%}else{%>' +
 				'<h4>Unknown author</h4>' +
 				'<%}%><p><%=message.replace(/\\n/g, "<br />")%></p>',

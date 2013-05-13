@@ -375,18 +375,18 @@ class PresenceController extends BaseController
 				}
 			} else {
 				foreach ($data->statuses as $post) {
-                    if($post->message){
-                        $tableData[] = array(
-                            'actor_type'=>'type',//$post->actor->actor_type
-                            'actor_name' => $post->actor_id,//$post->actor->name
-                            'pic_url' => '../../../assets/img/facebook.img',//$post->actor->pic_url
-                            'profile_url' => 'http://www.facebook.com',//$post->actor->profile_url
-                            'message'=>$post->message,
-                            'comments'=>$post->comments,
-                            'likes'=>$post->likes,
-                            'date'=> Model_Base::localeDate($post->created_time)
-                        );
-                    }
+					if($post->message){
+						$tableData[] = array(
+							'actor_type'=>$post->actor->type,
+							'actor_name' => $post->actor->name,
+							'pic_url' => $post->actor->pic_url,
+							'profile_url' => $post->actor->profile_url,
+							'message'=>$post->message,
+							'comments'=>$post->comments,
+							'likes'=>$post->likes,
+							'date'=> Model_Base::localeDate($post->created_time)
+						);
+					}
 				}
 			}
 			$count = count($data->statuses);

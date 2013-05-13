@@ -4,12 +4,12 @@ class Model_Presence extends Model_Base {
 	protected static $tableName = 'presences';
 	protected static $sortColumn = 'handle';
 
-    public static $bucketSizes = array(
-        'bucket_half_hour' => 1800, // 30*60
-        'bucket_4_hours' => 14400, // 4*60*60
-        'bucket_12_hours' => 43200, // 12*60*60
-        'bucket_day' => 86400 // 24*60*60
-    );
+	public static $bucketSizes = array(
+		'bucket_half_hour' => 1800, // 30*60
+		'bucket_4_hours' => 14400, // 4*60*60
+		'bucket_12_hours' => 43200, // 12*60*60
+		'bucket_day' => 86400 // 24*60*60
+	);
 
 	const TYPE_FACEBOOK = 'facebook';
 	const TYPE_TWITTER = 'twitter';
@@ -219,89 +219,99 @@ class Model_Presence extends Model_Base {
 		return $data;
 	}
 
-    public function getPopularityData($startDate, $endDate){
-        return $this->getHistoryData('popularity', $startDate, $endDate);
-    }
+	public function getPopularityData($startDate, $endDate){
+		return $this->getHistoryData('popularity', $startDate, $endDate);
+	}
 
-    public function getStatuses($startDate, $endDate, $search, $order, $limit, $offset){
-        $tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
-	    $clauses = array(
-		    'presence_id = :pid',
-		    'created_time >= :start_date',
-		    'created_time <= :end_date'
-	    );
-	    $args = array(
-		    ':pid'=>$this->id,
-		    ':start_date'=>$startDate,
-		    ':end_date'=>$endDate
-	    );
+	public function getStatuses($startDate, $endDate, $search, $order, $limit, $offset){
+		$tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
+		$clauses = array(
+			'presence_id = :pid',
+			'created_time >= :start_date',
+			'created_time <= :end_date'
+		);
+		$args = array(
+			':pid'=>$this->id,
+			':start_date'=>$startDate,
+			':end_date'=>$endDate
+		);
 
-	    if ($search) {
-		    //parse special search filters
-		    $searchBits = explode(':', $search, 2);
-		    if (count($searchBits) > 1 && $searchBits[0] == 'date') {
-			    $dates = explode('/', $searchBits[1]);
-			    $clauses[] = 'created_time >= :filter_min_date';
-			    $clauses[] = 'created_time < :filter_max_date';
-			    $args[':filter_min_date'] = gmdate('Y-m-d H:i:s', strtotime($dates[0]));
-			    $args[':filter_max_date'] = gmdate('Y-m-d H:i:s', strtotime($dates[1]));
-		    } else {
-			    $textMatchColumn = ($this->type == self::TYPE_TWITTER ? 'text_expanded' : 'message');
-			    $textMatches = array("$textMatchColumn LIKE :search");
-			    if ($this->type == self::TYPE_TWITTER) {
-				    $textMatches[] = 'user.name LIKE :search';
-				    $textMatches[] = 'user.screen_name LIKE :search';
-			    } else {
-				    $textMatches[] = 'actor.name LIKE :search';
-			    }
-			    $clauses[] = '(' . implode(' OR ', $textMatches) . ')';
-			    $args[':search'] = "%$search%";
-		    }
-	    }
+		if ($search) {
+			//parse special search filters
+			$searchBits = explode(':', $search, 2);
+			if (count($searchBits) > 1 && $searchBits[0] == 'date') {
+				$dates = explode('/', $searchBits[1]);
+				$clauses[] = 'created_time >= :filter_min_date';
+				$clauses[] = 'created_time < :filter_max_date';
+				$args[':filter_min_date'] = gmdate('Y-m-d H:i:s', strtotime($dates[0]));
+				$args[':filter_max_date'] = gmdate('Y-m-d H:i:s', strtotime($dates[1]));
+			} else {
+				$textMatchColumn = ($this->type == self::TYPE_TWITTER ? 'text_expanded' : 'message');
+				$textMatches = array("$textMatchColumn LIKE :search");
+				if ($this->type == self::TYPE_TWITTER) {
+					$textMatches[] = 'user.name LIKE :search';
+					$textMatches[] = 'user.screen_name LIKE :search';
+				} else {
+					$textMatches[] = 'actor.name LIKE :search';
+				}
+				$clauses[] = '(' . implode(' OR ', $textMatches) . ')';
+				$args[':search'] = "%$search%";
+			}
+		}
 
-	    // todo: add sorting
+		// todo: add sorting
 
-	    $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM $tableName WHERE " . implode (' AND ', $clauses);
-	    if ($limit != -1) {
-		    $sql .= ' LIMIT '.$limit;
-	    }
-	    if ($offset != -1) {
-		    $sql .= ' OFFSET '.$offset;
-	    }
+		$sql = "SELECT SQL_CALC_FOUND_ROWS * FROM $tableName WHERE " . implode (' AND ', $clauses);
+		if ($limit != -1) {
+			$sql .= ' LIMIT '.$limit;
+		}
+		if ($offset != -1) {
+			$sql .= ' OFFSET '.$offset;
+		}
 
-	    $stmt = $this->_db->prepare($sql);
-        $stmt->execute($args);
-	    $statuses = $stmt->fetchAll(PDO::FETCH_OBJ);
-	    $total = $this->_db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
-        if($this->type == self::TYPE_FACEBOOK){
-            /*
-            $actorIds = array();
-            foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row){
-                $actorIds[$row->actor_id] = $row->actor_id;
-            }
-            $actors = $this->getActors($actorIds);
-            $return = array();
-            foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row){
-                $row->actor = $actors[$row->actor_id];
-                $return[] = $row + $actors[$row->actor_id];
-            }
-            */
-        }
+		$stmt = $this->_db->prepare($sql);
+		$stmt->execute($args);
+		$statuses = $stmt->fetchAll(PDO::FETCH_OBJ);
+		$total = $this->_db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
+		if($this->type == self::TYPE_FACEBOOK){
+			$actorIds = array_map(function($a) { return $a->actor_id; }, $statuses);
+			$actors = $this->getActors($actorIds);
+			foreach($statuses as $status){
+				if (array_key_exists($status->actor_id, $actors)) {
+					$status->actor = $actors[$status->actor_id];
+				} else {
+					$status->actor = (object)array(
+						'id'=>$status->actor_id,
+						'username'=>null,
+						'name'=>null,
+						'pic_url'=>null,
+						'profile_url'=>null,
+						'type'=>'unknown',
+						'last_fetched'=>null
+					);
+				}
+			}
+		}
 		return (object)array('statuses'=>$statuses, 'total'=>$total);
-    }
+	}
 
-    public function getActors($actorIds = array()){
-        $actorIds = implode(',', $actorIds);
-        $stmt = $this->_db->prepare(
-            "SELECT * FROM facebook_actors WHERE actor_id IN ( $actorIds )"
-        );
-        $stmt->execute();
-        $return = array();
-        foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
-            $return[$row->actor_id] = $row;
-        }
-        return $return;
-    }
+	/**
+	 * Gets a list of facebook actors, keyed by their ID
+	 * @param array $actorIds
+	 * @return array
+	 */
+	public function getActors($actorIds = array()){
+		$actors = array();
+		if ($actorIds) {
+			$actorIds = implode(',', array_unique($actorIds));
+			$stmt = $this->_db->prepare("SELECT * FROM facebook_actors WHERE id IN ( $actorIds )");
+			$stmt->execute();
+			foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
+				$actors[$row->id] = $row;
+			}
+		}
+		return $actors;
+	}
 
 	public function getAveragePostsPerDay($startDate, $endDate) {
 		$tableName = $this->type == self::TYPE_TWITTER ? 'twitter_tweets' : 'facebook_stream';
@@ -330,13 +340,13 @@ class Model_Presence extends Model_Base {
 		return $counts;
 	}
 
-//    public function getRecentPopularityData(){
-//        $stmt = $this->_db->prepare('SELECT popularity, handle
+//	public function getRecentPopularityData(){
+//		$stmt = $this->_db->prepare('SELECT popularity, handle
 //			FROM presences
 //			WHERE presence_id = :id');
-//        $stmt->execute(array(':id'=>$this->id));
-//        return $stmt->fetchAll(PDO::FETCH_OBJ);
-//    }
+//		$stmt->execute(array(':id'=>$this->id));
+//		return $stmt->fetchAll(PDO::FETCH_OBJ);
+//	}
 
 	public function getTargetAudience() {
 		$target = 0;

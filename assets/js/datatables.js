@@ -101,13 +101,13 @@ app.datatables = {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + app.state.controller + "/statuses",
 				aaSorting:[
-					[5, 'desc']
+					[3, 'desc']
 				],
 				aoColumns:[
 					{
 						mDataProp:'actor_name',
 						fnRender:function (o, val) {
-							return o.aData.pic_url ? '<img data-src="' + o.aData.pic_url + '" width="50px" class="async-load" />' : '';
+							return '<img data-src="' + o.aData.pic_url + '" class="facebook-actor async-load" />';
 						},
 						sClass:'statusPic',
 						bUseRendered:false
@@ -243,19 +243,17 @@ app.datatables = {
 		};
 	},
 	reloadAvatars: function(dtable) {
-		$('img.async-load', dtable.nTBody).each(function () {
+		$(dtable.nTable).find('img.async-load').each(function (i) {
 			var $img = $(this);
+			$img.removeClass('async-load');
+			var src = $img.data('src');
 
-			setTimeout(function () { // spawn new thread-ish thing
-
-				$('<img />').load(function () {
-					$img.attr('src', $img.data('src'));
-				}).error(function () {
-						$img.attr('src', 'https://twimg0-a.akamaihd.net/sticky/default_profile_images/default_profile_4_normal.png');
-					}).attr('src', $img.data('src'));
-
-			}, 1);
-
-		})
+			// try to load the image in an anonymous img, then apply to original img if it succeeds
+			$('<img />')
+				.attr('src', src)
+				.load(function () {
+					$img.attr('src', src);
+				});
+		});
 	}
 };
