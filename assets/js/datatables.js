@@ -116,7 +116,7 @@ app.datatables = {
 					{
 						mDataProp:'message',
 						fnRender:function (o) {
-							if (typeof o.aData.message == 'undefined') {
+							if (typeof o.aData.message != 'string') {
 								o.aData.message = '';
 							}
 							console.log(o.aData, typeof(o.aData.message));
