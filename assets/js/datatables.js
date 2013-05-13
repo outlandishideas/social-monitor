@@ -110,11 +110,13 @@ app.datatables = {
 							return '<img data-src="' + o.aData.pic_url + '" class="facebook-actor async-load" />';
 						},
 						sClass:'statusPic',
+						bSortable:false,
 						bUseRendered:false
 					},
 					{
 						mDataProp:'message',
 						fnRender:function (o) {
+							console.log(o.aData);
 							return parseTemplate(app.templates.post, o.aData);
 						},
 						bSortable:false,

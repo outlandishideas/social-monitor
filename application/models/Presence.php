@@ -259,9 +259,21 @@ class Model_Presence extends Model_Base {
 			}
 		}
 
-		// todo: add sorting
+		// todo: other sort columns?
+		$ordering = array();
+		foreach ($order as $column=>$dir) {
+			switch ($column) {
+				case 'date':
+					$column = 'created_time';
+					break;
+				default:
+					$column = 'created_time';
+					break;
+			}
+			$ordering[] = $column . ' ' . $dir;
+		}
 
-		$sql = "SELECT SQL_CALC_FOUND_ROWS * FROM $tableName WHERE " . implode (' AND ', $clauses);
+		$sql = "SELECT SQL_CALC_FOUND_ROWS * FROM $tableName WHERE " . implode (' AND ', $clauses) . ' ORDER BY ' . implode(',', $ordering);
 		if ($limit != -1) {
 			$sql .= ' LIMIT '.$limit;
 		}
