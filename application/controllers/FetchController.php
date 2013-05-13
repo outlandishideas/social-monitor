@@ -119,6 +119,7 @@ class FetchController extends BaseController
 		$actorQuery->execute();
 		$actorIds = $actorQuery->fetchAll(PDO::FETCH_COLUMN);
 		$inserted = array();
+
 		if ($actorIds) {
 			$insertActor = $db->prepare('REPLACE INTO facebook_actors (id, username, name, pic_url, profile_url, type, last_fetched)
 				VALUES (:id, :username, :name, :pic_url, :profile_url, :type, :last_fetched)');
@@ -177,8 +178,22 @@ class FetchController extends BaseController
 					}
 				}
 			}
+
+			// create dummy entries for the missing IDs
+			$diff = array_diff($actorIds, $inserted);
+			foreach ($diff as $id) {
+				$args = array(
+					':id'=>$id,
+					':username'=>null,
+					':name'=>null,
+					':pic_url'=>null,
+					':profile_url'=>null,
+					':type'=>'unknown',
+					':last_fetched'=>$now
+				);
+				$insertActor->execute($args);
+			}
 		}
-//		$diff = array_diff($actorIds, $inserted);
 
 		return $inserted;
 	}
