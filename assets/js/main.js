@@ -201,13 +201,6 @@ app.init = {
 				}
 			}
 		},
-
-		'#editableLocationMap': function($item) {
-			app.mapping.initialise($item, true);
-		},
-		'#readonlyLocationMap': function($item) {
-			app.mapping.initialise($item, false);
-		},
 		'#manage-country': function($form) {
 			var canAdd = function(id) {
 				var currentValues = $form.serializeArray();

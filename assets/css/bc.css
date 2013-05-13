@@ -679,16 +679,6 @@ table.dtable.dataTable {
 	color: hsl(0, 100%, 50%)
 }
 
-#editableLocationMap {
-	width: 500px;
-	height: 400px;
-}
-
-#readonlyLocationMap {
-	width: 800px;
-	height: 600px;
-}
-
 .geolocated {
 	background: url(../img/world.png) no-repeat 0 0;
 	width: 16px;
