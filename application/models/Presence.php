@@ -271,18 +271,23 @@ class Model_Presence extends Model_Base {
 	}
 
 	public function getStatuses($startDate, $endDate, $search, $order, $limit, $offset){
-		$tableName = $this->isForTwitter() ? 'twitter_tweets' : 'facebook_stream';
 		$clauses = array(
 			'presence_id = :pid',
 			'created_time >= :start_date',
-			'created_time <= :end_date',
-			'in_response_to IS NULL'
+			'created_time <= :end_date'
 		);
 		$args = array(
 			':pid'=>$this->id,
 			':start_date'=>$startDate,
 			':end_date'=>$endDate
 		);
+
+		if ($this->isForTwitter()) {
+			$tableName = 'twitter_tweets';
+		} else {
+			$tableName = 'facebook_stream';
+			$clauses[] = 'in_response_to IS NULL';
+		}
 
 		if ($search) {
 			//parse special search filters
@@ -377,14 +382,14 @@ class Model_Presence extends Model_Base {
 		$clauses = array(
 			'presence_id = :pid',
 			'created_time >= :start_date',
-			'created_time <= :end_date',
-			'in_response_to IS NULL'
+			'created_time <= :end_date'
 		);
 		if ($this->isForTwitter()) {
 			$tableName = 'twitter_tweets';
 		} else {
 			$tableName = 'facebook_stream';
-			$clauses[] =  'posted_by_owner = 1';
+			$clauses[] = 'posted_by_owner = 1';
+			$clauses[] = 'in_response_to IS NULL';
 		}
 
 		$sql = 'SELECT COUNT(1)/DATEDIFF(:end_date, :start_date) AS av FROM ' . $tableName . ' WHERE ' . implode(' AND ', $clauses);
@@ -397,14 +402,14 @@ class Model_Presence extends Model_Base {
 		$clauses = array(
 			'presence_id = :pid',
 			'created_time >= :start_date',
-			'created_time <= :end_date',
-			'in_response_to IS NULL'
+			'created_time <= :end_date'
 		);
 		if ($this->isForTwitter()) {
 			$tableName = 'twitter_tweets';
 		} else {
 			$tableName = 'facebook_stream';
-			$clauses[] =  'posted_by_owner = 1';
+			$clauses[] = 'posted_by_owner = 1';
+			$clauses[] = 'in_response_to IS NULL';
 		}
 
 		$sql = 'SELECT date, COUNT(date) AS post_count
