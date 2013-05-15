@@ -18,15 +18,8 @@ app.charts = {
 		});
 
 		$(document)
-			.on('dateRangeUpdated', function () {
-				var dates = app.state.dateRange.map(Date.parse);
-				for (var s in app.state.charts) {
-					app.state.charts[s].xMap.domain(dates);
-				}
-				// refetch the currently-graphed data, but redraw the data we currently have
-				app.api.getGraphData(app.state.lineIds);
-				app.charts.updateXAxis();
-			});
+			.on('dateRangeUpdated', app.charts.refreshCharts)
+			.on('dataChanged', app.charts.refreshCharts);
 
 		$charts.find('.chart').each(function () {
 			var selector = '#' + $(this).attr('id');
@@ -46,60 +39,32 @@ app.charts = {
 		}
 	},
 
+	refreshCharts: function() {
+		var dates = app.state.dateRange.map(Date.parse);
+		for (var s in app.state.charts) {
+			app.state.charts[s].xMap.domain(dates);
+		}
+		// refetch the currently-graphed data, but redraw the data we currently have
+		app.api.getGraphData(app.state.lineIds);
+		app.charts.updateXAxis();
+	},
 	/**
 	 * Specific settings for charts
 	 */
 	customSetup: {
-//		'#posts': function(chart) {
-//			chart.getYValue = function (d) {
-//				return d.value;
-//			};
-//			chart.shouldRescale = true;
-//			chart.drawCircles = true;
-//		},
 		'#popularity': function(chart) {
-			chart.getXValue = function (d) {
-				return app.charts.dateFormat.parse(d.date);
-			};
-			chart.getYValue = function (d) {
-				return d.value;
-			};
 			chart.shouldRescale = true;
-			chart.drawCircles = true;
 		},
 		'#posts_per_day': function(chart) {
-			chart.getXValue = function (d) {
-				return app.charts.dateFormat.parse(d.date);
-			};
 			chart.getYValue = function (d) {
 				return d.post_count;
 			};
 			chart.shouldRescale = true;
-			chart.drawCircles = true;
+		},
+		'#response_time': function(chart) {
+			chart.shouldRescale = true;
 		}
 	},
-
-	/**
-	 * Specific settings for charts
-	 */
-	healthDisplay: {
-		'#posts_per_day': function(health) {
-			health.title = 'Posts per Day';
-			health.values = '' ;
-		},
-		'#popularity': function(health) {
-			health.title = 'Target Followers';
-			health.values = 31500;
-			health.key.min = 24400;
-			health.key.target = 27700;
-			health.key.string = 'followers';
-		},
-		'#reply-time': function(chart) {
-			health.title = 'Response Time';
-			health.values = '' ;
-		}
-	},
-
 
 	/**
 	 * Show charts and legend
@@ -118,6 +83,7 @@ app.charts = {
 	createChart:function (selector) {
 		var borders = {t:10, r:10, b:30, l:70};
 		var c = {
+			selector: selector,
 			$chart: $(selector),
 			shouldRescale: false,
 			drawBuckets: false,
@@ -186,6 +152,13 @@ app.charts = {
 				return c.yMap(c.getYValue(d));
 			});
 
+		c.getXValue = function(d) {
+			return app.charts.dateFormat.parse(d.date);
+		};
+		c.getYValue = function(d) {
+			return d.value;
+		};
+
 		return c;
 	},
 
@@ -215,6 +188,9 @@ app.charts = {
 			$health.find('.legend').text('');
 			$health.find('.target').html('');
 		} else {
+			var chart = app.state.charts[data.selector];
+			chart.yMin = Infinity;
+			chart.yMax = -Infinity;
 			switch (data.selector) {
 				case '#popularity':
 					$health.find('.value')
@@ -241,7 +217,7 @@ app.charts = {
 					}
 					$health.find('.target').html(targetText);
 
-					app.charts.addBars(data.selector, data.points, data.line_id, app.charts.getColorForPercentage(data.health));
+					app.charts.addBars(chart, data.points, data.line_id, app.charts.getColorForPercentage(data.health));
 					break;
 				case '#posts_per_day':
 					$health.find('.value')
@@ -250,7 +226,15 @@ app.charts = {
 						.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
 					$health.find('.target').text('Target Posts Per Day: ' + data.target);
 
-					app.charts.addBars(data.selector, data.points, data.line_id, app.charts.getColorForPercentage(data.health));
+					app.charts.addBars(chart, data.points, data.line_id, app.charts.getColorForPercentage(data.health));
+					break;
+				case '#response_time':
+					$health.find('.value')
+						.text(app.utils.numberFixedDecimal(data.average, 2))
+						.css('color', app.charts.getColorForPercentage(data.health));
+					$health.find('.target').text('Target Response Time: ' + data.target);
+
+					app.charts.addBars(chart, data.points, data.line_id, app.charts.getColorForPercentage(data.health));
 					break;
 			}
         }
@@ -281,8 +265,7 @@ app.charts = {
 			.attr('class', 'dataset lines');
 	},
 
-	addLine: function (selector, points, line_id, color) {
-		var c = app.state.charts[selector];
+	addLine: function (c, points, line_id, color) {
 		var group = app.charts.addGroup(c, points, line_id);
 
 		group.append("svg:path")
@@ -325,8 +308,7 @@ app.charts = {
 		}
 	},
 
-	addBars: function (selector, points, line_id, color) {
-		var c = app.state.charts[selector];
+	addBars: function (c, points, line_id, color) {
 		var group = app.charts.addGroup(c, points, line_id);
 
 		var maxWidth = c.w/points.length;
@@ -364,7 +346,7 @@ app.charts = {
 				return color;
 			})
 			.attr('title', function(d, i) {
-				return c.getYValue(d);
+				return Date.parse(c.getXValue(d)).toString('d MMM') + ': ' + c.getYValue(d);
 			})
 			.on('mouseover', function (d, i) {
 				$('div.tipsy').remove();

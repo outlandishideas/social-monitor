@@ -39,6 +39,12 @@ class PresenceController extends BaseController
 			'lineId' => 'posts_per_day:' . $presence->id,
 			'title' => 'Posts Per Day'
 		);
+		$graphs[] = (object)array(
+			'id' => 'response_time',
+			'yAxisLabel' => 'Response time (hours)',
+			'lineId' => 'response_time:' . $presence->id,
+			'title' => 'Average Response Time (hours)'
+		);
 
 		$title = '';
 		if ($presence->image_url) {
@@ -190,6 +196,9 @@ class PresenceController extends BaseController
 					case 'posts_per_day':
 						$line = $this->generatePostsPerDayGraphData($presence, $startDate, $endDate);
 						break;
+					case 'response_time':
+						$line = $this->generateResponseTimeGraphData($presence, $startDate, $endDate);
+						break;
 				}
 				if ($line) {
 					$line['line_id'] = $lineId;
@@ -258,15 +267,7 @@ class PresenceController extends BaseController
 				}
 			}
 
-			// fill in the gaps
-			$currentDate = $startDate;
-			while ($currentDate < $endDate) {
-				if (!array_key_exists($currentDate, $points)) {
-					$points[$currentDate] = (object)array('date'=>$currentDate, 'value'=>0);
-				}
-				$currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
-			}
-			ksort($points);
+			$points = $this->fillDateGaps($points, $startDate, $endDate, 0);
 			$points = array_values($points);
 
 			$current = array(
@@ -325,6 +326,67 @@ class PresenceController extends BaseController
 			'target' => $target,
 			'points' => $data,
 			'health' => $healthCalc($average)
+		);
+	}
+
+	/**
+	 * @param Model_Presence $presence
+	 * @param $startDate
+	 * @param $endDate
+	 * @return array
+	 */
+	private function generateResponseTimeGraphData($presence, $startDate, $endDate) {
+		$data = $presence->getResponseData($startDate, $endDate);
+		$points = array();
+		$bestTime = BaseController::getOption('response_time_best');
+		$goodTime = BaseController::getOption('response_time_good');
+		$badTime = BaseController::getOption('response_time_bad');
+
+		if (!$data) {
+			$average = 0;
+			$health = 0;
+		} else {
+			$now = time();
+			$totalTime = 0;
+			foreach ($data as $row) {
+				$key = gmdate('Y-m-d', strtotime($row->post->created_time));
+				if (!array_key_exists($key, $points)) {
+					$points[$key] = (object)array('date'=>$key, 'value'=>array());
+				}
+
+				$diff = ($row->first_response ? strtotime($row->first_response->created_time) : $now) - strtotime($row->post->created_time);
+				$diff /= (60*60);
+				$totalTime += $diff;
+				$points[$key]->value[] = $diff;
+			}
+			$average = $totalTime/count($data);
+
+			$healthCalc = function($value) use ($bestTime, $goodTime, $badTime) {
+				if ($value <= $bestTime) {
+					return 100;
+				} else if ($value <= $goodTime) {
+					return 50 + 50*(1-($value-$bestTime)/($goodTime-$bestTime));
+				} else if ($value <= $badTime) {
+					return 50*(1-($value-$goodTime)/($badTime-$goodTime));
+				} else {
+					return 0;
+				}
+			};
+
+			foreach ($points as $key=>$diffs) {
+				$points[$key]->value = round(10*array_sum($diffs->value)/count($diffs->value))/10;
+				$points[$key]->health = $healthCalc($points[$key]->value);
+			}
+			$points = $this->fillDateGaps($points, $startDate, $endDate, 0);
+			$points = array_values($points);
+			$health = $healthCalc($average);
+		}
+
+		return array(
+			'average' => $average,
+			'target' => $goodTime,
+			'points' => $points,
+			'health' => $health
 		);
 	}
 
@@ -447,6 +509,18 @@ class PresenceController extends BaseController
 			$this->apiSuccess($apiResult);
 		}
 
+	}
+
+	private function fillDateGaps($points, $startDate, $endDate, $value) {
+		$currentDate = $startDate;
+		while ($currentDate < $endDate) {
+			if (!array_key_exists($currentDate, $points)) {
+				$points[$currentDate] = (object)array('date'=>$currentDate, 'value'=>$value);
+			}
+			$currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+		}
+		ksort($points);
+		return $points;
 	}
 
 }

@@ -15,6 +15,9 @@ class ConfigController extends BaseController {
 			'achieve_audience_best'=>array('label'=>'Target audience best score (months)', 'hint'=>'The number of months the target audience should be reached within to get the best score'),
 			'achieve_audience_good'=>array('label'=>'Target audience good score (months)', 'hint'=>'The number of months the target audience should be reached within to get a medium score'),
 			'achieve_audience_bad'=>array('label'=>'Target audience bad score (months)', 'hint'=>'If the target audience will be reached after this number of months, the presence will get a bad score'),
+			'response_time_best'=>array('label'=>'Perfect response time (hours)'),
+			'response_time_good'=>array('label'=>'Good response time (hours)'),
+			'response_time_bad'=>array('label'=>'Bad response time (hours)'),
 		);
 		foreach ($values as $key=>$args) {
 			$values[$key] = (object)$values[$key];

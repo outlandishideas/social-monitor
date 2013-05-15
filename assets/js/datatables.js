@@ -35,7 +35,8 @@ app.datatables = {
 
 		if (typeof app.datatables.statusesTable != 'undefined') {
 			$(document)
-				.on('dateRangeUpdated', app.datatables.refreshStatuses);
+				.on('dateRangeUpdated', app.datatables.refreshStatuses)
+				.on('dataChanged', app.datatables.refreshStatuses);
 		}
 	},
 	refreshStatuses: function () {
@@ -101,6 +102,9 @@ app.datatables = {
 		'#statuses.facebook': function($div) {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + app.state.controller + "/statuses",
+				fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+					$(nRow).data('id', aData.id);
+				},
 				aaSorting:[
 					[3, 'desc']
 				],
@@ -133,11 +137,11 @@ app.datatables = {
 								return '<h4>' + Date.parse(response.date).toString('d MMM HH:mm') + ' (' + response.date_diff + ')</h4>' +
 									'<p>' + response.message.replace(/\\n/g, '<br />') + '</p>';
 							} else if (o.aData.needs_response == '1') {
-								return '<p class="more"><a href="#" class="require-response" data-id="' + o.aData.id + '">Does not require a response</a></p>' +
-									'<span class="no-response">Awaiting response (' + response.date_diff + ')...</span>';
+								return '<p class="more"><a href="#" class="require-response">Does not require a response</a></p>' +
+									'<p class="no-response">Awaiting response (' + response.date_diff + ')...</p>';
 							} else {
-								return '<p class="more"><a href="#" class="require-response" data-id="' + o.aData.id + '">Requires a response</a></p>' +
-									'<span class="no-response">No response required</span>';
+								return '<p class="more"><a href="#" class="require-response">Requires a response</a></p>' +
+									'<p class="no-response">No response required</p>';
 							}
 						},
 						sClass: 'message',
@@ -163,9 +167,10 @@ app.datatables = {
 
 			$div.on('click', '.require-response', function(e) {
 				e.preventDefault();
-				console.log('updating ', $(this).data('id'));
-				app.api.post('presence/toggle-response-needed', {id: $(this).data('id')})
-					.always(app.datatables.refreshStatuses);
+				app.api.post('presence/toggle-response-needed', { id: $(this).closest('tr').data('id') })
+					.always(function() {
+						$(document).trigger('dataChanged');
+					});
 			});
 		},
 		'#statuses.twitter': function($div) {

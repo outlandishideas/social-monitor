@@ -157,6 +157,7 @@ class Model_Presence extends Model_Base {
 				$posts = Util_Facebook::pagePosts($this->uid, $since);
 				while ($posts) {
 					$post = array_shift($posts);
+					$postedByOwner = $post->actor_id == $this->uid;
 					$toInsert[$post->post_id] = array(
 						'post_id' => $post->post_id,
 						'presence_id' => $this->id,
@@ -165,7 +166,8 @@ class Model_Presence extends Model_Base {
 						'actor_id' => $post->actor_id,
 						'permalink' => $post->permalink,
 						'type' => $post->type,
-						'posted_by_owner' => $post->actor_id == $this->uid
+						'posted_by_owner' => $postedByOwner,
+						'needs_response' => !$postedByOwner && $post->message
 					);
 				}
 
@@ -347,13 +349,11 @@ class Model_Presence extends Model_Base {
 			if ($postIds) {
 				$postIds = array_map(function($a) { return "'" . $a . "'"; }, $postIds);
 				$postIds = implode(',', $postIds);
-				$stmt = $this->_db->prepare("SELECT * FROM facebook_stream WHERE in_response_to IN ($postIds)");
-				$stmt->execute();
+				$stmt = $this->_db->prepare("SELECT * FROM facebook_stream WHERE presence_id = :pid AND in_response_to IN ($postIds)");
+				$stmt->execute(array(':pid'=>$this->id));
 				foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $response) {
 					$key = $response->in_response_to;
-					if (!array_key_exists($key, $responses)) {
-						$responses[$key] = $response;
-					} else if ($response->created_time < $responses[$key]->created_time) {
+					if (!array_key_exists($key, $responses) || ($response->created_time < $responses[$key]->created_time)) {
 						$responses[$key] = $response;
 					}
 				}
@@ -456,13 +456,47 @@ class Model_Presence extends Model_Base {
 		return $counts;
 	}
 
-//	public function getRecentPopularityData(){
-//		$stmt = $this->_db->prepare('SELECT popularity, handle
-//			FROM presences
-//			WHERE presence_id = :id');
-//		$stmt->execute(array(':id'=>$this->id));
-//		return $stmt->fetchAll(PDO::FETCH_OBJ);
-//	}
+	public function getResponseData($startDate, $endDate) {
+		$responseData = array();
+		if ($this->isForFacebook()) {
+			$clauses = array(
+				'presence_id = :pid',
+				'created_time >= :start_date',
+				'created_time <= :end_date',
+				'posted_by_owner = 0',
+				"(in_response_to IS NULL OR in_response_to = '')"
+			);
+			$args = array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate);
+			$stmt = $this->_db->prepare('SELECT * FROM facebook_stream WHERE ' . implode(' AND ', $clauses) . ' ORDER BY created_time DESC');
+			$stmt->execute($args);
+			foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $p) {
+				$responseData[$p->post_id] = (object)array(
+					'post'=>$p,
+					'first_response'=>null
+				);
+			}
+
+			if ($responseData) {
+				// now get the responses
+				$postIds = array_map(function($a) { return "'" . $a . "'"; }, array_keys($responseData));
+				$stmt = $this->_db->prepare('SELECT * FROM facebook_stream WHERE presence_id = :pid AND in_response_to IN (' . implode(',', $postIds) . ')');
+				$stmt->execute(array(':pid'=>$this->id));
+				foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
+					$key = $r->in_response_to;
+					if (!$responseData[$key]->first_response || $r->created_time < $responseData[$key]->first_response->created_time) {
+						$responseData[$key]->first_response = $r;
+					}
+				}
+			}
+
+			foreach ($responseData as $i=>$row) {
+				if (!$row->post->needs_response && !$row->first_response) {
+					unset($responseData[$i]);
+				}
+			}
+		}
+		return $responseData;
+	}
 
 	public function getTargetAudience() {
 		$target = 0;
