@@ -326,7 +326,7 @@ class Model_Presence extends Model_Base {
 			$ordering[] = $column . ' ' . $dir;
 		}
 
-		$sql = "SELECT SQL_CALC_FOUND_ROWS * FROM $tableName WHERE " . implode (' AND ', $clauses) . ' ORDER BY ' . implode(',', $ordering);
+		$sql = "SELECT SQL_CALC_FOUND_ROWS s.* FROM $tableName AS s WHERE " . implode (' AND ', $clauses) . ' ORDER BY ' . implode(',', $ordering);
 		if ($limit != -1) {
 			$sql .= ' LIMIT '.$limit;
 		}
@@ -338,9 +338,27 @@ class Model_Presence extends Model_Base {
 		$stmt->execute($args);
 		$statuses = $stmt->fetchAll(PDO::FETCH_OBJ);
 		$total = $this->_db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
-		if($this->type == self::TYPE_FACEBOOK){
+		if($this->isForFacebook()){
 			$actorIds = array_map(function($a) { return $a->actor_id; }, $statuses);
 			$actors = $this->getActors($actorIds);
+
+			$postIds = array_map(function($a) { return $a->post_id; }, $statuses);
+			$responses = array();
+			if ($postIds) {
+				$postIds = array_map(function($a) { return "'" . $a . "'"; }, $postIds);
+				$postIds = implode(',', $postIds);
+				$stmt = $this->_db->prepare("SELECT * FROM facebook_stream WHERE in_response_to IN ($postIds)");
+				$stmt->execute();
+				foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $response) {
+					$key = $response->in_response_to;
+					if (!array_key_exists($key, $responses)) {
+						$responses[$key] = $response;
+					} else if ($response->created_time < $responses[$key]->created_time) {
+						$responses[$key] = $response;
+					}
+				}
+			}
+
 			foreach($statuses as $status){
 				if (array_key_exists($status->actor_id, $actors)) {
 					$status->actor = $actors[$status->actor_id];
@@ -354,6 +372,12 @@ class Model_Presence extends Model_Base {
 						'type'=>'unknown',
 						'last_fetched'=>null
 					);
+				}
+
+				if (array_key_exists($status->post_id, $responses)) {
+					$status->first_response = $responses[$status->post_id];
+				} else {
+					$status->first_response = null;
 				}
 			}
 		}
@@ -445,7 +469,7 @@ class Model_Presence extends Model_Base {
 		$country = $this->getCountry();
 		if ($country) {
 			$target = $country->getTargetAudience();
-			$target *= BaseController::getOption($this->type == self::TYPE_FACEBOOK ? 'fb_min' : 'tw_min');
+			$target *= BaseController::getOption($this->isForFacebook() ? 'fb_min' : 'tw_min');
 			$target /= 100;
 			$target = round($target);
 		}

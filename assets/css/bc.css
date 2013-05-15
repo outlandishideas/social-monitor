@@ -539,12 +539,39 @@ form.autoConfirm {
 	width: 100%;
 }
 
-.statusesDisplay td.lesser,
-.statusesDisplay td.statusPic {
-	width: 10%;
+.statusesDisplay td {
+	padding: 10px;
+	border-bottom-color: #ddd;
+}
+
+.statusesDisplay td.date {
+	min-width: 100px;
+	max-width: 100px;
 	text-align: center;
 	background: #efefef;
 }
+.statusesDisplay td.statusPic {
+	min-width: 70px;
+	max-width: 70px;
+	text-align: center;
+	vertical-align: top;
+}
+.statusesDisplay td.message {
+	width: 10000px;
+	vertical-align: top;
+}
+.statusesDisplay td.message h4 {
+	margin-top: 0;
+	margin-bottom: 10px;
+}
+.statusesDisplay td.message p {
+	margin: 0;
+}
+.statusesDisplay td.message .no-response {
+	color: #999;
+	font-style: italic;
+}
+
 .statusesDisplay .dataTables_info {
 	position: absolute;
 	top: 20px;
@@ -554,7 +581,6 @@ form.autoConfirm {
 .statusesDisplay .dataTable p.more {
 	float: right;
 	font-size: 10px;
-	margin-right: 10px;
 	visibility: hidden;
 }
 
@@ -566,15 +592,18 @@ form.autoConfirm {
 	border-bottom: 1px solid black;
 }
 
-.statusesDisplay .facebook-actor {
+.statusesDisplay td.statusPic img {
 	width: 50px;
 	height: 50px;
-	background: url(../img/facebook-placeholder.png) no-repeat center center;
 	background-size: 100%;
 	border: 3px solid #ccc;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
+}
+
+.statusesDisplay td.statusPic img.facebook-actor {
+	background: url(../img/facebook-placeholder.png) no-repeat center center;
 }
 
 /* DataTables */

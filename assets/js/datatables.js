@@ -35,12 +35,13 @@ app.datatables = {
 
 		if (typeof app.datatables.statusesTable != 'undefined') {
 			$(document)
-				.on('dateRangeUpdated', function () {
-					if (app.datatables.statusesTable.length) {
-						app.datatables.statusesTable.fnClearTable(false);
-						app.datatables.statusesTable.fnDraw();
-					}
-				});
+				.on('dateRangeUpdated', app.datatables.refreshStatuses);
+		}
+	},
+	refreshStatuses: function () {
+		if (app.datatables.statusesTable.length) {
+			app.datatables.statusesTable.fnClearTable(false);
+			app.datatables.statusesTable.fnDraw();
 		}
 	},
 	numberRender: function(o, val) {
@@ -101,7 +102,7 @@ app.datatables = {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + app.state.controller + "/statuses",
 				aaSorting:[
-					[2, 'desc']
+					[3, 'desc']
 				],
 				aoColumns:[
 					{
@@ -121,8 +122,27 @@ app.datatables = {
 							}
 							return parseTemplate(app.templates.post, o.aData);
 						},
+						sClass: 'message',
 						bSortable:false,
 						bUseRendered:false
+					},
+					{
+						mDataProp:'first_response',
+						fnRender:function(o, response) {
+							if (response.message != null) {
+								return '<h4>' + Date.parse(response.date).toString('d MMM HH:mm') + ' (' + response.date_diff + ')</h4>' +
+									'<p>' + response.message.replace(/\\n/g, '<br />') + '</p>';
+							} else if (o.aData.needs_response == '1') {
+								return '<p class="more"><a href="#" class="require-response" data-id="' + o.aData.id + '">Does not require a response</a></p>' +
+									'<span class="no-response">Awaiting response (' + response.date_diff + ')...</span>';
+							} else {
+								return '<p class="more"><a href="#" class="require-response" data-id="' + o.aData.id + '">Requires a response</a></p>' +
+									'<span class="no-response">No response required</span>';
+							}
+						},
+						sClass: 'message',
+						bSortable: false,
+						bUseRendered: false
 					},
 					{
 						mDataProp:'date',
@@ -130,7 +150,7 @@ app.datatables = {
 							return Date.parse(val).toString('d MMM<br>HH:mm');
 						},
 						bUseRendered:false,
-						sClass:'retweets lesser',
+						sClass:'date',
 						asSorting:['desc', 'asc']
 					}
 				],
@@ -140,6 +160,13 @@ app.datatables = {
 			app.datatables.statusesTable = $div.find('table')
 				.dataTable($.extend({}, app.datatables.serverSideArgs(), args))
 				.fnSetFilteringDelay(250);
+
+			$div.on('click', '.require-response', function(e) {
+				e.preventDefault();
+				console.log('updating ', $(this).data('id'));
+				app.api.post('presence/toggle-response-needed', {id: $(this).data('id')})
+					.always(app.datatables.refreshStatuses);
+			});
 		},
 		'#statuses.twitter': function($div) {
 			var args = {
@@ -153,6 +180,7 @@ app.datatables = {
 						fnRender:function (o) {
 							return parseTemplate(app.templates.tweet, o.aData);
 						},
+						sClass: 'message',
 						bSortable:false,
 						bUseRendered:false
 					},
@@ -162,7 +190,7 @@ app.datatables = {
 							return Date.parse(val).toString('d MMM<br>HH:mm');
 						},
 						bUseRendered:false,
-						sClass:'retweets lesser',
+						sClass:'date',
 						asSorting:['desc', 'asc']
 					}
 				],

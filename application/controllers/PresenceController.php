@@ -332,6 +332,17 @@ class PresenceController extends BaseController
 		return Model_Presence::fetchById($id)->typeLabel;
 	}
 
+	public function toggleResponseNeededAction() {
+		$id = $this->_request->id;
+		if (!$id) {
+			$this->apiError('Missing ID');
+		}
+		$stmt = $this->db()->prepare('UPDATE facebook_stream set needs_response = !needs_response WHERE id = :id');
+		$stmt->execute(array(':id'=>$id));
+		$changed = $stmt->rowCount();
+		$this->apiSuccess(array('updated'=>$changed));
+	}
+
 	/**
 	 * AJAX function for fetching the posts/tweets for a presence
 	 */
@@ -376,14 +387,46 @@ class PresenceController extends BaseController
 			} else {
 				foreach ($data->statuses as $post) {
 					if($post->message){
+						if ($post->first_response) {
+							$message = $post->first_response->message;
+							$responseDate = $post->first_response->created_time;
+						} else {
+							$message = null;
+							$responseDate = gmdate('Y-m-d H:i:s');
+						}
+
+						$timeDiff = strtotime($responseDate) - strtotime($post->created_time);
+						$components = array();
+						$timeDiff /= 60;
+
+						$elements = array(
+							'minute'=>60,
+							'hour'=>24,
+							'day'=>100000
+						);
+						foreach ($elements as $label=>$size) {
+							$val = $timeDiff % $size;
+							$timeDiff /= $size;
+							if ($val) {
+								array_unshift($components, $val . ' ' . $label . ($val == 1 ? '' : 's'));
+							}
+						}
+
 						$tableData[] = array(
+							'id' => $post->id,
 							'actor_type' => $post->actor->type,
 							'actor_name' => $post->actor->name,
 							'pic_url' => $post->actor->pic_url,
 							'facebook_url' => $post->permalink,
 							'profile_url' => $post->actor->profile_url,
 							'message' => $post->message,
-							'date' => Model_Base::localeDate($post->created_time)
+							'date' => Model_Base::localeDate($post->created_time),
+							'needs_response' => $post->needs_response,
+							'first_response' => array(
+								'message'=>$message,
+								'date' => Model_Base::localeDate($responseDate),
+								'date_diff' => implode(', ', $components),
+							)
 						);
 					}
 				}
