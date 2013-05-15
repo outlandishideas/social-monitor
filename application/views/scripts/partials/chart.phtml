@@ -1,0 +1,29 @@
+<?php
+    $graph = $this->current['graph'];
+    $presence = $this->current['presence'];
+?>
+
+<div class="chart-container">
+
+    <div class="health">
+
+        <h3 class="title"><?php echo $graph->title; ?></h3>
+
+        <div class="fieldset">
+            <h4 class="legend"></h4>
+            <p class="value"></p>
+        </div>
+
+        <p class="target"></p>
+
+    </div>
+
+    <div id="<?php echo $graph->metric .'_'. $presence->id; ?>" class="chart" data-metric="<?php echo $graph->metric; ?>" data-y-label="<?php echo $graph->yAxisLabel; ?>" data-id="<?php echo $presence->id; ?>">
+
+        <div class="downloadChart">Download as <span class="link">PNG</span> or <span class="link">SVG</span></div>
+
+    </div>
+
+    <div class="clearfix"></div>
+
+</div>

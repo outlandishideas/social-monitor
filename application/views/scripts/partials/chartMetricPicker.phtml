@@ -1,0 +1,10 @@
+<div id="metric-nav" class="picker charts">
+
+	<label for="metric-picker">Metric:</label>
+	<select id="metric-picker">
+        <?php foreach($this->graphs as $key => $value) : ?>
+            <option value="<?php echo $key; ?>"><?php echo $value->title; ?></option>
+        <?php endforeach;?>
+	</select>
+
+</div>

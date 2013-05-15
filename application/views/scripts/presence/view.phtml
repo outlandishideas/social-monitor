@@ -4,6 +4,27 @@
 
 <div id="share-box"><span class="link">Link to this page</span></div>
 
+<div id="charts" data-controller="presence" data-controller-label="presence">
+
+    <?php $presence = $this->presence; ?>
+
+        <div class="presence <?php echo $presence->type; ?>">
+            <a href="<?php echo $presence->page_url; ?>" target="_blank"><?php echo $presence->page_url; ?></a>
+            <p>Info last updated: <?php echo $this->prettyDate($presence->last_updated, 'Never'); ?></p>
+            <p>Statuses last updated: <?php echo $this->prettyDate($presence->last_fetched, 'Never'); ?></p>
+
+            <?php
+                foreach($this->graphs as $graph) {
+                    $this->current = array('graph'=>$graph, 'presence'=>$presence);
+                    echo $this->render('partials/chart.phtml');
+                }
+            ?>
+
+        </div>
+
+
+</div>
+
 <div class="presence <?php echo $this->presence->type; ?>">
 	<a href="<?php echo $this->presence->page_url; ?>" target="_blank"><?php echo $this->presence->page_url; ?></a>
 </div>

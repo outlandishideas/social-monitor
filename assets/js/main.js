@@ -11,8 +11,8 @@ var jsConfig = jsConfig || {};
 $.extend(app, {
 	colors: ['CD3667', '177AB9', '22B5E9', '47918E', '8EBD3D', '645691', 'FF0000', '0000FF', 'FFFF00', 'FF00FF'],
 	state: {
-		charts: {},
-		lineIds: [],
+		charts: [],
+		chartData: [],
 		colors: {},
 		timestamps: [],
 		unloading: false
@@ -361,7 +361,7 @@ app.api = {
 				.done(app.api.callback)
 				.fail(app.api.errorCallback);
 	},
-	getGraphData: function (line_ids, cb) {
+	getGraphData: function (chartData, cb) {
 		app.charts.show();
 		$('.chart-container').showLoader();
 
@@ -370,7 +370,7 @@ app.api = {
 			return $.datepicker.formatDate('yy-mm-dd', Date.parse(d));
 		});
 		var args = {
-			line_ids:line_ids,
+            chartData:chartData,
 			dateRange: dateRange
 		};
 

@@ -27,16 +27,14 @@ class PresenceController extends BaseController
 		$this->validateData($presence);
 
 		$graphs = array();
-		$graphs[] = (object)array(
-			'id' => 'popularity',
+		$graphs['popularity'] = (object)array(
+			'metric' => 'popularity',
 			'yAxisLabel' => ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'Fans' : 'Followers') . ' gained per day',
-			'lineId' => 'popularity:' . $presence->id,
 			'title' => 'Audience Rate'
 		);
-		$graphs[] = (object)array(
-			'id' => 'posts_per_day',
+		$graphs['posts_per_day'] = (object)array(
+			'metric' => 'posts_per_day',
 			'yAxisLabel' => 'Posts per day',
-			'lineId' => 'posts_per_day:' . $presence->id,
 			'title' => 'Posts Per Day'
 		);
 
@@ -52,6 +50,35 @@ class PresenceController extends BaseController
 		$this->view->presence = $presence;
 		$this->view->graphs = $graphs;
 	}
+
+    public function compareAction()
+    {
+        /** @var Model_Presence $presence */
+        $presences = array();
+        foreach(explode(',',$this->_request->id) as $id){
+            $presence = Model_Presence::fetchById($id);
+            $this->validateData($presence);
+            $presences[$id] = $presence;
+        }
+
+        $graphs = array();
+        $graphs['popularity'] = (object)array(
+            'metric' => 'popularity',
+            'yAxisLabel' => ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'Fans' : 'Followers') . ' gained per day',
+            'title' => 'Audience Rate'
+        );
+        $graphs['posts_per_day'] = (object)array(
+            'metric' => 'posts_per_day',
+            'yAxisLabel' => 'Posts per day',
+            'title' => 'Posts Per Day'
+        );
+
+        $title = 'Comparing ';
+
+        $this->view->title = $title;
+        $this->view->presences = $presences;
+        $this->view->graphs = $graphs;
+    }
 
 
 
@@ -168,8 +195,8 @@ class PresenceController extends BaseController
 			$this->apiError('Missing date range');
 		}
 		/** @var $presence Model_Presence */
-		$lineIds = $this->_request->line_ids;
-		if (!$lineIds) {
+        $chartData = $this->_request->chartData;
+		if (!$chartData) {
 			$this->apiError('Missing line IDs');
 		}
 
@@ -178,23 +205,21 @@ class PresenceController extends BaseController
 
 		$series = array();
 
-		foreach ($lineIds as $lineId) {
-			list($selector, $presenceId) = explode(':', $lineId);
-			$presence = Model_Presence::fetchById($presenceId);
+		foreach ($chartData as $chart) {
+			$presence = Model_Presence::fetchById($chart['presence']);
 			if ($presence) {
-				$line = null;
-				switch ($selector) {
+                $data = null;
+				switch ($chart['metric']) {
 					case 'popularity':
-						$line = $this->generatePopularityGraphData($presence, $startDate, $endDate);
+						$data = $this->generatePopularityGraphData($presence, $startDate, $endDate);
 						break;
 					case 'posts_per_day':
-						$line = $this->generatePostsPerDayGraphData($presence, $startDate, $endDate);
+                        $data = $this->generatePostsPerDayGraphData($presence, $startDate, $endDate);
 						break;
 				}
-				if ($line) {
-					$line['line_id'] = $lineId;
-					$line['selector'] = '#' . $selector;
-					$series[] = $line;
+				if ($data) {
+                    $data['chart'] = $chart;
+					$series[] = $data;
 				}
 			}
 		}
