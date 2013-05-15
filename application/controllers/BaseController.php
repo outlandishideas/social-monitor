@@ -26,7 +26,7 @@ class BaseController extends Zend_Controller_Action {
                 //get/set default date range
                 if (!isset($_SESSION['dateRange'])) {
                     $today = date('Y-m-d');
-                    $_SESSION['dateRange'] = array($today, date('Y-m-d', strtotime($today . ' +1 day')));
+                    $_SESSION['dateRange'] = array(date('Y-m-d', strtotime($today . ' -30 days')), date('Y-m-d', strtotime($today . ' +1 day')));
                 }
                 $this->view->jsonDateRange = json_encode($_SESSION['dateRange']);
 
