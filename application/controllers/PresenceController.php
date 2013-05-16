@@ -28,21 +28,18 @@ class PresenceController extends BaseController
 
 		$graphs = array();
 		$graphs[] = (object)array(
-			'id' => 'popularity',
-			'yAxisLabel' => ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'Fans' : 'Followers') . ' gained per day',
-			'lineId' => 'popularity:' . $presence->id,
+			'metric' => 'popularity',
+			'yAxisLabel' => ($presence->isForFacebook() ? 'Fans' : 'Followers') . ' gained per day',
 			'title' => 'Audience Rate'
 		);
 		$graphs[] = (object)array(
-			'id' => 'posts_per_day',
+			'metric' => 'posts_per_day',
 			'yAxisLabel' => 'Posts per day',
-			'lineId' => 'posts_per_day:' . $presence->id,
 			'title' => 'Posts Per Day'
 		);
 		$graphs[] = (object)array(
-			'id' => 'response_time',
+			'metric' => 'response_time',
 			'yAxisLabel' => 'Response time (hours)',
-			'lineId' => 'response_time:' . $presence->id,
 			'title' => 'Average Response Time (hours)'
 		);
 
@@ -58,6 +55,43 @@ class PresenceController extends BaseController
 		$this->view->presence = $presence;
 		$this->view->graphs = $graphs;
 	}
+
+    public function compareAction()
+    {
+        /** @var Model_Presence $presence */
+        $presences = array();
+        foreach(explode(',',$this->_request->id) as $id){
+            $presence = Model_Presence::fetchById($id);
+            $this->validateData($presence);
+            $presences[$id] = $presence;
+        }
+
+	    $graphs = array();
+        $graphs[] = (object)array(
+            'metric' => 'popularity',
+            'yAxisLabel' => ($presence->isForFacebook() ? 'Fans' : 'Followers') . ' gained per day',
+            'label' => 'Audience Rate',
+            'title' => 'Audience Rate'
+        );
+        $graphs[] = (object)array(
+            'metric' => 'posts_per_day',
+            'yAxisLabel' => 'Posts per day',
+            'label' => 'Posts Per Day',
+            'title' => 'Posts Per Day'
+        );
+	    $graphs[] = (object)array(
+		    'metric' => 'response_time',
+		    'yAxisLabel' => 'Response time (hours)',
+		    'label' => 'Average Response Time',
+		    'title' => 'Average Response Time (hours)'
+	    );
+
+        $title = 'Comparing ';
+
+        $this->view->title = $title;
+        $this->view->presences = $presences;
+        $this->view->graphs = $graphs;
+    }
 
 
 
@@ -174,8 +208,8 @@ class PresenceController extends BaseController
 			$this->apiError('Missing date range');
 		}
 		/** @var $presence Model_Presence */
-		$lineIds = $this->_request->line_ids;
-		if (!$lineIds) {
+        $chartData = $this->_request->chartData;
+		if (!$chartData) {
 			$this->apiError('Missing line IDs');
 		}
 
@@ -184,26 +218,24 @@ class PresenceController extends BaseController
 
 		$series = array();
 
-		foreach ($lineIds as $lineId) {
-			list($selector, $presenceId) = explode(':', $lineId);
-			$presence = Model_Presence::fetchById($presenceId);
+		foreach ($chartData as $chart) {
+			$presence = Model_Presence::fetchById($chart['presence_id']);
 			if ($presence) {
-				$line = null;
-				switch ($selector) {
+                $data = null;
+				switch ($chart['metric']) {
 					case 'popularity':
-						$line = $this->generatePopularityGraphData($presence, $startDate, $endDate);
+						$data = $this->generatePopularityGraphData($presence, $startDate, $endDate);
 						break;
 					case 'posts_per_day':
-						$line = $this->generatePostsPerDayGraphData($presence, $startDate, $endDate);
+                        $data = $this->generatePostsPerDayGraphData($presence, $startDate, $endDate);
 						break;
 					case 'response_time':
-						$line = $this->generateResponseTimeGraphData($presence, $startDate, $endDate);
+						$data = $this->generateResponseTimeGraphData($presence, $startDate, $endDate);
 						break;
 				}
-				if ($line) {
-					$line['line_id'] = $lineId;
-					$line['selector'] = '#' . $selector;
-					$series[] = $line;
+				if ($data) {
+                    $data['chart'] = $chart;
+					$series[] = $data;
 				}
 			}
 		}
@@ -416,85 +448,79 @@ class PresenceController extends BaseController
 			$this->apiError('Missing date range');
 		}
 
-		$lineIds = explode(',', $this->_request->line_ids);
-		$linePropsArray = array();
-		foreach ($lineIds as $lineId) {
-			if ($lineId) $linePropsArray[] = self::parseLineId($lineId);
+		/** @var $presence Model_Presence */
+		$presence = Model_Presence::fetchById($this->_request->id);
+		if (!$presence) {
+			$this->apiError('Presence not found');
 		}
+
+		$data = $presence->getStatuses(
+			$dateRange[0],
+			$dateRange[1],
+			$this->getRequestSearchQuery(),
+			$this->getRequestOrdering(),
+			$this->getRequestLimit(),
+			$this->getRequestOffset()
+		);
 
 		$tableData = array();
-		$count = 0;
-		$data = null;
-		if ($linePropsArray) {
-			/** @var $presence Model_Presence */
-			$presence = Model_Presence::fetchById($linePropsArray[0]['modelId']);
-			$data = $presence->getStatuses(
-				$dateRange[0],
-				$dateRange[1],
-				$this->getRequestSearchQuery(),
-				$this->getRequestOrdering(),
-				$this->getRequestLimit(),
-				$this->getRequestOffset()
-			);
+		// convert statuses to appropriate datatables.js format
+		if ($presence->isForTwitter()) {
+			foreach ($data->statuses as $tweet) {
+				$tableData[] = array(
+					'message'=> $this->_request->format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
+					'date'=>Model_Base::localeDate($tweet->created_time),
+					'twitter_url'=>Model_TwitterTweet::getTwitterUrl($presence->handle, $tweet->tweet_id)
+				);
+			}
+		} else {
+			foreach ($data->statuses as $post) {
+				if($post->message){
+					if ($post->first_response) {
+						$message = $post->first_response->message;
+						$responseDate = $post->first_response->created_time;
+					} else {
+						$message = null;
+						$responseDate = gmdate('Y-m-d H:i:s');
+					}
 
-			// convert statuses to appropriate datatables.js format
-			if ($presence->isForTwitter()) {
-				foreach ($data->statuses as $tweet) {
+					$timeDiff = strtotime($responseDate) - strtotime($post->created_time);
+					$components = array();
+					$timeDiff /= 60;
+
+					$elements = array(
+						'minute'=>60,
+						'hour'=>24,
+						'day'=>100000
+					);
+					foreach ($elements as $label=>$size) {
+						$val = $timeDiff % $size;
+						$timeDiff /= $size;
+						if ($val) {
+							array_unshift($components, $val . ' ' . $label . ($val == 1 ? '' : 's'));
+						}
+					}
+
 					$tableData[] = array(
-						'message'=> $this->_request->format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
-						'date'=>Model_Base::localeDate($tweet->created_time),
-						'twitter_url'=>Model_TwitterTweet::getTwitterUrl($presence->handle, $tweet->tweet_id)
+						'id' => $post->id,
+						'actor_type' => $post->actor->type,
+						'actor_name' => $post->actor->name,
+						'pic_url' => $post->actor->pic_url,
+						'facebook_url' => $post->permalink,
+						'profile_url' => $post->actor->profile_url,
+						'message' => $post->message,
+						'date' => Model_Base::localeDate($post->created_time),
+						'needs_response' => $post->needs_response,
+						'first_response' => array(
+							'message'=>$message,
+							'date' => Model_Base::localeDate($responseDate),
+							'date_diff' => implode(', ', $components),
+						)
 					);
 				}
-			} else {
-				foreach ($data->statuses as $post) {
-					if($post->message){
-						if ($post->first_response) {
-							$message = $post->first_response->message;
-							$responseDate = $post->first_response->created_time;
-						} else {
-							$message = null;
-							$responseDate = gmdate('Y-m-d H:i:s');
-						}
-
-						$timeDiff = strtotime($responseDate) - strtotime($post->created_time);
-						$components = array();
-						$timeDiff /= 60;
-
-						$elements = array(
-							'minute'=>60,
-							'hour'=>24,
-							'day'=>100000
-						);
-						foreach ($elements as $label=>$size) {
-							$val = $timeDiff % $size;
-							$timeDiff /= $size;
-							if ($val) {
-								array_unshift($components, $val . ' ' . $label . ($val == 1 ? '' : 's'));
-							}
-						}
-
-						$tableData[] = array(
-							'id' => $post->id,
-							'actor_type' => $post->actor->type,
-							'actor_name' => $post->actor->name,
-							'pic_url' => $post->actor->pic_url,
-							'facebook_url' => $post->permalink,
-							'profile_url' => $post->actor->profile_url,
-							'message' => $post->message,
-							'date' => Model_Base::localeDate($post->created_time),
-							'needs_response' => $post->needs_response,
-							'first_response' => array(
-								'message'=>$message,
-								'date' => Model_Base::localeDate($responseDate),
-								'date_diff' => implode(', ', $components),
-							)
-						);
-					}
-				}
 			}
-			$count = count($data->statuses);
 		}
+		$count = count($data->statuses);
 
 		//return CSV or JSON?
 		if ($this->_request->format == 'csv') {

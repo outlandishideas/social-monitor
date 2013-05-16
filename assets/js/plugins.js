@@ -15,7 +15,6 @@
 	};
 
 	$.fn.showLoader = function(settings) {
-
 		return this.each(function () {
 			var $toCover = $(this);
 			var offset = $toCover.offset();
@@ -61,22 +60,14 @@
 	$.fn.hideLoader = function(skip) {
 
 		return this.each(function () {
-			var $this = $(this);
+			var $shield = $('div#shield-' + $(this).getLoaderId());
 
-			var id = $this.getLoaderId();
-			var $spinner = $('div#' + id);
-			var $shield = $('div#shield-' + id);
-
-			if ($spinner.length == 0) {
-				$this.showLoader();
+			if ($shield.length > 0) {
+				var delay = (typeof skip != 'undefined') ? 800 : 0;
+				setTimeout(function () {
+					$shield.addClass('dead');
+				}, delay);
 			}
-
-			var delay = !skip ? 800 : 0;
-			setTimeout(function () {
-//				$spinner.addClass('dead');
-				$shield.addClass('dead');
-			}, delay);
-
 		});
 
 	}

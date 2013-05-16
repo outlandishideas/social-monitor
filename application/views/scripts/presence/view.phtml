@@ -11,31 +11,24 @@
 <p>Statuses last updated: <?php echo $this->prettyDate($this->presence->last_fetched, 'Never'); ?></p>
 
 <div id="charts" data-controller="presence" data-controller-label="presence">
-	<?php foreach ($this->graphs as $graph) : ?>
-	<div class="chart-container">
-		<div class="health">
-			<h3 class="title"><?php echo $graph->title; ?></h3>
-			<div class="fieldset">
-				<h4 class="legend"></h4>
-				<p class="value"></p>
-			</div>
-			<p class="target"></p>
-		</div>
-		<div id="<?php echo $graph->id; ?>" class="chart" data-y-label="<?php echo $graph->yAxisLabel; ?>" data-line-id="<?php echo $graph->lineId; ?>">
-			<div class="downloadChart">Download as <span class="link">PNG</span> or <span class="link">SVG</span></div>
-		</div>
-		<div class="clearfix"></div>
-	</div>
-	<?php endforeach; ?>
+	<?php
+	$currentId = 1;
+	foreach ($this->graphs as $graph) {
+		$graph->id = $currentId++;
+		$graph->presence_id = $this->presence->id;
+		$this->graph = $graph;
+		echo $this->render('partials/chart.phtml');
+	}
+	?>
 </div>
 
-<div id="statuses" class="statusesDisplay <?php echo $this->presence->type; ?>">
+<div id="statuses" class="statusesDisplay <?php echo $this->presence->type; ?>" data-presence-id="<?php echo $this->presence->id; ?>">
 	<div class="inner">
 		<h3>Statuses</h3>
 		<table>
 			<thead>
 				<tr>
-				<?php if ($this->presence->type == Model_Presence::TYPE_FACEBOOK) : ?>
+				<?php if ($this->presence->isForFacebook()) : ?>
 					<th class="user">User</th>
 					<th class="message">Message</th>
 					<th class="response">Response</th>

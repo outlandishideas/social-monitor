@@ -33,7 +33,7 @@ app.datatables = {
 			if ($item.length) app.datatables.selectors[selector]($item);
 		}
 
-		if (typeof app.datatables.statusesTable != 'undefined') {
+		if (typeof app.datatables.statusesTable == 'object' && app.datatables.statusesTable != null) {
 			$(document)
 				.on('dateRangeUpdated', app.datatables.refreshStatuses)
 				.on('dataChanged', app.datatables.refreshStatuses);
@@ -102,6 +102,10 @@ app.datatables = {
 		'#statuses.facebook': function($div) {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + app.state.controller + "/statuses",
+				fnServerParams: function(aoData) {
+					aoData.push({ name:"dateRange", value:app.state.dateRange });
+					aoData.push({ name:"id", value:$div.data('presence-id') });
+				},
 				fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 					$(nRow).data('id', aData.id);
 				},
@@ -176,6 +180,10 @@ app.datatables = {
 		'#statuses.twitter': function($div) {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + app.state.controller + "/statuses",
+				fnServerParams: function(aoData) {
+					aoData.push({ name:"dateRange", value:app.state.dateRange });
+					aoData.push({ name:"id", value:$div.data('presence-id') });
+				},
 				aaSorting:[
 					[1, 'desc']
 				],
@@ -223,10 +231,6 @@ app.datatables = {
 			bProcessing:false,
 			bServerSide:true,
 			bAutoWidth:false,
-			fnServerParams:function (aoData) {
-				aoData.push({ name:"dateRange", value:app.state.dateRange });
-				aoData.push({ name:"line_ids", value:app.state.lineIds });
-			},
 			fnServerData:function (sSource, aoData, fnCallback) {
 				var $wrapper = $(this).closest('.inner');
 				$wrapper.showLoader();

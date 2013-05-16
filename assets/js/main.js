@@ -12,7 +12,7 @@ $.extend(app, {
 	colors: ['CD3667', '177AB9', '22B5E9', '47918E', '8EBD3D', '645691', 'FF0000', '0000FF', 'FFFF00', 'FF00FF'],
 	state: {
 		charts: {},
-		lineIds: [],
+		chartData: [],
 		colors: {},
 		timestamps: [],
 		unloading: false
@@ -361,31 +361,6 @@ app.api = {
 				.done(app.api.callback)
 				.fail(app.api.errorCallback);
 	},
-	getGraphData: function (line_ids, cb) {
-		app.charts.show();
-		$('.chart-container').showLoader();
-
-		var url = app.state.controller + '/graph-data';
-		var dateRange = app.state.dateRange.map(function(d){
-			return $.datepicker.formatDate('yy-mm-dd', Date.parse(d));
-		});
-		var args = {
-			line_ids:line_ids,
-			dateRange: dateRange
-		};
-
-        return app.api.get(url, args).done(function(response) {
-	        for (var i in response.data) {
-		        app.charts.renderDataset(response.data[i]);
-	        }
-	        app.charts.updateYAxis();
-	        $('.chart-container').hideLoader();
-
-	        if (cb) {
-		        cb();
-	        }
-        });
-	},
 	callback: function (response) {
 		if (response.messages) {
 			_.each(response.messages, function(messageData) {
@@ -399,7 +374,6 @@ app.api = {
 		if (app.state.unloading) return; //don't show errors caused by navigation away from page
 
 		var data = $.parseJSON(response.responseText);
-		$('#charts').hideLoader();
 		var message = '';
 		if (!data) {
 //			message = 'AJAX error';

@@ -280,6 +280,11 @@ a:hover, span.link:hover {
     right: 40px;
 }
 
+#metric-nav.charts {
+    top: 254px;
+    right: 420px;
+}
+
     #metric-nav select {
         border: 2px solid #555;
         outline: none;
@@ -288,6 +293,7 @@ a:hover, span.link:hover {
         color: #888;
         padding: 0 0 0 5px;
         margin-left: 10px;
+        min-width: 221px;
     }
 
     #metric-picker select:focus {
@@ -434,6 +440,7 @@ table.text th {
 	font-weight: bold;
 	text-align: left;
 	border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
 }
 
 table.text th,

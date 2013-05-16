@@ -1,0 +1,20 @@
+<?php //print_r($this->presence); ?>
+
+<?php echo $this->render('partials/chartMetricPicker.phtml'); ?>
+<?php echo $this->render('partials/daterange.phtml'); ?>
+
+<div id="share-box"><span class="link">Link to this page</span></div>
+
+<div id="charts" data-controller="presence" data-controller-label="presence">
+	<?php
+	$currentId = 1;
+	foreach($this->presences as $presence) {
+		foreach ($this->graphs as $graph) {
+			$graph->id = $currentId++;
+			$graph->presence_id = $presence->id;
+			$this->graph = $graph;
+			echo $this->render('partials/chart.phtml');
+		}
+	}
+	?>
+</div>

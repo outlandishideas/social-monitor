@@ -13,71 +13,109 @@ app.charts = {
 		if (!app.state.controllerLabel) {
 			app.state.controllerLabel = app.state.controller;
 		}
-		$charts.find('.chart').each(function() {
-			app.state.lineIds.push($(this).data('line-id'));
-		});
 
 		$(document)
 			.on('dateRangeUpdated', app.charts.refreshCharts)
 			.on('dataChanged', app.charts.refreshCharts);
 
+		var $metricPicker = $('#metric-picker');
+		if ($metricPicker.length > 0) {
+			$metricPicker.on('change', app.charts.refreshCharts);
+		}
+
 		$charts.find('.chart').each(function () {
 			var selector = '#' + $(this).attr('id');
 			var chart = app.charts.createChart(selector);
 			app.state.charts[selector] = chart;
-			if (selector in app.charts.customSetup) {
-				app.charts.customSetup[selector](chart);
+			if (chart.metric in app.charts.customSetup) {
+				app.charts.customSetup[chart.metric](chart);
 			}
 		});
 
-		//hide charts if we have no lines
-		if (app.state.lineIds.length == 0) {
+		app.charts.populateChartData();
+
+		if (app.state.chartData.length == 0) {
 			$charts.hide();
 		} else {
+			$('.chart-container').hide();
+			for (var i in app.state.chartData) {
+				$(app.state.chartData[i].selector).closest('.chart-container').show();
+			}
+
 			// fire off an initial data request
-			app.api.getGraphData(app.state.lineIds);
+			app.charts.fetchChartData();
 		}
 	},
 
 	refreshCharts: function() {
 		var dates = app.state.dateRange.map(Date.parse);
 		for (var s in app.state.charts) {
-			app.state.charts[s].xMap.domain(dates);
+			var chart = app.state.charts[s];
+			chart.xMap.domain(dates);
+			app.charts.rescaleChartX(chart);
 		}
+
 		// refetch the currently-graphed data, but redraw the data we currently have
-		app.api.getGraphData(app.state.lineIds);
-		app.charts.updateXAxis();
+		app.charts.populateChartData();
+
+		var $inactive = $('.chart-container');
+		var $active = $();
+		for (var i in app.state.chartData) {
+			var $chart = $(app.state.chartData[i].selector).closest('.chart-container');
+			$active = $active.add($chart);
+			$inactive = $inactive.not($chart);
+
+		}
+
+		// slide up the inactive charts and slide down the active charts, then trigger
+		// a refetch (but only one!)
+		$inactive.slideUp();
+		var fetched = false;
+		$active.slideDown(function() {
+			if (!fetched) {
+				app.charts.fetchChartData();
+				fetched = true;
+			}
+		});
 	},
+
 	/**
 	 * Specific settings for charts
 	 */
 	customSetup: {
-		'#popularity': function(chart) {
+		'popularity': function(chart) {
 			chart.shouldRescale = true;
 		},
-		'#posts_per_day': function(chart) {
+		'posts_per_day': function(chart) {
 			chart.getYValue = function (d) {
 				return d.post_count;
 			};
 			chart.shouldRescale = true;
 		},
-		'#response_time': function(chart) {
+		'response_time': function(chart) {
 			chart.shouldRescale = true;
 		}
 	},
 
-	/**
-	 * Show charts and legend
-	 */
-	show:function () {
-		$('#charts').slideDown();
+
+	currentMetric:function () {
+		return $('#metric-picker').val();
 	},
 
-	/**
-	 * Hide charts and legend
-	 */
-	hide:function () {
-		$('#charts').slideUp();
+	populateChartData: function(){
+		app.state.chartData.length = 0;
+		var metric = app.charts.currentMetric();
+		for (var id in app.state.charts) {
+			var c = app.state.charts[id];
+			if (typeof metric == 'undefined' || c.$chart.data('metric') == metric) {
+				var chartData = {
+					presence_id: c.$chart.data('presence-id'),
+					metric: c.$chart.data('metric'),
+					selector: c.selector
+				};
+				app.state.chartData.push(chartData);
+			}
+		}
 	},
 
 	createChart:function (selector) {
@@ -90,6 +128,8 @@ app.charts = {
 			drawCircles: false
 		};
 
+		c.metric = c.$chart.data('metric');
+
 		c.w = c.$chart.width() - (borders.l + borders.r);
 		c.h = c.$chart.height() - (borders.t + borders.b);
 
@@ -99,7 +139,7 @@ app.charts = {
 			.attr('preserveAspectRatio', 'none')
 			.attr('viewBox', '0 0 ' + (c.w + borders.l + borders.r) + ' ' + (c.h + borders.t + borders.b))
 			.append('svg:g')
-			.attr('class', 'chart')
+			.attr('class', 'svg-chart')
 			.attr('transform', "translate(" + borders.l + "," + borders.t + ")");
 
 		//create x and y scale mapping functions
@@ -162,24 +202,19 @@ app.charts = {
 		return c;
 	},
 
-	parseLineId: function(line_id) {
-		var bits = line_id.split(':');
-		return {
-			modelType: bits[0],
-			modelId: bits[1],
-			filterType: bits.length > 2 ? bits[2] : '',
-			filterValue: bits.length > 3 ? bits[3] : ''
-		}
-	},
-
 	/**
 	 * Add data received from the server to the charts
 	 * @param data
 	 */
 	renderDataset: function(data) {
-		var $health = $(data.selector).siblings('.health');
+		var c = app.state.charts[data.chart.selector];
+		var $health = c.$chart.siblings('.health');
 
-		$('.chart').find('.dataset[data-line-id="' + data.line_id + '"]').remove();
+		// remove the old dataset(s)
+		var $datasets = c.$chart.find('.dataset');
+		$datasets.each(function(){
+			d3.select(this).remove();
+		});
 
 		if (data.points.length == 0) {
 			$health.find('.value')
@@ -188,11 +223,10 @@ app.charts = {
 			$health.find('.legend').text('');
 			$health.find('.target').html('');
 		} else {
-			var chart = app.state.charts[data.selector];
-			chart.yMin = Infinity;
-			chart.yMax = -Infinity;
-			switch (data.selector) {
-				case '#popularity':
+			c.yMin = Infinity;
+			c.yMax = -Infinity;
+			switch (data.chart.metric) {
+				case 'popularity':
 					$health.find('.value')
 						.text(app.utils.numberFormat(data.current.value))
 						.css('color', app.charts.getColorForPercentage(data.health));
@@ -217,33 +251,33 @@ app.charts = {
 					}
 					$health.find('.target').html(targetText);
 
-					app.charts.addBars(chart, data.points, data.line_id, app.charts.getColorForPercentage(data.health));
+					app.charts.addBars(c, data.points, data.chart, app.charts.getColorForPercentage(data.health));
 					break;
-				case '#posts_per_day':
+				case 'posts_per_day':
 					$health.find('.value')
 						.text(app.utils.numberFixedDecimal(data.average, 2))
 						.css('color', app.charts.getColorForPercentage(data.health))
 						.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
 					$health.find('.target').text('Target Posts Per Day: ' + data.target);
 
-					app.charts.addBars(chart, data.points, data.line_id, app.charts.getColorForPercentage(data.health));
+					app.charts.addBars(c, data.points, data.chart, app.charts.getColorForPercentage(data.health));
 					break;
-				case '#response_time':
+				case 'response_time':
 					$health.find('.value')
 						.text(app.utils.numberFixedDecimal(data.average, 2))
 						.css('color', app.charts.getColorForPercentage(data.health));
 					$health.find('.target').text('Target Response Time: ' + data.target);
 
-					app.charts.addBars(chart, data.points, data.line_id, app.charts.getColorForPercentage(data.health));
+					app.charts.addBars(c, data.points, data.chart, app.charts.getColorForPercentage(data.health));
 					break;
 			}
-        }
+}
 
 	},
 
-	addGroup: function(c, points, line_id) {
-		//calculate min/max y value in this dataset (need to convert to integer, otherwise 'max' is done alphabetically)
-		var f = function(d) { return parseInt(c.getYValue(d)); };
+	addGroup: function(c, points, data) {
+		//calculate min/max y value in this dataset (need to convert to float, otherwise 'max' is done alphabetically)
+		var f = function(d) { return parseFloat(c.getYValue(d)); };
 		c.yMax = Math.max(c.yMax, d3.max(points, f));
 		c.yMin = Math.min(c.yMin, d3.min(points, f));
 
@@ -258,15 +292,14 @@ app.charts = {
 		// create one container per data set
 		return c.vis
 			.append('svg:g')
-			.attr('data-line-id', line_id)
-			.attr('data-max', c.yMax)
-			.attr('data-min', c.yMin)
+			.attr('data-metric', data.metric)
+			.attr('data-presence', data.presence)
 			.attr('data-points', JSON.stringify(points))
 			.attr('class', 'dataset lines');
 	},
 
-	addLine: function (c, points, line_id, color) {
-		var group = app.charts.addGroup(c, points, line_id);
+	addLine: function (c, points, data, color) {
+		var group = app.charts.addGroup(c, points, data);
 
 		group.append("svg:path")
 			.attr("d", c.line(points))
@@ -303,13 +336,14 @@ app.charts = {
 					}
 					return color;
 				})
-				.attr('data-line-id', line_id)
+				.attr('data-metric', data.metric)
+				.attr('data-presence', data.presence)
 				.attr("r", 4);
 		}
 	},
 
-	addBars: function (c, points, line_id, color) {
-		var group = app.charts.addGroup(c, points, line_id);
+	addBars: function (c, points, data, color) {
+		var group = app.charts.addGroup(c, points, data);
 
 		var maxWidth = c.w/points.length;
 		var width = maxWidth*0.8;
@@ -332,7 +366,8 @@ app.charts = {
 				return Math.abs(c.yMap(0) - c.yMap(c.getYValue(d)));
 			})
 			.attr("width", width)
-			.attr('data-line-id', line_id)
+			.attr('data-metric', data.metric)
+			.attr('data-presence', data.presence)
 			.style('fill', function(d, i) {
 				if ('health' in d) {
 					return app.charts.getColorForPercentage(d.health);
@@ -362,26 +397,32 @@ app.charts = {
 			});
 	},
 
-	updateXAxis:function () {
+	updateYAxis:function () {
 		for (var selector in app.state.charts) {
-			app.charts.rescaleChartX(app.state.charts[selector]);
+			app.charts.rescaleChartY(app.state.charts[selector]);
 		}
 	},
 
 	rescaleChartX:function (c) {
 
 		var $datasets = c.$chart.find('.dataset');
-		c.vis.transition().select('.axis-x').call(c.xAxis);
-
 		var duration = 1000;
+
+		c.vis
+			.transition()
+			.duration(duration)
+			.select('.axis-x')
+				.call(c.xAxis);
+
 		$datasets.each(function () {
-			var $dataset = $(this);
-			d3.select(this).selectAll('path')
+			var points = $(this).data('points');
+			var dataset = d3.select(this);
+			dataset.selectAll('path')
 					.transition()
 					.duration(duration)
-					.attr("d", c.line($(this).data('points')));
+					.attr("d", c.line(points));
 
-			d3.select(this).selectAll('circle')
+			dataset.selectAll('circle')
 					.transition()
 					.duration(duration)
 					.attr("cx", function (d, i) {
@@ -389,8 +430,8 @@ app.charts = {
 					})
 					.style('opacity', 0);
 
-			var width = 0.8*c.w/$dataset.data('points').length;
-			d3.select(this).selectAll('rect')
+			var width = 0.8*c.w/points.length;
+			dataset.selectAll('rect')
 				.transition()
 				.duration(duration)
 				.attr("x", function (d, i) {
@@ -399,12 +440,6 @@ app.charts = {
 				.attr('transform', 'translate(-'+ width/2 +')')
 				.attr("width", width);
 		});
-	},
-
-	updateYAxis:function () {
-		for (var selector in app.state.charts) {
-			app.charts.rescaleChartY(app.state.charts[selector]);
-		}
 	},
 
 	rescaleChartY:function (c) {
@@ -422,28 +457,33 @@ app.charts = {
 		//update y scale mapping functions
 		c.yMap.domain([Math.min(0, c.yMin), c.yMax]);
 
+		var duration = 600;
+
 		//rescale axes
-		c.vis.transition().select('.axis-y').call(c.yAxis);
+		c.vis
+			.transition()
+			.duration(duration)
+			.select('.axis-y')
+				.call(c.yAxis);
 
 		//rescale lines
-		var duration = 600;
 		$datasets.each(function () {
 			var points = $(this).data('points');
 			if (typeof points != 'undefined') {
-
-				d3.select(this).selectAll('path')
+				var dataset = d3.select(this);
+				dataset.selectAll('path')
 					.transition()
 					.duration(duration)
 					.attr("d", c.line(points));
 
-				d3.select(this).selectAll('circle')
+				dataset.selectAll('circle')
 					.transition()
 					.duration(duration)
 					.attr("cy", function (d) {
 						return c.yMap(c.getYValue(d));
 					});
 
-				d3.select(this).selectAll('rect')
+				dataset.selectAll('rect')
 					.transition()
 					.duration(duration)
 					.attr('y', function(d) {
@@ -525,5 +565,30 @@ app.charts = {
 			}
 		}
 		return '';
+	},
+	fetchChartData: function () {
+		for (var i in app.state.chartData) {
+			$(app.state.chartData[i].selector).closest('.chart-container').showLoader();
+		}
+
+		var url = app.state.controller + '/graph-data';
+		var dateRange = app.state.dateRange.map(function(d){
+			return $.datepicker.formatDate('yy-mm-dd', Date.parse(d));
+		});
+		var args = {
+			chartData:app.state.chartData,
+			dateRange: dateRange
+		};
+
+		return app.api.get(url, args)
+			.done(function(response) {
+				for (var i in response.data) {
+					app.charts.renderDataset(response.data[i]);
+				}
+				app.charts.updateYAxis();
+			})
+			.always(function() {
+				$('.chart-container').hideLoader();
+			});
 	}
 };
