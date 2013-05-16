@@ -260,13 +260,22 @@ a:hover, span.link:hover {
 	left: 50px;
 }
 
+#pickers {
+	position: absolute;
+	top: 178px;
+	right: 40px;
+	margin-bottom: 5px;
+}
+
 .picker {
-    position: absolute;
-    margin-top: -76px;
-    margin-bottom: 5px;
     padding: 20px;
     background: #e4e4e4;
     border: 1px solid #ccc;
+	float: left;
+}
+
+.picker + .picker {
+	margin-left: 10px;
 }
 
 .picker label {
@@ -275,50 +284,34 @@ a:hover, span.link:hover {
 	color: #555;
 }
 
-#metric-nav {
-    top: 254px;
-    right: 40px;
+.picker input,
+.picker select {
+	color: #888;
+	margin-left: 10px;
+	outline: none;
+	border: 2px solid #555;
 }
 
-#metric-nav.charts {
-    top: 254px;
-    right: 420px;
+.picker input:focus,
+.picker select:focus {
+	border-color: #24abf8;
+	color: #333;
 }
 
-    #metric-nav select {
-        border: 2px solid #555;
-        outline: none;
-        line-height: 34px;
-        height: 34px;
-        color: #888;
-        padding: 0 0 0 5px;
-        margin-left: 10px;
-        min-width: 221px;
-    }
-
-    #metric-picker select:focus {
-        border-color: #24abf8;
-        color: #333;
-    }
-
-#date-nav {
-	top: 254px;
-	right: 40px;
+#metric-picker {
+    line-height: 34px;
+    height: 34px;
+    padding: 0 0 0 5px;
+    min-width: 221px;
 }
-	#date-nav input {
-		background: #fff url(../img/calendar.png) 5px center no-repeat;
-		border: 2px solid #555;
-		outline: none;
-		line-height: 30px;
-		height: 30px;
-		color: #888;
-		padding: 0 5px 0 30px;
-		margin-left: 10px;
-	}
-	#date-nav input:focus {
-		border-color: #24abf8;
-		color: #333;
-	}
+
+#date-picker {
+	background: #fff url(../img/calendar.png) 5px center no-repeat;
+	line-height: 30px;
+	height: 30px;
+	padding: 0 5px 0 30px;
+}
+
 #share-box {
 	float: right;
 	clear: right;

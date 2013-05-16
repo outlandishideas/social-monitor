@@ -133,7 +133,7 @@ class BaseController extends Zend_Controller_Action {
 				$args->colorsRgb[] = $rgb;
 			}
 		}
-		$this->view->metrics = $metrics;
+		$this->view->trafficMetrics = $metrics;
 	}
 
 	/**

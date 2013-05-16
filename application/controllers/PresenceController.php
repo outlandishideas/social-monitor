@@ -58,41 +58,48 @@ class PresenceController extends BaseController
 
     public function compareAction()
     {
-        /** @var Model_Presence $presence */
-        $presences = array();
+        $compareData = array();
         foreach(explode(',',$this->_request->id) as $id){
+	        /** @var Model_Presence $presence */
             $presence = Model_Presence::fetchById($id);
             $this->validateData($presence);
-            $presences[$id] = $presence;
+            $compareData[$id] = (object)array(
+	            'presence'=>$presence,
+	            'graphs'=>$this->graphs($presence)
+            );
         }
 
-	    $graphs = array();
-        $graphs[] = (object)array(
-            'metric' => 'popularity',
-            'yAxisLabel' => ($presence->isForFacebook() ? 'Fans' : 'Followers') . ' gained per day',
-            'label' => 'Audience Rate',
-            'title' => 'Audience Rate'
-        );
-        $graphs[] = (object)array(
-            'metric' => 'posts_per_day',
-            'yAxisLabel' => 'Posts per day',
-            'label' => 'Posts Per Day',
-            'title' => 'Posts Per Day'
-        );
-	    $graphs[] = (object)array(
-		    'metric' => 'response_time',
-		    'yAxisLabel' => 'Response time (hours)',
-		    'label' => 'Average Response Time',
-		    'title' => 'Average Response Time (hours)'
+        $this->view->title = 'Comparing ';
+	    $this->view->metrics = array(
+		    'popularity'=>'Audience Rate',
+		    'posts_per_day'=>'Posts Per Day',
+		    'response_time'=>'Average Response Time'
 	    );
-
-        $title = 'Comparing ';
-
-        $this->view->title = $title;
-        $this->view->presences = $presences;
-        $this->view->graphs = $graphs;
+        $this->view->compareData = $compareData;
     }
 
+	private function graphs(Model_Presence $presence) {
+		$graphs = array();
+		$graphs[] = (object)array(
+			'metric' => 'popularity',
+			'yAxisLabel' => ($presence->isForFacebook() ? 'Fans' : 'Followers') . ' gained per day',
+			'title' => 'Audience Rate'
+		);
+		$graphs[] = (object)array(
+			'metric' => 'posts_per_day',
+			'yAxisLabel' => 'Posts per day',
+			'title' => 'Posts Per Day'
+		);
+		$graphs[] = (object)array(
+			'metric' => 'response_time',
+			'yAxisLabel' => 'Response time (hours)',
+			'title' => 'Average Response Time (hours)'
+		);
+		foreach ($graphs as $g) {
+			$g->presence_id = $presence->id;
+		}
+		return $graphs;
+	}
 
 
 	/**

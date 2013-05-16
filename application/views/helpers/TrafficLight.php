@@ -18,7 +18,7 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
 	 * @return null|string
 	 */
 	public function color($value, $metric) {
-		$metric = $this->view->metrics[$metric];
+		$metric = $this->view->trafficMetrics[$metric];
 		$color = null;
 
 		foreach ($metric->range as $i=>$v) {
