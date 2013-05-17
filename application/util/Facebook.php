@@ -47,10 +47,6 @@ class Util_Facebook {
 				$fields[] = 'post_id';
 			}
 			$config = Zend_Registry::get('config');
-	//		$postData = self::multiquery(array(
-	//			'posts'=>'SELECT ' . implode(',', $fields) . ' FROM stream WHERE source_id = ' . $pageId . ' LIMIT 30',
-	//			'comments'=>'SELECT comments, fromid, id, likes, object_id, post_fbid, post_id, reply_xid, text, time, username, xid FROM comment WHERE post_id IN (SELECT post_id FROM #posts) LIMIT 10'
-	//		));
 			$max = time();
 			do {
 				$clauses = array('source_id = ' . $pageId);

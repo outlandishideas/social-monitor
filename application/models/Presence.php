@@ -186,7 +186,7 @@ class Model_Presence extends Model_Base {
 						AND in_response_to IS NULL
 						AND (
 							(needs_response = 1 AND created_time > :necessary_since) OR
-							(posted_by_owner = 0 AND message <> '' AND message IS NOT NULL AND created_time > :unnecessarySince)
+							(posted_by_owner = 0 AND message <> '' AND message IS NOT NULL AND created_time > :unnecessary_since)
 						)
 					) as a
 					LEFT OUTER JOIN $tableName AS b

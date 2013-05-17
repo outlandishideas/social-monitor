@@ -42,7 +42,7 @@ class FetchController extends BaseController
 				} catch (Exception_FacebookNotFound $e) {
 					$this->log($e->getMessage());
 				} catch (Exception $e) {
-					$this->log($e->getMessage());
+					$this->log("Error updating presence info: " . $e->getMessage());
 					$saveLastUpdated = false;
 				}
 
@@ -64,7 +64,7 @@ class FetchController extends BaseController
 				$p->last_fetched = gmdate('Y-m-d H:i:s');
 				$p->save();
 			} catch (Exception $e) {
-				$this->log($e->getMessage());
+				$this->log("Error updating presence statuses: " . $e->getMessage());
 			}
 			$this->touchLock();
 		}
@@ -72,32 +72,6 @@ class FetchController extends BaseController
 		$this->log('Updating facebook actors');
 		$inserted = $this->updateFacebookActors();
 		$this->log('Updated ' . count($inserted));
-
-//		//fetch lists and searches for each campaign using appropriate tokens
-//		$campaigns = Model_Campaign::fetchAll();
-//
-//		//randomise order to avoid one campaign from blocking others
-//		shuffle($campaigns);
-
-//		$lastToken = null;
-//		foreach ($campaigns as $campaign) {
-//			if ($campaign->twitterToken) {
-//				$this->log('Fetching tweets for campaign: '.$campaign->name);
-//
-//				$listsAndSearches = array_merge($campaign->activeTwitterLists, $campaign->activeTwitterSearches);
-//				$this->log('Found ' . count($listsAndSearches) . ' active lists/searches');
-//				$this->fetchTweets($listsAndSearches, $campaign->twitterToken);
-//
-//				$lastToken = $campaign->twitterToken;
-//			} else {
-//				$this->log('Skipping tweets for campaign with no token: '.$campaign->name."\n");
-//			}
-//		}
-//
-//		//fetch trends and facebook pages globaly rather than by campaign
-//		$this->fetchAllPages();
-//
-//		$this->fetchAllTrends($lastToken);
 
 		$this->touchLock();
 
@@ -196,43 +170,6 @@ class FetchController extends BaseController
 		}
 
 		return $inserted;
-	}
-
-	/**
-	 * @param Model_TwitterBase[] $listsAndSearches
-	 * @param Model_TwitterToken $token
-	 */
-	private function fetchTweets($listsAndSearches, $token) {
-		foreach ($listsAndSearches as $thing) {
-			try {
-
-				$this->log("Fetching tweets from {$thing->type}: {$thing->label}");
-				$counts = $thing->fetchTweets($token);
-				$this->log($counts);
-
-				if ($thing->type == 'list') {
-					$refetchCounts = $thing->refetchTweets($token);
-					foreach ($refetchCounts as $name=>$count) {
-						$items = 'tweet' . ($count == 1 ? '' : 's');
-						$this->log("Refetched $count $items from $name");
-					}
-				}
-
-			} catch (Exception_TwitterApi $e) {
-				$httpCode = $e->getCode();
-				$this->log("Received $httpCode error from Twitter API. Skipping {$thing->type}.");
-				continue;
-			} catch (Exception $e) {
-				print_r($e);
-			}
-
-			$thing->tweets_last_24_hours = $thing->countTweetsSince(gmdate('Y-m-d H:i:s', time() - 3600 * 24));
-			$thing->tweets_this_month = $thing->countTweetsSince(gmdate('Y-m-d H:i:s', gmmktime(0, 0, 0, date('m'), 1)));
-			$thing->last_fetched = gmdate('Y-m-d H:i:s');
-			$thing->save();
-
-			$this->touchLock();
-		}
 	}
 
 	/**
