@@ -91,6 +91,10 @@ class Model_Presence extends Model_Base {
 
 			//posts per day
 			$kpiData[Model_Campaign::KPI_POSTS_PER_DAY] = $this->getAveragePostsPerDay($startDateString, $endDateString);
+
+			//response time
+			$kpiData[Model_Campaign::KPI_RESPONSE_TIME] = $this->getAverageResponseTime($startDateString, $endDateString);
+
 			$this->kpiData = $kpiData;
 		}
 
@@ -173,22 +177,23 @@ class Model_Presence extends Model_Base {
 
 				// update the responses for any non-page posts that don't have a response yet.
 				// Only get those that explicitly need one, or were posted in the last 3 days
-				$since = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -3 days'));
+				$necessarySince = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days'));
+				$unnecessarySince = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -3 days'));
 				$stmt = $this->_db->prepare("SELECT DISTINCT a.post_id
 					FROM (
 						SELECT * FROM $tableName
 						WHERE presence_id = :id
 						AND in_response_to IS NULL
 						AND (
-							needs_response = 1
-							OR (posted_by_owner = 0 AND message <> '' AND message IS NOT NULL AND created_time > :since)
+							(needs_response = 1 AND created_time > :necessary_since) OR
+							(posted_by_owner = 0 AND message <> '' AND message IS NOT NULL AND created_time > :unnecessarySince)
 						)
 					) as a
 					LEFT OUTER JOIN $tableName AS b
 						ON b.presence_id = a.presence_id
 						AND b.in_response_to = a.post_id
 					WHERE b.id IS NULL");
-				$stmt->execute(array(':id'=>$this->id, ':since'=>$since));
+				$stmt->execute(array(':id'=>$this->id, ':necessary_since'=>$necessarySince, ':unnecessary_since'=>$unnecessarySince));
 				$postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
 				$newResponses = Util_Facebook::responses($this->uid, $postIds);
 				foreach ($newResponses as $response) {
@@ -420,6 +425,24 @@ class Model_Presence extends Model_Base {
 		$stmt = $this->_db->prepare($sql);
 		$stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
 		return floatval($stmt->fetchColumn());
+	}
+
+	public function getAverageResponseTime($startDate, $endDate) {
+		$data = $this->getResponseData($startDate, $endDate);
+		$maxTime = floatval(BaseController::getOption('response_time_bad'));
+		$now = time();
+		$totalTime = 0;
+		if ($data) {
+			foreach ($data as $row) {
+				$diff = ($row->first_response ? strtotime($row->first_response->created_time) : $now) - strtotime($row->post->created_time);
+				$diff /= (60*60);
+				$diff = min($maxTime, $diff);
+				$totalTime += $diff;
+			}
+			return $totalTime/count($data);
+		} else {
+			return 0;
+		}
 	}
 
 	public function getPostsPerDayData($startDate, $endDate) {

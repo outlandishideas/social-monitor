@@ -7,6 +7,7 @@ class Model_Campaign extends Model_Base {
 	const KPI_POPULARITY_PERCENTAGE = 'popularityPercentage';
 	const KPI_POPULARITY_TIME = 'popularityTime';
 	const KPI_POSTS_PER_DAY = 'postsPerDay';
+	const KPI_RESPONSE_TIME = 'responseTime';
 
 	public function delete() {
 		$this->_db->prepare('DELETE FROM campaign_presences WHERE campaign_id = :cid')->execute(array(':cid'=>$this->id));
@@ -55,7 +56,8 @@ class Model_Campaign extends Model_Base {
 		return array(
 			self::KPI_POPULARITY_PERCENTAGE => 'Percent of Target Audience',
 			self::KPI_POPULARITY_TIME => 'Time to Reach Target Audience',
-			self::KPI_POSTS_PER_DAY => 'Average Number of Posts Per Day'
+			self::KPI_POSTS_PER_DAY => 'Average Number of Posts Per Day',
+			self::KPI_RESPONSE_TIME => 'Average Response Time'
 		);
 	}
 

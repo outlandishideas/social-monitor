@@ -377,9 +377,9 @@ class PresenceController extends BaseController
 	private function generateResponseTimeGraphData($presence, $startDate, $endDate) {
 		$data = $presence->getResponseData($startDate, $endDate);
 		$points = array();
-		$bestTime = BaseController::getOption('response_time_best');
-		$goodTime = BaseController::getOption('response_time_good');
-		$badTime = BaseController::getOption('response_time_bad');
+		$bestTime = floatval(BaseController::getOption('response_time_best'));
+		$goodTime = floatval(BaseController::getOption('response_time_good'));
+		$badTime = floatval(BaseController::getOption('response_time_bad'));
 
 		if (!$data) {
 			$average = 0;
@@ -395,6 +395,7 @@ class PresenceController extends BaseController
 
 				$diff = ($row->first_response ? strtotime($row->first_response->created_time) : $now) - strtotime($row->post->created_time);
 				$diff /= (60*60);
+				$diff = min($badTime, $diff);
 				$totalTime += $diff;
 				$points[$key]->value[] = $diff;
 			}

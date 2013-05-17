@@ -76,6 +76,9 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
 			case Model_Campaign::KPI_POPULARITY_PERCENTAGE:
 				$label .= '%';
 				break;
+			case Model_Campaign::KPI_RESPONSE_TIME:
+				$label .= ' hours';
+				break;
 		}
 		return $label;
 	}

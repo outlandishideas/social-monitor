@@ -122,6 +122,13 @@ class BaseController extends Zend_Controller_Action {
 		$postsPerDayBad = self::getOption('updates_per_day_bad_range');
 		$metrics[Model_Campaign::KPI_POSTS_PER_DAY]->range = array(0, $postsPerDay - $postsPerDayBad, $postsPerDay - $postsPerDayOk, $postsPerDay + $postsPerDayOk, $postsPerDay + $postsPerDayBad, max($postsPerDay + $postsPerDayBad + 1, 2*$postsPerDay));
 		$metrics[Model_Campaign::KPI_POSTS_PER_DAY]->colors = array($colors->red, $colors->yellow, $colors->green, $colors->green, $colors->yellow, $colors->red);
+
+		$responseTimeBest = self::getOption('response_time_best');
+		$responseTimeGood = self::getOption('response_time_good');
+		$responseTimeBad = self::getOption('response_time_bad');
+		$metrics[Model_Campaign::KPI_RESPONSE_TIME]->range = array(0, $responseTimeBest, $responseTimeGood, $responseTimeBad);
+		$metrics[Model_Campaign::KPI_RESPONSE_TIME]->colors = array($colors->green, $colors->yellow, $colors->orange, $colors->red);
+
 		// convert each hex string to rgb values
 		foreach ($metrics as $args) {
 			$args->colorsRgb = array();
