@@ -416,12 +416,6 @@ table {
 
 table.text {
 	width: 100%;
-}
-table.text th {
-	background: #F5F5F5;
-}
-
-table.text {
 	margin-top: 10px;
 }
 
@@ -430,6 +424,7 @@ table.dataTable {
 }
 
 table.text th {
+	background: #F5F5F5;
 	font-weight: bold;
 	text-align: left;
 	border-bottom: 1px solid #ddd;
@@ -623,6 +618,7 @@ table.dtable.dataTable {
 	background-position: center right;
 	background-repeat: no-repeat;
 	*cursor: hand;
+	padding-right: 15px;
 }
 
 .dataTable .sorting { background-image: url(../img/sort_both.png); }

@@ -68,7 +68,7 @@ app.datatables = {
 			}
 
 			var width = $cell.data('width');
-			if (typeof sortType != 'undefined') {
+			if (typeof width != 'undefined') {
 				column.sWidth = width;
 			}
 
