@@ -144,8 +144,10 @@ class Model_Presence extends Model_Base {
 			throw new Exception('Presence not initialised');
 		}
 
-		$toInsert = array();
+		$statuses = array();
 		$responses = array();
+		$links = array();
+		$failedLinks = array();
 		$tableName = null;
 		$fetchCount = new Util_FetchCount(0, 0);
 		switch($this->type) {
@@ -162,7 +164,15 @@ class Model_Presence extends Model_Base {
 				while ($posts) {
 					$post = array_shift($posts);
 					$postedByOwner = $post->actor_id == $this->uid;
-					$toInsert[$post->post_id] = array(
+					if ($postedByOwner) {
+						$newLinks = $this->extractLinks($post->message);
+						foreach ($newLinks as $link) {
+							$link['post_id'] = $post->post_id;
+							$link['type'] = $this->type;
+							$links[] = $link;
+						}
+					}
+					$statuses[$post->post_id] = array(
 						'post_id' => $post->post_id,
 						'presence_id' => $this->id,
 						'message' => $post->message,
@@ -218,7 +228,7 @@ class Model_Presence extends Model_Base {
 				while ($tweets) {
 					$tweet = array_shift($tweets);
 					$parsedTweet = Util_Twitter::parseTweet($tweet);
-					$toInsert[$tweet->id_str] = array(
+					$statuses[$tweet->id_str] = array(
 						'tweet_id' => $tweet->id_str,
 						'presence_id' => $this->id,
 						'text_expanded' => $parsedTweet['text_expanded'],
@@ -233,16 +243,60 @@ class Model_Presence extends Model_Base {
 		}
 
 		if ($tableName) {
-			if ($toInsert) {
-				$fetchCount->fetched += count($toInsert);
-				$fetchCount->added += $this->insertData($tableName, $toInsert);
+			if ($statuses) {
+				$fetchCount->fetched += count($statuses);
+				$fetchCount->added += $this->insertData($tableName, $statuses);
 			}
 			if ($responses) {
 				$this->insertData($tableName, $responses);
 			}
+			if ($links) {
+				$columnName = $this->isForFacebook() ? 'post_id' : 'tweet_id';
+				$postIds = array_map(function($a) use($columnName) { return "'" . $a[$columnName] . "'"; }, $links);
+				$postIds = implode(',', $postIds);
+				$stmt = $this->_db->prepare("SELECT post_id, id FROM $tableName WHERE presence_id = :id AND $columnName IN ($postIds)");
+				$stmt->execute(array(':id'=>$this->id));
+				$lookup = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+				foreach ($links as $i=>$link) {
+					if (array_key_exists($link[$columnName], $lookup)) {
+						$links[$i]['status_id'] = $lookup[$link[$columnName]];
+						unset($links[$i][$columnName]);
+					}
+				}
+				$this->insertData('status_links', $links);
+			}
 		}
 
 		return $fetchCount;
+	}
+
+	private function extractLinks($message) {
+		$links = array();
+		$failedLinks = array();
+		if (preg_match_all('/[^\s]{5,}/', $message, $tokens)) {
+			foreach ($tokens[0] as $token) {
+				$token = trim($token, '.,');
+				if (filter_var($token, FILTER_VALIDATE_URL)) {
+					try {
+						$url = Util_Http::resolveUrl($token);
+						$start = max(strpos($url, '//')+2, 0);
+						$domain = substr($url, $start);
+						$end = strpos($domain, '/');
+						if ($end > 0) {
+							$domain = substr($domain, 0, $end);
+						}
+						$links[] = array(
+							'url'=>$url,
+							'domain'=>$domain
+						);
+					} catch (RuntimeException $ex) {
+						// ignore failed URLs
+						$failedLinks[] = $token;
+					}
+				}
+			}
+		}
+		return $links;
 	}
 
 	/**
