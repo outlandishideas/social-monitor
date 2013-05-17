@@ -77,18 +77,7 @@ app.datatables = {
 		return columns;
 	},
 	selectors: {
-		'#all-presences':function($table) {
-			$table.dataTable({
-				bScrollInfinite: true,
-				iDisplayLength: 1000,
-				bScrollCollapse: true,
-				sScrollY: '400px',
-				bFilter: false,
-				bInfo: false,
-				aoColumns: app.datatables.generateColumns($table)
-			});
-		},
-		'#all-countries': function($table) {
+		'.dtable.standard': function($table) {
 			$table.dataTable({
 				bScrollInfinite: true,
 				iDisplayLength: 1000,

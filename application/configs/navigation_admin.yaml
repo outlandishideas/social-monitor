@@ -2,6 +2,9 @@
 #  label: Users
 #  controller: user
 
+domain:
+  label: Domains
+  controller: domain
 config:
   label: Settings
   controller: config

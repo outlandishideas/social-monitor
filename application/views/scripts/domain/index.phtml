@@ -1,0 +1,25 @@
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm">
+	<table class="text dtable standard hoverable">
+		<thead>
+			<tr>
+				<th data-sort="auto">Domain</th>
+				<th data-sort="numeric">Links</th>
+				<th>British Council</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php /** @var $domain Model_Domain */ ?>
+			<?php foreach ($this->domains as $domain) : ?>
+			<tr>
+				<td><?php echo $domain->domain; ?></td>
+				<td><?php echo $domain->getLinkCount(); ?></td>
+				<td><input type="checkbox" <?php if ($domain->is_bc) { echo 'checked'; } ?> name="is_bc[<?php echo $domain->id; ?>]" /></td>
+			</tr>
+			<?php endforeach; ?>
+		</tbody>
+	</table>
+
+	<div class="buttonHolder">
+		<input type="submit" value="Save" class="primaryAction">
+	</div>
+</form>
