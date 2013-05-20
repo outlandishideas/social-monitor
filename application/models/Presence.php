@@ -147,7 +147,6 @@ class Model_Presence extends Model_Base {
 		$statuses = array();
 		$responses = array();
 		$links = array();
-		$failedLinks = array();
 		$tableName = null;
 		$fetchCount = new Util_FetchCount(0, 0);
 		switch($this->type) {
@@ -167,7 +166,7 @@ class Model_Presence extends Model_Base {
 					if ($postedByOwner) {
 						$newLinks = $this->extractLinks($post->message);
 						foreach ($newLinks as $link) {
-							$link['post_id'] = $post->post_id;
+							$link['external_id'] = $post->post_id;
 							$link['type'] = $this->type;
 							$links[] = $link;
 						}
@@ -227,6 +226,16 @@ class Model_Presence extends Model_Base {
 				$tweets = Util_Twitter::userTweets($this->uid, $lastTweetId);
 				while ($tweets) {
 					$tweet = array_shift($tweets);
+					foreach ($tweet->entities->urls as $urlInfo) {
+						$url = $urlInfo->expanded_url;
+						$domain = $this->extractDomain($url);
+						$links[] = array(
+							'url'=>$url,
+							'domain'=>$domain,
+							'external_id'=>$tweet->id_str,
+							'type'=>$this->type
+						);
+					}
 					$parsedTweet = Util_Twitter::parseTweet($tweet);
 					$statuses[$tweet->id_str] = array(
 						'tweet_id' => $tweet->id_str,
@@ -251,16 +260,16 @@ class Model_Presence extends Model_Base {
 				$this->insertData($tableName, $responses);
 			}
 			if ($links) {
-				$columnName = $this->isForFacebook() ? 'post_id' : 'tweet_id';
-				$postIds = array_map(function($a) use($columnName) { return "'" . $a[$columnName] . "'"; }, $links);
+				$postIds = array_map(function($a) { return "'" . $a['external_id'] . "'"; }, $links);
 				$postIds = implode(',', $postIds);
-				$stmt = $this->_db->prepare("SELECT post_id, id FROM $tableName WHERE presence_id = :id AND $columnName IN ($postIds)");
+				$columnName = $this->isForFacebook() ? 'post_id' : 'tweet_id';
+				$stmt = $this->_db->prepare("SELECT $columnName, id FROM $tableName WHERE presence_id = :id AND $columnName IN ($postIds)");
 				$stmt->execute(array(':id'=>$this->id));
 				$lookup = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 				foreach ($links as $i=>$link) {
-					if (array_key_exists($link[$columnName], $lookup)) {
-						$links[$i]['status_id'] = $lookup[$link[$columnName]];
-						unset($links[$i][$columnName]);
+					if (array_key_exists($link['external_id'], $lookup)) {
+						$links[$i]['status_id'] = $lookup[$link['external_id']];
+						unset($links[$i]['external_id']);
 					}
 				}
 				$this->insertData('status_links', $links);
@@ -270,21 +279,26 @@ class Model_Presence extends Model_Base {
 		return $fetchCount;
 	}
 
+	private function extractDomain($url) {
+		$start = max(strpos($url, '//')+2, 0);
+		$domain = substr($url, $start);
+		$end = strpos($domain, '/');
+		if ($end > 0) {
+			$domain = substr($domain, 0, $end);
+		}
+		return $domain;
+	}
+
 	private function extractLinks($message) {
 		$links = array();
 		$failedLinks = array();
 		if (preg_match_all('/[^\s]{5,}/', $message, $tokens)) {
 			foreach ($tokens[0] as $token) {
-				$token = trim($token, '.,');
+				$token = trim($token, '.,;!"()');
 				if (filter_var($token, FILTER_VALIDATE_URL)) {
 					try {
 						$url = Util_Http::resolveUrl($token);
-						$start = max(strpos($url, '//')+2, 0);
-						$domain = substr($url, $start);
-						$end = strpos($domain, '/');
-						if ($end > 0) {
-							$domain = substr($domain, 0, $end);
-						}
+						$domain = $this->extractDomain($url);
 						$links[] = array(
 							'url'=>$url,
 							'domain'=>$domain
