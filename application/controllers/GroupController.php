@@ -26,7 +26,7 @@ class GroupController extends CampaignController {
             $this->validateData($presence);
             $compareData[$presence->id] = (object)array(
                 'presence'=>$presence,
-                'graphs'=>$presence->graphs()
+                'graphs'=>$this->graphs($presence)
             );
         }
 

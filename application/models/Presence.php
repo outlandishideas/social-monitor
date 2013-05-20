@@ -11,29 +11,6 @@ class Model_Presence extends Model_Base {
 		'bucket_day' => 86400 // 24*60*60
 	);
 
-    public function graphs() {
-        $graphs = array();
-        $graphs[] = (object)array(
-            'metric' => 'popularity',
-            'yAxisLabel' => ($this->isForFacebook() ? 'Fans' : 'Followers') . ' gained per day',
-            'title' => 'Audience Rate'
-        );
-        $graphs[] = (object)array(
-            'metric' => 'posts_per_day',
-            'yAxisLabel' => 'Posts per day',
-            'title' => 'Posts Per Day'
-        );
-        $graphs[] = (object)array(
-            'metric' => 'response_time',
-            'yAxisLabel' => 'Response time (hours)',
-            'title' => 'Average Response Time (hours)'
-        );
-        foreach ($graphs as $g) {
-            $g->presence_id = $this->id;
-        }
-        return $graphs;
-    }
-
 	const TYPE_FACEBOOK = 'facebook';
 	const TYPE_TWITTER = 'twitter';
 

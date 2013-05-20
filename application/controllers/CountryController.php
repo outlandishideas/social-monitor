@@ -18,15 +18,15 @@ class CountryController extends CampaignController {
 	 */
 	public function viewAction()
 	{
+		/** @var Model_Country $country */
 		$country = Model_Country::fetchById($this->_request->id);
 		$this->validateData($country);
 
         $compareData = array();
-        foreach($country->presences as $presence){
-            $this->validateData($presence);
+        foreach($country->getPresences() as $presence){
             $compareData[$presence->id] = (object)array(
                 'presence'=>$presence,
-                'graphs'=>$presence->graphs()
+                'graphs'=>$this->graphs($presence)
             );
         }
 
