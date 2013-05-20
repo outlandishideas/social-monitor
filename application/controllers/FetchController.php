@@ -69,9 +69,13 @@ class FetchController extends BaseController
 			$this->touchLock();
 		}
 
+		$this->log('Updating linked domains');
+		$inserted = $this->updateDomains();
+		$this->log('Inserted ' . count($inserted) . ' domains');
+
 		$this->log('Updating facebook actors');
 		$inserted = $this->updateFacebookActors();
-		$this->log('Updated ' . count($inserted));
+		$this->log('Updated ' . count($inserted) . ' actors');
 
 		$this->touchLock();
 
@@ -169,6 +173,25 @@ class FetchController extends BaseController
 			}
 		}
 
+		return $inserted;
+	}
+
+	public function updateDomains() {
+		$db = self::db();
+		$inserted = array();
+		$stmt = $db->prepare('SELECT DISTINCT l.domain
+			FROM status_links AS l
+			LEFT OUTER JOIN domains AS d ON l.domain = d.domain
+			WHERE d.id IS NULL');
+		$stmt->execute();
+		$toInsert = $stmt->fetchAll(PDO::FETCH_COLUMN);
+		$stmt = $db->prepare('INSERT INTO domains (domain) VALUES (:domain)');
+		foreach ($toInsert as $domain) {
+			try {
+				$stmt->execute(array(':domain'=>$domain));
+				$inserted[] = $domain;
+			} catch (Exception $ex) {}
+		}
 		return $inserted;
 	}
 
