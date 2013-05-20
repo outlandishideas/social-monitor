@@ -181,7 +181,7 @@ class PresenceController extends GraphingController
                 $data = null;
 				$metric = $chart['metric'];
 				switch ($metric) {
-					case Model_Presence::METRIC_POPULARITY:
+					case Model_Presence::METRIC_POPULARITY_RATE:
 						$data = $this->generatePopularityGraphData($presence, $startDate, $endDate);
 						break;
 					case Model_Presence::METRIC_POSTS_PER_DAY:
@@ -195,10 +195,11 @@ class PresenceController extends GraphingController
 						break;
 				}
 				if ($data) {
+					$trafficLight = $this->view->trafficLight();
 					foreach ($data['points'] as $point) {
-						$point->color = $this->view->trafficLight()->color($point->value, $metric);
+						$point->color = $trafficLight->color(isset($point->health) ? $point->health : $point->value, $metric);
 					}
-					$data['color'] = $this->view->trafficLight()->color($data['health'], $metric);
+					$data['color'] = $trafficLight->color(isset($data['health']) ? $data['health'] : $data['average'], $metric);
                     $data['chart'] = $chart;
 					$series[] = $data;
 				}
@@ -232,14 +233,42 @@ class PresenceController extends GraphingController
 
 			$targetDiff = $target - $current->value;
 
-			$healthCalc = new Util_HealthCalculator($targetDiff);
-			$requiredRates = $healthCalc->requiredRates($current->datetime);
+			$bestScore = BaseController::getOption('achieve_audience_best');
+			$goodScore = BaseController::getOption('achieve_audience_good');
+			$badScore = BaseController::getOption('achieve_audience_bad');
+
+			$daysPerMonth = 365/12;
+			$bestRate = $targetDiff/($daysPerMonth*$bestScore);
+			$goodRate = $targetDiff/($daysPerMonth*$goodScore);
+			$badRate = $targetDiff/($daysPerMonth*$badScore);
+
+			$healthCalc = function($value) use ($bestRate, $goodRate, $badRate, $targetDiff) {
+				if ($targetDiff < 0 || $value >= $bestRate) {
+					return 100;
+				} else if ($value < 0 || $value <= $badRate) {
+					return 0;
+				} else if ($value >= $goodRate) {
+					return 50 + 50*($value - $goodRate)/($bestRate - $goodRate);
+				} else {
+					return 50*($value - $badRate)/($goodRate - $badRate);
+				}
+			};
+			$requiredRates = array();
+			if ($bestRate > 0) {
+				$requiredRates[] = array('rate'=>$bestRate, 'date'=>date('F Y', strtotime($current->datetime . ' +' . $bestScore . ' months')));
+			}
+			if ($goodRate > 0) {
+				$requiredRates[] = array('rate'=>$goodRate, 'date'=>date('F Y', strtotime($current->datetime . ' +' . $goodScore . ' months')));
+			}
+			if ($badRate > 0) {
+				$requiredRates[] = array('rate'=>$badRate, 'date'=>date('F Y', strtotime($current->datetime . ' +' . $badScore . ' months')));
+			}
 
 			if ($targetDiff > 0) {
 				if ($targetDate) {
 					$interval = date_create($targetDate)->diff(date_create($startDate));
 					$timeToTarget = array('y'=>$interval->y, 'm'=>$interval->m);
-					$graphHealth = $healthCalc->getHealth($targetDiff/$interval->days);
+					$graphHealth = $healthCalc($targetDiff/$interval->days);
 				}
 			} else {
 				$graphHealth = 100;
@@ -258,7 +287,7 @@ class PresenceController extends GraphingController
 				$prevDay = date('Y-m-d', strtotime($key . ' -1 day'));
 				if (array_key_exists($prevDay, $points)) {
 					$point->value = $point->total - $points[$prevDay]->total;
-					$point->health = $healthCalc->getHealth($point->value);
+					$point->health = $healthCalc($point->value);
 				} else {
 					$point->value = 0;
 				}
@@ -296,24 +325,11 @@ class PresenceController extends GraphingController
 		usort($data, function($a, $b) { return strcmp($a->date, $b->date); });
 
 		$target = BaseController::getOption('updates_per_day');
-		$okRange = BaseController::getOption('updates_per_day_ok_range');
-		$badRange = BaseController::getOption('updates_per_day_bad_range');
-		$healthCalc = function($value) use ($target, $okRange, $badRange) {
-			$targetDiff = abs($value - $target);
-			if ($targetDiff <= $okRange) {
-				return 100;
-			} else if ($targetDiff <= $badRange) {
-				return 50;
-			} else {
-				return 0;
-			}
-		};
 		$average = 0;
 		if ($data) {
 			$total = 0;
 			foreach ($data as $row) {
 				$total += $row->value;
-				$row->health = $healthCalc($row->value);
 			}
 			$average = $total/count($data);
 		}
@@ -321,8 +337,7 @@ class PresenceController extends GraphingController
 		return array(
 			'average' => $average,
 			'target' => $target,
-			'points' => $data,
-			'health' => $healthCalc($average)
+			'points' => $data
 		);
 	}
 
@@ -335,13 +350,11 @@ class PresenceController extends GraphingController
 	private function generateResponseTimeGraphData($presence, $startDate, $endDate) {
 		$data = $presence->getResponseData($startDate, $endDate);
 		$points = array();
-		$bestTime = floatval(BaseController::getOption('response_time_best'));
 		$goodTime = floatval(BaseController::getOption('response_time_good'));
 		$badTime = floatval(BaseController::getOption('response_time_bad'));
 
 		if (!$data) {
 			$average = 0;
-			$health = 0;
 		} else {
 			$now = time();
 			$totalTime = 0;
@@ -359,32 +372,17 @@ class PresenceController extends GraphingController
 			}
 			$average = $totalTime/count($data);
 
-			$healthCalc = function($value) use ($bestTime, $goodTime, $badTime) {
-				if ($value <= $bestTime) {
-					return 100;
-				} else if ($value <= $goodTime) {
-					return 50 + 50*(1-($value-$bestTime)/($goodTime-$bestTime));
-				} else if ($value <= $badTime) {
-					return 50*(1-($value-$goodTime)/($badTime-$goodTime));
-				} else {
-					return 0;
-				}
-			};
-
 			foreach ($points as $key=>$diffs) {
 				$points[$key]->value = round(10*array_sum($diffs->value)/count($diffs->value))/10;
-				$points[$key]->health = $healthCalc($points[$key]->value);
 			}
 			$points = $this->fillDateGaps($points, $startDate, $endDate, 0);
 			$points = array_values($points);
-			$health = $healthCalc($average);
 		}
 
 		return array(
 			'average' => $average,
 			'target' => $goodTime,
 			'points' => $points,
-			'health' => $health
 		);
 	}
 
@@ -400,22 +398,13 @@ class PresenceController extends GraphingController
 		$data = $presence->getLinkRatioData($startDate, $endDate);
 		if (!$data) {
 			$average = 0;
-			$health = 0;
 		} else {
-			$healthCalc = function($value) use ($target) {
-				if ($value >= $target) {
-					return 100;
-				} else {
-					return $value/$target;
-				}
-			};
-
 			$total = 0;
 			$bc = 0;
 			foreach ($data as $row) {
 				$key = $row->date;
 				$value = ($row->total ? 100*$row->bc/$row->total : 0);
-				$points[$key] = (object)array('date'=>$key, 'value'=>$value, 'health'=>$healthCalc($value));
+				$points[$key] = (object)array('date'=>$key, 'value'=>$value);
 				$total += $row->total;
 				$bc += $row->bc;
 			}
@@ -423,13 +412,11 @@ class PresenceController extends GraphingController
 
 			$points = $this->fillDateGaps($points, $startDate, $endDate, 0);
 			$points = array_values($points);
-			$health = $healthCalc($average);
 		}
 		return array(
 			'average' => $average,
 			'target' => $target,
-			'points' => $points,
-			'health' => $health
+			'points' => $points
 		);
 	}
 

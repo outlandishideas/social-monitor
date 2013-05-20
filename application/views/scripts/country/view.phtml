@@ -84,7 +84,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
         <tr class="average">
             <td>Country Average</td>
-            <?php foreach ($this->country->getKpiAverages() as $key=>$value) : ?>
+            <?php $kpiData = $this->country->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                 <td>
                     <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
                     <?php echo $this->trafficLight()->label($value, $key); ?>

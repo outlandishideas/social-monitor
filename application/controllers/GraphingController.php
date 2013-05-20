@@ -5,7 +5,7 @@ abstract class GraphingController extends BaseController {
 
 	protected static function graphMetrics() {
 		return array(
-			Model_Presence::METRIC_POPULARITY => 'Audience Rate',
+			Model_Presence::METRIC_POPULARITY_RATE => 'Audience Rate',
 			Model_Presence::METRIC_POSTS_PER_DAY => 'Posts Per Day',
 			Model_Presence::METRIC_RESPONSE_TIME => 'Response Time',
 			Model_Presence::METRIC_LINK_RATIO => 'Links Ratio'
@@ -14,7 +14,7 @@ abstract class GraphingController extends BaseController {
 
 	protected static function mapMetrics(){
 		return array(
-			Model_Presence::METRIC_POPULARITY => 'Percent of Target Audience',
+			Model_Presence::METRIC_POPULARITY_PERCENT => 'Percent of Target Audience',
 			Model_Presence::METRIC_POPULARITY_TIME => 'Time to Reach Target Audience',
 			Model_Presence::METRIC_POSTS_PER_DAY => 'Average Number of Posts Per Day',
 			Model_Presence::METRIC_RESPONSE_TIME => 'Average Response Time',
@@ -24,7 +24,7 @@ abstract class GraphingController extends BaseController {
 
 	protected static function tableMetrics(){
 		return array(
-			Model_Presence::METRIC_POPULARITY => 'Percent of Target Audience',
+			Model_Presence::METRIC_POPULARITY_PERCENT => 'Percent of Target Audience',
 			Model_Presence::METRIC_POPULARITY_TIME => 'Time to Reach Target Audience',
 			Model_Presence::METRIC_POSTS_PER_DAY => 'Average Number of Posts Per Day',
 			Model_Presence::METRIC_RESPONSE_TIME => 'Average Response Time',
@@ -35,7 +35,7 @@ abstract class GraphingController extends BaseController {
 	protected function graphs(Model_Presence $presence) {
 		$graphs = array();
 		$graphs[] = (object)array(
-			'metric' => Model_Presence::METRIC_POPULARITY,
+			'metric' => Model_Presence::METRIC_POPULARITY_RATE,
 			'yAxisLabel' => ($presence->isForFacebook() ? 'Fans' : 'Followers') . ' gained per day',
 			'title' => 'Audience Rate'
 		);
@@ -71,7 +71,7 @@ abstract class GraphingController extends BaseController {
 		);
 		$metrics = array();
 
-		$metrics[Model_Presence::METRIC_POPULARITY] = (object)array(
+		$metrics[Model_Presence::METRIC_POPULARITY_PERCENT] = (object)array(
 			'range' => array(0, 50, 100),
 			'colors' => array($colors->red, $colors->yellow, $colors->green)
 		);
@@ -82,6 +82,10 @@ abstract class GraphingController extends BaseController {
 		$metrics[Model_Presence::METRIC_POPULARITY_TIME] = (object)array(
 			'range' => array($audienceBest, $audienceGood, $audienceBad, $audienceGood+$audienceBad),
 			'colors' => array($colors->green, $colors->yellow, $colors->orange, $colors->red)
+		);
+		$metrics[Model_Presence::METRIC_POPULARITY_RATE] = (object)array(
+			'range' => array(0, 33, 66, 100),
+			'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
 		);
 
 		$postsPerDay = self::getOption('updates_per_day');

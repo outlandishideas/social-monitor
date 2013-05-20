@@ -73,7 +73,7 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
 					$label = implode(', ', $components);
 				}
 				break;
-			case Model_Presence::METRIC_POPULARITY:
+			case Model_Presence::METRIC_POPULARITY_PERCENT:
 			case Model_Presence::METRIC_LINK_RATIO:
 				$label .= '%';
 				break;
