@@ -12,7 +12,7 @@
 			?>
 
             <li class="social-media box traffic-lights <?php echo $presence->type; ?>">
-                <?php $sign = $presence->type == Model_Presence::TYPE_FACEBOOK ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
+                <?php $sign = $presence->isForFacebook() ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
 
                 <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>"
                    class="presence"

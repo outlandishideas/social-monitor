@@ -35,8 +35,8 @@ if ($links) {
 					<a href="<?php echo $presence->page_url; ?>" target="_blank" class="icon external"></a>
 				</div>
 			</td>
-			<td><?php echo number_format($presence->popularity) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
-			<td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
+			<td><?php echo number_format($presence->popularity) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
+			<td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
 			<?php
 			$kpiData = $presence->getKpiData();
 			foreach ($this->tableMetrics as $key=>$label) :
