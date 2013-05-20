@@ -42,10 +42,11 @@ if ($links) {
 			foreach ($this->tableMetrics as $key=>$label) :
 				$value = $kpiData[$key];
 			?>
-				<td>
-					<div class="traffic-light" data-value="<?php echo $value; ?>" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
-					<span><?php echo $this->trafficLight()->label($value, $key); ?></span>
-				</td>
+
+                <td>
+                    <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
+                    <?php echo $this->trafficLight()->label($value, $key); ?>
+                </td>
 			<?php endforeach; ?>
 			<td>
 				<?php

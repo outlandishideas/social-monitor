@@ -106,7 +106,7 @@ app.datatables = {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + app.state.controller + "/statuses",
 				fnServerParams: function(aoData) {
-					aoData.push({ name:"dateRange", value:app.state.dateRange });
+                    aoData.push({ name:"dateRange", value:app.state.dateRange });
 					aoData.push({ name:"id", value:$div.data('presence-id') });
 				},
 				fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {

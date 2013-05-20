@@ -390,7 +390,30 @@ app.charts = {
 			})
 			.on('mouseout', function (d, i) {
 				$('div.tipsy').remove();
-			});
+			})
+            .on('click', function(d, i){
+
+                console.log(d);
+
+                var $sibling = $(this).next('rect');
+                if($sibling.length == 0){
+                    $sibling = $(this).prev('rect');
+                }
+
+                if($(this).css('opacity') < 1){
+                    $(this).fadeTo('slow',1)
+                        .siblings('rect').fadeTo('slow',0.2);
+                } else {
+                    if($sibling.css('opacity') < 1){
+                        $(this)
+                            .siblings('rect').fadeTo('slow',1);
+                    } else {
+                        $(this)
+                            .siblings('rect').fadeTo('slow',0.2);
+                    }
+
+                }
+            });
 	},
 
 	updateYAxis:function () {

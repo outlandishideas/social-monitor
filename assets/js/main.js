@@ -129,6 +129,10 @@ app.init = {
                         $listItem.remove();
                     }
 
+                    if($list.find('li').length == 0){
+                        $list.remove();
+                    }
+
                 }
 
                 var href = $button.data('href');
