@@ -36,7 +36,7 @@ class GroupController extends CampaignController {
             'response_time'=>'Average Response Time'
         );
         $this->view->compareData = $compareData;
-		$this->view->title = '<span class="icon-globe"></span> '. $group->display_name . ' <a href="#" class="accordian-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>';
+		$this->view->title = '<span class="icon-th-list"></span> '. $group->display_name . ' <a href="#" class="accordian-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>';
 		$this->view->titleInfo = $group->groupInfo();
         $this->view->group = $group;
 	}
