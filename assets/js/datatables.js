@@ -17,8 +17,7 @@ app.datatables = {
         // add a 'checkbox' sort type, which sorts by whether a checkbox is checked or not
         $.extend($.fn.dataTableExt.oSort, {
             "checkbox-pre": function ( a ) {
-                var $checkbox = $(a).filter('.compare-checkbox');
-                console.log($checkbox.is(':checked'));
+                var $checkbox = $(a).filter('input[type=checkbox]');
                 if ($checkbox.is(':checked')) {
                     return 1;
                 } else {
