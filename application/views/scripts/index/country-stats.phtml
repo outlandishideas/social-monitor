@@ -5,15 +5,28 @@
 	<ul class="presence-list">
 		<?php /** @var $presence Model_Presence */ ?>
 		<?php foreach ($this->country->presences as $presence) : ?>
+
 			<?php
 			$kpiData = $presence->getKpiData();
 			$metricValue = $kpiData[$this->metric];
 			?>
-		<li class="presence <?php echo $presence->type; ?>">
-			<div class="traffic-light" style="background-color: <?php echo $this->trafficLight()->color($metricValue, $this->metric); ?>;"
-			     title="<?php echo $this->trafficLight()->label($metricValue, $this->metric); ?>"></div>
-			<a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>"><?php echo $presence->getLabel(); ?></a>
-		</li>
+
+            <li class="social-media box traffic-lights <?php echo $presence->type; ?>">
+                <?php $sign = $presence->type == Model_Presence::TYPE_FACEBOOK ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
+
+                <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>"
+                   class="presence"
+                   title="<?php echo $this->trafficLight()->label($metricValue, $this->metric); ?>">
+
+                    <span class="<?php echo $sign; ?> icon-large front"></span>
+                    <?php echo $presence->getLabel(); ?>
+                    <span class="icon-circle icon-large back"
+                          style="color: <?php echo $this->trafficLight()->color($metricValue, $this->metric); ?>;">
+                    </span>
+
+                </a>
+            </li>
+
 		<?php endforeach; ?>
 	</ul>
 	<?php else : ?>

@@ -25,10 +25,10 @@
 			<td><a href="<?php echo $this->url(array('action'=>'view', 'id'=>$country->id)); ?>"><?php echo $country->display_name; ?></a></td>
 			<?php if ($presenceLinks) : ?>
 			<?php $kpiData = $country->getKpiAverages(); foreach ($kpis as $key=>$label) : $value = $kpiData[$key]; ?>
-				<td>
-					<div class="traffic-light" data-value="<?php echo $value; ?>" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
-					<?php echo $this->trafficLight()->label($value, $key); ?>
-				</td>
+                    <td>
+                        <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
+                        <?php echo $this->trafficLight()->label($value, $key); ?>
+                    </td>
 			<?php endforeach; ?>
 			<td><?php echo implode('', $presenceLinks); ?></td>
 			<?php else : ?>
