@@ -1,5 +1,4 @@
 <?php
-$kpis = Model_Campaign::getKpis();
 $links = $this->gatekeeper()->filterAll(array(
 	'<a class="button add" href="%url%"><span class="icon-plus"></span>  Add new</a>' => array('action' => 'new'),
     '<a class="button compare" data-href="%url%" href="%url%"><span class="icon-search"></span>  Compare</a>' => array('action' => 'compare', 'id'=>'')
@@ -16,7 +15,7 @@ if ($links) {
 			<th data-name="handle" data-sort="auto">Handle</th>
 			<th data-name="popularity" data-sort="fuzzy-numeric">Audience</th>
 			<th data-name="target" data-sort="fuzzy-numeric">Target audience</th>
-			<?php foreach ($kpis as $key=>$label) : ?>
+			<?php foreach ($this->tableMetrics as $key=>$label) : ?>
 			<th data-name="<?php echo $key; ?>" data-sort="traffic-light" data-width="150px"><?php echo $label; ?></th>
 			<?php endforeach; ?>
 			<th data-name="options" data-width="150px"></th>
@@ -40,7 +39,7 @@ if ($links) {
 			<td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
 			<?php
 			$kpiData = $presence->getKpiData();
-			foreach ($kpis as $key=>$label) :
+			foreach ($this->tableMetrics as $key=>$label) :
 				$value = $kpiData[$key];
 			?>
 

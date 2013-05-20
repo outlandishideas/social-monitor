@@ -1,4 +1,3 @@
-<?php $kpis = Model_Campaign::getKpis(); ?>
 <?php echo $this->gatekeeper()->filter('<p><a class="button add" href="%url%">Add new</a></p>', array('action'=>'new')); ?>
 
 <table class="text hoverable dtable standard" id="all-countries">
@@ -7,7 +6,7 @@
 			<th data-name="name" data-sort="auto">Name</th>
 			<th data-name="country" data-sort="auto" data-width="150px">Country</th>
 			<th data-name="audience" data-sort="fuzzy-numeric">Audience Size</th>
-			<?php foreach ($kpis as $key=>$label) : ?>
+			<?php foreach ($this->tableMetrics as $key=>$label) : ?>
 				<th data-name="<?php echo $key; ?>" data-width="150px" data-sort="traffic-light"><?php echo $label; ?> (average)</th>
 			<?php endforeach; ?>
 			<th data-name="presences">Presences</th>
@@ -28,7 +27,7 @@
 			<td><?php echo $country->getName() . ' (' . $country->country . ')'; ?></td>
 			<td><?php echo number_format($country->audience); ?></td>
 			<?php if ($presenceLinks) : ?>
-			<?php $kpiData = $country->getKpiAverages(); foreach ($kpis as $key=>$label) : $value = $kpiData[$key]; ?>
+			<?php $kpiData = $country->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
 				<td>
                     <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
 					<?php echo $this->trafficLight()->label($value, $key); ?>
@@ -36,7 +35,7 @@
 			<?php endforeach; ?>
 			<td><?php echo implode('', $presenceLinks); ?></td>
 			<?php else : ?>
-			<?php foreach ($kpis as $key=>$label) : ?>
+			<?php foreach ($this->tableMetrics as $key=>$label) : ?>
 			<td>-</td>
 			<?php endforeach; ?>
 			<td>-</td>

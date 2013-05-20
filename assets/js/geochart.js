@@ -14,7 +14,7 @@ app.geochart = {
 		});
 
 		// copy the provided metrics to app.geochart, and populate values
-		app.geochart.metrics = metrics;
+		app.geochart.metrics = geochartMetrics;
 		for (var i in app.geochart.metrics) {
 			var metric = app.geochart.metrics[i];
 			metric.key = i;

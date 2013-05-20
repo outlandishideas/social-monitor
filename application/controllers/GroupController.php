@@ -3,13 +3,14 @@
 class GroupController extends CampaignController {
 
 	/**
-	 * Lists all countries
+	 * Lists all groups
 	 * @permission list_group
 	 */
 	public function indexAction() {
 
 		$this->view->title = 'Groups';
-		$this->view->countries = Model_Group::fetchAll();
+		$this->view->groups = Model_Group::fetchAll();
+		$this->view->tableMetrics = self::tableMetrics();
 	}
 
 	/**
@@ -18,23 +19,20 @@ class GroupController extends CampaignController {
 	 */
 	public function viewAction()
 	{
+		/** @var Model_Group $group */
 		$group = Model_Group::fetchById($this->_request->id);
 		$this->validateData($group);
 
         $compareData = array();
         foreach($group->presences as $presence){
-            $this->validateData($presence);
             $compareData[$presence->id] = (object)array(
                 'presence'=>$presence,
-                'graphs'=>$presence->graphs()
+                'graphs'=>$this->graphs($presence)
             );
         }
 
-        $this->view->metrics = array(
-            'popularity'=>'Audience Rate',
-            'posts_per_day'=>'Posts Per Day',
-            'response_time'=>'Average Response Time'
-        );
+		$this->view->metricOptions = self::graphMetrics();
+		$this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
 		$this->view->title = '<span class="icon-th-list"></span> '. $group->display_name . ' <a href="#" class="accordian-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>';
 		$this->view->titleInfo = $group->groupInfo();
@@ -120,6 +118,7 @@ class GroupController extends CampaignController {
 	 * @permission manage_group
 	 */
 	public function manageAction() {
+		/** @var Model_Group $group */
 		$group = Model_Group::fetchById($this->_request->id);
 		$this->validateData($group);
 

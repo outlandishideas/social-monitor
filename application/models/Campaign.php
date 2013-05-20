@@ -4,11 +4,6 @@ class Model_Campaign extends Model_Base {
 	protected static $tableName = 'campaigns';
 	protected static $sortColumn = 'display_name';
 
-	const KPI_POPULARITY_PERCENTAGE = 'popularityPercentage';
-	const KPI_POPULARITY_TIME = 'popularityTime';
-	const KPI_POSTS_PER_DAY = 'postsPerDay';
-	const KPI_RESPONSE_TIME = 'responseTime';
-
 	public function delete() {
 		$this->_db->prepare('DELETE FROM campaign_presences WHERE campaign_id = :cid')->execute(array(':cid'=>$this->id));
 		parent::delete();
@@ -52,15 +47,6 @@ class Model_Campaign extends Model_Base {
 		return array_filter($this->getPresences(), function($a) { return $a->type == 'twitter'; });
 	}
 
-	static function getKpis(){
-		return array(
-			self::KPI_POPULARITY_PERCENTAGE => 'Percent of Target Audience',
-			self::KPI_POPULARITY_TIME => 'Time to Reach Target Audience',
-			self::KPI_POSTS_PER_DAY => 'Average Number of Posts Per Day',
-			self::KPI_RESPONSE_TIME => 'Average Response Time'
-		);
-	}
-
 	function getKpiData(){
 		$return = array();
 
@@ -79,31 +65,33 @@ class Model_Campaign extends Model_Base {
 	}
 
 	function getKpiAverages() {
-		$kpiKeys = array_keys(Model_Campaign::getKpis());
-
-		$scores = array();
-		foreach ($kpiKeys as $key) {
-			$scores[$key] = array();
-		}
-		foreach ($this->getKpiData() as $p) {
-			foreach ($kpiKeys as $key) {
-				$scores[$key][] = $p[$key];
+		if (!isset($this->kpiAverages)) {
+			$scores = array();
+			$metrics = Model_Presence::$ALL_METRICS;
+			foreach ($metrics as $m) {
+				$scores[$m] = array();
 			}
-		}
-		$averages = array();
-		foreach ($kpiKeys as $key) {
-			$total = 0;
-			$count = 0;
-			foreach ($scores[$key] as $value) {
-				if ($value !== null) {
-					$total += $value;
-					$count++;
+			foreach ($this->getKpiData() as $p) {
+				foreach ($metrics as $m) {
+					$scores[$m][] = $p[$m];
 				}
 			}
-			$average = $count > 0 ? $total/$count : null;
-			$averages[$key] = $average;
+			$averages = array();
+			foreach ($scores as $key=>$s) {
+				$total = 0;
+				$count = 0;
+				foreach ($s as $value) {
+					if ($value !== null) {
+						$total += $value;
+						$count++;
+					}
+				}
+				$average = $count > 0 ? $total/$count : null;
+				$averages[$key] = $average;
+			}
+			$this->kpiAverages = $averages;
 		}
 
-		return $averages;
+		return $this->kpiAverages;
 	}
 }

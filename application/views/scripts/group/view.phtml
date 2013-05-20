@@ -1,6 +1,4 @@
 <?php
-$kpis = Model_Campaign::getKpis();
-
 $buttons = $this->gatekeeper()->filterAll(array(
 	'<a class="button" href="%url%">Edit Group</a>' => array('action'=>'edit', 'id'=>$this->group->id),
 	'<a class="button" href="%url%">Manage Presences</a>' => array('action'=>'manage', 'id'=>$this->group->id)
@@ -24,8 +22,6 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
 <?php else : ?>
 
-    <div id="share-box"><span class="link">Link to this page</span></div>
-
     <div id="charts" data-controller="presence" data-controller-label="presence">
         <?php
         $currentId = 1;
@@ -46,7 +42,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
             <th>Handle</th>
             <th>Audience size</th>
             <th>Target audience</th>
-            <?php foreach ($kpis as $key=>$label) : ?>
+            <?php foreach ($this->tableMetrics as $key=>$label) : ?>
                 <th><?php echo $label; ?></th>
             <?php endforeach; ?>
         </tr>
@@ -61,7 +57,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
                 </td>
                 <td><?php echo number_format($presence->popularity) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
                 <td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
-                <?php $kpiData = $presence->getKpiData(); foreach ($kpis as $key=>$label) : $value = $kpiData[$key]; ?>
+                <?php $kpiData = $presence->getKpiData(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                     <td>
                         <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
                         <?php echo $this->trafficLight()->label($value, $key); ?>

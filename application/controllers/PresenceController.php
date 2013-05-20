@@ -1,17 +1,13 @@
 <?php
 
-class PresenceController extends BaseController
+class PresenceController extends GraphingController
 {
 
 	public function indexAction()
 	{
 		$this->view->title = 'All Presences';
-//		if ($this->_request->group) {
-//			$filter = 'campaign_id='. $this->_request->group;
-//		} else {
-			$filter = null;
-//		}
-		$this->view->presences = Model_Presence::fetchAll($filter);
+		$this->view->presences = Model_Presence::fetchAll();
+		$this->view->tableMetrics = self::tableMetrics();
 	}
 
 	/**
@@ -23,23 +19,6 @@ class PresenceController extends BaseController
 		/** @var Model_Presence $presence */
 		$presence = Model_Presence::fetchById($this->_request->id);
 		$this->validateData($presence);
-
-		$graphs = array();
-		$graphs[] = (object)array(
-			'metric' => 'popularity',
-			'yAxisLabel' => ($presence->isForFacebook() ? 'Fans' : 'Followers') . ' gained per day',
-			'title' => 'Audience Rate'
-		);
-		$graphs[] = (object)array(
-			'metric' => 'posts_per_day',
-			'yAxisLabel' => 'Posts per day',
-			'title' => 'Posts Per Day'
-		);
-		$graphs[] = (object)array(
-			'metric' => 'response_time',
-			'yAxisLabel' => 'Response time (hours)',
-			'title' => 'Average Response Time (hours)'
-		);
 
 		$title = '';
 		if ($presence->image_url) {
@@ -68,37 +47,10 @@ class PresenceController extends BaseController
         }
 
         $this->view->title = 'Comparing '.count($compareData).' Presences';
-	    $this->view->metrics = array(
-		    'popularity'=>'Audience Rate',
-		    'posts_per_day'=>'Posts Per Day',
-		    'response_time'=>'Average Response Time'
-	    );
+	    $this->view->metricOptions = self::graphMetrics();
+	    $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
     }
-
-	private function graphs(Model_Presence $presence) {
-		$graphs = array();
-		$graphs[] = (object)array(
-			'metric' => 'popularity',
-			'yAxisLabel' => ($presence->isForFacebook() ? 'Fans' : 'Followers') . ' gained per day',
-			'title' => 'Audience Rate'
-		);
-		$graphs[] = (object)array(
-			'metric' => 'posts_per_day',
-			'yAxisLabel' => 'Posts per day',
-			'title' => 'Posts Per Day'
-		);
-		$graphs[] = (object)array(
-			'metric' => 'response_time',
-			'yAxisLabel' => 'Response time (hours)',
-			'title' => 'Average Response Time (hours)'
-		);
-		foreach ($graphs as $g) {
-			$g->presence_id = $presence->id;
-		}
-		return $graphs;
-	}
-
 
 	/**
 	 * Creates a new presence
@@ -215,7 +167,7 @@ class PresenceController extends BaseController
 		/** @var $presence Model_Presence */
         $chartData = $this->_request->chartData;
 		if (!$chartData) {
-			$this->apiError('Missing line IDs');
+			$this->apiError('Missing chart options');
 		}
 
 		$startDate = $dateRange[0];
@@ -227,18 +179,26 @@ class PresenceController extends BaseController
 			$presence = Model_Presence::fetchById($chart['presence_id']);
 			if ($presence) {
                 $data = null;
-				switch ($chart['metric']) {
-					case 'popularity':
+				$metric = $chart['metric'];
+				switch ($metric) {
+					case Model_Presence::METRIC_POPULARITY:
 						$data = $this->generatePopularityGraphData($presence, $startDate, $endDate);
 						break;
-					case 'posts_per_day':
+					case Model_Presence::METRIC_POSTS_PER_DAY:
                         $data = $this->generatePostsPerDayGraphData($presence, $startDate, $endDate);
 						break;
-					case 'response_time':
+					case Model_Presence::METRIC_RESPONSE_TIME:
 						$data = $this->generateResponseTimeGraphData($presence, $startDate, $endDate);
+						break;
+					case Model_Presence::METRIC_LINK_RATIO:
+						$data = $this->generateLinkRatioGraphData($presence, $startDate, $endDate);
 						break;
 				}
 				if ($data) {
+					foreach ($data['points'] as $point) {
+						$point->color = $this->view->trafficLight()->color($point->value, $metric);
+					}
+					$data['color'] = $this->view->trafficLight()->color($data['health'], $metric);
                     $data['chart'] = $chart;
 					$series[] = $data;
 				}
@@ -352,8 +312,8 @@ class PresenceController extends BaseController
 		if ($data) {
 			$total = 0;
 			foreach ($data as $row) {
-				$total += $row->post_count;
-				$row->health = $healthCalc($row->post_count);
+				$total += $row->value;
+				$row->health = $healthCalc($row->value);
 			}
 			$average = $total/count($data);
 		}
@@ -428,8 +388,49 @@ class PresenceController extends BaseController
 		);
 	}
 
-	public static function getStatusType($id){
-		return Model_Presence::fetchById($id)->typeLabel;
+	/**
+	 * @param Model_Presence $presence
+	 * @param $startDate
+	 * @param $endDate
+	 * @return array
+	 */
+	private function generateLinkRatioGraphData($presence, $startDate, $endDate) {
+		$points = array();
+		$target = 80;
+		$data = $presence->getLinkRatioData($startDate, $endDate);
+		if (!$data) {
+			$average = 0;
+			$health = 0;
+		} else {
+			$healthCalc = function($value) use ($target) {
+				if ($value >= $target) {
+					return 100;
+				} else {
+					return $value/$target;
+				}
+			};
+
+			$total = 0;
+			$bc = 0;
+			foreach ($data as $row) {
+				$key = $row->date;
+				$value = ($row->total ? 100*$row->bc/$row->total : 0);
+				$points[$key] = (object)array('date'=>$key, 'value'=>$value, 'health'=>$healthCalc($value));
+				$total += $row->total;
+				$bc += $row->bc;
+			}
+			$average = $total ? 100*$bc/$total : 0;
+
+			$points = $this->fillDateGaps($points, $startDate, $endDate, 0);
+			$points = array_values($points);
+			$health = $healthCalc($average);
+		}
+		return array(
+			'average' => $average,
+			'target' => $target,
+			'points' => $points,
+			'health' => $health
+		);
 	}
 
 	public function toggleResponseNeededAction() {

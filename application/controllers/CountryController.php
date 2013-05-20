@@ -9,6 +9,7 @@ class CountryController extends CampaignController {
 	public function indexAction() {
 
 		$this->view->title = 'Countries';
+		$this->view->tableMetrics = self::tableMetrics();
 		$this->view->countries = Model_Country::fetchAll();
 	}
 
@@ -18,54 +19,24 @@ class CountryController extends CampaignController {
 	 */
 	public function viewAction()
 	{
+		/** @var Model_Country $country */
 		$country = Model_Country::fetchById($this->_request->id);
 		$this->validateData($country);
 
         $compareData = array();
-        foreach($country->presences as $presence){
-            $this->validateData($presence);
+        foreach($country->getPresences() as $presence){
             $compareData[$presence->id] = (object)array(
                 'presence'=>$presence,
-                'graphs'=>$presence->graphs()
+                'graphs'=>$this->graphs($presence)
             );
         }
 
-        $this->view->metrics = array(
-            'popularity'=>'Audience Rate',
-            'posts_per_day'=>'Posts Per Day',
-            'response_time'=>'Average Response Time'
-        );
+        $this->view->metricOptions = self::graphMetrics();
+        $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
 		$this->view->title = '<span class="icon-globe"></span> '. $country->display_name . ' <a href="#" class="accordian-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>';
 		$this->view->titleInfo = $country->countryInfo();
         $this->view->country = $country;
-	}
-
-	/**
-	 * Gets KPI data for a country
-	 * @permission view_country
-	 */
-	public function kpiDataAction()
-	{
-		/** @var $country Model_Country */
-		if($this->_request->code) {
-			$country = Model_Country::fetchByCountryCode($this->_request->code);
-		} else {
-			$country = Model_Country::fetchById($this->_request->id);
-		}
-
-		if ($country) {
-			$data = array(
-				'name' => $country->name,
-				'audience' => number_format($country->audience),
-				'pages' => count($country->getFacebookPages()),
-				'handles' => count($country->getTwitterAccounts())
-			);
-
-			$this->apiSuccess($data);
-		} else {
-			$this->apiError('Country not found');
-		}
 	}
 
 	/**
@@ -178,6 +149,7 @@ class CountryController extends CampaignController {
 	 * @permission manage_country
 	 */
 	public function manageAction() {
+		/** @var Model_Country $country */
 		$country = Model_Country::fetchById($this->_request->id);
 		$this->validateData($country);
 

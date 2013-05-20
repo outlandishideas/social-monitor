@@ -338,29 +338,6 @@ a:hover, span.link:hover {
     color: #333;
 }
 
-#share-box {
-	float: right;
-	clear: right;
-	margin-top: 20px;
-}
-	#share-box label {
-
-	}
-	#share-box input {
-		border: 1px solid #CCCCCC;
-		outline: none;
-		line-height: 20px;
-		color: #888;
-		padding: 0 5px;
-		margin-left: 10px;
-		font-style: italic;
-		font-size: 12px;
-	}
-	#share-box input:focus {
-		border-color: #24abf8;
-		color: #333;
-	}
-
 #nav-bar {
 	position: fixed;
 	top: 0;

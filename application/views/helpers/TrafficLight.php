@@ -54,7 +54,7 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
 	public function label($value, $metric) {
 		$label = round($value * 100)/100;
 		switch ($metric) {
-			case Model_Campaign::KPI_POPULARITY_TIME:
+			case Model_Presence::METRIC_POPULARITY_TIME:
 				if ($value == 0) {
 					$label = 'Target already reached';
 				} else {
@@ -73,10 +73,11 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
 					$label = implode(', ', $components);
 				}
 				break;
-			case Model_Campaign::KPI_POPULARITY_PERCENTAGE:
+			case Model_Presence::METRIC_POPULARITY:
+			case Model_Presence::METRIC_LINK_RATIO:
 				$label .= '%';
 				break;
-			case Model_Campaign::KPI_RESPONSE_TIME:
+			case Model_Presence::METRIC_RESPONSE_TIME:
 				$label .= ' hours';
 				break;
 		}

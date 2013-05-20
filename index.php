@@ -35,6 +35,7 @@ if (file_exists(APP_ROOT_PATH.'/maintenance.html')) {
 
 
 require_once APPLICATION_PATH.'/controllers/BaseController.php';
+require_once APPLICATION_PATH.'/controllers/GraphingController.php';
 require_once APPLICATION_PATH.'/controllers/CampaignController.php';
 
 $resourceLoader = new Zend_Application_Module_Autoloader(array(
