@@ -3,7 +3,7 @@
 <?php if (!$this->groups) : ?>
 <h3>No groups found</h3>
 <?php else : ?>
-<table class="text hoverable dtable" id="all-countries">
+<table class="text hoverable dtable standard" id="all-countries">
 	<thead>
 		<tr>
 			<th data-name="name" data-sort="auto">Name</th>
@@ -25,24 +25,19 @@
 				}
 			?>
 			<td><a href="<?php echo $this->url(array('action'=>'view', 'id'=>$group->id)); ?>"><?php echo $group->display_name; ?></a></td>
-			<?php if ($presenceLinks) : ?>
-			<?php $kpiData = $country->getKpiAverages(); foreach ($kpis as $key=>$label) : $value = $kpiData[$key]; ?>
+			<?php if ($presenceLinks == true) : ?>
+                <?php $kpiData = $group->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                     <td>
                         <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
                         <?php echo $this->trafficLight()->label($value, $key); ?>
                     </td>
-			<?php $kpiData = $group->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
-				<td>
-					<div class="traffic-light" data-value="<?php echo $value; ?>" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
-					<?php echo $this->trafficLight()->label($value, $key); ?>
-				</td>
-			<?php endforeach; ?>
-			<td><?php echo implode('', $presenceLinks); ?></td>
+                <?php endforeach; ?>
+                <td><?php echo implode('', $presenceLinks); ?></td>
 			<?php else : ?>
-			<?php foreach ($this->tableMetrics as $key=>$label) : ?>
-			<td>-</td>
-			<?php endforeach; ?>
-			<td>-</td>
+			    <?php foreach ($this->tableMetrics as $key=>$label) : ?>
+                    <td>-</td>
+                <?php endforeach; ?>
+			    <td>-</td>
 			<?php endif; ?>
 			<td class="options">
 				<?php

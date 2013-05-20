@@ -86,7 +86,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
             <td><?php echo number_format($avTarget) . ' fans/followers'; ?></td>
             <?php foreach ($this->group->getKpiAverages() as $key=>$value) : ?>
                 <td>
-                    <div class="traffic-light" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
+                    <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
                     <?php echo $this->trafficLight()->label($value, $key); ?>
                 </td>
             <?php endforeach; ?>

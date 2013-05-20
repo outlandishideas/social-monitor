@@ -58,7 +58,7 @@
                 </td>
                 <?php $kpiData = $presence->getKpiData(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                     <td>
-                        <div class="traffic-light" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
+                        <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
                         <?php echo $this->trafficLight()->label($value, $key); ?>
                     </td>
                 <?php endforeach; ?>
