@@ -17,12 +17,8 @@ app.datatables = {
         // add a 'checkbox' sort type, which sorts by whether a checkbox is checked or not
         $.extend($.fn.dataTableExt.oSort, {
             "checkbox-pre": function ( a ) {
-                var $checkbox = $(a).filter('input[type=checkbox]');
-                if ($checkbox.is(':checked')) {
-                    return 1;
-                } else {
-                    return 0;
-                }
+                var $checkbox = $('#' + $(a).filter('input[type=checkbox]').attr('id'));
+                return ($checkbox.is(':checked') ? 1 : 0);
             },
             "checkbox-asc": function ( a, b ) { return a - b; },
             "checkbox-desc": function ( a, b ) { return b - a; }
@@ -93,6 +89,20 @@ app.datatables = {
 	selectors: {
 		'.dtable.standard': function($table) {
 			$table.dataTable({
+				bScrollInfinite: true,
+				iDisplayLength: 1000,
+				bScrollCollapse: true,
+				sScrollY: '400px',
+				bFilter: false,
+				bInfo: false,
+				aoColumns: app.datatables.generateColumns($table)
+			});
+		},
+		'#all-presences': function($table) {
+			$table.dataTable({
+				aaSorting:[
+					[1, 'asc']
+				],
 				bScrollInfinite: true,
 				iDisplayLength: 1000,
 				bScrollCollapse: true,
