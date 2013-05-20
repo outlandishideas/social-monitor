@@ -444,6 +444,7 @@ class Model_Presence extends Model_Base {
 
 			$postIds = array_map(function($a) { return $a->post_id; }, $statuses);
 			$responses = array();
+			$links = array();
 			if ($postIds) {
 				$postIds = array_map(function($a) { return "'" . $a . "'"; }, $postIds);
 				$postIds = implode(',', $postIds);
@@ -454,6 +455,22 @@ class Model_Presence extends Model_Base {
 					if (!array_key_exists($key, $responses) || ($response->created_time < $responses[$key]->created_time)) {
 						$responses[$key] = $response;
 					}
+				}
+
+				$ids = array_map(function($a) { return $a->id; }, $statuses);
+				$ids = implode(',', $ids);
+				$stmt = $this->_db->prepare("SELECT * FROM status_links AS l INNER JOIN domains AS d USING (domain) WHERE status_id IN ($ids) AND type = :type");
+				$stmt->execute(array(':type'=>$this->type));
+				foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $link) {
+					$key = $link->status_id;
+					if (!array_key_exists($key, $links)) {
+						$links[$key] = array(
+							'internal'=>array(),
+							'external'=>array()
+						);
+					}
+					$innerKey = $link->is_bc ? 'internal' : 'external';
+					$links[$key][$innerKey][] = $link;
 				}
 			}
 
@@ -476,6 +493,12 @@ class Model_Presence extends Model_Base {
 					$status->first_response = $responses[$status->post_id];
 				} else {
 					$status->first_response = null;
+				}
+
+				if (array_key_exists($status->id, $links)) {
+					$status->links = count($links[$status->id]['internal']) . ', ' . count($links[$status->id]['external']);
+				} else {
+					$status->links = '';
 				}
 			}
 		}
@@ -558,7 +581,7 @@ class Model_Presence extends Model_Base {
 			$clauses[] = 'in_response_to IS NULL';
 		}
 
-		$stmt = $this->_db->prepare("SELECT date, COUNT(1) AS total, SUM(1) AS bc
+		$stmt = $this->_db->prepare("SELECT date, COUNT(1) AS total, SUM(is_bc) AS bc
 			FROM (
 				SELECT DATE(p.created_time) AS date, d.*
 				FROM domains AS d
