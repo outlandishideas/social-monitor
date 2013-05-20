@@ -4,7 +4,7 @@ class Model_Presence extends Model_Base {
 	protected static $tableName = 'presences';
 	protected static $sortColumn = 'handle';
 
-	const METRIC_POPULARITY = 'popularity';
+	const METRIC_POPULARITY_PERCENT = 'popularity';
 	const METRIC_POPULARITY_TIME = 'popularity_time';
 	const METRIC_POPULARITY_RATE = 'popularity_rate';
 	const METRIC_POSTS_PER_DAY = 'posts_per_day';
@@ -12,7 +12,7 @@ class Model_Presence extends Model_Base {
 	const METRIC_LINK_RATIO = 'link_ratio';
 
 	public static $ALL_METRICS = array(
-		self::METRIC_POPULARITY,
+		self::METRIC_POPULARITY_PERCENT,
 		self::METRIC_POPULARITY_TIME,
 		self::METRIC_POPULARITY_RATE,
 		self::METRIC_POSTS_PER_DAY,
@@ -92,7 +92,7 @@ class Model_Presence extends Model_Base {
 			$targetAudienceDate = $this->getTargetAudienceDate($startDateString, $endDateString);
 
 			// target audience %
-			$kpiData[self::METRIC_POPULARITY] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
+			$kpiData[self::METRIC_POPULARITY_PERCENT] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
 
 			// target audience rate (months until reaching target)
 			if ($currentAudience >= $targetAudience) {
