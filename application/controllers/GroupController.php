@@ -3,13 +3,13 @@
 class GroupController extends CampaignController {
 
 	/**
-	 * Lists all countries
+	 * Lists all groups
 	 * @permission list_group
 	 */
 	public function indexAction() {
 
 		$this->view->title = 'Groups';
-		$this->view->countries = Model_Group::fetchAll();
+		$this->view->groups = Model_Group::fetchAll();
 		$this->view->tableMetrics = self::tableMetrics();
 	}
 

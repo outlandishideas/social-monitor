@@ -1,5 +1,8 @@
 <?php echo $this->gatekeeper()->filter('<p><a class="button add" href="%url%">Add new</a></p>', array('action'=>'new')); ?>
 
+<?php if (!$this->groups) : ?>
+<h3>No groups found</h3>
+<?php else : ?>
 <table class="text hoverable dtable" id="all-countries">
 	<thead>
 		<tr>
@@ -12,18 +15,18 @@
 		</tr>
 	</thead>
 	<tbody>
-		<?php /** @var $country Model_Country */ ?>
-		<?php foreach ($this->countries as $country) : ?>
+		<?php /** @var $group Model_Group */ ?>
+		<?php foreach ($this->groups as $group) : ?>
 		<tr>
 			<?php
 				$presenceLinks = array();
-				foreach($country->getPresences() as $p) {
+				foreach($group->getPresences() as $p) {
 					$presenceLinks[] = '<div class="presence ' . $p->type . '" title="' . $p->name . '"><a href="' . $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)) . '">' . $p->handle . '</a></div>';
 				}
 			?>
-			<td><a href="<?php echo $this->url(array('action'=>'view', 'id'=>$country->id)); ?>"><?php echo $country->display_name; ?></a></td>
+			<td><a href="<?php echo $this->url(array('action'=>'view', 'id'=>$group->id)); ?>"><?php echo $group->display_name; ?></a></td>
 			<?php if ($presenceLinks) : ?>
-			<?php $kpiData = $country->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
+			<?php $kpiData = $group->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
 				<td>
 					<div class="traffic-light" data-value="<?php echo $value; ?>" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
 					<?php echo $this->trafficLight()->label($value, $key); ?>
@@ -39,9 +42,9 @@
 			<td class="options">
 				<?php
 					$actions = $this->gatekeeper()->filterAll(array(
-						'<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$country->id),
-						'<a href="%url%">Presences</a>' => array('action'=>'manage', 'id'=>$country->id),
-						'<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$country->id)
+						'<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$group->id),
+						'<a href="%url%">Presences</a>' => array('action'=>'manage', 'id'=>$group->id),
+						'<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$group->id)
 					));
 					echo implode(' | ', $actions);
 				?>
@@ -50,3 +53,4 @@
 		<?php endforeach; ?>
 	</tbody>
 </table>
+<?php endif; ?>
