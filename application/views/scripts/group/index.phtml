@@ -39,7 +39,7 @@
                 <?php endforeach; ?>
 			    <td>-</td>
 			<?php endif; ?>
-			<td class="options">
+			<td>
 				<?php
 					$actions = $this->gatekeeper()->filterAll(array(
 						'- <a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$group->id),
