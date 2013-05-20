@@ -10,6 +10,7 @@ class GroupController extends CampaignController {
 
 		$this->view->title = 'Groups';
 		$this->view->countries = Model_Group::fetchAll();
+		$this->view->tableMetrics = self::tableMetrics();
 	}
 
 	/**
@@ -30,7 +31,8 @@ class GroupController extends CampaignController {
             );
         }
 
-		$this->view->metricOptions = $this->graphMetrics();
+		$this->view->metricOptions = self::graphMetrics();
+		$this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
 		$this->view->title = '<span class="icon-th-list"></span> '. $group->display_name . ' <a href="#" class="accordian-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>';
 		$this->view->titleInfo = $group->groupInfo();

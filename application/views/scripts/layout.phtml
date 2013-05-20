@@ -79,7 +79,7 @@
 			->appendFile('http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js')
 			->appendFile('http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js')
 			->appendScript('var jsConfig = ' . json_encode($this->jsConfig) . ';')
-			->appendScript('var metrics = ' . json_encode($this->trafficMetrics) . ';')
+			->appendScript('var geochartMetrics = ' . json_encode($this->trafficMetrics) . ';')
 			->appendFile('assets/lib/d3/d3.v2.min.js') //use preminified version to avoid error
 			->appendFile('assets/lib/jquery/date.js')
 			->appendFile('assets/lib/jquery/daterangepicker.jQuery.js')

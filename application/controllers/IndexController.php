@@ -1,11 +1,12 @@
 <?php
 
-class IndexController extends BaseController
+class IndexController extends GraphingController
 {
 	public function indexAction() {
 		/** @var Model_Country[] $countries */
 		$countries = Model_Country::fetchAll();
 		$kpiData = array();
+		$metrics = self::mapMetrics();
 		foreach($countries as $country){
 			$row = array(
 				'country' => $country->country,
@@ -27,7 +28,7 @@ class IndexController extends BaseController
 		$this->view->title = 'Home';
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->kpiData = $kpiData;
-		$this->view->metricOptions = Model_Campaign::getKpis();
+		$this->view->metricOptions = $metrics;
 	}
 
 	public function dateRangeAction() {

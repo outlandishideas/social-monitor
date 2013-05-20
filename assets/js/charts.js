@@ -83,18 +83,6 @@ app.charts = {
 	 * Specific settings for charts
 	 */
 	customSetup: {
-		'popularity': function(chart) {
-			chart.shouldRescale = true;
-		},
-		'posts_per_day': function(chart) {
-			chart.getYValue = function (d) {
-				return d.post_count;
-			};
-			chart.shouldRescale = true;
-		},
-		'response_time': function(chart) {
-			chart.shouldRescale = true;
-		}
 	},
 
 
@@ -123,7 +111,7 @@ app.charts = {
 		var c = {
 			selector: selector,
 			$chart: $(selector),
-			shouldRescale: false,
+			shouldRescale: true,
 			drawBuckets: false,
 			drawCircles: false
 		};
@@ -219,7 +207,7 @@ app.charts = {
 		if (data.points.length == 0) {
 			$health.find('.value')
 				.text('No data found')
-				.css('color', app.charts.getColorForPercentage(0));
+				.css('color', data.color);
 			$health.find('.legend').text('');
 			$health.find('.target').html('');
 		} else {
@@ -229,7 +217,7 @@ app.charts = {
 				case 'popularity':
 					$health.find('.value')
 						.text(app.utils.numberFormat(data.current.value))
-						.css('color', app.charts.getColorForPercentage(data.health));
+						.css('color', data.color);
 					$health.find('.legend').text('As of ' + data.current.date);
 					var targetText = 'Target audience: '+ app.utils.numberFormat(data.target);
 					if (data.timeToTarget) {
@@ -251,24 +239,32 @@ app.charts = {
 					}
 					$health.find('.target').html(targetText);
 
-					app.charts.addBars(c, data.points, data.chart, app.charts.getColorForPercentage(data.health));
+					app.charts.addBars(c, data.points, data.chart, data.color);
 					break;
 				case 'posts_per_day':
 					$health.find('.value')
 						.text(app.utils.numberFixedDecimal(data.average, 2))
-						.css('color', app.charts.getColorForPercentage(data.health))
+						.css('color', data.color)
 						.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
 					$health.find('.target').text('Target Posts Per Day: ' + data.target);
 
-					app.charts.addBars(c, data.points, data.chart, app.charts.getColorForPercentage(data.health));
+					app.charts.addBars(c, data.points, data.chart, data.color);
 					break;
 				case 'response_time':
 					$health.find('.value')
 						.text(app.utils.numberFixedDecimal(data.average, 2))
-						.css('color', app.charts.getColorForPercentage(data.health));
+						.css('color', data.color);
 					$health.find('.target').text('Target Response Time: ' + data.target);
 
-					app.charts.addBars(c, data.points, data.chart, app.charts.getColorForPercentage(data.health));
+					app.charts.addBars(c, data.points, data.chart, data.color);
+					break;
+				case 'link_ratio':
+					$health.find('.value')
+						.text(app.utils.numberFixedDecimal(data.average, 2))
+						.css('color', data.color);
+					$health.find('.target').text('Target: ' + data.target + '%');
+
+					app.charts.addBars(c, data.points, data.chart, data.color);
 					break;
 			}
 }
@@ -325,14 +321,14 @@ app.charts = {
 					return c.yMap(c.getYValue(d));
 				})
 				.style('fill', function(d, i) {
-					if ('health' in d) {
-						return app.charts.getColorForPercentage(d.health);
+					if ('color' in d) {
+						return d.color;
 					}
 					return color;
 				})
 				.style('stroke', function(d, i) {
-					if ('health' in d) {
-						return app.charts.getColorForPercentage(d.health);
+					if ('color' in d) {
+						return d.color;
 					}
 					return color;
 				})
@@ -369,14 +365,14 @@ app.charts = {
 			.attr('data-metric', data.metric)
 			.attr('data-presence', data.presence)
 			.style('fill', function(d, i) {
-				if ('health' in d) {
-					return app.charts.getColorForPercentage(d.health);
+				if ('color' in d) {
+					return d.color;
 				}
 				return color;
 			})
 			.style('stroke', function(d, i) {
-				if ('health' in d) {
-					return app.charts.getColorForPercentage(d.health);
+				if ('color' in d) {
+					return d.color;
 				}
 				return color;
 			})
@@ -538,33 +534,6 @@ app.charts = {
 				}
 		);
 
-	},
-	percentColors:[
-		{ pct: 0, color: { r: 0xd0, g: 0x69, b: 0x59 } }, //red
-		{ pct: 50, color: { r: 0xf1, g: 0xdc, b: 0x63 } }, //amber
-		{ pct: 100, color: { r: 0x84, g: 0xaf, b: 0x5b } } //green
-	],
-	getColorForPercentage:function(pct) {
-		var percentColors = app.charts.percentColors;
-		if(pct > 100) pct = 100;
-		if(pct < 0) pct = 0;
-		for (var i = 0; i < percentColors.length; i++) {
-			if (pct <= percentColors[i].pct) {
-				var lower = (i === 0) ? percentColors[i] : percentColors[i - 1];
-				var upper = (i === 0) ? percentColors[i + 1] : percentColors[i];
-				var range = upper.pct - lower.pct;
-				var pctUpper = (pct - lower.pct) / range;
-				var pctLower = 1 - pctUpper;
-				var color = {
-					r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
-					g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
-					b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
-				};
-				return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
-				// or output as hex if preferred
-			}
-		}
-		return '';
 	},
 	fetchChartData: function () {
 		for (var i in app.state.chartData) {

@@ -96,51 +96,6 @@ class BaseController extends Zend_Controller_Action {
 		$configArray = $this->config->toArray();
 		$this->view->jsConfig = $configArray['jsConfig'];
 		$this->view->jsConfig['apiEndpoint'] = $this->view->baseUrl('/');
-
-		// set up the metrics ranges and colours
-		$colors = (object)array(
-			'red' => '#FF0000',
-			'green' => '#008000',
-			'orange' => '#FFA500',
-			'yellow' => '#FFFF00'
-		);
-		$metrics = array();
-		foreach (Model_Campaign::getKpis() as $key=>$label) {
-			$metrics[$key] = (object)array('label'=>$label);
-		}
-		$metrics[Model_Campaign::KPI_POPULARITY_PERCENTAGE]->range = array(0, 50, 100);
-		$metrics[Model_Campaign::KPI_POPULARITY_PERCENTAGE]->colors = array($colors->red, $colors->yellow, $colors->green);
-
-		$audienceBest = self::getOption('achieve_audience_best');
-		$audienceGood = self::getOption('achieve_audience_good');
-		$audienceBad = self::getOption('achieve_audience_bad');
-		$metrics[Model_Campaign::KPI_POPULARITY_TIME]->range = array($audienceBest, $audienceGood, $audienceBad, $audienceGood+$audienceBad);
-		$metrics[Model_Campaign::KPI_POPULARITY_TIME]->colors = array($colors->green, $colors->yellow, $colors->orange, $colors->red);
-
-		$postsPerDay = self::getOption('updates_per_day');
-		$postsPerDayOk = self::getOption('updates_per_day_ok_range');
-		$postsPerDayBad = self::getOption('updates_per_day_bad_range');
-		$metrics[Model_Campaign::KPI_POSTS_PER_DAY]->range = array(0, $postsPerDay - $postsPerDayBad, $postsPerDay - $postsPerDayOk, $postsPerDay + $postsPerDayOk, $postsPerDay + $postsPerDayBad, max($postsPerDay + $postsPerDayBad + 1, 2*$postsPerDay));
-		$metrics[Model_Campaign::KPI_POSTS_PER_DAY]->colors = array($colors->red, $colors->yellow, $colors->green, $colors->green, $colors->yellow, $colors->red);
-
-		$responseTimeBest = self::getOption('response_time_best');
-		$responseTimeGood = self::getOption('response_time_good');
-		$responseTimeBad = self::getOption('response_time_bad');
-		$metrics[Model_Campaign::KPI_RESPONSE_TIME]->range = array(0, $responseTimeBest, $responseTimeGood, $responseTimeBad);
-		$metrics[Model_Campaign::KPI_RESPONSE_TIME]->colors = array($colors->green, $colors->yellow, $colors->orange, $colors->red);
-
-		// convert each hex string to rgb values
-		foreach ($metrics as $args) {
-			$args->colorsRgb = array();
-			foreach ($args->colors as $color) {
-				$rgb = array();
-				for ($i=1; $i<6; $i+=2) {
-					$rgb[] = hexdec(substr($color, $i, 2));
-				}
-				$args->colorsRgb[] = $rgb;
-			}
-		}
-		$this->view->trafficMetrics = $metrics;
 	}
 
 	/**

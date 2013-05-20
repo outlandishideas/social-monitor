@@ -4,6 +4,20 @@ class Model_Presence extends Model_Base {
 	protected static $tableName = 'presences';
 	protected static $sortColumn = 'handle';
 
+	const METRIC_POPULARITY = 'popularity';
+	const METRIC_POPULARITY_TIME = 'popularity_time';
+	const METRIC_POSTS_PER_DAY = 'posts_per_day';
+	const METRIC_RESPONSE_TIME = 'response_time';
+	const METRIC_LINK_RATIO = 'link_ratio';
+
+	public static $ALL_METRICS = array(
+		self::METRIC_POPULARITY,
+		self::METRIC_POPULARITY_TIME,
+		self::METRIC_POSTS_PER_DAY,
+		self::METRIC_RESPONSE_TIME,
+		self::METRIC_LINK_RATIO,
+	);
+
 	public static $bucketSizes = array(
 		'bucket_half_hour' => 1800, // 30*60
 		'bucket_4_hours' => 14400, // 4*60*60
@@ -76,24 +90,33 @@ class Model_Presence extends Model_Base {
 			$targetAudienceDate = $this->getTargetAudienceDate($startDateString, $endDateString);
 
 			// target audience %
-			$kpiData[Model_Campaign::KPI_POPULARITY_PERCENTAGE] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
+			$kpiData[self::METRIC_POPULARITY] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
 
 			// target audience rate (months until reaching target)
 			if ($currentAudience >= $targetAudience) {
-				$kpiData[Model_Campaign::KPI_POPULARITY_TIME] = 0; // already achieved
+				$kpiData[self::METRIC_POPULARITY_TIME] = 0; // already achieved
 			} else if ($targetAudienceDate) {
 				$diff = strtotime($targetAudienceDate) - $endDate->getTimestamp();
 				$months = $diff/(60*60*24*365/12);
-				$kpiData[Model_Campaign::KPI_POPULARITY_TIME] = $months;
+				$kpiData[self::METRIC_POPULARITY_TIME] = $months;
 			} else {
-				$kpiData[Model_Campaign::KPI_POPULARITY_TIME] = null;
+				$kpiData[self::METRIC_POPULARITY_TIME] = null;
 			}
 
 			//posts per day
-			$kpiData[Model_Campaign::KPI_POSTS_PER_DAY] = $this->getAveragePostsPerDay($startDateString, $endDateString);
+			$kpiData[self::METRIC_POSTS_PER_DAY] = $this->getAveragePostsPerDay($startDateString, $endDateString);
 
 			//response time
-			$kpiData[Model_Campaign::KPI_RESPONSE_TIME] = $this->getAverageResponseTime($startDateString, $endDateString);
+			$kpiData[self::METRIC_RESPONSE_TIME] = $this->getAverageResponseTime($startDateString, $endDateString);
+
+			//link ratio
+			$total = 0;
+			$bc = 0;
+			foreach ($this->getLinkRatioData($startDateString, $endDateString) as $row) {
+				$total += $row->total;
+				$bc += $row->bc;
+			}
+			$kpiData[self::METRIC_LINK_RATIO] = $total ? 100*$bc/$total : 0;
 
 			$this->kpiData = $kpiData;
 		}
@@ -513,6 +536,39 @@ class Model_Presence extends Model_Base {
 		}
 	}
 
+	public function getLinkRatioData($startDate, $endDate) {
+		$clauses = array(
+			'p.presence_id = :pid',
+			'p.created_time >= :start_date',
+			'p.created_time <= :end_date'
+		);
+		$args = array(
+			':pid'=>$this->id,
+			':start_date'=>$startDate,
+			':end_date'=>$endDate
+		);
+
+		if ($this->isForTwitter()) {
+			$tableName = 'twitter_tweets';
+		} else {
+			$tableName = 'facebook_stream';
+			$clauses[] = 'posted_by_owner = 1';
+			$clauses[] = 'in_response_to IS NULL';
+		}
+
+		$stmt = $this->_db->prepare("SELECT date, COUNT(1) AS total, SUM(1) AS bc
+			FROM (
+				SELECT DATE(p.created_time) AS date, d.*
+				FROM domains AS d
+				INNER JOIN status_links AS s ON d.domain = s.domain
+				INNER JOIN $tableName AS p ON s.status_id = p.id
+				WHERE " . implode(' AND ', $clauses) . "
+			) AS tmp
+			GROUP BY date");
+		$stmt->execute($args);
+		return $stmt->fetchAll(PDO::FETCH_OBJ);
+	}
+
 	public function getPostsPerDayData($startDate, $endDate) {
 		$clauses = array(
 			'presence_id = :pid',
@@ -527,7 +583,7 @@ class Model_Presence extends Model_Base {
 			$clauses[] = 'in_response_to IS NULL';
 		}
 
-		$sql = 'SELECT date, COUNT(date) AS post_count
+		$sql = 'SELECT date, COUNT(date) AS value
 			FROM (
 				SELECT DATE(created_time) AS date
 				FROM ' . $tableName . '
@@ -538,7 +594,7 @@ class Model_Presence extends Model_Base {
 		$counts = array();
 		$date = gmdate('Y-m-d', strtotime($startDate));
 		while ($date <= $endDate) {
-			$counts[$date] = (object)array('date'=>$date, 'post_count'=>0);
+			$counts[$date] = (object)array('date'=>$date, 'value'=>0);
 			$date = gmdate('Y-m-d', strtotime($date . '+1 day'));
 		}
 		foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {

@@ -7,6 +7,7 @@ class PresenceController extends GraphingController
 	{
 		$this->view->title = 'All Presences';
 		$this->view->presences = Model_Presence::fetchAll();
+		$this->view->tableMetrics = self::tableMetrics();
 	}
 
 	/**
@@ -46,7 +47,8 @@ class PresenceController extends GraphingController
         }
 
         $this->view->title = 'Comparing '.count($compareData).' Presences';
-	    $this->view->metricOptions = $this->graphMetrics();
+	    $this->view->metricOptions = self::graphMetrics();
+	    $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
     }
 
@@ -177,18 +179,26 @@ class PresenceController extends GraphingController
 			$presence = Model_Presence::fetchById($chart['presence_id']);
 			if ($presence) {
                 $data = null;
-				switch ($chart['metric']) {
-					case self::METRIC_POPULARITY:
+				$metric = $chart['metric'];
+				switch ($metric) {
+					case Model_Presence::METRIC_POPULARITY:
 						$data = $this->generatePopularityGraphData($presence, $startDate, $endDate);
 						break;
-					case self::METRIC_POSTS_PER_DAY:
+					case Model_Presence::METRIC_POSTS_PER_DAY:
                         $data = $this->generatePostsPerDayGraphData($presence, $startDate, $endDate);
 						break;
-					case self::METRIC_RESPONSE_TIME:
+					case Model_Presence::METRIC_RESPONSE_TIME:
 						$data = $this->generateResponseTimeGraphData($presence, $startDate, $endDate);
+						break;
+					case Model_Presence::METRIC_LINK_RATIO:
+						$data = $this->generateLinkRatioGraphData($presence, $startDate, $endDate);
 						break;
 				}
 				if ($data) {
+					foreach ($data['points'] as $point) {
+						$point->color = $this->view->trafficLight()->color($point->value, $metric);
+					}
+					$data['color'] = $this->view->trafficLight()->color($data['health'], $metric);
                     $data['chart'] = $chart;
 					$series[] = $data;
 				}
@@ -302,8 +312,8 @@ class PresenceController extends GraphingController
 		if ($data) {
 			$total = 0;
 			foreach ($data as $row) {
-				$total += $row->post_count;
-				$row->health = $healthCalc($row->post_count);
+				$total += $row->value;
+				$row->health = $healthCalc($row->value);
 			}
 			$average = $total/count($data);
 		}
@@ -378,8 +388,49 @@ class PresenceController extends GraphingController
 		);
 	}
 
-	public static function getStatusType($id){
-		return Model_Presence::fetchById($id)->typeLabel;
+	/**
+	 * @param Model_Presence $presence
+	 * @param $startDate
+	 * @param $endDate
+	 * @return array
+	 */
+	private function generateLinkRatioGraphData($presence, $startDate, $endDate) {
+		$points = array();
+		$target = 80;
+		$data = $presence->getLinkRatioData($startDate, $endDate);
+		if (!$data) {
+			$average = 0;
+			$health = 0;
+		} else {
+			$healthCalc = function($value) use ($target) {
+				if ($value >= $target) {
+					return 100;
+				} else {
+					return $value/$target;
+				}
+			};
+
+			$total = 0;
+			$bc = 0;
+			foreach ($data as $row) {
+				$key = $row->date;
+				$value = ($row->total ? 100*$row->bc/$row->total : 0);
+				$points[$key] = (object)array('date'=>$key, 'value'=>$value, 'health'=>$healthCalc($value));
+				$total += $row->total;
+				$bc += $row->bc;
+			}
+			$average = $total ? 100*$bc/$total : 0;
+
+			$points = $this->fillDateGaps($points, $startDate, $endDate, 0);
+			$points = array_values($points);
+			$health = $healthCalc($average);
+		}
+		return array(
+			'average' => $average,
+			'target' => $target,
+			'points' => $points,
+			'health' => $health
+		);
 	}
 
 	public function toggleResponseNeededAction() {

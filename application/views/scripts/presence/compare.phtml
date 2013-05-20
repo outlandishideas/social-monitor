@@ -13,8 +13,6 @@
     }
 ?>
 
-<?php $kpis = Model_Campaign::getKpis(); ?>
-
 <?php if (empty($this->compareData)) : ?>
 
     <h3>No presences found</h3>
@@ -34,14 +32,13 @@
         ?>
     </div>
 
+	<h3>Scores for the last 30 days:</h3>
 
     <table class="text">
 
         <tr>
             <th>Handle</th>
-            <th>Audience size</th>
-            <th>Target audience</th>
-            <?php foreach ($kpis as $key=>$label) : ?>
+            <?php foreach ($this->tableMetrics as $key=>$label) : ?>
                 <th><?php echo $label; ?></th>
             <?php endforeach; ?>
         </tr>
@@ -54,9 +51,7 @@
                         <a href="<?php echo $presence->page_url; ?>" target="_blank" class="icon external"></a>
                     </div>
                 </td>
-                <td><?php echo number_format($presence->popularity) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
-                <td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
-                <?php $kpiData = $presence->getKpiData(); foreach ($kpis as $key=>$label) : $value = $kpiData[$key]; ?>
+                <?php $kpiData = $presence->getKpiData(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                     <td>
                         <div class="traffic-light" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
                         <?php echo $this->trafficLight()->label($value, $key); ?>
