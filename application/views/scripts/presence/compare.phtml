@@ -22,14 +22,19 @@
     <div id="charts" data-controller="presence" data-controller-label="presence">
         <?php
         $currentId = 1;
-        foreach($this->compareData as $data) {
-            foreach ($data->graphs as $graph) {
+        foreach($this->compareData as $data) :
+        ?>
+	    <div class="presence-charts">
+		    <div class="presence <?php echo $data->presence->type; ?>"><?php echo $data->presence->label; if ($data->presence->label != $data->presence->handle) { echo ' (' . $data->presence->handle . ')'; } ?></div>
+            <?php
+	        foreach ($data->graphs as $graph) {
                 $graph->id = $currentId++;
                 $this->graph = $graph;
                 echo $this->render('partials/chart.phtml');
             }
-        }
-        ?>
+	        ?>
+		</div>
+        <?php endforeach; ?>
     </div>
 
 	<h3>Scores for the last 30 days:</h3>
