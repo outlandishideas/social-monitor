@@ -40,8 +40,6 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
         <tr>
             <th>Handle</th>
-            <th>Audience size</th>
-            <th>Target audience</th>
             <?php foreach ($this->tableMetrics as $key=>$label) : ?>
                 <th><?php echo $label; ?></th>
             <?php endforeach; ?>
@@ -55,8 +53,6 @@ $buttons = $this->gatekeeper()->filterAll(array(
                         <a href="<?php echo $presence->page_url; ?>" target="_blank" class="icon external"></a>
                     </div>
                 </td>
-                <td><?php echo number_format($presence->popularity) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
-                <td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
                 <?php $kpiData = $presence->getKpiData(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                     <td>
                         <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
@@ -82,8 +78,6 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
         <tr class="average">
             <td>Group Average</td>
-            <td><?php echo number_format($avPop) . ' fans/followers'; ?></td>
-            <td><?php echo number_format($avTarget) . ' fans/followers'; ?></td>
             <?php foreach ($this->group->getKpiAverages() as $key=>$value) : ?>
                 <td>
                     <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>

@@ -33,7 +33,7 @@
 			<ul id="presences">
 				<?php foreach ($this->group->presences as $presence) : ?>
                     <li class="social-media box <?php echo $presence->type; ?> split">
-                        <?php $sign = $presence->type == Model_Presence::TYPE_FACEBOOK ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
+                        <?php $sign = $presence->isForFacebook() ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
 
                         <input type="hidden" value="<?php echo $presence->id;?>" name="presences[]">
                         <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>" class="presence">

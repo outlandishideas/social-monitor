@@ -31,7 +31,7 @@
 <!--                    <div class="site-title"><span>British Council</span> Social Media Monitor</div>-->
 					<div id="nav">
 						<div class="main">
-                            <div class="site-title"><span>British Council Social Media Monitor</span></div>
+                            <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>"><div class="site-title"><span>British Council Social Media Monitor</span></div></a>
                             <?php
                                 echo $this->navigation()->menu()->setMaxDepth(0);
                             ?>
