@@ -325,26 +325,6 @@ app.init = {
 					}
 				}
 			});
-		},
-		'#share-box': function($item) {
-			//init manager
-			var pm = new Scotty(window.location.hash);
-
-			//check if we're loading a bookmarked URL
-			if (window.location.hash) {
-				app.state.lineIds = JSON.parse(pm.getValue('lineIds'));
-				app.state.dateRange = pm.getValue('dateRange').split(',');
-				app.date.syncFromState();
-			}
-
-			$item.on('click', '.link', function(){
-				pm.setValues({
-					dateRange: app.state.dateRange,
-					lineIds: JSON.stringify(app.state.lineIds)
-				});
-				var keyCombo = navigator.platform.indexOf('Mac') > 0 ? 'Cmd+C' : 'Ctrl+C';
-				window.prompt('Press '+keyCombo+' to copy the URL to the clipboard', pm.toString());
-			});
 		}
 	}
 };

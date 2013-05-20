@@ -30,11 +30,7 @@ class CountryController extends CampaignController {
             );
         }
 
-        $this->view->metrics = array(
-            'popularity'=>'Audience Rate',
-            'posts_per_day'=>'Posts Per Day',
-            'response_time'=>'Average Response Time'
-        );
+        $this->view->metricOptions = $this->graphMetrics();
         $this->view->compareData = $compareData;
 		$this->view->title = '<span class="icon-globe"></span> '. $country->display_name . ' <a href="#" class="accordian-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>';
 		$this->view->titleInfo = $country->countryInfo();

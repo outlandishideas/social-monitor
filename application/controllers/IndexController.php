@@ -27,7 +27,7 @@ class IndexController extends BaseController
 		$this->view->title = 'Home';
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->kpiData = $kpiData;
-		$this->view->metrics = Model_Campaign::getKpis();
+		$this->view->metricOptions = Model_Campaign::getKpis();
 	}
 
 	public function dateRangeAction() {

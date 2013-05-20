@@ -6,12 +6,7 @@ class PresenceController extends GraphingController
 	public function indexAction()
 	{
 		$this->view->title = 'All Presences';
-//		if ($this->_request->group) {
-//			$filter = 'campaign_id='. $this->_request->group;
-//		} else {
-			$filter = null;
-//		}
-		$this->view->presences = Model_Presence::fetchAll($filter);
+		$this->view->presences = Model_Presence::fetchAll();
 	}
 
 	/**
@@ -23,23 +18,6 @@ class PresenceController extends GraphingController
 		/** @var Model_Presence $presence */
 		$presence = Model_Presence::fetchById($this->_request->id);
 		$this->validateData($presence);
-
-		$graphs = array();
-		$graphs[] = (object)array(
-			'metric' => 'popularity',
-			'yAxisLabel' => ($presence->isForFacebook() ? 'Fans' : 'Followers') . ' gained per day',
-			'title' => 'Audience Rate'
-		);
-		$graphs[] = (object)array(
-			'metric' => 'posts_per_day',
-			'yAxisLabel' => 'Posts per day',
-			'title' => 'Posts Per Day'
-		);
-		$graphs[] = (object)array(
-			'metric' => 'response_time',
-			'yAxisLabel' => 'Response time (hours)',
-			'title' => 'Average Response Time (hours)'
-		);
 
 		$title = '';
 		if ($presence->image_url) {
@@ -68,11 +46,7 @@ class PresenceController extends GraphingController
         }
 
         $this->view->title = 'Comparing '.count($compareData).' Presences';
-	    $this->view->metrics = array(
-		    'popularity'=>'Audience Rate',
-		    'posts_per_day'=>'Posts Per Day',
-		    'response_time'=>'Average Response Time'
-	    );
+	    $this->view->metricOptions = $this->graphMetrics();
         $this->view->compareData = $compareData;
     }
 
@@ -204,13 +178,13 @@ class PresenceController extends GraphingController
 			if ($presence) {
                 $data = null;
 				switch ($chart['metric']) {
-					case 'popularity':
+					case self::METRIC_POPULARITY:
 						$data = $this->generatePopularityGraphData($presence, $startDate, $endDate);
 						break;
-					case 'posts_per_day':
+					case self::METRIC_POSTS_PER_DAY:
                         $data = $this->generatePostsPerDayGraphData($presence, $startDate, $endDate);
 						break;
-					case 'response_time':
+					case self::METRIC_RESPONSE_TIME:
 						$data = $this->generateResponseTimeGraphData($presence, $startDate, $endDate);
 						break;
 				}
