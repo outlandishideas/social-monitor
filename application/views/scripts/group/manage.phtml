@@ -1,7 +1,7 @@
 <form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="manage-country">
 
 	<fieldset class="inlineLabels">
-		<legend><?php echo $this->country->display_name; ?></legend>
+		<legend><?php echo $this->group->display_name; ?></legend>
 		<div class="ctrlHolder">
 			<label for="twitter">
 				Available twitter presences
@@ -31,7 +31,7 @@
 				Currently assigned presences
 			</label>
 			<ul id="presences">
-				<?php foreach ($this->country->presences as $presence) : ?>
+				<?php foreach ($this->group->presences as $presence) : ?>
                     <li class="social-media box <?php echo $presence->type; ?>">
                         <?php $sign = $presence->type == Model_Presence::TYPE_FACEBOOK ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
 

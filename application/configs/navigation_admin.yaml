@@ -1,6 +1,6 @@
-#user:
-#  label: Users
-#  controller: user
+user:
+  label: User
+  controller: user
 
 domain:
   label: Domains

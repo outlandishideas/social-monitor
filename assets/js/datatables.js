@@ -7,12 +7,27 @@ var app = app || {};
 app.datatables = {
 	statusesTable: null,
 	init:function () {
-		// add a 'fuzzy numeric' sort type, which just ignores all non-numeric characters
-		$.extend($.fn.dataTableExt.oSort, {
-			"fuzzy-numeric-pre": function ( a ) { if (typeof(a) == 'string') { return parseInt(a.replace(/[^\d]/g, "")); } else { return 0; }},
-			"fuzzy-numeric-asc": function ( a, b ) { return a - b; },
-			"fuzzy-numeric-desc": function ( a, b ) { return b - a; }
-		});
+        // add a 'fuzzy numeric' sort type, which just ignores all non-numeric characters
+        $.extend($.fn.dataTableExt.oSort, {
+            "fuzzy-numeric-pre": function ( a ) { if (typeof(a) == 'string') { return parseInt(a.replace(/[^\d]/g, "")); } else { return 0; }},
+            "fuzzy-numeric-asc": function ( a, b ) { return a - b; },
+            "fuzzy-numeric-desc": function ( a, b ) { return b - a; }
+        });
+
+        // add a 'checkbox' sort type, which sorts by whether a checkbox is checked or not
+        $.extend($.fn.dataTableExt.oSort, {
+            "checkbox-pre": function ( a ) {
+                var $checkbox = $(a).filter('.compare-checkbox');
+                console.log($checkbox.is(':checked'));
+                if ($checkbox.is(':checked')) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            },
+            "checkbox-asc": function ( a, b ) { return a - b; },
+            "checkbox-desc": function ( a, b ) { return b - a; }
+        });
 
 		// add a 'traffic light' sort type, which uses the value in the traffic light
 		$.extend($.fn.dataTableExt.oSort, {

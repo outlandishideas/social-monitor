@@ -106,16 +106,16 @@ fieldset input, fieldset select, fieldset textarea {
 }
 
 .site-title {
-    font-size: 45px;
+    font-size: 20px;
     font-weight: bold;
-    line-height: 1;
-    padding: 20px 0;
-    margin: 0 32px;
-    background: #fff url('../img/British-Council-Logo.png') no-repeat;
+    line-height: 36px;
+    background: url('../img/british-council-logo-white.png') center center no-repeat;
     background-size: contain;
     color: #065284;
-    padding-left: 282px;
-    text-transform: uppercase;
+    width: 100px;
+    height: 36px;
+    float: left;
+    margin-left: 10px;
 }
 
 .site-title span {
@@ -153,19 +153,6 @@ a:hover, span.link:hover {
 	color: #105b86;
 }
 
-.icon {
-	width: 16px;
-	height: 16px;
-	display: inline-block;
-	vertical-align: top;
-	cursor: pointer;
-	background-repeat: no-repeat;
-}
-
-.icon.add { background-image: url(../img/add.png); }
-.icon.remove { background-image: url(../img/delete.png); }
-.icon.external { background-image: url(../img/external_link.png); }
-
 #wrapper,
 #content {
 	background: #FFFFFF;
@@ -183,7 +170,7 @@ a:hover, span.link:hover {
 	background: #F2F2F2;
 	border-bottom: 1px solid #CCCCCC;
 	padding: 20px;
-	padding-top: 150px;
+	padding-top: 56px;
 }
 
 #main-header h2 {
@@ -193,7 +180,7 @@ a:hover, span.link:hover {
 }
 
 #main-header h1 {
-	margin: 0 0 5px;
+	margin: 0px;
 	line-height: 56px;
 	height: 56px;
 }
@@ -206,6 +193,42 @@ a:hover, span.link:hover {
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
+}
+
+#title-info {
+    width: 50%;
+    background-color: #e2e2e2;
+    height: auto;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 2s;
+    -webkit-transition: max-height 2s;
+}
+
+#title-info.expand {
+    max-height: 300px;
+}
+
+#title-info dl {
+    padding: 10px;
+}
+
+#title-info dd,
+#title-info dt {
+    padding: 5px 0;
+}
+
+#title-info dd {
+    margin-left: 25%;
+}
+
+#title-info dd p {
+    margin: 0;
+}
+
+#title-info dt {
+    float: left;
+    width: 25%;
 }
 
 #campaign-switcher {
@@ -261,10 +284,9 @@ a:hover, span.link:hover {
 }
 
 #pickers {
-	position: absolute;
-	top: 178px;
-	right: 40px;
-	margin-bottom: 5px;
+    position: relative;
+    float: right;
+    top: -75px;
 }
 
 .picker {
@@ -284,32 +306,36 @@ a:hover, span.link:hover {
 	color: #555;
 }
 
-.picker input,
-.picker select {
-	color: #888;
-	margin-left: 10px;
-	outline: none;
-	border: 2px solid #555;
-}
-
-.picker input:focus,
-.picker select:focus {
-	border-color: #24abf8;
-	color: #333;
-}
-
 #metric-picker {
+    border: 2px solid #555;
+    outline: none;
     line-height: 34px;
     height: 34px;
+    color: #888;
     padding: 0 0 0 5px;
+    margin-left: 10px;
     min-width: 221px;
 }
 
+#metric-picker:focus {
+    border-color: #24abf8;
+    color: #333;
+}
+
 #date-picker {
-	background: #fff url(../img/calendar.png) 5px center no-repeat;
-	line-height: 30px;
-	height: 30px;
-	padding: 0 5px 0 30px;
+    background: #fff url(../img/calendar.png) 5px center no-repeat;
+    border: 2px solid #555;
+    outline: none;
+    line-height: 30px;
+    height: 30px;
+    color: #888;
+    padding: 0 5px 0 30px;
+    margin-left: 10px;
+}
+
+#date-picker:focus {
+    border-color: #24abf8;
+    color: #333;
 }
 
 #share-box {
@@ -351,48 +377,56 @@ a:hover, span.link:hover {
 	display: block;
 	position: relative;
 }
+
+#nav .main {
+    height: inherit;
+    float: left;
+}
+
+#nav .main .logo {
+    height: 100%;
+    float: left;
+    margin-right: 10px;
+}
+
 #nav .main ul {
 	float: left;
+    height: inherit;
 }
 #nav .extra {
-}
-#nav .extra ul {
-	float: right;
-	background: #01a6e6;
-	margin-top: -4px;
-	padding-top: 4px;
-}
-#nav .extra ul a {
-	height: 19px;
+    float: right;
+    height: inherit;
 }
 
 #nav ul {	
 	list-style: none;
 	margin: 0;
-	padding: 0 10px;
 }
 
 #nav li {
 	float: left;
-	margin: 0 5px;
+    border-width: 1px;
+    border-color: #fff;
+    border-color: rgba(255,255,255,0.5);
+    border-left-style: solid;
+    height: inherit;
+}
+
+#nav .main li:last-child {
+    border-right-style: solid;
 }
 
 #nav li a {
-	display: block;
-	padding: 8px 10px 12px 10px;
-	height: 14px;
-	color: #efefef;
-	text-decoration: none;
-	margin-bottom: -1px;
-	border-top: 2px solid #065284;
-}
-
-#nav .extra li a {
-	border-color: #01a6e6;
+    display: block;
+    padding: 0 10px;
+    color: #efefef;
+    text-decoration: none;
+    line-height: 36px;
+    min-width: 36px;
 }
 
 #nav li a:hover {
-	border-top-color: #fff;
+    background-color: #097fcd;
 }
 
 #nav .notab {
@@ -402,7 +436,6 @@ a:hover, span.link:hover {
 }
 
 #nav li.active a {
-	border-top-color: #fff;
 }
 
 #user-nav {
@@ -977,6 +1010,10 @@ body .ui-daterangepicker ul {
 
 /* buttons */
 
+body .buttons {
+    margin-bottom: 20px;
+}
+
 body .button {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -1008,3 +1045,74 @@ body .button-right .button {
 	margin-right: 0;
 }
 
+body .compare.list {
+    display: inline-block;
+    margin: 0;
+    background-color: #065284;
+    color: #fff;
+}
+
+body .compare.list li {
+    display: inline-block;
+    list-style: none;
+    padding: 0 10px;
+}
+
+/* group_editAction #added-presences */
+
+#added-presences {
+    margin: 10px 0;
+    padding: 0;
+}
+
+#added-presences li {
+    list-style: none;
+    margin: 5px 0;
+    display: inline-block;
+}
+
+#added-presences li span.icon-li {
+    display: none;
+}
+
+/* social-media box */
+
+.social-media.box a,
+.social-media.box a:visited,
+.social-media.box a:link {
+    display: inline-block;
+    background-color: #8b9dc3;
+    color: #fff;
+    cursor: pointer;
+}
+
+.social-media.box a.presence {
+    padding: 2px 7px 0px 3px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.social-media.box a.remove-presence {
+    padding: 3px 5px 2px 5px;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    margin-left: -3px;
+}
+
+.social-media.box a:hover,
+.social-media.box a:focus {
+    background-color: #3B5998;
+}
+
+.social-media.box.twitter a {
+    background-color: #63B3FF;
+}
+
+.social-media.box.twitter a:hover,
+.social-media.box.twitter a:focus {
+    background-color: #4099FF;
+}
+
+.social-media.box a.presence span {
+    margin-right: 7px;
+}

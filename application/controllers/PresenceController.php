@@ -3,13 +3,11 @@
 class PresenceController extends BaseController
 {
 
-
-
 	public function indexAction()
 	{
 		$this->view->title = 'All Presences';
-//		if ($this->_request->campaign) {
-//			$filter = 'campaign_id='. $this->_request->campaign;
+//		if ($this->_request->group) {
+//			$filter = 'campaign_id='. $this->_request->group;
 //		} else {
 			$filter = null;
 //		}
@@ -53,7 +51,7 @@ class PresenceController extends BaseController
 		}
 		$this->view->title = $title;
 		$this->view->presence = $presence;
-		$this->view->graphs = $graphs;
+        $this->view->graphs = $this->graphs($presence);
 	}
 
     public function compareAction()
@@ -69,7 +67,7 @@ class PresenceController extends BaseController
             );
         }
 
-        $this->view->title = 'Comparing ';
+        $this->view->title = 'Comparing '.count($compareData).' Presences';
 	    $this->view->metrics = array(
 		    'popularity'=>'Audience Rate',
 		    'posts_per_day'=>'Posts Per Day',

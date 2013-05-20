@@ -1,0 +1,58 @@
+<?php
+$buttons = $this->gatekeeper()->filterAll(array(
+	'<a class="button" href="%url%">View Group</a>' => array('controller'=>'group', 'action'=>'view'),
+	'<a class="button" href="%url%">Manage Presences</a>' => array('controller'=>'group', 'action'=>'manage')
+));
+if ($buttons && $this->showButtons) :
+?>
+<p>
+	<?php echo implode('', $buttons); ?>
+</p>
+<?php endif; ?>
+
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-campaign">
+
+	<fieldset class="inlineLabels">
+		<legend>Group details</legend>
+        <div class="ctrlHolder">
+            <label for="display_name" class="requiredField">
+                Display name<span class="asteriskField">*</span>
+            </label>
+            <input name="display_name" value="<?php echo htmlspecialchars($this->editingGroup->display_name); ?>" class="textInput"
+                   type="text" id="display_name">
+        </div>
+	</fieldset>
+
+    <?php if(!empty($this->presences)) : ?>
+    <fieldset class="inlineLabels">
+        <legend>Presence details</legend>
+        <div class="ctrlHolder">
+            <p>These presences will be automatically added to this group:</p>
+            <ul id="added-presences">
+                <?php foreach($this->presences as $presence) : ?>
+                    <li class="social-media box <?php echo $presence->type; ?>">
+                        <?php $sign = $presence->type == Model_Presence::TYPE_FACEBOOK ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
+
+                        <input type="hidden" value="<?php echo $presence->id;?>" name="presences[]">
+                        <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>" class="presence">
+                            <span class="<?php echo $sign; ?> icon-large"></span>
+                            <?php echo $presence->getLabel(); ?>
+                        </a>
+                        <a href="#" class="remove-presence">
+                            <span class="icon-remove"></span>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </fieldset>
+    <?php endif; ?>
+
+    <input name="is_country" value="0" type="hidden" id="is_country">
+
+	<div class="buttonHolder">
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?>
+		<input type="submit" value="Save" class="primaryAction">
+	</div>
+</form>
+

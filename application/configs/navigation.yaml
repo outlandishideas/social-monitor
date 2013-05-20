@@ -1,12 +1,19 @@
 home:
   label: Home
+  icon: icon-home icon-large
   controller: index
-#campaign:
+#group:
 #  label: Campaigns
-#  controller: campaign
+#  controller: group
 country:
   label: Countries
+  icon: icon-globe icon-large
   controller: country
+group:
+  label: Groups
+  icon: icon-th-list icon-large
+  controller: group
 presence:
   label: Presences
+  icon: icon-bar-chart icon-large
   controller: presence

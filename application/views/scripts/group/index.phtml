@@ -1,0 +1,53 @@
+<?php $kpis = Model_Campaign::getKpis(); ?>
+<?php echo $this->gatekeeper()->filter('<p><a class="button add" href="%url%">Add new</a></p>', array('action'=>'new')); ?>
+
+<table class="text hoverable dtable" id="all-countries">
+	<thead>
+		<tr>
+			<th data-name="name" data-sort="auto">Name</th>
+			<?php foreach ($kpis as $key=>$label) : ?>
+				<th data-name="<?php echo $key; ?>" data-sort="traffic-light"><?php echo $label; ?> (average)</th>
+			<?php endforeach; ?>
+			<th data-name="presences">Presences</th>
+			<th data-name="options" class="options"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php /** @var $country Model_Country */ ?>
+		<?php foreach ($this->countries as $country) : ?>
+		<tr>
+			<?php
+				$presenceLinks = array();
+				foreach($country->getPresences() as $p) {
+					$presenceLinks[] = '<div class="presence ' . $p->type . '" title="' . $p->name . '"><a href="' . $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)) . '">' . $p->handle . '</a></div>';
+				}
+			?>
+			<td><a href="<?php echo $this->url(array('action'=>'view', 'id'=>$country->id)); ?>"><?php echo $country->display_name; ?></a></td>
+			<?php if ($presenceLinks) : ?>
+			<?php $kpiData = $country->getKpiAverages(); foreach ($kpis as $key=>$label) : $value = $kpiData[$key]; ?>
+				<td>
+					<div class="traffic-light" data-value="<?php echo $value; ?>" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
+					<?php echo $this->trafficLight()->label($value, $key); ?>
+				</td>
+			<?php endforeach; ?>
+			<td><?php echo implode('', $presenceLinks); ?></td>
+			<?php else : ?>
+			<?php foreach ($kpis as $key=>$label) : ?>
+			<td>-</td>
+			<?php endforeach; ?>
+			<td>-</td>
+			<?php endif; ?>
+			<td class="options">
+				<?php
+					$actions = $this->gatekeeper()->filterAll(array(
+						'<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$country->id),
+						'<a href="%url%">Presences</a>' => array('action'=>'manage', 'id'=>$country->id),
+						'<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$country->id)
+					));
+					echo implode(' | ', $actions);
+				?>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>

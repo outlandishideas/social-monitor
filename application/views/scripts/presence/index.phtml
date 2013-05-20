@@ -1,16 +1,18 @@
 <?php
 $kpis = Model_Campaign::getKpis();
 $links = $this->gatekeeper()->filterAll(array(
-	'<a class="button add" href="%url%">Add new</a>' => array('action' => 'new')
+	'<a class="button add" href="%url%"><span class="icon-plus"></span>  Add new</a>' => array('action' => 'new'),
+    '<a class="button compare" data-href="%url%" href="%url%"><span class="icon-search"></span>  Compare</a>' => array('action' => 'compare', 'id'=>'')
 ));
 if ($links) {
-	echo '<p>' . implode('', $links) . '</p>';
+	echo '<div class="buttons">' . implode('', $links) . '</div>';
 }
 ?>
 
 <table class="text dtable standard" id="all-presences">
 	<thead>
 		<tr>
+            <th data-name="compare" data-sort="checkbox"><span class="icon-check"></span></th>
 			<th data-name="handle" data-sort="auto">Handle</th>
 			<th data-name="popularity" data-sort="fuzzy-numeric">Audience</th>
 			<th data-name="target" data-sort="fuzzy-numeric">Target audience</th>
@@ -24,6 +26,7 @@ if ($links) {
 		<?php /** @var $presence Model_Presence */ ?>
 		<?php foreach ($this->presences as $presence) : ?>
 		<tr>
+            <td><input type="checkbox" id="presence-<?php echo $presence->id; ?>" class="compare-checkbox" data-name="<?php echo $presence->handle; ?>" name="presences" value="<?php echo $presence->id; ?>" ></td>
 			<td>
 				<div class="presence <?php echo $presence->type; ?>">
 					<a href="<?php echo $this->url(array('action'=>'view', 'id'=>$presence->id)); ?>" title="<?php echo $presence->label; ?>"><?php echo $presence->handle; ?></a>

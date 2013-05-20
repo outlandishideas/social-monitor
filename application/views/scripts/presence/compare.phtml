@@ -1,21 +1,72 @@
 <?php //print_r($this->presence); ?>
-
 <div id="pickers">
 	<?php echo $this->render('partials/metricpicker.phtml'); ?>
 	<?php echo $this->render('partials/daterange.phtml'); ?>
 </div>
 
-<div id="share-box"><span class="link">Link to this page</span></div>
+<?php
+    $links = $this->gatekeeper()->filterAll(array(
+        '<a class="button add" href="%url%"><span class="icon-plus"></span>  Create Group</a>' => array('controller'=>'group','action' => 'new'),
+    ));
+    if ($links) {
+        echo '<div class="buttons">' . implode('', $links) . '</div>';
+    }
+?>
 
-<div id="charts" data-controller="presence" data-controller-label="presence">
-	<?php
-	$currentId = 1;
-	foreach($this->compareData as $data) {
-		foreach ($data->graphs as $graph) {
-			$graph->id = $currentId++;
-			$this->graph = $graph;
-			echo $this->render('partials/chart.phtml');
-		}
-	}
-	?>
-</div>
+<?php $kpis = Model_Campaign::getKpis(); ?>
+
+<?php if (empty($this->compareData)) : ?>
+
+    <h3>No presences found</h3>
+
+<?php else : ?>
+
+    <div id="share-box"><span class="link">Link to this page</span></div>
+
+    <div id="charts" data-controller="presence" data-controller-label="presence">
+        <?php
+        $currentId = 1;
+        foreach($this->compareData as $data) {
+            foreach ($data->graphs as $graph) {
+                $graph->id = $currentId++;
+                $this->graph = $graph;
+                echo $this->render('partials/chart.phtml');
+            }
+        }
+        ?>
+    </div>
+
+
+    <table class="text">
+
+        <tr>
+            <th>Handle</th>
+            <th>Audience size</th>
+            <th>Target audience</th>
+            <?php foreach ($kpis as $key=>$label) : ?>
+                <th><?php echo $label; ?></th>
+            <?php endforeach; ?>
+        </tr>
+
+        <?php foreach($this->compareData as $data) : $presence = $data->presence?>
+            <tr>
+                <td>
+                    <div class="presence <?php echo $presence->type; ?>">
+                        <?php echo $this->gatekeeper()->filter('<a href="%url%">' . $presence->handle . '</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>
+                        <a href="<?php echo $presence->page_url; ?>" target="_blank" class="icon external"></a>
+                    </div>
+                </td>
+                <td><?php echo number_format($presence->popularity) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
+                <td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->type == Model_Presence::TYPE_FACEBOOK ? 'fans' : 'followers'); ?></td>
+                <?php $kpiData = $presence->getKpiData(); foreach ($kpis as $key=>$label) : $value = $kpiData[$key]; ?>
+                    <td>
+                        <div class="traffic-light" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
+                        <?php echo $this->trafficLight()->label($value, $key); ?>
+                    </td>
+                <?php endforeach; ?>
+            </tr>
+        <?php endforeach; ?>
+
+    </table>
+
+<?php endif; ?>

@@ -21,8 +21,24 @@ class CountryController extends CampaignController {
 		$country = Model_Country::fetchById($this->_request->id);
 		$this->validateData($country);
 
-		$this->view->title = $country->display_name;
-		$this->view->country = $country;
+        $compareData = array();
+        foreach($country->presences as $presence){
+            $this->validateData($presence);
+            $compareData[$presence->id] = (object)array(
+                'presence'=>$presence,
+                'graphs'=>$presence->graphs()
+            );
+        }
+
+        $this->view->metrics = array(
+            'popularity'=>'Audience Rate',
+            'posts_per_day'=>'Posts Per Day',
+            'response_time'=>'Average Response Time'
+        );
+        $this->view->compareData = $compareData;
+		$this->view->title = '<span class="icon-globe"></span> '. $country->display_name . ' <a href="#" class="accordian-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>';
+		$this->view->titleInfo = $country->countryInfo();
+        $this->view->country = $country;
 	}
 
 	/**
@@ -72,8 +88,10 @@ class CountryController extends CampaignController {
 	{
 		if ($this->_request->action == 'edit') {
 			$editingCountry = Model_Country::fetchById($this->_request->id);
+            $this->showButtons = true;
 		} else {
 			$editingCountry = new Model_Country();
+            $this->showButtons = false;
 		}
 
 		$this->validateData($editingCountry);

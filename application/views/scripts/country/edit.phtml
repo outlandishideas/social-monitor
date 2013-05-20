@@ -3,7 +3,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
 	'<a class="button" href="%url%">View Country</a>' => array('controller'=>'country', 'action'=>'view'),
 	'<a class="button" href="%url%">Manage Presences</a>' => array('controller'=>'country', 'action'=>'manage')
 ));
-if ($buttons) :
+if ($buttons && $this->showButtons) :
 ?>
 <p>
 	<?php echo implode('', $buttons); ?>

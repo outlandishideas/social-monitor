@@ -2,8 +2,8 @@
 $kpis = Model_Campaign::getKpis();
 
 $buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button" href="%url%">Edit Country</a>' => array('action'=>'edit', 'id'=>$this->country->id),
-	'<a class="button" href="%url%">Manage Presences</a>' => array('action'=>'manage', 'id'=>$this->country->id)
+	'<a class="button" href="%url%">Edit Group</a>' => array('action'=>'edit', 'id'=>$this->group->id),
+	'<a class="button" href="%url%">Manage Presences</a>' => array('action'=>'manage', 'id'=>$this->group->id)
 ));
 ?>
 
@@ -85,10 +85,10 @@ $buttons = $this->gatekeeper()->filterAll(array(
         ?>
 
         <tr class="average">
-            <td>Country Average</td>
+            <td>Group Average</td>
             <td><?php echo number_format($avPop) . ' fans/followers'; ?></td>
             <td><?php echo number_format($avTarget) . ' fans/followers'; ?></td>
-            <?php foreach ($this->country->getKpiAverages() as $key=>$value) : ?>
+            <?php foreach ($this->group->getKpiAverages() as $key=>$value) : ?>
                 <td>
                     <div class="traffic-light" style="background-color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></div>
                     <?php echo $this->trafficLight()->label($value, $key); ?>

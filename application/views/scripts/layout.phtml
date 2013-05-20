@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="baseUrl" content="<?php echo $this->baseUrl('/'); ?>">
 	<title>British Council :: <?php echo strip_tags($this->title); ?></title>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
 	<?php
 		echo $this->minifyHeadLink()
 			->appendStylesheet('assets/fonts/proxima-nova-fontfacekit/stylesheet.css')
@@ -27,13 +28,16 @@
 
 				<?php if (Zend_Auth::getInstance()->hasIdentity()) : ?>
 				<div id="nav-bar">
-                    <div class="site-title"><span>British Council</span> Social Media Monitor</div>
+<!--                    <div class="site-title"><span>British Council</span> Social Media Monitor</div>-->
 					<div id="nav">
 						<div class="main">
-						<?php echo $this->navigation()->menu()->setMaxDepth(0); ?>
+                            <div class="site-title"><span>British Council Social Media Monitor</span></div>
+                            <?php
+                                echo $this->navigation()->menu()->setMaxDepth(0);
+                            ?>
 						</div>
 						<div class="extra">
-						<?php echo $this->navigation()->menu()->render($this->user->isAdmin ? $this->adminMenu : $this->nonAdminMenu); ?>
+						    <?php echo $this->navigation()->menu()->render($this->user->isAdmin ? $this->adminMenu : $this->nonAdminMenu); ?>
 						</div>
 					</div>
 				</div>
@@ -48,6 +52,19 @@
 				</div>
 				<?php endif; ?>
 				<h1><?php echo $this->title; ?></h1>
+                <?php if(isset($this->titleInfo)) : ?>
+                    <div id="title-info" class="acccordian">
+                        <dl>
+                            <?php foreach($this->titleInfo as $k => $info) : ?>
+
+                                <?php $value = $k == 'notes' ? '<p>'.$info->value.'</p>' : $info->value ; ?>
+                                <dt><?php echo $info->title; ?>:</dt>
+                                <dd><?php echo $value; ?></dd>
+
+                            <?php endforeach; ?>
+                        </dl>
+                    </div>
+                <?php endif; ?>
 			</div>
 		</header>
 		<div id="content" class="clearfix">

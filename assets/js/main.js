@@ -100,6 +100,78 @@ app.init = {
 			$item.uniform();
 		},
 
+        '.compare-checkbox': function ($item) {
+            $item.on('click', function(){
+                var $button = $('.compare.button');
+                var $list = $('.compare.list');
+
+                var val = $(this).val();
+                var name = $(this).data("name");
+
+                //if the list does not exist create it.
+                if($list.length == 0){
+                    var ulHtml = '<ul class="compare list button"></ul>'
+                    $button.after(ulHtml);
+                    $list = $('.compare.list');
+                }
+
+                if($(this).is(':checked')){
+
+                    //add presence to list in $list
+                    var liHtml = '<li data-id="'+ val +'">'+name+'</li>';
+                    $list.append(liHtml);
+
+                } else {
+
+                    //remove list item if it exists
+                    var $listItem = $list.find('*[data-id="'+val+'"]');
+                    if($listItem.length != 0){
+                        $listItem.remove();
+                    }
+
+                }
+
+                var href = $button.data('href');
+                var ids = $('input:checkbox:checked.compare-checkbox').map(function () {
+                    return this.value;
+                }).get();
+
+                href = href + ids.join(',');
+
+                $button.attr('href', href);
+
+            });
+        },
+
+        '.accordian-btn': function ($item) {
+
+            $item.on('click', function(event){
+                event.preventDefault();
+                var id = $(this).data('id');
+                var $div = $("#"+id);
+                var $icon = $(this).find('span');
+
+                if($div){
+                    if($div.hasClass('expand')){
+                        $div.removeClass('expand');
+                        $(this).find()
+                    } else {
+                        $div.addClass('expand');
+                    }
+                }
+
+                if($icon.hasClass('icon-caret-down')){
+                    setTimeout(function(){
+                        $icon.removeClass('icon-caret-down').addClass('icon-caret-up');
+                    },1000);
+                } else if($icon.hasClass('icon-caret-up')){
+                    setTimeout(function(){
+                        $icon.removeClass('icon-caret-up').addClass('icon-caret-down');
+                    },1000);
+                }
+            })
+        },
+
 		'#user-nav': function($item) {
 			$item.on('click', '.dropdown-toggle', function(e){
 				var $dropdown = $(this).closest('.dropdown');
