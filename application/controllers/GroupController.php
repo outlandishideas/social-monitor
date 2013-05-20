@@ -18,12 +18,12 @@ class GroupController extends CampaignController {
 	 */
 	public function viewAction()
 	{
+		/** @var Model_Group $group */
 		$group = Model_Group::fetchById($this->_request->id);
 		$this->validateData($group);
 
         $compareData = array();
         foreach($group->presences as $presence){
-            $this->validateData($presence);
             $compareData[$presence->id] = (object)array(
                 'presence'=>$presence,
                 'graphs'=>$this->graphs($presence)
@@ -116,6 +116,7 @@ class GroupController extends CampaignController {
 	 * @permission manage_group
 	 */
 	public function manageAction() {
+		/** @var Model_Group $group */
 		$group = Model_Group::fetchById($this->_request->id);
 		$this->validateData($group);
 

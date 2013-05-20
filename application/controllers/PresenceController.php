@@ -165,7 +165,7 @@ class PresenceController extends GraphingController
 		/** @var $presence Model_Presence */
         $chartData = $this->_request->chartData;
 		if (!$chartData) {
-			$this->apiError('Missing line IDs');
+			$this->apiError('Missing chart options');
 		}
 
 		$startDate = $dateRange[0];

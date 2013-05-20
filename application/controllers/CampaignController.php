@@ -1,6 +1,6 @@
 <?php
 
-class CampaignController extends GraphingController
+abstract class CampaignController extends GraphingController
 {
 
 }

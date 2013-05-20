@@ -38,33 +38,6 @@ class CountryController extends CampaignController {
 	}
 
 	/**
-	 * Gets KPI data for a country
-	 * @permission view_country
-	 */
-	public function kpiDataAction()
-	{
-		/** @var $country Model_Country */
-		if($this->_request->code) {
-			$country = Model_Country::fetchByCountryCode($this->_request->code);
-		} else {
-			$country = Model_Country::fetchById($this->_request->id);
-		}
-
-		if ($country) {
-			$data = array(
-				'name' => $country->name,
-				'audience' => number_format($country->audience),
-				'pages' => count($country->getFacebookPages()),
-				'handles' => count($country->getTwitterAccounts())
-			);
-
-			$this->apiSuccess($data);
-		} else {
-			$this->apiError('Country not found');
-		}
-	}
-
-	/**
 	 * Creates a new country
 	 * @permission create_country
 	 */
@@ -174,6 +147,7 @@ class CountryController extends CampaignController {
 	 * @permission manage_country
 	 */
 	public function manageAction() {
+		/** @var Model_Country $country */
 		$country = Model_Country::fetchById($this->_request->id);
 		$this->validateData($country);
 

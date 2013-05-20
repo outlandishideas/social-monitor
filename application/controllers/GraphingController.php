@@ -1,7 +1,7 @@
 <?php
 
 
-class GraphingController extends BaseController {
+abstract class GraphingController extends BaseController {
 
 	const METRIC_POPULARITY = 'popularity';
 	const METRIC_POSTS_PER_DAY = 'posts_per_day';
@@ -11,7 +11,7 @@ class GraphingController extends BaseController {
 		return array(
 			self::METRIC_POPULARITY=>'Audience Rate',
 			self::METRIC_POSTS_PER_DAY=>'Posts Per Day',
-			self::METRIC_RESPONSE_TIME=>'Average Response Time'
+			self::METRIC_RESPONSE_TIME=>'Response Time'
 		);
 	}
 
