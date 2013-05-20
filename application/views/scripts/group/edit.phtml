@@ -30,11 +30,13 @@ if ($buttons && $this->showButtons) :
             <p>These presences will be automatically added to this group:</p>
             <ul id="added-presences">
                 <?php foreach($this->presences as $presence) : ?>
-                    <li class="social-media box <?php echo $presence->type; ?>">
+                    <li class="social-media box <?php echo $presence->type; ?> split">
                         <?php $sign = $presence->type == Model_Presence::TYPE_FACEBOOK ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
 
                         <input type="hidden" value="<?php echo $presence->id;?>" name="presences[]">
-                        <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>" class="presence">
+                        <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>"
+                           class="presence"
+                            target="_blank">
                             <span class="<?php echo $sign; ?> icon-large"></span>
                             <?php echo $presence->getLabel(); ?>
                         </a>
