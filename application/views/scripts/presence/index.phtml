@@ -17,7 +17,7 @@ if ($links) {
 			<?php foreach ($kpis as $key=>$label) : ?>
 			<th data-name="<?php echo $key; ?>" data-sort="traffic-light" data-width="150px"><?php echo $label; ?></th>
 			<?php endforeach; ?>
-			<th data-name="options" class="options"></th>
+			<th data-name="options" data-width="150px"></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -45,14 +45,14 @@ if ($links) {
 					<span><?php echo $this->trafficLight()->label($value, $key); ?></span>
 				</td>
 			<?php endforeach; ?>
-			<td class="options">
+			<td>
 				<?php
 				$links = $this->gatekeeper()->filterAll(array(
-					'<a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$presence->id),
-					'<a href="%url%">Update info</a>' => array('action'=>'update', 'id'=>$presence->id),
-					'<a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$presence->id)
+					'- <a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$presence->id),
+					'- <a href="%url%">Update info</a>' => array('action'=>'update', 'id'=>$presence->id),
+					'- <a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$presence->id)
 				));
-				echo implode(' | ', $links);
+				echo implode('<br />', $links);
 				?>
 			</td>
 		</tr>
