@@ -73,7 +73,9 @@ class Model_Campaign extends Model_Base {
 			}
 			foreach ($this->getKpiData() as $p) {
 				foreach ($metrics as $m) {
-					$scores[$m][] = $p[$m];
+					if (array_key_exists($m, $p)) {
+						$scores[$m][] = $p[$m];
+					}
 				}
 			}
 			$averages = array();

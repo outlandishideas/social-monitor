@@ -6,6 +6,7 @@ class Model_Presence extends Model_Base {
 
 	const METRIC_POPULARITY = 'popularity';
 	const METRIC_POPULARITY_TIME = 'popularity_time';
+	const METRIC_POPULARITY_RATE = 'popularity_rate';
 	const METRIC_POSTS_PER_DAY = 'posts_per_day';
 	const METRIC_RESPONSE_TIME = 'response_time';
 	const METRIC_LINK_RATIO = 'link_ratio';
@@ -13,6 +14,7 @@ class Model_Presence extends Model_Base {
 	public static $ALL_METRICS = array(
 		self::METRIC_POPULARITY,
 		self::METRIC_POPULARITY_TIME,
+		self::METRIC_POPULARITY_RATE,
 		self::METRIC_POSTS_PER_DAY,
 		self::METRIC_RESPONSE_TIME,
 		self::METRIC_LINK_RATIO,

@@ -214,7 +214,7 @@ app.charts = {
 			c.yMin = Infinity;
 			c.yMax = -Infinity;
 			switch (data.chart.metric) {
-				case 'popularity':
+				case 'popularity_rate':
 					$health.find('.value')
 						.text(app.utils.numberFormat(data.current.value))
 						.css('color', data.color);
