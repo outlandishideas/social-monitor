@@ -105,22 +105,20 @@ app.init = {
                 var $button = $('.compare.button');
                 var $list = $('.compare.list');
 
-                var val = $(this).val();
-                var name = $(this).data("name");
-
                 //if the list does not exist create it.
                 if($list.length == 0){
-                    var ulHtml = '<ul class="compare list button"></ul>'
-                    $button.after(ulHtml);
+                    $button.after('<ul class="compare list"></ul>');
                     $list = $('.compare.list');
                 }
 
-                if($(this).is(':checked')){
+	            var val = $(this).val();
+
+	            if($(this).is(':checked')){
 
                     //add presence to list in $list
-                    var liHtml = '<li data-id="'+ val +'">'+name+'</li>';
+                    var liHtml = '<li data-id="'+ val +'">'+$(this).data("name")+'</li>';
                     $list.append(liHtml);
-
+					$button.show();
                 } else {
 
                     //remove list item if it exists
@@ -130,7 +128,8 @@ app.init = {
                     }
 
                     if($list.find('li').length == 0){
-                        $list.remove();
+                        $list.hide();
+	                    $button.hide();
                     }
 
                 }
@@ -147,7 +146,7 @@ app.init = {
             });
         },
 
-        '.accordian-btn': function ($item) {
+        '.accordion-btn': function ($item) {
 
             $item.on('click', function(event){
                 event.preventDefault();
@@ -155,24 +154,9 @@ app.init = {
                 var $div = $("#"+id);
                 var $icon = $(this).find('span');
 
-                if($div){
-                    if($div.hasClass('expand')){
-                        $div.removeClass('expand');
-                        $(this).find()
-                    } else {
-                        $div.addClass('expand');
-                    }
-                }
-
-                if($icon.hasClass('icon-caret-down')){
-                    setTimeout(function(){
-                        $icon.removeClass('icon-caret-down').addClass('icon-caret-up');
-                    },1000);
-                } else if($icon.hasClass('icon-caret-up')){
-                    setTimeout(function(){
-                        $icon.removeClass('icon-caret-up').addClass('icon-caret-down');
-                    },1000);
-                }
+                $div.slideToggle(function() {
+	                $icon.toggleClass('icon-caret-down').toggleClass('icon-caret-up')
+                });
             })
         },
 

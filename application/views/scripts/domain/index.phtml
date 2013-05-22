@@ -13,7 +13,7 @@
 			<tr>
 				<td><?php echo $domain->domain; ?></td>
 				<td><?php echo $domain->getLinkCount(); ?></td>
-				<td><input type="checkbox" <?php if ($domain->is_bc) { echo 'checked'; } ?> name="is_bc[<?php echo $domain->id; ?>]" /></td>
+				<td><input id="domain-<?php echo $domain->id; ?>" type="checkbox" <?php if ($domain->is_bc) { echo 'checked'; } ?> name="is_bc[<?php echo $domain->id; ?>]" /></td>
 			</tr>
 			<?php endforeach; ?>
 		</tbody>

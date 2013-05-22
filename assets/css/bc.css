@@ -105,6 +105,10 @@ fieldset input, fieldset select, fieldset textarea {
 	margin: 0px;
 }
 
+.site-title-link {
+	float: left;
+}
+
 .site-title {
     font-size: 20px;
     font-weight: bold;
@@ -114,7 +118,6 @@ fieldset input, fieldset select, fieldset textarea {
     color: #065284;
     width: 100px;
     height: 36px;
-    float: left;
     margin-left: 10px;
 }
 
@@ -180,7 +183,7 @@ a:hover, span.link:hover {
 }
 
 #main-header h1 {
-	margin: 0px;
+	margin: 0;
     line-height: 56px;
     height: 56px;
 }
@@ -211,19 +214,12 @@ a:hover, span.link:hover {
 #title-info {
     width: 50%;
     background-color: #e2e2e2;
-    height: auto;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 2s;
-    -webkit-transition: max-height 2s;
-}
-
-#title-info.expand {
-    max-height: 300px;
+	display: none;
 }
 
 #title-info dl {
     padding: 10px;
+	margin: 0;
 }
 
 #title-info dd,
@@ -513,6 +509,18 @@ form.autoConfirm {
     width: 100%;
 }
 
+#charts .presence-charts .presence {
+	margin-bottom: -1px;
+	border: 1px solid #ddd;
+	border-bottom: 0;
+	background-color: #fff;
+	display: inline-block;
+	padding: 4px 4px 4px 28px;
+	background-position: 4px center;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+}
+
 .chart-container {
 	clear: both;
 	border: 1px solid #ddd;
@@ -569,6 +577,11 @@ form.autoConfirm {
 	max-width: 100px;
 	text-align: center;
 	background: #efefef;
+}
+.statusesDisplay td.links {
+	min-width: 200px;
+	max-width: 200px;
+	vertical-align: top;
 }
 .statusesDisplay td.statusPic {
 	min-width: 70px;
@@ -643,7 +656,7 @@ table.dtable.dataTable {
 	background-position: center right;
 	background-repeat: no-repeat;
 	*cursor: hand;
-	padding-right: 15px;
+	padding-right: 18px;
 }
 
 .dataTable .sorting { background-image: url(../img/sort_both.png); }
@@ -887,31 +900,6 @@ table.dtable.dataTable {
 	overflow: auto;
 }
 
-.traffic-light {
-	display: inline-block;
-	width: 32px;
-	height: 32px;
-	border-radius: 32px;
-	-webkit-border-radius: 32px;
-	-moz-border-radius: 32px;
-	background: #ddd;
-	border: 2px solid #666;
-}
-
-#map .country .traffic-light {
-	width: 16px;
-	height: 16px;
-	border-radius: 16px;
-	-webkit-border-radius: 16px;
-	-moz-border-radius: 16px;
-	border-width: 1px;
-}
-
-table .traffic-light {
-	float: left;
-	margin-right: 5px;
-}
-
 .key {
     top: 200px;
     position: absolute;
@@ -1037,11 +1025,17 @@ body .button-right .button {
 	margin-right: 0;
 }
 
+body .button.compare {
+	display: none;
+}
+
 body .compare.list {
     display: inline-block;
     margin: 0;
     background-color: #065284;
     color: #fff;
+	border-radius: 5px;
+	padding: 10px 15px;
 }
 
 body .compare.list li {

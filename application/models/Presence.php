@@ -11,7 +11,6 @@ class Model_Presence extends Model_Base {
 	const METRIC_POPULARITY_RATE = 'popularity_rate';
 	const METRIC_POSTS_PER_DAY = 'posts_per_day';
 	const METRIC_RESPONSE_TIME = 'response_time';
-	const METRIC_LINK_RATIO = 'link_ratio';
 
 	public static $ALL_METRICS = array(
 		self::METRIC_POPULARITY_PERCENT,
@@ -19,7 +18,6 @@ class Model_Presence extends Model_Base {
 		self::METRIC_POPULARITY_RATE,
 		self::METRIC_POSTS_PER_DAY,
 		self::METRIC_RESPONSE_TIME,
-		self::METRIC_LINK_RATIO,
 	);
 
 	public static $bucketSizes = array(
@@ -171,15 +169,6 @@ class Model_Presence extends Model_Base {
 			//response time
 			$kpiData[self::METRIC_RESPONSE_TIME] = $this->getAverageResponseTime($startDateString, $endDateString);
 
-			//link ratio
-			$total = 0;
-			$bc = 0;
-			foreach ($this->getLinkRatioData($startDateString, $endDateString) as $row) {
-				$total += $row->total;
-				$bc += $row->bc;
-			}
-			$kpiData[self::METRIC_LINK_RATIO] = $total ? 100*$bc/$total : 0;
-
 			$this->kpiData = $kpiData;
 		}
 
@@ -316,14 +305,16 @@ class Model_Presence extends Model_Base {
 				while ($tweets) {
 					$tweet = array_shift($tweets);
 					foreach ($tweet->entities->urls as $urlInfo) {
-						$url = $urlInfo->expanded_url;
-						$domain = $this->extractDomain($url);
-						$links[] = array(
-							'url'=>$url,
-							'domain'=>$domain,
-							'external_id'=>$tweet->id_str,
-							'type'=>$this->type
-						);
+						try {
+							$url = Util_Http::resolveUrl($urlInfo->expanded_url);
+							$domain = $this->extractDomain($url);
+							$links[] = array(
+								'url'=>$url,
+								'domain'=>$domain,
+								'external_id'=>$tweet->id_str,
+								'type'=>$this->type
+							);
+						} catch (Exception $ex) { }
 					}
 					$parsedTweet = Util_Twitter::parseTweet($tweet);
 					$statuses[$tweet->id_str] = array(
@@ -508,6 +499,7 @@ class Model_Presence extends Model_Base {
 
 			$postIds = array_map(function($a) { return $a->post_id; }, $statuses);
 			$responses = array();
+			$links = array();
 			if ($postIds) {
 				$postIds = array_map(function($a) { return "'" . $a . "'"; }, $postIds);
 				$postIds = implode(',', $postIds);
@@ -518,6 +510,18 @@ class Model_Presence extends Model_Base {
 					if (!array_key_exists($key, $responses) || ($response->created_time < $responses[$key]->created_time)) {
 						$responses[$key] = $response;
 					}
+				}
+
+				$ids = array_map(function($a) { return $a->id; }, $statuses);
+				$ids = implode(',', $ids);
+				$stmt = $this->_db->prepare("SELECT * FROM status_links AS l INNER JOIN domains AS d USING (domain) WHERE status_id IN ($ids) AND type = :type");
+				$stmt->execute(array(':type'=>$this->type));
+				foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $link) {
+					$key = $link->status_id;
+					if (!array_key_exists($key, $links)) {
+						$links[$key] = array();
+					}
+					$links[$key][] = $link;
 				}
 			}
 
@@ -540,6 +544,13 @@ class Model_Presence extends Model_Base {
 					$status->first_response = $responses[$status->post_id];
 				} else {
 					$status->first_response = null;
+				}
+
+				if (array_key_exists($status->id, $links) && $status->actor_id == $this->uid) {
+					$status->links = $links[$status->id];
+					usort($status->links, function($a, $b) { return $b->is_bc - $a->is_bc; });
+				} else {
+					$status->links = null;
 				}
 			}
 		}
@@ -602,7 +613,7 @@ class Model_Presence extends Model_Base {
 		}
 	}
 
-	public function getLinkRatioData($startDate, $endDate) {
+	public function getLinkData($startDate, $endDate) {
 		$clauses = array(
 			'p.presence_id = :pid',
 			'p.created_time >= :start_date',
@@ -622,15 +633,11 @@ class Model_Presence extends Model_Base {
 			$clauses[] = 'in_response_to IS NULL';
 		}
 
-		$stmt = $this->_db->prepare("SELECT date, COUNT(1) AS total, SUM(1) AS bc
-			FROM (
-				SELECT DATE(p.created_time) AS date, d.*
+		$stmt = $this->_db->prepare("SELECT DATE(p.created_time) AS date, s.status_id, s.url, d.domain, d.is_bc
 				FROM domains AS d
 				INNER JOIN status_links AS s ON d.domain = s.domain
 				INNER JOIN $tableName AS p ON s.status_id = p.id
-				WHERE " . implode(' AND ', $clauses) . "
-			) AS tmp
-			GROUP BY date");
+				WHERE " . implode(' AND ', $clauses));
 		$stmt->execute($args);
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}

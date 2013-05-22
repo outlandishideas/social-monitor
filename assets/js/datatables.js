@@ -17,12 +17,8 @@ app.datatables = {
         // add a 'checkbox' sort type, which sorts by whether a checkbox is checked or not
         $.extend($.fn.dataTableExt.oSort, {
             "checkbox-pre": function ( a ) {
-                var $checkbox = $(a).filter('input[type=checkbox]');
-                if ($checkbox.is(':checked')) {
-                    return 1;
-                } else {
-                    return 0;
-                }
+                var $checkbox = $('#' + $(a).filter('input[type=checkbox]').attr('id'));
+                return ($checkbox.is(':checked') ? 1 : 0);
             },
             "checkbox-asc": function ( a, b ) { return a - b; },
             "checkbox-desc": function ( a, b ) { return b - a; }
@@ -106,6 +102,20 @@ app.datatables = {
 				aoColumns: app.datatables.generateColumns($table)
 			});
 		},
+		'#all-presences': function($table) {
+			$table.dataTable({
+				aaSorting:[
+					[1, 'asc']
+				],
+				bScrollInfinite: true,
+				iDisplayLength: 1000,
+				bScrollCollapse: true,
+				sScrollY: '400px',
+				bFilter: false,
+				bInfo: false,
+				aoColumns: app.datatables.generateColumns($table)
+			});
+		},
 		'#statuses.facebook': function($div) {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + app.state.controller + "/statuses",
@@ -117,7 +127,7 @@ app.datatables = {
 					$(nRow).data('id', aData.id);
 				},
 				aaSorting:[
-					[3, 'desc']
+					[4, 'desc']
 				],
 				aoColumns:[
 					{
@@ -138,6 +148,22 @@ app.datatables = {
 							return parseTemplate(app.templates.post, o.aData);
 						},
 						sClass: 'message',
+						bSortable:false,
+						bUseRendered:false
+					},
+					{
+						mDataProp:'links',
+						fnRender:function (o, links) {
+							var linkStrings = [];
+							if (links) {
+								for (var i=0; i<links.length; i++) {
+									var link = links[i];
+									linkStrings.push('<a href="' + link.url + '" target="_blank">' + link.domain + '</a> (' + (link.is_bc == '1' ? 'BC' : 'non-BC') + ')');
+								}
+							}
+							return linkStrings.join(', ');
+						},
+						sClass: 'links',
 						bSortable:false,
 						bUseRendered:false
 					},

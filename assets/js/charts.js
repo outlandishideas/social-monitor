@@ -249,20 +249,14 @@ app.charts = {
 					$health.find('.target').text('Target Posts Per Day: ' + data.target);
 
 					app.charts.addBars(c, data.points, data.chart, data.color);
+					app.charts.addBars(c, data.bc, data.chart, '#00f', 0.3, -1);
+					app.charts.addBars(c, data.non_bc, data.chart, '#99f', 0.3, 0);
 					break;
 				case 'response_time':
 					$health.find('.value')
 						.text(app.utils.numberFixedDecimal(data.average, 2))
 						.css('color', data.color);
 					$health.find('.target').text('Target Response Time: ' + data.target);
-
-					app.charts.addBars(c, data.points, data.chart, data.color);
-					break;
-				case 'link_ratio':
-					$health.find('.value')
-						.text(app.utils.numberFixedDecimal(data.average, 2))
-						.css('color', data.color);
-					$health.find('.target').text('Target: ' + data.target + '%');
 
 					app.charts.addBars(c, data.points, data.chart, data.color);
 					break;
@@ -338,11 +332,18 @@ app.charts = {
 		}
 	},
 
-	addBars: function (c, points, data, color) {
+	addBars: function (c, points, data, color, widthFraction, offsetFraction) {
 		var group = app.charts.addGroup(c, points, data);
 
 		var maxWidth = c.w/points.length;
-		var width = maxWidth*0.8;
+		if (typeof widthFraction != 'number') {
+			widthFraction = 0.8;
+		}
+		if (typeof offsetFraction != 'number') {
+			offsetFraction = -0.5;
+		}
+		var width = maxWidth*widthFraction;
+		var offset = width*offsetFraction;
 
 		// translate by half a column width
 		group.attr('transform', 'translate('+ maxWidth/2 +')');
@@ -354,7 +355,7 @@ app.charts = {
 			.attr("x", function (d, i) {
 				return c.xMap(c.getXValue(d));
 			})
-			.attr('transform', 'translate(-' + width/2 + ')')
+			.attr('transform', 'translate(' + offset + ')')
 			.attr('y', function(d, i) {
 				return c.yMap(Math.max(0, c.getYValue(d)));
 			})
@@ -377,7 +378,11 @@ app.charts = {
 				return color;
 			})
 			.attr('title', function(d, i) {
-				return Date.parse(c.getXValue(d)).toString('d MMM') + ': ' + c.getYValue(d);
+				var title = Date.parse(c.getXValue(d)).toString('d MMM') + ': ' + c.getYValue(d);
+				if ('subtitle' in d) {
+					title += ' ' + d.subtitle;
+				}
+				return title;
 			})
 			.on('mouseover', function (d, i) {
 				$('div.tipsy').remove();

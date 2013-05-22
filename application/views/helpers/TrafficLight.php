@@ -74,7 +74,6 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
 				}
 				break;
 			case Model_Presence::METRIC_POPULARITY_PERCENT:
-			case Model_Presence::METRIC_LINK_RATIO:
 				$label .= '%';
 				break;
 			case Model_Presence::METRIC_RESPONSE_TIME:
