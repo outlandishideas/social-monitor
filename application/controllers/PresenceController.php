@@ -331,23 +331,28 @@ class PresenceController extends GraphingController
 			$average = $total/count($postsPerDay);
 		}
 
-		$linkData = array();
-		foreach ($presence->getLinkData($startDate, $endDate) as $row) {
-			$linkData[$row->date] = $row;
-		}
 		$bc = array();
 		$nonBc = array();
 		foreach ($postsPerDay as $entry) {
 			$date = $entry->date;
-			$bcItem = (object)array('date'=>$date, 'value'=>0, 'subtitle'=>'(with BC links)');
-			$nonBcItem = (object)array('date'=>$date, 'value'=>0, 'subtitle'=>'(with non-BC links)');
-			if (array_key_exists($date, $linkData)) {
-				$linkItem = $linkData[$date];
-				$bcItem->value = $linkItem->bc;
-				$nonBcItem->value = $linkItem->total - $linkItem->bc;
+			$bc[$date] = (object)array('date'=>$date, 'value'=>0, 'subtitle'=>'(with BC links)', 'statusIds'=>array());
+			$nonBc[$date] = (object)array('date'=>$date, 'value'=>0, 'subtitle'=>'(with non-BC links)', 'statusIds'=>array());
+		}
+
+		foreach ($presence->getLinkData($startDate, $endDate) as $row) {
+			if ($row->is_bc) {
+				$bc[$row->date]->statusIds[] = $row->status_id;
+			} else {
+				$nonBc[$row->date]->statusIds[] = $row->status_id;
 			}
-			$bc[] = $bcItem;
-			$nonBc[] = $nonBcItem;
+		}
+		$bc = array_values($bc);
+		$nonBc = array_values($nonBc);
+		foreach (array($bc, $nonBc) as $set) {
+			foreach ($set as $row) {
+				$row->value = count(array_unique($row->statusIds));
+				unset($row->statusIds);
+			}
 		}
 
 		return array(

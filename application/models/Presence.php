@@ -569,15 +569,11 @@ class Model_Presence extends Model_Base {
 			$clauses[] = 'in_response_to IS NULL';
 		}
 
-		$stmt = $this->_db->prepare("SELECT date, COUNT(1) AS total, SUM(is_bc) AS bc
-			FROM (
-				SELECT DATE(p.created_time) AS date, d.*
+		$stmt = $this->_db->prepare("SELECT DATE(p.created_time) AS date, s.status_id, s.url, d.domain, d.is_bc
 				FROM domains AS d
 				INNER JOIN status_links AS s ON d.domain = s.domain
 				INNER JOIN $tableName AS p ON s.status_id = p.id
-				WHERE " . implode(' AND ', $clauses) . "
-			) AS tmp
-			GROUP BY date");
+				WHERE " . implode(' AND ', $clauses));
 		$stmt->execute($args);
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
