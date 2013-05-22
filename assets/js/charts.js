@@ -249,20 +249,14 @@ app.charts = {
 					$health.find('.target').text('Target Posts Per Day: ' + data.target);
 
 					app.charts.addBars(c, data.points, data.chart, data.color);
+					app.charts.addBars(c, data.bc, data.chart, '#00f');
+					app.charts.addBars(c, data.non_bc, data.chart, '#99f');
 					break;
 				case 'response_time':
 					$health.find('.value')
 						.text(app.utils.numberFixedDecimal(data.average, 2))
 						.css('color', data.color);
 					$health.find('.target').text('Target Response Time: ' + data.target);
-
-					app.charts.addBars(c, data.points, data.chart, data.color);
-					break;
-				case 'link_ratio':
-					$health.find('.value')
-						.text(app.utils.numberFixedDecimal(data.average, 2))
-						.css('color', data.color);
-					$health.find('.target').text('Target: ' + data.target + '%');
 
 					app.charts.addBars(c, data.points, data.chart, data.color);
 					break;
@@ -377,7 +371,11 @@ app.charts = {
 				return color;
 			})
 			.attr('title', function(d, i) {
-				return Date.parse(c.getXValue(d)).toString('d MMM') + ': ' + c.getYValue(d);
+				var title = Date.parse(c.getXValue(d)).toString('d MMM') + ': ' + c.getYValue(d);
+				if ('subtitle' in d) {
+					title += ' ' + d.subtitle;
+				}
+				return title;
 			})
 			.on('mouseover', function (d, i) {
 				$('div.tipsy').remove();

@@ -9,7 +9,6 @@ class Model_Presence extends Model_Base {
 	const METRIC_POPULARITY_RATE = 'popularity_rate';
 	const METRIC_POSTS_PER_DAY = 'posts_per_day';
 	const METRIC_RESPONSE_TIME = 'response_time';
-	const METRIC_LINK_RATIO = 'link_ratio';
 
 	public static $ALL_METRICS = array(
 		self::METRIC_POPULARITY_PERCENT,
@@ -17,7 +16,6 @@ class Model_Presence extends Model_Base {
 		self::METRIC_POPULARITY_RATE,
 		self::METRIC_POSTS_PER_DAY,
 		self::METRIC_RESPONSE_TIME,
-		self::METRIC_LINK_RATIO,
 	);
 
 	public static $bucketSizes = array(
@@ -110,15 +108,6 @@ class Model_Presence extends Model_Base {
 
 			//response time
 			$kpiData[self::METRIC_RESPONSE_TIME] = $this->getAverageResponseTime($startDateString, $endDateString);
-
-			//link ratio
-			$total = 0;
-			$bc = 0;
-			foreach ($this->getLinkRatioData($startDateString, $endDateString) as $row) {
-				$total += $row->total;
-				$bc += $row->bc;
-			}
-			$kpiData[self::METRIC_LINK_RATIO] = $total ? 100*$bc/$total : 0;
 
 			$this->kpiData = $kpiData;
 		}
@@ -252,14 +241,16 @@ class Model_Presence extends Model_Base {
 				while ($tweets) {
 					$tweet = array_shift($tweets);
 					foreach ($tweet->entities->urls as $urlInfo) {
-						$url = $urlInfo->expanded_url;
-						$domain = $this->extractDomain($url);
-						$links[] = array(
-							'url'=>$url,
-							'domain'=>$domain,
-							'external_id'=>$tweet->id_str,
-							'type'=>$this->type
-						);
+						try {
+							$url = Util_Http::resolveUrl($urlInfo->expanded_url);
+							$domain = $this->extractDomain($url);
+							$links[] = array(
+								'url'=>$url,
+								'domain'=>$domain,
+								'external_id'=>$tweet->id_str,
+								'type'=>$this->type
+							);
+						} catch (Exception $ex) { }
 					}
 					$parsedTweet = Util_Twitter::parseTweet($tweet);
 					$statuses[$tweet->id_str] = array(
@@ -464,13 +455,9 @@ class Model_Presence extends Model_Base {
 				foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $link) {
 					$key = $link->status_id;
 					if (!array_key_exists($key, $links)) {
-						$links[$key] = array(
-							'internal'=>array(),
-							'external'=>array()
-						);
+						$links[$key] = array();
 					}
-					$innerKey = $link->is_bc ? 'internal' : 'external';
-					$links[$key][$innerKey][] = $link;
+					$links[$key][] = $link;
 				}
 			}
 
@@ -495,10 +482,11 @@ class Model_Presence extends Model_Base {
 					$status->first_response = null;
 				}
 
-				if (array_key_exists($status->id, $links)) {
-					$status->links = count($links[$status->id]['internal']) . ', ' . count($links[$status->id]['external']);
+				if (array_key_exists($status->id, $links) && $status->actor_id == $this->uid) {
+					$status->links = $links[$status->id];
+					usort($status->links, function($a, $b) { return $b->is_bc - $a->is_bc; });
 				} else {
-					$status->links = '';
+					$status->links = null;
 				}
 			}
 		}
@@ -561,7 +549,7 @@ class Model_Presence extends Model_Base {
 		}
 	}
 
-	public function getLinkRatioData($startDate, $endDate) {
+	public function getLinkData($startDate, $endDate) {
 		$clauses = array(
 			'p.presence_id = :pid',
 			'p.created_time >= :start_date',

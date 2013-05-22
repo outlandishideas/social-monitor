@@ -190,9 +190,6 @@ class PresenceController extends GraphingController
 					case Model_Presence::METRIC_RESPONSE_TIME:
 						$data = $this->generateResponseTimeGraphData($presence, $startDate, $endDate);
 						break;
-					case Model_Presence::METRIC_LINK_RATIO:
-						$data = $this->generateLinkRatioGraphData($presence, $startDate, $endDate);
-						break;
 				}
 				if ($data) {
 					$trafficLight = $this->view->trafficLight();
@@ -321,23 +318,44 @@ class PresenceController extends GraphingController
 	 * @return array
 	 */
 	private function generatePostsPerDayGraphData($presence, $startDate, $endDate) {
-		$data = $presence->getPostsPerDayData($startDate, $endDate);
-		usort($data, function($a, $b) { return strcmp($a->date, $b->date); });
+		$postsPerDay = $presence->getPostsPerDayData($startDate, $endDate);
+		usort($postsPerDay, function($a, $b) { return strcmp($a->date, $b->date); });
 
 		$target = BaseController::getOption('updates_per_day');
 		$average = 0;
-		if ($data) {
+		if ($postsPerDay) {
 			$total = 0;
-			foreach ($data as $row) {
+			foreach ($postsPerDay as $row) {
 				$total += $row->value;
 			}
-			$average = $total/count($data);
+			$average = $total/count($postsPerDay);
+		}
+
+		$linkData = array();
+		foreach ($presence->getLinkData($startDate, $endDate) as $row) {
+			$linkData[$row->date] = $row;
+		}
+		$bc = array();
+		$nonBc = array();
+		foreach ($postsPerDay as $entry) {
+			$date = $entry->date;
+			$bcItem = (object)array('date'=>$date, 'value'=>0, 'subtitle'=>'(with BC links)');
+			$nonBcItem = (object)array('date'=>$date, 'value'=>0, 'subtitle'=>'(with non-BC links)');
+			if (array_key_exists($date, $linkData)) {
+				$linkItem = $linkData[$date];
+				$bcItem->value = $linkItem->bc;
+				$nonBcItem->value = $linkItem->total - $linkItem->bc;
+			}
+			$bc[] = $bcItem;
+			$nonBc[] = $nonBcItem;
 		}
 
 		return array(
 			'average' => $average,
 			'target' => $target,
-			'points' => $data
+			'points' => $postsPerDay,
+			'bc' => $bc,
+			'non_bc' => $nonBc
 		);
 	}
 
@@ -386,39 +404,6 @@ class PresenceController extends GraphingController
 		);
 	}
 
-	/**
-	 * @param Model_Presence $presence
-	 * @param $startDate
-	 * @param $endDate
-	 * @return array
-	 */
-	private function generateLinkRatioGraphData($presence, $startDate, $endDate) {
-		$points = array();
-		$target = 80;
-		$data = $presence->getLinkRatioData($startDate, $endDate);
-		if (!$data) {
-			$average = 0;
-		} else {
-			$total = 0;
-			$bc = 0;
-			foreach ($data as $row) {
-				$key = $row->date;
-				$value = ($row->total ? 100*$row->bc/$row->total : 0);
-				$points[$key] = (object)array('date'=>$key, 'value'=>$value);
-				$total += $row->total;
-				$bc += $row->bc;
-			}
-			$average = $total ? 100*$bc/$total : 0;
-
-			$points = $this->fillDateGaps($points, $startDate, $endDate, 0);
-			$points = array_values($points);
-		}
-		return array(
-			'average' => $average,
-			'target' => $target,
-			'points' => $points
-		);
-	}
 
 	public function toggleResponseNeededAction() {
 		$id = $this->_request->id;
@@ -503,6 +488,7 @@ class PresenceController extends GraphingController
 						'facebook_url' => $post->permalink,
 						'profile_url' => $post->actor->profile_url,
 						'message' => $post->message,
+						'links' => $post->links,
 						'date' => Model_Base::localeDate($post->created_time),
 						'needs_response' => $post->needs_response,
 						'first_response' => array(

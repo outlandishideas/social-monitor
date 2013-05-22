@@ -8,7 +8,6 @@ abstract class GraphingController extends BaseController {
 			Model_Presence::METRIC_POPULARITY_RATE => 'Audience Rate',
 			Model_Presence::METRIC_POSTS_PER_DAY => 'Posts Per Day',
 			Model_Presence::METRIC_RESPONSE_TIME => 'Response Time',
-			Model_Presence::METRIC_LINK_RATIO => 'Links Ratio'
 		);
 	}
 
@@ -18,7 +17,6 @@ abstract class GraphingController extends BaseController {
 			Model_Presence::METRIC_POPULARITY_TIME => 'Time to Reach Target Audience',
 			Model_Presence::METRIC_POSTS_PER_DAY => 'Average Number of Posts Per Day',
 			Model_Presence::METRIC_RESPONSE_TIME => 'Average Response Time',
-			Model_Presence::METRIC_LINK_RATIO => 'Average Links Ratio'
 		);
 	}
 
@@ -28,7 +26,6 @@ abstract class GraphingController extends BaseController {
 			Model_Presence::METRIC_POPULARITY_TIME => 'Time to Reach Target Audience',
 			Model_Presence::METRIC_POSTS_PER_DAY => 'Average Number of Posts Per Day',
 			Model_Presence::METRIC_RESPONSE_TIME => 'Average Response Time',
-			Model_Presence::METRIC_LINK_RATIO => 'Average Links Ratio'
 		);
 	}
 
@@ -48,11 +45,6 @@ abstract class GraphingController extends BaseController {
 			'metric' => Model_Presence::METRIC_RESPONSE_TIME,
 			'yAxisLabel' => 'Response time (hours)',
 			'title' => 'Average Response Time (hours)'
-		);
-		$graphs[] = (object)array(
-			'metric' => Model_Presence::METRIC_LINK_RATIO,
-			'yAxisLabel' => 'Link percent',
-			'title' => 'Links to BC sites (%)'
 		);
 		foreach ($graphs as $g) {
 			$g->presence_id = $presence->id;
@@ -102,11 +94,6 @@ abstract class GraphingController extends BaseController {
 		$metrics[Model_Presence::METRIC_RESPONSE_TIME] = (object)array(
 			'range' => array(0, $responseTimeBest, $responseTimeGood, $responseTimeBad),
 			'colors' => array($colors->green, $colors->yellow, $colors->orange, $colors->red)
-		);
-
-		$metrics[Model_Presence::METRIC_LINK_RATIO] = (object)array(
-			'range' => array(0, 50, 100),
-			'colors' => array($colors->red, $colors->yellow, $colors->green)
 		);
 
 		foreach (self::mapMetrics() as $key=>$label) {

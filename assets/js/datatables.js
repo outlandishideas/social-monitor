@@ -123,7 +123,7 @@ app.datatables = {
 					$(nRow).data('id', aData.id);
 				},
 				aaSorting:[
-					[3, 'desc']
+					[4, 'desc']
 				],
 				aoColumns:[
 					{
@@ -144,6 +144,22 @@ app.datatables = {
 							return parseTemplate(app.templates.post, o.aData);
 						},
 						sClass: 'message',
+						bSortable:false,
+						bUseRendered:false
+					},
+					{
+						mDataProp:'links',
+						fnRender:function (o, links) {
+							var linkStrings = [];
+							if (links) {
+								for (var i=0; i<links.length; i++) {
+									var link = links[i];
+									linkStrings.push('<a href="' + link.url + '" target="_blank">' + link.domain + '</a> (' + (link.is_bc == '1' ? 'BC' : 'non-BC') + ')');
+								}
+							}
+							return linkStrings.join(', ');
+						},
+						sClass: 'links',
 						bSortable:false,
 						bUseRendered:false
 					},
