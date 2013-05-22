@@ -27,13 +27,13 @@ if ($links) {
 		<tr>
             <td><input type="checkbox" id="presence-<?php echo $presence->id; ?>" class="compare-checkbox" data-name="<?php echo $presence->handle; ?>" name="presences" value="<?php echo $presence->id; ?>" ></td>
 			<td>
-				<div class="presence <?php echo $presence->type; ?>">
-					<a href="<?php echo $this->url(array('action'=>'view', 'id'=>$presence->id)); ?>" title="<?php echo $presence->label; ?>"><?php echo $presence->handle; ?></a>
-					<?php if (!$presence->uid) : ?>
-					[not found]
-					<?php endif; ?>
-					<a href="<?php echo $presence->page_url; ?>" target="_blank" class="icon external"></a>
-				</div>
+                <a href="<?php echo $this->url(array('action'=>'view', 'id'=>$presence->id)); ?>" title="<?php echo $presence->label; ?>">
+                    <?php echo $presence->getLargePresenceSign().' '.$presence->handle; ?>
+                </a>
+                <?php if (!$presence->uid) : ?>
+                [not found]
+                <?php endif; ?>
+                <!--<a href="<?php echo $presence->page_url; ?>" target="_blank" class="icon external"></a>-->
 			</td>
 			<td><?php echo number_format($presence->popularity) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
 			<td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>

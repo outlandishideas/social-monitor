@@ -8,7 +8,7 @@ class CountryController extends CampaignController {
 	 */
 	public function indexAction() {
 
-		$this->view->title = 'Countries';
+		$this->view->title = Model_Country::getLargeIcon().' Countries';
 		$this->view->tableMetrics = self::tableMetrics();
 		$this->view->countries = Model_Country::fetchAll();
 	}
@@ -34,7 +34,7 @@ class CountryController extends CampaignController {
         $this->view->metricOptions = self::graphMetrics();
         $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
-		$this->view->title = '<span class="icon-globe"></span> '. $country->display_name . ' <a href="#" class="accordian-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>';
+		$this->view->title = Model_Country::getLargeIcon().' '. $country->display_name . ' <a href="#" class="accordian-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>';
 		$this->view->titleInfo = $country->countryInfo();
         $this->view->country = $country;
 	}

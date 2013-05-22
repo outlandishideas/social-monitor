@@ -1,6 +1,9 @@
 <?php
 
 class Model_Country extends Model_Campaign {
+
+    const ICON_TYPE = 'icon-globe';
+
 	protected function fetch($clause = null, $args = array()) {
 		if ($clause) {
 			$clause .= ' AND ';

@@ -1,10 +1,13 @@
 user:
   label: User
   controller: user
-
-domain:
-  label: Domains
-  controller: domain
+  action: edit-self
+  icon: icon-user icon-large
+users:
+  label: Users
+  controller: users
+  icon: icon-group icon-large
 config:
   label: Settings
   controller: config
+  icon: icon-cog icon-large

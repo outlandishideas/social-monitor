@@ -1,7 +1,10 @@
 <?php
 
 class Model_Group extends Model_Campaign {
-	protected function fetch($clause = null, $args = array()) {
+
+    const ICON_TYPE = 'icon-th-large';
+
+    protected function fetch($clause = null, $args = array()) {
 		if ($clause) {
 			$clause .= ' AND ';
 		}

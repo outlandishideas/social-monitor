@@ -31,7 +31,11 @@ app.datatables = {
 		// add a 'traffic light' sort type, which uses the value in the traffic light
 		$.extend($.fn.dataTableExt.oSort, {
 			"traffic-light-pre": function ( a ) {
-				var value = $(a).filter('.icon-circle').data('value');
+
+
+
+
+										  		var value = $(a).filter('.icon-circle').data('value');
 				if (typeof value == 'undefined') {
 					value = -1;
 				}

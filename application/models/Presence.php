@@ -4,7 +4,9 @@ class Model_Presence extends Model_Base {
 	protected static $tableName = 'presences';
 	protected static $sortColumn = 'handle';
 
-	const METRIC_POPULARITY_PERCENT = 'popularity';
+    const ICON_TYPE = 'icon-bar-chart';
+
+    const METRIC_POPULARITY_PERCENT = 'popularity';
 	const METRIC_POPULARITY_TIME = 'popularity_time';
 	const METRIC_POPULARITY_RATE = 'popularity_rate';
 	const METRIC_POSTS_PER_DAY = 'posts_per_day';
@@ -37,6 +39,64 @@ class Model_Presence extends Model_Base {
 	public static function fetchAllFacebook() {
 		return self::fetchAll('type = :type', array(':type'=>self::TYPE_FACEBOOK));
 	}
+
+    public function presenceIcon($append =  null){
+        switch($this->type){
+            case self::TYPE_FACEBOOK:
+                return 'icon-facebook'.$append;
+                break;
+            case self::TYPE_TWITTER:
+                return 'icon-twitter'.$append;
+                break;
+            default:
+                return false;
+        }
+    }
+
+    public function getPresenceIcon($classes = array()){
+
+        $icon = $this->presenceIcon();
+
+        if(!$icon) return false;
+
+        $classes[] = $icon;
+
+        $classes = implode(' ',$classes);
+
+        return '<span class="'. $classes .'"></span>';
+
+    }
+
+    public function getLargePresenceIcon($classes = array()) {
+
+        $defaults = array('icon-large');
+
+        $classes = $defaults + $classes;
+
+        return $this->getPresenceIcon($classes);
+    }
+
+    public function getPresenceSign($classes = array()) {
+
+        $icon = $this->presenceIcon('-sign');
+
+        if(!$icon) return false;
+
+        $classes[] = $icon;
+
+        $classes = implode(' ',$classes);
+
+        return '<span class="'.$classes.'"></span>';
+    }
+
+    public function getLargePresenceSign($classes = array()) {
+
+        $defaults = array('icon-large');
+
+        $classes = $defaults + $classes;
+
+        return $this->getPresenceSign($classes);
+    }
 
 	public function getLabel() {
 		return $this->name ?: $this->handle;
@@ -154,6 +214,10 @@ class Model_Presence extends Model_Base {
 				break;
 		}
 	}
+
+    public function isBranded(){
+        return false;
+    }
 
 	public function getTypeLabel() {
 		return ucfirst($this->type);

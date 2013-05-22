@@ -33,7 +33,10 @@
 						<div class="main">
                             <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>"><div class="site-title"><span>British Council Social Media Monitor</span></div></a>
                             <?php
-                                echo $this->navigation()->menu()->setMaxDepth(0);
+                                $partial = array('menu.phtml', 'default');
+                                $this->navigation()->menu()->setPartial($partial);
+                                //$this->navigation()->menu()->setMaxDepth(2);
+                                echo $this->navigation()->menu()->render();
                             ?>
 						</div>
 						<div class="extra">
@@ -51,9 +54,19 @@
 					<div class="dropdown-menu"></div>
 				</div>
 				<?php endif; ?>
-				<h1><?php echo $this->title; ?></h1>
+                <?php if(is_string($this->title)) : ?>
+                    <h1><?php echo $this->title; ?></h1>
+                <?php else : ?>
+                    <div class="with-subtitle">
+                        <?php
+                            if(isset($this->title->logo)) echo $this->title->logo;
+                            if(isset($this->title->main)) echo '<h1>'.$this->title->main.'</h1>';
+                            if(isset($this->title->subtitle)) echo '<h2>'.$this->title->subtitle.'</h2>';
+                        ?>
+                    </div>
+                <?php endif; ?>
                 <?php if(isset($this->titleInfo)) : ?>
-                    <div id="title-info" class="acccordian">
+                    <div id="title-info" class="accordian">
                         <dl>
                             <?php foreach($this->titleInfo as $k => $info) : ?>
 

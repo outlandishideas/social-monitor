@@ -275,4 +275,22 @@ abstract class Model_Base
 		$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
 		return $date->format('Y-m-d H:i:s');
 	}
+
+    public static function getIcon($classes = array()){
+
+        $icon = defined('static::ICON_TYPE') ? static::ICON_TYPE : false;
+
+        if(!$icon) return false;
+
+        $classes = $icon .' '. implode(' ', $classes);
+        return '<span class="'. $classes .'"></span>';
+
+    }
+
+    public static function getLargeIcon($classes = array()){
+
+        $classes = $classes + array('icon-large');
+
+        return static::getIcon($classes);
+    }
 }

@@ -1,0 +1,26 @@
+<ul class="navigation">
+
+    <?php
+
+    foreach ($this->container as $page) :
+
+        $href = $page->getHref();
+        if($href == true) : ?>
+
+            <li>
+                <a href="<?php echo $href; ?>">
+
+                    <?php
+                        $icon = $page->icon;
+                        if($icon) echo '<span class="'.$icon.'"></span>  ';
+                        echo $page->getLabel();
+                    ?>
+
+                </a>
+            </li>
+
+        <?php endif;
+
+    endforeach; ?>
+
+</ul>

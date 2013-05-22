@@ -181,18 +181,31 @@ a:hover, span.link:hover {
 
 #main-header h1 {
 	margin: 0px;
-	line-height: 56px;
-	height: 56px;
+    line-height: 56px;
+    height: 56px;
 }
 
-#main-header h1 img {
+#main-header h1 img,
+#main-header .with-subtitle img {
 	margin-right: 10px;
 	width: 50px;
 	height: 50px;
 	border: 3px solid #ccc;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
+}
+
+#main-header .with-subtitle h1 {
+    line-height: 40px;
+    height: 40px;
+    margin-left: 60px;
+}
+
+#main-header .with-subtitle h2 {
+    margin: 0;
+    margin-left: 60px;
+}
+
+#main-header .with-subtitle img {
+    float: left;
 }
 
 #title-info {
@@ -387,6 +400,7 @@ a:hover, span.link:hover {
     border-color: rgba(255,255,255,0.5);
     border-left-style: solid;
     height: inherit;
+    text-align: center;
 }
 
 #nav .main li:last-child {
@@ -399,7 +413,7 @@ a:hover, span.link:hover {
     color: #efefef;
     text-decoration: none;
     line-height: 36px;
-    min-width: 36px;
+    min-width: 16px;
 }
 
 #nav li a:hover,

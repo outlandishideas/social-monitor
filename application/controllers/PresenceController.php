@@ -5,7 +5,7 @@ class PresenceController extends GraphingController
 
 	public function indexAction()
 	{
-		$this->view->title = 'All Presences';
+		$this->view->title = Model_Presence::getLargeIcon().' All Presences';
 		$this->view->presences = Model_Presence::fetchAll();
 		$this->view->tableMetrics = self::tableMetrics();
 	}
@@ -20,14 +20,17 @@ class PresenceController extends GraphingController
 		$presence = Model_Presence::fetchById($this->_request->id);
 		$this->validateData($presence);
 
-		$title = '';
-		if ($presence->image_url) {
-			$title .= '<img src="' . $presence->image_url . '" alt="' . $presence->getLabel() . '"/>';
-		}
-		$title .= $presence->getLabel();
-		if ($presence->getLabel() != $presence->handle) {
-			$title .= ' (' . $presence->handle . ')';
-		}
+
+
+        $title = (object)array(
+            'main'=>$presence->getLabel(),
+            'logo'=>'<img src="' . $presence->image_url . '" alt="' . $presence->getLabel() . '"/>'
+        );
+
+        if($presence->getLabel() != $presence->handle){
+            $title->subtitle = '<a href="'.$presence->page_url.'" target="_blank">' . $presence->handle . ' <span class="icon-external-link"></span></a>';
+        }
+
 		$this->view->title = $title;
 		$this->view->presence = $presence;
         $this->view->graphs = $this->graphs($presence);

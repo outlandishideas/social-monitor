@@ -1,5 +1,6 @@
 home:
   label: Home
+  Title: World Map
   icon: icon-home icon-large
   controller: index
 #group:
@@ -7,13 +8,21 @@ home:
 #  controller: group
 country:
   label: Countries
+  Title: Index of Countries
   icon: icon-globe icon-large
   controller: country
 group:
-  label: Groups
-  icon: icon-th-list icon-large
+  label: SBUs
+  Title: Index of SBUs, Projects & Products
+  icon: icon-th-large icon-large
   controller: group
 presence:
   label: Presences
+  title: Index of Presences
   icon: icon-bar-chart icon-large
   controller: presence
+domain:
+  label: Domains
+  title: Index of Domains
+  icon: icon-laptop icon-large
+  controller: domain
