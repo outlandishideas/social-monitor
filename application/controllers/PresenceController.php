@@ -63,6 +63,7 @@ class PresenceController extends GraphingController
 	{
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
+        $this->view->editType = true;
 		$this->view->title = 'New presence';
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
@@ -118,6 +119,7 @@ class PresenceController extends GraphingController
 			}
 		}
 
+        $this->view->editType = false;
 		$this->view->types = array(Model_Presence::TYPE_TWITTER=>'Twitter', Model_Presence::TYPE_FACEBOOK=>'Facebook');
 		$this->view->countries = Model_Campaign::fetchAll();
 		$this->view->presence = $presence;

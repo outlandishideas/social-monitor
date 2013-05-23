@@ -8,7 +8,8 @@
 				<?php foreach ($this->types as $val => $name) : ?>
 				<li>
 					<label class="radio"><input name="type" type="radio" value="<?php echo $val; ?>"
-						<?php if ($this->presence->type == $val) echo 'checked'; ?>> <?php echo $name; ?>
+						<?php if ($this->presence->type == $val) echo 'checked'; ?>
+                        <?php if (!$this->editType) echo 'disabled'; ?>> <?php echo $name; ?>
 					</label>
 				</li>
 				<?php endforeach; ?>
