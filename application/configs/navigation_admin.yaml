@@ -1,11 +1,11 @@
-user:
-  label: User
-  controller: user
-  action: edit-self
-  icon: icon-user icon-large
+#user:
+#  label: User
+#  controller: user
+#  action: edit-self
+#  icon: icon-user icon-large
 users:
   label: Users
-  controller: users
+  controller: user
   icon: icon-group icon-large
 config:
   label: Settings
