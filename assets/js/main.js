@@ -107,9 +107,7 @@ app.init = {
             }
             $item.on('click', 'li', function(event){
                 event.preventDefault();
-                if($(this).hasClass('active')){
-                    return true;
-                } else {
+                if(!$(this).hasClass('active')){
                     $(this).addClass('active')
                         .siblings('li.active').removeClass('active');
                     app.geochart.refreshMap();

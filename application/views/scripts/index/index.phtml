@@ -1,6 +1,6 @@
 <ul id="map-tabs" class="tabs">
     <?php $first = true; foreach($this->metricOptions as $key => $value) : ?>
-        <li class="<?php echo !$first?:'active';?>" data-val="<?php echo $key; ?>"><?php echo $value; ?></li>
+        <li class="<?php echo !$first?'':'active';?>" data-val="<?php echo $key; ?>"><?php echo $value; ?></li>
     <?php $first = false; endforeach; ?>
 </ul>
 

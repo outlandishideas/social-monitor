@@ -1187,11 +1187,13 @@ ul.tabs li {
     border-bottom-style: none;
     height: 33px;
     cursor: pointer;
+    background-color: #F2F2F2;
 }
 
 ul.tabs li.active {
     border-bottom-style: solid;
     cursor: default;
+    background-color: #fff;
 }
 
 
