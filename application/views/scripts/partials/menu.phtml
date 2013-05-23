@@ -7,7 +7,7 @@
         $href = $page->getHref();
         if($href == true) : ?>
 
-            <li>
+            <li<?php if ($page->active) { echo ' class="active"'; } ?>>
                 <a href="<?php echo $href; ?>">
 
                     <?php

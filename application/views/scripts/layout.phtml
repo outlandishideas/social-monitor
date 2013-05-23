@@ -33,10 +33,7 @@
 						<div class="main">
                             <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>" class="site-title-link"><div class="site-title"><span>British Council Social Media Monitor</span></div></a>
                             <?php
-                                $partial = array('menu.phtml', 'default');
-                                $this->navigation()->menu()->setPartial($partial);
-                                //$this->navigation()->menu()->setMaxDepth(2);
-                                echo $this->navigation()->menu()->render();
+                                echo $this->navigation()->menu()->setPartial('partials/menu.phtml')->render();
                             ?>
 						</div>
 						<div class="extra">
