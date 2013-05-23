@@ -8,7 +8,12 @@ class GroupController extends CampaignController {
 	 */
 	public function indexAction() {
 
-		$this->view->title = 'Groups';
+        $title = '';
+        $icon = Model_Group::getLargeIcon();
+        if($icon) $title .= '<span class="'. $icon .'"></span> ';
+        $title .= 'SBUs';
+
+        $this->view->title = $title;
 		$this->view->groups = Model_Group::fetchAll();
 		$this->view->tableMetrics = self::tableMetrics();
 	}

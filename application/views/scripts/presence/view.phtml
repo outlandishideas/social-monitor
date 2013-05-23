@@ -4,11 +4,50 @@
 	<?php echo $this->render('partials/daterange.phtml'); ?>
 </div>
 
-<div class="presence <?php echo $this->presence->type; ?>">
-	<a href="<?php echo $this->presence->page_url; ?>" target="_blank"><?php echo $this->presence->page_url; ?></a>
+<div class="">
+    <?php
+    //todo move this to controller and model and create actual values.
+        $badges = array(
+            'quality'=>(object)array(
+                'number'=>20,
+                'values'=>array(
+                    'KPI 1'=>10,
+                    'KPI 2'=>20,
+                    'KPI 3'=>30
+                )
+            ),
+            'reach'=>(object)array(
+                'number'=>50,
+                'values'=>array(
+                    'KPI 1'=>40,
+                    'KPI 2'=>50,
+                    'KPI 3'=>60
+                )
+            ),
+            'engagement'=>(object)array(
+                'number'=>80,
+                'values'=>array(
+                    'KPI 1'=>70,
+                    'KPI 2'=>80,
+                    'KPI 3'=>90
+                )
+            )
+        );
+    ?>
+    <?php foreach($badges as $name => $badge) : ?>
+        <div class="badge box <?php echo $name; ?>">
+            <div class="badge">
+                <?php echo $badge->number; ?>%
+            </div>
+            <dl>
+                <?php foreach($badge->values as $key => $value) : ?>
+                    <dt><?php echo $key; ?></dt>
+                    <dd><?php echo $value; ?></dd>
+                <?php endforeach; ?>
+            </dl>
+        </div>
+    <?php endforeach; ?>
 </div>
-<p>Info last updated: <?php echo $this->prettyDate($this->presence->last_updated, 'Never'); ?></p>
-<p>Statuses last updated: <?php echo $this->prettyDate($this->presence->last_fetched, 'Never'); ?></p>
 
 <div id="charts" data-controller="presence" data-controller-label="presence">
 	<?php

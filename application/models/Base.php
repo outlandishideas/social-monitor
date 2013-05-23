@@ -283,7 +283,7 @@ abstract class Model_Base
         if(!$icon) return false;
 
         $classes = $icon .' '. implode(' ', $classes);
-        return '<span class="'. $classes .'"></span>';
+        return $classes;
 
     }
 

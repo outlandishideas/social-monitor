@@ -5,8 +5,13 @@ class PresenceController extends GraphingController
 
 	public function indexAction()
 	{
-		$this->view->title = Model_Presence::getLargeIcon().' All Presences';
-		$this->view->presences = Model_Presence::fetchAll();
+        $title = '';
+        $icon = Model_Presence::getLargeIcon();
+        if($icon) $title .= '<span class="'. $icon .'"></span> ';
+        $title .= 'Countries';
+
+        $this->view->title = $title;
+        $this->view->presences = Model_Presence::fetchAll();
 		$this->view->tableMetrics = self::tableMetrics();
 	}
 

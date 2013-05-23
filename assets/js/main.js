@@ -100,6 +100,23 @@ app.init = {
 			$item.uniform();
 		},
 
+        '#map-tabs': function($item) {
+            $active = $item.find('li.active');
+            if($active.length == 0){
+                $active.find('li:first').addClass('active');
+            }
+            $item.on('click', 'li', function(event){
+                event.preventDefault();
+                if($(this).hasClass('active')){
+                    return true;
+                } else {
+                    $(this).addClass('active')
+                        .siblings('li.active').removeClass('active');
+                    app.geochart.refreshMap();
+                }
+            })
+        },
+
         '.compare-checkbox': function ($item) {
             $item.on('click', function(){
                 var $button = $('.compare.button');

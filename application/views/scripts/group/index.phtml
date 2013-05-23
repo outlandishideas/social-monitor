@@ -18,21 +18,24 @@
 		<?php /** @var $group Model_Group */ ?>
 		<?php foreach ($this->groups as $group) : ?>
 		<tr>
-			<?php
-				$presenceLinks = array();
-				foreach($group->getPresences() as $p) {
-					$presenceLinks[] = '<div class="presence ' . $p->type . '" title="' . $p->name . '"><a href="' . $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)) . '">' . $p->handle . '</a></div>';
-				}
-			?>
+			<?php $presences = $group->getPresences(); ?>
 			<td><a href="<?php echo $this->url(array('action'=>'view', 'id'=>$group->id)); ?>"><?php echo $group->display_name; ?></a></td>
-			<?php if ($presenceLinks == true) : ?>
+			<?php if ($presences == true) : ?>
                 <?php $kpiData = $group->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                     <td>
                         <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
                         <?php echo $this->trafficLight()->label($value, $key); ?>
                     </td>
                 <?php endforeach; ?>
-                <td><?php echo implode('', $presenceLinks); ?></td>
+                <td>
+                    <ul class="presence-list">
+                        <?php foreach($presences as $presence) : ?>
+                            <li>
+                                <?php echo $this->partial('partials/presence_inline.phtml',  array('presence' => $presence)); ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </td>
 			<?php else : ?>
 			    <?php foreach ($this->tableMetrics as $key=>$label) : ?>
                     <td>-</td>

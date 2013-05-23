@@ -61,7 +61,7 @@ class Model_Presence extends Model_Base {
 
         $classes = implode(' ',$classes);
 
-        return '<span class="'. $classes .'"></span>';
+        return $classes;
 
     }
 
@@ -84,7 +84,7 @@ class Model_Presence extends Model_Base {
 
         $classes = implode(' ',$classes);
 
-        return '<span class="'.$classes.'"></span>';
+        return $classes;
     }
 
     public function getLargePresenceSign($classes = array()) {

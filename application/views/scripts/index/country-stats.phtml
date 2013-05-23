@@ -11,20 +11,11 @@
 			$metricValue = $kpiData[$this->metric];
 			?>
 
-            <li class="social-media box traffic-lights <?php echo $presence->type; ?>">
-                <?php $sign = $presence->isForFacebook() ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
-
-                <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>"
-                   class="presence"
-                   title="<?php echo $this->trafficLight()->label($metricValue, $this->metric); ?>">
-
-                    <span class="<?php echo $sign; ?> icon-large front"></span>
-                    <?php echo $presence->getLabel(); ?>
-                    <span class="icon-circle icon-large back"
-                          style="color: <?php echo $this->trafficLight()->color($metricValue, $this->metric); ?>;">
-                    </span>
-
-                </a>
+            <li>
+                <span class="icon-circle icon-large traffic-light"
+                      style="color: <?php echo $this->trafficLight()->color($metricValue, $this->metric); ?>;">
+                </span>
+                <?php echo $this->partial('partials/presence_inline.phtml',  array('presence' => $presence)); ?>
             </li>
 
 		<?php endforeach; ?>

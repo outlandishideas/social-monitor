@@ -27,9 +27,7 @@ if ($links) {
 		<tr>
             <td><input type="checkbox" id="presence-<?php echo $presence->id; ?>" class="compare-checkbox" data-name="<?php echo $presence->handle; ?>" name="presences" value="<?php echo $presence->id; ?>" ></td>
 			<td>
-                <a href="<?php echo $this->url(array('action'=>'view', 'id'=>$presence->id)); ?>" title="<?php echo $presence->label; ?>">
-                    <?php echo $presence->getLargePresenceSign().' '.$presence->handle; ?>
-                </a>
+                <?php echo $this->partial('partials/presence_inline.phtml',  array('presence' => $presence)); ?>
                 <?php if (!$presence->uid) : ?>
                 [not found]
                 <?php endif; ?>

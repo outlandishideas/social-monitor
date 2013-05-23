@@ -35,17 +35,20 @@ app.geochart = {
 			app.geochart.refreshMap();
 		});
 
-		$('#metric-picker').on('change', function() {
-			var $country = $mapDiv.find('.country');
-			if ($country.length > 0) {
-				app.geochart.loadCountryStats($country.data('id'));
-				$country.remove();
-			}
-			app.geochart.refreshMap();
-		});
+		$('#map-tabs').find('li').each(function(){
+            if(!$(this).hasClass('active')) {
+                $(this).on('click', function() {
+                    var $country = $mapDiv.find('.country');
+                    if ($country.length > 0) {
+                        app.geochart.loadCountryStats($country.data('id'));
+                        $country.remove();
+                    }
+                });
+            }
+        });
 	},
 	currentMetric:function () {
-		return $('#metric-picker').val();
+		return $('#map-tabs').find('li.active').data('val');
 	},
 	// calculates the average value for a given kpi across the presences for 1 country
 	kpiAverage: function(country, m) {

@@ -8,7 +8,12 @@ class CountryController extends CampaignController {
 	 */
 	public function indexAction() {
 
-		$this->view->title = Model_Country::getLargeIcon().' Countries';
+        $title = '';
+        $icon = Model_Country::getLargeIcon();
+        if($icon) $title .= '<span class="'. $icon .'"></span> ';
+        $title .= 'Countries';
+
+        $this->view->title = $title;
 		$this->view->tableMetrics = self::tableMetrics();
 		$this->view->countries = Model_Country::fetchAll();
 	}
