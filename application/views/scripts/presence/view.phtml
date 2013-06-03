@@ -1,53 +1,60 @@
-<?php //print_r($this->presence); ?>
+<?php
+$buttons = $this->gatekeeper()->filterAll(array(
+    '<a class="button" href="%url%">Edit Presence</a>' => array('action'=>'edit', 'id'=>$this->presence->id)
+));
+?>
 
 <div id="pickers">
 	<?php echo $this->render('partials/daterange.phtml'); ?>
 </div>
 
-<div class="">
-    <?php
-    //todo move this to controller and model and create actual values.
-        $badges = array(
-            'quality'=>(object)array(
-                'number'=>20,
-                'values'=>array(
-                    'KPI 1'=>10,
-                    'KPI 2'=>20,
-                    'KPI 3'=>30
-                )
-            ),
-            'reach'=>(object)array(
-                'number'=>50,
-                'values'=>array(
-                    'KPI 1'=>40,
-                    'KPI 2'=>50,
-                    'KPI 3'=>60
-                )
-            ),
-            'engagement'=>(object)array(
-                'number'=>80,
-                'values'=>array(
-                    'KPI 1'=>70,
-                    'KPI 2'=>80,
-                    'KPI 3'=>90
-                )
-            )
-        );
-    ?>
-    <?php foreach($badges as $name => $badge) : ?>
-        <div class="badge box <?php echo $name; ?>">
-            <div class="badge">
-                <?php echo $badge->number; ?>%
+<?php if ($buttons) : ?>
+    <p>
+        <?php echo implode('', $buttons); ?>
+    </p>
+<?php endif; ?>
+
+<?php
+$kpis = $this->presence->getKpiData();
+$badges = $this->presence->getOverallKpi();
+?>
+<?php foreach($badges as $name => $badge) : ?>
+    <div class="badge box <?php echo $name; ?>">
+
+        <h3><?php echo $badge->title; ?></h3>
+
+        <div class="score-card">
+            <div class="score ranking">
+                <div class="text">Ranking</div>
+                <div class="number">
+                    <?php echo $badge->ranking; ?>
+                </div>
+                <div class="text">of <?php echo $badge->rankingTotal; ?></div>
             </div>
+            <div class="score overall-score">
+                <div class="text">Score</div>
+                <div class="number">
+                    <?php echo $badge->score < 100 ? $badge->score : 99; ?>
+                </div>
+                <div class="text">out of 100</div>
+            </div>
+        </div>
+
+        <?php if(isset($badge->values)) : ?>
+
             <dl>
+                <h4>Percent to Target</h4>
                 <?php foreach($badge->values as $key => $value) : ?>
-                    <dt><?php echo $key; ?></dt>
-                    <dd><?php echo $value; ?></dd>
+                    <dd title="Target = <?php echo $value->target; ?>"><?php echo $value->percent; ?></dd>
+                    <dt><?php echo $value->title; ?></dt>
                 <?php endforeach; ?>
             </dl>
-        </div>
-    <?php endforeach; ?>
-</div>
+
+        <?php endif; ?>
+
+    </div>
+<?php endforeach; ?>
+
 
 <div id="charts" data-controller="presence" data-controller-label="presence">
 	<?php

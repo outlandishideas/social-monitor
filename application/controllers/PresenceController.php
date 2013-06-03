@@ -8,7 +8,7 @@ class PresenceController extends GraphingController
         $title = '';
         $icon = Model_Presence::getLargeIcon();
         if($icon) $title .= '<span class="'. $icon .'"></span> ';
-        $title .= 'Countries';
+        $title .= 'Presences';
 
         $this->view->title = $title;
         $this->view->presences = Model_Presence::fetchAll();
@@ -97,6 +97,9 @@ class PresenceController extends GraphingController
 			if (empty($this->_request->handle)) {
 				$errorMessages[] = 'Please enter a handle';
 			}
+            if (empty($this->_request->branding)) {
+                $presence->_row->branding = 0;
+            }
 
 			if (!$errorMessages) {
 				try {

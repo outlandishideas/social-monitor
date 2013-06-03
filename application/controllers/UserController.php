@@ -78,14 +78,14 @@ class UserController extends BaseController
 					try {
 						$resetLink = $this->_request->getScheme() . '://' . $this->_request->getHttpHost() . $this->view->url(array('action'=>'reset-password')) . '?name=' . urlencode($user->name) . '&reset_key=' . $user->reset_key;
 						$message = '<p>Hi ' . $user->name . ',</p>
-							<p>A request to reset the password for your 33 digital account was recently made.</p>
+							<p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p>
 							<p>If you did not request a reset, please ignore this email.</p>
 							<p>Otherwise, click this link to reset your password <a href="' . $resetLink . '">Reset password</a></p>
-							<p>Thanks,<br />the 33 digital password keeper</p>';
+							<p>Thanks,<br />the British Council Social Media Monitor team</p>';
 						$this->sendEmail(
 							$message,
 							'do.not.reply@example.com',
-							'The 33 digital password keeper',
+							'The British Council Social Media Monitor team',
 							$user->email,
 							'Password reset'
 						);

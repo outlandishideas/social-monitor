@@ -523,9 +523,10 @@ form.autoConfirm {
 
 .chart-container {
 	clear: both;
-	border: 1px solid #ddd;
-	padding: 10px;
-	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	padding: 20px;
+	margin-bottom: 20px;
+    position: relative;
 }
 
 .chart {
@@ -539,13 +540,6 @@ form.autoConfirm {
     width: 25%;
 	float: left;
 }
-
-/*#mentions, #sentiment, #trends, #api-stats, #reply-time, #popularity {*/
-	/*margin-left: 200px;*/
-/*}*/
-/*#mentions, #sentiment, #reply-time, #popularity {*/
-	/*height: 150px;*/
-/*}*/
 
 .downloadChart {
 	position: absolute;
@@ -925,15 +919,21 @@ table.dtable.dataTable {
 
 .health h3 {
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 300;
+    position: absolute;
+    top: -24px;
+    background-color: #fff;
+    color: #888;
+
 }
 
 .health .fieldset {
-    border: 1px solid #666;
+    border: 1px solid #ccc;
     margin: 0 20%;
     text-align: center;
     position: relative;
-    padding: 20px
+    padding: 20px;
+    margin-top: 72px;
 }
 
 .health .fieldset h4 {
@@ -946,7 +946,7 @@ table.dtable.dataTable {
     left: 10px;
     font-weight: normal;
     font-size: 12px;
-    color: #666;
+    color: #888;
 }
 
 .health .fieldset p {
@@ -1137,34 +1137,89 @@ body .compare.list li {
     width: 20%;
     display: inline-block;
     padding: 20px;
-    background: #e4e4e4;
+    background: #fff;
     border: 1px solid #ccc;
     margin-bottom: 20px;
-    margin-left: 2%;
+    color: #444;
+    position: relative;
+}
+
+.badge.box.total {
+    width: auto;
 }
 
 .badge.box:first-child {
     margin-left: 0;
 }
 
-.badge.box .badge {
-    width: 50%;
+.badge.box h3 {
+    margin: 0;
+    position: absolute;
+    top: -8px;
+    background-color: #fff;
+    padding: 0 5px;
+    left: 20px;
+    font-size: 14px;
+    color: #666;
+    font-weight: 400;
+}
+
+.badge.box h4 {
+    margin: 0;
+    font-weight: 300;
+    text-align: right;
+    font-size: 12px;
+    line-height: 22px;
+}
+
+.badge .score {
     float: left;
+    width: 84px;
+    padding: 3px;
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+.badge .score .text {
+    font-size: 14px;
+    color: #888;
+}
+
+.badge .score .number {
     font-size: 50px;
+    line-height: 50px;
+}
+
+.badge .score-card .overall-score,
+.badge .score-card:hover .ranking {
+    display: none;
+}
+
+.badge .score-card:hover .overall-score {
+    display: block;
 }
 
 .badge.box dl {
-    margin-left: 50%;
+    margin: 0 0 0 110px;
 }
 
 .badge.box dt, .badge.box dd {
-    display: inline-block;
-    width: 45%;
-    margin: 0;
+    margin: 0 50px 0 0;
+    line-height: 22px;
+}
+
+.badge.box dt {
+    white-space:nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+
 }
 
 .badge.box dd {
     text-align: right;
+    width: 50px;
+    margin: 0;
+    float: right;
 }
 
 /* ul tabs */

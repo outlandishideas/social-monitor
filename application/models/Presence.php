@@ -11,6 +11,9 @@ class Model_Presence extends Model_Base {
 	const METRIC_POPULARITY_RATE = 'popularity_rate';
 	const METRIC_POSTS_PER_DAY = 'posts_per_day';
 	const METRIC_RESPONSE_TIME = 'response_time';
+    const METRIC_RATIO_REPLIES_TO_OTHERS_POSTS = 'replies_to_posts';
+    const METRIC_LINKS_PER_DAY = 'links_per_day';
+    const METRIC_LIKES_PER_POST = 'likes_per_post';
 
 	public static $ALL_METRICS = array(
 		self::METRIC_POPULARITY_PERCENT,
@@ -19,6 +22,24 @@ class Model_Presence extends Model_Base {
 		self::METRIC_POSTS_PER_DAY,
 		self::METRIC_RESPONSE_TIME,
 	);
+
+    public static $METRIC_QUALITY = array(
+        self::METRIC_POSTS_PER_DAY,
+        self::METRIC_LINKS_PER_DAY,
+        self::METRIC_LIKES_PER_POST
+    );
+
+    public static $METRIC_ENGAGEMENT = array(
+        self::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS,
+		self::METRIC_RESPONSE_TIME,
+        self::METRIC_POPULARITY_PERCENT
+    );
+
+    public static $METRIC_REACH = array(
+        self::METRIC_POPULARITY_PERCENT,
+        self::METRIC_POPULARITY_TIME,
+        self::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS
+    );
 
 	public static $bucketSizes = array(
 		'bucket_half_hour' => 1800, // 30*60
@@ -174,6 +195,122 @@ class Model_Presence extends Model_Base {
 
 		return $this->kpiData;
 	}
+
+    public function getOverallKpi($startDate = null, $endDate = null){
+
+        if (!$startDate || !$endDate) {
+            $endDate = new DateTime();
+            $startDate = new DateTime();
+            $startDate->sub(DateInterval::createFromDateString('1 month'));
+        }
+
+        $endDateString = $endDate->format('Y-m-d');
+        $startDateString = $startDate->format('Y-m-d');
+
+        $badges = array(
+            'reach'=>self::$METRIC_REACH,
+            'engagement'=>self::$METRIC_ENGAGEMENT,
+            'quality'=>self::$METRIC_QUALITY
+        );
+
+        $return = array();
+        $total = (object)array(
+            'title' => 'Total',
+            'score' => 0
+        );
+        $return['total'] = $total;
+
+        foreach($badges as $k=> $kpi){
+
+            $return[$k] = (object)array();
+            $return[$k]->title = ucfirst($k);
+            foreach($kpi as $val){
+                switch($val){
+                    case(self::METRIC_POSTS_PER_DAY):
+                        $value = (object)array();
+                        $value->title = 'Average Posts Per Day';
+                        $value->target = BaseController::getOption('updates_per_day');
+                        $value->actual = $this->getAveragePostsPerDay($startDateString, $endDateString);
+                        $value->percent = round(( $value->actual / $value->target ) * 100);
+                        break;
+                    case(self::METRIC_LINKS_PER_DAY):
+                        $value = (object)array();
+                        $value->title = 'Average Links Per Day';
+                        $value->target = BaseController::getOption('updates_per_day');
+                        $value->actual = $this->getAverageLinksPerDay($startDateString, $endDateString);
+                        if($value->actual > $value->target){
+                            $value->percent = 100;
+                        } else {
+                            $value->percent = round(( $value->actual / $value->target ) * 100);
+                        }
+                        break;
+                    case(self::METRIC_LIKES_PER_POST):
+                        $value = (object)array();
+                        $value->title = 'Average Likes Per Post';
+                        $value->target = BaseController::getOption('updates_per_day');
+                        $value->actual = $this->getAverageLikesPerPost($startDateString, $endDateString);
+                        if($value->actual > $value->target){
+                            $value->percent = 100;
+                        } else {
+                            $value->percent = round(( $value->actual / $value->target ) * 100);
+                        }
+                        break;
+                    case(self::METRIC_RESPONSE_TIME):
+                        $value = (object)array();
+                        $value->title = 'Average Response Time';
+                        $value->target = BaseController::getOption('updates_per_day');
+                        $value->actual = $this->getAverageResponseTime($startDateString,$endDateString);
+                        if($value->actual > $value->target){
+                            $value->percent = round(( $value->target / $value->actual ) * 100);
+                        } else {
+                            $value->percent = 100;
+                        }
+                        break;
+                    case(self::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS):
+                        $value = (object)array();
+                        $value->title = 'Ratio of Replies to Posts from others';
+                        $value->target = BaseController::getOption('updates_per_day');
+                        $value->actual = $this->getRatioRepliesToOthersPosts($startDateString, $endDateString);
+                        if($value->actual > $value->target){
+                            $value->percent = 100;
+                        } else {
+                            $value->percent = round(( $value->actual / $value->target ) * 100);
+                        }
+                        break;
+                    default:
+                        $value = (object)array();
+                        $value->title = 'Default';
+                        $value->target = 0;
+                        $value->actual = 0;
+                        $value->percent = 0;
+                }
+                $return[$k]->values[$val] = $value;
+            }
+        }
+
+        $denominator = 0;
+        foreach($return as $k => $badge){
+            $number = 0;
+            if($k != 'total'){
+
+                foreach($badge->values as $kpi){
+                    $number += $kpi->percent;
+                }
+
+                $badge->score = round($number/count($badge->values));
+                $badge->rankingTotal = count(Model_Presence::fetchAll());
+                $badge->ranking = rand(1,count(Model_Presence::fetchAll()));
+                $return['total']->score += $badge->score;
+                $denominator++;
+
+            }
+        }
+        $return['total']->rankingTotal = count(Model_Presence::fetchAll());
+        $return['total']->ranking = rand(1,count(Model_Presence::fetchAll()));
+        $return['total']->score = round($return['total']->score/$denominator);
+        return $return;
+
+    }
 
 	public function updateInfo() {
 		switch($this->type) {
@@ -575,7 +712,95 @@ class Model_Presence extends Model_Base {
 		return $actors;
 	}
 
-	public function getAveragePostsPerDay($startDate, $endDate) {
+    public function getAverageLinksPerDay($startDate, $endDate) {
+
+        $clauses = array(
+            'presence_id = :pid',
+            'created_time >= :start_date',
+            'created_time <= :end_date'
+        );
+
+        if ($this->isForTwitter()) {
+            $tableName = 'twitter_tweets';
+        } else {
+            $tableName = 'facebook_stream';
+            $clauses[] = 'posted_by_owner = 1';
+            $clauses[] = 'in_response_to IS NULL';
+        }
+
+        $sql = '
+        SELECT SUM(links.count) AS links, COUNT(statuses.id) AS posts, SUM(links.count)/COUNT(statuses.id) as av
+        FROM ' . $tableName . ' AS statuses
+        lEFT JOIN (
+            SELECT status_id, COUNT(url) as count FROM `status_links` GROUP BY status_id
+        ) AS links ON statuses.id = links.status_id
+        WHERE ' . implode(' AND ', $clauses);
+        $stmt = $this->_db->prepare($sql);
+        $stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
+        return floatval($stmt->fetchColumn());
+    }
+
+    /*
+     * function to average number of likes per post
+     * */
+    public function getAverageLikesPerPost($startDate, $endDate){
+        $clauses = array(
+            'presence_id = :pid',
+            'created_time >= :start_date',
+            'created_time <= :end_date'
+        );
+
+        if ($this->isForTwitter()) {
+            return null;
+        } else {
+            $tableName = 'facebook_stream';
+        }
+
+        $sql = '
+        SELECT COUNT(1)/SUM(likes) AS av
+        FROM ' . $tableName . '
+        WHERE ' . implode(' AND ', $clauses);
+        $stmt = $this->_db->prepare($sql);
+        $stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
+        return floatval($stmt->fetchColumn());
+    }
+
+    /*
+     * function to get the ratio of replies to number of posts from others over timeframe
+     * */
+    public function getRatioRepliesToOthersPosts($startDate, $endDate){
+        $clauses = array(
+            'presence_id = :pid',
+            'created_time >= :start_date',
+            'created_time <= :end_date'
+        );
+
+        if ($this->isForTwitter()) {
+            return null;
+        } else {
+            $tableName = 'facebook_stream';
+        }
+
+        $sql = '
+        SELECT t1.replies/t2.posts as replies_to_others_posts FROM
+        (
+            SELECT presence_id, COUNT(*) as replies
+            FROM ' . $tableName . '
+            WHERE ' . implode(' AND ', $clauses) .'
+            AND in_response_to IS NOT NULL
+        ) as t1,
+        (
+            SELECT presence_id, COUNT(*) as posts
+            FROM ' . $tableName . '
+            WHERE ' . implode(' AND ', $clauses) .'
+            AND posted_by_owner = 0
+        ) as t2';
+        $stmt = $this->_db->prepare($sql);
+        $stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
+        return floatval($stmt->fetchColumn());
+    }
+
+    public function getAveragePostsPerDay($startDate, $endDate) {
 		$clauses = array(
 			'presence_id = :pid',
 			'created_time >= :start_date',

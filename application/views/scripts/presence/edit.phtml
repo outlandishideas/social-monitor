@@ -11,6 +11,9 @@
 						<?php if ($this->presence->type == $val) echo 'checked'; ?>
                         <?php if (!$this->editType) echo 'disabled'; ?>> <?php echo $name; ?>
 					</label>
+                    <?php if (!$this->editType && ($this->presence->type == $val)) : ?>
+                        <input type="hidden" value="<?php echo $val; ?>" name="type">
+                    <?php endif; ?>
 				</li>
 				<?php endforeach; ?>
 			</ul>
@@ -22,6 +25,40 @@
 			<input name="handle" id="handle" type="text" value="<?php echo $this->presence->handle; ?>">
 			<p class="formHint">For www.facebook.com/<strong>platform</strong> or www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'</p>
 		</div>
+
+        <div class="ctrlHolder">
+            <p class="label">Signed Off</p>
+            <ul class="blockLabels">
+                <li>
+                    <label class="radio"><input name="sign_off" type="radio" value="0"
+                            <?php if ($this->presence->sign_off < 1) echo 'checked'; ?>> Not Signed off by Head of Digital
+                    </label>
+                </li>
+                <li>
+                    <label class="radio"><input name="sign_off" type="radio" value="1"
+                            <?php if ($this->presence->sign_off > 0) echo 'checked'; ?>> Signed off by Head of Digital
+                    </label>
+                </li>
+            </ul>
+        </div>
+
+        <div class="ctrlHolder">
+            <p class="label">Branding</p>
+            <ul class="blockLabels">
+                    <li>
+                        <label class="radio"><input name="branding" type="radio" value="0"
+                                <?php if ($this->presence->branding < 1) echo 'checked'; ?>> Incorrectly Branded
+                        </label>
+                    </li>
+                    <li>
+                        <label class="radio"><input name="branding" type="radio" value="1"
+                                <?php if ($this->presence->branding > 0) echo 'checked'; ?>> Correctly Branded
+                        </label>
+                    </li>
+            </ul>
+        </div>
+
+
 <!--        <div class="ctrlHolder">-->
 <!--            <label for="group" class="requiredField">-->
 <!--                Campaign<span class="asteriskField">*</span>-->
@@ -33,7 +70,6 @@
 <!--            </select>-->
 <!--        </div>-->
 	</fieldset>
-    <input type="hidden" value="<?php $this->type; ?>">
 	<div class="buttonHolder">
 		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', $this->gatekeeper()->fallbackUrlArgs(array('action'=>'index')), null, true); ?>
 		<input type="submit" value="Save" class="primaryAction">
