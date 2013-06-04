@@ -188,6 +188,14 @@ a:hover, span.link:hover {
     height: 56px;
 }
 
+span.icon-ok-sign {
+    color: #84af5b;
+}
+
+span.icon-remove-sign {
+    color: #D06959;
+}
+
 #main-header h1 img,
 #main-header .with-subtitle img {
 	margin-right: 10px;

@@ -14,6 +14,13 @@ app.datatables = {
             "fuzzy-numeric-desc": function ( a, b ) { return b - a; }
         });
 
+        // sort by a numeric value in data-value on the direct child of the table cell
+        $.extend($.fn.dataTableExt.oSort, {
+            "data-value-numeric-pre": function ( a ) { var value = $(a).data('value'); if(value){return value;}else{return 0}},
+            "data-value-numeric-asc": function ( a, b ) { return a - b; },
+            "data-value-numeric-desc": function ( a, b ) { return b - a; }
+        });
+
         // add a 'checkbox' sort type, which sorts by whether a checkbox is checked or not
         $.extend($.fn.dataTableExt.oSort, {
             "checkbox-pre": function ( a ) {
