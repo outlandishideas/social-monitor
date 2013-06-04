@@ -5,7 +5,7 @@
 			Available twitter presences
 		</label>
 		<button type="button" class="button add-presence">Add</button>
-		<select id="twitter">
+		<select id="twitter" class="selectInput">
 			<option value="">-- Select --</option>
 			<?php foreach ($this->twitterPresences as $p) : ?>
 				<option value="<?php echo $p->id; ?>"
@@ -22,7 +22,7 @@
 			Available facebook presences
 		</label>
 		<button type="button" class="button add-presence">Add</button>
-		<select id="facebook">
+		<select id="facebook" class="selectInput">
 			<option value="">-- Select --</option>
 			<?php foreach ($this->facebookPresences as $p) : ?>
 				<option value="<?php echo $p->id; ?>"
