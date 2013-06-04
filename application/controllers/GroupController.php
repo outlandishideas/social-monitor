@@ -8,10 +8,7 @@ class GroupController extends CampaignController {
 	 */
 	public function indexAction() {
 
-        $title = '';
-        $icon = Model_Group::getLargeIcon();
-        if($icon) $title .= '<span class="'. $icon .'"></span> ';
-        $title .= 'SBUs';
+        $title = '<span class="'. Model_Group::ICON_TYPE .' icon-large"></span> SBUs';
 
         $this->view->title = $title;
 		$this->view->groups = Model_Group::fetchAll();

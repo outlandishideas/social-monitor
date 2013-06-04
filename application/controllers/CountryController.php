@@ -8,10 +8,7 @@ class CountryController extends CampaignController {
 	 */
 	public function indexAction() {
 
-        $title = '';
-        $icon = Model_Country::getLargeIcon();
-        if($icon) $title .= '<span class="'. $icon .'"></span> ';
-        $title .= 'Countries';
+        $title = '<span class="'. Model_Country::ICON_TYPE .' icon-large"></span> Countries';
 
         $this->view->title = $title;
 		$this->view->tableMetrics = self::tableMetrics();
@@ -36,10 +33,13 @@ class CountryController extends CampaignController {
             );
         }
 
-        $this->view->metricOptions = self::graphMetrics();
+		$title = '<span class="'. Model_Country::ICON_TYPE .' icon-large"></span> ' .
+			$country->display_name . ' <a href="#" class="accordion-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>';
+
+		$this->view->metricOptions = self::graphMetrics();
         $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
-		$this->view->title = Model_Country::getLargeIcon().' '. $country->display_name . ' <a href="#" class="accordian-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>';
+		$this->view->title = $title;
 		$this->view->titleInfo = $country->countryInfo();
         $this->view->country = $country;
 	}
