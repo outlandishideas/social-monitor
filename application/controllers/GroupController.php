@@ -45,6 +45,7 @@ class GroupController extends CampaignController {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
         $this->view->title = 'New Group';
+	    $this->view->titleIcon = 'icon-plus-sign';
 
         $presences = array();
         $ids = $this->_request->id;
@@ -112,6 +113,7 @@ class GroupController extends CampaignController {
 
         $this->view->editingGroup = $editingGroup;
         $this->view->title = 'Edit Group';
+        $this->view->titleIcon = 'icon-edit';
     }
 
 	/**
@@ -130,6 +132,7 @@ class GroupController extends CampaignController {
 		}
 
 		$this->view->title = 'Manage Group Presences';
+		$this->view->titleIcon = 'icon-tasks';
 		$this->view->group = $group;
 		$this->view->twitterPresences = Model_Presence::fetchAllTwitter();
 		$this->view->facebookPresences = Model_Presence::fetchAllFacebook();

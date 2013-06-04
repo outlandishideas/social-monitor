@@ -51,10 +51,15 @@ $.extend(app, {
 		message: '<li class="<%=type%>"><%=msg%></li>',
 		userStatus: '<div><a href="<%=logoutUrl%>">Logout</a> of Social Media Monitor</div>',
 		presence:
-			'<li>\
+			'<li class="social-media box <%=type%> split">\
 				<input type="hidden" value="<%=id%>" name="presences[]" />\
-				<button type="button" class="button remove-presence">Remove</button>\
-				<div class="presence <%=type%>"><%=label%></div>\
+				<a href="<%=url%>" class="presence" title="<%=hover%>">\
+					<span class="icon-<%=type%>-sign icon-large"></span>\
+					<%=label%>\
+				</a>\
+				<a href="#" class="remove-presence">\
+					<span class="icon-remove"></span>\
+				</a>\
 			</li>',
 		audienceTargetRates:
 			'<table>\
@@ -278,7 +283,7 @@ app.init = {
 				}
 			}
 		},
-		'#manage-country': function($form) {
+		'#manage-country, #manage-group': function($form) {
 			var canAdd = function(id) {
 				var currentValues = $form.serializeArray();
 				for (var i=0; i<currentValues.length; i++) {
@@ -292,7 +297,7 @@ app.init = {
 				$form.find('.none-found').toggle($form.find('.presence').length == 0);
 			};
 			var updateAddButton = function() {
-				$(this).closest('.ctrlHolder').find('.add-presence').toggle($(this).val() != '' && canAdd($(this).val()));
+				$(this).closest('.ctrlHolder').find('.add-presence').css('visibility', ($(this).val() != '' && canAdd($(this).val())) ? 'visible' : 'hidden');
 			};
 			var updateAddButtons = function() {
 				$form.find('select').each(updateAddButton);
@@ -303,7 +308,8 @@ app.init = {
 
 			$form
 				.on('change', 'select', updateAddButton)
-				.on('click', '.remove-presence', function() {
+				.on('click', '.remove-presence', function(e) {
+					e.preventDefault();
 					$(this).closest('li').remove();
 					updateNoneFound();
 					updateAddButtons();
@@ -312,7 +318,10 @@ app.init = {
 					var $selected = $(this).closest('.ctrlHolder').find('select option:selected');
 					var id = $selected.val();
 					if (id != '' && canAdd(id)) {
-						$(_.template(app.templates.presence, {id: id, type: $selected.closest('select').attr('id'), label: $selected.text() }))
+						var args = $selected.data();
+						args.id = id;
+						args.type = $selected.closest('select').attr('id');
+						$(_.template(app.templates.presence, args))
 							.appendTo($('#presences'));
 						updateNoneFound();
 						updateAddButtons();

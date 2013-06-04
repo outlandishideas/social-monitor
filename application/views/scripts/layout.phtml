@@ -61,7 +61,7 @@
                     </div>
 				<?php endif; ?>
 
-				<div class="page-title <?php echo $this->titleClass; ?>">
+				<div class="page-title <?php if ($this->subtitle) echo 'with-subtitle'; ?>">
 					<?php
 					if($this->titleImage) {
 						echo $this->titleImage;

@@ -1,0 +1,61 @@
+<fieldset class="inlineLabels">
+	<legend><?php echo $this->owner->display_name; ?></legend>
+	<div class="ctrlHolder">
+		<label for="twitter">
+			Available twitter presences
+		</label>
+		<button type="button" class="button add-presence">Add</button>
+		<select id="twitter">
+			<option value="">-- Select --</option>
+			<?php foreach ($this->twitterPresences as $p) : ?>
+				<option value="<?php echo $p->id; ?>"
+				        data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
+				        data-label="<?php echo '@' . $p->handle; ?>"
+				        data-hover="<?php echo $p->label; ?>">
+					<?php echo '@' . $p->handle . ' (' . $p->label . ')'; ?>
+				</option>
+			<?php endforeach; ?>
+		</select>
+	</div>
+	<div class="ctrlHolder">
+		<label for="facebook">
+			Available facebook presences
+		</label>
+		<button type="button" class="button add-presence">Add</button>
+		<select id="facebook">
+			<option value="">-- Select --</option>
+			<?php foreach ($this->facebookPresences as $p) : ?>
+				<option value="<?php echo $p->id; ?>"
+						data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
+				        data-label="<?php echo $p->handle; ?>"
+				        data-hover="<?php echo $p->label; ?>">
+					<?php echo $p->handle . ' (' . $p->label . ')'; ?>
+				</option>
+			<?php endforeach; ?>
+		</select>
+	</div>
+	<div class="ctrlHolder">
+		<label>
+			Currently assigned presences
+		</label>
+		<ul id="presences">
+			<?php foreach ($this->owner->presences as $presence) : /** @var $presence Model_Presence */ ?>
+				<li class="social-media box <?php echo $presence->type; ?> split">
+					<?php $sign = $presence->isForFacebook() ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
+
+					<input type="hidden" value="<?php echo $presence->id;?>" name="presences[]">
+					<a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>" class="presence" title="<?php echo $presence->getLabel(); ?>">
+						<span class="<?php echo $sign; ?> icon-large"></span>
+						<?php echo ($presence->isForTwitter() ? '@' : '') . $presence->handle; ?>
+					</a>
+					<a href="#" class="remove-presence">
+						<span class="icon-remove"></span>
+					</a>
+				</li>
+			<?php endforeach; ?>
+			<li class="none-found">
+				No presences assigned
+			</li>
+		</ul>
+	</div>
+</fieldset>

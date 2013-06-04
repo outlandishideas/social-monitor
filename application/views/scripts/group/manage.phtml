@@ -1,59 +1,15 @@
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="manage-country">
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="manage-group">
 
-	<fieldset class="inlineLabels">
-		<legend><?php echo $this->group->display_name; ?></legend>
-		<div class="ctrlHolder">
-			<label for="twitter">
-				Available twitter presences
-			</label>
-			<select id="twitter">
-				<option value="">-- Select --</option>
-				<?php foreach ($this->twitterPresences as $p) : ?>
-				<option value="<?php echo $p->id; ?>"><?php echo $p->label . ' (@' . $p->handle . ')'; ?></option>
-				<?php endforeach; ?>
-			</select>
-			<button type="button" class="button add-presence">Add</button>
-		</div>
-		<div class="ctrlHolder">
-			<label for="facebook">
-				Available facebook presences
-			</label>
-			<select id="facebook">
-				<option value="">-- Select --</option>
-				<?php foreach ($this->facebookPresences as $p) : ?>
-				<option value="<?php echo $p->id; ?>"><?php echo $p->label . ' (' . $p->handle . ')'; ?></option>
-				<?php endforeach; ?>
-			</select>
-			<button type="button" class="button add-presence">Add</button>
-		</div>
-		<div class="ctrlHolder">
-			<label>
-				Currently assigned presences
-			</label>
-			<ul id="presences">
-				<?php foreach ($this->group->presences as $presence) : ?>
-                    <li class="social-media box <?php echo $presence->type; ?> split">
-                        <?php $sign = $presence->isForFacebook() ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
-
-                        <input type="hidden" value="<?php echo $presence->id;?>" name="presences[]">
-                        <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>" class="presence">
-                            <span class="<?php echo $sign; ?> icon-large"></span>
-                            <?php echo $presence->getLabel(); ?>
-                        </a>
-                        <a href="#" class="remove-presence">
-                            <span class="icon-remove"></span>
-                        </a>
-                    </li>
-				<?php endforeach; ?>
-				<li class="none-found">
-					No presences assigned
-				</li>
-			</ul>
-		</div>
-	</fieldset>
+	<?php
+	echo $this->partial('partials/assign-presences.phtml', array(
+			'owner'=>$this->group,
+			'twitterPresences'=>$this->twitterPresences,
+			'facebookPresences'=>$this->facebookPresences)
+		);
+	?>
 
 	<div class="buttonHolder">
-		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'country', 'action'=>'index'), null, true); ?>
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?>
 		<input type="submit" value="Save" class="primaryAction">
 	</div>
 </form>

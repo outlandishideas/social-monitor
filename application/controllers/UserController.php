@@ -165,6 +165,7 @@ class UserController extends BaseController
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
 		$this->view->title = 'New User';
+		$this->view->titleIcon = 'icon-plus-sign';
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -258,6 +259,7 @@ class UserController extends BaseController
 		$this->view->userLevels = Model_User::$userLevels;
 		$this->view->editingUser = $editingUser;
 		$this->view->title = 'Edit User';
+		$this->view->titleIcon = 'icon-edit';
 	}
 
 	/**

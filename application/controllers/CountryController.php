@@ -49,6 +49,7 @@ class CountryController extends CampaignController {
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
 		$this->view->title = 'New Country';
+		$this->view->titleIcon = 'icon-plus-sign';
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -143,6 +144,7 @@ class CountryController extends CampaignController {
 
 		$this->view->editingCountry = $editingCountry;
 		$this->view->title = 'Edit Country';
+		$this->view->titleIcon = 'icon-edit';
 	}
 
 	/**
@@ -161,6 +163,7 @@ class CountryController extends CampaignController {
 		}
 
 		$this->view->title = 'Manage Country Presences';
+		$this->view->titleIcon = 'icon-tasks';
 		$this->view->country = $country;
 		$this->view->twitterPresences = Model_Presence::fetchAllTwitter();
 		$this->view->facebookPresences = Model_Presence::fetchAllFacebook();

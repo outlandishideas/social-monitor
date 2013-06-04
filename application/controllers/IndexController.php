@@ -27,7 +27,8 @@ class IndexController extends GraphingController
 			$kpiData[] = $row;
 		}
 
-		$this->view->title = 'Home';
+		$this->view->title = 'British Council Social Media Monitor';
+		$this->view->titleIcon = 'icon-home';
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->kpiData = $kpiData;
 		$this->view->metricOptions = $metrics;

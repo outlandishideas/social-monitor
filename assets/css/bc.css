@@ -841,6 +841,23 @@ table.dtable.dataTable {
 	display: inline-block;
 }
 
+#manage-country select,
+#manage-group select {
+	width: 55%;
+}
+
+#manage-country button.add-presence,
+#manage-group button.add-presence {
+	float: left;
+	visibility: hidden;
+}
+
+#manage-country .social-media,
+#manage-group .social-media {
+	padding: 0;
+	margin-left: 66px;
+}
+
 .none-found {
 	display: none;
 }

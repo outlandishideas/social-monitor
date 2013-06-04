@@ -21,8 +21,6 @@ class PresenceController extends GraphingController
 		$presence = Model_Presence::fetchById($this->_request->id);
 		$this->validateData($presence);
 
-
-		$this->view->titleClass = 'with-subtitle';
 		$this->view->title = $presence->getLabel();
 		if($presence->getLabel() != $presence->handle){
 			$this->view->subtitle = '<a href="'.$presence->page_url.'" target="_blank">' . $presence->handle . ' <span class="icon-external-link"></span></a>';
@@ -46,6 +44,7 @@ class PresenceController extends GraphingController
         }
 
         $this->view->title = 'Comparing '.count($compareData).' Presences';
+        $this->view->titleIcon = 'icon-exchange';
 	    $this->view->metricOptions = self::graphMetrics();
 	    $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
@@ -61,6 +60,7 @@ class PresenceController extends GraphingController
 		$this->editAction();
         $this->view->editType = true;
 		$this->view->title = 'New presence';
+		$this->view->titleIcon = 'icon-plus-sign';
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -123,6 +123,7 @@ class PresenceController extends GraphingController
 		$this->view->countries = Model_Campaign::fetchAll();
 		$this->view->presence = $presence;
 		$this->view->title = 'Edit Presence';
+		$this->view->titleIcon = 'icon-edit';
 	}
 
 	/**
