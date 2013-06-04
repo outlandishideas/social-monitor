@@ -7,10 +7,8 @@ class GroupController extends CampaignController {
 	 * @permission list_group
 	 */
 	public function indexAction() {
-
-        $title = '<span class="'. Model_Group::ICON_TYPE .' icon-large"></span> SBUs';
-
-        $this->view->title = $title;
+        $this->view->title = 'SBUs';
+        $this->view->titleIcon = Model_Group::ICON_TYPE;
 		$this->view->groups = Model_Group::fetchAll();
 		$this->view->tableMetrics = self::tableMetrics();
 	}
@@ -36,7 +34,8 @@ class GroupController extends CampaignController {
 		$this->view->metricOptions = self::graphMetrics();
 		$this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
-		$this->view->title = '<span class="icon-th-list"></span> '. $group->display_name . ' <a href="#" class="accordion-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>';
+		$this->view->title = $group->display_name;
+		$this->view->titleIcon = 'icon-th-list';
 		$this->view->titleInfo = $group->groupInfo();
         $this->view->group = $group;
 	}
