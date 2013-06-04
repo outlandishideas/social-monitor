@@ -405,16 +405,22 @@ app.charts = {
                     $sibling = $(this).prev('rect');
                 }
 
-                if($(this).css('opacity') < 1){
+                if($(this).css('opacity') < 1){ //if the bar you click on is already faded
                     $(this).fadeTo('slow',1)
                         .siblings('rect').fadeTo('slow',0.2);
-                } else {
+                    app.state.barDate = [d.date+' 00:00:00', d.date+' 23:59:59'];
+                    app.datatables.refreshStatuses();
+                } else { //if the bar you click on is not faded
                     if($sibling.css('opacity') < 1){
                         $(this)
                             .siblings('rect').fadeTo('slow',1);
+                        app.state.barDate = [];
+                        app.datatables.refreshStatuses();
                     } else {
                         $(this)
                             .siblings('rect').fadeTo('slow',0.2);
+                        app.state.barDate = [d.date+' 00:00:00', d.date+' 23:59:59'];
+                        app.datatables.refreshStatuses();
                     }
 
                 }

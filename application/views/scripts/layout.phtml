@@ -27,31 +27,40 @@
 		<header id="main-header">
 			<div class="hold">
 
-				<?php if (Zend_Auth::getInstance()->hasIdentity()) : ?>
 				<div id="nav-bar">
 <!--                    <div class="site-title"><span>British Council</span> Social Media Monitor</div>-->
 					<div id="nav">
 						<div class="main">
                             <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>" class="site-title-link"><div class="site-title"><span>British Council Social Media Monitor</span></div></a>
                             <?php
-                                echo $this->navigation()->menu()->setPartial('partials/menu.phtml')->render();
+                                if (Zend_Auth::getInstance()->hasIdentity()) :
+                                    echo $this->navigation()->menu()->setPartial('partials/menu.phtml')->render();
+                                endif;
                             ?>
 						</div>
 						<div class="extra">
-						    <?php echo $this->navigation()->menu()->render($this->user->isAdmin ? $this->adminMenu : $this->nonAdminMenu); ?>
+						    <?php
+                                if (Zend_Auth::getInstance()->hasIdentity()) :
+                                    echo $this->navigation()->menu()->render($this->user->isAdmin ? $this->adminMenu : $this->nonAdminMenu);
+                                else :
+                                    echo $this->navigation()->menu()->setPartial('partials/menu.phtml')->render($this->nonUserMenu);
+                                endif;
+                            ?>
 						</div>
 					</div>
 				</div>
 
-				<div id="user-nav" class="dropdown">
-					<a href="" class="dropdown-toggle" data-toggle="dropdown">
-						<span>Logged in as</span>
-						<?php echo $this->user->safeName; ?>
-						<b class="caret"></b>
-					</a>
-					<div class="dropdown-menu"></div>
-				</div>
+                <?php if (Zend_Auth::getInstance()->hasIdentity()) : ?>
+                    <div id="user-nav" class="dropdown">
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                            <span>Logged in as</span>
+                            <?php echo $this->user->safeName; ?>
+                            <b class="caret"></b>
+                        </a>
+                        <div class="dropdown-menu"></div>
+                    </div>
 				<?php endif; ?>
+
                 <?php if(is_string($this->title)) : ?>
                     <h1><?php echo $this->title; ?></h1>
                 <?php else : ?>

@@ -81,7 +81,7 @@ class BaseController extends Zend_Controller_Action {
 		$this->view->navigation($navigation);
 
 		// set up admin navigation
-		foreach (array('adminMenu'=>'navigation_admin.yaml', 'nonAdminMenu'=>'navigation_non_admin.yaml') as $property=>$configFile) {
+		foreach (array('adminMenu'=>'navigation_admin.yaml', 'nonAdminMenu'=>'navigation_non_admin.yaml', 'nonUserMenu'=>'navigation_non_user.yaml') as $property=>$configFile) {
 			$navConfig = new Zend_Config_Yaml(APPLICATION_PATH . '/configs/' . $configFile);
 			$navigation = new Zend_Navigation($navConfig);
 			foreach ($navigation->getPages() as $page) {

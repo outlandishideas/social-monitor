@@ -2,6 +2,8 @@
 
 class IndexController extends GraphingController
 {
+    protected $publicActions = array('index');
+
 	public function indexAction() {
 		/** @var Model_Country[] $countries */
 		$countries = Model_Country::fetchAll();

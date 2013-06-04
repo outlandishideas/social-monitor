@@ -120,7 +120,8 @@ app.datatables = {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + app.state.controller + "/statuses",
 				fnServerParams: function(aoData) {
-                    aoData.push({ name:"dateRange", value:app.state.dateRange });
+                    var date = app.state.barDate.length == 2 ? app.state.barDate : app.state.dateRange ;
+                    aoData.push({ name:"dateRange", value:date });
 					aoData.push({ name:"id", value:$div.data('presence-id') });
 				},
 				fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {

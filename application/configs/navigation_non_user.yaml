@@ -1,0 +1,5 @@
+user:
+  label: Login
+  controller: user
+  action: login
+  icon: icon-person icon-large
