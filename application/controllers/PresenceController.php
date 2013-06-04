@@ -5,12 +5,8 @@ class PresenceController extends GraphingController
 
 	public function indexAction()
 	{
-        $title = '';
-        $icon = Model_Presence::getLargeIcon();
-        if($icon) $title .= '<span class="'. $icon .'"></span> ';
-        $title .= 'Presences';
-
-        $this->view->title = $title;
+        $this->view->title = 'Presences';
+        $this->view->titleIcon = Model_Presence::ICON_TYPE;
         $this->view->presences = Model_Presence::fetchAll();
 		$this->view->tableMetrics = self::tableMetrics();
 	}
@@ -26,29 +22,25 @@ class PresenceController extends GraphingController
 		$this->validateData($presence);
 
 
-
-        $title = (object)array(
-            'main'=>$presence->getLabel(),
-            'logo'=>'<img src="' . $presence->image_url . '" alt="' . $presence->getLabel() . '"/>'
-        );
+		$this->view->titleClass = 'with-subtitle';
+		$this->view->title = $presence->getLabel();
+		if($presence->getLabel() != $presence->handle){
+			$this->view->subtitle = '<a href="'.$presence->page_url.'" target="_blank">' . $presence->handle . ' <span class="icon-external-link"></span></a>';
+		}
 
         if($presence->sign_off){
-            $title->main .= ' <span class="icon-ok-sign" title="Has been signed off by Head of Digital"></span>';
+            $this->view->title .= ' <span class="icon-ok-sign" title="Has been signed off by Head of Digital"></span>';
         } else {
-            $title->main .= ' <span class="icon-remove-sign" title="Has not been signed off by Head of Digital"></span>';
+            $this->view->title .= ' <span class="icon-remove-sign" title="Has not been signed off by Head of Digital"></span>';
         }
 
         if($presence->branding){
-            $title->main .= ' <span class="icon-ok-sign" title="Has been correctly branded"></span>';
+            $this->view->title .= ' <span class="icon-ok-sign" title="Has been correctly branded"></span>';
         } else {
-            $title->main .= ' <span class="icon-remove-sign" title="Is lacking correct branding"></span>';
+            $this->view->title .= ' <span class="icon-remove-sign" title="Is lacking correct branding"></span>';
         }
-
-        if($presence->getLabel() != $presence->handle){
-            $title->subtitle = '<a href="'.$presence->page_url.'" target="_blank">' . $presence->handle . ' <span class="icon-external-link"></span></a>';
-        }
-
-		$this->view->title = $title;
+        
+		$this->view->titleImage = '<img src="' . $presence->image_url . '" alt="' . $presence->getLabel() . '"/>';
 		$this->view->presence = $presence;
         $this->view->graphs = $this->graphs($presence);
 	}

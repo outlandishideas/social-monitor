@@ -15,5 +15,6 @@ class DomainController extends BaseController {
 		}
 		$this->view->domains = Model_Domain::fetchAll();
 		$this->view->title = 'Domains';
+		$this->view->titleIcon = 'icon-laptop';
 	}
 }

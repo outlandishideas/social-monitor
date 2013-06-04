@@ -4,6 +4,7 @@
 class ConfigController extends BaseController {
 	function indexAction() {
 		$this->view->title = 'Settings';
+		$this->view->titleIcon = 'icon-cog';
 		$values = array(
 			'fb_min'=>array('label'=>'Facebook Minimum Audience (% of total)'),
 			'fb_opt'=>array('label'=>'Facebook Optimum Audience (% of total)'),

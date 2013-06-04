@@ -12,6 +12,7 @@ class UserController extends BaseController
 	public function indexAction()
 	{
 		$this->view->title = 'Users';
+		$this->view->titleIcon = 'icon-group';
 		$this->view->users = Model_User::fetchAll();
 		$this->view->userLevels = Model_User::$userLevels;
 	}

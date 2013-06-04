@@ -60,17 +60,18 @@
                     </div>
 				<?php endif; ?>
 
-                <?php if(is_string($this->title)) : ?>
-                    <h1><?php echo $this->title; ?></h1>
-                <?php else : ?>
-                    <div class="with-subtitle">
-                        <?php
-                            if(isset($this->title->logo)) echo $this->title->logo;
-                            if(isset($this->title->main)) echo '<h1>'.$this->title->main.'</h1>';
-                            if(isset($this->title->subtitle)) echo '<h2>'.$this->title->subtitle.'</h2>';
-                        ?>
-                    </div>
-                <?php endif; ?>
+				<div class="page-title <?php echo $this->titleClass; ?>">
+					<?php
+					if($this->titleImage) {
+						echo $this->titleImage;
+					}
+					echo '<h1>'. ($this->titleIcon ? '<span class="' . $this->titleIcon . ' icon-large"></span> ' : '') . $this->title .
+						($this->titleInfo ? ' <a href="#" class="accordion-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>' : '') . '</h1>';
+					if($this->subtitle) {
+						echo '<h2>'.$this->subtitle.'</h2>';
+					}
+					?>
+				</div>
                 <?php if(isset($this->titleInfo)) : ?>
                     <div id="title-info" class="accordion">
                         <dl>
