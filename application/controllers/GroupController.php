@@ -2,13 +2,17 @@
 
 class GroupController extends CampaignController {
 
+	public function init() {
+		parent::init();
+		$this->view->titleIcon = Model_Group::ICON_TYPE;
+	}
+
 	/**
 	 * Lists all groups
 	 * @permission list_group
 	 */
 	public function indexAction() {
         $this->view->title = 'SBUs';
-        $this->view->titleIcon = Model_Group::ICON_TYPE;
 		$this->view->groups = Model_Group::fetchAll();
 		$this->view->tableMetrics = self::tableMetrics();
 	}

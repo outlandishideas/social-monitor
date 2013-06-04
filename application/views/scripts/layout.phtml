@@ -62,16 +62,17 @@
 				<?php endif; ?>
 
 				<div class="page-title <?php if ($this->subtitle) echo 'with-subtitle'; ?>">
-					<?php
-					if($this->titleImage) {
-						echo $this->titleImage;
-					}
-					echo '<h1>'. ($this->titleIcon ? '<span class="' . $this->titleIcon . ' icon-large"></span> ' : '') . $this->title .
-						($this->titleInfo ? ' <a href="#" class="accordion-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>' : '') . '</h1>';
-					if($this->subtitle) {
-						echo '<h2>'.$this->subtitle.'</h2>';
-					}
-					?>
+					<?php if($this->titleImage) { echo $this->titleImage; } ?>
+					<h1>
+						<?php if ($this->titleIcon) : ?>
+						<span class="<?php echo $this->titleIcon; ?> icon-large"></span>
+						<?php endif; ?>
+						<?php echo $this->title; ?>
+						<?php if ($this->titleInfo) : ?>
+						<a href="#" class="accordion-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>
+						<?php endif; ?>
+					</h1>
+					<?php if($this->subtitle) { echo '<h2>'.$this->subtitle.'</h2>'; } ?>
 				</div>
                 <?php if(isset($this->titleInfo)) : ?>
                     <div id="title-info" class="accordion">

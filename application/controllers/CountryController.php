@@ -2,13 +2,17 @@
 
 class CountryController extends CampaignController {
 
+	public function init() {
+		parent::init();
+		$this->view->titleIcon = Model_Country::ICON_TYPE;
+	}
+
 	/**
 	 * Lists all countries
 	 * @permission list_country
 	 */
 	public function indexAction() {
         $this->view->title = 'Countries';
-        $this->view->titleIcon = Model_Country::ICON_TYPE;
 		$this->view->tableMetrics = self::tableMetrics();
 		$this->view->countries = Model_Country::fetchAll();
 	}
@@ -35,7 +39,6 @@ class CountryController extends CampaignController {
         $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
 		$this->view->title = $country->display_name;
-		$this->view->titleIcon = Model_Country::ICON_TYPE;
 		$this->view->titleInfo = $country->countryInfo();
         $this->view->country = $country;
 	}
