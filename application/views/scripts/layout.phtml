@@ -40,11 +40,21 @@
 						</div>
 						<div class="extra">
 						    <?php
-                                if (Zend_Auth::getInstance()->hasIdentity()) :
-                                    echo $this->navigation()->menu()->render($this->user->isAdmin ? $this->adminMenu : $this->nonAdminMenu);
-                                else :
+                                if (Zend_Auth::getInstance()->hasIdentity()) {
+	                                switch ($this->user->user_level) {
+		                                case Model_User::USER_LEVEL_ADMIN:
+		                                case Model_User::USER_LEVEL_MANAGER:
+											$menu = $this->adminMenu;
+										    break;
+		                                case Model_User::USER_LEVEL_USER:
+										default:
+											$menu = $this->nonAdminMenu;
+										    break;
+						            }
+                                    echo $this->navigation()->menu()->render($menu);
+							    } else {
                                     echo $this->navigation()->menu()->setPartial('partials/menu.phtml')->render($this->nonUserMenu);
-                                endif;
+						        }
                             ?>
 						</div>
 					</div>
@@ -57,7 +67,9 @@
                             <?php echo $this->user->safeName; ?>
                             <b class="caret"></b>
                         </a>
-                        <div class="dropdown-menu"></div>
+                        <div class="dropdown-menu">
+	                        <div><a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'logout')); ?>">Logout</a> of Social Media Monitor</div>
+                        </div>
                     </div>
 				<?php endif; ?>
 
@@ -97,29 +109,56 @@
 	<div id="loader" class="dead"></div>
 
 	<?php
-		echo $this->minifyHeadScript()
-			->appendFile('http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js')
-			->appendFile('http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js')
-			->appendScript('var jsConfig = ' . json_encode($this->jsConfig) . ';')
-			->appendScript('var geochartMetrics = ' . json_encode($this->trafficMetrics) . ';')
-			->appendFile('assets/lib/d3/d3.v2.min.js') //use preminified version to avoid error
-			->appendFile('assets/lib/jquery/date.js')
-			->appendFile('assets/lib/jquery/daterangepicker.jQuery.js')
-			->appendFile('assets/lib/jquery/jquery.ui.widget.js')
-			->appendFile('assets/lib/tipsy/js/jquery.tipsy.js')
-			->appendFile('assets/lib/datatables/media/js/jquery.dataTables.js')
-			->appendFile('assets/js/dataTables.filteringDelay.js')
-			->appendFile('assets/lib/jquery/uni-form.jquery.min.js')
-			->appendFile('assets/lib/farbtastic/farbtastic.js')
-			->appendFile('assets/js/plugins.js')
-			->appendFile('assets/lib/backbone/underscore.js')
-			->appendFile('assets/lib/bootstrap/bootstrap.js')
-			->appendFile('assets/js/datatables.js')
-            ->appendFile('assets/js/charts.js')
-            ->appendFile('assets/js/geochart.js')
-            ->appendFile('assets/js/main.js')
+	$scripts = array(
+		array('link', 'http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'),
+		array('link', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js'),
+		array('code', 'var jsConfig = ' . json_encode($this->jsConfig) . ';'),
+		array('code', 'var geochartMetrics = ' . json_encode($this->trafficMetrics) . ';'),
+		array('link', 'assets/lib/d3/d3.v2.min.js'), //use preminified version to avoid error
+		array('link', 'assets/lib/jquery/date.js'),
+		array('link', 'assets/lib/jquery/daterangepicker.jQuery.js'),
+		array('link', 'assets/lib/jquery/jquery.ui.widget.js'),
+		array('link', 'assets/lib/tipsy/js/jquery.tipsy.js'),
+		array('link', 'assets/lib/datatables/media/js/jquery.dataTables.js'),
+		array('link', 'assets/js/dataTables.filteringDelay.js'),
+		array('link', 'assets/lib/jquery/uni-form.jquery.min.js'),
+		array('link', 'assets/lib/farbtastic/farbtastic.js'),
+		array('link', 'assets/js/plugins.js'),
+		array('link', 'assets/lib/backbone/underscore.js'),
+		array('link', 'assets/lib/bootstrap/bootstrap.js'),
+		array('link', 'assets/js/datatables.js'),
+		array('link', 'assets/js/charts.js'),
+		array('link', 'assets/js/geochart.js'),
+		array('link', 'assets/js/main.js')
+	);
+
+	$debug = false; // enable this to print out the scripts individually, so you don't have to wait for minify to execute
+	if ($debug) {
+		foreach ($scripts as $type=>$script) {
+			list($type, $s) = $script;
+			if ($type == 'link') {
+				if (strpos($s, 'http://') !== 0) {
+					$s = $this->baseUrl($s);
+				}
+				echo '<script type="text/javascript" src="' . $s . '"></script>' . PHP_EOL;
+			} else {
+				echo '<script type="text/javascript">' . $s . '</script>' . PHP_EOL;
+			}
+		}
+	} else {
+		$minify = $this->minifyHeadScript();
+		foreach ($scripts as $type=>$script) {
+			list($type, $s) = $script;
+			if ($type == 'link') {
+				$minify->appendFile($s);
+			} else {
+				$minify->appendScript($s);
+			}
+		}
+		echo $minify;
+	}
 	?>
-    <script>
+	<script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
                 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

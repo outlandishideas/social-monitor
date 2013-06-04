@@ -6,8 +6,8 @@
 
 <?php
     $links = $this->gatekeeper()->filterAll(array(
-        '<a class="button add" href="%url%"><span class="icon-plus"></span>  Create Group</a>' => array('controller'=>'group','action' => 'new'),
-    ));
+        '<a class="button add" href="%url%"><span class="icon-plus"></span>  Create Group</a>' => array('controller'=>'group','action' => 'new', 'presences'=>implode(',', array_keys($this->compareData))),
+    ), null, true);
     if ($links) {
         echo '<div class="buttons">' . implode('', $links) . '</div>';
     }

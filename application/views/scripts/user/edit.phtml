@@ -21,7 +21,7 @@
 			<label for="user_level" class="requiredField">
 				User Level<span class="asteriskField">*</span>
 			</label>		
-			<select id="user_level" name="user_level" class="selectInput" <?php if (!$this->user->canPerform('change_user_level')) echo 'disabled'; ?>>
+			<select id="user_level" name="user_level" class="selectInput" <?php if (!$this->canChangeLevel) echo 'disabled'; ?>>
 				<?php foreach ($this->userLevels as $value=>$label) : ?>
 				<option value="<?php echo $value; ?>" <?php if ($value == $this->editingUser->user_level) echo 'selected'; ?>><?php echo $label; ?></option>
 				<?php endforeach; ?>

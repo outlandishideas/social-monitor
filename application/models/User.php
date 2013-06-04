@@ -8,10 +8,14 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 
 	const PASSWORD_SALT = 'Humpty dumpty sat on a wall';
 
+	const USER_LEVEL_USER = 1;
+	const USER_LEVEL_MANAGER = 5;
+	const USER_LEVEL_ADMIN = 10;
+
 	public static $userLevels = array(
-		'1'=>'User',
-		'5'=>'Manager',
-		'10'=>'Admin'
+		self::USER_LEVEL_USER=>'User',
+		self::USER_LEVEL_MANAGER=>'Manager',
+		self::USER_LEVEL_ADMIN=>'Admin'
 	);
 
 	protected static $permissions = array();
@@ -72,9 +76,17 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 //		return !$action || in_array($action, Model_User::getPermissions($this->user_level));
 	}
 
+	function getIsManager() {
+		return $this->user_level >= self::USER_LEVEL_MANAGER;
+	}
+
 	function getIsAdmin() {
-		$levels = array_flip(self::$userLevels);
-		$adminLevel = (int)$levels['Admin'];
-		return $this->user_level >= $adminLevel;
+		return $this->user_level >= self::USER_LEVEL_ADMIN;
+	}
+
+	function getAccessEntities() {
+		$stmt = $this->_db->prepare('SELECT * FROM user_access WHERE user_id = :id');
+		$stmt->execute(array(':id'=>$this->id));
+		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
 }

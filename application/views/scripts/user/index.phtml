@@ -6,7 +6,7 @@
 		<th class="email">Email Address</th>
 		<th class="user-level">User Level</th>
 		<th class="last-sign-in">Last Sign In</th>
-		<th class="options"></th>
+		<th></th>
 	</tr>
 <?php foreach ($this->users as $user) : ?>
 	<?php
@@ -17,17 +17,22 @@
 		<td class="email"><?php echo $user->email; ?></td>
 		<td class="user-level"><?php echo $userLevel; ?></td>
 		<td class="last-sign-in"><?php echo $this->prettyDate($user->last_sign_in, 'Never signed in'); ?></td>
-		<td class="options">
+		<td>
 			<?php
 				$links = array();
 				if ($this->user->id == $user->id) {
-					$links['<a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit-self');
+					$links = array(
+						'- <a href="%url%">Edit</a>' => array('controller'=>'user', 'action'=>'edit-self')
+					);
 				} else {
-					$links['<a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit', 'id'=>$user->id);
+					$links = array(
+						'- <a href="%url%">Edit</a>' => array('controller'=>'user', 'action'=>'edit', 'id'=>$user->id),
+						'- <a href="%url%">Permissions</a>' => array('controller'=>'user', 'action'=>'manage', 'id'=>$user->id),
+						'- <a href="%url%" class="autoConfirm">Delete</a>' => array('controller'=>'user', 'action'=>'delete', 'id'=>$user->id)
+					);
 				}
-				$links['<a href="%url%" class="autoConfirm">Delete</a>'] = array('controller'=>'user', 'action'=>'delete', 'id'=>$user->id);
 				$links = $this->gatekeeper()->filterAll($links);
-				echo implode(' | ', $links);
+				echo implode('<br />', $links);
 			?>
 		</td>
 	</tr>

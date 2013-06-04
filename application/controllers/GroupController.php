@@ -52,13 +52,11 @@ class GroupController extends CampaignController {
 	    $this->view->titleIcon = 'icon-plus-sign';
 
         $presences = array();
-        $ids = $this->_request->id;
-        if($ids){
-            $ids = explode(',',html_entity_decode($ids));
-            if(!empty($ids)){
-                foreach($ids as $id){
-                    $presences[$id] = Model_Presence::fetchById($id);
-                }
+        $presenceIds = $this->_request->presences;
+        if($presenceIds){
+	        $presenceIds = explode(',',html_entity_decode($presenceIds));
+            foreach($presenceIds as $id){
+                $presences[$id] = Model_Presence::fetchById($id);
             }
         }
 
@@ -99,8 +97,8 @@ class GroupController extends CampaignController {
                 try {
                     $editingGroup->save();
 
-                    if($this->_request->presences){
-                        $editingGroup->assignPresences($this->_request->presences);
+                    if($this->_request->p){
+                        $editingGroup->assignPresences($this->_request->p);
                     }
                     $this->_helper->FlashMessenger(array('info' => 'Group saved'));
                     $this->_helper->redirector->gotoSimple('index');

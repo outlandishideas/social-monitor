@@ -4,6 +4,11 @@ class UserController extends BaseController
 {
 	protected $publicActions = array('login', 'forgotten', 'reset-password');
 
+	public function init() {
+		parent::init();
+		$this->view->titleIcon = 'icon-group';
+	}
+
 	/**
 	 * Displays a list of all users.
 	 * If current user is admin, also shows links for modifying each user
@@ -12,7 +17,6 @@ class UserController extends BaseController
 	public function indexAction()
 	{
 		$this->view->title = 'Users';
-		$this->view->titleIcon = 'icon-group';
 		$this->view->users = Model_User::fetchAll();
 		$this->view->userLevels = Model_User::$userLevels;
 	}
@@ -177,6 +181,7 @@ class UserController extends BaseController
 	{
 		// do exactly the same as in editAction, but with different permissions
 		$this->editAction();
+		$this->view->canChangeLevel = false;
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -256,6 +261,7 @@ class UserController extends BaseController
 			}
 		}
 
+		$this->view->canChangeLevel = $this->view->user->isAdmin;
 		$this->view->userLevels = Model_User::$userLevels;
 		$this->view->editingUser = $editingUser;
 		$this->view->title = 'Edit User';
@@ -279,11 +285,16 @@ class UserController extends BaseController
 		$this->_helper->redirector->gotoSimple('index');
 	}
 
-	public function statusAction(){
-		$data = array(
-			'logoutUrl' => $this->view->url(array('controller' => 'user', 'action' => 'logout'))
-		);
+	public function manageAction() {
+		$user = Model_User::fetchById($this->_request->id);
+		$this->validateData($user);
 
-		$this->apiSuccess($data);
+		$this->view->title = 'User Permissions';
+		$this->view->titleIcon = 'icon-tasks';
+		$this->view->editingUser = $user;
+		$this->view->twitterPresences = Model_Presence::fetchAllTwitter();
+		$this->view->facebookPresences = Model_Presence::fetchAllFacebook();
+		$this->view->countries = Model_Country::fetchAll();
+		$this->view->groups = Model_Group::fetchAll();
 	}
 }

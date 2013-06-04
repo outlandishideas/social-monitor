@@ -1,4 +1,4 @@
-<a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$this->presence->id)); ?>" title="<?php echo $this->presence->label; ?>">
+<a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$this->presence->id)); ?>" title="<?php echo $this->presence->label; ?>" class="presence <?php echo $this->presence->type; ?>">
     <span class="<?php echo $this->presence->getLargePresenceSign();?>"></span>
     <?php echo $this->presence->handle; ?>
 </a>

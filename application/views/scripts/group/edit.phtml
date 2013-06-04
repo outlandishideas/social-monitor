@@ -10,7 +10,7 @@ if ($buttons && $this->showButtons) :
 </p>
 <?php endif; ?>
 
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-campaign">
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-group">
 
 	<fieldset class="inlineLabels">
 		<legend>Group details</legend>
@@ -30,17 +30,13 @@ if ($buttons && $this->showButtons) :
             <p>These presences will be automatically added to this group:</p>
             <ul id="added-presences">
                 <?php foreach($this->presences as $presence) : ?>
-                    <li class="social-media box <?php echo $presence->type; ?> split">
-                        <?php $sign = $presence->isForFacebook() ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
-
-                        <input type="hidden" value="<?php echo $presence->id;?>" name="presences[]">
-                        <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>"
-                           class="presence"
-                            target="_blank">
-                            <span class="<?php echo $sign; ?> icon-large"></span>
-                            <?php echo $presence->getLabel(); ?>
-                        </a>
-                        <a href="#" class="remove-presence">
+                    <li class="link box <?php echo $presence->type; ?> split">
+                        <input type="hidden" value="<?php echo $presence->id;?>" name="p[]">
+                        <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id), null, true); ?>"
+                           title="<?php echo $presence->getLabel(); ?>" class="presence first" target="_blank">
+                            <span class="icon-<?php echo $presence->type; ?>-sign icon-large"></span>
+	                        <?php echo ($presence->isForTwitter() ? '@' : '') . $presence->handle; ?>
+                        </a><a href="#" class="remove-item last">
                             <span class="icon-remove"></span>
                         </a>
                     </li>

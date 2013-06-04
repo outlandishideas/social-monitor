@@ -49,15 +49,14 @@ $.extend(app, {
 						</div>\
 					</div>',
 		message: '<li class="<%=type%>"><%=msg%></li>',
-		userStatus: '<div><a href="<%=logoutUrl%>">Logout</a> of Social Media Monitor</div>',
-		presence:
-			'<li class="social-media box <%=type%> split">\
-				<input type="hidden" value="<%=id%>" name="presences[]" />\
-				<a href="<%=url%>" class="presence" title="<%=hover%>">\
-					<span class="icon-<%=type%>-sign icon-large"></span>\
+		linkBox:
+			'<li class="link box <%=type%> split">\
+				<input type="hidden" value="<%=id%>" name="assigned[<%=type%>][]" />\
+				<a href="<%=url%>" title="<%=hover%>" class="first" target="_blank">\
+					<span class="<%=icon%> icon-large"></span>\
 					<%=label%>\
-				</a>\
-				<a href="#" class="remove-presence">\
+				</a>' + // don't put whitespace between the links
+				'<a href="#" class="remove-item last">\
 					<span class="icon-remove"></span>\
 				</a>\
 			</li>',
@@ -107,7 +106,7 @@ app.init = {
 		},
 
         '#map-tabs': function($item) {
-            $active = $item.find('li.active');
+            var $active = $item.find('li.active');
             if($active.length == 0){
                 $active.find('li:first').addClass('active');
             }
@@ -180,21 +179,6 @@ app.init = {
                 });
             })
         },
-
-		'#user-nav': function($item) {
-			$item.on('click', '.dropdown-toggle', function(e){
-				var $dropdown = $(this).closest('.dropdown');
-				if (!$dropdown.is('.open')) {
-					var $menu = $dropdown.find('.dropdown-menu');
-					$menu.text('Loading...');
-					app.api.get('user/status', {}).done(function(response) {
-						//don't show login API request
-						response.data.rateLimits = _.omit(response.data.rateLimits, 'account/verify_credentials');
-						$menu.html(_.template(app.templates.userStatus, response.data))
-					});
-				}
-			});
-		},
 
 		'#date-picker': function($item) {
 			$item.daterangepicker({
@@ -283,21 +267,23 @@ app.init = {
 				}
 			}
 		},
-		'#manage-country, #manage-group': function($form) {
-			var canAdd = function(id) {
+		'form.management': function($form) {
+			var canAdd = function(id, type) {
 				var currentValues = $form.serializeArray();
 				for (var i=0; i<currentValues.length; i++) {
-					if (currentValues[i].name == 'presences[]' && currentValues[i].value == id) {
+					if (currentValues[i].name == 'assigned[' + type + '][]' && currentValues[i].value == id) {
 						return false;
 					}
 				}
 				return true;
 			};
 			var updateNoneFound = function() {
-				$form.find('.none-found').toggle($form.find('.presence').length == 0);
+				$form.find('.none-found').toggle($form.find('.link.box').length == 0);
 			};
 			var updateAddButton = function() {
-				$(this).closest('.ctrlHolder').find('.add-presence').css('visibility', ($(this).val() != '' && canAdd($(this).val())) ? 'visible' : 'hidden');
+				var type = $(this).closest('select').data('type');
+				var val = $(this).val();
+				$(this).closest('.ctrlHolder').find('.add-item').css('visibility', (val != '' && canAdd(val, type)) ? 'visible' : 'hidden');
 			};
 			var updateAddButtons = function() {
 				$form.find('select').each(updateAddButton);
@@ -308,27 +294,31 @@ app.init = {
 
 			$form
 				.on('change', 'select', updateAddButton)
-				.on('click', '.remove-presence', function(e) {
+				.on('click', '.remove-item', function(e) {
 					e.preventDefault();
 					$(this).closest('li').remove();
 					updateNoneFound();
 					updateAddButtons();
 				})
-				.on('click', '.add-presence', function() {
-					var $selected = $(this).closest('.ctrlHolder').find('select option:selected');
+				.on('click', '.add-item', function() {
+					var $select = $(this).closest('.ctrlHolder').find('select');
+					var $selected = $select.find('option:selected');
+					var type = $select.data('type');
 					var id = $selected.val();
-					if (id != '' && canAdd(id)) {
+					if (id != '' && canAdd(id, type)) {
 						var args = $selected.data();
 						args.id = id;
-						args.type = $selected.closest('select').attr('id');
-						$(_.template(app.templates.presence, args))
-							.appendTo($('#presences'));
+						args.type = type;
+						args.icon = $select.data('icon');
+						$(_.template(app.templates.linkBox, args))
+							.appendTo($('#assigned'));
 						updateNoneFound();
 						updateAddButtons();
 					}
 				});
 		},
 		'#edit-country': function($form) {
+			// automatically copy the selected country from the drop-down, if it doesn't yet have a value
 			$form.on('focus', '#display_name', function() {
 				if (!$(this).val()) {
 					var $select = $form.find('select');
@@ -337,6 +327,12 @@ app.init = {
 						$(this).select();
 					}
 				}
+			});
+		},
+		'#edit-group': function($form) {
+			$form.on('click', '.link.box .remove-item', function(e) {
+				e.preventDefault();
+				$(this).closest('.link.box').remove();
 			});
 		}
 	}

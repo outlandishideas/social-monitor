@@ -1,11 +1,11 @@
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="manage-country">
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm management" novalidate id="manage-country">
 
 	<?php
 	echo $this->partial('partials/assign-presences.phtml', array(
 			'owner'=>$this->country,
 			'twitterPresences'=>$this->twitterPresences,
-			'facebookPresences'=>$this->facebookPresences)
-		);
+			'facebookPresences'=>$this->facebookPresences
+		));
 	?>
 
 	<div class="buttonHolder">

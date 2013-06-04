@@ -160,7 +160,13 @@ class CountryController extends CampaignController {
 		$this->validateData($country);
 
 		if ($this->_request->isPost()) {
-			$country->assignPresences($this->_request->presences);
+			$presenceIds = array();
+			foreach ($this->_request->assigned as $type=>$ids) {
+				foreach ($ids as $id) {
+					$presenceIds[] = $id;
+				}
+			}
+			$country->assignPresences($presenceIds);
 			$this->_helper->FlashMessenger(array('info' => 'Country presences updated'));
 			$this->_helper->redirector->gotoSimple('index');
 		}
