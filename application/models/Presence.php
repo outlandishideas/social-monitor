@@ -151,9 +151,10 @@ class Model_Presence extends Model_Base {
 	 * If not given, calculates using the last month's worth of data
 	 * @param null $startDate
 	 * @param null $endDate
+	 * @param bool $useCache
 	 * @return array
 	 */
-	public function getKpiData($startDate = null, $endDate = null) {
+	public function getKpiData($startDate = null, $endDate = null, $useCache = true) {
 		if (!isset($this->kpiData)) {
 			$kpiData = array();
 
@@ -166,29 +167,52 @@ class Model_Presence extends Model_Base {
 			$endDateString = $endDate->format('Y-m-d');
 			$startDateString = $startDate->format('Y-m-d');
 
-			$currentAudience = $this->popularity;
-			$targetAudience = $this->getTargetAudience();
-			$targetAudienceDate = $this->getTargetAudienceDate($startDateString, $endDateString);
-
-			// target audience %
-			$kpiData[self::METRIC_POPULARITY_PERCENT] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
-
-			// target audience rate (months until reaching target)
-			if ($currentAudience >= $targetAudience) {
-				$kpiData[self::METRIC_POPULARITY_TIME] = 0; // already achieved
-			} else if ($targetAudienceDate) {
-				$diff = strtotime($targetAudienceDate) - $endDate->getTimestamp();
-				$months = $diff/(60*60*24*365/12);
-				$kpiData[self::METRIC_POPULARITY_TIME] = $months;
+			if ($useCache) {
+				$stmt = $this->_db->prepare('SELECT metric, value FROM kpi_cache WHERE presence_id = :pid AND start_date = :start AND end_date = :end');
+				$stmt->execute(array(':pid'=>$this->id, ':start'=>$startDateString, ':end'=>$endDateString));
+				$cachedValues = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 			} else {
-				$kpiData[self::METRIC_POPULARITY_TIME] = null;
+				$cachedValues = array();
+			}
+
+			if (array_key_exists(self::METRIC_POPULARITY_PERCENT, $cachedValues)) {
+				$kpiData[self::METRIC_POPULARITY_PERCENT] = $cachedValues[self::METRIC_POPULARITY_PERCENT];
+				$kpiData[self::METRIC_POPULARITY_TIME] = $cachedValues[self::METRIC_POPULARITY_TIME];
+			} else {
+				$currentAudience = $this->popularity;
+				$targetAudience = $this->getTargetAudience();
+				$targetAudienceDate = $this->getTargetAudienceDate($startDateString, $endDateString);
+
+				// target audience %
+				$kpiData[self::METRIC_POPULARITY_PERCENT] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
+
+				// target audience rate (months until reaching target)
+				if ($currentAudience >= $targetAudience) {
+					$kpiData[self::METRIC_POPULARITY_TIME] = 0; // already achieved
+				} else if ($targetAudienceDate) {
+					$diff = strtotime($targetAudienceDate) - $endDate->getTimestamp();
+					$months = $diff/(60*60*24*365/12);
+					$kpiData[self::METRIC_POPULARITY_TIME] = $months;
+				} else {
+					$kpiData[self::METRIC_POPULARITY_TIME] = null;
+				}
 			}
 
 			//posts per day
-			$kpiData[self::METRIC_POSTS_PER_DAY] = $this->getAveragePostsPerDay($startDateString, $endDateString);
+			$metric = self::METRIC_POSTS_PER_DAY;
+			if (array_key_exists($metric, $cachedValues)) {
+				$kpiData[$metric] = $cachedValues[$metric];
+			} else {
+				$kpiData[$metric] = $this->getAveragePostsPerDay($startDateString, $endDateString);
+			}
 
 			//response time
-			$kpiData[self::METRIC_RESPONSE_TIME] = $this->getAverageResponseTime($startDateString, $endDateString);
+			$metric = self::METRIC_RESPONSE_TIME;
+			if (array_key_exists($metric, $cachedValues)) {
+				$kpiData[$metric] = $cachedValues[$metric];
+			} else {
+				$kpiData[$metric] = $this->getAverageResponseTime($startDateString, $endDateString);
+			}
 
 			$this->kpiData = $kpiData;
 		}

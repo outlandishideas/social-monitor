@@ -547,4 +547,29 @@ class PresenceController extends GraphingController
 		return $points;
 	}
 
+	/**
+	 * This should be called via a cron job (~hourly), and does not output anything
+	 */
+	public function updateKpiCacheAction() {
+		/** @var Model_Presence[] $presences */
+		$presences = Model_Presence::fetchAll();
+		$endDate = new DateTime();
+		$startDate = new DateTime();
+		$startDate->sub(DateInterval::createFromDateString('1 month'));
+		$stmt = self::db()->prepare('REPLACE INTO kpi_cache (presence_id, metric, start_date, end_date, value) VALUES (:pid, :metric, :start, :end, :value)');
+		$args = array(
+			':start'=>$startDate->format('Y-m-d'),
+			':end'=>$endDate->format('Y-m-d')
+		);
+		foreach ($presences as $p) {
+			$args[':pid'] = $p->id;
+			$stats = $p->getKpiData($startDate, $endDate, false);
+			foreach ($stats as $metric=>$value) {
+				$args[':metric'] = $metric;
+				$args[':value'] = $value;
+				$stmt->execute($args);
+			}
+		}
+		exit;
+	}
 }
