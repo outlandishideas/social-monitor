@@ -15,7 +15,8 @@ $.extend(app, {
 		chartData: [],
 		colors: {},
 		timestamps: [],
-		unloading: false
+		unloading: false,
+        barDate: []
 	},
 	templates: {
 		legendLabel: '<div class="dataset <%=className%>" data-line-id="<%=line_id%>">\
