@@ -238,3 +238,23 @@ ol.messages li.info {
 ol.messages li a {
 	text-decoration: underline;
 }
+
+.blockLabels.hide {
+    display: none;
+}
+
+.switch.radio {
+    display: none;
+}
+
+.switch.radio.show {
+    display: block;
+}
+
+.switch.radio span {
+    display: none;
+}
+
+.switch.radio .show {
+    display: inline;
+}

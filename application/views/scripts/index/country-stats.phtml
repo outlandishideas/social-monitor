@@ -1,8 +1,14 @@
-<div class="country">
-	<div class="close"><a href="#">Close</a></div>
-	<h3><a href="<?php echo $this->url(array('action'=>'view', 'controller'=>'country', 'id'=>$this->country->id)); ?>"><?php echo $this->country->display_name; ?></a></h3>
+<div class="country hide">
+	<div class="close"><a href="#"><span class="icon-remove-circle icon-large"></span></a></div>
+	<h3>
+        <a href="<?php echo $this->url(array('action'=>'view', 'controller'=>'country', 'id'=>$this->country->id)); ?>">
+            <span class="icon-globe icon-large"></span>
+            <?php echo $this->country->display_name; ?>
+        </a>
+    </h3>
 	<?php if ($this->country->presences) : ?>
-	<ul class="presence-list">
+    <h4><?php echo ucfirst($this->metric); ?></h4>
+	<ul>
 		<?php /** @var $presence Model_Presence */ ?>
 		<?php foreach ($this->country->presences as $presence) : ?>
 
@@ -16,6 +22,13 @@
                       style="color: <?php echo $this->trafficLight()->color($metricValue, $this->metric); ?>;">
                 </span>
                 <?php echo $this->partial('partials/presence_inline.phtml',  array('presence' => $presence)); ?>
+                <span style="float:right;">
+                    <span class="<?php echo $presence->sign_off ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
+                          title="Digital Sign-off"></span>
+                    <span
+                        class="<?php echo $presence->branding ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
+                        title="Branding"></span>
+                </span>
             </li>
 
 		<?php endforeach; ?>

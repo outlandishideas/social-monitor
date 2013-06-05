@@ -105,6 +105,7 @@ app.geochart = {
 				var $country = $(data);
 				$country.data('id', id);
 				$map.append($country);
+                $country.removeClass('hide');
 			})
 			.always(function() {
 				$loading.hide();

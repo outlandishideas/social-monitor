@@ -28,6 +28,13 @@
 
         <div class="ctrlHolder">
             <p class="label">Signed Off</p>
+            <?php $name = "sign_off"; ?>
+            <div class="switch radio" data-name="<?php echo $name; ?>">
+                <a href="#">
+                    <span class="icon-ok-sign icon-large <?php if ($this->presence->$name > 0) echo 'show'; ?>"></span>
+                    <span class="icon-remove-sign icon-large <?php if ($this->presence->$name < 1) echo 'show'; ?>"></span>
+                </a>
+            </div>
             <ul class="blockLabels">
                 <li>
                     <label class="radio"><input name="sign_off" type="radio" value="0"
@@ -44,6 +51,13 @@
 
         <div class="ctrlHolder">
             <p class="label">Branding</p>
+            <?php $name = "branding"; ?>
+            <div class="switch radio" data-name="<?php echo $name; ?>">
+                <a href="#">
+                    <span class="icon-ok-sign icon-large <?php if ($this->presence->$name > 0) echo 'show'; ?>"></span>
+                    <span class="icon-remove-sign icon-large <?php if ($this->presence->$name < 1) echo 'show'; ?>"></span>
+                </a>
+            </div>
             <ul class="blockLabels">
                     <li>
                         <label class="radio"><input name="branding" type="radio" value="0"

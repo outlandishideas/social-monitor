@@ -36,12 +36,14 @@ if ($links) {
 			</td>
             <td>
                 <span class="<?php echo $presence->sign_off ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
-                      data-value="<?php echo $presence->branding ? 1 : 0 ;?>"></span>
+                      data-value="<?php echo $presence->sign_off ? 1 : 0 ;?>"
+                      title="Digital Sign-off"></span>
             </td>
             <td>
                 <span
                     class="<?php echo $presence->branding ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
-                    data-value="<?php echo $presence->branding ? 1 : 0 ;?>"></span>
+                    data-value="<?php echo $presence->branding ? 1 : 0 ;?>"
+                    title="Branding"></span>
             </td>
 			<td><?php echo number_format($presence->popularity) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
 			<td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>

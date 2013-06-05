@@ -46,6 +46,8 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
         <tr>
             <th>Handle</th>
+            <th></th>
+            <th></th>
             <?php foreach ($this->tableMetrics as $key=>$label) : ?>
                 <th><?php echo $label; ?></th>
             <?php endforeach; ?>
@@ -58,6 +60,17 @@ $buttons = $this->gatekeeper()->filterAll(array(
                         <?php echo $this->gatekeeper()->filter('<a href="%url%">' . $presence->handle . '</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>
                         <a href="<?php echo $presence->page_url; ?>" target="_blank" class="icon external"></a>
                     </div>
+                </td>
+                <td>
+                    <span class="<?php echo $presence->sign_off ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
+                          data-value="<?php echo $presence->sign_off ? 1 : 0 ;?>"
+                          title="Digital Sign-off"></span>
+                </td>
+                <td>
+                    <span
+                        class="<?php echo $presence->branding ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
+                        data-value="<?php echo $presence->branding ? 1 : 0 ;?>"
+                        title="Branding"></span>
                 </td>
                 <?php $kpiData = $presence->getKpiData(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                     <td>
@@ -84,6 +97,8 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
         <tr class="average">
             <td>Group Average</td>
+            <td></td>
+            <td></td>
             <?php $kpiData = $this->group->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                 <td>
                     <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
