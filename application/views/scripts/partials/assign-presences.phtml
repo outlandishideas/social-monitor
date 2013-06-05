@@ -39,18 +39,11 @@
 			Currently assigned presences
 		</label>
 		<ul id="assigned">
-			<?php foreach ($this->owner->presences as $presence) : /** @var $presence Model_Presence */ ?>
-				<li class="link box <?php echo $presence->type; ?> split">
-					<input type="hidden" value="<?php echo $presence->id;?>" name="assigned[<?php echo $presence->type; ?>][]">
-					<a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>"
-					   title="<?php echo $presence->getLabel(); ?>" class="first" target="_blank">
-						<span class="icon-<?php echo $presence->type; ?>-sign icon-large"></span>
-						<?php echo ($presence->isForTwitter() ? '@' : '') . $presence->handle; ?>
-					</a><a href="#" class="remove-item last">
-						<span class="icon-remove"></span>
-					</a>
-				</li>
-			<?php endforeach; ?>
+			<?php
+			foreach ($this->owner->presences as $presence) {
+				echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence, 'varname'=>'assigned[' . $presence->type . ']'));
+			}
+			?>
 			<li class="none-found">
 				No presences assigned
 			</li>

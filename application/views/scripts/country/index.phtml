@@ -18,7 +18,13 @@
 		<?php foreach ($this->countries as $country) : ?>
 		<tr>
 			<?php $presences = $country->getPresences(); ?>
-			<td><a href="<?php echo $this->url(array('action'=>'view', 'id'=>$country->id)); ?>"><?php echo $country->display_name; ?></a></td>
+			<td>
+				<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'id'=>$country->id)); if ($url) : ?>
+				<a href="<?php echo $url; ?>"><?php echo $country->display_name; ?></a>
+				<?php else : ?>
+				<?php echo $country->display_name; ?>
+				<?php endif; ?>
+			</td>
 			<td><?php echo $country->getName() . ' (' . $country->country . ')'; ?></td>
 			<td><?php echo number_format($country->audience); ?></td>
 			<?php if ($presences) : ?>

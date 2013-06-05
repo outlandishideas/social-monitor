@@ -52,7 +52,9 @@
             <tr>
                 <td>
                     <div class="presence <?php echo $presence->type; ?>">
-                        <?php echo $this->gatekeeper()->filter('<a href="%url%">' . $presence->handle . '</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>
+                        <?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); if ($url) : ?>
+	                    <a href="<?php echo $url; ?>"><?php echo $presence->handle; ?></a>
+	                    <?php else : echo $presence->handle; endif; ?>
                         <a href="<?php echo $presence->page_url; ?>" target="_blank" class="icon external"></a>
                     </div>
                 </td>

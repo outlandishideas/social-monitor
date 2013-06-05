@@ -63,7 +63,7 @@ class Zend_View_Helper_Gatekeeper extends Zend_View_Helper_Abstract
 		$controller = $urlArgs['controller'];
 		$action = $urlArgs['action'];
 		$level = $this->getRequiredUserLevel($controller, $action);
-		return $this->view->user->canPerform($level, $controller, $urlArgs['id']);
+		return $this->view->user && $this->view->user->canPerform($level, $controller, $urlArgs['id']);
 	}
 
 	private function populateMissingArgs(&$urlArgs) {

@@ -1,0 +1,10 @@
+<?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>'presence', 'action'=>'view', 'id'=>$this->presence->id), null, true); ?>
+<li class="link box <?php echo $this->presence->type; ?> split">
+	<input type="hidden" value="<?php echo $this->presence->id;?>" name="<?php echo $this->varname; ?>[]">
+	<a href="<?php echo ($url ?: '#'); ?>" title="<?php echo $this->presence->getLabel(); ?>" class="first" <?php if ($url) echo 'target="_blank"'; ?>>
+		<span class="icon-<?php echo $this->presence->type; ?>-sign icon-large"></span>
+		<?php echo ($this->presence->isForTwitter() ? '@' : '') . $this->presence->handle; ?>
+	</a><a href="#" class="remove-item last">
+		<span class="icon-remove"></span>
+	</a>
+</li>

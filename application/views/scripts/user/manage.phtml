@@ -83,9 +83,10 @@
 				</label>
 				<ul id="assigned">
 					<?php foreach ($this->editingUser->getAccessEntities() as $entity) : ?>
+						<?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>$entity->controller, 'action'=>'view', 'id'=>$entity->entity_id)); ?>
 						<li class="link box <?php echo $entity->entity_type; ?> split">
 							<input type="hidden" value="<?php echo $entity->entity_id;?>" name="assigned[<?php echo $entity->entity_type; ?>][]">
-							<a href="<?php echo $this->url(array('controller'=>$entity->controller, 'action'=>'view', 'id'=>$entity->entity_id)); ?>" class="first" title="<?php echo $entity->title; ?>" target="_blank">
+							<a href="<?php echo $url ?: '#'; ?>" class="first" title="<?php echo $entity->title; ?>" target="_blank">
 								<span class="<?php echo $entity->icon; ?> icon-large"></span>
 								<?php echo $entity->text; ?>
 							</a><a href="#" class="remove-item last">

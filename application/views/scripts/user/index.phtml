@@ -22,14 +22,25 @@
 			all
 			<?php else : ?>
 			<ul class="entity-list">
-				<?php foreach($user->getAccessEntities() as $e) : ?>
+				<?php $entities = $user->getAccessEntities(); if ($entities) : ?>
+				<?php foreach($entities as $e) : ?>
 					<li>
-						<a href="<?php echo $this->url(array('controller'=>$e->controller, 'action'=>'view', 'id'=>$e->entity_id)); ?>" title="<?php echo $e->title; ?>" class="entity <?php echo $e->entity_type; ?>">
+						<?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>$e->controller, 'action'=>'view', 'id'=>$e->entity_id)); if ($url) : ?>
+						<a href="<?php echo $url; ?>" title="<?php echo $e->title; ?>" class="entity <?php echo $e->entity_type; ?>">
 							<span class="icon-large <?php echo $e->icon;?>"></span>
 							<?php echo $e->text; ?>
 						</a>
+						<?php else : ?>
+						<span title="<?php echo $e->title; ?>" class="entity <?php echo $e->entity_type; ?>">
+							<span class="icon-large <?php echo $e->icon;?>"></span>
+							<?php echo $e->text; ?>
+						</span>
+						<?php endif; ?>
 					</li>
 				<?php endforeach; ?>
+				<?php else : ?>
+				none
+				<?php endif; ?>
 			</ul>
 			<?php endif; ?>
 		</td>

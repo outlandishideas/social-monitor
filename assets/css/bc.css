@@ -1114,7 +1114,7 @@ body .compare.list li {
 
 #added-presences li {
     list-style: none;
-    margin: 5px 0;
+    margin: 5px;
     display: inline-block;
 }
 
@@ -1124,10 +1124,10 @@ body .compare.list li {
 
 /* presences */
 
-a.entity.twitter .icon-large { color: #4099FF; }
-a.entity.facebook .icon-large { color: #3B5998; }
-a.entity.country .icon-large { color: #009600; }
-a.entity.group .icon-large { color: #960000; }
+.entity.twitter .icon-large { color: #4099FF; }
+.entity.facebook .icon-large { color: #3B5998; }
+.entity.country .icon-large { color: #009600; }
+.entity.group .icon-large { color: #960000; }
 
 /* link box */
 

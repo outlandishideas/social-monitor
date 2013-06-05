@@ -29,18 +29,11 @@ if ($buttons && $this->showButtons) :
         <div class="ctrlHolder">
             <p>These presences will be automatically added to this group:</p>
             <ul id="added-presences">
-                <?php foreach($this->presences as $presence) : ?>
-                    <li class="link box <?php echo $presence->type; ?> split">
-                        <input type="hidden" value="<?php echo $presence->id;?>" name="p[]">
-                        <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id), null, true); ?>"
-                           title="<?php echo $presence->getLabel(); ?>" class="first" target="_blank">
-                            <span class="icon-<?php echo $presence->type; ?>-sign icon-large"></span>
-	                        <?php echo ($presence->isForTwitter() ? '@' : '') . $presence->handle; ?>
-                        </a><a href="#" class="remove-item last">
-                            <span class="icon-remove"></span>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
+	            <?php
+	            foreach ($this->presences as $presence) {
+		            echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence, 'varname'=>'p'));
+	            }
+	            ?>
             </ul>
         </div>
     </fieldset>

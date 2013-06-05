@@ -19,7 +19,13 @@
 		<?php foreach ($this->groups as $group) : ?>
 		<tr>
 			<?php $presences = $group->getPresences(); ?>
-			<td><a href="<?php echo $this->url(array('action'=>'view', 'id'=>$group->id)); ?>"><?php echo $group->display_name; ?></a></td>
+			<td>
+				<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'id'=>$group->id)); if ($url) : ?>
+					<a href="<?php echo $url; ?>"><?php echo $group->display_name; ?></a>
+				<?php else : ?>
+					<?php echo $group->display_name; ?>
+				<?php endif; ?>
+			</td>
 			<?php if ($presences == true) : ?>
                 <?php $kpiData = $group->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                     <td>
