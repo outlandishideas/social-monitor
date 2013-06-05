@@ -9,15 +9,21 @@ class Model_Campaign extends Model_Base {
 		parent::delete();
 	}
 
+	function getPresenceIds() {
+		if (!isset($this->presenceIds)) {
+			$statement = $this->_db->prepare('SELECT presence_id FROM campaign_presences WHERE campaign_id = :cid');
+			$statement->execute(array(':cid'=>$this->id));
+			$this->presenceIds = $statement->fetchAll(PDO::FETCH_COLUMN);
+		}
+		return $this->presenceIds;
+	}
 
 	/**
 	 * @return Model_Presence[]
 	 */
 	function getPresences() {
 		if (!isset($this->presences)) {
-			$statement = $this->_db->prepare('SELECT presence_id FROM campaign_presences WHERE campaign_id = :cid');
-			$statement->execute(array(':cid'=>$this->id));
-			$ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+			$ids = $this->getPresenceIds();
 			if ($ids) {
 				$clause = 'id IN (' . implode(',', $ids) . ')';
 				$this->presences = Model_Presence::fetchAll($clause);

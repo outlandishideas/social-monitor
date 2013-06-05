@@ -85,9 +85,21 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 					return true;
 				}
 				$entities = $this->getAccessEntities();
+				/** @var Model_Campaign[] $campaigns */
+				$campaigns = array();
 				foreach ($entities as $e) {
 					if ($e->controller == $controller && $e->entity_id == $id) {
 						return true;
+					}
+					if ($e->model instanceof Model_Campaign) {
+						$campaigns[] = $e->model;
+					}
+				}
+				if ($controller == 'presence') {
+					foreach ($campaigns as $c) {
+						if (in_array($id, $c->getPresenceIds())) {
+							return true;
+						}
 					}
 				}
 			}
@@ -140,7 +152,9 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 						break;
 				}
 
-				if (!$entity) {
+				if ($entity) {
+					$e->model = $entity;
+				} else {
 					unset($entities[$i]);
 				}
 			}
