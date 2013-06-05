@@ -41,6 +41,7 @@ class CountryController extends CampaignController {
 		$this->view->title = $country->display_name;
 		$this->view->titleInfo = $country->countryInfo();
         $this->view->country = $country;
+        $this->view->badges = $country->getOverallKpi();
 	}
 
 	/**

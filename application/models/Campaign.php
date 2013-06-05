@@ -102,4 +102,16 @@ class Model_Campaign extends Model_Base {
 
 		return $this->kpiAverages;
 	}
+
+    public function getOverallKpi(){
+        $presences = $this->getPresences();
+
+        $return = array();
+
+        foreach($presences as $presence){
+            $return[] = $presence->getOverallKpi();
+        }
+
+        return null;
+    }
 }
