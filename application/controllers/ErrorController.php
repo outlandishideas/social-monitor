@@ -20,11 +20,13 @@ class ErrorController extends BaseController
                 // 404 error -- controller or action not found
                 $this->getResponse()->setHttpResponseCode(404);
                 $this->view->title = 'Page not found';
+                $this->view->titleIcon = 'icon-exclamation-sign';
                 break;
             default:
                 // application error 
                 $this->getResponse()->setHttpResponseCode(500);
                 $this->view->title = 'Application error';
+                $this->view->titleIcon = 'icon-exclamation-sign';
                 break;
         }
         

@@ -71,7 +71,6 @@ class BaseController extends Zend_Controller_Action {
 		// provide a default page title
 		$this->view->title = ucfirst($this->_request->getControllerName()) . ' > ' . ucfirst($this->_request->getActionName());
 		$this->view->subtitle = '';
-		$this->view->titleClass = '';
 		$this->view->titleImage = '';
 		$this->view->titleIcon = '';
 

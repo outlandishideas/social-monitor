@@ -2,13 +2,17 @@
 
 class CountryController extends CampaignController {
 
+	public function init() {
+		parent::init();
+		$this->view->titleIcon = Model_Country::ICON_TYPE;
+	}
+
 	/**
 	 * Lists all countries
 	 * @permission list_country
 	 */
 	public function indexAction() {
         $this->view->title = 'Countries';
-        $this->view->titleIcon = Model_Country::ICON_TYPE;
 		$this->view->tableMetrics = self::tableMetrics();
 		$this->view->countries = Model_Country::fetchAll();
 	}
@@ -35,7 +39,6 @@ class CountryController extends CampaignController {
         $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
 		$this->view->title = $country->display_name;
-		$this->view->titleIcon = Model_Country::ICON_TYPE;
 		$this->view->titleInfo = $country->countryInfo();
         $this->view->country = $country;
 	}
@@ -49,6 +52,7 @@ class CountryController extends CampaignController {
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
 		$this->view->title = 'New Country';
+		$this->view->titleIcon = 'icon-plus-sign';
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -143,6 +147,7 @@ class CountryController extends CampaignController {
 
 		$this->view->editingCountry = $editingCountry;
 		$this->view->title = 'Edit Country';
+		$this->view->titleIcon = 'icon-edit';
 	}
 
 	/**
@@ -155,12 +160,19 @@ class CountryController extends CampaignController {
 		$this->validateData($country);
 
 		if ($this->_request->isPost()) {
-			$country->assignPresences($this->_request->presences);
+			$presenceIds = array();
+			foreach ($this->_request->assigned as $type=>$ids) {
+				foreach ($ids as $id) {
+					$presenceIds[] = $id;
+				}
+			}
+			$country->assignPresences($presenceIds);
 			$this->_helper->FlashMessenger(array('info' => 'Country presences updated'));
 			$this->_helper->redirector->gotoSimple('index');
 		}
 
 		$this->view->title = 'Manage Country Presences';
+		$this->view->titleIcon = 'icon-tasks';
 		$this->view->country = $country;
 		$this->view->twitterPresences = Model_Presence::fetchAllTwitter();
 		$this->view->facebookPresences = Model_Presence::fetchAllFacebook();

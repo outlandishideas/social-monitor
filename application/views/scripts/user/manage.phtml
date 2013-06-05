@@ -1,0 +1,106 @@
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm management" novalidate id="manage-user">
+
+	<fieldset class="inlineLabels">
+		<legend><?php echo $this->editingUser->safeName; ?></legend>
+		<div class="ctrlHolder">
+			<div class="formHint">Adding a country or SBU automatically adds any presences belonging to it to the user.</div>
+		</div>
+		<div class="ctrlHolder">
+			<label for="country">
+				Available countries
+			</label>
+			<button type="button" class="button add-item">Add</button>
+			<select id="country" class="selectInput" data-icon="<?php echo Model_Country::ICON_TYPE; ?>" data-type="country">
+				<option value="">-- Select --</option>
+				<?php foreach ($this->countries as $c) : ?>
+					<option value="<?php echo $c->id; ?>"
+					        data-url="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$c->id)); ?>"
+					        data-label="<?php echo $c->display_name; ?>"
+					        data-hover="<?php echo $c->display_name; ?>">
+						<?php echo $c->display_name; ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<div class="ctrlHolder">
+			<label for="group">
+				Available SBUs
+			</label>
+			<button type="button" class="button add-item">Add</button>
+			<select id="group" class="selectInput" data-icon="<?php echo Model_Group::ICON_TYPE; ?>" data-type="group">
+				<option value="">-- Select --</option>
+				<?php foreach ($this->groups as $g) : ?>
+					<option value="<?php echo $g->id; ?>"
+					        data-url="<?php echo $this->url(array('controller'=>'group', 'action'=>'view', 'id'=>$g->id)); ?>"
+					        data-label="<?php echo $g->display_name; ?>"
+					        data-hover="<?php echo $g->display_name; ?>">
+						<?php echo $g->display_name; ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<div class="ctrlHolder">
+			<label for="twitter">
+				Available twitter presences
+			</label>
+			<button type="button" class="button add-item">Add</button>
+			<select id="twitter" class="selectInput" data-icon="icon-twitter-sign" data-type="twitter">
+				<option value="">-- Select --</option>
+				<?php foreach ($this->twitterPresences as $p) : ?>
+					<option value="<?php echo $p->id; ?>"
+					        data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
+					        data-label="<?php echo '@' . $p->handle; ?>"
+					        data-hover="<?php echo $p->label; ?>">
+						<?php echo '@' . $p->handle . ' (' . $p->label . ')'; ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<div class="ctrlHolder">
+			<label for="facebook">
+				Available facebook presences
+			</label>
+			<button type="button" class="button add-item">Add</button>
+			<select id="facebook" class="selectInput" data-icon="icon-facebook-sign" data-type="facebook">
+				<option value="">-- Select --</option>
+				<?php foreach ($this->facebookPresences as $p) : ?>
+					<option value="<?php echo $p->id; ?>"
+					        data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
+					        data-label="<?php echo $p->handle; ?>"
+					        data-hover="<?php echo $p->label; ?>">
+						<?php echo $p->handle . ' (' . $p->label . ')'; ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<div class="ctrlHolder">
+			<label>
+				Currently assigned
+			</label>
+			<ul id="assigned">
+				<?php foreach ($this->editingUser->getAccessEntities() as $presence) : /** @var $presence Model_Presence */ ?>
+					<li class="link box <?php echo $presence->type; ?> split">
+						<?php $sign = $presence->isForFacebook() ? 'icon-facebook-sign' : 'icon-twitter-sign'; ?>
+
+						<input type="hidden" value="<?php echo $presence->id;?>" name="assigned[presence][]">
+						<a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>" class="presence" title="<?php echo $presence->getLabel(); ?>" target="_blank">
+							<span class="<?php echo $sign; ?> icon-large"></span>
+							<?php echo ($presence->isForTwitter() ? '@' : '') . $presence->handle; ?>
+						</a><a href="#" class="remove-item">
+							<span class="icon-remove"></span>
+						</a>
+					</li>
+				<?php endforeach; ?>
+				<li class="none-found">
+					None assigned
+				</li>
+			</ul>
+		</div>
+	</fieldset>
+
+	<div class="buttonHolder">
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'user', 'action'=>'index'), null, true); ?>
+		<input type="submit" value="Save" class="primaryAction">
+	</div>
+</form>
+

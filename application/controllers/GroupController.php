@@ -2,13 +2,17 @@
 
 class GroupController extends CampaignController {
 
+	public function init() {
+		parent::init();
+		$this->view->titleIcon = Model_Group::ICON_TYPE;
+	}
+
 	/**
 	 * Lists all groups
 	 * @permission list_group
 	 */
 	public function indexAction() {
         $this->view->title = 'SBUs';
-        $this->view->titleIcon = Model_Group::ICON_TYPE;
 		$this->view->groups = Model_Group::fetchAll();
 		$this->view->tableMetrics = self::tableMetrics();
 	}
@@ -45,15 +49,14 @@ class GroupController extends CampaignController {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
         $this->view->title = 'New Group';
+	    $this->view->titleIcon = 'icon-plus-sign';
 
         $presences = array();
-        $ids = $this->_request->id;
-        if($ids){
-            $ids = explode(',',html_entity_decode($ids));
-            if(!empty($ids)){
-                foreach($ids as $id){
-                    $presences[$id] = Model_Presence::fetchById($id);
-                }
+        $presenceIds = $this->_request->presences;
+        if($presenceIds){
+	        $presenceIds = explode(',',html_entity_decode($presenceIds));
+            foreach($presenceIds as $id){
+                $presences[$id] = Model_Presence::fetchById($id);
             }
         }
 
@@ -94,8 +97,8 @@ class GroupController extends CampaignController {
                 try {
                     $editingGroup->save();
 
-                    if($this->_request->presences){
-                        $editingGroup->assignPresences($this->_request->presences);
+                    if($this->_request->p){
+                        $editingGroup->assignPresences($this->_request->p);
                     }
                     $this->_helper->FlashMessenger(array('info' => 'Group saved'));
                     $this->_helper->redirector->gotoSimple('index');
@@ -112,6 +115,7 @@ class GroupController extends CampaignController {
 
         $this->view->editingGroup = $editingGroup;
         $this->view->title = 'Edit Group';
+        $this->view->titleIcon = 'icon-edit';
     }
 
 	/**
@@ -130,6 +134,7 @@ class GroupController extends CampaignController {
 		}
 
 		$this->view->title = 'Manage Group Presences';
+		$this->view->titleIcon = 'icon-tasks';
 		$this->view->group = $group;
 		$this->view->twitterPresences = Model_Presence::fetchAllTwitter();
 		$this->view->facebookPresences = Model_Presence::fetchAllFacebook();

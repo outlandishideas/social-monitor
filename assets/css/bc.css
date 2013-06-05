@@ -827,26 +827,33 @@ table.dtable.dataTable {
 	margin: 0;
 }
 
-.presence {
-	padding-left: 24px;
-	background-position: left top;
-	background-repeat: no-repeat;
-	line-height: 20px;
+/* obsolete stuff? */
+/*.presence {*/
+	/*padding-left: 24px;*/
+	/*background-position: left top;*/
+	/*background-repeat: no-repeat;*/
+	/*line-height: 20px;*/
+/*}*/
+
+/*.presence + .presence {*/
+	/*margin-top: 5px;*/
+/*}*/
+
+/*.presence.twitter {*/
+	/*background-image: url(../img/twitter.png);*/
+/*}*/
+/*.presence.facebook {*/
+	/*background-image: url(../img/facebook.png);*/
+/*}*/
+
+form.management button.add-item {
+	float: left;
+	visibility: hidden;
 }
 
-.presence + .presence {
-	margin-top: 5px;
-}
-
-.presence.twitter {
-	background-image: url(../img/twitter.png);
-}
-.presence.facebook {
-	background-image: url(../img/facebook.png);
-}
-
-#manage-country .presence {
-	display: inline-block;
+form.management #assigned {
+	margin-left: 66px;
+	width: 50%;
 }
 
 .none-found {
@@ -1116,67 +1123,92 @@ body .compare.list li {
     display: none;
 }
 
-/* social-media box */
+/* presences */
 
-.social-media {
+a.presence.twitter .icon-large {
+	color: #4099FF;
+}
+
+a.presence.facebook .icon-large {
+	color: #3B5998;
+}
+
+/* link box */
+
+.link.box {
     display: block;
     list-style: none;
     margin: 5px 0;
 }
 
-.social-media.box a,
-.social-media.box a:visited,
-.social-media.box a:link {
+li.link.box {
+	padding: 0;
+}
+
+.link.box a,
+.link.box a:visited,
+.link.box a:link {
     display: inline-block;
-    background-color: #8b9dc3;
+	background-color: #ddd;
     color: #fff;
     cursor: pointer;
 }
 
-.social-media.box a.presence {
-    padding: 2px 7px 0px 3px;
-    border-radius: 5px;
+.link.box a {
+    padding: 2px 7px 2px 3px;
 }
 
-.social-media.box.split a.presence {
-    padding: 2px 7px 0px 3px;
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
+.link.box.split a + a {
+	margin-left: 1px;
+}
+.link.box.split a.first {
+    padding: 2px 7px 2px 3px;
+	border-radius: 5px;
+	border-bottom-right-radius: 0;
+	border-top-right-radius: 0;
 }
 
-.social-media.box.traffic-lights a.presence {
-    padding: 2px 3px 0px 3px;
-    border-bottom-right-radius: 16px;
-    border-top-right-radius: 16px;
-}
-
-.social-media.box a.remove-presence {
+.link.box.split a.last {
     padding: 3px 5px 2px 5px;
-    border-bottom-right-radius: 5px;
-    border-top-right-radius: 5px;
-    margin-left: -3px;
+	border-radius: 5px;
+	border-bottom-left-radius: 0;
+	border-top-left-radius: 0;
 }
 
-.social-media.box a:hover,
-.social-media.box a:focus {
+.link.box.facebook a {
+	background-color: #8b9dc3;
+}
+
+.link.box.facebook a:hover,
+.link.box.facebook a:focus {
     background-color: #3B5998;
 }
 
-.social-media.box.twitter a {
+.link.box.twitter a {
     background-color: #63B3FF;
 }
 
-.social-media.box.twitter a:hover,
-.social-media.box.twitter a:focus {
+.link.box.twitter a:hover,
+.link.box.twitter a:focus {
     background-color: #4099FF;
 }
 
-.social-media.box a.presence span.front {
-    margin-right: 7px;
+.link.box.country a {
+    background-color: #00bb00;
 }
 
-.social-media.box a.presence span.back {
-    margin-left: 7px;
+.link.box.country a:hover,
+.link.box.country a:focus {
+    background-color: #009600;
+}
+
+.link.box.group a {
+    background-color: #bb0000;
+}
+
+.link.box.group a:hover,
+.link.box.group a:focus {
+    background-color: #960000;
 }
 
 /* badges */
