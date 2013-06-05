@@ -2,6 +2,10 @@
 
 
 class ConfigController extends BaseController {
+	/**
+	 * Lists all configurable values
+	 * @user-level manager
+	 */
 	function indexAction() {
 		$this->view->title = 'Settings';
 		$this->view->titleIcon = 'icon-cog';

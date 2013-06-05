@@ -9,7 +9,7 @@ class CountryController extends CampaignController {
 
 	/**
 	 * Lists all countries
-	 * @permission list_country
+	 * @user-level user
 	 */
 	public function indexAction() {
         $this->view->title = 'Countries';
@@ -19,7 +19,7 @@ class CountryController extends CampaignController {
 
 	/**
 	 * Views a specific country
-	 * @permission view_country
+	 * @user-level user
 	 */
 	public function viewAction()
 	{
@@ -45,7 +45,7 @@ class CountryController extends CampaignController {
 
 	/**
 	 * Creates a new country
-	 * @permission create_country
+	 * @user-level manager
 	 */
 	public function newAction()
 	{
@@ -58,7 +58,7 @@ class CountryController extends CampaignController {
 
 	/**
 	 * Edits/creates a country
-	 * @permission edit_country
+	 * @user-level user
 	 */
 	public function editAction()
 	{
@@ -152,7 +152,7 @@ class CountryController extends CampaignController {
 
 	/**
 	 * Manages the presences that belong to a country
-	 * @permission manage_country
+	 * @user-level manager
 	 */
 	public function manageAction() {
 		/** @var Model_Country $country */
@@ -180,7 +180,7 @@ class CountryController extends CampaignController {
 
 	/**
 	 * Deletes a country
-	 * @permission delete_country
+	 * @user-level manager
 	 */
 	public function deleteAction() {
 		$country = Model_Country::fetchById($this->_request->id);

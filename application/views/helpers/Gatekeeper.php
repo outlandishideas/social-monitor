@@ -13,7 +13,7 @@ class Zend_View_Helper_Gatekeeper extends Zend_View_Helper_Abstract
 		$this->view = $view;
 	}
 
-	public function getRequiredPermission($controller, $action) {
+	public function getRequiredUserLevel($controller, $action) {
 		//convert multiple-word-action to multipleWordAction
 		if (strpos($action, '-') !== false) {
 			$action = str_replace(' ', '', ucwords(str_replace('-', ' ', $action)));
@@ -21,7 +21,7 @@ class Zend_View_Helper_Gatekeeper extends Zend_View_Helper_Abstract
 		}
 
 		if (isset(self::$_cache[$controller][$action])) {
-			$permission = self::$_cache[$controller][$action];
+			$level = self::$_cache[$controller][$action];
 		} else {
 			$controllerClassName = ucfirst($controller) . 'Controller';
 			$methodReflector = null;
@@ -45,25 +45,25 @@ class Zend_View_Helper_Gatekeeper extends Zend_View_Helper_Abstract
 				}
 			}
 
-			$permission = null;
-			if ($methodReflector && preg_match('/@permission\s+([\w_]+)/', $methodReflector->getDocComment(), $matches)) {
-				$permission = $matches[1];
+			$level = null;
+			if ($methodReflector && preg_match('/@user-level\s+([\w_]+)/', $methodReflector->getDocComment(), $matches)) {
+				$level = $matches[1];
 			}
 
 			// cache the permission
 			if (!array_key_exists($controller, self::$_cache)) {
 				self::$_cache[$controller] = array();
 			}
-			self::$_cache[$controller][$action] = $permission;
+			self::$_cache[$controller][$action] = $level;
 		}
-		return $permission;
+		return $level;
 	}
 
 	public function userCanAccess($urlArgs) {
 		$controller = $urlArgs['controller'];
 		$action = $urlArgs['action'];
-		$permission = $this->getRequiredPermission($controller, $action);
-		return $this->view->user->canPerform($permission);
+		$level = $this->getRequiredUserLevel($controller, $action);
+		return $this->view->user->canPerform($level, $controller, $urlArgs['id']);
 	}
 
 	private function populateMissingArgs(&$urlArgs) {
@@ -72,6 +72,9 @@ class Zend_View_Helper_Gatekeeper extends Zend_View_Helper_Abstract
 		}
 		if (empty($urlArgs['action'])) {
 			$urlArgs['action'] = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+		}
+		if (empty($urlArgs['id'])) {
+			$urlArgs['id'] = null;
 		}
 	}
 

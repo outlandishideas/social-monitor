@@ -62,7 +62,6 @@ if ($links) {
 				<?php
 				$links = $this->gatekeeper()->filterAll(array(
 					'- <a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$presence->id),
-					'- <a href="%url%">Update info</a>' => array('action'=>'update', 'id'=>$presence->id),
 					'- <a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$presence->id)
 				));
 				echo implode('<br />', $links);

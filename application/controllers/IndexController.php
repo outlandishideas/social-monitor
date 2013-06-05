@@ -2,7 +2,7 @@
 
 class IndexController extends GraphingController
 {
-    protected $publicActions = array('index');
+    protected $publicActions = array('index', 'country-stats');
 
 	public function indexAction() {
 		/** @var Model_Country[] $countries */

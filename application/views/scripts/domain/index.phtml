@@ -13,13 +13,16 @@
 			<tr>
 				<td><?php echo $domain->domain; ?></td>
 				<td><?php echo $domain->getLinkCount(); ?></td>
-				<td><input id="domain-<?php echo $domain->id; ?>" type="checkbox" <?php if ($domain->is_bc) { echo 'checked'; } ?> name="is_bc[<?php echo $domain->id; ?>]" /></td>
+				<td><input id="domain-<?php echo $domain->id; ?>" type="checkbox" <?php if ($domain->is_bc) { echo 'checked'; } ?>
+				           name="is_bc[<?php echo $domain->id; ?>]" <?php if (!$this->canEdit) { echo 'disabled'; } ?> /></td>
 			</tr>
 			<?php endforeach; ?>
 		</tbody>
 	</table>
 
+	<?php if ($this->canEdit) : ?>
 	<div class="buttonHolder">
 		<input type="submit" value="Save" class="primaryAction">
 	</div>
+	<?php endif; ?>
 </form>

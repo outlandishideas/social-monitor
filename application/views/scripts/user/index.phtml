@@ -5,7 +5,7 @@
 		<th class="name">Name</th>
 		<th class="email">Email Address</th>
 		<th class="user-level">User Level</th>
-		<th class="access">Edit Permissions</th>
+		<th class="access">Access rights</th>
 		<th class="last-sign-in">Last Sign In</th>
 		<th></th>
 	</tr>
@@ -42,7 +42,7 @@
 				} else {
 					$links['- <a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit', 'id'=>$user->id);
 					if (!$user->isManager) {
-						$links['- <a href="%url%">Permissions</a>'] = array('controller'=>'user', 'action'=>'manage', 'id'=>$user->id);
+						$links['- <a href="%url%">Access Rights</a>'] = array('controller'=>'user', 'action'=>'manage', 'id'=>$user->id);
 					}
 					$links['- <a href="%url%" class="autoConfirm">Delete</a>'] = array('controller'=>'user', 'action'=>'delete', 'id'=>$user->id);
 				}

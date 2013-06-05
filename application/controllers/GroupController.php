@@ -9,7 +9,7 @@ class GroupController extends CampaignController {
 
 	/**
 	 * Lists all groups
-	 * @permission list_group
+	 * @user-level user
 	 */
 	public function indexAction() {
         $this->view->title = 'SBUs';
@@ -19,7 +19,7 @@ class GroupController extends CampaignController {
 
 	/**
 	 * Views a specific group
-	 * @permission view_group
+	 * @user-level user
 	 */
 	public function viewAction()
 	{
@@ -44,7 +44,11 @@ class GroupController extends CampaignController {
         $this->view->group = $group;
 	}
 
-    public function newAction()
+	/**
+	 * Creates a new group
+	 * @user-level manager
+	 */
+	public function newAction()
     {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
@@ -66,7 +70,7 @@ class GroupController extends CampaignController {
 
     /**
      * Edits/creates a group
-     * @permission edit_group
+     * @user-level user
      */
     public function editAction()
     {
@@ -120,7 +124,7 @@ class GroupController extends CampaignController {
 
 	/**
 	 * Manages the presences that belong to a group
-	 * @permission manage_group
+	 * @user-level manager
 	 */
 	public function manageAction() {
 		/** @var Model_Group $group */
@@ -142,7 +146,7 @@ class GroupController extends CampaignController {
 
 	/**
 	 * Deletes a group
-	 * @permission delete_group
+	 * @user-level manager
 	 */
 	public function deleteAction() {
 		$group = Model_Group::fetchById($this->_request->id);

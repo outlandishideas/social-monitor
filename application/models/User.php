@@ -67,13 +67,32 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 
 	/**
 	 * Returns true if $action is blank, or if the user_level has been assigned the action
-	 * @param $action
+	 * @param $levelName
+	 * @param $controller
+	 * @param $id
 	 * @return bool
 	 */
-	function canPerform($action) {
-		//todo: reinstate this when all permissions have been ironed out
-		return true;
-//		return !$action || in_array($action, Model_User::getPermissions($this->user_level));
+	function canPerform($levelName, $controller, $id) {
+		if ($this->isManager || !$levelName) {
+			return true;
+		}
+		$levelName = strtolower($levelName);
+		$levels = self::$userLevels;
+		foreach ($levels as $l=>$label) {
+			if (strtolower($label) == $levelName && $this->user_level >= $l) {
+				// only check specific entities if an id given
+				if (!$id) {
+					return true;
+				}
+				$entities = $this->getAccessEntities();
+				foreach ($entities as $e) {
+					if ($e->controller == $controller && $e->entity_id == $id) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	function getIsManager() {
@@ -85,46 +104,49 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	}
 
 	function getAccessEntities() {
-		$stmt = $this->_db->prepare('SELECT * FROM user_access WHERE user_id = :id ORDER BY entity_type ASC, id ASC');
-		$stmt->execute(array(':id'=>$this->id));
-		$entities = $stmt->fetchAll(PDO::FETCH_OBJ);
-		foreach ($entities as $i=>$e) {
-			$entity = null;
-			$e->controller = $e->entity_type;
-			switch ($e->entity_type) {
-				case 'twitter':
-				case 'facebook':
-					$e->controller = 'presence';
-					$entity = Model_Presence::fetchById($e->entity_id);
-					if ($entity) {
-						$e->icon = 'icon-'.$entity->type.'-sign';
-						$e->title = $entity->getLabel();
-						$e->text = ($entity->isForTwitter() ? '@' : '') . $entity->handle;
-					}
-					break;
-				case 'country':
-					$entity = Model_Country::fetchById($e->entity_id);
-					if ($entity) {
-						$e->icon = Model_Country::ICON_TYPE;
-						$e->title = '';
-						$e->text = $entity->display_name;
-					}
-					break;
-				case 'group':
-					$entity = Model_Group::fetchById($e->entity_id);
-					if ($entity) {
-						$e->icon = Model_Group::ICON_TYPE;
-						$e->title = '';
-						$e->text = $entity->display_name;
-					}
-					break;
-			}
+		if (!isset($this->entities)) {
+			$stmt = $this->_db->prepare('SELECT * FROM user_access WHERE user_id = :id ORDER BY entity_type ASC, id ASC');
+			$stmt->execute(array(':id'=>$this->id));
+			$entities = $stmt->fetchAll(PDO::FETCH_OBJ);
+			foreach ($entities as $i=>$e) {
+				$entity = null;
+				$e->controller = $e->entity_type;
+				switch ($e->entity_type) {
+					case 'twitter':
+					case 'facebook':
+						$e->controller = 'presence';
+						$entity = Model_Presence::fetchById($e->entity_id);
+						if ($entity) {
+							$e->icon = 'icon-'.$entity->type.'-sign';
+							$e->title = $entity->getLabel();
+							$e->text = ($entity->isForTwitter() ? '@' : '') . $entity->handle;
+						}
+						break;
+					case 'country':
+						$entity = Model_Country::fetchById($e->entity_id);
+						if ($entity) {
+							$e->icon = Model_Country::ICON_TYPE;
+							$e->title = '';
+							$e->text = $entity->display_name;
+						}
+						break;
+					case 'group':
+						$entity = Model_Group::fetchById($e->entity_id);
+						if ($entity) {
+							$e->icon = Model_Group::ICON_TYPE;
+							$e->title = '';
+							$e->text = $entity->display_name;
+						}
+						break;
+				}
 
-			if (!$entity) {
-				unset($entities[$i]);
+				if (!$entity) {
+					unset($entities[$i]);
+				}
 			}
+			$this->entities = $entities;
 		}
-		return $entities;
+		return $this->entities;
 	}
 
 	function assignAccess($toAssign) {

@@ -12,7 +12,7 @@ class UserController extends BaseController
 	/**
 	 * Displays a list of all users.
 	 * If current user is admin, also shows links for modifying each user
-	 * @permission list_user
+	 * @user-level manager
 	 */
 	public function indexAction()
 	{
@@ -162,7 +162,7 @@ class UserController extends BaseController
 
 	/**
 	 * Prompts to create a new dashboard user
-	 * @permission create_user
+	 * @user-level manager
 	 */
 	public function newAction()
 	{
@@ -175,7 +175,7 @@ class UserController extends BaseController
 
 	/**
 	 * Prompts to modify the current user
-	 * @permission edit_self
+	 * @user-level user
 	 */
 	public function editSelfAction()
 	{
@@ -187,7 +187,7 @@ class UserController extends BaseController
 
 	/**
 	 * Prompts to modify an existing user (also used for creating a new user, indicated by argument).
-	 * @permission edit_user
+	 * @user-level manager
 	 */
 	public function editAction()
 	{
@@ -205,11 +205,12 @@ class UserController extends BaseController
 		}
 
 		$this->validateData($editingUser);
+		$this->view->canChangeLevel = $this->view->user->isManager;
 
 		if ($this->_request->isPost()) {
 			// prevent hackers upgrading their own user level
 			$params = $this->_request->getParams();
-			if (!$this->view->user->canPerform('change_user_level')) {
+			if (!$this->view->canChangeLevel) {
 				unset($params['user_level']);
 			}
 
@@ -261,7 +262,6 @@ class UserController extends BaseController
 			}
 		}
 
-		$this->view->canChangeLevel = $this->view->user->isAdmin;
 		$this->view->userLevels = Model_User::$userLevels;
 		$this->view->editingUser = $editingUser;
 		$this->view->title = 'Edit User';
@@ -270,7 +270,7 @@ class UserController extends BaseController
 
 	/**
 	 * Deletes a user
-	 * @permission delete_user
+	 * @user-level manager
 	 */
 	public function deleteAction()
 	{
@@ -285,6 +285,10 @@ class UserController extends BaseController
 		$this->_helper->redirector->gotoSimple('index');
 	}
 
+	/**
+	 * Manages a user's access rights
+	 * @user-level manager
+	 */
 	public function manageAction() {
 		/** @var Model_User $user */
 		$user = Model_User::fetchById($this->_request->id);

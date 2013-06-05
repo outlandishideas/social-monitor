@@ -2,7 +2,12 @@
 
 class PresenceController extends GraphingController
 {
+	protected $publicActions = array('update-kpi-cache');
 
+	/**
+	 * Lists all presences
+	 * @user-level user
+	 */
 	public function indexAction()
 	{
         $this->view->title = 'Presences';
@@ -13,7 +18,7 @@ class PresenceController extends GraphingController
 
 	/**
 	 * Views a specific presence
-	 * @permission view_presence
+	 * @user-level user
 	 */
 	public function viewAction()
 	{
@@ -43,7 +48,11 @@ class PresenceController extends GraphingController
         $this->view->graphs = $this->graphs($presence);
 	}
 
-    public function compareAction()
+	/**
+	 * Compares multiple presences
+	 * @user-level user
+	 */
+	public function compareAction()
     {
         $compareData = array();
         foreach(explode(',',$this->_request->id) as $id){
@@ -65,7 +74,7 @@ class PresenceController extends GraphingController
 
 	/**
 	 * Creates a new presence
-	 * @permission create_presence
+	 * @user-level manager
 	 */
 	public function newAction()
 	{
@@ -79,7 +88,7 @@ class PresenceController extends GraphingController
 
 	/**
 	 * Edits/creates a presence
-	 * @permission edit_presence
+	 * @user-level user
 	 */
 	public function editAction()
 	{
@@ -140,25 +149,8 @@ class PresenceController extends GraphingController
 	}
 
 	/**
-	 * Updates the name, stats, pic etc for the given facebook page
-	 * @permission update_presence
-	 */
-	public function updateAction()
-	{
-		$presence = Model_Presence::fetchById($this->_request->id);
-		$this->validateData($presence);
-
-		$presence->updateInfo();
-		$presence->last_updated = gmdate('Y-m-d H:i:s');
-		$presence->save();
-
-		$this->_helper->FlashMessenger(array('info'=>'Updated presence info'));
-		$this->_helper->redirector->gotoSimple('index');
-	}
-
-	/**
 	 * Deletes a presence
-	 * @permission delete_presence
+	 * @user-level manager
 	 */
 	public function deleteAction()
 	{
@@ -428,6 +420,9 @@ class PresenceController extends GraphingController
 	}
 
 
+	/**
+	 * AJAX function for toggling whether a facebook status needs a response
+	 */
 	public function toggleResponseNeededAction() {
 		$id = $this->_request->id;
 		if (!$id) {
@@ -575,6 +570,7 @@ class PresenceController extends GraphingController
 				$stmt->execute($args);
 			}
 		}
+		print_r($presences);
 		exit;
 	}
 }

@@ -54,10 +54,10 @@ class BaseController extends Zend_Controller_Action {
 			}
 		}
 
-		$permission = $this->view->gatekeeper()->getRequiredPermission($this->_request->getControllerName(), $this->_request->getActionName());
-		if ($permission) {
-			$this->rejectIfNotAllowed($permission);
-		}
+		$controller = $this->_request->getControllerName();
+		$action = $this->_request->getActionName();
+		$id = $this->_request->id;
+		$this->rejectIfNotAllowed($controller, $action, $id);
 	}
 
 	public function init() {
@@ -118,25 +118,30 @@ class BaseController extends Zend_Controller_Action {
 		}
 		return $foundActive;
 	}
+
 	/**
-	 * shows a message and redirects to index page if current user has insufficient permissions to perform the given action
+	 * shows a message and redirects to index page if current user has insufficient access rights
+	 * @param $controller
 	 * @param $action
+	 * @param $id
+	 * @internal param $level
+	 * @internal param $action
 	 */
-	protected function rejectIfNotAllowed($action) {
-		//todo: reinstate this when all permissions have been ironed out
-//		if (!$this->view->user->canPerform($action)) {
-//			$message = 'Not allowed: Insufficient user privileges';
-//			if (APPLICATION_ENV != 'live') {
-//				$message .= ' (' . $action . ')';
-//			}
-//			if ($this->_request->isXmlHttpRequest()) {
-//				$this->apiError($message);
-//			} else {
-//				$this->_helper->FlashMessenger(array('error' => $message));
-//				$urlArgs = $this->view->gatekeeper()->fallbackUrlArgs(array('action'=>'index'));
-//				$this->_helper->redirector->gotoRoute($urlArgs, null, true);
-//			}
-//		}
+	protected function rejectIfNotAllowed($controller, $action, $id) {
+		$level = $this->view->gatekeeper()->getRequiredUserLevel($controller, $action);
+		if ($this->view->user && !$this->view->user->canPerform($level, $controller, $id)) {
+			$message = 'Not allowed: Insufficient access rights';
+			if (APPLICATION_ENV != 'live') {
+				$message .= ' (' . implode('/', array_filter(array($controller, $action, $id))) . ')';
+			}
+			if ($this->_request->isXmlHttpRequest()) {
+				$this->apiError($message);
+			} else {
+				$this->_helper->FlashMessenger(array('error' => $message));
+				$urlArgs = $this->view->gatekeeper()->fallbackUrlArgs(array('action'=>'index'));
+				$this->_helper->redirector->gotoRoute($urlArgs, null, true);
+			}
+		}
 	}
 
 	/**
