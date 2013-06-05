@@ -365,10 +365,6 @@ class Model_Presence extends Model_Base {
 		}
 	}
 
-    public function isBranded(){
-        return false;
-    }
-
 	public function getTypeLabel() {
 		return ucfirst($this->type);
 	}

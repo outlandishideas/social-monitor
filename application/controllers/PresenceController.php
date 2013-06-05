@@ -25,6 +25,19 @@ class PresenceController extends GraphingController
 		if($presence->getLabel() != $presence->handle){
 			$this->view->subtitle = '<a href="'.$presence->page_url.'" target="_blank">' . $presence->handle . ' <span class="icon-external-link"></span></a>';
 		}
+
+        if($presence->sign_off){
+            $this->view->title .= ' <span class="icon-ok-sign" title="Has been signed off by Head of Digital"></span>';
+        } else {
+            $this->view->title .= ' <span class="icon-remove-sign" title="Has not been signed off by Head of Digital"></span>';
+        }
+
+        if($presence->branding){
+            $this->view->title .= ' <span class="icon-ok-sign" title="Has been correctly branded"></span>';
+        } else {
+            $this->view->title .= ' <span class="icon-remove-sign" title="Is lacking correct branding"></span>';
+        }
+        
 		$this->view->titleImage = '<img src="' . $presence->image_url . '" alt="' . $presence->getLabel() . '"/>';
 		$this->view->presence = $presence;
         $this->view->graphs = $this->graphs($presence);

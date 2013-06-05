@@ -188,6 +188,14 @@ a:hover, span.link:hover {
     height: 56px;
 }
 
+span.icon-ok-sign {
+    color: #84af5b;
+}
+
+span.icon-remove-sign {
+    color: #D06959;
+}
+
 #main-header h1 img,
 #main-header .with-subtitle img {
 	margin-right: 10px;
@@ -882,16 +890,39 @@ form.management #assigned {
     top: 0;
     right: 0;
     width: 319px;
-    background: #F2F2F2;
+    background: #fff;
     border: 1px solid #ccc;
     padding: 20px;
+    opacity:1;
+    transition: opacity 1s ease-out;
+    -webkit-transition: opacity 5s ease-out; /* Safari */
 }
 
-#map .close {
-	float: right;
-
+#map .country.hide {
+    opacity:0;
 }
 
+.close {
+	position: absolute;
+    top: 6px;
+    right: 6px;
+}
+
+.close a {
+    color: #666;
+}
+
+#map .country h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px -20px;
+    padding: 5px 20px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background: #f2f2f2;
+}
+
+#map .country ul,
 .entity-list {
     margin: 0;
     padding: 0;
@@ -900,11 +931,28 @@ form.management #assigned {
 }
 
 .entity-list li {
-    margin: 4px 0;
+    margin: 3px 0;
 }
 
-#map .country .entity-list {
-	max-height: 400px;
+#map .country ul li {
+    border-top: 1px solid #ccc;
+    padding: 8px 0;
+}
+
+#map .country ul li:first-child {
+    border-top-style: none;
+}
+
+#map .country ul li span.icon-ok-sign,
+#map .country ul li span.icon-remove-sign{
+    opacity: 0;
+    transition: opacity 1s ease-out;
+    -webkit-transition: opacity 1s ease-out; /* Safari */
+}
+
+#map .country ul li:hover span.icon-ok-sign,
+#map .country ul li:hover span.icon-remove-sign{
+    opacity: 1;
 }
 
 .key {
