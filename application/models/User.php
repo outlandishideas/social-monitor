@@ -85,8 +85,61 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	}
 
 	function getAccessEntities() {
-		$stmt = $this->_db->prepare('SELECT * FROM user_access WHERE user_id = :id');
+		$stmt = $this->_db->prepare('SELECT * FROM user_access WHERE user_id = :id ORDER BY entity_type ASC, id ASC');
 		$stmt->execute(array(':id'=>$this->id));
-		return $stmt->fetchAll(PDO::FETCH_OBJ);
+		$entities = $stmt->fetchAll(PDO::FETCH_OBJ);
+		foreach ($entities as $i=>$e) {
+			$entity = null;
+			$e->controller = $e->entity_type;
+			switch ($e->entity_type) {
+				case 'twitter':
+				case 'facebook':
+					$e->controller = 'presence';
+					$entity = Model_Presence::fetchById($e->entity_id);
+					if ($entity) {
+						$e->icon = 'icon-'.$entity->type.'-sign';
+						$e->title = $entity->getLabel();
+						$e->text = ($entity->isForTwitter() ? '@' : '') . $entity->handle;
+					}
+					break;
+				case 'country':
+					$entity = Model_Country::fetchById($e->entity_id);
+					if ($entity) {
+						$e->icon = Model_Country::ICON_TYPE;
+						$e->title = '';
+						$e->text = $entity->display_name;
+					}
+					break;
+				case 'group':
+					$entity = Model_Group::fetchById($e->entity_id);
+					if ($entity) {
+						$e->icon = Model_Group::ICON_TYPE;
+						$e->title = '';
+						$e->text = $entity->display_name;
+					}
+					break;
+			}
+
+			if (!$entity) {
+				unset($entities[$i]);
+			}
+		}
+		return $entities;
+	}
+
+	function assignAccess($toAssign) {
+		$rows = array();
+		foreach ($toAssign as $type=>$ids) {
+			foreach ($ids as $id) {
+				$rows[] = array(
+					'user_id'=>$this->id,
+					'entity_type'=>$type,
+					'entity_id'=>$id
+				);
+			}
+		}
+		$stmt = $this->_db->prepare('DELETE FROM user_access WHERE user_id = :id');
+		$stmt->execute(array(':id'=>$this->id));
+		$this->insertData('user_access', $rows);
 	}
 }

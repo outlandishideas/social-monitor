@@ -286,8 +286,15 @@ class UserController extends BaseController
 	}
 
 	public function manageAction() {
+		/** @var Model_User $user */
 		$user = Model_User::fetchById($this->_request->id);
 		$this->validateData($user);
+
+		if ($this->_request->isPost()) {
+			$user->assignAccess($this->_request->assigned);
+			$this->_helper->FlashMessenger(array('info' => 'User permissions saved'));
+			$this->_helper->redirector->gotoSimple('index');
+		}
 
 		$this->view->title = 'User Permissions';
 		$this->view->titleIcon = 'icon-tasks';

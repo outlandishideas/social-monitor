@@ -5,6 +5,7 @@
 		<th class="name">Name</th>
 		<th class="email">Email Address</th>
 		<th class="user-level">User Level</th>
+		<th class="access">Permissions</th>
 		<th class="last-sign-in">Last Sign In</th>
 		<th></th>
 	</tr>
@@ -16,20 +17,30 @@
 		<td class="name"><?php echo $user->safeName; ?></td>
 		<td class="email"><?php echo $user->email; ?></td>
 		<td class="user-level"><?php echo $userLevel; ?></td>
+		<td class="access">
+			<ul class="entity-list">
+				<?php foreach($user->getAccessEntities() as $e) : ?>
+					<li>
+						<a href="<?php echo $this->url(array('controller'=>$e->controller, 'action'=>'view', 'id'=>$e->entity_id)); ?>" title="<?php echo $e->title; ?>" class="entity <?php echo $e->entity_type; ?>">
+							<span class="icon-large <?php echo $e->icon;?>"></span>
+							<?php echo $e->text; ?>
+						</a>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		</td>
 		<td class="last-sign-in"><?php echo $this->prettyDate($user->last_sign_in, 'Never signed in'); ?></td>
 		<td>
 			<?php
 				$links = array();
 				if ($this->user->id == $user->id) {
-					$links = array(
-						'- <a href="%url%">Edit</a>' => array('controller'=>'user', 'action'=>'edit-self')
-					);
+					$links['- <a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit-self');
 				} else {
-					$links = array(
-						'- <a href="%url%">Edit</a>' => array('controller'=>'user', 'action'=>'edit', 'id'=>$user->id),
-						'- <a href="%url%">Permissions</a>' => array('controller'=>'user', 'action'=>'manage', 'id'=>$user->id),
-						'- <a href="%url%" class="autoConfirm">Delete</a>' => array('controller'=>'user', 'action'=>'delete', 'id'=>$user->id)
-					);
+					$links['- <a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit', 'id'=>$user->id);
+					if (!$user->isManager) {
+						$links['- <a href="%url%">Permissions</a>'] = array('controller'=>'user', 'action'=>'manage', 'id'=>$user->id);
+					}
+					$links['- <a href="%url%" class="autoConfirm">Delete</a>'] = array('controller'=>'user', 'action'=>'delete', 'id'=>$user->id);
 				}
 				$links = $this->gatekeeper()->filterAll($links);
 				echo implode('<br />', $links);

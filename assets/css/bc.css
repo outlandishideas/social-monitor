@@ -510,13 +510,12 @@ form.autoConfirm {
 }
 
 #charts .presence-charts .presence {
+	display: inline-block;
 	margin-bottom: -1px;
-	border: 1px solid #ddd;
+	border: 1px solid #ccc;
 	border-bottom: 0;
 	background-color: #fff;
-	display: inline-block;
-	padding: 4px 4px 4px 28px;
-	background-position: 4px center;
+	padding: 4px 6px;
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
 }
@@ -893,18 +892,18 @@ form.management #assigned {
 
 }
 
-.presence-list {
+.entity-list {
     margin: 0;
     padding: 0;
     list-style: none;
     overflow: auto;
 }
 
-.presence-list li {
+.entity-list li {
     margin: 4px 0;
 }
 
-#map .country .presence-list {
+#map .country .entity-list {
 	max-height: 400px;
 }
 
@@ -1077,13 +1076,10 @@ body .compare.list li {
 
 /* presences */
 
-a.presence.twitter .icon-large {
-	color: #4099FF;
-}
-
-a.presence.facebook .icon-large {
-	color: #3B5998;
-}
+a.entity.twitter .icon-large { color: #4099FF; }
+a.entity.facebook .icon-large { color: #3B5998; }
+a.entity.country .icon-large { color: #009600; }
+a.entity.group .icon-large { color: #960000; }
 
 /* link box */
 

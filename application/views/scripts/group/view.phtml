@@ -28,7 +28,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
         foreach($this->compareData as $data) :
 	    ?>
 	    <div class="presence-charts">
-		    <div class="presence <?php echo $data->presence->type; ?>"><?php echo $data->presence->label; if ($data->presence->label != $data->presence->handle) { echo ' (' . $data->presence->handle . ')'; } ?></div>
+		    <?php echo $this->partial('partials/presence_inline.phtml', array('presence'=>$data->presence)); ?>
             <?php
             foreach ($data->graphs as $graph) {
                 $graph->id = $currentId++;
@@ -54,10 +54,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
         <?php foreach($this->compareData as $data) : $presence = $data->presence?>
             <tr>
                 <td>
-                    <div class="presence <?php echo $presence->type; ?>">
-                        <?php echo $this->gatekeeper()->filter('<a href="%url%">' . $presence->handle . '</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id)); ?>
-                        <a href="<?php echo $presence->page_url; ?>" target="_blank" class="icon external"></a>
-                    </div>
+	                <?php echo $this->partial('partials/presence_inline.phtml', array('presence'=>$data->presence)); ?>
                 </td>
                 <?php $kpiData = $presence->getKpiData(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                     <td>

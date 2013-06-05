@@ -25,7 +25,7 @@
         foreach($this->compareData as $data) :
         ?>
 	    <div class="presence-charts">
-		    <div class="presence <?php echo $data->presence->type; ?>"><?php echo $data->presence->label; if ($data->presence->label != $data->presence->handle) { echo ' (' . $data->presence->handle . ')'; } ?></div>
+		    <?php echo $this->partial('partials/presence_inline.phtml', array('presence'=>$data->presence)); ?>
             <?php
 	        foreach ($data->graphs as $graph) {
                 $graph->id = $currentId++;
