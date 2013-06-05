@@ -136,6 +136,15 @@ h2 {
 	font-weight: bold;
 	margin: 16px 0px;
 }
+    h2.presence-title {
+        font-size: 26px;
+        font-weight: 300;
+        border-bottom: 1px solid #ccc;
+        border-top: 1px solid #ccc;
+        background-color: #f2f2f2;
+        margin: 40px -20px;
+        padding: 8px 20px;
+    }
 
 h3 {
 	font-size: 20px;
@@ -826,25 +835,6 @@ table.dtable.dataTable {
 	margin: 0;
 }
 
-/* obsolete stuff? */
-/*.presence {*/
-	/*padding-left: 24px;*/
-	/*background-position: left top;*/
-	/*background-repeat: no-repeat;*/
-	/*line-height: 20px;*/
-/*}*/
-
-/*.presence + .presence {*/
-	/*margin-top: 5px;*/
-/*}*/
-
-/*.presence.twitter {*/
-	/*background-image: url(../img/twitter.png);*/
-/*}*/
-/*.presence.facebook {*/
-	/*background-image: url(../img/facebook.png);*/
-/*}*/
-
 form.management button.add-item {
 	float: left;
 	visibility: hidden;
@@ -1128,6 +1118,15 @@ body .compare.list li {
 .entity.facebook .icon-large { color: #3B5998; }
 .entity.country .icon-large { color: #009600; }
 .entity.group .icon-large { color: #960000; }
+a.presence.twitter .icon-large,
+.icon-twitter-sign {
+	color: #4099FF;
+}
+
+a.presence.facebook .icon-large,
+.icon-facebook-sign{
+	color: #3B5998;
+}
 
 /* link box */
 

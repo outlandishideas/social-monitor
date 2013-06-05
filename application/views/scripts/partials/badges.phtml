@@ -1,0 +1,44 @@
+<?php
+/**
+ * Created by JetBrains PhpStorm.
+ * User: Matthew
+ * Date: 05/06/13
+ * Time: 12:36
+ * To change this template use File | Settings | File Templates.
+ */
+?>
+
+<div class="badge box <?php echo $this->name; ?>">
+
+    <h3><?php echo $this->badge->title; ?></h3>
+
+    <div class="score-card">
+        <div class="score ranking">
+            <div class="text">Ranking</div>
+            <div class="number">
+                <?php echo $this->badge->ranking; ?>
+            </div>
+            <div class="text">of <?php echo $this->badge->rankingTotal; ?></div>
+        </div>
+        <div class="score overall-score">
+            <div class="text">Score</div>
+            <div class="number">
+                <?php echo $this->badge->score < 100 ? $this->badge->score : 99; ?>
+            </div>
+            <div class="text">out of 100</div>
+        </div>
+    </div>
+
+    <?php if(isset($this->badge->values)) : ?>
+
+        <dl>
+            <h4>Percent to Target</h4>
+            <?php foreach($this->badge->values as $key => $value) : ?>
+                <dd title="Target = <?php echo $value->target; ?>"><?php echo $value->percent; ?></dd>
+                <dt><?php echo $value->title; ?></dt>
+            <?php endforeach; ?>
+        </dl>
+
+    <?php endif; ?>
+
+</div>
