@@ -22,13 +22,32 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
 <?php else : ?>
 
+    <div class="section-title">
+        <h2>Badges</h2>
+    </div>
+
+    <div class="grid justify">
+        <?php
+        foreach($this->badges as $name => $badge) {
+            echo $this->partial('partials/badges.phtml', array('badge'=>$badge, 'name'=> $name));
+        }
+        ?>
+    </div>
+
     <div id="charts" data-controller="presence" data-controller-label="presence">
         <?php
         $currentId = 1;
         foreach($this->compareData as $data) :
 	    ?>
 	    <div class="presence-charts">
-		    <h2 class="presence-title"><span class="<?php echo $data->presence->getLargePresenceSign(); ?>"></span> <?php echo $data->presence->label; if ($data->presence->label != $data->presence->handle) { echo ' (' . $data->presence->handle . ')'; } ?></h2>
+            <?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>'presence', 'action'=>'view', 'id'=>$data->presence->id)); ?>
+            <div class="section-title">
+                <h2>
+                    <?php if($url) echo '<a href="'.$url.'">'; ?>
+                        <span class="<?php echo $data->presence->getLargePresenceSign(); ?>"></span> <?php echo $data->presence->label; if ($data->presence->label != $data->presence->handle) { echo ' (' . $data->presence->handle . ')'; } ?>
+                    <?php if($url) echo '</a>'; ?>
+                </h2>
+            </div>
             <?php
 	        foreach ($data->graphs as $graph) {
                 $graph->id = $currentId++;
@@ -40,7 +59,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
         <?php endforeach; ?>
     </div>
 
-	<h3>Scores for the last 30 days:</h3>
+	<div class="section-title"><h2>Scores for the last 30 days:</h2></div>
 
 	<table class="text">
 

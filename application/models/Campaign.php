@@ -104,14 +104,53 @@ class Model_Campaign extends Model_Base {
 	}
 
     public function getOverallKpi(){
+        $ranking = count(self::fetchAll());
         $presences = $this->getPresences();
+        $countPresences = count($presences);
 
         $return = array();
 
         foreach($presences as $presence){
-            $return[] = $presence->getOverallKpi();
+            $badges = $presence->getOverallKpi();
+            foreach($badges as $b=>$badge) {
+
+                if(!isset($return[$b])) $return[$b] = (object)array();
+
+                $return[$b]->score += $badge->score;
+
+                if(!isset($return[$b]->presences)) $return[$b]->presences = array();
+
+                $return[$b]->presences[$presence->label] = $badge;
+
+                if(isset($badge->kpis)){
+                    if(!isset($return[$b]->kpis)) $return[$b]->kpis = array();
+                    foreach($badge->kpis as $k => $kpi){
+
+                        if(!isset($return[$b]->kpis[$k])) $return[$b]->kpis[$k] = (object)array();
+
+                        $return[$b]->kpis[$k]->percent += $kpi->percent;
+
+                        $return[$b]->kpis[$k]->title = $kpi->title;
+                    }
+                }
+
+            }
         }
 
-        return null;
+        foreach($return as $b=>$badge){
+
+            $return[$b]->title = ucfirst($b);
+            $return[$b]->ranking = rand(1,$ranking);
+            $return[$b]->rankingTotal = $ranking;
+            $return[$b]->score = round($badge->score/$countPresences);
+
+            if(isset($badge->kpis)){
+                foreach($badge->kpis as $k=>$kpi){
+                    $return[$b]->kpis[$k]->percent = round($kpi->percent/$countPresences);
+                }
+            }
+        }
+
+        return $return;
     }
 }

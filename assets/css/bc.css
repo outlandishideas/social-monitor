@@ -136,14 +136,20 @@ h2 {
 	font-weight: bold;
 	margin: 16px 0px;
 }
-    h2.presence-title {
+
+.section-title  {
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    background-color: #f2f2f2;
+    margin: 40px -20px;
+    padding: 8px 20px;
+}
+    .section-title h2 {
         font-size: 26px;
         font-weight: 300;
-        border-bottom: 1px solid #ccc;
-        border-top: 1px solid #ccc;
-        background-color: #f2f2f2;
-        margin: 40px -20px;
-        padding: 8px 20px;
+        margin: 0;
+        padding: 0;
+        color: #666;
     }
 
 h3 {
@@ -393,8 +399,9 @@ span.icon-remove-sign {
 }
 
 #nav .main ul {
-	float: left;
     height: inherit;
+    margin-left: 140px;
+    padding-left: 0;
 }
 #nav .extra {
     float: right;
@@ -489,9 +496,10 @@ table tr td {
 }
 
 table tr.average td {
-	border-top: 2px solid #ddd;
-	border-bottom: 2px solid #ddd;
+	border-top: 2px solid #ccc;
+	border-bottom: 2px solid #ccc;
 	font-style: italic;
+    background-color: #f2f2f2;
 }
 
 table.hoverable tr:hover td {
@@ -539,7 +547,7 @@ form.autoConfirm {
 
 .chart-container {
 	clear: both;
-	border: 1px solid #ccc;
+	/*border: 1px solid #ccc;*/
 	padding: 20px;
 	margin-bottom: 20px;
     position: relative;
@@ -1208,15 +1216,25 @@ li.link.box {
 
 /* badges */
 
+.grid.justify {
+    text-align: justify;
+    width: 100%;
+}
+    .grid.justify:after {
+        content:'';
+        display: inline-block;
+        width: 100%;
+    }
+
 .badge.box {
-    width: 20%;
+    width: 25%;
     display: inline-block;
     padding: 20px;
     background: #fff;
     border: 1px solid #ccc;
-    margin-bottom: 20px;
     color: #444;
     position: relative;
+    vertical-align: top;
 }
 
 .badge.box.total {

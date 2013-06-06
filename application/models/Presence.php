@@ -308,20 +308,20 @@ class Model_Presence extends Model_Base {
                         $value->actual = 0;
                         $value->percent = 0;
                 }
-                $return[$k]->values[$val] = $value;
+                $return[$k]->kpis[$val] = $value;
             }
         }
 
         $denominator = 0;
         foreach($return as $k => $badge){
             $number = 0;
-            if($k != 'total'){
+            if(isset($badge->kpis)){
 
-                foreach($badge->values as $kpi){
+                foreach($badge->kpis as $kpi){
                     $number += $kpi->percent;
                 }
 
-                $badge->score = round($number/count($badge->values));
+                $badge->score = round($number/count($badge->kpis));
                 $badge->rankingTotal = count(Model_Presence::fetchAll());
                 $badge->ranking = rand(1,count(Model_Presence::fetchAll()));
                 $return['total']->score += $badge->score;

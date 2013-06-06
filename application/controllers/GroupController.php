@@ -42,6 +42,7 @@ class GroupController extends CampaignController {
 		$this->view->titleIcon = 'icon-th-list';
 		$this->view->titleInfo = $group->groupInfo();
         $this->view->group = $group;
+        $this->view->badges = $group->getOverallKpi();
 	}
 
 	/**
