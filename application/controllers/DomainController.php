@@ -61,6 +61,14 @@ class DomainController extends BaseController {
 				}
 			}
 		}
+		usort($links, function($a, $b) {
+			$ca = count($a->statuses);
+			$cb = count($b->statuses);
+			if ($ca == $cb) {
+				return strcasecmp($a->url, $b->url);
+			}
+			return $ca > $cb ? -1 : 1;
+		});
 		foreach ($links as $data) {
 			usort($data->statuses, function($a, $b) { return strcasecmp($b->created_time, $a->created_time); });
 		}
