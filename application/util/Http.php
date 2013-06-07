@@ -55,7 +55,7 @@ class Util_Http {
 					$url = self::resolveUrl($redirectUrl, $iteration+1);
 					break;
 				case 405: // method not supported. Try a full GET
-					$url = self::resolveUrl($url, $iteration, false);
+					$url = self::resolveUrl($url, $iteration+1, false);
 					break;
 				case 200:
 					break;
