@@ -1,7 +1,7 @@
 <?php
 $links = $this->gatekeeper()->filterAll(array(
-	'<a class="button add" href="%url%"><span class="icon-plus"></span>  Add new</a>' => array('action' => 'new'),
-    '<a class="button compare" data-href="%url%" href="%url%"><span class="icon-search"></span>  Compare</a>' => array('action' => 'compare', 'id'=>'')
+	'<a class="button add" href="%url%"><span class="icon-plus"></span> Add new</a>' => array('action' => 'new'),
+    '<a class="button compare" data-href="%url%" href="%url%"><span class="icon-eye-open"></span>  Compare</a>' => array('action' => 'compare', 'id'=>'')
 ));
 if ($links) {
 	echo '<div class="buttons">' . implode('', $links) . '</div>';

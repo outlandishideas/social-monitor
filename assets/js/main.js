@@ -101,31 +101,6 @@ app.init = {
 			$item.on('click', '.link', app.charts.grabSvgElement);
 		},
 
-        '.switch.radio': function($item) {
-            var radioName = $item.data('name');
-
-            if(!radioName) return false;
-
-            $item.siblings('.blockLabels').addClass('hide');
-            $item.addClass('show');
-
-            $item.on('click', 'a', function(event){
-                event.preventDefault();
-
-                var $currentR = $('input[name="'+radioName+'"]').filter(':checked').parents('li');
-                var $nextR = $currentR.next();
-                if($nextR.length == 0) $nextR = $currentR.parent('ul').children().filter(':first');
-                $currentR.find('input[name="'+radioName+'"]').attr("checked", false);
-                $nextR.find('input[name="'+radioName+'"]').attr("checked", true);
-
-                var $current = $(this).find('span.show');
-                var $next = $current.next();
-                if($next.length == 0) $next = $current.parent().children().filter(':first');
-                $current.removeClass('show');
-                $next.addClass('show');
-            });
-        },
-
 		'form.uniForm': function ($item) {
 			$item.uniform();
 		},
