@@ -9,7 +9,6 @@ class Util_Http {
 		CURLOPT_FOLLOWLOCATION => false,    // follow redirects
 		CURLOPT_ENCODING       => "",       // handle all encodings
 		CURLOPT_USERAGENT      => "spider", // who am i
-//		CURLOPT_NOBODY         => true,     // don't return body
 		CURLOPT_AUTOREFERER    => true,     // set referrer on redirect
 		CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
 		CURLOPT_TIMEOUT        => 120,      // timeout on response
@@ -20,10 +19,11 @@ class Util_Http {
 	 * Follows redirects to resolve the given URL to its eventual location
 	 * @param $url
 	 * @param int $iteration
+	 * @param bool $headOnly
 	 * @throws RuntimeException
 	 * @return string
 	 */
-	public static function resolveUrl($url, $iteration = 0) {
+	public static function resolveUrl($url, $iteration = 0, $headOnly = true) {
 		if ($iteration > 10) {
 			throw new RuntimeException('Too many redirects');
 		}
@@ -31,7 +31,11 @@ class Util_Http {
 		// don't bother checking https urls. Assume they are ok
 		if (strpos($url, 'https://') === false) {
 			$ch = curl_init($url);
-			curl_setopt_array( $ch, self::$options );
+			$options = self::$options;
+			if (!$headOnly) {
+				$options[CURLOPT_NOBODY] = true;
+			}
+			curl_setopt_array($ch, $options);
 			curl_exec($ch);
 			$header = curl_getinfo($ch);
 			curl_close($ch);
@@ -49,6 +53,9 @@ class Util_Http {
 						throw new RuntimeException('Infinite redirect loop');
 					}
 					$url = self::resolveUrl($redirectUrl, $iteration+1);
+					break;
+				case 405: // method not supported. Try a full GET
+					$url = self::resolveUrl($url, $iteration, false);
 					break;
 				case 200:
 					break;
