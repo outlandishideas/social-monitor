@@ -1,7 +1,7 @@
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button" href="%url%">Edit Group</a>' => array('action'=>'edit', 'id'=>$this->group->id),
-	'<a class="button" href="%url%">Manage Presences</a>' => array('action'=>'manage', 'id'=>$this->group->id)
+	'<a class="button" href="%url%"><span class="icon-edit icon-large"></span> Edit Group</a>' => array('action'=>'edit', 'id'=>$this->group->id),
+	'<a class="button" href="%url%"><span class="icon-tasks icon-large"></span> Manage Presences</a>' => array('action'=>'manage', 'id'=>$this->group->id)
 ));
 ?>
 
@@ -23,7 +23,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
 <?php else : ?>
 
     <div class="section-title">
-        <h2>Badges</h2>
+        <h2><span class="icon-certificate icon-large"></span> Badges</h2>
     </div>
 
     <div class="grid justify">
@@ -59,7 +59,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
         <?php endforeach; ?>
     </div>
 
-    <div class="section-title"><h2>Scores for the last 30 days:</h2></div>
+    <div class="section-title"><h2><span class="icon-bar-chart icon-large"></span> Scores for the last 30 days:</h2></div>
 
     <table class="text">
 
