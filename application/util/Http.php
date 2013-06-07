@@ -35,6 +35,8 @@ class Util_Http {
 			curl_exec($ch);
 			$header = curl_getinfo($ch);
 			curl_close($ch);
+			$ch = null;
+			unset($ch);
 
 			switch ($header['http_code']) {
 				case 301: // moved permanently
