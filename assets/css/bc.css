@@ -5,6 +5,10 @@ body {
 	background: #8F8F8F;
 }
 
+abbr {
+	border-bottom: 1px dashed #999;
+}
+
 #loginWrapper {
 	margin: 100px auto 0;
 	width: 325px;

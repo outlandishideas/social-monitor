@@ -13,8 +13,8 @@ if ($links) {
 		<tr>
             <th data-name="compare" data-sort="checkbox"><span class="icon-check"></span></th>
 			<th data-name="handle" data-sort="auto">Handle</th>
-            <th data-name="sign-off" data-sort="data-value-numeric"></th>
-            <th data-name="branding" data-sort="data-value-numeric"></th>
+            <th data-name="sign-off" data-sort="data-value-numeric"><abbr title="Digital Sign-off">SO</abbr></th>
+            <th data-name="branding" data-sort="data-value-numeric"><abbr title="Branding">B</abbr></th>
 			<th data-name="popularity" data-sort="fuzzy-numeric">Audience</th>
 			<th data-name="target" data-sort="fuzzy-numeric">Target audience</th>
 			<?php foreach ($this->tableMetrics as $key=>$label) : ?>
@@ -36,14 +36,12 @@ if ($links) {
 			</td>
             <td>
                 <span class="<?php echo $presence->sign_off ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
-                      data-value="<?php echo $presence->sign_off ? 1 : 0 ;?>"
-                      title="Digital Sign-off"></span>
+                      data-value="<?php echo $presence->sign_off ? 1 : 0 ;?>"></span>
             </td>
             <td>
                 <span
                     class="<?php echo $presence->branding ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
-                    data-value="<?php echo $presence->branding ? 1 : 0 ;?>"
-                    title="Branding"></span>
+                    data-value="<?php echo $presence->branding ? 1 : 0 ;?>"></span>
             </td>
 			<td><?php echo number_format($presence->popularity) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
 			<td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
