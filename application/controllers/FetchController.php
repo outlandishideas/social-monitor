@@ -223,12 +223,12 @@ class FetchController extends BaseController
 		ob_implicit_flush(true);
 
 		// backup the last log file
-		@copy($this->logFileName(), $this->logFileName() . '.last');
+		@copy($this->logFileName('fetch'), $this->logFileName('fetch') . '.last');
 
 		//truncate log file
 		$action = $this->_request->getActionName();
 		$action = $action == 'index' ? 'fetch' : $action;
-		file_put_contents( $this->logFileName(), '');
+		file_put_contents( $this->logFileName('fetch'), '');
 
 		$this->log('Starting '.$action.' process on ' . date('Y-m-d') . "\n");
 	}
@@ -246,7 +246,7 @@ class FetchController extends BaseController
 //			flush();
 		}
 
-		file_put_contents($this->logFileName(), $log, FILE_APPEND);
+		file_put_contents($this->logFileName('fetch'), $log, FILE_APPEND);
 	}
 
 	private function acquireLock($lockTimeout = 600) {
@@ -260,8 +260,8 @@ class FetchController extends BaseController
 			} else {
 				//force show message
 				$this->log("Stale lock file found last active $seconds seconds ago: " . $lockFile, true);
-				$lastFile = $this->logFileName() . '.last';
-				$staleFile = $this->logFileName() . '.stale';
+				$lastFile = $this->logFileName('fetch') . '.last';
+				$staleFile = $this->logFileName('fetch') . '.stale';
 				if (file_exists($lastFile) && !file_exists($staleFile)) {
 					@copy($lastFile, $staleFile);
 				}
