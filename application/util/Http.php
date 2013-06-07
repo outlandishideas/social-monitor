@@ -32,7 +32,7 @@ class Util_Http {
 		if (strpos($url, 'https://') === false) {
 			$ch = curl_init($url);
 			$options = self::$options;
-			if (!$headOnly) {
+			if ($headOnly) {
 				$options[CURLOPT_NOBODY] = true;
 			}
 			curl_setopt_array($ch, $options);
