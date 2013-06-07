@@ -1,0 +1,13 @@
+<p><?php echo $this->pluralise('site', count($this->links)); ?> linked to from <?php echo $this->pluralise('status', $this->domain->getLinkCount()); ?></p>
+<?php foreach ($this->links as $link) : ?>
+<div class="link-title">
+	<a href="<?php echo $link->url; ?>" target="_blank"><?php echo $link->url; ?> <span class="icon-external-link"></span></a>
+</div>
+<ul class="link-list">
+	<?php foreach ($link->statuses as $status) : ?>
+	<li>
+		<?php echo date('jS M Y (H:i)', strtotime($status->created_time)); ?>: <?php echo $this->partial('partials/presence_inline.phtml', array('presence'=>$status->presence)); ?>
+	</li>
+	<?php endforeach; ?>
+</ul>
+<?php endforeach; ?>

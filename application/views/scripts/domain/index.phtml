@@ -11,7 +11,12 @@
 			<?php /** @var $domain Model_Domain */ ?>
 			<?php foreach ($this->domains as $domain) : ?>
 			<tr>
-				<td><?php echo $domain->domain; ?></td>
+				<td>
+					<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'id'=>$domain->id)); ?>
+					<?php if ($url) : ?><a href="<?php echo $url; ?>"><?php endif; ?>
+					<?php echo $domain->domain; ?>
+					<?php if ($url) : ?></a><?php endif; ?>
+				</td>
 				<td><?php echo $domain->getLinkCount(); ?></td>
 				<td><input id="domain-<?php echo $domain->id; ?>" type="checkbox" <?php if ($domain->is_bc) { echo 'checked'; } ?>
 				           name="is_bc[<?php echo $domain->id; ?>]" <?php if (!$this->canEdit) { echo 'disabled'; } ?> /></td>

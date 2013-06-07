@@ -22,5 +22,3 @@ class Zend_View_Helper_Pluralise extends Zend_View_Helper_Abstract
 		return $string;
 	}
 }
-
-?>
