@@ -1,7 +1,8 @@
 <p><?php echo $this->pluralise('site', count($this->links)); ?> linked to from <?php echo $this->pluralise('status', $this->domain->getLinkCount()); ?></p>
 <?php foreach ($this->links as $link) : ?>
 <div class="link-title">
-	<a href="<?php echo $link->url; ?>" target="_blank"><?php echo $link->url; ?> <span class="icon-external-link"></span></a>
+	<a href="<?php echo $link->url; ?>" target="_blank"><?php echo highlight($link->url, $this->domain->domain); ?> <span class="icon-external-link"></span></a>
+	(<?php echo $this->pluralise('mention', count($link->statuses)); ?>)
 </div>
 <ul class="link-list">
 	<?php foreach ($link->statuses as $status) : ?>
@@ -11,3 +12,14 @@
 	<?php endforeach; ?>
 </ul>
 <?php endforeach; ?>
+
+<?php
+function highlight($url, $domain) {
+	$text = $url;
+	$pos = strpos($url, $domain);
+	if ($pos >= 0) {
+		$pos += strlen($domain) + 1;
+		$text = substr($url, 0, $pos) . '<strong>' . substr($url, $pos) . '</strong>';
+	}
+	return $text;
+}
