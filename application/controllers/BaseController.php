@@ -95,6 +95,36 @@ class BaseController extends Zend_Controller_Action {
 			$this->view->$property = $navigation;
 		}
 
+		// check the fetch lockfile
+		$lockFile = $this->lockFileName('fetch');
+		if (file_exists($lockFile)) {
+			$seconds = time() - filemtime($lockFile);
+			if ($seconds > (10 * $this->config->app->fetch_time_limit)) {
+				$factors = array(
+					'day'=>86400,
+					'hour'=>3600,
+					'min'=>60,
+					'sec'=>0
+				);
+				$elements = array();
+				foreach ($factors as $label=>$factor) {
+					if ($seconds > $factor) {
+						if ($factor) {
+							$tmp = $seconds%$factor;
+							$elements[] = array(($seconds-$tmp)/$factor, $label);
+							$seconds = $tmp;
+						} else {
+							$elements[] = array($seconds, $label);
+						}
+					}
+				}
+				foreach ($elements as $i=>$e) {
+					$elements[$i] = $this->view->pluralise($e[1], $e[0]);
+				}
+				$this->_helper->FlashMessenger(array('error' => 'Fetch process has been inactive for ' . implode(', ', $elements) . '. Please review the fetch lock file.'));
+			}
+		}
+
 		//set JS config to be output in the page
 		$configArray = $this->config->toArray();
 		$this->view->jsConfig = $configArray['jsConfig'];
@@ -384,4 +414,15 @@ class BaseController extends Zend_Controller_Action {
 		$mail->setSubject($subject);
 		$mail->send();
 	}
+
+	protected function lockFileName($name = null) {
+		$name = $name ? : $this->_request->getActionName();
+		return APP_ROOT_PATH . '/log/' . $name . '.lock';
+	}
+
+	protected function logFileName($name = null) {
+		$name = $name ? : $this->_request->getActionName();
+		return APP_ROOT_PATH . '/log/' . $name . '.log';
+	}
+
 }

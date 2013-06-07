@@ -249,19 +249,9 @@ class FetchController extends BaseController
 		file_put_contents($this->logFileName(), $log, FILE_APPEND);
 	}
 
-	private function lockFileName($name = null) {
-		$name = $name ? : $this->_request->getActionName();
-		return APP_ROOT_PATH . '/log/' . $name . '.lock';
-	}
-
-	private function logFileName($name = null) {
-		$name = $name ? : $this->_request->getActionName();
-		return APP_ROOT_PATH . '/log/' . $name . '.log';
-	}
-
 	private function acquireLock($lockTimeout = 600) {
 		//check for a lock file and exit if one is found
-		$lockFile = $this->lockFileName();
+		$lockFile = $this->lockFileName('fetch');
 		if (file_exists($lockFile)) {
 			$seconds = time() - filemtime($lockFile);
 			if ($seconds < $lockTimeout) {
@@ -286,12 +276,12 @@ class FetchController extends BaseController
 	}
 
 	private function releaseLock() {
-		$lockFileName = $this->lockFileName();
+		$lockFileName = $this->lockFileName('fetch');
 		rename($lockFileName, $lockFileName.'.last');
 	}
 
 	private function touchLock() {
-		touch($this->lockFileName());
+		touch($this->lockFileName('fetch'));
 	}
 }
 
