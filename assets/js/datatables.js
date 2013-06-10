@@ -34,11 +34,7 @@ app.datatables = {
 		// add a 'traffic light' sort type, which uses the value in the traffic light
 		$.extend($.fn.dataTableExt.oSort, {
 			"traffic-light-pre": function ( a ) {
-
-
-
-
-										  		var value = $(a).filter('.icon-circle').data('value');
+		  		var value = $(a).filter('.icon-circle').data('value');
 				if (typeof value == 'undefined') {
 					value = -1;
 				}
@@ -104,7 +100,7 @@ app.datatables = {
 				iDisplayLength: 1000,
 				bScrollCollapse: true,
 				sScrollY: '400px',
-				bFilter: false,
+				bFilter: true,
 				bInfo: false,
 				aoColumns: app.datatables.generateColumns($table)
 			});
@@ -118,7 +114,7 @@ app.datatables = {
 				iDisplayLength: 1000,
 				bScrollCollapse: true,
 				sScrollY: '400px',
-				bFilter: false,
+				bFilter: true,
 				bInfo: false,
 				aoColumns: app.datatables.generateColumns($table)
 			});

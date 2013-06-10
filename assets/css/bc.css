@@ -671,6 +671,10 @@ table.dtable.dataTable {
 	display: table;
 }
 
+.dataTables_filter {
+	margin-bottom: 10px;
+}
+
 .dataTable .sorting,
 .dataTable .sorting_asc,
 .dataTable .sorting_desc {
