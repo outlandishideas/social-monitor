@@ -56,7 +56,7 @@ class BaseController extends Zend_Controller_Action {
 
 		$controller = $this->_request->getControllerName();
 		$action = $this->_request->getActionName();
-		$id = $this->_request->id;
+		$id = $this->_request->getParam('id');
 		$this->rejectIfNotAllowed($controller, $action, $id);
 	}
 
