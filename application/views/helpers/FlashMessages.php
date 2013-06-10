@@ -4,6 +4,7 @@ class Zend_View_Helper_FlashMessages extends Zend_View_Helper_Abstract
 {
 	public function flashMessages()
 	{
+		/** @var Zend_Controller_Action_Helper_FlashMessenger $flashMessenger */
 		$flashMessenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
 
 		//merge current and previous flash messages
@@ -21,11 +22,19 @@ class Zend_View_Helper_FlashMessages extends Zend_View_Helper_Abstract
 
 		//process messages
 		$output = '<ol class="messages">';
+		$seenInaction = false;
 		foreach ($messages as $message)
 		{
 			$type = 'error';
 			if (is_array($message)) {
 				list($type, $message) = each($message);
+			}
+			if ($type == 'inaction') {
+				if ($seenInaction) {
+					continue;
+				}
+				$seenInaction = true;
+				$type = 'error';
 			}
 			$output .= '<li class="'.$type.'">'.$message.'</li>';
 		}

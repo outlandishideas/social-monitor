@@ -110,9 +110,6 @@ class PresenceController extends GraphingController
 			if (empty($this->_request->handle)) {
 				$errorMessages[] = 'Please enter a handle';
 			}
-            if (empty($this->_request->branding)) {
-                $presence->_row->branding = 0;
-            }
 
 			if (!$errorMessages) {
 				try {

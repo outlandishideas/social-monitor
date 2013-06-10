@@ -121,7 +121,7 @@ class BaseController extends Zend_Controller_Action {
 				foreach ($elements as $i=>$e) {
 					$elements[$i] = $this->view->pluralise($e[1], $e[0]);
 				}
-				$this->_helper->FlashMessenger(array('error' => 'Fetch process has been inactive for ' . implode(', ', $elements) . '. Please review the fetch lock file.'));
+				$this->_helper->FlashMessenger(array('inaction' => 'Fetch process has been inactive for ' . implode(', ', $elements) . '. Please review the fetch lock file.'));
 			}
 		}
 

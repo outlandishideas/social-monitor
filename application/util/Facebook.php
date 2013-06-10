@@ -29,7 +29,7 @@ class Util_Facebook {
 	 * @return array
 	 */
 	public static function pageInfo($name, $fields = array('page_id', 'name', 'username', 'pic_square', 'page_url', 'fan_count')) {
-		$data = Util_Facebook::query('SELECT ' . implode(',', $fields) . ' FROM page WHERE username = "' . $name.'"');
+		$data = Util_Facebook::query('SELECT ' . implode(',', $fields) . ' FROM page WHERE username = "' . $name.'" OR page_id = "' . $name . '"');
 		return $data[0];
 	}
 
