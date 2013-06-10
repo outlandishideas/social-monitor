@@ -138,6 +138,7 @@ app.init = {
                     //add presence to list in $list
                     var liHtml = '<li data-id="'+ val +'">'+$(this).data("name")+'</li>';
                     $list.append(liHtml);
+		            $list.show();
 					$button.show();
                 } else {
 
