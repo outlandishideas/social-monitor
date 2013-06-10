@@ -97,7 +97,7 @@ class BaseController extends Zend_Controller_Action {
 
 		// check the fetch lockfile
 		$lockFile = $this->lockFileName('fetch');
-		if (file_exists($lockFile)) {
+		if (file_exists($lockFile) && !$this->_request->isXmlHttpRequest()) {
 			$seconds = time() - filemtime($lockFile);
 			if ($seconds > (10 * $this->config->app->fetch_time_limit)) {
 				$factors = array(
