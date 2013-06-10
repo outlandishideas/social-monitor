@@ -604,6 +604,7 @@ form.autoConfirm {
 	min-width: 200px;
 	max-width: 200px;
 	vertical-align: top;
+	word-wrap: break-word;
 }
 .statusesDisplay td.statusPic {
 	min-width: 70px;
