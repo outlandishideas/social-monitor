@@ -43,11 +43,11 @@
                     } else {
                         $title = "Presences";
                         foreach($this->badge->presences as $p => $presence){
-                            $title .= "\n".$p." : ". round($presence->kpis[$k]->percent) ."%";
+                            $title .= "\n".$p." : ". round($presence->kpis[$k]->score) ."%";
                         }
                     }
                 ?>
-                <dd title="Target = <?php echo $title; ?>"><?php echo round($kpi->percent); ?></dd>
+                <dd title="Target = <?php echo $title; ?>"><?php echo round($kpi->score); ?></dd>
                 <dt><?php echo $kpi->title; ?></dt>
             <?php endforeach; ?>
         </dl>

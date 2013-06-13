@@ -132,7 +132,7 @@ class Model_Campaign extends Model_Base {
                 foreach($badge->kpis as $k => $kpi){
 
                     $badges[$badge->type]->kpis[$k] = (object)array(
-                        'percent' => 0,
+                        'score' => 0,
                         'title' => $kpi->title,
                         'type' => $kpi->type
                     );
@@ -152,7 +152,7 @@ class Model_Campaign extends Model_Base {
 
                     foreach($badge->kpis as $k => $kpu){
 
-                        $badges[$badge->type]->kpis[$k]->percent += $kpu->percent;
+                        $badges[$badge->type]->kpis[$k]->score += $kpu->score;
 
                     }
 
@@ -170,7 +170,7 @@ class Model_Campaign extends Model_Base {
 
                 foreach($badge->kpis as $kpi){
 
-                    $kpi->percent /= count($presences);
+                    $kpi->score /= count($presences);
 
                 }
 
@@ -310,7 +310,7 @@ class Model_Campaign extends Model_Base {
 
                         if(!isset($return[$b]->kpis[$k])) $return[$b]->kpis[$k] = (object)array();
 
-                        $return[$b]->kpis[$k]->percent += $kpi->percent;
+                        $return[$b]->kpis[$k]->score += $kpi->score;
 
                         $return[$b]->kpis[$k]->title = $kpi->title;
                     }
@@ -328,7 +328,7 @@ class Model_Campaign extends Model_Base {
 
             if(isset($badge->kpis)){
                 foreach($badge->kpis as $k=>$kpi){
-                    $return[$b]->kpis[$k]->percent = $kpi->percent/$countPresences;
+                    $return[$b]->kpis[$k]->score = $kpi->score/$countPresences;
                 }
             }
         }

@@ -654,7 +654,7 @@ class Model_Presence extends Model_Base {
                         'target' => BaseController::getOption('updates_per_day'),
                         'actual' => $this->getAveragePostsPerDay($startDateString, $endDateString)
                     );
-                    $metricObj->percent = ( $metricObj->actual / $metricObj->target ) * 100;
+                    $metricObj->score = ( $metricObj->actual / $metricObj->target ) * 100;
                     break;
 
                 case(self::METRIC_LINKS_PER_DAY):
@@ -664,9 +664,9 @@ class Model_Presence extends Model_Base {
                         'actual' => $this->getAverageLinksPerDay($startDateString, $endDateString),
                     );
                     if($metricObj->actual > $metricObj->target){
-                        $metricObj->percent = 100;
+                        $metricObj->score = 100;
                     } else {
-                        $metricObj->percent = ( $metricObj->actual / $metricObj->target ) * 100;
+                        $metricObj->score = ( $metricObj->actual / $metricObj->target ) * 100;
                     }
                     break;
 
@@ -677,9 +677,9 @@ class Model_Presence extends Model_Base {
                         'actual' => $this->getAverageLikesPerPost($startDateString, $endDateString)
                     );
                     if($metricObj->actual > $metricObj->target){
-                        $metricObj->percent = 100;
+                        $metricObj->score = 100;
                     } else {
-                        $metricObj->percent = ( $metricObj->actual / $metricObj->target ) * 100;
+                        $metricObj->score = ( $metricObj->actual / $metricObj->target ) * 100;
                     }
                     break;
 
@@ -690,9 +690,9 @@ class Model_Presence extends Model_Base {
                         'actual' => $this->getAverageResponseTime($startDateString,$endDateString)
                     );
                     if($metricObj->actual > $metricObj->target){
-                        $metricObj->percent = ( $metricObj->target / $metricObj->actual ) * 100;
+                        $metricObj->score = ( $metricObj->target / $metricObj->actual ) * 100;
                     } else {
-                        $metricObj->percent = 100;
+                        $metricObj->score = 100;
                     }
                     break;
 
@@ -703,9 +703,9 @@ class Model_Presence extends Model_Base {
                         'actual' => $this->getRatioRepliesToOthersPosts($startDateString, $endDateString)
                     );
                     if($metricObj->actual > $metricObj->target){
-                        $metricObj->percent = 100;
+                        $metricObj->score = 100;
                     } else {
-                        $metricObj->percent = ( $metricObj->actual / $metricObj->target ) * 100;
+                        $metricObj->score = ( $metricObj->actual / $metricObj->target ) * 100;
                     }
                     break;
 
@@ -715,7 +715,7 @@ class Model_Presence extends Model_Base {
                         'target' => 0,
                         'actual' => 0
                     );
-                    $metricObj->percent = 0;
+                    $metricObj->score = 0;
 
             }
 
@@ -723,8 +723,8 @@ class Model_Presence extends Model_Base {
             $metricObj->type = $metric;
             $badge->kpis[$metric] = $metricObj;
 
-            //add the percent score to the $badge->score
-            $badge->score += $metricObj->percent;
+            //add the score score to the $badge->score
+            $badge->score += $metricObj->score;
 
         }
 
