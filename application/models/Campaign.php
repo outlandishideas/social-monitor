@@ -103,6 +103,188 @@ class Model_Campaign extends Model_Base {
 		return $this->kpiAverages;
 	}
 
+    public function getBadges(){
+
+        //get presences and foreach, presence get its badges
+        $presenceBadges = array();
+        $presences = $this->getPresences();
+
+        //if no presences return an empty array
+        if(empty($presences)) return array();
+
+        foreach($presences as $presence){
+            $presenceBadges[$presence->handle] = $presence->getBadges();
+        }
+
+        //initialise each badge first, before filling it with data
+        $badges = array();
+        $testPresence = end($presenceBadges);
+        foreach($testPresence as $badge){
+            $badges[$badge->type] = (object)array(
+                'score' => 0,
+                'title' => $badge->title,
+                'type' => $badge->type,
+                'presences' => array()
+            );
+            if(isset($badge->kpis) && !empty($badge->kpis)){
+
+                $badges[$badge->type]->kpis = array();
+                foreach($badge->kpis as $k => $kpi){
+
+                    $badges[$badge->type]->kpis[$k] = (object)array(
+                        'percent' => 0,
+                        'title' => $kpi->title,
+                        'type' => $kpi->type
+                    );
+
+                }
+            }
+        }
+
+        //foreach presence and each badge add up its score
+        reset($presenceBadges);
+        foreach($presenceBadges as $p => $presence){
+            foreach($presence as $badge){
+                $badges[$badge->type]->score += $badge->score;
+                $badges[$badge->type]->presences[$p] = $badge;
+
+                if(isset($badge->kpis) && !empty($badge->kpis)){
+
+                    foreach($badge->kpis as $k => $kpu){
+
+                        $badges[$badge->type]->kpis[$k]->percent += $kpu->percent;
+
+                    }
+
+                }
+
+            }
+        }
+
+        //go through the badges and divide scores by number of presences
+        foreach($badges as $badge){
+
+            $badge->score /= count($presences);
+
+            if(isset($badge->kpis)){
+
+                foreach($badge->kpis as $kpi){
+
+                    $kpi->percent /= count($presences);
+
+                }
+
+            }
+
+            //get the ranking for each badge
+            $this->badgeRanking($badge);
+        }
+
+        return $badges;
+    }
+
+    /**
+     * Returns the badges for a campaign by calculating the scores from the badges of each presence
+     * @return array
+     */
+    public function getBadgesScores(){
+
+        //get presences and foreach, presence get its badges
+        $presenceBadges = array();
+        $presences = $this->getPresences();
+
+        //if no presences return an empty array
+        if(empty($presences)) return array();
+
+        foreach($presences as $presence){
+            $presenceBadges[] = $presence->getBadgesScore();
+        }
+
+        //foreach presence and each badge add up its score
+        $badges = array();
+        foreach($presenceBadges as $presences){
+            foreach($presences as $badge){
+                $badges[$badge->type] += $badge->score;
+            }
+        }
+
+        //go through the scores and convert each one into a badge object and divide the score by the number of presences
+        foreach($badges as $s => $badge){
+            $badges[$s] = (object)array(
+                'score' => $badge/count($presences),
+                'title' => ucfirst($s),
+                'type' => $s
+            );
+
+            //get the ranking for each badge
+            $this->badgeRanking($badges[$s]);
+        }
+
+        return $badges;
+    }
+
+    public function getScore($type){
+
+        //get the presences of the campaign
+        $presences = $this->getPresences();
+
+        //for each presence get the score of badge $type and add it to the $score
+        $score = 0;
+        foreach($presences as $presence){
+            $score += $presence->getScore($type);
+        }
+
+        //$divide the $score by the number of presences and return it
+        $score /= count($presences);
+
+        return $score;
+
+    }
+
+    public function badgeRanking(&$badge){
+
+        //fetch all campaigns and add their count() as the rankingTotal
+        $allCampaigns = self::fetchAll();
+        $badge->rankingTotal = count($allCampaigns);
+
+        //get the score of each campaign and add it to the scores array
+        $scores = array();
+        foreach($allCampaigns as $campaign){
+            $score = $campaign->getScore($badge->type);
+            $scores[] = (object)array(
+                'id'=>$campaign->id,
+                'score'=>$score
+            );
+        }
+
+        //sort the scores array by the score of each campaign
+        usort($scores, function($a, $b){
+            if($a->score == $b->score) return 0;
+            return ($a->score < $b->score) ? 1 : -1 ;
+        });
+
+        //go through each score to determine the ranking of the campaign in question
+        $ranking = 0;
+        for($i=0;$i<count($scores);$i++){
+
+            //if its the first score, set the ranking to 1 (for 1st)
+            //else if the score does not match the previous score increase the ranking
+            if($i == 0) {
+                $ranking++;
+            } else {
+                if($scores[$i]->score != $scores[$i-1]->score){
+                    $ranking++;
+                }
+            }
+
+            //if the current id matches this campaign's id break out of the loop and add the current ranking as this badges ranking
+            if($scores[$i]->id == $this->id){
+                $badge->ranking = $ranking;
+                break;
+            }
+        }
+    }
+
     public function getOverallKpi(){
         $ranking = count(self::fetchAll());
         $presences = $this->getPresences();
@@ -142,11 +324,11 @@ class Model_Campaign extends Model_Base {
             $return[$b]->title = ucfirst($b);
             $return[$b]->ranking = rand(1,$ranking);
             $return[$b]->rankingTotal = $ranking;
-            $return[$b]->score = round($badge->score/$countPresences);
+            $return[$b]->score /= $countPresences;
 
             if(isset($badge->kpis)){
                 foreach($badge->kpis as $k=>$kpi){
-                    $return[$b]->kpis[$k]->percent = round($kpi->percent/$countPresences);
+                    $return[$b]->kpis[$k]->percent = $kpi->percent/$countPresences;
                 }
             }
         }

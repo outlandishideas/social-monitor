@@ -29,7 +29,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
     <div class="grid justify">
         <?php
         foreach($this->badges as $name => $badge) {
-            echo $this->partial('partials/badges.phtml', array('badge'=>$badge, 'name'=> $name));
+            echo $this->partial('partials/badges.phtml', array('badge'=>$badge));
         }
         ?>
     </div>

@@ -45,7 +45,7 @@ class PresenceController extends GraphingController
 		$this->view->titleImage = '<img src="' . $presence->image_url . '" alt="' . $presence->getLabel() . '"/>';
 		$this->view->presence = $presence;
         $this->view->graphs = $this->graphs($presence);
-        $this->view->badges = $presence->getOverallKpi();
+        $this->view->badges = $presence->getBadges();
 	}
 
 	/**

@@ -8,7 +8,7 @@
  */
 ?>
 
-<div class="badge box <?php echo $this->name; ?>">
+<div class="badge box <?php echo $this->badge->type; ?>">
 
     <h3><?php echo $this->badge->title; ?></h3>
 
@@ -25,7 +25,7 @@
         <div class="score overall-score">
             <div class="text">Score</div>
             <div class="number">
-                <?php echo $this->badge->score < 100 ? $this->badge->score : 99; ?>
+                <?php echo round($this->badge->score); ?>
             </div>
             <div class="text">out of 100</div>
         </div>
@@ -43,11 +43,11 @@
                     } else {
                         $title = "Presences";
                         foreach($this->badge->presences as $p => $presence){
-                            $title .= "\n".$p." : ".$presence->kpis[$k]->percent."%";
+                            $title .= "\n".$p." : ". round($presence->kpis[$k]->percent) ."%";
                         }
                     }
                 ?>
-                <dd title="Target = <?php echo $title; ?>"><?php echo $kpi->percent; ?></dd>
+                <dd title="Target = <?php echo $title; ?>"><?php echo round($kpi->percent); ?></dd>
                 <dt><?php echo $kpi->title; ?></dt>
             <?php endforeach; ?>
         </dl>
