@@ -45,7 +45,7 @@ class PresenceController extends GraphingController
 		$this->view->titleImage = '<img src="' . $presence->image_url . '" alt="' . $presence->getLabel() . '"/>';
 		$this->view->presence = $presence;
         $this->view->graphs = $this->graphs($presence);
-        $this->view->badges = $presence->getBadges();
+        $this->view->badges = array('total','reach','engagement','quality');
 	}
 
 	/**
@@ -160,6 +160,20 @@ class PresenceController extends GraphingController
 		}
 		$this->_helper->redirector->gotoSimple('index');
 	}
+
+    /**
+     * Gets all of the graph data for the requested presence
+     */
+    public function badgeDataAction() {
+        Zend_Session::writeClose(); // release session on long running actions
+
+        $presence = Model_Presence::fetchById($this->_request->id);
+
+        $response = $presence->getBadges();
+
+        $this->apiSuccess($response);
+
+    }
 
 	/**
 	 * Gets all of the graph data for the requested presence

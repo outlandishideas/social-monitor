@@ -26,7 +26,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
         <h2><span class="icon-certificate icon-large"></span> Badges</h2>
     </div>
 
-    <div class="grid justify">
+    <div id="badges" data-id="<?php echo $this->country->id; ?>" class="grid justify" data-controller="country" data-controller-label="country">
         <?php
         foreach($this->badges as $name => $badge) {
             echo $this->partial('partials/badges.phtml', array('badge'=>$badge));

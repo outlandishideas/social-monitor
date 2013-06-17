@@ -1247,7 +1247,7 @@ li.link.box {
     vertical-align: top;
 }
 
-.badge.box.total {
+.badge.box#total {
     width: auto;
 }
 

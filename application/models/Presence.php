@@ -481,6 +481,38 @@ class Model_Presence extends Model_Base {
 		return $this->getHistoryData('popularity', $startDate, $endDate);
 	}
 
+    public function getTotalData($startDate, $endDate){
+        return $this->getHistoryData('total', $startDate, $endDate);
+    }
+
+    public function getReachData($startDate, $endDate){
+        return $this->getHistoryData('reach', $startDate, $endDate);
+    }
+
+    public function getEngagementData($startDate, $endDate){
+        return $this->getHistoryData('engagement', $startDate, $endDate);
+    }
+
+    public function getQualityData($startDate, $endDate){
+        return $this->getHistoryData('quality', $startDate, $endDate);
+    }
+
+    public function getTotalRankingData($startDate, $endDate){
+        return $this->getHistoryData('total_ranking', $startDate, $endDate);
+    }
+
+    public function getReachRankingData($startDate, $endDate){
+        return $this->getHistoryData('reach_ranking', $startDate, $endDate);
+    }
+
+    public function getEngagementRankingData($startDate, $endDate){
+        return $this->getHistoryData('engagement_ranking', $startDate, $endDate);
+    }
+
+    public function getQualityRankingData($startDate, $endDate){
+        return $this->getHistoryData('quality_ranking', $startDate, $endDate);
+    }
+
     /********************************************************************
      *
      * Start of Badge Functions
@@ -522,17 +554,24 @@ class Model_Presence extends Model_Base {
 
         //go though list of badges and get the Badge object for each (with metrics)
         $badges = array();
-        foreach(Model_Presence::ALL_BADGES() as $badge => $array){
-            $badges[$badge] = $this->getBadgeMetrics($badge);
-        }
+        $countPresences = count(Model_Presence::fetchAll());
+        $class = get_called_class();
 
-        //add the Total badge, which has a score based the sum of other badge scores
-        $badges = array('total'=>$this->getTotal($badges))+$badges;
+        foreach(Model_Presence::ALL_BADGES() as $badge => $array){
+            $badges[$badge] = new Model_Badge(array($this->handle => $this), $badge, $class, $countPresences);
+        }
 
         //foreach badge get the ranking
         foreach($badges as $badge){
-            $this->badgeRanking($badge);
+            $badge->getRanking($this->id);
         }
+
+        //add the Total badge, which has a score based the sum of other badge scores
+        $totalBadge = new Model_Badge($badges, 'total', $class, $countPresences);
+        $totalBadge->getRanking($this->id);
+
+        $badges = array( 'total' => $totalBadge ) + $badges;
+
 
         return $badges;
 
@@ -762,7 +801,6 @@ class Model_Presence extends Model_Base {
 
             //if score was not found in db, calculate it
         } else {
-
 
             //get the score of each presence and add it scores array
             $scores = array();

@@ -41,7 +41,7 @@ class CountryController extends CampaignController {
 		$this->view->title = $country->display_name;
 		$this->view->titleInfo = $country->countryInfo();
         $this->view->country = $country;
-        $this->view->badges = $country->getBadges();
+        $this->view->badges = array('total','reach','engagement','quality');
 	}
 
 	/**
@@ -193,4 +193,19 @@ class CountryController extends CampaignController {
 		}
 		$this->_helper->redirector->gotoSimple('index');
 	}
+
+    /**
+     * Gets all of the graph data for the requested presence
+     */
+    public function badgeDataAction() {
+        Zend_Session::writeClose(); // release session on long running actions
+
+        $country = Model_Country::fetchById($this->_request->id);
+
+        $response = $country->getBadges();
+
+        $this->apiSuccess($response);
+
+    }
+
 }

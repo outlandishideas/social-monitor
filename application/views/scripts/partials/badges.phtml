@@ -8,48 +8,35 @@
  */
 ?>
 
-<div class="badge box <?php echo $this->badge->type; ?>">
+<div id="<?php echo $this->badge; ?>" class="badge box">
 
-    <h3><?php echo $this->badge->title; ?></h3>
+    <h3><?php echo ucfirst($this->badge); ?></h3>
 
     <div class="score-card">
 
         <div class="score ranking">
-            <div class="text">Ranking</div>
+            <div class="text title">Ranking</div>
             <div class="number">
-                <?php echo $this->badge->ranking; ?>
+                ?
             </div>
-            <div class="text">of <?php echo $this->badge->rankingTotal; ?></div>
+            <div class="text denominator">of ?</div>
         </div>
 
         <div class="score overall-score">
             <div class="text">Score</div>
             <div class="number">
-                <?php echo round($this->badge->score); ?>
+                ?
             </div>
             <div class="text">out of 100</div>
         </div>
 
     </div>
 
-    <?php if(isset($this->badge->kpis)) : ?>
+    <?php if($this->badge != 'total') : ?>
 
         <dl>
             <h4>Percent to Target</h4>
-            <?php foreach($this->badge->kpis as $k => $kpi) : ?>
-                <?php
-                    if(isset($kpi->target)){
-                        $title = "Target = ". $kpi->target;
-                    } else {
-                        $title = "Presences";
-                        foreach($this->badge->presences as $p => $presence){
-                            $title .= "\n".$p." : ". round($presence->kpis[$k]->score) ."%";
-                        }
-                    }
-                ?>
-                <dd title="Target = <?php echo $title; ?>"><?php echo round($kpi->score); ?></dd>
-                <dt><?php echo $kpi->title; ?></dt>
-            <?php endforeach; ?>
+
         </dl>
 
     <?php endif; ?>

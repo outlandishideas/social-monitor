@@ -16,7 +16,8 @@ $.extend(app, {
 		colors: {},
 		timestamps: [],
 		unloading: false,
-        barDate: []
+        barDate: [],
+        badges: []
 	},
 	templates: {
 		legendLabel: '<div class="dataset <%=className%>" data-line-id="<%=line_id%>">\
@@ -229,6 +230,10 @@ app.init = {
 		'#charts': function($item) {
 			app.charts.setup();
 		},
+
+        '#badges': function($item) {
+            app.badges.setup();
+        },
 
         '#map': function($item) {
             app.geochart.setup($item);

@@ -103,85 +103,42 @@ class Model_Campaign extends Model_Base {
 		return $this->kpiAverages;
 	}
 
-    public function getBadges(){
+    /**
+     * Returns an array of badge objects that contain the score, ranking and individual kpis for each badge
+     * @return array
+     */
+    public function getBadges() {
 
-        //get presences and foreach, presence get its badges
-        $presenceBadges = array();
-        $presences = $this->getPresences();
-
-        //if no presences return an empty array
-        if(empty($presences)) return array();
-
-        foreach($presences as $presence){
-            $presenceBadges[$presence->handle] = $presence->getBadges();
-        }
-
-        //initialise each badge first, before filling it with data
+        //go though list of badges and get the Badge object for each (with metrics)
         $badges = array();
-        $testPresence = end($presenceBadges);
-        foreach($testPresence as $badge){
-            $badges[$badge->type] = (object)array(
-                'score' => 0,
-                'title' => $badge->title,
-                'type' => $badge->type,
-                'presences' => array()
-            );
-            if(isset($badge->kpis) && !empty($badge->kpis)){
-
-                $badges[$badge->type]->kpis = array();
-                foreach($badge->kpis as $k => $kpi){
-
-                    $badges[$badge->type]->kpis[$k] = (object)array(
-                        'score' => 0,
-                        'title' => $kpi->title,
-                        'type' => $kpi->type
-                    );
-
-                }
-            }
+        $countCampaigns = count(self::fetchAll());
+        $class = get_called_class();
+        $presences = $this->getPresences();
+        foreach($presences as $p => $presence){
+            $presences[$presence->handle] = $presence;
+            unset($presences[$p]);
         }
 
-        //foreach presence and each badge add up its score
-        reset($presenceBadges);
-        foreach($presenceBadges as $p => $presence){
-            foreach($presence as $badge){
-                $badges[$badge->type]->score += $badge->score;
-                $badges[$badge->type]->presences[$p] = $badge;
-
-                if(isset($badge->kpis) && !empty($badge->kpis)){
-
-                    foreach($badge->kpis as $k => $kpu){
-
-                        $badges[$badge->type]->kpis[$k]->score += $kpu->score;
-
-                    }
-
-                }
-
-            }
+        foreach(Model_Presence::ALL_BADGES() as $badge => $array){
+            $badges[$badge] = new Model_Badge($presences, $badge, $class, $countCampaigns);
         }
 
-        //go through the badges and divide scores by number of presences
+        //foreach badge get the ranking
         foreach($badges as $badge){
-
-            $badge->score /= count($presences);
-
-            if(isset($badge->kpis)){
-
-                foreach($badge->kpis as $kpi){
-
-                    $kpi->score /= count($presences);
-
-                }
-
-            }
-
-            //get the ranking for each badge
-            $this->badgeRanking($badge);
+            $badge->getRanking($this->id);
         }
+
+        //add the Total badge, which has a score based the sum of other badge scores
+        $totalBadge = new Model_Badge($badges, 'total', $class, $countCampaigns);
+        $totalBadge->getRanking($this->id);
+
+        $badges = array( 'total' => $totalBadge ) + $badges;
+
 
         return $badges;
+
     }
+
 
     /**
      * Returns the badges for a campaign by calculating the scores from the badges of each presence
@@ -189,8 +146,8 @@ class Model_Campaign extends Model_Base {
      */
     public function getBadgesScores(){
 
-        //get presences and foreach, presence get its badges
-        $presenceBadges = array();
+        //get campaigns and foreach, presence get its badges
+        $campaignBadges = array();
         $presences = $this->getPresences();
 
         //if no presences return an empty array

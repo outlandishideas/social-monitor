@@ -42,7 +42,7 @@ class GroupController extends CampaignController {
 		$this->view->titleIcon = 'icon-th-list';
 		$this->view->titleInfo = $group->groupInfo();
         $this->view->group = $group;
-        $this->view->badges = $group->getOverallKpi();
+        $this->view->badges = array('total','reach','engagement','quality');
 	}
 
 	/**
@@ -159,4 +159,19 @@ class GroupController extends CampaignController {
 		}
 		$this->_helper->redirector->gotoSimple('index');
 	}
+
+    /**
+     * Gets all of the graph data for the requested presence
+     */
+    public function badgeDataAction() {
+        Zend_Session::writeClose(); // release session on long running actions
+
+        $group = Model_Group::fetchById($this->_request->id);
+
+        $response = $group->getBadges();
+
+        $this->apiSuccess($response);
+
+    }
+
 }
