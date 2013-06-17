@@ -9,12 +9,6 @@ app.badges = {
 
         var $badges = $('#badges');
 
-        app.state.controller = $badges.data('controller');
-        app.state.controllerLabel = $badges.data('controller-label');
-        if (!app.state.controllerLabel) {
-            app.state.controllerLabel = app.state.controller;
-        }
-
         $badges.find('.badge.box').each(function(){
             var selector = '#' + $(this).attr('id');
             app.state.badges[selector] = app.badges.createBadge(selector);
@@ -37,7 +31,7 @@ app.badges = {
 
         $badges.showLoader();
 
-        var url = app.state.controller + '/badge-data';
+        var url = $badges.data('controller') + '/badge-data';
         var args = {
             id:$badges.data('id')
         };

@@ -8,11 +8,6 @@ app.charts = {
 	dateFormat: d3.time.format('%Y-%m-%d'),
 	setup:function () {
 		var $charts = $('#charts');
-		app.state.controller = $charts.data('controller');
-		app.state.controllerLabel = $charts.data('controller-label');
-		if (!app.state.controllerLabel) {
-			app.state.controllerLabel = app.state.controller;
-		}
 
 		$(document)
 			.on('dateRangeUpdated', app.charts.refreshCharts)
@@ -574,7 +569,7 @@ app.charts = {
 			$(app.state.chartData[i].selector).closest('.chart-container').showLoader();
 		}
 
-		var url = app.state.controller + '/graph-data';
+		var url = $('#charts').data('controller') + '/graph-data';
 		var dateRange = app.state.dateRange.map(function(d){
 			return $.datepicker.formatDate('yy-mm-dd', Date.parse(d));
 		});

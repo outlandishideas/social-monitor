@@ -26,7 +26,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
         <h2><span class="icon-certificate icon-large"></span> Badges</h2>
     </div>
 
-    <div id="badges" data-id="<?php echo $this->country->id; ?>" class="grid justify" data-controller="country" data-controller-label="country">
+    <div id="badges" data-id="<?php echo $this->country->id; ?>" class="grid justify" data-controller="country">
         <?php
         foreach($this->badges as $name => $badge) {
             echo $this->partial('partials/badges.phtml', array('badge'=>$badge));
@@ -34,7 +34,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
         ?>
     </div>
 
-    <div id="charts" data-controller="presence" data-controller-label="presence">
+    <div id="charts" data-controller="presence">
         <?php
         $currentId = 1;
         foreach($this->compareData as $data) :
@@ -65,8 +65,8 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
         <tr>
             <th>Handle</th>
-            <th></th>
-            <th></th>
+            <th><abbr title="Digital Sign-Off"">SO</abbr></th>
+            <th><abbr title="Branding">B</abbr></th>
             <?php foreach ($this->tableMetrics as $key=>$label) : ?>
                 <th><?php echo $label; ?></th>
             <?php endforeach; ?>
@@ -79,14 +79,12 @@ $buttons = $this->gatekeeper()->filterAll(array(
                 </td>
                 <td>
                     <span class="<?php echo $presence->sign_off ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
-                          data-value="<?php echo $presence->sign_off ? 1 : 0 ;?>"
-                          title="Digital Sign-off"></span>
+                          data-value="<?php echo $presence->sign_off ? 1 : 0 ;?>"></span>
                 </td>
                 <td>
                     <span
                         class="<?php echo $presence->branding ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
-                        data-value="<?php echo $presence->branding ? 1 : 0 ;?>"
-                        title="Branding"></span>
+                        data-value="<?php echo $presence->branding ? 1 : 0 ;?>"></span>
                 </td>
                 <?php $kpiData = $presence->getKpiData(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                     <td>

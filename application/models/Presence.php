@@ -241,6 +241,7 @@ class Model_Presence extends Model_Base {
 				try {
 					$data = Util_Facebook::pageInfo($this->handle);
 				} catch (Exception_FacebookNotFound $e) {
+					$this->uid = null;
 					throw new Exception_FacebookNotFound('Facebook page not found: ' . $this->handle, $e->getCode(), $e->getFql(), $e->getErrors());
 				}
 				$this->uid = $data['page_id'];
@@ -253,6 +254,7 @@ class Model_Presence extends Model_Base {
 				try {
 					$data = Util_Twitter::userInfo($this->handle);
 				} catch (Exception_TwitterNotFound $e) {
+					$this->uid = null;
 					throw new Exception_TwitterNotFound('Twitter user not found: ' . $this->handle, $e->getCode(), $e->getPath(), $e->getErrors());
 				}
 				$this->uid = $data->id_str;
@@ -275,7 +277,7 @@ class Model_Presence extends Model_Base {
 	 */
 	public function updateStatuses() {
 		if (!$this->uid) {
-			throw new Exception('Presence not initialised');
+			throw new Exception('Presence not initialised/found');
 		}
 
 		$statuses = array();
