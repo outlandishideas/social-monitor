@@ -20,6 +20,8 @@ live:
     secret: ***REMOVED***
     fetch_per_page: 50
     cache_user_data: 7
+  klout:
+    api_key: ***REMOVED***
   app:
 # e.g. 7 Feb 2012 for PHP date()
     dateFormat: j M Y
