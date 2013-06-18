@@ -161,7 +161,7 @@ app.init = {
                     return this.value;
                 }).get();
 
-                href = href + ids.join(',');
+                href += '/id/' + ids.join(',');
 
                 $button.attr('href', href);
 
