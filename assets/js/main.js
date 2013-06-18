@@ -121,51 +121,26 @@ app.init = {
             })
         },
 
-        '.compare-checkbox': function ($item) {
-            $item.on('click', function(){
-                var $button = $('.compare.button');
-                var $list = $('.compare.list');
+        '.button.compare': function ($button) {
+	        var updateComparison = function() {
+		        var $list = $('.compare.list');
+		        var $checked = $('input.compare-checkbox:checked');
 
-                //if the list does not exist create it.
-                if($list.length == 0){
-                    $button.after('<ul class="compare list"></ul>');
-                    $list = $('.compare.list');
-                }
+		        $list.empty().addClass('empty');
+		        $button.hide();
 
-	            var val = $(this).val();
-
-	            if($(this).is(':checked')){
-
-                    //add presence to list in $list
-                    var liHtml = '<li data-id="'+ val +'">'+$(this).data("name")+'</li>';
-                    $list.append(liHtml);
-		            $list.show();
-					$button.show();
-                } else {
-
-                    //remove list item if it exists
-                    var $listItem = $list.find('*[data-id="'+val+'"]');
-                    if($listItem.length != 0){
-                        $listItem.remove();
-                    }
-
-                    if($list.find('li').length == 0){
-                        $list.hide();
-	                    $button.hide();
-                    }
-
-                }
-
-                var href = $button.data('href');
-                var ids = $('input:checkbox:checked.compare-checkbox').map(function () {
-                    return this.value;
-                }).get();
-
-                href += '/id/' + ids.join(',');
-
-                $button.attr('href', href);
-
-            });
+		        var ids = [];
+		        $checked.each(function() {
+			        var id = $(this).val();
+			        ids.push(id);
+			        $button.show();
+			        $list.removeClass('empty');
+			        $list.append('<li data-id="'+ id +'">'+$(this).data("name")+'</li>')
+		        });
+		        $button.attr('href', $button.data('href') + '/id/' + ids.join(','));
+	        };
+	        updateComparison();
+	        $('input.compare-checkbox').on('change', updateComparison);
         },
 
         '.accordion-btn': function ($item) {

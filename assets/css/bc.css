@@ -1098,6 +1098,9 @@ body .button.compare {
 	display: none;
 }
 
+body .compare.list.empty {
+	display: none;
+}
 body .compare.list {
     display: inline-block;
     margin: 0;
