@@ -6,7 +6,7 @@
 
 <?php
     $links = $this->gatekeeper()->filterAll(array(
-        '<a class="button add" href="%url%"><span class="icon-plus"></span>  Create Group</a>' => array('controller'=>'group','action' => 'new', 'presences'=>implode(',', array_keys($this->compareData))),
+        '<a class="button add" href="%url%"><span class="icon-plus"></span>  Create SBU</a>' => array('controller'=>'group','action' => 'new', 'presences'=>implode(',', array_keys($this->compareData))),
     ), null, true);
     if ($links) {
         echo '<div class="buttons">' . implode('', $links) . '</div>';
@@ -19,13 +19,14 @@
 
 <?php else : ?>
 
-    <div id="charts" data-controller="presence" data-controller-label="presence">
+    <div id="charts" data-controller="presence">
         <?php
         $currentId = 1;
-        foreach($this->compareData as $data) :
-        ?>
+        foreach($this->compareData as $data) : ?>
+        <div class="section-title">
+	        <h2><?php echo $this->partial('partials/presence_inline.phtml', array('presence'=>$data->presence)); ?></h2>
+        </div>
 	    <div class="presence-charts">
-		    <?php echo $this->partial('partials/presence_inline.phtml', array('presence'=>$data->presence)); ?>
             <?php
 	        foreach ($data->graphs as $graph) {
                 $graph->id = $currentId++;
@@ -37,7 +38,9 @@
         <?php endforeach; ?>
     </div>
 
-	<h3>Scores for the last 30 days:</h3>
+	<div class="section-title">
+		<h2><span class="icon-bar-chart icon-large"></span> Scores for the last 30 days:</h2>
+	</div>
 
     <table class="text">
 

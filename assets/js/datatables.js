@@ -121,7 +121,7 @@ app.datatables = {
 		},
 		'#statuses.facebook': function($div) {
 			var args = {
-				sAjaxSource:jsConfig.apiEndpoint + app.state.controller + "/statuses",
+				sAjaxSource:jsConfig.apiEndpoint + "/presence/statuses",
 				fnServerParams: function(aoData) {
                     var date = app.state.barDate.length == 2 ? app.state.barDate : app.state.dateRange ;
                     aoData.push({ name:"dateRange", value:date });
@@ -216,7 +216,7 @@ app.datatables = {
 		},
 		'#statuses.twitter': function($div) {
 			var args = {
-				sAjaxSource:jsConfig.apiEndpoint + app.state.controller + "/statuses",
+				sAjaxSource:jsConfig.apiEndpoint + "/presence/statuses",
 				fnServerParams: function(aoData) {
 					aoData.push({ name:"dateRange", value:app.state.dateRange });
 					aoData.push({ name:"id", value:$div.data('presence-id') });
@@ -256,7 +256,7 @@ app.datatables = {
 	generateLanguage: function(type) {
 		return {
 			sSearch:'Search ' + type + 's:',
-			sEmptyTable:'No ' + type + 's found for this ' + app.state.controllerLabel,
+			sEmptyTable:'No ' + type + 's found for this presence',
 			sZeroRecords:'No matching ' + type + 's',
 			sInfo:'Showing ' + type + 's: _START_ to _END_',
 			sInfoEmpty:'No ' + type + 's to show',

@@ -18,7 +18,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
     <h2>Badges</h2>
 </div>
 
-<div id="badges" data-id="<?php echo $this->presence->id; ?>" class="grid justify" data-controller="presence" data-controller-label="presence">
+<div id="badges" data-id="<?php echo $this->presence->id; ?>" class="grid justify" data-controller="presence">
     <?php
         foreach($this->badges as $name => $badge) {
             echo $this->partial('partials/badges.phtml', array('badge'=>$badge));
@@ -26,7 +26,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
     ?>
 </div>
 
-<div id="charts" data-controller="presence" data-controller-label="presence">
+<div id="charts" data-controller="presence">
 	<?php
 	$currentId = 1;
 	foreach ($this->graphs as $graph) {

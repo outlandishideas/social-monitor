@@ -67,4 +67,20 @@ class Util_Http {
 		return $url;
 	}
 
+	public static function fetchJson($url) {
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_URL, $url);
+		$response = curl_exec($ch);
+		$resultCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+
+		if ($resultCode != 200) {
+			throw new RuntimeException($response, $resultCode);
+		} else {
+			return json_decode($response);
+		}
+	}
 }

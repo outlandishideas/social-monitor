@@ -66,6 +66,8 @@ class Model_Presence extends Model_Base {
 	const TYPE_FACEBOOK = 'facebook';
 	const TYPE_TWITTER = 'twitter';
 
+	const KLOUT_API_ENDPOINT = 'http://api.klout.com/v2/';
+
 	public static function fetchAllTwitter() {
 		return self::fetchAll('type = :type', array(':type'=>self::TYPE_TWITTER));
 	}
@@ -241,6 +243,7 @@ class Model_Presence extends Model_Base {
 				try {
 					$data = Util_Facebook::pageInfo($this->handle);
 				} catch (Exception_FacebookNotFound $e) {
+					$this->uid = null;
 					throw new Exception_FacebookNotFound('Facebook page not found: ' . $this->handle, $e->getCode(), $e->getFql(), $e->getErrors());
 				}
 				$this->uid = $data['page_id'];
@@ -253,6 +256,7 @@ class Model_Presence extends Model_Base {
 				try {
 					$data = Util_Twitter::userInfo($this->handle);
 				} catch (Exception_TwitterNotFound $e) {
+					$this->uid = null;
 					throw new Exception_TwitterNotFound('Twitter user not found: ' . $this->handle, $e->getCode(), $e->getPath(), $e->getErrors());
 				}
 				$this->uid = $data->id_str;
@@ -260,6 +264,20 @@ class Model_Presence extends Model_Base {
 				$this->name = $data->name;
 				$this->page_url = 'http://www.twitter.com/' . $data->screen_name;
 				$this->popularity = $data->followers_count;
+
+				// update the klout score (not currently possible for facebook pages)
+				try {
+					$apiKey = Zend_Registry::get('config')->klout->api_key;
+					if (!$this->klout_id) {
+						$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $this->uid . '?key=' . $apiKey);
+						$this->klout_id = $json->id;
+					}
+					if ($this->klout_id) {
+						$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'user.json/' . $this->klout_id . '?key=' . $apiKey);
+						$this->klout_score = $json->score->score;
+					}
+				} catch (Exception $ex) { /* ignore */ }
+
 				break;
 		}
 	}
@@ -275,7 +293,7 @@ class Model_Presence extends Model_Base {
 	 */
 	public function updateStatuses() {
 		if (!$this->uid) {
-			throw new Exception('Presence not initialised');
+			throw new Exception('Presence not initialised/found');
 		}
 
 		$statuses = array();
