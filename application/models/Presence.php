@@ -513,393 +513,137 @@ class Model_Presence extends Model_Base {
         return $this->getHistoryData('quality_ranking', $startDate, $endDate);
     }
 
-    /********************************************************************
-     *
-     * Start of Badge Functions
-     *
-     ********************************************************************/
+    public function calculateMetrics($badgeType, $metrics = array())
+    {
 
-    /**
-     * Returns an array of badge objects that contain only the score and ranking
-     * @return array
-     */
-    public function getBadgesScore() {
+        $endDate = new DateTime();
+        $startDate = new DateTime();
+        $startDate->sub(DateInterval::createFromDateString('1 month'));
 
-        //go through the list of badges and get the Badge object of each (just the score)
-        $badges = array();
-        foreach(Model_Presence::ALL_BADGES() as $badge => $array){
-            $badges[$badge] = (object)array(
-                'score' => $this->getScore($badge),
-                'type' => $badge,
-                'title' => ucfirst($badge)
-            );
-        }
+        $end = $endDate->format('Y-m-d');
+        $start = $startDate->format('Y-m-d');
 
-        //add the Total badge, which has a score based the sum of other badge scores
-        $badges = array('total'=>$this->getTotal($badges))+$badges;
+        $dateString = $endDate->format('Y-m-d H-i-s');
 
-        //foreach badge get the ranking
-        foreach($badges as $badge){
-            $this->badgeRanking($badge);
-        }
-
-        return $badges;
-    }
-
-    /**
-     * Returns an array of badge objects that contain the score, ranking and individual kpis for each badge
-     * @return array
-     */
-    public function getBadges() {
-
-        //go though list of badges and get the Badge object for each (with metrics)
-        $badges = array();
-        $countPresences = count(Model_Presence::fetchAll());
-        $class = get_called_class();
-
-        foreach(Model_Presence::ALL_BADGES() as $badge => $array){
-            $badges[$badge] = new Model_Badge(array($this->handle => $this), $badge, $class, $countPresences);
-        }
-
-        //foreach badge get the ranking
-        foreach($badges as $badge){
-            $badge->getRanking($this->id);
-        }
-
-        //add the Total badge, which has a score based the sum of other badge scores
-        $totalBadge = new Model_Badge($badges, 'total', $class, $countPresences);
-        $totalBadge->getRanking($this->id);
-
-        $badges = array( 'total' => $totalBadge ) + $badges;
-
-
-        return $badges;
-
-    }
-
-    /**
-     * Takes an array of badge objects and calculates the combined total for the Total Badge
-     * @param $badges
-     * @return object
-     */
-    public function getTotal($badges){
-
-        //go through each badge and count up the scores, and then divide by the number of badges
-        $score = 0;
-        foreach($badges as $badge){
-            $score += $badge->score;
-        }
-        $score /= count($badges);
-
-        //return the object for the Total badge
-        return (object)array(
-            'title'=>'Total',
-            'type'=>'total',
-            'score'=>$score
-        );
-    }
-
-    /**
-     * Gets the score for the badge. First try from history, then calculate
-     * @param string $type
-     * @return object
-     */
-    public function getScore($type){
-
-        //create start and end dates for db query
-        $date = new DateTime();
-        $startDate = $date->format('Y-m-d');
-        $endDate = $startDate . ' 23:59:59';
-        $startDate = $startDate . ' 00:00:00';
-
-        //get score for this badge type and presence from db
-        $rows = $this->getHistoryData($type, $startDate, $endDate);
-
-        if(!empty($rows)){
-
-            $row = array_pop($rows);
-            $score = $row->value;
-
-        //if score was not found in db, calculate it
-        } else {
-
-            if($type != 'total'){
-                $badge = $this->getBadgeMetrics($type);
-                $score = $badge->score;
-            } else {
-                $score = 0;
-                $allBadges = self::ALL_BADGES();
-                foreach(self::ALL_BADGES() as $badge => $array){
-                    $score += $this->getScore($badge);
-                }
-                $score /= count($allBadges);
-            }
-
-            //if we still can't get anything set score to 0
-            if(!$score) $score = 0;
-
-            //set Score in database
-            $this->setScore($score, $type);
-
-        }
-
-        return $score;
-    }
-
-    /**
-     * Gets the scores for the different metrics that make up a badge
-     * @param string $badgeType
-     * @param string $startDateString
-     * @param string $endDateString
-     * @return object
-     */
-    public function getBadgeMetrics($badgeType, $startDateString = null, $endDateString = null){
-
-        //if start and end date not set create them. Standard is 1 month in the past
-        if (!$startDateString || !$endDateString) {
-
-            $endDate = new DateTime();
-            $startDate = new DateTime();
-            $startDate->sub(DateInterval::createFromDateString('1 month'));
-
-            $endDateString = $endDate->format('Y-m-d');
-            $startDateString = $startDate->format('Y-m-d');
-        }
-
-        //get metrics for this badge type. If the badge type is incorrect, something has gone terribly wrong so return an empty array
-        $metricList = Model_Presence::ALL_BADGES();
-        if(!array_key_exists($badgeType,$metricList)){
-            $metrics = array();
-        } else {
-            $metrics = $metricList[$badgeType];
-        }
-
-        //create badge object and add title and type, score and an array for the kpis
-        $badge = (object)array(
-            'title' => ucfirst($badgeType),
-            'type' => $badgeType,
-            'kpis' => array(),
-            'score' => 0
+        $dataRow = (object)array(
+            'presence_id' => $this->id,
+            'value' => 0,
+            'datetime' => $dateString,
+            'type' => $badgeType
         );
 
-        //go through each of the metrics and match them against a rule. Create an object to be added to the kpi
+        if(empty($metrics))
+        {
+            $badges = Model_Presence::ALL_BADGES();
+            $metrics = $badges[$badgeType];
+        }
+
         foreach($metrics as $metric){
 
             switch($metric){
 
-                case(self::METRIC_POSTS_PER_DAY):
-                    $metricObj = (object)array(
-                        'title' => 'Average Posts Per Day',
-                        'target' => BaseController::getOption('updates_per_day'),
-                        'actual' => $this->getAveragePostsPerDay($startDateString, $endDateString)
-                    );
-                    $metricObj->score = ( $metricObj->actual / $metricObj->target ) * 100;
+                case(Model_Presence::METRIC_POSTS_PER_DAY):
+
+                    $target = BaseController::getOption('updates_per_day');
+                    $actual = $this->getAveragePostsPerDay($start, $end);
+
+                    if(!$target){
+                        $percent = 0;
+                    } else if($actual > $target){
+                        $percent = 100;
+                    } else {
+                        $percent = ( $actual / $target ) * 100;
+                    }
+
+                    $title = 'Average Posts Per Day';
+
                     break;
 
-                case(self::METRIC_LINKS_PER_DAY):
-                    $metricObj = (object)array(
-                        'title' => 'Average Links Per Day',
-                        'target' => BaseController::getOption('updates_per_day'),
-                        'actual' => $this->getAverageLinksPerDay($startDateString, $endDateString),
-                    );
-                    if($metricObj->actual > $metricObj->target){
-                        $metricObj->score = 100;
+                case(Model_Presence::METRIC_LINKS_PER_DAY):
+
+                    $target = BaseController::getOption('links_per_day');
+                    $actual = $this->getAverageLinksPerDay($start, $end);
+
+                    if(!$target){
+                        $percent = 0;
+                    } else if($actual > $target){
+                        $percent = 100;
                     } else {
-                        $metricObj->score = ( $metricObj->actual / $metricObj->target ) * 100;
+                        $percent = ( $actual / $target ) * 100;
                     }
+
+                    $title = 'Average Links Per Day';
+
                     break;
 
-                case(self::METRIC_LIKES_PER_POST):
-                    $metricObj = (object)array(
-                        'title' => 'Average Likes Per Post',
-                        'target' => BaseController::getOption('updates_per_day'),
-                        'actual' => $this->getAverageLikesPerPost($startDateString, $endDateString)
-                    );
-                    if($metricObj->actual > $metricObj->target){
-                        $metricObj->score = 100;
+                case(Model_Presence::METRIC_LIKES_PER_POST):
+
+                    $target = BaseController::getOption('likes_per_post_best');
+                    $actual = $this->getAverageLikesPerPost($start, $end);
+
+                    if(!$target){
+                        $percent = 0;
+                    } else if($actual > $target){
+                        $percent = 100;
                     } else {
-                        $metricObj->score = ( $metricObj->actual / $metricObj->target ) * 100;
+                        $percent = ( $actual / $target ) * 100;
                     }
+
+                    $title = 'Average Likes Per Post';
+
                     break;
 
-                case(self::METRIC_RESPONSE_TIME):
-                    $metricObj = (object)array(
-                        'title' => 'Average Response Time',
-                        'target' => BaseController::getOption('updates_per_day'),
-                        'actual' => $this->getAverageResponseTime($startDateString,$endDateString)
-                    );
-                    if($metricObj->actual > $metricObj->target){
-                        $metricObj->score = ( $metricObj->target / $metricObj->actual ) * 100;
+                case(Model_Presence::METRIC_RESPONSE_TIME):
+
+                    $target = BaseController::getOption('updates_per_day');
+                    $actual = $this->getAverageResponseTime($start, $end);
+
+                    if(!$target){
+                        $percent = 0;
+                    } else if($actual > $target){
+                        $percent = ( $target / $actual ) * 100;
                     } else {
-                        $metricObj->score = 100;
+                        $percent = 100;
                     }
+
+                    $title = 'Average Response Time';
+
                     break;
 
-                case(self::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS):
-                    $metricObj = (object)array(
-                        'title' => 'Ratio of Replies to Posts from others',
-                        'target' => BaseController::getOption('updates_per_day'),
-                        'actual' => $this->getRatioRepliesToOthersPosts($startDateString, $endDateString)
-                    );
-                    if($metricObj->actual > $metricObj->target){
-                        $metricObj->score = 100;
+                case(Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS):
+
+                    $target = BaseController::getOption('replies_to_number_posts_best');
+                    $actual = $this->getRatioRepliesToOthersPosts($start, $end);
+
+                    if(!$target){
+                        $percent = 0;
+                    } else if($actual > $target){
+                        $percent = 100;
                     } else {
-                        $metricObj->score = ( $metricObj->actual / $metricObj->target ) * 100;
+                        $percent = ( $actual / $target ) * 100;
                     }
+
+                    $title = 'Ratio of Replies to Posts from others';
+
                     break;
 
                 default:
-                    $metricObj = (object)array(
-                        'title' => 'Default',
-                        'target' => 0,
-                        'actual' => 0
-                    );
-                    $metricObj->score = 0;
+
+                    $title = 'Default';
+                    $target = 0;
+                    $actual = 0;
+                    $percent = 0;
 
             }
 
-            //add the metric type to the metric object
-            $metricObj->type = $metric;
-            $badge->kpis[$metric] = $metricObj;
-
-            //add the score score to the $badge->score
-            $badge->score += $metricObj->score;
+            $dataRow->value += $percent;
 
         }
 
-        //calculate total score for the badge by dividing the total of all kpis by their number
-        $badge->score = $badge->score/count($badge->kpis);
+        $dataRow->value /= count($metrics);
 
-        return $badge;
+        return $dataRow;
     }
-
-    /**
-     * Takes a badge object of a presence, compares its score against the score of all other presences and ranks it
-     * @param $badge
-     * @return boolean
-     */
-    public function badgeRanking(&$badge){
-
-        //fetch all presences and add their count() as the rankingTotal
-        $allPresences = Model_Presence::fetchAll();
-        $badge->rankingTotal = count($allPresences);
-
-        //create start and end dates for db query
-        $date = new DateTime();
-        $startDate = $date->format('Y-m-d');
-        $endDate = $startDate . ' 23:59:59';
-        $startDate = $startDate . ' 00:00:00';
-
-        $type = $badge->type.'_ranking';
-        $rows = $this->getHistoryData($type, $startDate, $endDate);
-
-        if(!empty($rows)){
-
-            $row = array_pop($rows);
-            $badge->ranking = $row->value;
-            return true;
-
-            //if score was not found in db, calculate it
-        } else {
-
-            //get the score of each presence and add it scores array
-            $scores = array();
-            foreach($allPresences as $presence){
-                $scores[] = (object)array(
-                    'id' => $presence->id,
-                    'score' => $presence->getScore($badge->type)
-                );
-            }
-
-            //sort the scores array by the score of each presence
-            usort($scores, function($a, $b){
-                if($a->score == $b->score) return 0;
-                return ($a->score < $b->score) ? 1 : -1 ;
-            });
-
-            //go through each score to determine the ranking of the presence in question
-            $ranking = 0;
-            for($i=0;$i<count($scores);$i++){
-
-                //if its the first score, set the ranking to 1 (for 1st)
-                //else if the score does not match the previous score increase the ranking
-                if($i == 0) {
-                    $ranking++;
-                } else {
-                    if($scores[$i]->score != $scores[$i-1]->score){
-                        $ranking++;
-                    }
-                }
-
-                //if the current id matches this presences id break out of the loop and add the current ranking as this badges ranking
-                if($scores[$i]->id == $this->id){
-                    $badge->ranking = $ranking;
-                    $this->setRanking($ranking, $type);
-                    return true;
-                }
-            }
-        }
-
-        $badge->ranking = 'n/a';
-    }
-
-    /**
-     * Sets the score for this badge type and this presence. Called only when prexisting score was not already found in the database.
-     * @param $score
-     * @param $type
-     * @param null $datetime
-     * @return int
-     */
-    public function setScore($score, $type, $datetime = null){
-
-        //if datetime has not been set, create it
-        if(!$datetime){
-            $date = new DateTime;
-            $datetime = $date->format('Y-m-d H:i:s');
-        }
-
-        //put together a package of data to be sent to the insertData function
-        $data = array(array(
-            'value'=>$score,
-            'type'=>$type,
-            'presence_id'=>$this->id,
-            'datetime'=>$datetime
-        ));
-
-        return $this->insertData('presence_history',$data);
-    }
-
-    /**
-     * Sets the ranking for this badge type and this presence. Called only when prexisting ranking was not already found in the database.
-     * @param $ranking
-     * @param $type
-     * @param null $datetime
-     * @return int
-     */
-    public function setRanking($ranking, $type, $datetime = null){
-
-        //if datetime has not been set, create it
-        if(!$datetime){
-            $date = new DateTime;
-            $datetime = $date->format('Y-m-d H:i:s');
-        }
-
-        //put together a package of data to be sent to the insertData function
-        $data = array(array(
-            'value'=>$ranking,
-            'type'=>$type,
-            'presence_id'=>$this->id,
-            'datetime'=>$datetime
-        ));
-
-        return $this->insertData('presence_history',$data);
-    }
-
-    /********************************************************************
-     *
-     * End of Badge Functions
-     *
-     ********************************************************************/
 
     public function getStatuses($startDate, $endDate, $search, $order, $limit, $offset){
 		$clauses = array(

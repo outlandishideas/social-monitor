@@ -292,4 +292,81 @@ class Model_Campaign extends Model_Base {
 
         return $return;
     }
+
+    public static function getBadgeData() {
+
+        $date = new DateTime();
+        $startDate = $date->format('Y-m-d');
+
+        $types = array('reach','engagement','quality');
+
+        $args[':start_date'] = $startDate . ' 00:00:00';
+        $args[':end_date'] = $startDate . ' 23:59:59';
+
+        $sql =
+            'SELECT m.presence_id, m.type, m.value, m.datetime, c.campaign_id
+            FROM campaign_presences as c
+            INNER JOIN (
+                SELECT p.id as presence_id, ph.type, ph.value, ph.datetime
+                FROM presences as p
+                LEFT JOIN presence_history as ph
+                ON ph.presence_id = p.id
+                WHERE ph.datetime >= :start_date
+                AND ph.datetime <= :end_date
+                AND ph.type IN ("'. implode('","',$types) .'")
+                ORDER BY p.id, p.type, ph.datetime DESC
+            ) as m
+            ON m.presence_id = c.presence_id
+            ORDER BY c.campaign_id';
+
+        $stmt = Zend_Registry::get('db')->prepare($sql);
+        $stmt->execute($args);
+        $data = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        if(empty($data)){
+
+            $presences = Model_Presence::fetchAll();
+            $setHistoryArgs = array();
+
+            foreach($presences as $presence){
+                foreach(Model_Presence::ALL_BADGES() as $badgeType => $metrics){
+                    $setHistoryArgs[] = (array)$presence->calculateMetrics($badgeType, $metrics, $date->format('Y-m-d H-i-s'));
+                }
+            }
+
+            Model_Base::insertData('presence_history', $setHistoryArgs);
+
+            $data = self::getBadgeData();
+
+        }
+
+        return $data;
+    }
+
+    public function organizeBadgeData($data){
+
+        $badgeData = array();
+
+        foreach($data as $row){
+
+            if(!isset($badgeData[$row->type])) $badgeData[$row->type] = (object)array('score'=>array(), 'rank'=>array());
+
+            if(!isset($badgeData[$row->type]->score[$row->campaign_id])) $badgeData[$row->type]->score[$row->campaign_id] = array();
+
+            if(!isset($badgeData[$row->type]->score[$row->campaign_id][$row->presence_id])) $badgeData[$row->type]->score[$row->campaign_id][$row->presence_id] = $row->value;
+
+        }
+
+        foreach($badgeData as $b => $badge){
+
+                $badge->score = array_map(function($a){
+                    $sum = array_sum($a);
+                    $count = count($a);
+                    return $sum/$count;
+                },$badge->score);
+
+        }
+
+        return $badgeData;
+    }
 }

@@ -169,7 +169,7 @@ class PresenceController extends GraphingController
 
         $presence = Model_Presence::fetchById($this->_request->id);
 
-        $response = $presence->getBadges();
+        $response = $presence->badgeFactory();
 
         $this->apiSuccess($response);
 

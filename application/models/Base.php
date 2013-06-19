@@ -172,6 +172,35 @@ abstract class Model_Base
 		return $class->fetch($clause, $args);
 	}
 
+    /**
+     * @param string|null $clause
+     * @param array $args
+     * @return Model_Base[]
+     */
+    public static function countAll($clause = null, $args = array()) {
+        $classname = get_called_class();
+        $class = new $classname;
+        return $class->count($clause, $args);
+    }
+
+    /**
+     * @param string|null $clause
+     * @param array $args
+     * @return Model_Base[]
+     */
+    protected function count($clause = null, $args = array()) {
+        $sql = 'SELECT COUNT(1) as count FROM '.static::$tableName;
+        if ($clause) {
+            $sql .= ' WHERE ' . $clause;
+        }
+
+        $statement = $this->_db->prepare($sql);
+        $statement->execute($args);
+
+        $stmt = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt[0]['count'];
+    }
+
 	/**
 	 * @param string|null $clause
 	 * @param array $args
@@ -193,7 +222,7 @@ abstract class Model_Base
 
 		$statement = $this->_db->prepare($sql);
 		$statement->execute($args);
-		
+
 		return $this->objectify($statement->fetchAll(PDO::FETCH_ASSOC));
 	}
 
@@ -275,4 +304,124 @@ abstract class Model_Base
 		$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
 		return $date->format('Y-m-d H:i:s');
 	}
+
+    public static function getBadgeData() {
+
+        $date = new DateTime('-1 day');
+        $startDate = $date->format('Y-m-d');
+
+        $types = array('reach','reach_ranking','engagement','engagement_ranking','quality','quality_ranking');
+
+        $args[':start_date'] = $startDate . ' 00:00:00';
+        $args[':end_date'] = $startDate . ' 23:59:59';
+
+        $sql =
+            'SELECT p.id as presence_id, ph.type as type, ph.value as value, ph.datetime as datetime
+            FROM presences as p
+            LEFT JOIN presence_history as ph
+            ON ph.presence_id = p.id
+            WHERE ph.datetime >= :start_date
+            AND ph.datetime <= :end_date
+            AND ph.type IN ("'. implode('","',$types) .'")
+            ORDER BY p.id, p.type, ph.datetime DESC';
+
+        $stmt = Zend_Registry::get('db')->prepare($sql);
+        $stmt->execute($args);
+        $data = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        if(empty($data)){
+
+            $presences = Model_Presence::fetchAll();
+            $setHistoryArgs = array();
+
+            foreach($presences as $presence){
+                foreach(Model_Presence::ALL_BADGES() as $badgeType => $metrics){
+                    $dataRow = $presence->calculateMetrics($badgeType, $metrics, $date->format('Y-m-d H-i-s'));
+                    $data[] = $dataRow;
+                    $setHistoryArgs[] = (array)$dataRow;
+                }
+            }
+
+            Model_Base::insertData('presence_history', $setHistoryArgs);
+
+        }
+
+        return $data;
+    }
+
+    public function badgeFactory(){
+
+        $date = new DateTime();
+        $class = get_called_class();
+        $setHistoryArgs = array();
+        $countItems = $class::countAll();
+
+        $data = $this->getBadgeData();
+
+        $badgeData = $class::organizeBadgeData($data);
+
+        $badges = array();
+        foreach($badgeData as $type => $badge){
+
+            //check count of score against all presences
+            //if we are missing some presences get all presences and array_diff_key  id
+            if(count($badge->score) != $countItems && $class == 'Model_Presence'){
+
+                if(!isset($allPresenceIds)) {
+                    $allPresences = Model_Presence::fetchAll(null, array(), array('id'));
+                    $allPresenceIds = array();
+                    foreach($allPresences as $p){
+                        $allPresenceIds[$p->presence_id] = $p;
+                    }
+                }
+
+                $missingIds = array_diff_key($allPresenceIds, $badge->score);
+                foreach($missingIds as $presence){
+                    $dataRow = $presence->calculateMetrics($type, $metrics = array(), $date->format('Y-m-d H-i-s'));
+                    $badge->score[$dataRow->presence_id] = $dataRow->value;
+                    $setHistoryArgs[] = (array)$dataRow;
+                }
+
+
+            }
+
+            $badges[$type] = new Model_Badge($badge, $type, $this, $class);
+        }
+
+        $total = array('total' => new Model_Badge($badges, 'total', $this, $class));
+        $badges = $total + $badges;
+
+        $this->insertData('presence_history', $setHistoryArgs);
+
+        return $badges;
+
+    }
+
+    public function organizeBadgeData($data){
+
+        $badgeData = array();
+
+        foreach($data as $row){
+
+            if(preg_match('|^(.*)\_ranking$|', $row->type, $matches)){
+                $badgeType = $matches[1];
+                $rank = true;
+            } else {
+                $badgeType = $row->type;
+                $rank = false;
+            }
+
+            if(!isset($badgeData[$badgeType])) $badgeData[$badgeType] = (object)array('score'=>array(), 'rank'=>array());
+
+            if($rank){
+                if(!array_key_exists($row->presence_id, $badgeData[$badgeType]->rank)) $badgeData[$badgeType]->rank[$row->presence_id] = $row->value;
+            } else {
+                if(!array_key_exists($row->presence_id, $badgeData[$badgeType]->score)) $badgeData[$badgeType]->score[$row->presence_id] = $row->value;
+            }
+
+        }
+
+        return $badgeData;
+    }
+
 }
