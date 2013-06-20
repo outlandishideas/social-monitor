@@ -103,6 +103,15 @@ class Model_Campaign extends Model_Base {
 		return $this->kpiAverages;
 	}
 
+    /*****************************************************************
+     * Badge Factory
+     *****************************************************************/
+
+    /**
+     * function gets returns rows for all Badge data stored in the presence_history for today's date
+     * If badge data is not yet in the table for today, it will calculate it and insert it and then return it
+     * @return array
+     */
     public static function getBadgeData() {
 
         //set up todays date
@@ -170,7 +179,7 @@ class Model_Campaign extends Model_Base {
      * @param $data
      * @return array
      */
-    public function organizeBadgeData($data){
+    public static function organizeBadgeData($data){
 
         //badgeData for campaigns is set up differently than
         $badgeData = array();

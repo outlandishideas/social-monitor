@@ -64,6 +64,10 @@ class Model_Country extends Model_Campaign {
         }
     }
 
+    public function mapDataFactory(){
+
+    }
+
     public static function countryCodes() {
         return array(
             'AF' => 'Afghanistan',

@@ -386,7 +386,7 @@ abstract class Model_Base
         $countItems = $class::countAll();
 
         //get the Badge Data from the presence_history table, or create ourselves if it doesn't exist
-        $data = $this->getBadgeData();
+        $data = $class::getBadgeData();
 
         //take the raw data and organise it depending on how it will be used
         $badgeData = $class::organizeBadgeData($data);
@@ -432,7 +432,7 @@ abstract class Model_Base
         $badges = $total + $badges;
 
         //insert the missing data that we have collected in this function into the db
-        $this->insertData('presence_history', $setHistoryArgs);
+        Model_Base::insertData('presence_history', $setHistoryArgs);
 
         return $badges;
 
@@ -443,7 +443,7 @@ abstract class Model_Base
      * @param $data
      * @return array
      */
-    public function organizeBadgeData($data){
+    public static function organizeBadgeData($data){
 
         $badgeData = array();
 

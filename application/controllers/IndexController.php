@@ -9,6 +9,11 @@ class IndexController extends GraphingController
 		$countries = Model_Country::fetchAll();
 		$kpiData = array();
 		$metrics = self::mapMetrics();
+        //get the Badge Data from the presence_history table, or create ourselves if it doesn't exist
+        $data = Model_Country::getBadgeData();
+
+        //take the raw data and organise it depending on how it will be used
+        $badgeData = Model_Country::organizeBadgeData($data);
 		foreach($countries as $country){
 			$row = array(
 				'country' => $country->country,
@@ -17,13 +22,20 @@ class IndexController extends GraphingController
 				'targetAudience' => $country->getTargetAudience(),
 				'presenceCount' => count($country->getPresences())
 			);
-			$averages = $country->getKpiAverages();
-			foreach ($averages as $key=>$average) {
+            $totalScore = 0;
+			foreach ($badgeData as $key=>$badge) {
+                $score = isset($badge->score[intval($country->id)]) ? $badge->score[intval($country->id)] : 0;
+                $totalScore += $score;
 				$row[$key] = array(
-					'average'=>$average,
-					'label'=>$this->view->trafficLight()->label($average, $key)
+					'average'=> $score,
+					'label'=> $score //$this->view->trafficLight()->label($badge, $key)
 				);
 			}
+            $row['total'] = array(
+                'average'=>$score/count($badgeData),
+                'label' => 'Total'
+            );
+
 			$kpiData[] = $row;
 		}
 

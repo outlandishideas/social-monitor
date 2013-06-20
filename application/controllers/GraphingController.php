@@ -13,10 +13,10 @@ abstract class GraphingController extends BaseController {
 
 	protected static function mapMetrics(){
 		return array(
-			Model_Presence::METRIC_POPULARITY_PERCENT => 'Percent of Target Audience',
-			Model_Presence::METRIC_POPULARITY_TIME => 'Time to Reach Target Audience',
-			Model_Presence::METRIC_POSTS_PER_DAY => 'Average Number of Posts Per Day',
-			Model_Presence::METRIC_RESPONSE_TIME => 'Average Response Time',
+			Model_Presence::METRIC_BADGE_TOTAL => 'Total',
+			Model_Presence::METRIC_BADGE_REACH => 'Reach',
+			Model_Presence::METRIC_BADGE_ENGAGEMENT => 'Engagement',
+			Model_Presence::METRIC_BADGE_QUALITY => 'Quality',
 		);
 	}
 
@@ -96,9 +96,25 @@ abstract class GraphingController extends BaseController {
 			'colors' => array($colors->green, $colors->yellow, $colors->orange, $colors->red)
 		);
 
-		foreach (self::mapMetrics() as $key=>$label) {
-			$metrics[$key]->label = $label;
-		}
+        $metrics[Model_Presence::METRIC_BADGE_TOTAL] = (object)array(
+            'range' => array(0, 33, 66, 100),
+            'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
+        );
+
+        $metrics[Model_Presence::METRIC_BADGE_REACH] = (object)array(
+            'range' => array(0, 33, 66, 100),
+            'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
+        );
+
+        $metrics[Model_Presence::METRIC_BADGE_ENGAGEMENT] = (object)array(
+            'range' => array(0, 33, 66, 100),
+            'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
+        );
+
+        $metrics[Model_Presence::METRIC_BADGE_QUALITY] = (object)array(
+            'range' => array(0, 33, 66, 100),
+            'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
+        );
 
 		// convert each hex string to rgb values
 		foreach ($metrics as $args) {
@@ -112,6 +128,34 @@ abstract class GraphingController extends BaseController {
 			}
 		}
 		$this->view->trafficMetrics = $metrics;
+
+        $geochart = array();
+        $geochart['total'] = (object)array(
+            'range' => array(0, 33, 66, 100),
+            'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
+        );
+        $badges = Model_Presence::ALL_BADGES();
+        foreach($badges as $badge => $kpis){
+            $geochart[$badge] = (object)array(
+                'range' => array(0, 33, 66, 100),
+                'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
+            );
+        }
+        foreach (self::mapMetrics() as $key=>$label) {
+            $geochart[$key]->label = $label;
+        }
+        foreach ($geochart as $args) {
+            $args->colorsRgb = array();
+            foreach ($args->colors as $color) {
+                $rgb = array();
+                for ($i=1; $i<6; $i+=2) {
+                    $rgb[] = hexdec(substr($color, $i, 2));
+                }
+                $args->colorsRgb[] = $rgb;
+            }
+        }
+        $this->view->geochartMetrics = $geochart;
+
 	}
 
 
