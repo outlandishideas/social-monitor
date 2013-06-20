@@ -202,7 +202,7 @@ class CountryController extends CampaignController {
 
         $country = Model_Country::fetchById($this->_request->id);
 
-        $response = $country->getBadges();
+        $response = $country->badgeFactory();
 
         $this->apiSuccess($response);
 

@@ -305,16 +305,29 @@ abstract class Model_Base
 		return $date->format('Y-m-d H:i:s');
 	}
 
+    /*****************************************************************
+     * Badge Factory
+     *****************************************************************/
+
+    /**
+     * function gets returns rows for all Badge data stored in the presence_history for today's date
+     * If badge data is not yet in the table for today, it will calculate it and insert it and then return it
+     * @return array
+     */
     public static function getBadgeData() {
 
-        $date = new DateTime('-1 day');
+        //get today's date
+        $date = new DateTime();
         $startDate = $date->format('Y-m-d');
 
+        //the values in the type column that we want to return
         $types = array('reach','reach_ranking','engagement','engagement_ranking','quality','quality_ranking');
 
+        //start and end dateTimes return all entries from today's date
         $args[':start_date'] = $startDate . ' 00:00:00';
         $args[':end_date'] = $startDate . ' 23:59:59';
 
+        //returns rows with presence_id, type, value and datetime, ordered by presence_id, type, and datetime(DESC)
         $sql =
             'SELECT p.id as presence_id, ph.type as type, ph.value as value, ph.datetime as datetime
             FROM presences as p
@@ -329,19 +342,30 @@ abstract class Model_Base
         $stmt->execute($args);
         $data = $stmt->fetchAll(PDO::FETCH_OBJ);
 
+        //if no rows are returned, then we need to create the data ourselves
         if(empty($data)){
 
+            //get all the presences
             $presences = Model_Presence::fetchAll();
+
+            //create a variable that will hold the data that will be
             $setHistoryArgs = array();
 
+            //foreach presence and foreach badge (not total badge), calculate the metrics
             foreach($presences as $presence){
                 foreach(Model_Presence::ALL_BADGES() as $badgeType => $metrics){
+
+                    //$dataRow is an object with four properties: presence_id, type, value, datetime (matching columns in presence_history table)
                     $dataRow = $presence->calculateMetrics($badgeType, $metrics, $date->format('Y-m-d H-i-s'));
                     $data[] = $dataRow;
+
+                    //we have to turn the object back into an array so it can be sent to the insertData function
                     $setHistoryArgs[] = (array)$dataRow;
+
                 }
             }
 
+            //insert the newly calculated data back into the presence_history table, so next time its ready for us.
             Model_Base::insertData('presence_history', $setHistoryArgs);
 
         }
@@ -349,15 +373,22 @@ abstract class Model_Base
         return $data;
     }
 
+    /**
+     * This function creates the four badges for the item it is called on.
+     * @return array
+     */
     public function badgeFactory(){
 
+        //set up some variables that we we will use throughout this function
         $date = new DateTime();
         $class = get_called_class();
         $setHistoryArgs = array();
         $countItems = $class::countAll();
 
+        //get the Badge Data from the presence_history table, or create ourselves if it doesn't exist
         $data = $this->getBadgeData();
 
+        //take the raw data and organise it depending on how it will be used
         $badgeData = $class::organizeBadgeData($data);
 
         $badges = array();
@@ -365,18 +396,23 @@ abstract class Model_Base
 
             //check count of score against all presences
             //if we are missing some presences get all presences and array_diff_key  id
+            //if we getting the badges for a country or group ignore this check (**do we need it??**)
             if(count($badge->score) != $countItems && $class == 'Model_Presence'){
 
+                //if we have already set $allPresenceIds, don't set it again
                 if(!isset($allPresenceIds)) {
-                    $allPresences = Model_Presence::fetchAll(null, array(), array('id'));
+                    $allPresences = Model_Presence::fetchAll(null, array());
                     $allPresenceIds = array();
                     foreach($allPresences as $p){
-                        $allPresenceIds[$p->presence_id] = $p;
+                        $allPresenceIds[$p->id] = $p;
                     }
                 }
 
-                $missingIds = array_diff_key($allPresenceIds, $badge->score);
-                foreach($missingIds as $presence){
+                //get back array of presences that are missing data
+                $missingPresences = array_diff_key($allPresenceIds, $badge->score);
+
+                //foreach missing presence calculate their metrics for this badge, add them to $data for this badge, and add the to the $args for insetData
+                foreach($missingPresences as $presence){
                     $dataRow = $presence->calculateMetrics($type, $metrics = array(), $date->format('Y-m-d H-i-s'));
                     $badge->score[$dataRow->presence_id] = $dataRow->value;
                     $setHistoryArgs[] = (array)$dataRow;
@@ -385,24 +421,35 @@ abstract class Model_Base
 
             }
 
+            //create a Badge Object from this data
             $badges[$type] = new Model_Badge($badge, $type, $this, $class);
         }
 
+        //once all standard badges are created, create a new Badge Object for the total badge using the prexisting data for the others
         $total = array('total' => new Model_Badge($badges, 'total', $this, $class));
+
+        //add the the total badge at the beginning of the $badges array
         $badges = $total + $badges;
 
+        //insert the missing data that we have collected in this function into the db
         $this->insertData('presence_history', $setHistoryArgs);
 
         return $badges;
 
     }
 
+    /**
+     * organize the raw data from db into badges. Each badge is an object with score and rank properties, to store arrays of key($presence_id) => value($score/$rank) pairs
+     * @param $data
+     * @return array
+     */
     public function organizeBadgeData($data){
 
         $badgeData = array();
 
         foreach($data as $row){
 
+            //if we are dealing with ranking data ( type = *_ranking) get the badge type and set conditions for later
             if(preg_match('|^(.*)\_ranking$|', $row->type, $matches)){
                 $badgeType = $matches[1];
                 $rank = true;
@@ -411,11 +458,14 @@ abstract class Model_Base
                 $rank = false;
             }
 
+            //if we haven't already set the object for this badge, instantiate it
             if(!isset($badgeData[$badgeType])) $badgeData[$badgeType] = (object)array('score'=>array(), 'rank'=>array());
 
             if($rank){
+                //if we haven't set the ranking data for this presence, then set it (allows us to ignore duplicate data)
                 if(!array_key_exists($row->presence_id, $badgeData[$badgeType]->rank)) $badgeData[$badgeType]->rank[$row->presence_id] = $row->value;
             } else {
+                //if we haven't set the sore data for this presence, then set it (allows us to ignore duplicate data)
                 if(!array_key_exists($row->presence_id, $badgeData[$badgeType]->score)) $badgeData[$badgeType]->score[$row->presence_id] = $row->value;
             }
 

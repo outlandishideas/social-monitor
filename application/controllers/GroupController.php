@@ -168,7 +168,7 @@ class GroupController extends CampaignController {
 
         $group = Model_Group::fetchById($this->_request->id);
 
-        $response = $group->getBadges();
+        $response = $group->badgeFactory();
 
         $this->apiSuccess($response);
 
