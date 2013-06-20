@@ -28,12 +28,12 @@ class IndexController extends GraphingController
                 $totalScore += $score;
 				$row[$key] = array(
 					'average'=> $score,
-					'label'=> $score //$this->view->trafficLight()->label($badge, $key)
+					'label'=> round($score).'%' //$this->view->trafficLight()->label($badge, $key)
 				);
 			}
             $row['total'] = array(
                 'average'=>$score/count($badgeData),
-                'label' => 'Total'
+                'label' => round($score/count($badgeData)).'%'
             );
 
 			$kpiData[] = $row;

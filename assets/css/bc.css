@@ -1349,6 +1349,9 @@ ul.tabs li {
     height: 33px;
     cursor: pointer;
     background-color: #F2F2F2;
+    text-align: center;
+    line-height: 33px;
+    font-size: 20px;
 }
 
 ul.tabs li.active {

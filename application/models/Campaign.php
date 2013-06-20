@@ -110,9 +110,10 @@ class Model_Campaign extends Model_Base {
     /**
      * function gets returns rows for all Badge data stored in the presence_history for today's date
      * If badge data is not yet in the table for today, it will calculate it and insert it and then return it
+     * @param int
      * @return array
      */
-    public static function getBadgeData() {
+    public static function getBadgeData($id = null) {
 
         //set up todays date
         $date = new DateTime();

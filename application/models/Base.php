@@ -312,9 +312,10 @@ abstract class Model_Base
     /**
      * function gets returns rows for all Badge data stored in the presence_history for today's date
      * If badge data is not yet in the table for today, it will calculate it and insert it and then return it
+     * @param int
      * @return array
      */
-    public static function getBadgeData() {
+    public static function getBadgeData($id = null) {
 
         //get today's date
         $date = new DateTime();
@@ -323,9 +324,20 @@ abstract class Model_Base
         //the values in the type column that we want to return
         $types = array('reach','reach_ranking','engagement','engagement_ranking','quality','quality_ranking');
 
+        $clauses = array();
+
         //start and end dateTimes return all entries from today's date
+        $clauses[] = 'ph.datetime >= :start_date';
+        $clauses[] = 'ph.datetime <= :end_date';
         $args[':start_date'] = $startDate . ' 00:00:00';
         $args[':end_date'] = $startDate . ' 23:59:59';
+
+        $clauses[] = 'ph.type IN ("'. implode('","',$types) .'")';
+
+        if($id){
+            $clauses[] = 'ph.presence_id = :id';
+            $args[':id'] = $id;
+        }
 
         //returns rows with presence_id, type, value and datetime, ordered by presence_id, type, and datetime(DESC)
         $sql =
@@ -333,9 +345,7 @@ abstract class Model_Base
             FROM presences as p
             LEFT JOIN presence_history as ph
             ON ph.presence_id = p.id
-            WHERE ph.datetime >= :start_date
-            AND ph.datetime <= :end_date
-            AND ph.type IN ("'. implode('","',$types) .'")
+            WHERE '.implode(" AND ", $clauses).'
             ORDER BY p.id, p.type, ph.datetime DESC';
 
         $stmt = Zend_Registry::get('db')->prepare($sql);
@@ -346,7 +356,12 @@ abstract class Model_Base
         if(empty($data)){
 
             //get all the presences
-            $presences = Model_Presence::fetchAll();
+            if($id){
+                $presences = array(Model_Presence::fetchById($id));
+            } else {
+                $presences = Model_Presence::fetchAll();
+            }
+
 
             //create a variable that will hold the data that will be
             $setHistoryArgs = array();

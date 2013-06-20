@@ -20,7 +20,7 @@
 		<?php foreach ($this->country->presences as $presence) : ?>
 
 			<?php
-			$kpiData = $presence->getKpiData();
+			$kpiData = $presence->getBadgeScores();
 			$metricValue = $kpiData[$this->metric];
 			?>
 

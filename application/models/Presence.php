@@ -57,14 +57,12 @@ class Model_Presence extends Model_Base {
 
     public static $METRIC_ENGAGEMENT = array(
         self::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS,
-		self::METRIC_RESPONSE_TIME,
-        self::METRIC_POPULARITY_PERCENT
+		self::METRIC_RESPONSE_TIME
     );
 
     public static $METRIC_REACH = array(
         self::METRIC_POPULARITY_PERCENT,
-        self::METRIC_POPULARITY_TIME,
-        self::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS
+        self::METRIC_POPULARITY_TIME
     );
 
 	public static $bucketSizes = array(
@@ -514,6 +512,22 @@ class Model_Presence extends Model_Base {
         return $this->calculateMetrics($badgeType, $metrics);
     }
 
+    public function getBadgeScores(){
+        $data = Model_Base::getBadgeData($this->id);
+
+        $return = array();
+        $total = 0;
+        foreach($data as $row){
+            if(!isset($return[$row->type])){
+                $return[$row->type] = $row->value;
+                $total += $row->value;
+            }
+        }
+        $return['total'] = $total/count($return);
+
+        return $return;
+    }
+
     public function getMetricsScore($badgeType, $metrics = array()){
 
         $date = new DateTime();
@@ -557,6 +571,40 @@ class Model_Presence extends Model_Base {
 
 
             switch($metric){
+
+                case(Model_Presence::METRIC_POPULARITY_PERCENT):
+
+                    $target = $this->getTargetAudience();
+                    $actual = $this->$this->popularity;
+
+                    if(!$target){
+                        $score = 0;
+                    } else if($actual > $target){
+                        $score = 100;
+                    } else {
+                        $score = ( $actual / $target ) * 100;
+                    }
+
+                    $title = 'Percent of Target Audience';
+
+                    break;
+
+                case(Model_Presence::METRIC_POPULARITY_TIME):
+
+                    $target = BaseController::getOption('achieve_audience_good');
+                    $actual = $this->getTargetAudienceDate($start, $end);
+
+                    if(!$target){
+                        $score = 0;
+                    } else if($actual > $target){
+                        $score = 100;
+                    } else {
+                        $score = ( $actual / $target ) * 100;
+                    }
+
+                    $title = 'Time to Reach Target Popularity';
+
+                    break;
 
                 case(Model_Presence::METRIC_POSTS_PER_DAY):
 

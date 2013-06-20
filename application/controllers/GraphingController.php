@@ -96,26 +96,6 @@ abstract class GraphingController extends BaseController {
 			'colors' => array($colors->green, $colors->yellow, $colors->orange, $colors->red)
 		);
 
-        $metrics[Model_Presence::METRIC_BADGE_TOTAL] = (object)array(
-            'range' => array(0, 33, 66, 100),
-            'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
-        );
-
-        $metrics[Model_Presence::METRIC_BADGE_REACH] = (object)array(
-            'range' => array(0, 33, 66, 100),
-            'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
-        );
-
-        $metrics[Model_Presence::METRIC_BADGE_ENGAGEMENT] = (object)array(
-            'range' => array(0, 33, 66, 100),
-            'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
-        );
-
-        $metrics[Model_Presence::METRIC_BADGE_QUALITY] = (object)array(
-            'range' => array(0, 33, 66, 100),
-            'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
-        );
-
 		// convert each hex string to rgb values
 		foreach ($metrics as $args) {
 			$args->colorsRgb = array();
@@ -127,17 +107,16 @@ abstract class GraphingController extends BaseController {
 				$args->colorsRgb[] = $rgb;
 			}
 		}
-		$this->view->trafficMetrics = $metrics;
 
         $geochart = array();
         $geochart['total'] = (object)array(
-            'range' => array(0, 33, 66, 100),
+            'range' => array(0, 25, 50, 100),
             'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
         );
         $badges = Model_Presence::ALL_BADGES();
         foreach($badges as $badge => $kpis){
             $geochart[$badge] = (object)array(
-                'range' => array(0, 33, 66, 100),
+                'range' => array(0, 25, 50, 100),
                 'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
             );
         }
@@ -155,6 +134,7 @@ abstract class GraphingController extends BaseController {
             }
         }
         $this->view->geochartMetrics = $geochart;
+        $this->view->trafficMetrics = $metrics+$geochart;
 
 	}
 
