@@ -356,7 +356,7 @@ abstract class Model_Base
                 foreach(Model_Presence::ALL_BADGES() as $badgeType => $metrics){
 
                     //$dataRow is an object with four properties: presence_id, type, value, datetime (matching columns in presence_history table)
-                    $dataRow = $presence->calculateMetrics($badgeType, $metrics, $date->format('Y-m-d H-i-s'));
+                    $dataRow = $presence->getMetricsScore($badgeType, $metrics, $date->format('Y-m-d H-i-s'));
                     $data[] = $dataRow;
 
                     //we have to turn the object back into an array so it can be sent to the insertData function
@@ -413,7 +413,7 @@ abstract class Model_Base
 
                 //foreach missing presence calculate their metrics for this badge, add them to $data for this badge, and add the to the $args for insetData
                 foreach($missingPresences as $presence){
-                    $dataRow = $presence->calculateMetrics($type, $metrics = array(), $date->format('Y-m-d H-i-s'));
+                    $dataRow = $presence->getMetricsScore($type, $metrics = array(), $date->format('Y-m-d H-i-s'));
                     $badge->score[$dataRow->presence_id] = $dataRow->value;
                     $setHistoryArgs[] = (array)$dataRow;
                 }

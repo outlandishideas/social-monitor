@@ -29,12 +29,23 @@ class Model_Presence extends Model_Base {
 		self::METRIC_RESPONSE_TIME,
 	);
 
-    public static function ALL_BADGES() {
-        return array(
+    public static function ALL_BADGES($key = null) {
+
+        $badges = array(
             self::METRIC_BADGE_REACH => self::$METRIC_REACH,
             self::METRIC_BADGE_ENGAGEMENT => self::$METRIC_ENGAGEMENT,
             self::METRIC_BADGE_QUALITY => self::$METRIC_QUALITY
         );
+
+        if($key){
+            if(array_key_exists($key, $badges)){
+                return $badges[$key];
+            } else {
+                return array();
+            }
+        } else {
+            return $badges;
+        }
     }
 
 
@@ -499,39 +510,33 @@ class Model_Presence extends Model_Base {
 		return $this->getHistoryData('popularity', $startDate, $endDate);
 	}
 
-    public function getTotalData($startDate, $endDate){
-        return $this->getHistoryData('total', $startDate, $endDate);
+    public function getMetrics($badgeType, $metrics = array()){
+        return $this->calculateMetrics($badgeType, $metrics);
     }
 
-    public function getReachData($startDate, $endDate){
-        return $this->getHistoryData('reach', $startDate, $endDate);
+    public function getMetricsScore($badgeType, $metrics = array()){
+
+        $date = new DateTime();
+        $dateString = $date->format('Y-m-d H-i-s');
+
+        $dataRow = (object)array(
+            'presence_id' => $this->id,
+            'value' => 0,
+            'datetime' => $dateString,
+            'type' => $badgeType
+        );
+
+        $metricData = $this->calculateMetrics($badgeType, $metrics);
+
+        foreach($metricData as $metric){
+            $dataRow->value += $metric->score;
+        }
+        $dataRow->value /= count($metricData);
+
+        return $dataRow;
     }
 
-    public function getEngagementData($startDate, $endDate){
-        return $this->getHistoryData('engagement', $startDate, $endDate);
-    }
-
-    public function getQualityData($startDate, $endDate){
-        return $this->getHistoryData('quality', $startDate, $endDate);
-    }
-
-    public function getTotalRankingData($startDate, $endDate){
-        return $this->getHistoryData('total_ranking', $startDate, $endDate);
-    }
-
-    public function getReachRankingData($startDate, $endDate){
-        return $this->getHistoryData('reach_ranking', $startDate, $endDate);
-    }
-
-    public function getEngagementRankingData($startDate, $endDate){
-        return $this->getHistoryData('engagement_ranking', $startDate, $endDate);
-    }
-
-    public function getQualityRankingData($startDate, $endDate){
-        return $this->getHistoryData('quality_ranking', $startDate, $endDate);
-    }
-
-    public function calculateMetrics($badgeType, $metrics = array())
+    private function calculateMetrics($badgeType, $metrics = array())
     {
 
         $endDate = new DateTime();
@@ -541,22 +546,15 @@ class Model_Presence extends Model_Base {
         $end = $endDate->format('Y-m-d');
         $start = $startDate->format('Y-m-d');
 
-        $dateString = $endDate->format('Y-m-d H-i-s');
-
-        $dataRow = (object)array(
-            'presence_id' => $this->id,
-            'value' => 0,
-            'datetime' => $dateString,
-            'type' => $badgeType
-        );
-
         if(empty($metrics))
         {
-            $badges = Model_Presence::ALL_BADGES();
-            $metrics = $badges[$badgeType];
+            $metrics = Model_Presence::ALL_BADGES($badgeType);
         }
 
+        $metricArray = array();
+
         foreach($metrics as $metric){
+
 
             switch($metric){
 
@@ -566,11 +564,11 @@ class Model_Presence extends Model_Base {
                     $actual = $this->getAveragePostsPerDay($start, $end);
 
                     if(!$target){
-                        $percent = 0;
+                        $score = 0;
                     } else if($actual > $target){
-                        $percent = 100;
+                        $score = 100;
                     } else {
-                        $percent = ( $actual / $target ) * 100;
+                        $score = ( $actual / $target ) * 100;
                     }
 
                     $title = 'Average Posts Per Day';
@@ -583,11 +581,11 @@ class Model_Presence extends Model_Base {
                     $actual = $this->getAverageLinksPerDay($start, $end);
 
                     if(!$target){
-                        $percent = 0;
+                        $score = 0;
                     } else if($actual > $target){
-                        $percent = 100;
+                        $score = 100;
                     } else {
-                        $percent = ( $actual / $target ) * 100;
+                        $score = ( $actual / $target ) * 100;
                     }
 
                     $title = 'Average Links Per Day';
@@ -600,11 +598,11 @@ class Model_Presence extends Model_Base {
                     $actual = $this->getAverageLikesPerPost($start, $end);
 
                     if(!$target){
-                        $percent = 0;
+                        $score = 0;
                     } else if($actual > $target){
-                        $percent = 100;
+                        $score = 100;
                     } else {
-                        $percent = ( $actual / $target ) * 100;
+                        $score = ( $actual / $target ) * 100;
                     }
 
                     $title = 'Average Likes Per Post';
@@ -617,11 +615,11 @@ class Model_Presence extends Model_Base {
                     $actual = $this->getAverageResponseTime($start, $end);
 
                     if(!$target){
-                        $percent = 0;
+                        $score = 0;
                     } else if($actual > $target){
-                        $percent = ( $target / $actual ) * 100;
+                        $score = ( $target / $actual ) * 100;
                     } else {
-                        $percent = 100;
+                        $score = 100;
                     }
 
                     $title = 'Average Response Time';
@@ -634,11 +632,11 @@ class Model_Presence extends Model_Base {
                     $actual = $this->getRatioRepliesToOthersPosts($start, $end);
 
                     if(!$target){
-                        $percent = 0;
+                        $score = 0;
                     } else if($actual > $target){
-                        $percent = 100;
+                        $score = 100;
                     } else {
-                        $percent = ( $actual / $target ) * 100;
+                        $score = ( $actual / $target ) * 100;
                     }
 
                     $title = 'Ratio of Replies to Posts from others';
@@ -650,17 +648,22 @@ class Model_Presence extends Model_Base {
                     $title = 'Default';
                     $target = 0;
                     $actual = 0;
-                    $percent = 0;
+                    $score = 0;
 
             }
 
-            $dataRow->value += $percent;
+            $metricArray[$metric] = (object)array(
+                'score' => $score,
+                'actual' => $actual,
+                'target' => $target,
+                'type' => $metric,
+                'title' => $title
+            );
+
 
         }
 
-        $dataRow->value /= count($metrics);
-
-        return $dataRow;
+        return $metricArray;
     }
 
     public function getStatuses($startDate, $endDate, $search, $order, $limit, $offset){

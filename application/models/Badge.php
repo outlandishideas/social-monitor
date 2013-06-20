@@ -22,6 +22,7 @@ class Model_Badge {
     public $badges;                         //the data for the badge
     public $item;                           //item this badge belongs to
     public $presences = array();            //array of presences (only one for Model_Presence badges)
+    public $metrics = array();
 
     public function __construct($data, $type, $item, $class)
     {
@@ -36,6 +37,10 @@ class Model_Badge {
             $this->presences = $item->getPresences();
         }
 
+        foreach($this->presences as $presence){
+            $presence->name = $presence->handle;
+        }
+
         if($type == 'total'){
             $this->badges = $data;
             $this->data = (object)array(
@@ -44,6 +49,7 @@ class Model_Badge {
             );
         } else {
             $this->data = $data;
+            $this->getMetrics();
         }
 
         $this->rankingTotal = count($this->data->score);
@@ -136,6 +142,41 @@ class Model_Badge {
 
         //when all is done, add new ranking data to db
         if(!empty($setHistoryArgs)) Model_Base::insertData('presence_history', $setHistoryArgs);
+    }
+
+    private function getMetrics()
+    {
+        //for each presence get the values of the metrics and add them onto the Model_Presence object
+        foreach($this->presences as $p => $presence){
+
+            $data = $presence->getMetrics($this->type);
+
+            if(count($this->presences) < 2) {
+
+                $this->metrics = $data;
+                return;
+
+            } else {
+
+                $this->presences[$p]->metrics = $data;
+                foreach($data as $m => $metric){
+                    if(!isset($this->metrics[$m])) {
+                        $this->metrics[$m] = (object)array(
+                            'score' => 0,
+                            'type' => $m,
+                            'title' => $metric->title
+                        );
+                    }
+                    $this->metrics[$m]->score += $metric->score;
+                }
+
+            }
+
+        }
+
+        foreach($this->metrics as $metric){
+            $metric->score /= count($this->presences);
+        }
     }
 
 }

@@ -147,7 +147,7 @@ class Model_Campaign extends Model_Base {
             //foreach presence and foreach badge, calculate the metrics and return as an object
             foreach($presences as $presence){
                 foreach(Model_Presence::ALL_BADGES() as $badgeType => $metrics){
-                    $setHistoryArgs[] = (array)$presence->calculateMetrics($badgeType, $metrics, $date->format('Y-m-d H-i-s'));
+                    $setHistoryArgs[] = (array)$presence->getMetricsScore($badgeType, $metrics, $date->format('Y-m-d H-i-s'));
                 }
             }
 

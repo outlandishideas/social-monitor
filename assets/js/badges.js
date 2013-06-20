@@ -39,7 +39,6 @@ app.badges = {
         return app.api.get(url, args)
             .done(function(response) {
                 $('#badges').hideLoader();
-                console.log(response);
                 for (var i in response.data) {
                     app.badges.renderBadge(response.data[i]);
                 }
@@ -61,18 +60,32 @@ app.badges = {
 
         var ref = '';
 
-        for(var i in data.kpis){
+        if(i != 'total'){
+            for(var i in data.metrics){
 
-            var kpi = data.kpis[i];
-            var title = '';
+                var metric = data.metrics[i];
+                var title = '';
 
-            if ( kpi.target ) {
-                title = "Target = " + kpi.target;
+                if ( metric.target ) {
+                    title = "Target = " + metric.target;
+                } /*else {
+                    title = "Presences";
+                    for(var p in data.presences){
+                        var presence = data.presences[p];
+                        console.log(presence);
+                        console.log(presence.handle);
+                        console.log(i);
+                        console.log(presence.metrics);
+                        console.log(presence.metrics[i]);
+                        title += "\n"+ presence.handle +": "+ presence.metrics[i].score;
+                    }
+
+                }*/
+
+                ref += '<dd title="' + title + '">' + Math.round(metric.score)+ '</dd>';
+                ref += '<dt>' + metric.title + '</dt>';
+
             }
-
-            ref += '<dd title="' + title + '">' + Math.round(kpi.score)+ '</dd>';
-            ref += '<dt>' + kpi.title + '</dt>';
-
         }
 
         b.$badge.find('dl').append(ref);
