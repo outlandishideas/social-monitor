@@ -575,7 +575,7 @@ class Model_Presence extends Model_Base {
                 case(Model_Presence::METRIC_POPULARITY_PERCENT):
 
                     $target = $this->getTargetAudience();
-                    $actual = $this->$this->popularity;
+                    $actual = $this->popularity;
 
                     if(!$target){
                         $score = 0;
