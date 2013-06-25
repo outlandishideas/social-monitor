@@ -44,6 +44,10 @@ class IndexController extends GraphingController
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->kpiData = $kpiData;
 		$this->view->metricOptions = $metrics;
+        $now = new DateTime();
+        $old = new DateTime('-1 month');
+        $this->view->currentDate = $now;
+        $this->view->oldDate = $old;
 	}
 
 	public function dateRangeAction() {

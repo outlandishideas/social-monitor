@@ -115,59 +115,40 @@ class Model_Campaign extends Model_Base {
      */
     public static function getBadgeData($id = null) {
 
-        //set up todays date
+        $class = get_called_class();
+        $countItems = $class::countAll();
+
+        //get today's date
         $date = new DateTime();
         $startDate = $date->format('Y-m-d');
 
-        //set the types of badge data that we want to return data for (type column in table)
-        $types = array('reach','engagement','quality');
+        $clauses = array();
 
-        //set start and end datetimes to get all rows for todays date
+        //start and end dateTimes return all entries from today's date
+        $clauses[] = 'p.datetime >= :start_date';
+        $clauses[] = 'p.datetime <= :end_date';
         $args[':start_date'] = $startDate . ' 00:00:00';
         $args[':end_date'] = $startDate . ' 23:59:59';
 
-        //statement returns rows with presence_id, type, value, datetime and campaign_id, ordered by campaign_id
+        //returns rows with presence_id, type, value and datetime, ordered by presence_id, type, and datetime(DESC)
         $sql =
-            'SELECT m.presence_id, m.type, m.value, m.datetime, c.campaign_id
-            FROM campaign_presences as c
-            INNER JOIN (
-                SELECT p.id as presence_id, ph.type, ph.value, ph.datetime
-                FROM presences as p
-                LEFT JOIN presence_history as ph
-                ON ph.presence_id = p.id
-                WHERE ph.datetime >= :start_date
-                AND ph.datetime <= :end_date
-                AND ph.type IN ("'. implode('","',$types) .'")
-                ORDER BY p.id, p.type, ph.datetime DESC
-            ) as m
-            ON m.presence_id = c.presence_id
-            ORDER BY c.campaign_id';
+            'SELECT p.*, c.campaign_id
+            FROM badge_history as p
+            INNER JOIN campaign_presences as c
+            ON p.presence_id = c.presence_id
+            WHERE '.implode(" AND ", $clauses).'
+            ORDER BY p.presence_id, p.datetime DESC';
 
         $stmt = Zend_Registry::get('db')->prepare($sql);
         $stmt->execute($args);
         $data = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-        //if no data is returned
+        //if too few rows are returned
         if(empty($data)){
 
-            //fetch all presences
-            $presences = Model_Presence::fetchAll();
-            $setHistoryArgs = array();
+            self::calculatePresenceBadgeData($data, $date);
 
-            //foreach presence and foreach badge, calculate the metrics and return as an object
-            foreach($presences as $presence){
-                foreach(Model_Presence::ALL_BADGES() as $badgeType => $metrics){
-                    $setHistoryArgs[] = (array)$presence->getMetricsScore($badgeType, $metrics, $date->format('Y-m-d H-i-s'));
-                }
-            }
-
-            //insert the data into the database
-            Model_Base::insertData('presence_history', $setHistoryArgs);
-
-            //fetch the newly inserted data from the database
-            //do this because this is quicker than having to recreate the campaign_id data for each presence and each metric that we calculated above
             $data = self::getBadgeData();
-
         }
 
         return $data;
@@ -188,23 +169,69 @@ class Model_Campaign extends Model_Base {
         foreach($data as $row){
 
             //if we haven't yet created the badge object for this type, create it
-            if(!isset($badgeData[$row->type])) $badgeData[$row->type] = (object)array('score'=>array(), 'rank'=>array());
+            if(!isset($badgeData[$row->type])) $badgeData[$row->type] = array();
 
             // if we haven't tet created the entry in the score array for this campaign_id, create it
-            if(!isset($badgeData[$row->type]->score[$row->campaign_id])) $badgeData[$row->type]->score[$row->campaign_id] = array();
+            if(!isset($badgeData[$row->type][$row->campaign_id])) {
+                $badgeData[$row->type][$row->campaign_id] = clone $row;
+                unset($badgeData[$row->type][$row->campaign_id]->presence_id);
+                $badgeData[$row->type][$row->campaign_id]->presences = array();
+            }
 
             //if we haven't yet created the the key=>value pair for this presence_id, add it to the array for this campaign
-            if(!isset($badgeData[$row->type]->score[$row->campaign_id][$row->presence_id])) $badgeData[$row->type]->score[$row->campaign_id][$row->presence_id] = $row->value;
+            if(!isset($badgeData[$row->type][$row->campaign_id]->presences[$row->presence_id])) $badgeData[$row->type][$row->campaign_id]->presences[$row->presence_id] = $row;
 
         }
 
         //go through each campaign_id in each badge's score property and create the campaign score by
         //adding up the array of presences, and dividing it by the number of presences
-        foreach($badgeData as $b => $badge){
+        foreach($badgeData as $t => $type){
 
-                $badge->score = array_map(function($a){
-                    return array_sum($a)/count($a);
-                },$badge->score);
+            foreach($type as $c => $campaign){
+
+                $campaign->reach = 0;
+                $campaign->engagement = 0;
+                $campaign->quality = 0;
+
+                $countPresences = count($campaign->presences);
+
+                foreach($campaign->presences as $p => $presence){
+
+                    $campaign->reach += $presence->reach;
+                    $campaign->engagement += $presence->engagement;
+                    $campaign->quality += $presence->quality;
+
+                }
+
+                $campaign->reach /= $countPresences;
+                $campaign->engagement /= $countPresences;
+                $campaign->quality /= $countPresences;
+
+            }
+
+            foreach(Model_Presence::ALL_BADGES() as $badge => $metric){
+
+                usort($type, function($a, $b) use ($badge){
+                    if($a->$badge == $b->$badge) return 0;
+                    return $a->$badge > $b->$badge ? -1 : 1;
+                });
+
+                $lastScore = null;
+                $ranking = 1;
+                foreach($type as $row) {
+                    //if score is not equal to last score increase ranking by 1
+                    if(is_numeric($lastScore) && $lastScore != $row->$badge){
+                        $ranking++;
+                    }
+
+                    $rankType = $badge.'_rank';
+
+                    $row->$rankType = $ranking;
+
+                    //set current score to $lastScore for next value in array
+                    $lastScore = $row->$badge;
+                }
+            }
 
         }
 

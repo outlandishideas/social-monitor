@@ -15,12 +15,15 @@
 			->appendStylesheet('assets/css/bc.css')
 			->appendStylesheet('assets/css/uni-form.css')
 			->appendStylesheet('assets/css/bc.uni-form.css')
-			->appendStylesheet('assets/lib/jquery/smoothness/jquery-ui-1.8.17.custom.css')
+			->appendStylesheet('assets/css/jquery-ui.min.css')
 			->appendStylesheet('assets/css/ui.daterangepicker.css')
 //			->appendStylesheet('assets/lib/datatables/media/css/jquery.dataTables.css')
 //			->appendStylesheet('assets/css/jquery.dataTables.custom.css')
 			->appendStylesheet('assets/lib/farbtastic/farbtastic.css')
 	?>
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" media="print" href="assets/css/print.css" type="text/css" />
+    <![endif]-->
 </head>
 <body class="<?php echo $this->bodyClass; ?>">
 	<div id="wrapper">
@@ -158,6 +161,26 @@
 		echo $minify;
 	}
 	?>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+
+    <script>
+        $(function() {
+            $( "#slider" ).slider({
+                value:30,
+                min: 0,
+                max: 30,
+                step: 1,
+                slide: function( event, ui ) {
+                    var days = 30 - ui.value;
+                    var now = new Date.today().addDays(-days);
+                    var then = now.clone();
+                    then.addMonths(-1);
+
+                    $( "#date-picker" ).val( then.toString('dd MMM yyyy') + ' - ' + now.toString('dd MMM yyyy') );
+                }
+            });
+        });
+    </script>
 	<script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

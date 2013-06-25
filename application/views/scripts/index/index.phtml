@@ -6,6 +6,13 @@
 </ul>
 
 <div id="map">
+    <div class="map-date">
+
+        <label for="date-slider"><h3>Date Range</h3></label>
+        <input type="text" size="25" id="date-slider" disabled
+               value="<?php echo $this->dateRangeString; ?>" data-date-range="<?php echo htmlspecialchars($this->jsonDateRange); ?>">
+        <div id="slider"></div>
+    </div>
 	<div id="geo-map"></div>
 	<div class="loading"></div>
 </div>

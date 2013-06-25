@@ -65,6 +65,8 @@ class Model_Presence extends Model_Base {
         self::METRIC_POPULARITY_TIME
     );
 
+    public static $BADGE_RANGES = array( 'week', 'month' );
+
 	public static $bucketSizes = array(
 		'bucket_half_hour' => 1800, // 30*60
 		'bucket_4_hours' => 14400, // 4*60*60
@@ -528,34 +530,26 @@ class Model_Presence extends Model_Base {
         return $return;
     }
 
-    public function getMetricsScore($badgeType, $metrics = array()){
+    public function getMetricsScore($badgeType, $metrics = array(), $dateRange = "month"){
 
-        $date = new DateTime();
-        $dateString = $date->format('Y-m-d H-i-s');
-
-        $dataRow = (object)array(
-            'presence_id' => $this->id,
-            'value' => 0,
-            'datetime' => $dateString,
-            'type' => $badgeType
-        );
+        $value = 0;
 
         $metricData = $this->calculateMetrics($badgeType, $metrics);
 
         foreach($metricData as $metric){
-            $dataRow->value += $metric->score;
+            $value += $metric->score;
         }
-        $dataRow->value /= count($metricData);
+        $value /= count($metricData);
 
-        return $dataRow;
+        return $value;
     }
 
-    private function calculateMetrics($badgeType, $metrics = array())
+    private function calculateMetrics($badgeType, $metrics = array(), $dateRange = "month")
     {
 
         $endDate = new DateTime();
         $startDate = new DateTime();
-        $startDate->sub(DateInterval::createFromDateString('1 month'));
+        $startDate->sub(DateInterval::createFromDateString('1 '.$dateRange));
 
         $end = $endDate->format('Y-m-d');
         $start = $startDate->format('Y-m-d');

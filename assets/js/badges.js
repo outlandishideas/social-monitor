@@ -39,8 +39,9 @@ app.badges = {
         return app.api.get(url, args)
             .done(function(response) {
                 $('#badges').hideLoader();
-                for (var i in response.data) {
-                    app.badges.renderBadge(response.data[i]);
+                console.log(response.data);
+                for (var i in response.data.month) {
+                    app.badges.renderBadge(response.data.month[i]);
                 }
             })
             .always(function() {
@@ -53,8 +54,8 @@ app.badges = {
         var b = app.state.badges[selector];
 
         b.$badge.find('.score.ranking')
-            .find('.number').html(data.ranking).end()
-            .find('.text.denominator').html('of ' + data.rankingTotal);
+            .find('.number').html(data.rank).end()
+            .find('.text.denominator').html('of ' + data.rankTotal);
         b.$badge.find('.score.overall-score')
             .find('.number').html(Math.round(data.score));
 
