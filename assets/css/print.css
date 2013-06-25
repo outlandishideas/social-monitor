@@ -1,0 +1,18 @@
+/**
+ * Created with JetBrains PhpStorm.
+ * User: Matthew
+ * Date: 21/06/13
+ * Time: 12:03
+ */
+
+    body {
+        width: 100% !important;
+    }
+
+    #main-header {
+        display: none !important;
+    }
+
+    #pickers {
+        display: none !important;
+    }

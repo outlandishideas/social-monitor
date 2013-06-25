@@ -9,40 +9,11 @@ class IndexController extends GraphingController
 		$countries = Model_Country::fetchAll();
 		$kpiData = array();
 		$metrics = self::mapMetrics();
-        //get the Badge Data from the presence_history table, or create ourselves if it doesn't exist
-        $data = Model_Country::getBadgeData();
-
-        //take the raw data and organise it depending on how it will be used
-        $badgeData = Model_Country::organizeBadgeData($data);
-		foreach($countries as $country){
-			$row = array(
-				'country' => $country->country,
-				'name' => $country->display_name,
-				'id'=>intval($country->id),
-				'targetAudience' => $country->getTargetAudience(),
-				'presenceCount' => count($country->getPresences())
-			);
-            $totalScore = 0;
-			foreach ($badgeData as $key=>$badge) {
-                $score = isset($badge->score[intval($country->id)]) ? $badge->score[intval($country->id)] : 0;
-                $totalScore += $score;
-				$row[$key] = array(
-					'average'=> $score,
-					'label'=> round($score).'%' //$this->view->trafficLight()->label($badge, $key)
-				);
-			}
-            $row['total'] = array(
-                'average'=>$score/count($badgeData),
-                'label' => round($score/count($badgeData)).'%'
-            );
-
-			$kpiData[] = $row;
-		}
 
 		$this->view->title = 'British Council Social Media Monitor';
 		$this->view->titleIcon = 'icon-home';
 		$this->view->countries = Model_Country::fetchAll();
-        $this->view->kpiData = $kpiData;
+        $this->view->mapData = Model_Country::mapDataFactory();
 		$this->view->metricOptions = $metrics;
         $now = new DateTime();
         $old = new DateTime('-1 month');

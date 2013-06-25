@@ -64,7 +64,41 @@ class Model_Country extends Model_Campaign {
         }
     }
 
-    public function mapDataFactory(){
+    public static function mapDataFactory(){
+
+        $data = self::getBadgeData();
+
+        $data = self::organizeBadges($data);
+
+        $badgeData = array();
+        $badges = Model_Presence::ALL_BADGES();
+        $countBadges = count($badges);
+        foreach($data['month'] as $country){
+            $countryItem = Model_Country::fetchById($country->campaign_id);
+            $row = array(
+                'country' => $countryItem->country,
+                'name' => $countryItem->display_name,
+                'id'=>intval($country->campaign_id),
+                'targetAudience' => $countryItem->getTargetAudience(),
+                'presenceCount' => count($country->presences)
+            );
+            $totalScore = 0;
+            foreach (Model_Presence::ALL_BADGES() as $badge=>$metrics) {
+                $totalScore += $country->$badge;
+                $row[$badge] = array(
+                    'average'=> $country->$badge,
+                    'label'=> round($country->$badge).'%' //$this->view->trafficLight()->label($badge, $key)
+                );
+            }
+            $row['total'] = array(
+                'average'=>$totalScore/$countBadges,
+                'label' => round($totalScore/$countBadges).'%'
+            );
+
+            $badgeData[] = $row;
+        }
+
+        return $badgeData;
 
     }
 

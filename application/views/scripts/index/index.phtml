@@ -8,9 +8,9 @@
 <div id="map">
     <div class="map-date">
 
-        <label for="date-slider"><h3>Date Range</h3></label>
+        <h3>Date Range</h3>
         <input type="text" size="25" id="date-slider" disabled
-               value="<?php echo $this->dateRangeString; ?>" data-date-range="<?php echo htmlspecialchars($this->jsonDateRange); ?>">
+                                      value="<?php echo $this->dateRangeString; ?>" data-date-range="<?php echo htmlspecialchars($this->jsonDateRange); ?>">
         <div id="slider"></div>
     </div>
 	<div id="geo-map"></div>
@@ -20,5 +20,5 @@
 
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>
-	var mapData = <?php echo json_encode($this->kpiData); ?>;
+	var mapData = <?php echo json_encode($this->mapData); ?>;
 </script>

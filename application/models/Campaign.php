@@ -154,15 +154,7 @@ class Model_Campaign extends Model_Base {
         return $data;
     }
 
-    /**
-     * organize the raw data from db into badges. Each badge is an object with score and rank properties.
-     * rank property is left empty. score property is initially created as array of key($campaign_id) => value(array($presences))
-     * The $array of presences is later summed to get a full score
-     * @param $data
-     * @return array
-     */
-    public static function organizeBadgeData($data){
-
+    public static function organizeBadges($data){
         //badgeData for campaigns is set up differently than
         $badgeData = array();
 
@@ -208,6 +200,22 @@ class Model_Campaign extends Model_Base {
                 $campaign->quality /= $countPresences;
 
             }
+        }
+        return $badgeData;
+    }
+
+    /**
+     * organize the raw data from db into badges. Each badge is an object with score and rank properties.
+     * rank property is left empty. score property is initially created as array of key($campaign_id) => value(array($presences))
+     * The $array of presences is later summed to get a full score
+     * @param $data
+     * @return array
+     */
+    public static function organizeBadgeData($data){
+
+        $badgeData = self::organizeBadges($data);
+
+        foreach($badgeData as $t => $type){
 
             foreach(Model_Presence::ALL_BADGES() as $badge => $metric){
 

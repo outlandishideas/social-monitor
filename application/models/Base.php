@@ -6,6 +6,8 @@ abstract class Model_Base
 	protected static $tableName;
 	protected static $sortColumn = 'id';
 
+
+
 	/**
 	 * @var PDO
 	 */

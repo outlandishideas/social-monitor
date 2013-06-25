@@ -70,7 +70,6 @@ app.geochart = {
 	},
 	refreshMap:function () {
 		var metric = app.geochart.metrics[app.geochart.currentMetric()];
-
 		app.geochart.map.options.colorAxis.values = metric.range;
 		app.geochart.map.options.colorAxis.colors = metric.colors;
 
