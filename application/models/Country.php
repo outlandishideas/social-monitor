@@ -66,39 +66,84 @@ class Model_Country extends Model_Campaign {
 
     public static function mapDataFactory(){
 
-        $data = self::getBadgeData();
+        $endDate = new DateTime();
+        $startDate = clone $endDate;
+        $startDate->modify('-30 days');
 
-        $data = self::organizeBadges($data);
+        $data = self::getBadgeData($startDate, $endDate);
 
+        //badgeData for campaigns is set up differently than
         $badgeData = array();
-        $badges = Model_Presence::ALL_BADGES();
-        $countBadges = count($badges);
-        foreach($data['month'] as $country){
-            $countryItem = Model_Country::fetchById($country->campaign_id);
-            $row = array(
-                'country' => $countryItem->country,
-                'name' => $countryItem->display_name,
-                'id'=>intval($country->campaign_id),
-                'targetAudience' => $countryItem->getTargetAudience(),
-                'presenceCount' => count($country->presences)
-            );
-            $totalScore = 0;
-            foreach (Model_Presence::ALL_BADGES() as $badge=>$metrics) {
-                $totalScore += $country->$badge;
-                $row[$badge] = array(
-                    'average'=> $country->$badge,
-                    'label'=> round($country->$badge).'%' //$this->view->trafficLight()->label($badge, $key)
-                );
-            }
-            $row['total'] = array(
-                'average'=>$totalScore/$countBadges,
-                'label' => round($totalScore/$countBadges).'%'
-            );
 
-            $badgeData[] = $row;
+        //get list of presences
+        $campaignIds = array();
+        array_map(function($a) use (&$campaignIds) {
+            if(!isset($campaignIds[$a->campaign_id])) $campaignIds[$a->campaign_id] = 0;
+            $campaignIds[$a->campaign_id]++;
+        }, $data);
+
+        $metrics = array();
+        $campaigns = array();
+        foreach(array_keys($campaignIds) as $id){
+            $country = Model_Country::fetchById($id);
+            $row = (object)array(
+                'country' => $country->country,
+                'name' => $country->display_name,
+                'id'=>intval($id),
+                'targetAudience' => $country->getTargetAudience(),
+                'presenceCount' => count($country->presences),
+                'presences' => array()
+            );
+            foreach (Model_Presence::ALL_BADGES() as $badge=>$m) {
+
+                $row->$badge = array();
+
+            }
+            $campaigns[$id] = $row;
         }
 
-        return $badgeData;
+        foreach($data as $row){
+            if($row->type != 'week'){
+                $rowDate = new DateTime($row->datetime);
+                $rowDiff = $rowDate->diff($endDate);
+                $days = $rowDiff->days;
+                $days = 30-$days;
+                if(!isset($campaigns[$row->campaign_id]->reach[$days])) $campaigns[$row->campaign_id]->reach[$days] = 0;
+                if(!isset($campaigns[$row->campaign_id]->engagement[$days])) $campaigns[$row->campaign_id]->engagement[$days] = 0;
+                if(!isset($campaigns[$row->campaign_id]->quality[$days])) $campaigns[$row->campaign_id]->quality[$days] = 0;
+                $campaigns[$row->campaign_id]->reach[$days] += $row->reach;
+                $campaigns[$row->campaign_id]->engagement[$days] += $row->engagement;
+                $campaigns[$row->campaign_id]->quality[$days] += $row->quality;
+            }
+        }
+
+        foreach($campaigns as $campaign){
+            $campaign->total = array();
+            foreach($campaign->reach as $v => $value){
+                $value /= $campaign->presenceCount;
+                $object = (object)array('score'=>$value, 'label'=>round($value).'%');
+                $campaign->reach[$v] = $object;
+                $campaign->total[$v] = $value;
+            }
+            foreach($campaign->engagement as $v => $value){
+                $value /= $campaign->presenceCount;
+                $object = (object)array('score'=>$value, 'label'=>round($value).'%');
+                $campaign->engagement[$v] = $object;
+                $campaign->total[$v] += $value;
+            }
+            foreach($campaign->quality as $v => $value){
+                $value /= $campaign->presenceCount;
+                $object = (object)array('score'=>$value, 'label'=>round($value).'%');
+                $campaign->quality[$v] = $object;
+                $campaign->total[$v] += $value;
+            }
+            foreach($campaign->total as $v => $value){
+                $value /= 3;
+                $object = (object)array('score'=>$value, 'label'=>round($value).'%');
+                $campaign->total[$v] = $object;
+            }
+        }
+        return $campaigns;
 
     }
 

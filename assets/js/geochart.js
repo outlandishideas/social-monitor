@@ -50,6 +50,14 @@ app.geochart = {
 	currentMetric:function () {
 		return $('#map-tabs').find('li.active').data('val');
 	},
+    currentDay:function () {
+        var day = $('#slider').data('val');
+        if(typeof day == 'undefined'){
+            return 30;
+        } else {
+            return day;
+        }
+    },
 	// calculates the average value for a given kpi across the presences for 1 country
 	kpiAverage: function(country, m) {
 		var presences = country.presences;
@@ -70,12 +78,13 @@ app.geochart = {
 	},
 	refreshMap:function () {
 		var metric = app.geochart.metrics[app.geochart.currentMetric()];
+        var day = app.geochart.currentDay();
 		app.geochart.map.options.colorAxis.values = metric.range;
 		app.geochart.map.options.colorAxis.colors = metric.colors;
 
 		// make a view of the data, which only consists of the first column and the column for the chosen metric
 		var view = new google.visualization.DataView(app.geochart.data);
-		view.setColumns([0, metric.columnIndex]);
+		view.setColumns([0, metric.days[day].columnIndex]);
 
 		app.geochart.map.draw(view, app.geochart.map.options);
 	},
@@ -114,6 +123,7 @@ app.geochart = {
 		if (typeof mapData == 'undefined' || mapData.length == 0) {
 			return;
 		}
+        console.log(mapData);
 
 		// define the columns
 		app.geochart.data = new google.visualization.DataTable();
@@ -125,11 +135,15 @@ app.geochart = {
 
 		// add 2 columns per metric (value & label)
 		for (var m in app.geochart.metrics) {
-			var metric = app.geochart.metrics[m];
-			metric.columnIndex = columnIndex;
-			app.geochart.data.addColumn('number', metric.label);
-			app.geochart.data.addColumn('string', metric.key + '-label');
-			columnIndex += 2;
+            var metric = app.geochart.metrics[m];
+            app.geochart.metrics[m].days = [];
+            for(var i = 1; i < 31; i++ ){
+                app.geochart.metrics[m].days[i] = {};
+                app.geochart.metrics[m].days[i].columnIndex = columnIndex;
+                app.geochart.data.addColumn('number', metric.label);
+                app.geochart.data.addColumn('string', metric.key + '_' + i + '-label');
+                columnIndex += 2;
+            }
 		}
 
 		// add one row per country
@@ -137,8 +151,16 @@ app.geochart = {
 			var country = mapData[c];
 			var row = [country.country, country.name, country.presenceCount, country.id];
 			for (var m in app.geochart.metrics) {
-				row.push(country[m].average);
-				row.push('' + country[m].label);
+                for(var i = 1; i < 31; i++ ){
+                    if(typeof country[m][i] !="undefined"){
+                        row.push(country[m][i].score);
+                        row.push('' + country[m][i].label);
+                    } else {
+                        row.push(null);
+                        row.push(null);
+                    }
+                }
+
 			}
 			app.geochart.data.addRow(row);
 		}
@@ -147,10 +169,12 @@ app.geochart = {
 		var titleFormatter = new google.visualization.PatternFormat('{1} (Presences: {2})');
 		titleFormatter.format(app.geochart.data, [0, 1, 2], 0);
 		var kpiFormatter = new google.visualization.PatternFormat('{1}');
-		for (var i in app.geochart.metrics) {
-			var metric = app.geochart.metrics[i];
-			var ci = metric.columnIndex;
-			kpiFormatter.format(app.geochart.data, [ci, ci+1]);
+		for (var m in app.geochart.metrics) {
+			var metric = app.geochart.metrics[m];
+            for(var i = 1; i < 31; i++ ){
+                var ci = metric.days[i].columnIndex;
+                kpiFormatter.format(app.geochart.data, [ci, ci+1]);
+            }
 		}
 	}
 };

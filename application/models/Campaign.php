@@ -113,22 +113,25 @@ class Model_Campaign extends Model_Base {
      * @param int
      * @return array
      */
-    public static function getBadgeData($id = null) {
+    public static function getBadgeData($startDate = null, $endDate = null) {
 
         $class = get_called_class();
         $countItems = $class::countAll();
 
-        //get today's date
-        $date = new DateTime();
-        $startDate = $date->format('Y-m-d');
+        if(!$startDate || !$endDate){
+            //get today's date
+            $endDate = new DateTime();
+            $startDate = clone $endDate;
+        }
+
 
         $clauses = array();
 
         //start and end dateTimes return all entries from today's date
         $clauses[] = 'p.datetime >= :start_date';
         $clauses[] = 'p.datetime <= :end_date';
-        $args[':start_date'] = $startDate . ' 00:00:00';
-        $args[':end_date'] = $startDate . ' 23:59:59';
+        $args[':start_date'] = $startDate->format('Y-m-d') . ' 00:00:00';
+        $args[':end_date'] = $endDate->format('Y-m-d') . ' 23:59:59';
 
         //returns rows with presence_id, type, value and datetime, ordered by presence_id, type, and datetime(DESC)
         $sql =
@@ -146,7 +149,7 @@ class Model_Campaign extends Model_Base {
         //if too few rows are returned
         if(empty($data)){
 
-            self::calculatePresenceBadgeData($data, $date);
+            self::calculatePresenceBadgeData($data, $endDate);
 
             $data = self::getBadgeData();
         }

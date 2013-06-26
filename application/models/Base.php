@@ -314,30 +314,28 @@ abstract class Model_Base
     /**
      * function gets returns rows for all Badge data stored in the presence_history for today's date
      * If badge data is not yet in the table for today, it will calculate it and insert it and then return it
-     * @param int
+     * @param object $startDate
+     * @param object $endDate
      * @return array
      */
-    public static function getBadgeData($id = null) {
+    public static function getBadgeData($startDate = null, $endDate = null) {
 
         $class = get_called_class();
         $countItems = $class::countAll();
 
-        //get today's date
-        $date = new DateTime();
-        $startDate = $date->format('Y-m-d');
+        if(!$startDate || !$endDate){
+            //get today's date
+            $endDate = new DateTime();
+            $startDate = clone $endDate;
+        }
 
         $clauses = array();
 
         //start and end dateTimes return all entries from today's date
         $clauses[] = 'datetime >= :start_date';
         $clauses[] = 'datetime <= :end_date';
-        $args[':start_date'] = $startDate . ' 00:00:00';
-        $args[':end_date'] = $startDate . ' 23:59:59';
-
-        if($id){
-            $clauses[] = 'presence_id = :id';
-            $args[':id'] = $id;
-        }
+        $args[':start_date'] = $startDate->format('Y-m-d') . ' 00:00:00';
+        $args[':end_date'] = $endDate->format('Y-m-d') . ' 23:59:59';
 
         //returns rows with presence_id, type, value and datetime, ordered by presence_id, type, and datetime(DESC)
         $sql =
@@ -360,10 +358,10 @@ abstract class Model_Base
         return $data;
     }
 
-    public static function calculatePresenceBadgeData($data, $date){
+    public static function calculatePresenceBadgeData($data, $date = null){
         //get back array of presences that are missing data
         $presences = Model_Presence::fetchAll(null, array());
-
+        if (!$date) $date = new DateTime();
         $dateString = $date->format('Y-m-d H-i-s');
 
         //create a variable that will hold the data that will be
