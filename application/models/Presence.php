@@ -515,26 +515,16 @@ class Model_Presence extends Model_Base {
     }
 
     public function getBadgeScores(){
-        $data = Model_Base::getBadgeData($this->id);
+        $data = static::getBadgeData();
 
-        $return = array();
-        $total = 0;
-        foreach($data as $row){
-            if(!isset($return[$row->type])){
-                $return[$row->type] = $row->value;
-                $total += $row->value;
-            }
-        }
-        $return['total'] = $total/count($return);
-
-        return $return;
+        return $data[$this->id];
     }
 
     public function getMetricsScore($badgeType, $metrics = array(), $dateRange = "month"){
 
         $value = 0;
 
-        $metricData = $this->calculateMetrics($badgeType, $metrics);
+        $metricData = $this->calculateMetrics($badgeType, $metrics, $dateRange);
 
         foreach($metricData as $metric){
             $value += $metric->score;

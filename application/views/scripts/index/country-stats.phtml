@@ -1,3 +1,5 @@
+<?php $currentMetric = $this->metric; ?>
+
 <div class="country hide">
 	<div class="close"><a href="#"><span class="icon-remove-circle icon-large"></span></a></div>
 	<h3>
@@ -16,12 +18,17 @@
 	<?php if ($this->country->presences) : ?>
     <h4><?php echo ucfirst($this->metric); ?></h4>
 	<ul>
-		<?php /** @var $presence Model_Presence */ ?>
+		<?php /** @var $presence Model_Presence */
+        $data = Model_Presence::getBadgeData();
+        $data = Model_Presence::organizeBadgeData($data);
+        $data = Model_Presence::calculateTotalScores($data); ?>
+
 		<?php foreach ($this->country->presences as $presence) : ?>
 
 			<?php
-			$kpiData = $presence->getBadgeScores();
-			$metricValue = $kpiData[$this->metric];
+                $row = $data['month'][$presence->id];
+
+                $metricValue = $row->$currentMetric;
 			?>
 
             <li>

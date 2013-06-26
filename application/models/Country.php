@@ -70,10 +70,9 @@ class Model_Country extends Model_Campaign {
         $startDate = clone $endDate;
         $startDate->modify('-30 days');
 
-        $data = self::getBadgeData($startDate, $endDate);
+        $badges = Model_Presence::ALL_BADGES();
 
-        //badgeData for campaigns is set up differently than
-        $badgeData = array();
+        $data = self::getBadgeData($startDate, $endDate);
 
         //get list of presences
         $campaignIds = array();
@@ -82,7 +81,7 @@ class Model_Country extends Model_Campaign {
             $campaignIds[$a->campaign_id]++;
         }, $data);
 
-        $metrics = array();
+        //set up an object for each country
         $campaigns = array();
         foreach(array_keys($campaignIds) as $id){
             $country = Model_Country::fetchById($id);
@@ -94,7 +93,9 @@ class Model_Country extends Model_Campaign {
                 'presenceCount' => count($country->presences),
                 'presences' => array()
             );
-            foreach (Model_Presence::ALL_BADGES() as $badge=>$m) {
+
+            //foreach badge, add a place to put scores to the country object
+            foreach ($badges as $badge=>$m) {
 
                 $row->$badge = array();
 
@@ -102,46 +103,60 @@ class Model_Country extends Model_Campaign {
             $campaigns[$id] = $row;
         }
 
+        //now that we have country objects set up, go though the data and assign it to the appropriate object
         foreach($data as $row){
+            //ignore the "week" range data for th moment
+            //todo include week data in the data that we send out as json
             if($row->type != 'week'){
+
+                //calculate the number of days since this row of data was created
                 $rowDate = new DateTime($row->datetime);
                 $rowDiff = $rowDate->diff($endDate);
                 $days = $rowDiff->days;
+                //turn it around so that the most recent data is the has the highest score
+                //this is because jquery slider has a value going 0-30 (left to right) and we want time to go in reverse
                 $days = 30-$days;
+
+                //each metric property in a country object is an array of days (0-30)
+                //if the day doesn't already exist, create it with a 0 value
                 if(!isset($campaigns[$row->campaign_id]->reach[$days])) $campaigns[$row->campaign_id]->reach[$days] = 0;
                 if(!isset($campaigns[$row->campaign_id]->engagement[$days])) $campaigns[$row->campaign_id]->engagement[$days] = 0;
                 if(!isset($campaigns[$row->campaign_id]->quality[$days])) $campaigns[$row->campaign_id]->quality[$days] = 0;
+
+                //add the badge values for this row to the appropriate country model
+                //multiple values per country, because countries have more than one presence
                 $campaigns[$row->campaign_id]->reach[$days] += $row->reach;
                 $campaigns[$row->campaign_id]->engagement[$days] += $row->engagement;
                 $campaigns[$row->campaign_id]->quality[$days] += $row->quality;
+
             }
         }
 
+        //calculate the total scores for each day for each country object
         foreach($campaigns as $campaign){
+
+            //setup the total score
             $campaign->total = array();
-            foreach($campaign->reach as $v => $value){
-                $value /= $campaign->presenceCount;
-                $object = (object)array('score'=>$value, 'label'=>round($value).'%');
-                $campaign->reach[$v] = $object;
-                $campaign->total[$v] = $value;
+
+            //go though each day in each badge in each country and convert the score into an score/label object for geochart
+            foreach($badges as $badge => $metrics){
+
+                foreach($campaign->$badge as $v => $value){
+                    $value /= $campaign->presenceCount;
+                    $object = (object)array('score'=>$value, 'label'=>round($value).'%');
+                    $campaign->{$badge}[$v] = $object;
+                    if(!isset($campaign->total[$v])) $campaign->total[$v] = 0;
+                    $campaign->total[$v] += $value;
+                }
+
             }
-            foreach($campaign->engagement as $v => $value){
-                $value /= $campaign->presenceCount;
-                $object = (object)array('score'=>$value, 'label'=>round($value).'%');
-                $campaign->engagement[$v] = $object;
-                $campaign->total[$v] += $value;
-            }
-            foreach($campaign->quality as $v => $value){
-                $value /= $campaign->presenceCount;
-                $object = (object)array('score'=>$value, 'label'=>round($value).'%');
-                $campaign->quality[$v] = $object;
-                $campaign->total[$v] += $value;
-            }
+
             foreach($campaign->total as $v => $value){
-                $value /= 3;
+                $value /= count($badges);
                 $object = (object)array('score'=>$value, 'label'=>round($value).'%');
                 $campaign->total[$v] = $object;
             }
+
         }
         return $campaigns;
 

@@ -882,8 +882,8 @@ form.management #assigned {
 
 #map .loading {
 	position: absolute;
-	top: 0;
-	right: 0;
+	top: 170px;
+	right: 152px;
 	width: 16px;
 	height: 16px;
 	display: none;
@@ -891,7 +891,7 @@ form.management #assigned {
 
 #map .country {
     position: absolute;
-    top: 0;
+    top: 130px;
     right: 0;
     width: 319px;
     background: #fff;

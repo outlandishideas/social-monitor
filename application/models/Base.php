@@ -320,24 +320,26 @@ abstract class Model_Base
      */
     public static function getBadgeData($startDate = null, $endDate = null) {
 
+        //get called class and count all the objects for this class
+        //(not accurate for campaigns as we don't return campaigns with no presences
         $class = get_called_class();
         $countItems = $class::countAll();
 
+        //if we haven't set a start and end date set it up
         if(!$startDate || !$endDate){
-            //get today's date
             $endDate = new DateTime();
             $startDate = clone $endDate;
         }
 
         $clauses = array();
 
-        //start and end dateTimes return all entries from today's date
+        //start and end dateTimes return all entries from start to end date inclusive
         $clauses[] = 'datetime >= :start_date';
         $clauses[] = 'datetime <= :end_date';
         $args[':start_date'] = $startDate->format('Y-m-d') . ' 00:00:00';
         $args[':end_date'] = $endDate->format('Y-m-d') . ' 23:59:59';
 
-        //returns rows with presence_id, type, value and datetime, ordered by presence_id, type, and datetime(DESC)
+        //returns rows with all columns from badge_history table, ordered by presence_id and datetime(DESC)
         $sql =
             'SELECT *
             FROM badge_history
@@ -351,7 +353,8 @@ abstract class Model_Base
         //if too few rows are returned
         if(count($data)/count(Model_Presence::$BADGE_RANGES) != $countItems){
 
-            $data = self::calculatePresenceBadgeData($data, $date);
+            //if too few rows, go off and calculate them for missing presences
+            $data = self::calculatePresenceBadgeData($data, $endDate);
 
         }
 
@@ -359,56 +362,68 @@ abstract class Model_Base
     }
 
     public static function calculatePresenceBadgeData($data, $date = null){
-        //get back array of presences that are missing data
-        $presences = Model_Presence::fetchAll(null, array());
-        if (!$date) $date = new DateTime();
-        $dateString = $date->format('Y-m-d H-i-s');
 
-        //create a variable that will hold the data that will be
+        //get back array of presences that are missing data
+        $presences = Model_Presence::fetchAll();
+
+        //get todays date for datetime column for data
+        if (!$date) $date = new DateTime();
+        $dateString = $date->format('Y-m-d H:i:s');
+
+        //create a variable that will hold the data that will be sent to insertData
         $setHistoryArgs = array();
 
-        //foreach presence and foreach badge (not total badge), calculate the metric
+        //foreach presence and foreach badge (not total badge), calculate the metrics
         foreach(Model_Presence::$BADGE_RANGES as $type){
 
+            //use tempData so we can keep the ranges separate when calculating ranking
             $tempData = array();
 
             foreach($presences as $presence){
 
+                //$dataRow is an object with four properties: presence_id, type, value, datetime (matching columns in presence_history table)
                 $dataRow = (object)array(
                     'presence_id' => $presence->id,
                     'datetime' => $dateString,
                     'type' => $type
                 );
 
+
                 foreach(Model_Presence::ALL_BADGES() as $badgeType => $metrics){
 
-                    //$dataRow is an object with four properties: presence_id, type, value, datetime (matching columns in presence_history table)
+                    //return score from the metrics from this badge and add it to the dataRow
                     $dataRow->$badgeType = $presence->getMetricsScore($badgeType, $metrics, $type);
-
 
                 }
 
+                //add the dataRow to tempData so we can rank it before we add it to the main data array
                 $tempData[] = $dataRow;
 
             }
 
+            //foreach badge (not total), sort the tempData and then rank it
             foreach(Model_Presence::ALL_BADGES() as $badge => $metric){
 
+                //sorts the $tempData by the current badge score
                 usort($tempData, function($a, $b) use ($badge){
                     if($a->$badge == $b->$badge) return 0;
                     return $a->$badge > $b->$badge ? -1 : 1;
                 });
 
+                //set variables for ranking
                 $lastScore = null;
                 $ranking = 1;
+
+                //foreach dataRow, ordered by score of the current badge, set the ranking
                 foreach($tempData as $row) {
+
                     //if score is not equal to last score increase ranking by 1
                     if(is_numeric($lastScore) && $lastScore != $row->$badge){
                         $ranking++;
                     }
 
+                    //add current $ranking to dataRow
                     $rankType = $badge.'_rank';
-
                     $row->$rankType = $ranking;
 
                     //set current score to $lastScore for next value in array
@@ -416,13 +431,15 @@ abstract class Model_Base
                 }
             }
 
-            foreach($tempData as $row){
-                //we have to turn the object back into an array to send it to insertData
-                $setHistoryArgs[] = (array)$row;
-            }
-
+            //add the tempData for this specifc range onto the data array
             $data = array_merge($data, $tempData);
 
+        }
+
+        //we have to turn the object back into an array to send it to insertData
+        foreach($tempData as $row){
+
+            $setHistoryArgs[] = (array)$row;
         }
 
         //insert the newly calculated data back into the presence_history table, so next time its ready for us.
@@ -432,21 +449,36 @@ abstract class Model_Base
     }
 
     public static function calculateTotalScores($data) {
+
         //calculate total scores for each presence
         foreach($data as $type => $typeData){
+
             foreach($typeData as $row){
-                $row->total = $row->reach + $row->engagement + $row->quality;
-                $row->total /= 3;
+
+                $total = 0;
+                $badges = Model_Presence::ALL_BADGES();
+
+                foreach($badges as $badge => $metrics){
+                    $total += $row->$badge;
+                }
+
+                $row->total = $total/count($badges);
+
             }
 
+            //sorts the $tempData by the total score
             usort($typeData, function($a, $b){
                 if($a->total == $b->total) return 0;
                 return $a->total > $b->total ? -1 : 1 ;
             });
 
+            //set variables for ranking
             $lastScore = null;
             $ranking = 1;
+
+            //foreach dataRow, ordered by score of the current badge, set the ranking
             foreach($typeData as $row){
+
                 //if score is not equal to last score increase ranking by 1
                 if(is_numeric($lastScore) && $lastScore != $row->total){
                     $ranking++;
@@ -468,33 +500,31 @@ abstract class Model_Base
      */
     public function badgeFactory(){
 
-        //set up some variables that we we will use throughout this function
-        $date = new DateTime();
+        //get called class
         $class = get_called_class();
-        $setHistoryArgs = array();
-        $countItems = $class::countAll();
 
         //get the Badge Data from the presence_history table, or create ourselves if it doesn't exist
-        $data = $class::getBadgeData();
+        $data = static::getBadgeData();
 
         //take the raw data and organise it depending on how it will be used
         $badgeData = $class::organizeBadgeData($data);
 
+        //calculate the total scores for each row of data (after it has been organized)
         $badgeData = $class::calculateTotalScores($badgeData);
 
         $badges = array();
-        foreach($badgeData as $type => $typeData){
+        foreach($badgeData as $range => $rangeData){
 
             foreach(Model_Presence::ALL_BADGES() as $badge => $metrics){
 
                 //create a Badge Object from this data
-                $badges[$type][$badge] = new Model_Badge($typeData, $badge, $this, $class);
+                $badges[$range][$badge] = new Model_Badge($rangeData, $badge, $this, $class);
 
             }
 
-            $total = array('total' => new Model_Badge($typeData, 'total', $this, $class));
+            $total = array('total' => new Model_Badge($rangeData, 'total', $this, $class));
             //add the the total badge at the beginning of the $badges array
-            $badges[$type] = $total + $badges[$type];
+            $badges[$range] = $total + $badges[$range];
         }
 
         return $badges;
