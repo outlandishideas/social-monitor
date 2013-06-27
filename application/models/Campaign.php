@@ -220,7 +220,9 @@ class Model_Campaign extends Model_Base {
 
         foreach($badgeData as $t => $type){
 
-            foreach(Model_Presence::ALL_BADGES() as $badge => $metric){
+            foreach(Model_Badge::ALL_BADGES_TITLE() as $badge => $metric){
+
+                if($badge == Model_Badge::METRIC_BADGE_TOTAL) continue;
 
                 usort($type, function($a, $b) use ($badge){
                     if($a->$badge == $b->$badge) return 0;

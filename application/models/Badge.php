@@ -21,11 +21,54 @@ class Model_Badge {
     public $presences = array();            //array of presences (only one for Model_Presence badges)
     public $metrics = array();
 
-    public function __construct($data, $type, $item, $class)
+    //Badge Metrics
+    const METRIC_BADGE_TOTAL = 'total';
+    const METRIC_BADGE_REACH = 'reach';
+    const METRIC_BADGE_ENGAGEMENT = 'engagement';
+    const METRIC_BADGE_QUALITY = 'quality';
+
+    public static $METRIC_QUALITY = array(
+        Model_Presence::METRIC_POSTS_PER_DAY,
+        Model_Presence::METRIC_LINKS_PER_DAY,
+        Model_Presence::METRIC_LIKES_PER_POST
+    );
+
+    public static $METRIC_ENGAGEMENT = array(
+        Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS,
+        Model_Presence::METRIC_RESPONSE_TIME
+    );
+
+    public static $METRIC_REACH = array(
+        Model_Presence::METRIC_POPULARITY_PERCENT,
+        Model_Presence::METRIC_POPULARITY_TIME
+    );
+
+    public static $BADGE_RANGES = array( 'week', 'month' );
+
+    public static function ALL_BADGES_TITLE() {
+
+        return array(
+            self::METRIC_BADGE_TOTAL => 'Global Score',
+            self::METRIC_BADGE_REACH => 'Reach',
+            self::METRIC_BADGE_ENGAGEMENT => 'Engagement',
+            self::METRIC_BADGE_QUALITY => 'Quality'
+        );
+    }
+
+    public static function ALL_BADGES_METRICS() {
+
+        return array(
+            self::METRIC_BADGE_REACH => self::$METRIC_REACH,
+            self::METRIC_BADGE_ENGAGEMENT => self::$METRIC_ENGAGEMENT,
+            self::METRIC_BADGE_QUALITY => self::$METRIC_QUALITY
+        );
+    }
+
+    public function __construct($data, $type, $title, $item, $class)
     {
         $this->type = $type;
         $this->rankType = $this->type.'_rank';
-        $this->title = ucfirst($type);
+        $this->title = $title;
         $this->class = $class;
         $this->item = $item;
 

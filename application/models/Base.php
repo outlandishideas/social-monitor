@@ -351,7 +351,7 @@ abstract class Model_Base
         $data = $stmt->fetchAll(PDO::FETCH_OBJ);
 
         //if too few rows are returned
-        if(count($data)/count(Model_Presence::$BADGE_RANGES) != $countItems){
+        if(count($data)/count(Model_Badge::$BADGE_RANGES) != $countItems){
 
             //if too few rows, go off and calculate them for missing presences
             $data = self::calculatePresenceBadgeData($data, $endDate);
@@ -374,7 +374,7 @@ abstract class Model_Base
         $setHistoryArgs = array();
 
         //foreach presence and foreach badge (not total badge), calculate the metrics
-        foreach(Model_Presence::$BADGE_RANGES as $type){
+        foreach(Model_Badge::$BADGE_RANGES as $type){
 
             //use tempData so we can keep the ranges separate when calculating ranking
             $tempData = array();
@@ -389,7 +389,7 @@ abstract class Model_Base
                 );
 
 
-                foreach(Model_Presence::ALL_BADGES() as $badgeType => $metrics){
+                foreach(Model_Badge::ALL_BADGES_METRICS() as $badgeType => $metrics){
 
                     //return score from the metrics from this badge and add it to the dataRow
                     $dataRow->$badgeType = $presence->getMetricsScore($badgeType, $metrics, $type);
@@ -402,7 +402,9 @@ abstract class Model_Base
             }
 
             //foreach badge (not total), sort the tempData and then rank it
-            foreach(Model_Presence::ALL_BADGES() as $badge => $metric){
+            foreach(Model_Badge::ALL_BADGES_TITLE() as $badge => $title){
+
+                if($badge == Model_Badge::METRIC_BADGE_TOTAL) continue;
 
                 //sorts the $tempData by the current badge score
                 usort($tempData, function($a, $b) use ($badge){
@@ -456,13 +458,14 @@ abstract class Model_Base
             foreach($typeData as $row){
 
                 $total = 0;
-                $badges = Model_Presence::ALL_BADGES();
+                $badges = Model_Badge::ALL_BADGES_TITLE();
 
-                foreach($badges as $badge => $metrics){
+                foreach($badges as $badge => $title){
+                    if($badge == Model_Badge::METRIC_BADGE_TOTAL) continue;
                     $total += $row->$badge;
                 }
 
-                $row->total = $total/count($badges);
+                $row->total = $total/count($badges)-1;
 
             }
 
@@ -515,16 +518,13 @@ abstract class Model_Base
         $badges = array();
         foreach($badgeData as $range => $rangeData){
 
-            foreach(Model_Presence::ALL_BADGES() as $badge => $metrics){
+            foreach(Model_Badge::ALL_BADGES_TITLE() as $badge => $title){
 
                 //create a Badge Object from this data
-                $badges[$range][$badge] = new Model_Badge($rangeData, $badge, $this, $class);
+                $badges[$range][$badge] = new Model_Badge($rangeData, $badge, $title, $this, $class);
 
             }
 
-            $total = array('total' => new Model_Badge($rangeData, 'total', $this, $class));
-            //add the the total badge at the beginning of the $badges array
-            $badges[$range] = $total + $badges[$range];
         }
 
         return $badges;

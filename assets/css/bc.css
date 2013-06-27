@@ -1353,15 +1353,15 @@ ul.tabs {
     padding: 0;
     list-style: none;
     border-bottom: 1px solid #ccc;
-    height: 54px;
+    height: 44px;
 }
 
 ul.tabs li {
-    width: 180px;
+    width: 140px;
     float: left;
     margin-left: 20px;
     border: 1px solid #ccc;
-    padding: 10px;
+    padding: 5px;
     border-bottom-color: #fff;
     border-bottom-style: none;
     height: 33px;
@@ -1369,7 +1369,7 @@ ul.tabs li {
     background-color: #F2F2F2;
     text-align: center;
     line-height: 33px;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 ul.tabs li.active {

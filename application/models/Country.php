@@ -70,7 +70,7 @@ class Model_Country extends Model_Campaign {
         $startDate = clone $endDate;
         $startDate->modify('-30 days');
 
-        $badges = Model_Presence::ALL_BADGES();
+        $badges = Model_Badge::ALL_BADGES_TITLE();
 
         $data = self::getBadgeData($startDate, $endDate);
 

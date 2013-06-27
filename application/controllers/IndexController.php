@@ -19,6 +19,7 @@ class IndexController extends GraphingController
         $old = new DateTime('-1 month');
         $this->view->currentDate = $now;
         $this->view->oldDate = $old;
+        $this->view->dateRangeString = $old->format('d-M-Y') .' - '. $now->format('d-M-Y');
 	}
 
 	public function dateRangeAction() {

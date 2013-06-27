@@ -15,12 +15,6 @@ class Model_Presence extends Model_Base {
     const METRIC_LINKS_PER_DAY = 'links_per_day';
     const METRIC_LIKES_PER_POST = 'likes_per_post';
 
-    //Badge Metrics
-    const METRIC_BADGE_TOTAL = 'total';
-    const METRIC_BADGE_REACH = 'reach';
-    const METRIC_BADGE_ENGAGEMENT = 'engagement';
-    const METRIC_BADGE_QUALITY = 'quality';
-
 	public static $ALL_METRICS = array(
 		self::METRIC_POPULARITY_PERCENT,
 		self::METRIC_POPULARITY_TIME,
@@ -28,44 +22,6 @@ class Model_Presence extends Model_Base {
 		self::METRIC_POSTS_PER_DAY,
 		self::METRIC_RESPONSE_TIME,
 	);
-
-    public static function ALL_BADGES($key = null) {
-
-        $badges = array(
-            self::METRIC_BADGE_REACH => self::$METRIC_REACH,
-            self::METRIC_BADGE_ENGAGEMENT => self::$METRIC_ENGAGEMENT,
-            self::METRIC_BADGE_QUALITY => self::$METRIC_QUALITY
-        );
-
-        if($key){
-            if(array_key_exists($key, $badges)){
-                return $badges[$key];
-            } else {
-                return array();
-            }
-        } else {
-            return $badges;
-        }
-    }
-
-
-    public static $METRIC_QUALITY = array(
-        self::METRIC_POSTS_PER_DAY,
-        self::METRIC_LINKS_PER_DAY,
-        self::METRIC_LIKES_PER_POST
-    );
-
-    public static $METRIC_ENGAGEMENT = array(
-        self::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS,
-		self::METRIC_RESPONSE_TIME
-    );
-
-    public static $METRIC_REACH = array(
-        self::METRIC_POPULARITY_PERCENT,
-        self::METRIC_POPULARITY_TIME
-    );
-
-    public static $BADGE_RANGES = array( 'week', 'month' );
 
 	public static $bucketSizes = array(
 		'bucket_half_hour' => 1800, // 30*60
@@ -546,13 +502,12 @@ class Model_Presence extends Model_Base {
 
         if(empty($metrics))
         {
-            $metrics = Model_Presence::ALL_BADGES($badgeType);
+            $metrics = Model_Badge::ALL_BADGES_METRICS($badgeType);
         }
 
         $metricArray = array();
 
         foreach($metrics as $metric){
-
 
             switch($metric){
 
@@ -569,7 +524,7 @@ class Model_Presence extends Model_Base {
                         $score = ( $actual / $target ) * 100;
                     }
 
-                    $title = 'Percent of Target Audience';
+                    $title = 'Popularity';
 
                     break;
 
@@ -586,7 +541,7 @@ class Model_Presence extends Model_Base {
                         $score = ( $actual / $target ) * 100;
                     }
 
-                    $title = 'Time to Reach Target Popularity';
+                    $title = 'Popularity Trend';
 
                     break;
 
@@ -637,7 +592,7 @@ class Model_Presence extends Model_Base {
                         $score = ( $actual / $target ) * 100;
                     }
 
-                    $title = 'Average Likes Per Post';
+                    $title = 'Applause';
 
                     break;
 
@@ -654,7 +609,7 @@ class Model_Presence extends Model_Base {
                         $score = 100;
                     }
 
-                    $title = 'Average Response Time';
+                    $title = 'Responsiveness';
 
                     break;
 
@@ -671,7 +626,7 @@ class Model_Presence extends Model_Base {
                         $score = ( $actual / $target ) * 100;
                     }
 
-                    $title = 'Ratio of Replies to Posts from others';
+                    $title = 'Conversation';
 
                     break;
 

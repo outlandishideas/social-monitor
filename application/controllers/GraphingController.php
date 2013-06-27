@@ -12,12 +12,7 @@ abstract class GraphingController extends BaseController {
 	}
 
 	protected static function mapMetrics(){
-		return array(
-			Model_Presence::METRIC_BADGE_TOTAL => 'Total',
-			Model_Presence::METRIC_BADGE_REACH => 'Reach',
-			Model_Presence::METRIC_BADGE_ENGAGEMENT => 'Engagement',
-			Model_Presence::METRIC_BADGE_QUALITY => 'Quality',
-		);
+		return Model_Badge::ALL_BADGES_TITLE();
 	}
 
 	protected static function tableMetrics(){
@@ -109,14 +104,10 @@ abstract class GraphingController extends BaseController {
 		}
 
         $geochart = array();
-        $geochart['total'] = (object)array(
-            'range' => array(0, 25, 50, 100),
-            'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
-        );
-        $badges = Model_Presence::ALL_BADGES();
+        $badges = Model_Badge::ALL_BADGES_TITLE();
         foreach($badges as $badge => $kpis){
             $geochart[$badge] = (object)array(
-                'range' => array(0, 25, 50, 100),
+                'range' => array(0, 33, 66, 100),
                 'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
             );
         }

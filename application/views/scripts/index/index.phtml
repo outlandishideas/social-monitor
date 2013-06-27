@@ -1,7 +1,6 @@
 <ul id="map-tabs" class="tabs">
-    <?php $badges = array('total'=> 'Total')+Model_Presence::ALL_BADGES(); ?>
-    <?php $first = true; foreach($badges as $key => $value) : ?>
-        <li class="<?php echo !$first?'':'active';?>" data-val="<?php echo $key; ?>"><?php echo ucfirst($key); ?></li>
+    <?php $first = true; foreach($this->metricOptions as $badge => $title) : ?>
+        <li class="<?php echo !$first?'':'active';?>" data-val="<?php echo $badge; ?>"><?php echo ucfirst($title); ?></li>
     <?php $first = false; endforeach; ?>
 </ul>
 
