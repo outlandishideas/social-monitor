@@ -2,4 +2,4 @@ user:
   label: User
   controller: user
   action: edit-self
-  icon: icon-person icon-large
+  icon: icon-user icon-large

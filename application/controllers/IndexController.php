@@ -15,8 +15,9 @@ class IndexController extends GraphingController
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->mapData = Model_Country::mapDataFactory();
 		$this->view->metricOptions = $metrics;
-        $now = new DateTime();
-        $old = new DateTime('-1 month');
+        $now = new DateTime('-1 day');
+        $old = clone $now;
+        $old->modify('-1 month');
         $this->view->currentDate = $now;
         $this->view->oldDate = $old;
         $this->view->dateRangeString = $old->format('d-M-Y') .' - '. $now->format('d-M-Y');
@@ -71,6 +72,24 @@ class IndexController extends GraphingController
 		));
 
 	}
+
+    public function buildBadgeDataAction () {
+
+        $this->_helper->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        for($i = 0 ; $i < 31 ; $i++){
+            $date = new DateTime();
+            $modifier = '-'.$i.' days';
+            $date->modify($modifier);
+
+            Model_Presence::getBadgeData($date, $date);
+
+        }
+        exit;
+
+
+    }
 
 	public function servefileAction () {
         $this->_helper->layout()->disableLayout();

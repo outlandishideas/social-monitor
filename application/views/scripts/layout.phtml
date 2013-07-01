@@ -35,9 +35,9 @@
 						<div class="main">
                             <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>" class="site-title-link"><div class="site-title"><span>British Council Social Media Monitor</span></div></a>
                             <?php
-                                if (Zend_Auth::getInstance()->hasIdentity()) :
+                                //if (Zend_Auth::getInstance()->hasIdentity()) :
                                     echo $this->navigation()->menu()->setPartial('partials/menu.phtml')->render();
-                                endif;
+                                //endif;
                             ?>
 						</div>
 						<div class="extra">
@@ -55,7 +55,7 @@
 						            }
                                     echo $this->navigation()->menu()->render($menu);
 							    } else {
-                                    echo $this->navigation()->menu()->setPartial('partials/menu.phtml')->render($this->nonUserMenu);
+                                    echo $this->navigation()->menu()->render($this->nonUserMenu);
 						        }
                             ?>
 						</div>

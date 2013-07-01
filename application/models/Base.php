@@ -351,7 +351,7 @@ abstract class Model_Base
         $data = $stmt->fetchAll(PDO::FETCH_OBJ);
 
         //if too few rows are returned
-        if(count($data)/count(Model_Badge::$BADGE_RANGES) != $countItems){
+        if(count($data) < $countItems){ // /count(Model_Badge::$BADGE_RANGES)
 
             //if too few rows, go off and calculate them for missing presences
             $data = self::calculatePresenceBadgeData($data, $endDate);
