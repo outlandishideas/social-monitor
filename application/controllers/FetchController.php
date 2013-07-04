@@ -37,7 +37,7 @@ class FetchController extends BaseController
 						':type'     => 'popularity',
 						':value'    => $p->popularity
 					));
-                    if($p->type == TYPE_TWITTER){
+                    if($p->type == Model_Presence::TYPE_TWITTER){
                         $infoStmt->execute(array(
                             ':id'       => $p->id,
                             ':datetime' => gmdate('Y-m-d H:i:s'),
