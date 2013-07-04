@@ -5,9 +5,16 @@
     foreach ($this->container as $page) :
 
         $href = $page->getHref();
+
         if($href == true) : ?>
 
-            <li<?php if ($page->active) { echo ' class="active"'; } ?>>
+            <?php
+                $test = $this->gatekeeper()->filter('%url%', array('controller' => $page->controller, 'action' => $page->action));
+                $href = $test ? $test : '#';
+                $class = $test ? 'disabled' : '';
+            ?>
+
+            <li class="<?php echo $class; if ($page->active) echo 'active'; ?>">
                 <a href="<?php echo $href; ?>">
 
                     <?php

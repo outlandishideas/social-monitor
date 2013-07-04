@@ -2,6 +2,8 @@
 
 class GroupController extends CampaignController {
 
+    protected $publicActions = array('index');
+
 	public function init() {
 		parent::init();
 		$this->view->titleIcon = Model_Group::ICON_TYPE;

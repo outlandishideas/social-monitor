@@ -37,6 +37,14 @@ class FetchController extends BaseController
 						':type'     => 'popularity',
 						':value'    => $p->popularity
 					));
+                    if($p->type == TYPE_TWITTER){
+                        $infoStmt->execute(array(
+                            ':id'       => $p->id,
+                            ':datetime' => gmdate('Y-m-d H:i:s'),
+                            ':type'     => 'klout_score',
+                            ':value'    => $p->klout_score
+                        ));
+                    }
 				} catch (Exception_TwitterNotFound $e) {
 					$this->log($e->getMessage());
 				} catch (Exception_FacebookNotFound $e) {
