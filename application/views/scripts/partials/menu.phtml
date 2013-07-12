@@ -10,9 +10,12 @@
         if($href == true) : ?>
 
             <?php
+            $class = '';
+            if($page->action != 'login'){
                 $test = $this->gatekeeper()->filter('%url%', array('controller' => $page->controller, 'action' => $page->action));
                 $href = $test ? $test : '#';
                 $class = $test ? 'disabled' : '';
+            }
             ?>
 
             <li class="<?php echo $class; if ($page->active) echo 'active'; ?>">
