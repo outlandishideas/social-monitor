@@ -19,7 +19,7 @@ abbr {
 #loginWrapper h1 {
 	margin-bottom: 20px;
 	padding-bottom: 10px;
-	margin-top: 0px;
+	margin-top: 0;
 	border-bottom: 1px solid #CCCCCC;
 }
 
@@ -84,7 +84,7 @@ fieldset ol, fieldset ul {
 
 fieldset ul li {
 	clear: left;
-	padding: 2px 0px 12px 0px;
+	padding: 2px 0 12px 0;
 }
 
 
@@ -105,7 +105,7 @@ fieldset label:not(.radio) {
 }
 
 fieldset input, fieldset select, fieldset textarea {
-	margin: 0px;
+	margin: 0;
 }
 
 .site-title-link {
@@ -131,13 +131,13 @@ fieldset input, fieldset select, fieldset textarea {
 h1 {
 	font-size: 32px;
 	font-weight: bold;
-	margin: 20px 0px;
+	margin: 20px 0;
 }
 
 h2 {
 	font-size: 26px;
 	font-weight: bold;
-	margin: 16px 0px;
+	margin: 16px 0;
 }
 
 .section-title  {
@@ -158,7 +158,7 @@ h2 {
 h3 {
 	font-size: 20px;
 	font-weight: bold;
-	margin: 13px 0px;
+	margin: 13px 0;
 }
 
 /* links */
@@ -709,11 +709,11 @@ table.dtable.dataTable {
 
 .data ul {
 	list-style: none;
-	-webkit-margin-before: 0px;
-	-webkit-margin-after: 0px;
-	-webkit-margin-start: 0px;
-	-webkit-margin-end: 0px;
-	-webkit-padding-start: 0px;
+	-webkit-margin-before: 0;
+	-webkit-margin-after: 0;
+	-webkit-margin-start: 0;
+	-webkit-margin-end: 0;
+	-webkit-padding-start: 0;
 }
 
 .data li {
@@ -1440,15 +1440,15 @@ ul.link-list {
         page-break-inside: avoid;
     }
 
-    img {
-        max-width: 100% !important;
-    }
+	img {
+		max-width: 100% !important;
+	}
 
-    @page {
-        margin: 0.5cm;
-    }
+	@page {
+		margin: 0.5cm;
+	}
 
-    p,
+	p,
     h2,
     h3 {
         orphans: 3;

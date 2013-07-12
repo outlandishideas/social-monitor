@@ -11,6 +11,7 @@
 	</tr>
 <?php foreach ($this->users as $user) : ?>
 	<?php
+		/** @var Model_User $user */
 		$userLevel = array_key_exists($user->user_level, $this->userLevels) ? $this->userLevels[$user->user_level] : 'Unknown (' . $user->user_level . ')';
 	?>
 	<tr <?php if ($user->id == $this->user->id) echo 'class="current-user"'; ?>>

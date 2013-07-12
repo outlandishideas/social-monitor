@@ -37,6 +37,7 @@ class DomainController extends BaseController {
 	 * @user-level user
 	 */
 	function viewAction() {
+		/** @var Model_Domain $domain */
 		$domain = Model_Domain::fetchById($this->_request->id);
 		$this->validateData($domain);
 

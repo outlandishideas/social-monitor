@@ -71,4 +71,3 @@ class Zend_View_Helper_PrettyDate extends Zend_View_Helper_Abstract
 	*/
 }
 
-?>

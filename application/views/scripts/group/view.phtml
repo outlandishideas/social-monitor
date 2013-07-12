@@ -72,7 +72,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
             <?php endforeach; ?>
         </tr>
 
-        <?php foreach($this->compareData as $data) : $presence = $data->presence?>
+        <?php foreach($this->compareData as $data) : /** @var Model_Presence $presence */ $presence = $data->presence?>
             <tr>
                 <td>
 	                <?php echo $this->partial('partials/presence_inline.phtml', array('presence'=>$data->presence)); ?>
@@ -101,6 +101,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
         $totalPop = 0;
         $totalTarget = 0;
         foreach ($this->compareData as $data) {
+	        /** @var Model_Presence $p */
             $p = $data->presence;
             $totalPop += $p->popularity;
             $totalTarget += $p->getTargetAudience();

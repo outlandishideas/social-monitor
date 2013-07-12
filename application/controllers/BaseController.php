@@ -6,10 +6,10 @@ class BaseController extends Zend_Controller_Action {
 
 	static $optionCache = array();
 
-	/**
-	 * @var Zend_Config
-	 */
+	/** @var Zend_Config */
 	protected $config;
+	/** @var Zend_Auth */
+	protected $auth;
 
 	public function preDispatch()
 	{
@@ -87,6 +87,7 @@ class BaseController extends Zend_Controller_Action {
 		foreach (array('adminMenu'=>'navigation_admin.yaml', 'nonAdminMenu'=>'navigation_non_admin.yaml', 'nonUserMenu'=>'navigation_non_user.yaml') as $property=>$configFile) {
 			$navConfig = new Zend_Config_Yaml(APPLICATION_PATH . '/configs/' . $configFile);
 			$navigation = new Zend_Navigation($navConfig);
+			/** @var Zend_Navigation_Page_Mvc $page */
 			foreach ($navigation->getPages() as $page) {
 				if (strpos($page->getClass(), 'notab') === false) {
 					$page->setActive($page->getController() == $this->_request->getControllerName());
@@ -133,7 +134,7 @@ class BaseController extends Zend_Controller_Action {
 
 	/**
 	 * Recursively set each page's active state, depending on whether they or their children are currently being shown
-	 * @param $pages
+	 * @param $pages Zend_Navigation_Page_Mvc[]
 	 * @return bool true if an active page is found within $pages
 	 */
 	protected function setActivePages($pages) {

@@ -162,7 +162,7 @@ class CountryController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 			$presenceIds = array();
-			foreach ($this->_request->assigned as $type=>$ids) {
+			foreach ($this->_request->assigned as $ids) {
 				foreach ($ids as $id) {
 					$presenceIds[] = $id;
 				}

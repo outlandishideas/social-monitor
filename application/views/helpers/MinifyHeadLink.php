@@ -160,6 +160,7 @@ class Zend_View_Helper_MinifyHeadLink extends Zend_View_Helper_HeadLink {
 	 * 
 	 * Loops through the defined valid static css extensions we use.
 	 * @param string $string
+	 * @return bool
 	 */
 	public function isValidStyleSheetExtension($string) {
 		foreach ( $this->_cssExtensions as $ext ) {

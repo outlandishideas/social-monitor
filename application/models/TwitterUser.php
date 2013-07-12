@@ -66,7 +66,7 @@ class Model_TwitterUser extends Model_Base {
 	 * otherwise fetches them from twitter
 	 * @static
 	 * @param $ids
-	 * @param null $token
+	 * @param $token Model_TwitterToken
 	 * @return array
 	 */
 	public static function fetchById($ids, $token = null) {
@@ -187,6 +187,9 @@ class Model_TwitterUser extends Model_Base {
 		return $ids ? explode(',', $ids) : array();
 	}
 
+	/**
+	 * @param $token Model_TwitterToken
+	 */
 	public function updateFromApi($token) {
 		$userData = $token->apiRequest('users/lookup', array('user_id'=>$this->id));
 		if (count($userData)) {

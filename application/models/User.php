@@ -22,7 +22,7 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 
 	public static function getPermissions($userLevel) {
 		if (!array_key_exists($userLevel, self::$permissions)) {
-			$db = Zend_Registry::get('db');
+			$db = BaseController::db();
 			$statement = $db->prepare('SELECT permission FROM user_permissions WHERE user_level = ?');
 			$statement->execute(array($userLevel));
 			self::$permissions[$userLevel] = $statement->fetchAll(PDO::FETCH_COLUMN);
@@ -127,6 +127,7 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 					case 'twitter':
 					case 'facebook':
 						$e->controller = 'presence';
+						/** @var Model_Presence $entity */
 						$entity = Model_Presence::fetchById($e->entity_id);
 						if ($entity) {
 							$e->icon = 'icon-'.$entity->type.'-sign';

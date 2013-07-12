@@ -213,6 +213,7 @@ class PresenceController extends GraphingController
 						break;
 				}
 				if ($data) {
+					/** @var Zend_View_Helper_TrafficLight $trafficLight */
 					$trafficLight = $this->view->trafficLight();
 					foreach ($data['points'] as $point) {
 						$point->color = $trafficLight->color(isset($point->health) ? $point->health : $point->value, $metric);
