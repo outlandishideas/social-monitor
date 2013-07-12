@@ -119,7 +119,6 @@
 		array('link', 'assets/lib/d3/d3.v2.min.js'), //use preminified version to avoid error
 		array('link', 'assets/lib/jquery/date.js'),
 		array('link', 'assets/lib/jquery/daterangepicker.jQuery.js'),
-		array('link', 'assets/lib/jquery/jquery.ui.widget.js'),
 		array('link', 'assets/lib/tipsy/js/jquery.tipsy.js'),
 		array('link', 'assets/lib/datatables/media/js/jquery.dataTables.js'),
 		array('link', 'assets/js/dataTables.filteringDelay.js'),
@@ -161,28 +160,7 @@
 		echo $minify;
 	}
 	?>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
 
-    <script>
-        $(function() {
-            $( "#slider" ).slider({
-                value:30,
-                min: 0,
-                max: 30,
-                step: 1,
-                slide: function( event, ui ) {
-                    console.log(ui.value);
-                    var days = 30 - ui.value;
-                    var now = new Date.today().addDays(-days);
-                    var then = now.clone();
-                    then.addMonths(-1);
-                    $( "#slider" ).data('val', ui.value);
-                    $( "#date-slider" ).val( then.toString('dd MMM yyyy') + ' - ' + now.toString('dd MMM yyyy') );
-                    app.geochart.refreshMap();
-                }
-            });
-        });
-    </script>
 	<script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

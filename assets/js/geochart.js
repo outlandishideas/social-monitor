@@ -123,7 +123,6 @@ app.geochart = {
 		if (typeof mapData == 'undefined' || mapData.length == 0) {
 			return;
 		}
-        console.log(mapData);
 
 		// define the columns
 		app.geochart.data = new google.visualization.DataTable();

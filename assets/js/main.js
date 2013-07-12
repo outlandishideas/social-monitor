@@ -315,6 +315,26 @@ app.init = {
 				e.preventDefault();
 				$(this).closest('.link.box').remove();
 			});
+		},
+		'#date-slider': function($sliderDate) {
+			var currentDate = $sliderDate.data('current-date');
+			var dayRange = parseInt($sliderDate.data('day-range'));
+			$( "#slider" ).slider({
+				value: dayRange,
+				min: 1,
+				max: dayRange,
+				step: 1,
+				slide: function( event, ui ) {
+					var days = dayRange - ui.value;
+					var now = (new Date(currentDate)).addDays(-days);
+					var then = now.clone();
+					then.addDays(-dayRange);
+					$( "#slider" ).data('val', ui.value);
+					$( "#date-slider" ).val( then.toString('dd MMM yyyy') + ' - ' + now.toString('dd MMM yyyy') );
+					app.geochart.refreshMap();
+				}
+			});
+
 		}
 	}
 };

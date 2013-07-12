@@ -22,7 +22,7 @@ app.badges = {
         var badge = {
             selector: selector,
             $badge: $(selector)
-        }
+        };
         return badge;
     },
 
@@ -39,7 +39,6 @@ app.badges = {
         return app.api.get(url, args)
             .done(function(response) {
                 $('#badges').hideLoader();
-                console.log(response.data);
                 for (var i in response.data.month) {
                     app.badges.renderBadge(response.data.month[i]);
                 }
