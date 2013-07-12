@@ -2,7 +2,7 @@
 
 class IndexController extends GraphingController
 {
-	protected $publicActions = array('index', 'country-stats');
+	protected $publicActions = array('index', 'country-stats', 'build-badge-data');
 
 	public function indexAction() {
 		$dayRange = 30;
