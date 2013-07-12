@@ -11,10 +11,6 @@ abstract class GraphingController extends BaseController {
 		);
 	}
 
-	protected static function mapMetrics(){
-		return Model_Badge::ALL_BADGES_TITLE();
-	}
-
 	protected static function tableMetrics(){
 		return array(
 			Model_Presence::METRIC_POPULARITY_PERCENT => 'Percent of Target Audience',
@@ -104,15 +100,15 @@ abstract class GraphingController extends BaseController {
 		}
 
         $geochart = array();
-        $badges = Model_Badge::ALL_BADGES_TITLE();
-        foreach($badges as $badge => $kpis){
-            $geochart[$badge] = (object)array(
+        $badges = Model_Badge::$ALL_BADGE_TYPES;
+        foreach($badges as $type){
+            $geochart[$type] = (object)array(
                 'range' => array(0, 33, 66, 100),
                 'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
             );
         }
-        foreach (self::mapMetrics() as $key=>$label) {
-            $geochart[$key]->label = $label;
+		foreach (Model_Badge::$ALL_BADGE_TYPES as $type) {
+            $geochart[$type]->label = Model_Badge::badgeTitle($type);
         }
         foreach ($geochart as $args) {
             $args->colorsRgb = array();

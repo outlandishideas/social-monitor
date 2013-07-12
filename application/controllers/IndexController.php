@@ -2,25 +2,26 @@
 
 class IndexController extends GraphingController
 {
-    protected $publicActions = array('index', 'country-stats');
+	protected $publicActions = array('index', 'country-stats');
 
 	public function indexAction() {
-		/** @var Model_Country[] $countries */
-		$countries = Model_Country::fetchAll();
-		$kpiData = array();
-		$metrics = self::mapMetrics();
+		$dayRange = 30;
+		$now = new DateTime();
+		$old = clone $now;
+		$old->modify("-$dayRange days");
 
+		$metrics = array();
+		foreach (Model_Badge::$ALL_BADGE_TYPES as $type) {
+			$metrics[$type] = Model_Badge::badgeTitle($type);
+		}
 		$this->view->title = 'British Council Social Media Monitor';
 		$this->view->titleIcon = 'icon-home';
 		$this->view->countries = Model_Country::fetchAll();
-        $this->view->mapData = Model_Country::mapDataFactory();
+		$this->view->mapData = Model_Country::generateMapData($dayRange);
 		$this->view->metricOptions = $metrics;
-        $now = new DateTime('-1 day');
-        $old = clone $now;
-        $old->modify('-1 month');
-        $this->view->currentDate = $now;
-        $this->view->oldDate = $old;
-        $this->view->dateRangeString = $old->format('d-M-Y') .' - '. $now->format('d-M-Y');
+		$this->view->dateRangeString = $old->format('d M Y') .' - '. $now->format('d M Y');
+		$this->view->currentDate = $now->format('Y-m-d');
+		$this->view->dayRange = $dayRange;
 	}
 
 	public function dateRangeAction() {
@@ -60,7 +61,7 @@ class IndexController extends GraphingController
 				exec($paths, $output);
 				unlink($svgpath);
 
-		        $fileName = basename($pngpath);
+				$fileName = basename($pngpath);
 				break;
 			case 'svg' :
 			default:
@@ -73,30 +74,23 @@ class IndexController extends GraphingController
 
 	}
 
-    public function buildBadgeDataAction () {
+	public function buildBadgeDataAction () {
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
 
-        $this->_helper->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        for($i = 0 ; $i < 31 ; $i++){
-            $date = new DateTime();
-            $modifier = '-'.$i.' days';
-            $date->modify($modifier);
-
-            Model_Presence::getBadgeData($date, $date);
-
-        }
-        exit;
-
-
-    }
+		$end = new DateTime('now');
+		$start = new DateTime('now -30 days');
+		Model_Badge::getAllData('month', $start, $end);
+//		Model_Badge::getAllData('week', $start, $end); //todo: uncomment this when it is needed
+		exit;
+	}
 
 	public function servefileAction () {
-        $this->_helper->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
+		$this->_helper->layout()->disableLayout();
+		$this->_helper->viewRenderer->setNoRender(true);
 
 		$fileName = $this->_request->fileName;
-        $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
+		$fileType = pathinfo($fileName, PATHINFO_EXTENSION);
 		$niceName = $this->_request->nicename.'.'.$fileType;
 
 		// simple validation;

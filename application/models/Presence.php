@@ -4,16 +4,16 @@ class Model_Presence extends Model_Base {
 	protected static $tableName = 'presences';
 	protected static $sortColumn = 'handle';
 
-    const ICON_TYPE = 'icon-bar-chart';
+	const ICON_TYPE = 'icon-bar-chart';
 
-    const METRIC_POPULARITY_PERCENT = 'popularity';
+	const METRIC_POPULARITY_PERCENT = 'popularity';
 	const METRIC_POPULARITY_TIME = 'popularity_time';
 	const METRIC_POPULARITY_RATE = 'popularity_rate';
 	const METRIC_POSTS_PER_DAY = 'posts_per_day';
 	const METRIC_RESPONSE_TIME = 'response_time';
-    const METRIC_RATIO_REPLIES_TO_OTHERS_POSTS = 'replies_to_posts';
-    const METRIC_LINKS_PER_DAY = 'links_per_day';
-    const METRIC_LIKES_PER_POST = 'likes_per_post';
+	const METRIC_RATIO_REPLIES_TO_OTHERS_POSTS = 'replies_to_posts';
+	const METRIC_LINKS_PER_DAY = 'links_per_day';
+	const METRIC_LIKES_PER_POST = 'likes_per_post';
 
 	public static $ALL_METRICS = array(
 		self::METRIC_POPULARITY_PERCENT,
@@ -43,63 +43,63 @@ class Model_Presence extends Model_Base {
 		return self::fetchAll('type = :type', array(':type'=>self::TYPE_FACEBOOK));
 	}
 
-    public function presenceIcon($append =  null){
-        switch($this->type){
-            case self::TYPE_FACEBOOK:
-                return 'icon-facebook'.$append;
-                break;
-            case self::TYPE_TWITTER:
-                return 'icon-twitter'.$append;
-                break;
-            default:
-                return false;
-        }
-    }
+	public function presenceIcon($append =  null){
+		switch($this->type){
+			case self::TYPE_FACEBOOK:
+				return 'icon-facebook'.$append;
+				break;
+			case self::TYPE_TWITTER:
+				return 'icon-twitter'.$append;
+				break;
+			default:
+				return false;
+		}
+	}
 
-    public function getPresenceIcon($classes = array()){
+	public function getPresenceIcon($classes = array()){
 
-        $icon = $this->presenceIcon();
+		$icon = $this->presenceIcon();
 
-        if(!$icon) return false;
+		if(!$icon) return false;
 
-        $classes[] = $icon;
+		$classes[] = $icon;
 
-        $classes = implode(' ',$classes);
+		$classes = implode(' ',$classes);
 
-        return $classes;
+		return $classes;
 
-    }
+	}
 
-    public function getLargePresenceIcon($classes = array()) {
+	public function getLargePresenceIcon($classes = array()) {
 
-        $defaults = array('icon-large');
+		$defaults = array('icon-large');
 
-        $classes = $defaults + $classes;
+		$classes = $defaults + $classes;
 
-        return $this->getPresenceIcon($classes);
-    }
+		return $this->getPresenceIcon($classes);
+	}
 
-    public function getPresenceSign($classes = array()) {
+	public function getPresenceSign($classes = array()) {
 
-        $icon = $this->presenceIcon('-sign');
+		$icon = $this->presenceIcon('-sign');
 
-        if(!$icon) return false;
+		if(!$icon) return false;
 
-        $classes[] = $icon;
+		$classes[] = $icon;
 
-        $classes = implode(' ',$classes);
+		$classes = implode(' ',$classes);
 
-        return $classes;
-    }
+		return $classes;
+	}
 
-    public function getLargePresenceSign($classes = array()) {
+	public function getLargePresenceSign($classes = array()) {
 
-        $defaults = array('icon-large');
+		$defaults = array('icon-large');
 
-        $classes = $defaults + $classes;
+		$classes = $defaults + $classes;
 
-        return $this->getPresenceSign($classes);
-    }
+		return $this->getPresenceSign($classes);
+	}
 
 	public function getLabel() {
 		return $this->name ?: $this->handle;
@@ -466,194 +466,139 @@ class Model_Presence extends Model_Base {
 		return $this->getHistoryData('popularity', $startDate, $endDate);
 	}
 
-    public function getMetrics($badgeType, $metrics = array()){
-        return $this->calculateMetrics($badgeType, $metrics);
-    }
+	public function getMetrics($badgeType = null){
+		switch ($badgeType) {
+			case Model_Badge::BADGE_TYPE_ENGAGEMENT:
+				$metrics = Model_Badge::$METRIC_ENGAGEMENT;
+				break;
+			case Model_Badge::BADGE_TYPE_QUALITY:
+				$metrics = Model_Badge::$METRIC_QUALITY;
+				break;
+			case Model_Badge::BADGE_TYPE_REACH:
+				$metrics = Model_Badge::$METRIC_REACH;
+				break;
+			case Model_Badge::BADGE_TYPE_TOTAL:
+			default:
+				$metrics = array_merge(
+					Model_Badge::$METRIC_REACH,
+					Model_Badge::$METRIC_ENGAGEMENT,
+					Model_Badge::$METRIC_QUALITY
+				);
+		}
+		$metricsArray = array();
+		foreach ($metrics as $m) {
+			$metricsArray[$m] = $this->calculateMetric(null, $m, 'month');
+		}
+		return $metricsArray;
+	}
 
-    public function getBadgeScores(){
-        $data = static::getBadgeData();
+	public function getMetricsScore($date, $metrics, $dateRange = "month") {
 
-        return $data[$this->id];
-    }
+		$score = 0;
+		$count = 0;
+		foreach ($metrics as $m) {
+			$metricData = $this->calculateMetric($date, $m, $dateRange);
+			$score += $metricData->score;
+			$count++;
+		}
 
-    public function getMetricsScore($badgeType, $metrics = array(), $dateRange = "month"){
+		return $score / $count;
+	}
 
-        $value = 0;
+	/**
+	 * Calculates the score for a given metric on a given day, over a given range
+	 * @param $date string
+	 * @param $metric string
+	 * @param $dateRange string
+	 * @return object
+	 */
+	public function calculateMetric($date = null, $metric, $dateRange)
+	{
+		$endDate = $date ?: date('Y-m-d');
+		$startDate = date('Y-m-d', strtotime($endDate . ' -1 ' . $dateRange));
 
-        $metricData = $this->calculateMetrics($badgeType, $metrics, $dateRange);
+		$score = null;
 
-        foreach($metricData as $metric){
-            $value += $metric->score;
-        }
-        $value /= count($metricData);
+		switch($metric){
+			case Model_Presence::METRIC_POPULARITY_PERCENT:
+				$title = 'Popularity';
+				$target = $this->getTargetAudience();
+				$actual = $this->popularity;
+				break;
 
-        return $value;
-    }
+			case Model_Presence::METRIC_POPULARITY_TIME:
+				$title = 'Popularity Trend';
+				$target = BaseController::getOption('achieve_audience_good');
+				$actual = $this->getTargetAudienceDate($startDate, $endDate);
+				break;
 
-    private function calculateMetrics($badgeType, $metrics = array(), $dateRange = "month")
-    {
+			case Model_Presence::METRIC_POSTS_PER_DAY:
+				$title = 'Average Posts Per Day';
+				$target = BaseController::getOption('updates_per_day');
+				$actual = $this->getAveragePostsPerDay($startDate, $endDate);
+				break;
 
-        $endDate = new DateTime();
-        $startDate = new DateTime();
-        $startDate->sub(DateInterval::createFromDateString('1 '.$dateRange));
+			case(Model_Presence::METRIC_LINKS_PER_DAY):
+				$title = 'Average Links Per Day';
+				$target = BaseController::getOption('links_per_day');
+				$actual = $this->getAverageLinksPerDay($startDate, $endDate);
+				break;
 
-        $end = $endDate->format('Y-m-d');
-        $start = $startDate->format('Y-m-d');
+			case Model_Presence::METRIC_LIKES_PER_POST:
+				$title = 'Applause';
+				$target = BaseController::getOption('likes_per_post_best');
+				$actual = $this->getAverageLikesPerPost($startDate, $endDate);
+				break;
 
-        if(empty($metrics))
-        {
-            $metrics = Model_Badge::ALL_BADGES_METRICS($badgeType);
-        }
+			case Model_Presence::METRIC_RESPONSE_TIME:
+				$title = 'Responsiveness';
+				$target = BaseController::getOption('updates_per_day');
+				$actual = $this->getAverageResponseTime($startDate, $endDate);
 
-        $metricArray = array();
+				// uses different score calculation
+				if(!$target){
+					$score = 0;
+				} else if($actual > $target){
+					$score = ( $target / $actual ) * 100;
+				} else {
+					$score = 100;
+				}
+				break;
 
-        foreach($metrics as $metric){
+			case Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS:
+				$title = 'Conversation';
+				$target = BaseController::getOption('replies_to_number_posts_best');
+				$actual = $this->getRatioRepliesToOthersPosts($startDate, $endDate);
+				break;
 
-            switch($metric){
+			default:
+				$title = 'Default';
+				$target = 0;
+				$actual = 0;
+				$score = 0;
+				break;
+		}
 
-                case(Model_Presence::METRIC_POPULARITY_PERCENT):
+		if ($score === null) {
+			if(!$target){
+				$score = 0;
+			} else if($actual > $target){
+				$score = 100;
+			} else {
+				$score = ( $actual / $target ) * 100;
+			}
+		}
 
-                    $target = $this->getTargetAudience();
-                    $actual = $this->popularity;
+		return (object)array(
+			'score' => $score,
+			'actual' => $actual,
+			'target' => $target,
+			'type' => $metric,
+			'title' => $title
+		);
+	}
 
-                    if(!$target){
-                        $score = 0;
-                    } else if($actual > $target){
-                        $score = 100;
-                    } else {
-                        $score = ( $actual / $target ) * 100;
-                    }
-
-                    $title = 'Popularity';
-
-                    break;
-
-                case(Model_Presence::METRIC_POPULARITY_TIME):
-
-                    $target = BaseController::getOption('achieve_audience_good');
-                    $actual = $this->getTargetAudienceDate($start, $end);
-
-                    if(!$target){
-                        $score = 0;
-                    } else if($actual > $target){
-                        $score = 100;
-                    } else {
-                        $score = ( $actual / $target ) * 100;
-                    }
-
-                    $title = 'Popularity Trend';
-
-                    break;
-
-                case(Model_Presence::METRIC_POSTS_PER_DAY):
-
-                    $target = BaseController::getOption('updates_per_day');
-                    $actual = $this->getAveragePostsPerDay($start, $end);
-
-                    if(!$target){
-                        $score = 0;
-                    } else if($actual > $target){
-                        $score = 100;
-                    } else {
-                        $score = ( $actual / $target ) * 100;
-                    }
-
-                    $title = 'Average Posts Per Day';
-
-                    break;
-
-                case(Model_Presence::METRIC_LINKS_PER_DAY):
-
-                    $target = BaseController::getOption('links_per_day');
-                    $actual = $this->getAverageLinksPerDay($start, $end);
-
-                    if(!$target){
-                        $score = 0;
-                    } else if($actual > $target){
-                        $score = 100;
-                    } else {
-                        $score = ( $actual / $target ) * 100;
-                    }
-
-                    $title = 'Average Links Per Day';
-
-                    break;
-
-                case(Model_Presence::METRIC_LIKES_PER_POST):
-
-                    $target = BaseController::getOption('likes_per_post_best');
-                    $actual = $this->getAverageLikesPerPost($start, $end);
-
-                    if(!$target){
-                        $score = 0;
-                    } else if($actual > $target){
-                        $score = 100;
-                    } else {
-                        $score = ( $actual / $target ) * 100;
-                    }
-
-                    $title = 'Applause';
-
-                    break;
-
-                case(Model_Presence::METRIC_RESPONSE_TIME):
-
-                    $target = BaseController::getOption('updates_per_day');
-                    $actual = $this->getAverageResponseTime($start, $end);
-
-                    if(!$target){
-                        $score = 0;
-                    } else if($actual > $target){
-                        $score = ( $target / $actual ) * 100;
-                    } else {
-                        $score = 100;
-                    }
-
-                    $title = 'Responsiveness';
-
-                    break;
-
-                case(Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS):
-
-                    $target = BaseController::getOption('replies_to_number_posts_best');
-                    $actual = $this->getRatioRepliesToOthersPosts($start, $end);
-
-                    if(!$target){
-                        $score = 0;
-                    } else if($actual > $target){
-                        $score = 100;
-                    } else {
-                        $score = ( $actual / $target ) * 100;
-                    }
-
-                    $title = 'Conversation';
-
-                    break;
-
-                default:
-
-                    $title = 'Default';
-                    $target = 0;
-                    $actual = 0;
-                    $score = 0;
-
-            }
-
-            $metricArray[$metric] = (object)array(
-                'score' => $score,
-                'actual' => $actual,
-                'target' => $target,
-                'type' => $metric,
-                'title' => $title
-            );
-
-
-        }
-
-        return $metricArray;
-    }
-
-    public function getStatuses($startDate, $endDate, $search, $order, $limit, $offset){
+	public function getStatuses($startDate, $endDate, $search, $order, $limit, $offset){
 		$clauses = array(
 			'presence_id = :pid',
 			'created_time >= :start_date',
@@ -803,95 +748,95 @@ class Model_Presence extends Model_Base {
 		return $actors;
 	}
 
-    public function getAverageLinksPerDay($startDate, $endDate) {
+	public function getAverageLinksPerDay($startDate, $endDate) {
 
-        $clauses = array(
-            'presence_id = :pid',
-            'created_time >= :start_date',
-            'created_time <= :end_date'
-        );
+		$clauses = array(
+			'presence_id = :pid',
+			'created_time >= :start_date',
+			'created_time <= :end_date'
+		);
 
-        if ($this->isForTwitter()) {
-            $tableName = 'twitter_tweets';
-        } else {
-            $tableName = 'facebook_stream';
-            $clauses[] = 'posted_by_owner = 1';
-            $clauses[] = 'in_response_to IS NULL';
-        }
+		if ($this->isForTwitter()) {
+			$tableName = 'twitter_tweets';
+		} else {
+			$tableName = 'facebook_stream';
+			$clauses[] = 'posted_by_owner = 1';
+			$clauses[] = 'in_response_to IS NULL';
+		}
 
-        $sql = '
-        SELECT SUM(links.count) AS links, COUNT(statuses.id) AS posts, SUM(links.count)/COUNT(statuses.id) as av
-        FROM ' . $tableName . ' AS statuses
-        lEFT JOIN (
-            SELECT status_id, COUNT(url) as count FROM `status_links` GROUP BY status_id
-        ) AS links ON statuses.id = links.status_id
-        WHERE ' . implode(' AND ', $clauses);
-        $stmt = $this->_db->prepare($sql);
-        $stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
-        return floatval($stmt->fetchColumn());
-    }
+		$sql = '
+		SELECT SUM(links.count) AS links, COUNT(statuses.id) AS posts, SUM(links.count)/COUNT(statuses.id) as av
+		FROM ' . $tableName . ' AS statuses
+		lEFT JOIN (
+			SELECT status_id, COUNT(url) as count FROM `status_links` GROUP BY status_id
+		) AS links ON statuses.id = links.status_id
+		WHERE ' . implode(' AND ', $clauses);
+		$stmt = $this->_db->prepare($sql);
+		$stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
+		return floatval($stmt->fetchColumn());
+	}
 
-    /*
-     * function to average number of likes per post
-     * */
-    public function getAverageLikesPerPost($startDate, $endDate){
-        $clauses = array(
-            'presence_id = :pid',
-            'created_time >= :start_date',
-            'created_time <= :end_date'
-        );
+	/*
+	 * function to average number of likes per post
+	 * */
+	public function getAverageLikesPerPost($startDate, $endDate){
+		$clauses = array(
+			'presence_id = :pid',
+			'created_time >= :start_date',
+			'created_time <= :end_date'
+		);
 
-        if ($this->isForTwitter()) {
-            return null;
-        } else {
-            $tableName = 'facebook_stream';
-        }
+		if ($this->isForTwitter()) {
+			return null;
+		} else {
+			$tableName = 'facebook_stream';
+		}
 
-        $sql = '
-        SELECT COUNT(1)/SUM(likes) AS av
-        FROM ' . $tableName . '
-        WHERE ' . implode(' AND ', $clauses);
-        $stmt = $this->_db->prepare($sql);
-        $stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
-        return floatval($stmt->fetchColumn());
-    }
+		$sql = '
+		SELECT COUNT(1)/SUM(likes) AS av
+		FROM ' . $tableName . '
+		WHERE ' . implode(' AND ', $clauses);
+		$stmt = $this->_db->prepare($sql);
+		$stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
+		return floatval($stmt->fetchColumn());
+	}
 
-    /*
-     * function to get the ratio of replies to number of posts from others over timeframe
-     * */
-    public function getRatioRepliesToOthersPosts($startDate, $endDate){
-        $clauses = array(
-            'presence_id = :pid',
-            'created_time >= :start_date',
-            'created_time <= :end_date'
-        );
+	/*
+	 * function to get the ratio of replies to number of posts from others over timeframe
+	 * */
+	public function getRatioRepliesToOthersPosts($startDate, $endDate){
+		$clauses = array(
+			'presence_id = :pid',
+			'created_time >= :start_date',
+			'created_time <= :end_date'
+		);
 
-        if ($this->isForTwitter()) {
-            return 0;
-        } else {
-            $tableName = 'facebook_stream';
-        }
+		if ($this->isForTwitter()) {
+			return 0;
+		} else {
+			$tableName = 'facebook_stream';
+		}
 
-        $sql = '
-        SELECT t1.replies/t2.posts as replies_to_others_posts FROM
-        (
-            SELECT presence_id, COUNT(*) as replies
-            FROM ' . $tableName . '
-            WHERE ' . implode(' AND ', $clauses) .'
-            AND in_response_to IS NOT NULL
-        ) as t1,
-        (
-            SELECT presence_id, COUNT(*) as posts
-            FROM ' . $tableName . '
-            WHERE ' . implode(' AND ', $clauses) .'
-            AND posted_by_owner = 0
-        ) as t2';
-        $stmt = $this->_db->prepare($sql);
-        $stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
-        return floatval($stmt->fetchColumn());
-    }
+		$sql = '
+		SELECT t1.replies/t2.posts as replies_to_others_posts FROM
+		(
+			SELECT presence_id, COUNT(*) as replies
+			FROM ' . $tableName . '
+			WHERE ' . implode(' AND ', $clauses) .'
+			AND in_response_to IS NOT NULL
+		) as t1,
+		(
+			SELECT presence_id, COUNT(*) as posts
+			FROM ' . $tableName . '
+			WHERE ' . implode(' AND ', $clauses) .'
+			AND posted_by_owner = 0
+		) as t2';
+		$stmt = $this->_db->prepare($sql);
+		$stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
+		return floatval($stmt->fetchColumn());
+	}
 
-    public function getAveragePostsPerDay($startDate, $endDate) {
+	public function getAveragePostsPerDay($startDate, $endDate) {
 		$clauses = array(
 			'presence_id = :pid',
 			'created_time >= :start_date',
@@ -1097,15 +1042,20 @@ class Model_Presence extends Model_Base {
 	 * Delete all of the presence's associated data
 	 */
 	public function delete() {
-		$this->_db->prepare('DELETE FROM campaign_presences WHERE presence_id = :pid')->execute(array(':pid'=>$this->id));
-		$this->_db->prepare('DELETE FROM presence_history WHERE presence_id = :pid')->execute(array(':pid'=>$this->id));
+		$tables = array(
+			'campaign_presences',
+			'presence_history'
+		);
 		switch($this->type) {
 			case self::TYPE_FACEBOOK:
-				$this->_db->prepare('DELETE FROM facebook_stream WHERE presence_id = :pid')->execute(array(':pid'=>$this->id));
+				$tables[] = 'facebook_stream';
 				break;
 			case self::TYPE_TWITTER:
-				$this->_db->prepare('DELETE FROM twitter_tweets WHERE presence_id = :pid')->execute(array(':pid'=>$this->id));
+				$tables[] = 'twitter_tweets';
 				break;
+		}
+		foreach ($tables as $table) {
+			$this->_db->prepare("DELETE FROM $table WHERE presence_id = :pid")->execute(array(':pid'=>$this->id));
 		}
 		parent::delete();
 	}

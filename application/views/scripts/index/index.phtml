@@ -8,8 +8,8 @@
     <div class="map-date">
 
         <h3>Date Range</h3>
-        <input type="text" size="25" id="date-slider" disabled
-                                      value="<?php echo $this->dateRangeString; ?>" data-date-range="<?php echo htmlspecialchars($this->jsonDateRange); ?>">
+        <input type="text" size="25" id="date-slider" disabled value="<?php echo $this->dateRangeString; ?>"
+               data-current-date="<?php echo $this->currentDate; ?>" data-day-range="<?php echo $this->dayRange; ?>">
         <div id="slider" data-val="30"></div>
     </div>
 	<div id="geo-map"></div>

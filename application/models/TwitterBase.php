@@ -105,7 +105,7 @@ abstract class Model_TwitterBase extends Model_SocialApiBase {
 	/**
 	 * Fetches and inserts/replaces all tweets in batches (starting with most recent), until
 	 * $minTweetId is found, or no tweets are returned
-	 * @param $token
+	 * @param $token Model_TwitterToken
 	 * @param null $minTweetId
 	 * @param null $maxTweetId
 	 * @return Util_FetchCount
@@ -200,6 +200,11 @@ abstract class Model_TwitterBase extends Model_SocialApiBase {
 		return $counts;
 	}
 
+	/**
+	 * @param $token Model_TwitterToken
+	 * @param $pages
+	 * @return Util_FetchCount
+	 */
 	public function backfillTweets($token, $pages) {
 		$path = $this->fetchUrl;
 		$argsArray = $this->fetchArgsArray;
@@ -282,45 +287,4 @@ abstract class Model_TwitterBase extends Model_SocialApiBase {
 	 ********************/
 
 
-	public static function getMentionsForModelIds($db, $modelIds, $dateRange, $filterType = null, $filterValue = null, $bucketCol = 'bucket_4_hours') {
-		if (!$modelIds) {
-			return array();
-		}
-
-		list($args, $statusTable, $statusTableWhere) = self::getStatusTableQuery($modelIds);
-		$args[':range_start'] = gmdate('Y-m-d H:i:s', strtotime($dateRange[0]));
-		$args[':range_end'] = gmdate('Y-m-d H:i:s', strtotime($dateRange[1]));
-
-		if ($filterType == 'topic') {
-			$sql = "SELECT COUNT(*) AS mentions, AVG(polarity) AS polarity, $bucketCol AS date
-				FROM $statusTable AS status
-				INNER JOIN twitter_tweet_topics AS topics ON topics.twitter_tweet_id = status.tweet_id
-				WHERE topics.normalised_topic = :topic";
-			$args[':topic'] = $filterValue;
-		} elseif ($filterType == 'text') {
-//			if (strlen($filterValue) <= 3) {
-				$matchQuery = "text_expanded LIKE :text";
-//				$args[':text'] = '[[:<:]]' . $filterValue . '[[:>:]]';
-				$args[':text'] = '%'.$filterValue.'%';
-//			} else {
-//				$matchQuery = "MATCH(text_expanded) AGAINST (:text)";
-//				$args[':text'] = $filterValue;
-//			}
-			$sql = "SELECT COUNT(*) AS mentions, IFNULL(average_sentiment, 0) AS polarity, $bucketCol as date
-				FROM $statusTable AS status
-				WHERE $matchQuery";
-		} else {
-			$sql = "SELECT COUNT(*) as mentions, IFNULL(average_sentiment, 0) AS polarity, $bucketCol AS date
-				FROM $statusTable AS status
-				WHERE 1";
-		}
-		$sql .= " AND $statusTableWhere
-				AND status.created_time BETWEEN :range_start AND :range_end
-				GROUP BY date";
-
-		$statement = $db->prepare($sql);
-		$statement->execute($args);
-
-		return $statement->fetchAll(PDO::FETCH_ASSOC);
-	}
 }
