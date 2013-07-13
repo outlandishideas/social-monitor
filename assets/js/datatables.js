@@ -121,7 +121,7 @@ app.datatables = {
 		},
 		'#statuses.facebook': function($div) {
 			var args = {
-				sAjaxSource:jsConfig.apiEndpoint + "/presence/statuses",
+				sAjaxSource:jsConfig.apiEndpoint + "presence/statuses",
 				fnServerParams: function(aoData) {
                     var date = app.state.barDate.length == 2 ? app.state.barDate : app.state.dateRange ;
                     aoData.push({ name:"dateRange", value:date });

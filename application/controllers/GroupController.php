@@ -48,14 +48,14 @@ class GroupController extends CampaignController {
 	}
 
 	/**
-	 * Creates a new group
+	 * Creates a new SBU
 	 * @user-level manager
 	 */
 	public function newAction()
     {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
-        $this->view->title = 'New Group';
+        $this->view->title = 'New SBU';
 	    $this->view->titleIcon = 'icon-plus-sign';
 
         $presences = array();
@@ -107,7 +107,7 @@ class GroupController extends CampaignController {
                     if($this->_request->p){
                         $editingGroup->assignPresences($this->_request->p);
                     }
-                    $this->_helper->FlashMessenger(array('info' => 'Group saved'));
+                    $this->_helper->FlashMessenger(array('info' => 'SBU saved'));
                     $this->_helper->redirector->gotoSimple('index');
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
@@ -121,7 +121,7 @@ class GroupController extends CampaignController {
 
 
         $this->view->editingGroup = $editingGroup;
-        $this->view->title = 'Edit Group';
+        $this->view->title = 'Edit SBU';
         $this->view->titleIcon = 'icon-edit';
     }
 
@@ -142,7 +142,7 @@ class GroupController extends CampaignController {
                 }
             }
             $group->assignPresences($presenceIds);
-            $this->_helper->FlashMessenger(array('info' => 'Country presences updated'));
+            $this->_helper->FlashMessenger(array('info' => 'SBU presences updated'));
             $this->_helper->redirector->gotoSimple('index');
         }
 
@@ -163,7 +163,7 @@ class GroupController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 			$group->delete();
-			$this->_helper->FlashMessenger(array('info' => 'Group deleted'));
+			$this->_helper->FlashMessenger(array('info' => 'SBU deleted'));
 		}
 		$this->_helper->redirector->gotoSimple('index');
 	}
