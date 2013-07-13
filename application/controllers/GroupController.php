@@ -130,21 +130,27 @@ class GroupController extends CampaignController {
 	 * @user-level manager
 	 */
 	public function manageAction() {
-		/** @var Model_Group $group */
-		$group = Model_Group::fetchById($this->_request->id);
-		$this->validateData($group);
+        /** @var Model_Group $group */
+        $group = Model_Group::fetchById($this->_request->id);
+        $this->validateData($group);
 
-		if ($this->_request->isPost()) {
-			$group->assignPresences($this->_request->presences);
-			$this->_helper->FlashMessenger(array('info' => 'Group presences updated'));
-			$this->_helper->redirector->gotoSimple('index');
-		}
+        if ($this->_request->isPost()) {
+            $presenceIds = array();
+            foreach ($this->_request->assigned as $ids) {
+                foreach ($ids as $id) {
+                    $presenceIds[] = $id;
+                }
+            }
+            $group->assignPresences($presenceIds);
+            $this->_helper->FlashMessenger(array('info' => 'Country presences updated'));
+            $this->_helper->redirector->gotoSimple('index');
+        }
 
-		$this->view->title = 'Manage Group Presences';
-		$this->view->titleIcon = 'icon-tasks';
-		$this->view->group = $group;
-		$this->view->twitterPresences = Model_Presence::fetchAllTwitter();
-		$this->view->facebookPresences = Model_Presence::fetchAllFacebook();
+        $this->view->title = 'Manage SBU Presences';
+        $this->view->titleIcon = 'icon-tasks';
+        $this->view->group = $group;
+        $this->view->twitterPresences = Model_Presence::fetchAllTwitter();
+        $this->view->facebookPresences = Model_Presence::fetchAllFacebook();
 	}
 
 	/**
