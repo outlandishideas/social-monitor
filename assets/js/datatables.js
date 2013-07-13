@@ -119,6 +119,56 @@ app.datatables = {
 				aoColumns: app.datatables.generateColumns($table)
 			});
 		},
+		'table#domains': function($table) {
+			var args = {
+				sAjaxSource:jsConfig.apiEndpoint + "domain/list",
+				sDom: {
+
+				},
+				aaSorting:[
+					[0, 'asc']
+				],
+				aoColumns:[
+					{
+						mDataProp:'domain',
+						fnRender:function (o, val) {
+							if (o.aData.url) {
+								val = '<a href="' + o.aData.url + '">' + val + '<a/>';
+							}
+							return val;
+						},
+						bUseRendered: false
+					},
+					{
+						mDataProp:'links'
+					},
+					{
+						mDataProp:'is_bc',
+						fnRender:function (o, val) {
+							var d = o.aData;
+							var $input = $('<input type="checkbox" />')
+								.attr('id', 'domain-' + d.id)
+								.attr('name', 'is_bc[' + d.id + ']');
+							if (d.is_bc == '1') {
+								$input.attr('checked', 'checked');
+							}
+							if (d.can_edit != '1') {
+								$input.attr('disabled', 'disabled');
+							}
+							return $('<div></div>').append($input).html();
+						},
+						bUseRendered: false
+					}
+				],
+				oLanguage:app.datatables.generateLanguage('domain')
+			};
+
+			app.datatables.statusesTable = $table
+				.dataTable($.extend({}, app.datatables.serverSideArgs(), args))
+				.fnSetFilteringDelay(250);
+
+			$('div.dataTables_filter').appendTo($('#domain-search'));
+		},
 		'#statuses.facebook': function($div) {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + "presence/statuses",

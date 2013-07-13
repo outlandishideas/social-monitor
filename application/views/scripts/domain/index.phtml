@@ -1,5 +1,9 @@
+<p>This shows the list of all domains linked to by tweets or facebook statues. Click the links to see more usage information and the specific URLs.</p>
+<p>You can say whether or not a domain belongs to the British Council by toggling the checkbox on the right, and clicking 'save'.
+	Note that if you reorder the columns before saving, any changes will be lost.</p>
+<div id="domain-search"><?php // search box will go in here ?></div>
 <form method="post" action="<?php echo $this->url(); ?>" class="uniForm">
-	<table class="text dtable standard hoverable">
+	<table class="text dtable hoverable" id="domains">
 		<thead>
 			<tr>
 				<th data-sort="auto">Domain</th>
@@ -8,20 +12,6 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php /** @var $domain Model_Domain */ ?>
-			<?php foreach ($this->domains as $domain) : ?>
-			<tr>
-				<td>
-					<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'id'=>$domain->id)); ?>
-					<?php if ($url) : ?><a href="<?php echo $url; ?>"><?php endif; ?>
-					<?php echo $domain->domain; ?>
-					<?php if ($url) : ?></a><?php endif; ?>
-				</td>
-				<td><?php echo $domain->getLinkCount(); ?></td>
-				<td><input id="domain-<?php echo $domain->id; ?>" type="checkbox" <?php if ($domain->is_bc) { echo 'checked'; } ?>
-				           name="is_bc[<?php echo $domain->id; ?>]" <?php if (!$this->canEdit) { echo 'disabled'; } ?> /></td>
-			</tr>
-			<?php endforeach; ?>
 		</tbody>
 	</table>
 

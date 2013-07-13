@@ -978,6 +978,19 @@ form.management #assigned {
     display: block;
 }
 
+.klout {
+	background: url(../img/klout.png) no-repeat 0 0;
+	display: inline-block;
+	width: 20px;
+	height: 18px;
+	color: #fff;
+	text-align: center;
+	cursor: default;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 18px;
+}
+
 /* Slider & Date */
 
 .map-date {
