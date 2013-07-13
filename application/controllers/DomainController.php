@@ -27,9 +27,80 @@ class DomainController extends BaseController {
 			}
 			$this->_helper->redirector->gotoSimple('');
 		}
-		$this->view->domains = Model_Domain::fetchAll();
 		$this->view->title = 'Domains';
 		$this->view->canEdit = $this->view->user->isManager;
+	}
+
+	/**
+	 * Ajax function for getting a page of domains
+	 */
+	function listAction() {
+		Zend_Session::writeClose(); //release session on long running actions
+
+		$search = $this->getRequestSearchQuery();
+		$order = $this->getRequestOrdering();
+		$limit = $this->getRequestLimit();
+		$offset = $this->getRequestOffset();
+
+		$clauses = array();
+		$args = array();
+		if ($search) {
+			$clauses[] = 'd.domain LIKE :search';
+			$args[':search'] = '%' . $search . '%';
+		}
+		$ordering = array();
+		foreach ($order as $column=>$dir) {
+			$ordering[] = $column . ' ' . $dir;
+		}
+
+		$sql = 'SELECT SQL_CALC_FOUND_ROWS d.*, COUNT(l.id) AS links
+			FROM domains AS d
+			INNER JOIN status_links AS l
+				ON d.domain = l.domain';
+		if ($clauses) {
+			$sql .= ' WHERE ' . implode(' AND ', $clauses);
+		}
+		$sql .= ' GROUP BY d.domain';
+		$sql .= ' ORDER BY ' . implode(',', $ordering);
+		if ($limit != -1) {
+			$sql .= ' LIMIT '.$limit;
+		}
+		if ($offset != -1) {
+			$sql .= ' OFFSET '.$offset;
+		}
+
+		$db = $this->db();
+		$query = $db->prepare($sql);
+		$query->execute($args);
+		$domains = $query->fetchAll(PDO::FETCH_OBJ);
+		$totalCount = $db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
+
+		$tableData = array();
+		foreach ($domains as $domain) {
+			$url = $this->view->gatekeeper()->filter('%url%', array('action'=>'view', 'id'=>$domain->id));
+			$tableData[] = array(
+				'id'=>$domain->id,
+				'domain'=>$domain->domain,
+				'links'=>$domain->links,
+				'url'=>$url,
+				'can_edit'=>$this->view->user->isManager ? '1' : '0',
+				'is_bc'=>$domain->is_bc
+			);
+		}
+		$count = count($tableData);
+
+		//return CSV or JSON?
+		if ($this->_request->format == 'csv') {
+			$this->returnCsv($tableData, 'domains.csv');
+		} else {
+			$apiResult = array(
+				'sEcho' => $this->_request->sEcho,
+				'iTotalRecords' => $count,
+				'iTotalDisplayRecords' => $totalCount,
+				'aaData' => $tableData
+			);
+			$this->apiSuccess($apiResult);
+		}
 	}
 
 	/**
