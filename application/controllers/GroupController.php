@@ -142,7 +142,7 @@ class GroupController extends CampaignController {
                 }
             }
             $group->assignPresences($presenceIds);
-            $this->_helper->FlashMessenger(array('info' => 'Country presences updated'));
+            $this->_helper->FlashMessenger(array('info' => 'SBU presences updated'));
             $this->_helper->redirector->gotoSimple('index');
         }
 
