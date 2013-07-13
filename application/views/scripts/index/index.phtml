@@ -13,6 +13,7 @@
         <div id="slider" data-val="30"></div>
     </div>
 	<div id="geo-map"></div>
+    <div id="group-map"></div>
 	<div class="loading"></div>
 </div>
 
@@ -20,4 +21,5 @@
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>
 	var mapData = <?php echo json_encode($this->mapData); ?>;
+    var groupData = <?php echo json_encode($this->groupData); ?>;
 </script>

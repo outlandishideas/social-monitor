@@ -18,6 +18,21 @@ class IndexController extends GraphingController
 		$this->view->titleIcon = 'icon-home';
 		$this->view->countries = Model_Country::fetchAll();
 		$this->view->mapData = Model_Country::generateMapData($dayRange);
+        $groupData = Model_Group::generateGroupData($dayRange);
+
+        $badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
+
+        /** @var Zend_View_Helper_TrafficLight $trafficLight */
+        $trafficLight = $this->view->trafficLight();
+        foreach($groupData as $group){
+            foreach($badgeTypes as $type){
+                foreach($group->$type as $day => $value){
+                    $value->color = $trafficLight->color($value->score, $type);
+                }
+            }
+        }
+
+        $this->view->groupData = $groupData;
 		$this->view->metricOptions = $metrics;
 		$this->view->dateRangeString = $old->format('d M Y') .' - '. $now->format('d M Y');
 		$this->view->currentDate = $now->format('Y-m-d');

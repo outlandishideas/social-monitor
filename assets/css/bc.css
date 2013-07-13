@@ -1397,6 +1397,50 @@ ul.link-list {
 	padding: 0;
 }
 
+/* group display on front page */
+
+#group-map {
+    margin: 40px auto;
+    width: 700px;
+}
+
+.group-display {
+    height: 150px;
+    width: 150px;
+    float: left;
+    background-color: #000;
+    margin: 20px;
+    border-radius: 50%;
+    text-align: center;
+    padding: 10px;
+    color: #f2f2f2;
+    font-size: 20px;
+    position: relative;
+}
+
+.group-display-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    color: #222;
+    z-index: 10;
+}
+
+.group-display-score {
+    font-size: 120px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    opacity: 0.5;
+}
 
 @media print {
     * {

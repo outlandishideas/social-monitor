@@ -7,6 +7,7 @@ app.geochart = {
 	map: null,
 	data: null,
 	metrics: {},
+    groupData: null,
 	setup:function ($mapDiv) {
 		$mapDiv.on('click', '.country .close', function(e) {
 			e.preventDefault();
@@ -35,9 +36,13 @@ app.geochart = {
 			app.geochart.refreshMap();
 		});
 
+        app.geochart.drawGroups();
+        app.geochart.colorGroups();
+
 		$('#map-tabs').find('li').each(function(){
             if(!$(this).hasClass('active')) {
                 $(this).on('click', function() {
+
                     var $country = $mapDiv.find('.country');
                     if ($country.length > 0) {
                         app.geochart.loadCountryStats($country.data('id'));
@@ -47,6 +52,40 @@ app.geochart = {
             }
         });
 	},
+    drawGroups: function() {
+        $groupContainer = $('#group-map');
+
+        app.geochart.groupData = groupData;
+
+
+        for(var i in app.geochart.groupData){
+            var group = app.geochart.groupData[i];
+
+            $groupContainer.append('<div id="'+ i +'" class="group-display"><div class="group-display-title">'+ group.name +'</div><div class="group-display-score"></div></div>')
+            var g = {
+                $group: $('#'+i),
+                groupData: group
+            }
+            app.state.groupCharts[i] = g;
+        }
+
+    },
+    colorGroups: function() {
+        var day = app.geochart.currentDay();
+        var metric = app.geochart.currentMetric();
+        console.log(day);
+        console.log(metric);
+
+        for(var i in app.state.groupCharts){
+            var g = app.state.groupCharts[i];
+            var color = g.groupData[metric][day].color;
+            var score = Math.round(g.groupData[metric][day].score);
+
+            g.$group.css('background-color', color);
+            g.$group.find('.group-display-score').empty().append(score);
+
+        }
+    },
 	currentMetric:function () {
 		return $('#map-tabs').find('li.active').data('val');
 	},
@@ -58,24 +97,6 @@ app.geochart = {
             return day;
         }
     },
-	// calculates the average value for a given kpi across the presences for 1 country
-	kpiAverage: function(country, m) {
-		var presences = country.presences;
-		if (presences.length > 0) {
-			var count = 0;
-			var total = 0;
-			for (var i=0; i<presences.length; i++){
-				if (m in presences[i]) {
-					total += parseFloat(presences[i][m]);
-					count++;
-				}
-			}
-			if (count > 0) {
-				return total/count;
-			}
-		}
-		throw 'No valid presences';
-	},
 	refreshMap:function () {
 		var metric = app.geochart.metrics[app.geochart.currentMetric()];
         var day = app.geochart.currentDay();

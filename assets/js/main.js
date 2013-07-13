@@ -17,7 +17,8 @@ $.extend(app, {
 		timestamps: [],
 		unloading: false,
         barDate: [],
-        badges: []
+        badges: [],
+        groupCharts: []
 	},
 	templates: {
 		legendLabel: '<div class="dataset <%=className%>" data-line-id="<%=line_id%>">\
@@ -117,6 +118,7 @@ app.init = {
                     $(this).addClass('active')
                         .siblings('li.active').removeClass('active');
                     app.geochart.refreshMap();
+                    app.geochart.colorGroups();
                 }
             })
         },
@@ -332,6 +334,7 @@ app.init = {
 					$( "#slider" ).data('val', ui.value);
 					$( "#date-slider" ).val( then.toString('dd MMM yyyy') + ' - ' + now.toString('dd MMM yyyy') );
 					app.geochart.refreshMap();
+                    app.geochart.colorGroups();
 				}
 			});
 
