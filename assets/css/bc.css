@@ -475,12 +475,13 @@ table.text th {
 	text-align: left;
 	border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
+	padding: 10px 8px;
+	vertical-align: middle;
 }
 
-table.text th,
 table.text td {
 	padding: 10px 8px;
-    vertical-align: middle;
+    vertical-align: top;
 }
 
 table th.options,
