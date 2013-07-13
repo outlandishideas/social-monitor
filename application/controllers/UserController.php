@@ -2,7 +2,7 @@
 
 class UserController extends BaseController
 {
-	protected $publicActions = array('login', 'forgotten', 'reset-password');
+	protected static $publicActions = array('login', 'forgotten', 'reset-password');
 
 	public function init() {
 		parent::init();

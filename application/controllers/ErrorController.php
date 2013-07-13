@@ -2,7 +2,7 @@
 
 class ErrorController extends BaseController
 {
-	protected $publicActions = array('error');
+	protected static $publicActions = array('error');
 
     public function errorAction()
     {

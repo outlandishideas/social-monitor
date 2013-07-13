@@ -7,18 +7,21 @@
 
         $href = $page->getHref();
 
-        if($href == true) : ?>
+        if($href) : ?>
 
             <?php
-            $class = '';
-            if($page->action != 'login'){
-                $test = $this->gatekeeper()->filter('%url%', array('controller' => $page->controller, 'action' => $page->action));
-                $href = $test ? $test : '#';
-                $class = $test ? 'disabled' : '';
+            $classes = array();
+            $urlTest = $this->gatekeeper()->filter('%url%', array('controller' => $page->controller, 'action' => $page->action));
+            if (!$urlTest) {
+	            $href = '#';
+	            $classes[] = 'disabled';
             }
+	        if ($page->active) {
+		        $classes[] = 'active';
+	        }
             ?>
 
-            <li class="<?php echo $class; if ($page->active) echo 'active'; ?>">
+            <li class="<?php echo implode(' ', $classes); ?>">
                 <a href="<?php echo $href; ?>">
 
                     <?php

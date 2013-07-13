@@ -2,7 +2,7 @@
 
 class GroupController extends CampaignController {
 
-    protected $publicActions = array('index');
+    protected static $publicActions = array('index');
 
 	public function init() {
 		parent::init();
