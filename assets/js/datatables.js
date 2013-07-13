@@ -216,7 +216,7 @@ app.datatables = {
 		},
 		'#statuses.twitter': function($div) {
 			var args = {
-				sAjaxSource:jsConfig.apiEndpoint + "/presence/statuses",
+				sAjaxSource:jsConfig.apiEndpoint + "presence/statuses",
 				fnServerParams: function(aoData) {
 					aoData.push({ name:"dateRange", value:app.state.dateRange });
 					aoData.push({ name:"id", value:$div.data('presence-id') });
