@@ -2,7 +2,7 @@
 
 class PresenceController extends GraphingController
 {
-	protected $publicActions = array('update-kpi-cache');
+	protected static $publicActions = array('update-kpi-cache');
 
 	/**
 	 * Lists all presences

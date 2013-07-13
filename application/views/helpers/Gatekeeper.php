@@ -114,7 +114,7 @@ class Zend_View_Helper_Gatekeeper extends Zend_View_Helper_Abstract
 	 */
 	public function filter($text, $urlArgs = array(), $name = null, $reset = false, $encode = true) {
 		$this->populateMissingArgs($urlArgs);
-		if ($this->userCanAccess($urlArgs)) {
+		if ($this->isPublicAction($urlArgs) || $this->userCanAccess($urlArgs)) {
 			$text = str_replace('%url%', $this->view->url($urlArgs, $name, $reset, $encode), $text);
 			$text = str_replace('%controller%', $urlArgs['controller'], $text);
 			$text = str_replace('%action%', $urlArgs['action'], $text);
@@ -128,8 +128,8 @@ class Zend_View_Helper_Gatekeeper extends Zend_View_Helper_Abstract
         $action = $urlArgs['action'];
         $controller = $urlArgs['controller'];
         $class = ucfirst($controller) . 'Controller';
-        $publicActions = $class::getInstance()->publicActions;
-        return in_array($action, $publicActions);
+	    require_once(APPLICATION_PATH . '/controllers/' . $class . '.php');
+	    return $class::isPublicAction($action);
     }
 
 	public function filterAll($list, $name = null, $reset = false, $encode = true) {

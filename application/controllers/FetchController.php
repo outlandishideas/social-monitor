@@ -2,7 +2,7 @@
 
 class FetchController extends BaseController
 {
-	protected $publicActions = array('index');
+	protected static $publicActions = array('index');
 
 	/**
 	 * Fetches all tweets/trends/facebook pages etc

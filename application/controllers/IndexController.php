@@ -2,7 +2,7 @@
 
 class IndexController extends GraphingController
 {
-	protected $publicActions = array('index', 'country-stats', 'build-badge-data');
+	protected static $publicActions = array('index', 'country-stats', 'build-badge-data');
 
 	public function indexAction() {
 		$dayRange = 30;
@@ -74,12 +74,15 @@ class IndexController extends GraphingController
 
 	}
 
+	/**
+	 * Ensures that the last 60 days worth of badge data is populated
+	 */
 	public function buildBadgeDataAction () {
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 
 		$end = new DateTime('now');
-		$start = new DateTime('now -30 days');
+		$start = new DateTime('now -60 days');
 		Model_Badge::getAllData('month', $start, $end);
 //		Model_Badge::getAllData('week', $start, $end); //todo: uncomment this when it is needed
 		exit;

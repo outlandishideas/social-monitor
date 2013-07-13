@@ -437,9 +437,12 @@ span.icon-remove-sign {
     min-width: 16px;
 }
 
-#nav li a:hover,
+#nav li.enabled a:hover,
 #nav li.active a {
     background-color: #097fcd;
+}
+#nav li.disabled a {
+    color: #999;
 }
 
 #nav .notab {
@@ -475,12 +478,13 @@ table.text th {
 	text-align: left;
 	border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
+	padding: 10px 8px;
+	vertical-align: middle;
 }
 
-table.text th,
 table.text td {
 	padding: 10px 8px;
-    vertical-align: middle;
+    vertical-align: top;
 }
 
 table th.options,

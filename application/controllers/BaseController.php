@@ -2,7 +2,7 @@
 
 class BaseController extends Zend_Controller_Action {
 
-	protected $publicActions = array();
+	protected static $publicActions = array();
 
 	static $optionCache = array();
 
@@ -43,7 +43,7 @@ class BaseController extends Zend_Controller_Action {
 		}
 
 		//if user hasn't been loaded and this is not a public action, go to login
-		if (!$this->view->user && !in_array($this->_request->getActionName(), $this->publicActions)) {
+		if (!$this->view->user && !in_array($this->_request->getActionName(), static::$publicActions)) {
 			$this->auth->clearIdentity();
 			if (PHP_SAPI == 'cli') {
 				die ('Not authorised');
@@ -426,4 +426,7 @@ class BaseController extends Zend_Controller_Action {
 		return APP_ROOT_PATH . '/log/' . $name . '.log';
 	}
 
+	public static function isPublicAction($action) {
+		return in_array($action, static::$publicActions);
+	}
 }
