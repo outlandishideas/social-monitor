@@ -65,12 +65,15 @@ class Model_Country extends Model_Campaign {
     }
 
     public static function generateMapData($dayRange){
-	    $endDate = new DateTime('now');
-		$startDate = new DateTime("now -$dayRange days");
+        $endDate = new DateTime('now');
+        $startDate = new DateTime("now -$dayRange days");
 
-	    //todo include week data in the data that we send out as json
-        $data = Model_Badge::getAllData('month', $startDate, $endDate);
+        //todo include week data in the data that we send out as json
+        return Model_Badge::getAllData('month', $startDate, $endDate);
+    }
 
+
+        public static function organizeMapData($data, $dayRange){
         $campaignIds = array();
 	    foreach ($data as $row) {
             $campaignIds[$row->campaign_id] = 1;
@@ -110,7 +113,7 @@ class Model_Country extends Model_Campaign {
 
                 //calculate the number of days since this row of data was created
                 $rowDate = new DateTime($row->date);
-                $rowDiff = $rowDate->diff($endDate);
+                $rowDiff = $rowDate->diff(new DateTime());
                 //turn it around so that the most recent data is the has the highest score
                 //this is because jquery slider has a value going 0-30 (left to right) and we want time to go in reverse
                 $days = $dayRange-$rowDiff->days;

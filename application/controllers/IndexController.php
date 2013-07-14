@@ -17,8 +17,9 @@ class IndexController extends GraphingController
 		$this->view->title = 'British Council Social Media Monitor';
 		$this->view->titleIcon = 'icon-home';
 		$this->view->countries = Model_Country::fetchAll();
-		$this->view->mapData = Model_Country::generateMapData($dayRange);
-        $groupData = Model_Group::generateGroupData($dayRange);
+		$data = Model_Country::generateMapData($dayRange);
+        $this->view->mapData = Model_Country::organizeMapData($data, $dayRange);
+        $groupData = Model_Group::organizeGroupData($data, $dayRange);
 
         $badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
 
