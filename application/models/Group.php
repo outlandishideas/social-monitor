@@ -37,12 +37,7 @@ class Model_Group extends Model_Campaign {
     }
 
 
-    public static function generateGroupData($dayRange){
-        $endDate = new DateTime('now');
-        $startDate = new DateTime("now -$dayRange days");
-
-        //todo include week data in the data that we send out as json
-        $data = Model_Badge::getAllData('month', $startDate, $endDate);
+    public static function organizeGroupData($data, $dayRange){
 
         $campaignIds = array();
         foreach ($data as $row) {
