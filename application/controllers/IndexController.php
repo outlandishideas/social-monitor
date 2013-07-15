@@ -18,18 +18,25 @@ class IndexController extends GraphingController
         $this->view->title = 'British Council Social Media Monitor';
         $this->view->titleIcon = 'icon-home';
         $this->view->countries = Model_Country::fetchAll();
-            $this->view->mapData = BaseController::getObjectCache(('generateMapData' . $dayRange));
-            if (!$this->view->mapData) {
-                $this->view->mapData = Model_Country::generateMapData($dayRange);
-                BaseController::setObjectCache(('generateMapData' . $dayRange), $this->view->mapData);
-            }
 
-            $groupData = BaseController::getObjectCache(('generateGroupData' . $dayRange));
-            if(!$groupData){
-                 $groupData = Model_Group::generateGroupData($dayRange);
-                BaseController::setObjectCache(('generateGroupData' . $dayRange), $groupData);
+        $mapData = BaseController::getObjectCache('mapData'.$dayRange);
+        if(!$mapData){
+            $mapData = Model_Country::generateMapData($dayRange);
+            BaseController::setObjectCache(('mapData' . $dayRange), $dayRange);
+        }
 
-            }
+        $this->view->mapData = BaseController::getObjectCache(('generateMapData' . $dayRange));
+        if (!$this->view->mapData) {
+            $this->view->mapData = Model_Country::organizeMapData($mapData, $dayRange);
+            BaseController::setObjectCache(('generateMapData' . $dayRange), $this->view->mapData);
+        }
+
+        $groupData = BaseController::getObjectCache(('generateGroupData' . $dayRange));
+        if (!$groupData) {
+            $groupData = Model_Group::organizeGroupData($mapData, $dayRange);
+            BaseController::setObjectCache(('generateGroupData' . $dayRange), $groupData);
+
+        }
 
 
         $badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
