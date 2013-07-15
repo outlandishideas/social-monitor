@@ -8,7 +8,6 @@ abstract class GraphingController extends BaseController {
 			Model_Presence::METRIC_POPULARITY_RATE => 'Audience Rate',
 			Model_Presence::METRIC_POSTS_PER_DAY => 'Posts Per Day',
 			Model_Presence::METRIC_RESPONSE_TIME => 'Response Time',
-            Model_Presence::METRIC_KLOUT_SCORE => 'Klout Score',
 		);
 	}
 
@@ -38,13 +37,6 @@ abstract class GraphingController extends BaseController {
 			'yAxisLabel' => 'Response time (hours)',
 			'title' => 'Average Response Time (hours)'
 		);
-        if($presence->type == Model_Presence::TYPE_TWITTER) {
-            $graphs[] = (object)array(
-                'metric' => Model_Presence::METRIC_KLOUT_SCORE,
-                'yAxisLabel' => 'Klout Score',
-                'title' => 'Klout Score'
-            );
-        }
 		foreach ($graphs as $g) {
 			$g->presence_id = $presence->id;
 		}

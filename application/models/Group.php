@@ -37,12 +37,7 @@ class Model_Group extends Model_Campaign {
     }
 
 
-    public static function generateGroupData($dayRange){
-        $endDate = new DateTime('now');
-        $startDate = new DateTime("now -$dayRange days");
-
-        //todo include week data in the data that we send out as json
-        $data = Model_Badge::getAllData('month', $startDate, $endDate);
+    public static function organizeGroupData($data, $dayRange){
 
         $campaignIds = array();
         foreach ($data as $row) {
@@ -83,7 +78,7 @@ class Model_Group extends Model_Campaign {
 
                 //calculate the number of days since this row of data was created
                 $rowDate = new DateTime($row->date);
-                $rowDiff = $rowDate->diff($endDate);
+                $rowDiff = $rowDate->diff(new DateTime());
                 //turn it around so that the most recent data is the has the highest score
                 //this is because jquery slider has a value going 0-30 (left to right) and we want time to go in reverse
                 $days = $dayRange-$rowDiff->days;
