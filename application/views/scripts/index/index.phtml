@@ -20,6 +20,6 @@
 
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>
-	var mapData = <?php echo json_encode($this->mapData); ?>;
-    var groupData = <?php echo json_encode($this->groupData); ?>;
+	var mapData = <?php echo json_encode((object) $this->mapData); ?>;
+    var groupData = <?php echo json_encode((object) $this->groupData); ?>;
 </script>
