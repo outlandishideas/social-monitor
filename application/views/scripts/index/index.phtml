@@ -1,6 +1,6 @@
 <ul id="map-tabs" class="tabs">
     <?php $first = true; foreach($this->metricOptions as $badge => $title) : ?>
-        <li class="<?php echo !$first?'':'active';?>" data-val="<?php echo $badge; ?>"><?php echo ucfirst($title); ?></li>
+        <li class="<?php if ($first) echo 'active';?>" data-val="<?php echo $badge; ?>"><?php echo ucfirst($title); ?></li>
     <?php $first = false; endforeach; ?>
 </ul>
 
