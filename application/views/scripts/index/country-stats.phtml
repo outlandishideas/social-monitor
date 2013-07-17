@@ -1,12 +1,3 @@
-<?php
-/** @var $presence Model_Presence */
-$metric = $this->metric;
-$date = new DateTime();
-$data = Model_Badge::getAllData('month', $date, $date);
-$data = Model_Presence::organizeBadgeData($data);
-$data = Model_Presence::calculateTotalScores($data);
-?>
-
 <div class="country hide">
 	<div class="close"><a href="#"><span class="icon-remove-circle icon-large"></span></a></div>
 	<h3>
@@ -23,15 +14,15 @@ $data = Model_Presence::calculateTotalScores($data);
 		<?php endif; ?>
     </h3>
 	<?php if ($this->country->presences) : ?>
-    <h4><?php echo Model_Badge::badgeTitle($metric); ?> (<?php echo $date->format('d M Y'); ?>)</h4>
+    <h4><?php echo Model_Badge::badgeTitle($this->metric); ?> (<?php echo $this->date->format('d M Y'); ?>)</h4>
 	<ul>
-		<?php foreach ($this->country->presences as $presence) : ?>
+		<?php foreach ($this->country->presences as $presence) : /** @var $presence Model_Presence */ ?>
 
-			<?php $metricValue = $data['month'][$presence->id]->$metric; ?>
+			<?php $metricValue = $this->badgeData[$presence->id][$this->metric]->score; ?>
 
             <li>
                 <span class="icon-circle icon-large traffic-light"
-                      style="color: <?php echo $this->trafficLight()->color($metricValue, $metric); ?>;">
+                      style="color: <?php echo $this->trafficLight()->color($metricValue, $this->metric); ?>;">
                 </span>
                 <?php echo $this->partial('partials/presence_inline.phtml',  array('presence' => $presence)); ?>
 	            <?php if ($presence->isForTwitter()) : ?>

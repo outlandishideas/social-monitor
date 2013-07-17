@@ -44,7 +44,7 @@ class GroupController extends CampaignController {
 		$this->view->titleIcon = 'icon-th-list';
 		$this->view->titleInfo = $group->groupInfo();
         $this->view->group = $group;
-        $this->view->badges = array('total','reach','engagement','quality');
+        $this->view->badges = Model_Badge::$ALL_BADGE_TYPES;
 	}
 
 	/**
@@ -174,9 +174,10 @@ class GroupController extends CampaignController {
     public function badgeDataAction() {
         Zend_Session::writeClose(); // release session on long running actions
 
+	    /** @var Model_Group $group */
         $group = Model_Group::fetchById($this->_request->id);
 
-        $response = $group->badgeFactory();
+        $response = $group->badges();
 
         $this->apiSuccess($response);
 

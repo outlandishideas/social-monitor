@@ -1,13 +1,9 @@
 var app = app || {};
 
-/**
- * D3 chart functions
- */
 app.geochart = {
 	map: null,
 	data: null,
 	metrics: {},
-    groupData: null,
 	setup:function ($mapDiv) {
 		$mapDiv.on('click', '.country .close', function(e) {
 			e.preventDefault();
@@ -31,75 +27,85 @@ app.geochart = {
 				datalessRegionColor: '#D5D5D5',
 				colorAxis: {}
 			};
-			google.visualization.events.addListener(app.geochart.map, 'select', app.geochart.selectHandler);
+			google.visualization.events.addListener(app.geochart.map, 'select', app.geochart.mapClickHandler);
 			app.geochart.buildDataTable();
 			app.geochart.refreshMap();
 		});
 
-        app.geochart.drawGroups();
-        app.geochart.colorGroups();
+		app.geochart.drawGroups();
+		app.geochart.refreshGroups();
 
-		$('#map-tabs').find('li').each(function(){
-            if(!$(this).hasClass('active')) {
-                $(this).on('click', function() {
-
-                    var $country = $mapDiv.find('.country');
-                    if ($country.length > 0) {
-                        app.geochart.loadCountryStats($country.data('id'));
-                        $country.remove();
-                    }
-                });
-            }
-        });
+		var $tabs = $('#map-tabs');
+		var $active = $tabs.find('li.active');
+		if ($active.length == 0) {
+			$active.find('li:first').addClass('active');
+		}
+		$tabs.on('click', 'li', function(event){
+			event.preventDefault();
+			if(!$(this).hasClass('active')){
+				$(this).addClass('active')
+					.siblings('li.active').removeClass('active');
+				app.geochart.refreshMap();
+				app.geochart.refreshGroups();
+				var $country = $mapDiv.find('.country');
+				if ($country.length > 0) {
+					var id = $country.data('id');
+					$country.remove();
+					app.geochart.loadCountryStats(id);
+				}
+			}
+		})
 	},
-    drawGroups: function() {
-        $groupContainer = $('#group-map');
+	/**
+	 * Add the groups in global groupData to the DOM, and store them in app.state.groupCharts
+	 */
+	drawGroups: function() {
+		var $groupContainer = $('#group-map');
 
-        app.geochart.groupData = groupData;
+		var groups = groupData;
+		for(var id in groups){
+			var group = groups[id];
 
+			$groupContainer.append('<div id="'+ id +'" class="group-display"><div class="group-display-title">'+ group.n +'</div><div class="group-display-score"></div></div>');
+			app.state.groupCharts[id] = {
+				$group: $('#'+id),
+				groupData: group
+			};
+		}
+	},
+	/**
+	 * Update the value and colour of each of the groups
+	 */
+	refreshGroups: function() {
+		var day = app.geochart.currentDay();
+		var metric = app.geochart.currentMetric();
 
-        for(var i in app.geochart.groupData){
-            var group = app.geochart.groupData[i];
+		for(var id in app.state.groupCharts){
+			var g = app.state.groupCharts[id];
+			var color = g.groupData.b[metric][day].c;
+			var score = Math.round(g.groupData.b[metric][day].s);
 
-            $groupContainer.append('<div id="'+ i +'" class="group-display"><div class="group-display-title">'+ group.name +'</div><div class="group-display-score"></div></div>')
-            var g = {
-                $group: $('#'+i),
-                groupData: group
-            }
-            app.state.groupCharts[i] = g;
-        }
-
-    },
-    colorGroups: function() {
-        var day = app.geochart.currentDay();
-        var metric = app.geochart.currentMetric();
-        console.log(day);
-        console.log(metric);
-
-        for(var i in app.state.groupCharts){
-            var g = app.state.groupCharts[i];
-            var color = g.groupData[metric][day].color;
-            var score = Math.round(g.groupData[metric][day].score);
-
-            g.$group.css('background-color', color);
-            g.$group.find('.group-display-score').empty().append(score);
-
-        }
-    },
+			g.$group.css('background-color', color);
+			g.$group.find('.group-display-score').empty().append(score);
+		}
+	},
 	currentMetric:function () {
 		return $('#map-tabs').find('li.active').data('val');
 	},
-    currentDay:function () {
-        var day = $('#slider').data('val');
-        if(typeof day == 'undefined'){
-            return 30;
-        } else {
-            return day;
-        }
-    },
+	currentDay:function () {
+		var day = $('#slider').data('val');
+		if(typeof day == 'undefined'){
+			return 30;
+		} else {
+			return day;
+		}
+	},
+	/**
+	 * Changes the view of the data used by the geochart
+	 */
 	refreshMap:function () {
 		var metric = app.geochart.metrics[app.geochart.currentMetric()];
-        var day = app.geochart.currentDay();
+		var day = app.geochart.currentDay();
 		app.geochart.map.options.colorAxis.values = metric.range;
 		app.geochart.map.options.colorAxis.colors = metric.colors;
 
@@ -113,7 +119,7 @@ app.geochart = {
 	 * Called when a country is clicked
 	 * @param e
 	 */
- 	selectHandler: function (e) {
+ 	mapClickHandler: function (e) {
 		var selection = app.geochart.map.getSelection();
 		if (selection.length > 0) {
 			var id = app.geochart.data.getValue(selection[0].row, 3);
@@ -134,16 +140,22 @@ app.geochart = {
 				var $country = $(data);
 				$country.data('id', id);
 				$map.append($country);
-                $country.removeClass('hide');
+				$country.removeClass('hide');
 			})
 			.always(function() {
 				$loading.hide();
 			});
 	},
+	/**
+	 * Creates the data structure used by the geochart.
+	 * Called when the geochart is ready for data to be added to it
+	 */
 	buildDataTable:function(){
 		if (typeof mapData == 'undefined' || mapData.length == 0) {
 			return;
 		}
+
+		var i, m, metric;
 
 		// define the columns
 		app.geochart.data = new google.visualization.DataTable();
@@ -154,32 +166,32 @@ app.geochart = {
 		var columnIndex = app.geochart.data.getNumberOfColumns();
 
 		// add 2 columns per metric (value & label)
-		for (var m in app.geochart.metrics) {
-            var metric = app.geochart.metrics[m];
-            app.geochart.metrics[m].days = [];
-            for(var i = 1; i < 31; i++ ){
-                app.geochart.metrics[m].days[i] = {};
-                app.geochart.metrics[m].days[i].columnIndex = columnIndex;
-                app.geochart.data.addColumn('number', metric.label);
-                app.geochart.data.addColumn('string', metric.key + '_' + i + '-label');
-                columnIndex += 2;
-            }
+		for (m in app.geochart.metrics) {
+			metric = app.geochart.metrics[m];
+			metric.days = [];
+			for(i = 1; i < 31; i++ ){
+				metric.days[i] = {};
+				metric.days[i].columnIndex = columnIndex;
+				app.geochart.data.addColumn('number', metric.label);
+				app.geochart.data.addColumn('string', metric.key + '_' + i + '-label');
+				columnIndex += 2;
+			}
 		}
 
 		// add one row per country
 		for (var c in mapData) {
 			var country = mapData[c];
-			var row = [country.country, country.name, country.presenceCount, country.id];
-			for (var m in app.geochart.metrics) {
-                for(var i = 1; i < 31; i++ ){
-                    if(typeof country[m][i] !="undefined"){
-                        row.push(country[m][i].score);
-                        row.push('' + country[m][i].label);
-                    } else {
-                        row.push(null);
-                        row.push(null);
-                    }
-                }
+			var row = [country.c, country.n, country.p, country.id];
+			for (m in app.geochart.metrics) {
+				for(i = 1; i < 31; i++ ){
+					if(typeof country.b[m][i] != "undefined"){
+						row.push(country.b[m][i].s);
+						row.push('' + country.b[m][i].l);
+					} else {
+						row.push(null);
+						row.push(null);
+					}
+				}
 
 			}
 			app.geochart.data.addRow(row);
@@ -189,12 +201,12 @@ app.geochart = {
 		var titleFormatter = new google.visualization.PatternFormat('{1} (Presences: {2})');
 		titleFormatter.format(app.geochart.data, [0, 1, 2], 0);
 		var kpiFormatter = new google.visualization.PatternFormat('{1}');
-		for (var m in app.geochart.metrics) {
-			var metric = app.geochart.metrics[m];
-            for(var i = 1; i < 31; i++ ){
-                var ci = metric.days[i].columnIndex;
-                kpiFormatter.format(app.geochart.data, [ci, ci+1]);
-            }
+		for (m in app.geochart.metrics) {
+			metric = app.geochart.metrics[m];
+			for(i = 1; i < 31; i++ ){
+				var ci = metric.days[i].columnIndex;
+				kpiFormatter.format(app.geochart.data, [ci, ci+1]);
+			}
 		}
 	}
 };

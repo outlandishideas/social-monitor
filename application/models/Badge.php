@@ -1,26 +1,6 @@
 <?php
 
-/**
- * Class Model_Badge
- * @param array $data - the data to calculate this badge from
- * @param string $type - the type of badge this is (Total, Reach, Engagement, Quality)
- * @param string $item - the item (Model_Presence, Model_Campaign) tis badge is for
- * @param int $class - The class that this item belongs to
- */
 class Model_Badge {
-
-    public $type;                           //the badge type
-    public $title;                          //the title for this badge
-    public $score = null;                   //the total score of this bag (out of 100)
-    public $rank;                        //the rank of this badge
-    public $rankTotal;                   //the total number of presences/groups/countries
-    public $class;                          //the model that this badge belongs to
-    public $data;                           //the data for the badge
-    public $badges;                         //the data for the badge
-    public $item;                           //item this badge belongs to
-	/** @var $presences Model_Presence[] */
-    public $presences = array();            //array of presences (only one for Model_Presence badges)
-    public $metrics = array();
 
     //Badge Metrics
     const BADGE_TYPE_TOTAL = 'total';
@@ -51,41 +31,6 @@ class Model_Badge {
         Model_Presence::METRIC_POPULARITY_TIME
     );
 
-    public function __construct($data, $type, $item, $class)
-    {
-        $this->type = $type;
-        $this->rankType = $this->type.'_rank';
-	    $this->title = self::badgeTitle($type);
-
-        $this->class = $class;
-        $this->item = $item;
-
-        if($this->class == 'Model_Presence'){
-            $this->presences = array($item);
-        } else {
-            $this->presences = $item->getPresences();
-        }
-
-        foreach($this->presences as $presence){
-            $presence->name = $presence->handle;
-        }
-
-        $this->data = $data;
-        $this->getMetrics();
-
-        $this->rankTotal = count($this->data);
-
-        $type = $this->type;
-        $rankType = $this->rankType;
-
-        //if this item exists in the data->score array set the score, otherwise set to 0
-        if(array_key_exists($item->id, $this->data)){
-            $this->score = $this->data[$item->id]->$type;
-            $this->rank = $this->data[$item->id]->$rankType;
-        }
-
-    }
-
 	public static function badgeTitle($type) {
 		switch ($type) {
 			case self::BADGE_TYPE_TOTAL:
@@ -100,61 +45,42 @@ class Model_Badge {
 		return '';
 	}
 
-    private function calculateTotalScores()
-    {
-        $denominator = count($this->badges);
-        $tempBadges = $this->badges;
-        $tempBadge = array_pop ($tempBadges);
-
-        $scores = $tempBadge->data->score;
-
-        foreach($tempBadges as $badge){
-            foreach($badge->data->score as $id => $score){
-
-                $scores[$id] += $score;
-
-            }
-        }
-
-        return array_map(function($a) use ($denominator) {
-            return $a/$denominator;
-        }, $scores);
-    }
-
-    private function getMetrics()
-    {
-        //for each presence get the values of the metrics and add them onto the Model_Presence object
-        foreach($this->presences as $p => $presence){
-
-            $data = $presence->getMetrics($this->type);
-
-            if(count($this->presences) < 2) {
-
-                $this->metrics = $data;
-                return;
-
-            } else {
-
-                $this->presences[$p]->metrics = $data;
-                foreach($data as $m => $metric){
-                    if(!isset($this->metrics[$m])) {
-                        $this->metrics[$m] = (object)array(
-                            'score' => 0,
-                            'type' => $m,
-                            'title' => $metric->title
-                        );
-                    }
-                    $this->metrics[$m]->score += $metric->score;
-                }
-
-            }
-
-        }
-
-        foreach($this->metrics as $metric){
-            $metric->score /= count($this->presences);
-        }
-    }
+	/**
+	 * @param $dateRange string
+	 * @param $date DateTime
+	 * @param $presenceIds int[]
+	 * @return array
+	 */
+//	public static function getData($dateRange, $date, $presenceIds) {
+//		$clauses = array(
+//			'date = :start_date',
+//			'daterange = :date_range',
+//			'presence_id IN (' . implode(',', $presenceIds) . ')'
+//		);
+//		$args = array(
+//			':start_date' => $date->format('Y-m-d'),
+//			':date_range' => $dateRange
+//		);
+//
+//		$sql =
+//			'SELECT *
+//			FROM badge_history
+//			WHERE '.implode(' AND ', $clauses).'
+//            ORDER BY
+//                presence_id ASC,
+//                date DESC';
+//
+//		$stmt = BaseController::db()->prepare($sql);
+//		$stmt->execute($args);
+//		$data = $stmt->fetchAll(PDO::FETCH_OBJ);
+//
+//		$indexedData = array();
+//		foreach ($data as $row) {
+//			$indexedData[$row->presence_id] = $row;
+//		}
+//
+//		return $indexedData;
+//	}
 
 	/**
 	 * Fetches all of the historical data using the given date range, between the given dates
@@ -164,7 +90,6 @@ class Model_Badge {
 	 * @return array
 	 */
 	public static function getAllData($dateRange, $startDate, $endDate) {
-
 		$clauses = array(
 			'h.date >= :start_date',
 			'h.date <= :end_date',
@@ -190,6 +115,7 @@ class Model_Badge {
 		$stmt->execute($args);
 		$data = $stmt->fetchAll(PDO::FETCH_OBJ);
 
+		// group the data by date and range, just to check that everything is present
 		$groupedData = array();
 		foreach ($data as $row) {
 			if (!isset($groupedData[$row->date])) {
@@ -203,12 +129,15 @@ class Model_Badge {
 
 		$fetchAgain = false;
 		/** @var Model_Presence[] $presences */
-		$presences = Model_Presence::fetchAll();
-		$presenceCount = count($presences);
+		$presences = null;
+		$presenceCount = Model_Presence::countAll();
 		$currentDate = clone $startDate;
 		while ($currentDate <= $endDate) {
 			$dateString = $currentDate->format('Y-m-d');
 			if (empty($groupedData[$dateString][$dateRange]) || count($groupedData[$dateString][$dateRange]) < $presenceCount) {
+				if (!$presences) {
+					$presences = Model_Presence::fetchAll();
+				}
 				self::populateBadgeHistory($presences, $dateString, $dateRange);
 				$fetchAgain = true;
 			}
@@ -281,11 +210,24 @@ class Model_Badge {
 		return $data;
 	}
 
+	public static function calculateTotalScore($badgeData) {
+		$badgeTypes = self::$ALL_BADGE_TYPES;
+		$total = 0;
+		foreach($badgeTypes as $type){
+			if($type != self::BADGE_TYPE_TOTAL) {
+				$total += $badgeData->$type;
+			}
+		}
+		$badgeData->total = $total/(count($badgeTypes)-1);
+	}
+
 	public static function assignRanks($presenceData, $badgeType) {
 		//sorts the data by the current badge score (descending)
 		usort($presenceData, function($a, $b) use ($badgeType){
-			if($a->$badgeType == $b->$badgeType) return 0;
-			return $a->$badgeType > $b->$badgeType ? -1 : 1;
+			$aVal = $a->$badgeType;
+			$bVal = $b->$badgeType;
+			if($aVal == $bVal) return 0;
+			return $aVal > $bVal ? -1 : 1;
 		});
 
 		//foreach row (ordered by score of the current badge type) set the ranking

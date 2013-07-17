@@ -35,6 +35,8 @@ class Model_Presence extends Model_Base {
 
 	const KLOUT_API_ENDPOINT = 'http://api.klout.com/v2/';
 
+	protected $metrics = array(); // stores the calculated metrics
+
 	public static function fetchAllTwitter() {
 		return self::fetchAll('type = :type', array(':type'=>self::TYPE_TWITTER));
 	}
@@ -515,6 +517,10 @@ class Model_Presence extends Model_Base {
 	public function calculateMetric($date = null, $metric, $dateRange)
 	{
 		$endDate = $date ?: date('Y-m-d');
+		$cacheKey = $metric . '-' . $endDate . '-' . $dateRange;
+		if (isset($this->metrics[$cacheKey])) {
+			return $this->metrics[$cacheKey];
+		}
 		$startDate = date('Y-m-d', strtotime($endDate . ' -1 ' . $dateRange));
 
 		$score = null;
@@ -589,13 +595,15 @@ class Model_Presence extends Model_Base {
 			}
 		}
 
-		return (object)array(
+		$metric = (object)array(
 			'score' => $score,
 			'actual' => $actual,
 			'target' => $target,
 			'type' => $metric,
 			'title' => $title
 		);
+		$this->metrics[$cacheKey] = $metric;
+		return $metric;
 	}
 
 	public function getStatuses($startDate, $endDate, $search, $order, $limit, $offset){
@@ -1058,6 +1066,48 @@ class Model_Presence extends Model_Base {
 			$this->_db->prepare("DELETE FROM $table WHERE presence_id = :pid")->execute(array(':pid'=>$this->id));
 		}
 		parent::delete();
+	}
+
+	private static $badgeCache = array();
+
+	/**
+	 * Gets the badges for this presence
+	 * @return array
+	 */
+	public function badges(){
+		$endDate = new DateTime('now');
+		$key = $endDate->format('Y-m-d');
+		if (isset(self::$badgeCache[$key])) {
+			$data = self::$badgeCache[$key];
+		} else {
+			$startDate = clone $endDate;
+			$data = Model_Badge::getAllData('month', $startDate, $endDate);
+			foreach ($data as $row) {
+				Model_Badge::calculateTotalScore($row);
+			}
+			Model_Badge::assignRanks($data, 'total');
+			$keyedData = array();
+			foreach ($data as $row) {
+				$keyedData[$row->presence_id] = $row;
+			}
+			$data = $keyedData;
+			self::$badgeCache[$key] = $data;
+		}
+
+		$badgeData = $data[$this->id];
+		$presenceCount = static::countAll();
+		$badges = array();
+		foreach(Model_Badge::$ALL_BADGE_TYPES as $type){
+			$badges[$type] = (object)array(
+				'type'=>$type,
+				'score'=>floatval($badgeData->{$type}),
+				'rank'=>intval($badgeData->{$type.'_rank'}),
+				'rankTotal'=>$presenceCount,
+				'metrics'=>$this->getMetrics($type)
+			);
+		}
+
+		return $badges;
 	}
 
 }

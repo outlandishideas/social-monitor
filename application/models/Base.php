@@ -163,34 +163,34 @@ abstract class Model_Base
 		return $class->fetch($clause, $args);
 	}
 
-    /**
-     * @param string|null $clause
-     * @param array $args
-     * @return Model_Base[]
-     */
-    public static function countAll($clause = null, $args = array()) {
-        $classname = get_called_class();
-        $class = new $classname;
-        return $class->count($clause, $args);
-    }
+	/**
+	 * @param string|null $clause
+	 * @param array $args
+	 * @return Model_Base[]
+	 */
+	public static function countAll($clause = null, $args = array()) {
+		$classname = get_called_class();
+		$class = new $classname;
+		return $class->count($clause, $args);
+	}
 
-    /**
-     * @param string|null $clause
-     * @param array $args
-     * @return Model_Base[]
-     */
-    protected function count($clause = null, $args = array()) {
-        $sql = 'SELECT COUNT(1) as count FROM '.static::$tableName;
-        if ($clause) {
-            $sql .= ' WHERE ' . $clause;
-        }
+	/**
+	 * @param string|null $clause
+	 * @param array $args
+	 * @return Model_Base[]
+	 */
+	protected function count($clause = null, $args = array()) {
+		$sql = 'SELECT COUNT(1) as count FROM '.static::$tableName;
+		if ($clause) {
+			$sql .= ' WHERE ' . $clause;
+		}
 
-        $statement = $this->_db->prepare($sql);
-        $statement->execute($args);
+		$statement = $this->_db->prepare($sql);
+		$statement->execute($args);
 
-        $stmt = $statement->fetchAll(PDO::FETCH_ASSOC);
-        return intval($stmt[0]['count']);
-    }
+		$stmt = $statement->fetchAll(PDO::FETCH_ASSOC);
+		return intval($stmt[0]['count']);
+	}
 
 	/**
 	 * @param string|null $clause
@@ -295,77 +295,4 @@ abstract class Model_Base
 		$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
 		return $date->format('Y-m-d H:i:s');
 	}
-
-    /*****************************************************************
-     * Badge Factory
-     *****************************************************************/
-
-    public static function calculateTotalScores($data) {
-
-	    $badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
-
-        //calculate total scores for each presence
-        foreach($data as $typeData){
-            foreach($typeData as $row){
-                $total = 0;
-                foreach($badgeTypes as $type){
-                    if($type != Model_Badge::BADGE_TYPE_TOTAL) {
-	                    $total += $row->$type;
-                    }
-                }
-                $row->total = $total/(count($badgeTypes)-1);
-            }
-
-	        Model_Badge::assignRanks($typeData, 'total');
-        }
-
-        return $data;
-    }
-
-	/**
-     * This function creates the four badges for the item it is called on.
-     * @return array
-     */
-    public function badgeFactory(){
-
-        //get the Badge Data from the presence_history table, or create ourselves if it doesn't exist
-	    $endDate = new DateTime('now');
-	    $startDate = new DateTime('now');
-        $data = Model_Badge::getAllData('month', $startDate, $endDate);
-
-        //take the raw data and organise it depending on how it will be used
-        $badgeData = static::organizeBadgeData($data);
-
-        //calculate the total scores for each row of data (after it has been organized)
-        $badgeData = static::calculateTotalScores($badgeData);
-
-        $badges = array();
-        foreach($badgeData as $range => $rangeData){
-            foreach(Model_Badge::$ALL_BADGE_TYPES as $type){
-                $badges[$range][$type] = new Model_Badge($rangeData, $type, $this, get_called_class());
-            }
-        }
-
-        return $badges;
-    }
-
-    /**
-     * organize the raw data from db into badges. Each badge is an object with score and rank properties, to store arrays of key($presence_id) => value($score/$rank) pairs
-     * @param $data
-     * @return array
-     */
-    public static function organizeBadgeData($data){
-
-        $badgeData = array();
-
-        foreach($data as $row){
-			if (!isset($badgeData[$row->daterange])) {
-	            $badgeData[$row->daterange] = array();
-			}
-            $badgeData[$row->daterange][$row->presence_id] = $row;
-        }
-
-        return $badgeData;
-    }
-
 }

@@ -39,8 +39,8 @@ app.badges = {
         return app.api.get(url, args)
             .done(function(response) {
                 $('#badges').hideLoader();
-                for (var i in response.data.month) {
-                    app.badges.renderBadge(response.data.month[i]);
+                for (var i in response.data) {
+                    app.badges.renderBadge(response.data[i]);
                 }
             })
             .always(function() {

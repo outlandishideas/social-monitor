@@ -107,22 +107,6 @@ app.init = {
 			$item.uniform();
 		},
 
-        '#map-tabs': function($item) {
-            var $active = $item.find('li.active');
-            if($active.length == 0){
-                $active.find('li:first').addClass('active');
-            }
-            $item.on('click', 'li', function(event){
-                event.preventDefault();
-                if(!$(this).hasClass('active')){
-                    $(this).addClass('active')
-                        .siblings('li.active').removeClass('active');
-                    app.geochart.refreshMap();
-                    app.geochart.colorGroups();
-                }
-            })
-        },
-
         '.button.compare': function ($button) {
 	        var updateComparison = function() {
 		        var $list = $('.compare.list');
@@ -334,7 +318,7 @@ app.init = {
 					$( "#slider" ).data('val', ui.value);
 					$( "#date-slider" ).val( then.toString('dd MMM yyyy') + ' - ' + now.toString('dd MMM yyyy') );
 					app.geochart.refreshMap();
-                    app.geochart.colorGroups();
+                    app.geochart.refreshGroups();
 				}
 			});
 
