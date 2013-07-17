@@ -1068,33 +1068,30 @@ class Model_Presence extends Model_Base {
 		parent::delete();
 	}
 
-	private static $badgeCache = array();
-
 	/**
 	 * Gets the badges for this presence
 	 * @return array
 	 */
 	public function badges(){
 		$endDate = new DateTime('now');
-		$key = $endDate->format('Y-m-d');
-		if (isset(self::$badgeCache[$key])) {
-			$data = self::$badgeCache[$key];
-		} else {
+		$key = 'presence_badges';
+		$data = BaseController::getObjectCache($key, 3600);
+		if (!$data) {
 			$startDate = clone $endDate;
 			$data = Model_Badge::getAllData('month', $startDate, $endDate);
 			foreach ($data as $row) {
 				Model_Badge::calculateTotalScore($row);
 			}
 			Model_Badge::assignRanks($data, 'total');
-			$keyedData = array();
+			$keyedData = new stdClass();
 			foreach ($data as $row) {
-				$keyedData[$row->presence_id] = $row;
+				$keyedData->{$row->presence_id} = $row;
 			}
 			$data = $keyedData;
-			self::$badgeCache[$key] = $data;
+			BaseController::setObjectCache($key, $data);
 		}
 
-		$badgeData = $data[$this->id];
+		$badgeData = $data->{$this->id};
 		$presenceCount = static::countAll();
 		$badges = array();
 		foreach(Model_Badge::$ALL_BADGE_TYPES as $type){
