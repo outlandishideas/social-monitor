@@ -134,7 +134,7 @@
 		array('link', 'assets/js/main.js')
 	);
 
-	$debug = true; // enable this to print out the scripts individually, so you don't have to wait for minify to execute
+	$debug = false; // enable this to print out the scripts individually, so you don't have to wait for minify to execute
 	if ($debug) {
 		foreach ($scripts as $type=>$script) {
 			list($type, $s) = $script;
