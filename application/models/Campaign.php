@@ -299,7 +299,7 @@ class Model_Campaign extends Model_Base {
 			foreach (array_keys($campaign->b) as $badgeType){
 				foreach ($campaign->b[$badgeType] as $day => $value){
 					$value /= $campaign->p; //average out the score
-					$campaign->b[$badgeType][$day] = (object)array('s'=>$value, 'l'=>round($value).'%');
+					$campaign->b[$badgeType][$day] = (object)array('s'=>round($value*10)/10, 'l'=>round($value).'%');
 					if(!isset($total[$day])) {
 						$total[$day] = $value;
 					} else {
@@ -310,7 +310,7 @@ class Model_Campaign extends Model_Base {
 
 			foreach ($total as $day => $value) {
 				$value /= count($campaign->b); // average out the badges
-				$total[$day] = (object)array('s'=>$value, 'l'=>round($value).'%');
+				$total[$day] = (object)array('s'=>round($value*10)/10, 'l'=>round($value).'%');
 			}
 			$campaign->b[Model_Badge::BADGE_TYPE_TOTAL] = $total;
 		}
