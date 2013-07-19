@@ -98,10 +98,10 @@ class BaseController extends Zend_Controller_Action
             $this->view->$property = $navigation;
         }
 
-        // check the fetch lockfile
-        $lockFile = $this->lockFileName('fetch');
-        if (file_exists($lockFile) && $this->_request instanceof Zend_Controller_Request_Http && !$this->_request->isXmlHttpRequest()) {
-            $seconds = time() - filemtime($lockFile);
+        // check the fetch lock
+        $lockTime = $this->getOption($this->lockName('fetch'));
+        if ($lockTime && $this->_request instanceof Zend_Controller_Request_Http && !$this->_request->isXmlHttpRequest()) {
+            $seconds = time() - $lockTime;
             if ($seconds > (10 * $this->config->app->fetch_time_limit)) {
                 $factors = array(
                     'day' => 86400,
@@ -436,10 +436,10 @@ class BaseController extends Zend_Controller_Action
         $mail->send();
     }
 
-    protected function lockFileName($name = null)
+    protected function lockName($name = null)
     {
         $name = $name ? : $this->_request->getActionName();
-        return APP_ROOT_PATH . '/log/' . $name . '.lock';
+        return $name . '_lock';
     }
 
     protected function logFileName($name = null)

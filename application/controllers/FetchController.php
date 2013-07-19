@@ -9,7 +9,7 @@ class FetchController extends BaseController
 	 */
 	public function indexAction() {
 		$this->setupConsoleOutput();
-		$this->acquireLock();
+		$lockName = $this->acquireLock();
 		set_time_limit($this->config->app->fetch_time_limit);
 
 		/** @var $presences Model_Presence[] */
@@ -59,7 +59,7 @@ class FetchController extends BaseController
 					$p->save();
 				}
 			}
-			$this->touchLock();
+			$this->touchLock($lockName);
 		}
 
 		usort($presences, function($a, $b) { return strcmp($a->last_fetched ?: '000000', $b->last_fetched ?: '000000'); });
@@ -74,7 +74,7 @@ class FetchController extends BaseController
 			} catch (Exception $e) {
 				$this->log("Error updating presence statuses: " . $e->getMessage());
 			}
-			$this->touchLock();
+			$this->touchLock($lockName);
 		}
 
 		$this->log('Updating linked domains');
@@ -85,10 +85,10 @@ class FetchController extends BaseController
 		$inserted = $this->updateFacebookActors();
 		$this->log('Updated ' . count($inserted) . ' actors');
 
-		$this->touchLock();
+		$this->touchLock($lockName);
 
 		$this->log('Finished');
-		$this->releaseLock();
+		$this->releaseLock($lockName);
 	}
 
 	/**
@@ -258,16 +258,17 @@ class FetchController extends BaseController
 	}
 
 	private function acquireLock($lockTimeout = 600) {
-		//check for a lock file and exit if one is found
-		$lockFile = $this->lockFileName('fetch');
-		if (file_exists($lockFile)) {
-			$seconds = time() - filemtime($lockFile);
+		//check for a lock and exit if one is found
+		$lockName = $this->lockName('fetch');
+		$lockTime = $this->getOption($lockName);
+		if ($lockTime) {
+			$seconds = time() - $lockTime;
 			if ($seconds < $lockTimeout) {
 				//show log message
 				$this->log("Process already running and last active $seconds seconds ago");
 			} else {
 				//force show message
-				$this->log("Stale lock file found last active $seconds seconds ago: " . $lockFile, true);
+				$this->log("Stale lock found last active $seconds seconds ago: " . $lockName, true);
 				$lastFile = $this->logFileName('fetch') . '.last';
 				$staleFile = $this->logFileName('fetch') . '.stale';
 				if (file_exists($lastFile) && !file_exists($staleFile)) {
@@ -276,20 +277,19 @@ class FetchController extends BaseController
 			}
 			exit;
 		} else {
-			//create lock file
-			touch($lockFile);
+			//create lock
+			$this->touchLock($lockName);
 		}
-
-		return $lockFile;
+		return $lockName;
 	}
 
-	private function releaseLock() {
-		$lockFileName = $this->lockFileName('fetch');
-		rename($lockFileName, $lockFileName.'.last');
+	private function releaseLock($lockName) {
+		$this->setOption($lockName . '_last', $this->getOption($lockName));
+		$this->setOption($lockName, '');
 	}
 
-	private function touchLock() {
-		touch($this->lockFileName('fetch'));
+	private function touchLock($lockName) {
+		$this->setOption($lockName, time());
 	}
 }
 
