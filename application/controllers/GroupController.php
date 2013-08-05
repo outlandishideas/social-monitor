@@ -125,6 +125,75 @@ class GroupController extends CampaignController {
         $this->view->titleIcon = 'icon-edit';
     }
 
+
+
+    /**
+     * Edits/creates a country
+     * @user-level user
+     */
+    public function editAllAction()
+    {
+
+        $this->view->title = 'Edit All';
+        $this->view->countries = Model_Group::fetchAll();
+
+        if ($this->_request->isPost()) {
+
+            $result = $this->_request->getParams();
+
+            $editingGroups = array();
+
+            foreach($result as $k => $v){
+                if(preg_match('|^([0-9]+)\_(.+)$|', $k, $matches)){
+                    if(!array_key_exists($matches[1], $editingGroups)) $editingGroups[$matches[1]] = array('id' => $matches[1]);
+                    $editingGroups[$matches[1]][$matches[2]] = $v;
+                }
+            }
+
+            $errorMessages = array();
+
+            $editedCountries = array();
+
+            foreach($editingGroups as $g){
+                $editingGroup = Model_Group::fetchById($g['id']);
+                $display_name = $editingGroup->display_name;
+                $editingGroup->fromArray($g);
+
+                if (!$g['display_name']) {
+                    $errorMessages[] = 'Please enter a display name for '. $display_name;
+                }
+
+                $editedGroups[] = $editingGroup;
+
+            }
+
+            if ($errorMessages) {
+                foreach ($errorMessages as $message) {
+                    $this->_helper->FlashMessenger(array('error' => $message));
+                }
+            } else {
+                try {
+                    foreach($editedGroups as $group){
+                        $group->save();
+                    }
+
+                    $this->_helper->FlashMessenger(array('info' => count($editedGroups) . ' SBUs saved'));
+                    $this->_helper->redirector->gotoSimple('index');
+
+                } catch (Exception $ex) {
+                    if (strpos($ex->getMessage(), '23000') !== false) {
+                        $this->_helper->FlashMessenger(array('error' => 'Display name already taken'));
+                    } else {
+                        $this->_helper->FlashMessenger(array('error' => $ex->getMessage()));
+                    }
+                }
+            }
+
+        }
+
+        $this->view->titleIcon = 'icon-edit';
+    }
+
 	/**
 	 * Manages the presences that belong to a group
 	 * @user-level manager
