@@ -77,18 +77,24 @@ class IndexController extends GraphingController
 	public function countryStatsAction()
 	{
 		/** @var Model_Country $country */
-		$country = Model_Country::fetchById($this->_request->id);
-		if ($country) {
+        if($this->_request->model == 'group'){
+            $campaign = Model_Group::fetchById($this->_request->id);
+        } else {
+            $campaign = Model_Country::fetchById($this->_request->id);
+        }
+
+		if ($campaign) {
 			$date = new DateTime();
 			$badgeData = array();
-			foreach ($country->getPresences() as $presence) {
+			foreach ($campaign->getPresences() as $presence) {
 				$badgeData[$presence->id] = $presence->badges();
 			}
 
-			$this->view->country = $country;
+			$this->view->campaign = $campaign;
 			$this->view->metric = $this->_request->metric;
 			$this->view->badgeData = $badgeData;
 			$this->view->date = $date;
+            $this->view->model = $this->_request->model;
 		} else {
 			$this->_helper->viewRenderer->setNoRender(true);
 		}

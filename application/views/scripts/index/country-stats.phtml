@@ -1,22 +1,22 @@
 <div class="country hide">
 	<div class="close"><a href="#"><span class="icon-remove-circle icon-large"></span></a></div>
 	<h3>
-		<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'controller'=>'country', 'id'=>$this->country->id)); if ($url) : ?>
+		<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'controller'=>$this->model, 'id'=>$this->campaign->id)); if ($url) : ?>
         <a href="<?php echo $url; ?>">
             <span class="icon-globe icon-large"></span>
-            <?php echo $this->country->display_name; ?>
+            <?php echo $this->campaign->display_name; ?>
         </a>
 		<?php else : ?>
 		<span>
 			<span class="icon-globe icon-large"></span>
-			<?php echo $this->country->display_name; ?>
+			<?php echo $this->campaign->display_name; ?>
 		</span>
 		<?php endif; ?>
     </h3>
-	<?php if ($this->country->presences) : ?>
+	<?php if ($this->campaign->presences) : ?>
     <h4><?php echo Model_Badge::badgeTitle($this->metric); ?> (<?php echo $this->date->format('d M Y'); ?>)</h4>
 	<ul>
-		<?php foreach ($this->country->presences as $presence) : /** @var $presence Model_Presence */ ?>
+		<?php foreach ($this->campaign->presences as $presence) : /** @var $presence Model_Presence */ ?>
 
 			<?php $metricValue = $this->badgeData[$presence->id][$this->metric]->score; ?>
 
