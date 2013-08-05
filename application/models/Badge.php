@@ -8,6 +8,9 @@ class Model_Badge {
     const BADGE_TYPE_ENGAGEMENT = 'engagement';
     const BADGE_TYPE_QUALITY = 'quality';
 
+    const METRIC_SIGN_OFF = 'sign_off';
+    const METRIC_BRANDING = 'branding';
+
 	public static $ALL_BADGE_TYPES = array(
 		self::BADGE_TYPE_TOTAL,
 		self::BADGE_TYPE_REACH,
@@ -18,7 +21,9 @@ class Model_Badge {
     public static $METRIC_QUALITY = array(
         Model_Presence::METRIC_POSTS_PER_DAY,
         Model_Presence::METRIC_LINKS_PER_DAY,
-        Model_Presence::METRIC_LIKES_PER_POST
+        Model_Presence::METRIC_LIKES_PER_POST,
+        Model_Presence::METRIC_SIGN_OFF,
+        Model_Presence::METRIC_BRANDING
     );
 
     public static $METRIC_ENGAGEMENT = array(
