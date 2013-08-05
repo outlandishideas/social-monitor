@@ -159,11 +159,22 @@ class CountryController extends CampaignController {
     public function editAllAction()
     {
 
-        $this->view->title = 'Edit All Countries';
+        $this->view->title = 'Edit All';
         $this->view->countries = Model_Country::fetchAll();
         $this->view->countryCodes = Model_Country::countryCodes();
 
         if ($this->_request->isPost()) {
+
+            $result = $this->_request->getParams();
+
+            $editingCountries = array();
+
+            foreach($result as $k => $v){
+                if(preg_match('|^([0-9]+)\_.+$|', $k, $matches)){
+
+                }
+            }
+
 //			$oldTimeZone = $editingCountry->timezone;
             $editingCountry->fromArray($this->_request->getParams());
 
