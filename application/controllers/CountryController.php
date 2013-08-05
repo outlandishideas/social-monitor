@@ -151,6 +151,53 @@ class CountryController extends CampaignController {
 		$this->view->titleIcon = 'icon-edit';
 	}
 
+
+    /**
+     * Edits/creates a country
+     * @user-level user
+     */
+    public function editAllAction()
+    {
+
+        $this->view->title = 'Edit All Countries';
+        $this->view->countries = Model_Country::fetchAll();
+        $this->view->countryCodes = Model_Country::countryCodes();
+
+        if ($this->_request->isPost()) {
+//			$oldTimeZone = $editingCountry->timezone;
+            $editingCountry->fromArray($this->_request->getParams());
+
+            $errorMessages = array();
+            if (!$this->_request->display_name) {
+                $errorMessages[] = 'Please enter a display name';
+            }
+            if (!$this->_request->country) {
+                $errorMessages[] = 'Please select a country';
+            }
+
+            if ($errorMessages) {
+                foreach ($errorMessages as $message) {
+                    $this->_helper->FlashMessenger(array('error' => $message));
+                }
+            } else {
+                try {
+                    $editingCountry->save();
+
+                    $this->_helper->FlashMessenger(array('info' => 'Country saved'));
+                    $this->_helper->redirector->gotoSimple('index');
+                } catch (Exception $ex) {
+                    if (strpos($ex->getMessage(), '23000') !== false) {
+                        $this->_helper->FlashMessenger(array('error' => 'Display name already taken'));
+                    } else {
+                        $this->_helper->FlashMessenger(array('error' => $ex->getMessage()));
+                    }
+                }
+            }
+        }
+
+        $this->view->titleIcon = 'icon-edit';
+    }
+
 	/**
 	 * Manages the presences that belong to a country
 	 * @user-level manager
