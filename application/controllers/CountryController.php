@@ -151,7 +151,6 @@ class CountryController extends CampaignController {
 		$this->view->titleIcon = 'icon-edit';
 	}
 
-
     /**
      * Edits/creates a country
      * @user-level user

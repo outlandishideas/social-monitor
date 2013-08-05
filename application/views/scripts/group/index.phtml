@@ -1,4 +1,15 @@
-<?php echo $this->gatekeeper()->filter('<p><a class="button add" href="%url%"><span class="icon-plus icon-large"></span> Add new</a></p>', array('action'=>'new')); ?>
+<?php
+$buttons = $this->gatekeeper()->filterAll(array(
+    '<a class="button add" href="%url%"><span class="icon-plus icon-large"></span> Add new</a>' => array('action'=>'new'),
+    '<a class="button" href="%url%"><span class="icon-edit icon-large"></span> Edit All</a>' => array('action'=>'edit-all')
+));
+?>
+
+<?php if ($buttons) : ?>
+    <p>
+        <?php echo implode('', $buttons); ?>
+    </p>
+<?php endif; ?>
 
 <?php if (!$this->groups) : ?>
 <h3>No groups found</h3>
