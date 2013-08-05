@@ -14,6 +14,8 @@ class Model_Presence extends Model_Base {
 	const METRIC_RATIO_REPLIES_TO_OTHERS_POSTS = 'replies_to_posts';
 	const METRIC_LINKS_PER_DAY = 'links_per_day';
 	const METRIC_LIKES_PER_POST = 'likes_per_post';
+    const METRIC_SIGN_OFF = 'sign_off';
+    const METRIC_BRANDING = 'branding';
 
 	public static $ALL_METRICS = array(
 		self::METRIC_POPULARITY_PERCENT,
