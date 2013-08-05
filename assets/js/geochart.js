@@ -35,6 +35,15 @@ app.geochart = {
 		app.geochart.drawGroups();
 		app.geochart.refreshGroups();
 
+        for(var id in app.state.groupCharts){
+            var g = app.state.groupCharts[id];
+
+            g.$group.on('click', function(e){
+                e.preventDefault();
+                app.geochart.loadCountryStats($(this).attr('id'), 'group');
+            });
+        }
+
 		var $tabs = $('#map-tabs');
 		var $active = $tabs.find('li.active');
 		if ($active.length == 0) {
@@ -123,19 +132,19 @@ app.geochart = {
 		var selection = app.geochart.map.getSelection();
 		if (selection.length > 0) {
 			var id = app.geochart.data.getValue(selection[0].row, 3);
-			app.geochart.loadCountryStats(id);
+			app.geochart.loadCountryStats(id, 'country');
 		}
 	},
 	/**
 	 * Fetches the country summary over ajax, and appends it to the map.
 	 * @param id
 	 */
-	loadCountryStats: function(id) {
+	loadCountryStats: function(id, model) {
 		var $map = $('#map');
 		var $loading = $map.find('.loading');
 		$loading.show();
 		$map.find('.country').remove();
-		$.get('index/country-stats/', {id: id, metric: app.geochart.currentMetric()})
+		$.get('index/country-stats/', {id: id, model: model, metric: app.geochart.currentMetric()})
 			.done(function(data) {
 				var $country = $(data);
 				$country.data('id', id);
