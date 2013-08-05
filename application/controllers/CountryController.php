@@ -170,20 +170,31 @@ class CountryController extends CampaignController {
             $editingCountries = array();
 
             foreach($result as $k => $v){
-                if(preg_match('|^([0-9]+)\_.+$|', $k, $matches)){
-
+                if(preg_match('|^([0-9]+)\_(.+)$|', $k, $matches)){
+                    if(!array_key_exists($matches[1], $editingCountries)) $editingCountries[$matches[1]] = array('id' => $matches[1]);
+                    $editingCountries[$matches[1]][$matches[2]] = $v;
                 }
             }
 
-//			$oldTimeZone = $editingCountry->timezone;
-            $editingCountry->fromArray($this->_request->getParams());
-
             $errorMessages = array();
-            if (!$this->_request->display_name) {
-                $errorMessages[] = 'Please enter a display name';
-            }
-            if (!$this->_request->country) {
-                $errorMessages[] = 'Please select a country';
+
+            $editedCountries = array();
+
+//			$oldTimeZone = $editingCountry->timezone;
+            foreach($editingCountries as $c){
+                $editingCountry = Model_Country::fetchById($c['id']);
+                $display_name = $editingCountry->display_name;
+                $editingCountry->fromArray($c);
+
+                if (!$c['display_name']) {
+                    $errorMessages[] = 'Please enter a display name for '. $display_name;
+                }
+                if (!$c['country']) {
+                    $errorMessages[] = 'Please select a country for '. $display_name;
+                }
+
+                $editedCountries[] = $editingCountry;
+
             }
 
             if ($errorMessages) {
@@ -192,10 +203,13 @@ class CountryController extends CampaignController {
                 }
             } else {
                 try {
-                    $editingCountry->save();
+                    foreach($editedCountries as $country){
+                        $country->save();
+                    }
 
-                    $this->_helper->FlashMessenger(array('info' => 'Country saved'));
+                    $this->_helper->FlashMessenger(array('info' => count($editedCountries) . ' Countries saved'));
                     $this->_helper->redirector->gotoSimple('index');
+
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
                         $this->_helper->FlashMessenger(array('error' => 'Display name already taken'));
@@ -204,6 +218,7 @@ class CountryController extends CampaignController {
                     }
                 }
             }
+
         }
 
         $this->view->titleIcon = 'icon-edit';
