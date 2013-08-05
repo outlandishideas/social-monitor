@@ -135,7 +135,7 @@ class GroupController extends CampaignController {
     {
 
         $this->view->title = 'Edit All';
-        $this->view->countries = Model_Group::fetchAll();
+        $this->view->groups = Model_Group::fetchAll();
 
         if ($this->_request->isPost()) {
 
