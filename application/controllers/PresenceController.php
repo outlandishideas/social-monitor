@@ -139,7 +139,8 @@ class PresenceController extends GraphingController
 
         $this->view->editType = false;
 		$this->view->types = array(Model_Presence::TYPE_TWITTER=>'Twitter', Model_Presence::TYPE_FACEBOOK=>'Facebook');
-		$this->view->countries = Model_Campaign::fetchAll();
+		$this->view->countries = Model_Country::fetchAll();
+        $this->view->groups = Model_Group::fetchAll();
 		$this->view->presence = $presence;
 		$this->view->title = 'Edit Presence';
 		$this->view->titleIcon = 'icon-edit';
