@@ -528,6 +528,18 @@ class Model_Presence extends Model_Base {
 		$score = null;
 
 		switch($metric){
+            case Model_Presence::METRIC_SIGN_OFF:
+                $title = 'Sign Off';
+                $target = '1';
+                $actual = $this->sign_off;
+                break;
+
+            case Model_Presence::METRIC_BRANDING:
+                $title = 'Popularity';
+                $target = '1';
+                $actual = $this->branding;
+                break;
+
 			case Model_Presence::METRIC_POPULARITY_PERCENT:
 				$title = 'Popularity';
 				$target = $this->getTargetAudience();
