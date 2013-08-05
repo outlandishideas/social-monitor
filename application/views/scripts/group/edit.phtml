@@ -21,6 +21,13 @@ if ($buttons && $this->showButtons) :
             <input name="display_name" value="<?php echo htmlspecialchars($this->editingGroup->display_name); ?>" class="textInput"
                    type="text" id="display_name">
         </div>
+        <div class="ctrlHolder">
+            <label for="audience">
+                Available audience size
+            </label>
+            <input name="audience" value="<?php echo htmlspecialchars($this->editingGroup->audience); ?>" class="textInput"
+                   type="text" id="audience">
+        </div>
 	</fieldset>
 
     <?php if(!empty($this->presences)) : ?>
