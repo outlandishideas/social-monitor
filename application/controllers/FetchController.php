@@ -82,7 +82,11 @@ class FetchController extends BaseController
 		$this->log('Inserted ' . count($inserted) . ' domains');
 
 		$this->log('Updating facebook actors');
-		$inserted = $this->updateFacebookActors();
+		try {
+			$inserted = $this->updateFacebookActors();
+		} catch (Exception_FacebookApi $ex) {
+			$this->log('Failed to update facebook actors: ' . $ex->getMessage());
+		}
 		$this->log('Updated ' . count($inserted) . ' actors');
 
 		$this->touchLock($lockName);
