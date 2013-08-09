@@ -1,0 +1,41 @@
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-all-countries">
+
+    <table class="text hoverable dtable standard" id="all-countries">
+        <thead>
+            <tr>
+                <th data-name="name" data-sort="auto">Display name</th>
+                <th data-name="country" data-sort="auto">Country</th>
+                <th data-name="audience" data-sort="fuzzy-numeric">Audience Size</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php /** @var $country Model_Country */ ?>
+        <?php foreach ($this->countries as $country) : ?>
+            <tr>
+                <td>
+                    <input name="<?php echo $country->id; ?>_display_name" value="<?php echo htmlspecialchars($country->display_name); ?>" class="textInput"
+                           type="text" id="<?php echo $country->id; ?>_display_name">
+                </td>
+                <td>
+                    <select name="<?php echo $country->id; ?>_country" id="<?php echo $country->id; ?>_country" class="selectInput">
+                        <option value="">--Select--</option>
+                        <?php foreach ($this->countryCodes as $code => $name) : ?>
+                            <option value="<?php echo $code; ?>" <?php if ($country->country == $code) echo 'selected'; ?>><?php echo $name; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+                <td>
+                    <input name="<?php echo $country->id; ?>_audience" value="<?php echo htmlspecialchars($country->audience); ?>" class="textInput"
+                           type="text" id="<?php echo $country->id; ?>_audience">
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+	<div class="buttonHolder">
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'country', 'action'=>'index'), null, true); ?>
+		<input type="submit" value="Save" class="primaryAction">
+	</div>
+</form>
+

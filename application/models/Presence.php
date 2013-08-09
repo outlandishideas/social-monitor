@@ -14,6 +14,8 @@ class Model_Presence extends Model_Base {
 	const METRIC_RATIO_REPLIES_TO_OTHERS_POSTS = 'replies_to_posts';
 	const METRIC_LINKS_PER_DAY = 'links_per_day';
 	const METRIC_LIKES_PER_POST = 'likes_per_post';
+    const METRIC_SIGN_OFF = 'sign_off';
+    const METRIC_BRANDING = 'branding';
 
 	public static $ALL_METRICS = array(
 		self::METRIC_POPULARITY_PERCENT,
@@ -526,6 +528,18 @@ class Model_Presence extends Model_Base {
 		$score = null;
 
 		switch($metric){
+            case Model_Presence::METRIC_SIGN_OFF:
+                $title = 'Sign Off';
+                $target = '1';
+                $actual = $this->sign_off;
+                break;
+
+            case Model_Presence::METRIC_BRANDING:
+                $title = 'Popularity';
+                $target = '1';
+                $actual = $this->branding;
+                break;
+
 			case Model_Presence::METRIC_POPULARITY_PERCENT:
 				$title = 'Popularity';
 				$target = $this->getTargetAudience();
