@@ -600,9 +600,11 @@ class Model_Presence extends Model_Base {
 		}
 
 		if ($score === null) {
-			if(!$target){
+            if($target === 0){
+                $score = 100;
+            } else if(!$target){
 				$score = 0;
-			} else if($actual > $target){
+			}  else if($actual > $target){
 				$score = 100;
 			} else {
 				$score = ( $actual / $target ) * 100;
