@@ -93,8 +93,10 @@ app.geochart = {
 			var g = app.state.groupCharts[id];
 			var color = g.groupData.b[metric][day].c;
 			var score = Math.round(g.groupData.b[metric][day].s);
+            var title = g.groupData.n +' (Presences: '+ g.groupData.p +')\n'+ app.geochart.metrics[metric].label +': '+ g.groupData.b[metric][day].l;
 
 			g.$group.css('background-color', color);
+            g.$group.attr('title', title);
 			g.$group.find('.group-display-score').empty().append(score);
 		}
 	},
