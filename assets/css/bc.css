@@ -1008,7 +1008,8 @@ form.management #assigned {
 }
 
 #slider {
-    width: 80%;
+    width: auto;
+    margin-right: 254px;
     margin-top: 20px;
 }
 
