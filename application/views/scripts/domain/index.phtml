@@ -17,6 +17,10 @@
 
 	<?php if ($this->canEdit) : ?>
 	<div class="buttonHolder">
+        <?php $buttons = $this->gatekeeper()->filterAll(array(
+            '<a class="button" href="%url%">Cancel</a>' => array('action'=>'index')
+        ));
+        foreach($buttons as $button) { echo $button; } ?>
 		<input type="submit" value="Save" class="primaryAction">
 	</div>
 	<?php endif; ?>
