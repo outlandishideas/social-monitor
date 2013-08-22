@@ -18,6 +18,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
 	<thead>
 		<tr>
 			<th data-name="name" data-sort="auto">Name</th>
+            <th data-name="audience" data-sort="fuzzy-numeric">Audience Size</th>
 			<?php foreach ($this->tableMetrics as $key=>$label) : ?>
 				<th data-name="<?php echo $key; ?>" data-sort="traffic-light"><?php echo $label; ?> (average)</th>
 			<?php endforeach; ?>
@@ -37,6 +38,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
 					<?php echo $group->display_name; ?>
 				<?php endif; ?>
 			</td>
+            <td><?php echo number_format($group->audience); ?></td>
 			<?php if ($presences == true) : ?>
                 <?php $kpiData = $group->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
                     <td>
