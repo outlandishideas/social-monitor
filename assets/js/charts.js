@@ -393,8 +393,6 @@ app.charts = {
 			})
             .on('click', function(d, i){
 
-                console.log(d);
-
                 var $sibling = $(this).next('rect');
                 if($sibling.length == 0){
                     $sibling = $(this).prev('rect');
