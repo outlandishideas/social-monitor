@@ -8,6 +8,12 @@ abbr {
 	border-bottom: 1px dashed #999;
 }
 
+#footer {
+    height: 200px;
+    background-color: #F2F2F2;
+    border-top: 1px solid #ccc;
+}
+
 #loginWrapper {
 	margin: 100px auto 0;
 	width: 325px;
