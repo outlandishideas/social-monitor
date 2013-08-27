@@ -18,35 +18,44 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
 	 * @return null|string
 	 */
 	public function color($value, $metric) {
-		$metric = $this->view->trafficMetrics[$metric];
-		$color = null;
+        if($value === 0 && $metric == 'response_time'){
 
-		foreach ($metric->range as $i=>$v) {
-			$color = $metric->colors[$i];
-			if ($value < $metric->range[$i]) {
-				break;
-			}
-		}
+            $color = "f2f2f2";
 
-		if (isset($i) && $i > 0 && $i < count($metric->range)) {
-			$start = $metric->range[$i-1];
-			$end = $metric->range[$i];
-			$fraction = ($value - $start)/($end - $start);
-			if ($fraction < 1) {
-				$color = '#';
-				for ($j=0; $j<3; $j++) {
-					$start = $metric->colorsRgb[$i-1][$j];
-					$end = $metric->colorsRgb[$i][$j];
-					$part = round($start + $fraction*($end - $start));
-					$part = dechex($part);
-					if (strlen($part) < 2) {
-						$part = '0' . $part;
-					}
-					$color .= $part;
-				}
-				$color = strtoupper($color);
-			}
-		}
+        } else {
+
+            $metric = $this->view->trafficMetrics[$metric];
+            $color = null;
+
+
+
+            foreach ($metric->range as $i=>$v) {
+                $color = $metric->colors[$i];
+                if ($value < $metric->range[$i]) {
+                    break;
+                }
+            }
+
+            if (isset($i) && $i > 0 && $i < count($metric->range)) {
+                $start = $metric->range[$i-1];
+                $end = $metric->range[$i];
+                $fraction = ($value - $start)/($end - $start);
+                if ($fraction < 1) {
+                    $color = '#';
+                    for ($j=0; $j<3; $j++) {
+                        $start = $metric->colorsRgb[$i-1][$j];
+                        $end = $metric->colorsRgb[$i][$j];
+                        $part = round($start + $fraction*($end - $start));
+                        $part = dechex($part);
+                        if (strlen($part) < 2) {
+                            $part = '0' . $part;
+                        }
+                        $color .= $part;
+                    }
+                    $color = strtoupper($color);
+                }
+            }
+        }
 
 		return $color;
 	}
