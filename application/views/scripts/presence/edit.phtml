@@ -1,9 +1,14 @@
-<div class="">
-    <?php $buttons = $this->gatekeeper()->filterAll(array(
-        '<a href="%url%" class="button remove"><span class="icon-remove icon-sign"></span> Delete</a>' => array('action'=>'delete', 'id'=>$this->presence->id)
-    ));
-    foreach($buttons as $button) { echo $button; } ?>
-</div>
+<?php
+$buttons = $this->gatekeeper()->filterAll(array(
+    '<a href="%url%" class="button remove"><span class="icon-remove icon-large"></span> Delete</a>' => array('action'=>'delete', 'id'=>$this->presence->id)
+));
+if ($buttons && $this->showButtons) :
+    ?>
+    <p>
+        <?php echo implode('', $buttons); ?>
+    </p>
+<?php endif; ?>
+
 
 <form method="post" action="<?php echo $this->url(); ?>" class="uniForm">
 

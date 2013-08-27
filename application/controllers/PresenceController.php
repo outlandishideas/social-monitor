@@ -95,8 +95,10 @@ class PresenceController extends GraphingController
 	{
 		if ($this->_request->action == 'edit') {
 			$presence = Model_Presence::fetchById($this->_request->id);
+            $this->view->showButtons = true;
 		} else {
 			$presence = new Model_Presence();
+            $this->view->showButtons = false;
 		}
 
 		$this->validateData($presence);
