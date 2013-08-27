@@ -80,10 +80,10 @@ class GroupController extends CampaignController {
     {
         if ($this->_request->action == 'edit') {
             $editingGroup = Model_Group::fetchById($this->_request->id);
-            $this->showButtons = true;
+            $this->view->showButtons = true;
         } else {
             $editingGroup = new Model_Group();
-            $this->showButtons = false;
+            $this->view->showButtons = false;
         }
 
         $this->validateData($editingGroup);

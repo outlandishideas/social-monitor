@@ -1,7 +1,8 @@
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button" href="%url%">View Group</a>' => array('controller'=>'group', 'action'=>'view'),
-	'<a class="button" href="%url%">Manage Presences</a>' => array('controller'=>'group', 'action'=>'manage')
+	'<a class="button" href="%url%"><span class="icon-eye-open icon-large"></span> View Group</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$this->editingGroup->id),
+	'<a class="button" href="%url%"><span class="icon-tasks icon-large"></span> Manage Presences</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$this->editingGroup->id),
+    '<a href="%url%" class="button remove"><span class="icon-remove icon-large"></span> Delete</a>' => array('controller'=>'group', 'action'=>'delete', 'id'=>$this->editingGroup->id)
 ));
 if ($buttons && $this->showButtons) :
 ?>

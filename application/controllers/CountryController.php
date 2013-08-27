@@ -66,10 +66,10 @@ class CountryController extends CampaignController {
 	{
 		if ($this->_request->action == 'edit') {
 			$editingCountry = Model_Country::fetchById($this->_request->id);
-            $this->showButtons = true;
+            $this->view->showButtons = true;
 		} else {
 			$editingCountry = new Model_Country();
-            $this->showButtons = false;
+            $this->view->showButtons = false;
 		}
 
 		$this->validateData($editingCountry);
