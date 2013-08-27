@@ -18,9 +18,9 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
 	 * @return null|string
 	 */
 	public function color($value, $metric) {
-        if($value === 0 && $metric == 'response_time'){
+        if($value == 0 && $metric == 'response_time'){
 
-            $color = "f2f2f2";
+            $color = "#000";
 
         } else {
 
@@ -61,34 +61,41 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
 	}
 
 	public function label($value, $metric) {
-		$label = round($value * 100)/100;
-		switch ($metric) {
-			case Model_Presence::METRIC_POPULARITY_TIME:
-				if ($value == 0) {
-					$label = 'Target already reached';
-				} else {
-					$tmp = floor($value);
-					$fraction = $value - $tmp;
-					$months = $tmp%12;
-					$years = ($tmp - $months)/12;
-					$months = round(($months + $fraction)*10)/10;
-					$components = array();
-					if ($years != 0) {
-						$components[] = $years . ' year' . ($years == 1 ? '' : 's');
-					}
-					if ($months != 0) {
-						$components[] = $months . ' month' . ($months == 1 ? '' : 's');
-					}
-					$label = implode(', ', $components);
-				}
-				break;
-			case Model_Presence::METRIC_POPULARITY_PERCENT:
-				$label .= '%';
-				break;
-			case Model_Presence::METRIC_RESPONSE_TIME:
-				$label .= ' hours';
-				break;
-		}
+        if($value == 0 && $metric == 'response_time'){
+
+            $label = "N/A";
+
+        } else {
+
+            $label = round($value * 100)/100;
+            switch ($metric) {
+                case Model_Presence::METRIC_POPULARITY_TIME:
+                    if ($value == 0) {
+                        $label = 'Target already reached';
+                    } else {
+                        $tmp = floor($value);
+                        $fraction = $value - $tmp;
+                        $months = $tmp%12;
+                        $years = ($tmp - $months)/12;
+                        $months = round(($months + $fraction)*10)/10;
+                        $components = array();
+                        if ($years != 0) {
+                            $components[] = $years . ' year' . ($years == 1 ? '' : 's');
+                        }
+                        if ($months != 0) {
+                            $components[] = $months . ' month' . ($months == 1 ? '' : 's');
+                        }
+                        $label = implode(', ', $components);
+                    }
+                    break;
+                case Model_Presence::METRIC_POPULARITY_PERCENT:
+                    $label .= '%';
+                    break;
+                case Model_Presence::METRIC_RESPONSE_TIME:
+                    $label .= ' hours';
+                    break;
+            }
+        }
 		return $label;
 	}
 }
