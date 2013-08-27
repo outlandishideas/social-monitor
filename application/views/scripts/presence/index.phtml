@@ -1,4 +1,13 @@
 <?php
+
+$today = new DateTime();
+$rawData = Model_Presence::badgesData();
+
+$badgeData = array();
+foreach($rawData as $v){
+    $badgeData[$v->presence_id] = $v;
+}
+
 $links = $this->gatekeeper()->filterAll(array(
 	'<a class="button add" href="%url%"><span class="icon-plus"></span> Add new</a>' => array('action' => 'new'),
     '<a class="button compare" data-href="%url%" href="%url%"><span class="icon-eye-open"></span>  Compare</a><ul class="compare list empty"></ul>' => array('action' => 'compare', 'id'=>'')
@@ -15,6 +24,8 @@ if ($links) {
 			<th data-name="handle" data-sort="auto">Handle</th>
             <th data-name="sign-off" data-sort="data-value-numeric">Sign Off</th>
             <th data-name="branding" data-sort="data-value-numeric">Branding Compliance</th>
+            <th data-name="global-rank" data-sort="fuzzy-numeric">Global Rank</th>
+            <th data-name="global-score" data-sort="fuzzy-numeric">Global Score</th>
 			<th data-name="popularity" data-sort="fuzzy-numeric">Audience</th>
 			<th data-name="target" data-sort="fuzzy-numeric">Target audience</th>
 			<?php foreach ($this->tableMetrics as $key=>$label) : ?>
@@ -43,6 +54,8 @@ if ($links) {
                     class="<?php echo $presence->branding ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
                     data-value="<?php echo $presence->branding ? 1 : 0 ;?>"></span>
             </td>
+            <td><?php echo $badgeData[$presence->id]->total_rank;?></td>
+            <td><?php echo round($badgeData[$presence->id]->total, 1);?></td>
 			<td><?php echo number_format($presence->popularity) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
 			<td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
 			<?php
