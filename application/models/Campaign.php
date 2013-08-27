@@ -140,62 +140,7 @@ class Model_Campaign extends Model_Base {
 	public function badges(){
 		$badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
 
-		// get the raw presence data
-		$startDate = new DateTime('now');
-		$endDate = new DateTime('now');
-		$data = Model_Badge::getAllData('month', $startDate, $endDate);
-		$keyedData = array();
-		foreach ($data as $row) {
-			$keyedData[$row->presence_id] = $row;
-		}
-
-		// get all of the campaign-presence relationships for this type (country or group)
-		$stmt = $this->_db->prepare(
-			'SELECT c.id AS campaign_id, cp.presence_id
-			FROM campaigns AS c
-			LEFT OUTER JOIN campaign_presences AS cp
-				ON cp.campaign_id = c.id
-			WHERE c.is_country = :is_country');
-		$stmt->execute(array(':is_country'=>static::$countryFilter));
-		$mapping = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-		// calculate averages badge scores for each campaign
-		$allCampaigns = array();
-		$template = array('count'=>0);
-		foreach ($badgeTypes as $badgeType) {
-			$template[$badgeType] = 0;
-		}
-		foreach ($mapping as $row) {
-			if (!isset($allCampaigns[$row->campaign_id])) {
-				$campaign = (object)$template;
-				$allCampaigns[$row->campaign_id] = $campaign;
-			} else {
-				$campaign = $allCampaigns[$row->campaign_id];
-			}
-			if (array_key_exists($row->presence_id, $keyedData)) {
-				$campaign->count++;
-				foreach ($badgeTypes as $badgeType) {
-					if ($badgeType != Model_Badge::BADGE_TYPE_TOTAL) {
-						$campaign->$badgeType += $keyedData[$row->presence_id]->$badgeType;
-					}
-				}
-			}
-		}
-		foreach ($allCampaigns as $campaign) {
-			if ($campaign->count > 0) {
-				foreach ($badgeTypes as $badgeType) {
-					$campaign->$badgeType /= $campaign->count;
-				}
-			}
-		}
-
-		// calculate the total scores for each campaign, and calculate ranks for all badge types
-		foreach ($allCampaigns as $campaign) {
-			Model_Badge::calculateTotalScore($campaign);
-		}
-		foreach ($badgeTypes as $badgeType) {
-			Model_Badge::assignRanks($allCampaigns, $badgeType);
-		}
+        $allCampaigns = static::badgesData();
 
 		$campaignCount = count($allCampaigns);
 		$badges = array();
@@ -231,6 +176,69 @@ class Model_Campaign extends Model_Base {
 
 		return $badges;
 	}
+
+    public static function badgesData(){
+        $badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
+
+        // get the raw presence data
+        $startDate = new DateTime('now');
+        $endDate = new DateTime('now');
+        $data = Model_Badge::getAllData('month', $startDate, $endDate);
+        $keyedData = array();
+        foreach ($data as $row) {
+            $keyedData[$row->presence_id] = $row;
+        }
+
+        // get all of the campaign-presence relationships for this type (country or group)
+        $class = new Model_Campaign();
+        $stmt = $class->_db->prepare(
+            'SELECT c.id AS campaign_id, cp.presence_id
+            FROM campaigns AS c
+            LEFT OUTER JOIN campaign_presences AS cp
+                ON cp.campaign_id = c.id
+            WHERE c.is_country = :is_country');
+        $stmt->execute(array(':is_country'=>static::$countryFilter));
+        $mapping = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        // calculate averages badge scores for each campaign
+        $allCampaigns = array();
+        $template = array('count'=>0);
+        foreach ($badgeTypes as $badgeType) {
+            $template[$badgeType] = 0;
+        }
+        foreach ($mapping as $row) {
+            if (!isset($allCampaigns[$row->campaign_id])) {
+                $campaign = (object)$template;
+                $allCampaigns[$row->campaign_id] = $campaign;
+            } else {
+                $campaign = $allCampaigns[$row->campaign_id];
+            }
+            if (array_key_exists($row->presence_id, $keyedData)) {
+                $campaign->count++;
+                foreach ($badgeTypes as $badgeType) {
+                    if ($badgeType != Model_Badge::BADGE_TYPE_TOTAL) {
+                        $campaign->$badgeType += $keyedData[$row->presence_id]->$badgeType;
+                    }
+                }
+            }
+        }
+        foreach ($allCampaigns as $campaign) {
+            if ($campaign->count > 0) {
+                foreach ($badgeTypes as $badgeType) {
+                    $campaign->$badgeType /= $campaign->count;
+                }
+            }
+        }
+
+        // calculate the total scores for each campaign, and calculate ranks for all badge types
+        foreach ($allCampaigns as $campaign) {
+            Model_Badge::calculateTotalScore($campaign);
+        }
+        foreach ($badgeTypes as $badgeType) {
+            Model_Badge::assignRanks($allCampaigns, $badgeType);
+        }
+        return $allCampaigns;
+    }
 
 	/**
 	 * Creates a structure containing data for $dayRange days worth of badge data for all of this type of campaign

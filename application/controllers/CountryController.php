@@ -15,6 +15,7 @@ class CountryController extends CampaignController {
         $this->view->title = 'Countries';
 		$this->view->tableMetrics = self::tableMetrics();
 		$this->view->countries = Model_Country::fetchAll();
+        $this->view->badgeData = Model_Country::badgesData();
 	}
 
 	/**
