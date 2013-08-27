@@ -17,6 +17,7 @@ class GroupController extends CampaignController {
         $this->view->title = 'SBUs';
 		$this->view->groups = Model_Group::fetchAll();
 		$this->view->tableMetrics = self::tableMetrics();
+        $this->view->badgeData = Model_Group::badgesData();
 	}
 
 	/**
