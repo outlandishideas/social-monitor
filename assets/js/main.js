@@ -18,7 +18,8 @@ $.extend(app, {
 		unloading: false,
         barDate: [],
         badges: [],
-        groupCharts: []
+        groupCharts: [],
+        regionCharts: []
 	},
 	templates: {
 		legendLabel: '<div class="dataset <%=className%>" data-line-id="<%=line_id%>">\

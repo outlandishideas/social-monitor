@@ -35,12 +35,24 @@ app.geochart = {
 		app.geochart.drawGroups();
 		app.geochart.refreshGroups();
 
+        app.geochart.drawRegions();
+        app.geochart.refreshRegions();
+
         for(var id in app.state.groupCharts){
             var g = app.state.groupCharts[id];
 
             g.$group.on('click', function(e){
                 e.preventDefault();
                 app.geochart.loadCountryStats($(this).attr('id'), 'group');
+            });
+        }
+
+        for(var id in app.state.regionCharts){
+            var r = app.state.regionCharts[id];
+
+            r.$region.on('click', function(e){
+                e.preventDefault();
+                app.geochart.loadCountryStats($(this).attr('id'), 'region');
             });
         }
 
@@ -100,6 +112,42 @@ app.geochart = {
 			g.$group.find('.group-display-score').empty().append(score);
 		}
 	},
+
+    /**
+     * Add the regions in global groupData to the DOM, and store them in app.state.groupCharts
+     */
+    drawRegions: function() {
+        var $groupContainer = $('#region-map');
+
+        var regions = regionData;
+        for(var id in regions){
+            var region = regions[id];
+
+            $regionContainer.append('<div id="'+ id +'" class="region-display"><div class="region-display-title">'+ region.n +'</div><div class="region-display-score"></div></div>');
+            app.state.regionCharts[id] = {
+                $region: $('#'+id),
+                regionData: region
+            };
+        }
+    },
+    /**
+     * Update the value and colour of each of the region
+     */
+    refreshRegions: function() {
+        var day = app.geochart.currentDay();
+        var metric = app.geochart.currentMetric();
+
+        for(var id in app.state.regionCharts){
+            var g = app.state.regionCharts[id];
+            var color = g.regionData.b[metric][day].c;
+            var score = Math.round(g.regionData.b[metric][day].s);
+            var title = g.regionData.n +' (Presences: '+ g.regionData.p +')\n'+ app.geochart.metrics[metric].label +': '+ g.regionData.b[metric][day].l;
+
+            g.$region.css('background-color', color);
+            g.$region.attr('title', title);
+            g.$region.find('.region-display-score').empty().append(score);
+        }
+    },
 	currentMetric:function () {
 		return $('#map-tabs').find('li.active').data('val');
 	},
