@@ -1128,7 +1128,7 @@ class Model_Presence extends Model_Base {
             $data = $keyedData;
             BaseController::setObjectCache($key, $data);
         }
-        return (array)$data;
+        return $data;
     }
 
 }
