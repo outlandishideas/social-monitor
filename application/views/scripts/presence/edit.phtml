@@ -1,3 +1,10 @@
+<div class="">
+    <?php $buttons = $this->gatekeeper()->filterAll(array(
+        '<a href="%url%" class="button remove"><span class="icon-remove icon-sign"></span> Delete</a>' => array('action'=>'delete', 'id'=>$this->presence->id)
+    ));
+    foreach($buttons as $button) { echo $button; } ?>
+</div>
+
 <form method="post" action="<?php echo $this->url(); ?>" class="uniForm">
 
 	<fieldset class="inlineLabels">
