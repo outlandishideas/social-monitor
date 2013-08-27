@@ -14,6 +14,7 @@
     </div>
 	<div id="geo-map"></div>
     <div id="group-map"></div>
+    <div id="region-map"></div>
 	<div class="loading"></div>
 </div>
 
@@ -22,4 +23,5 @@
 <script type='text/javascript'>
 	var mapData = <?php echo json_encode((object) $this->mapData); ?>;
     var groupData = <?php echo json_encode((object) $this->groupData); ?>;
+    var regionData = <?php echo json_encode((object) $this->regionData); ?>;
 </script>

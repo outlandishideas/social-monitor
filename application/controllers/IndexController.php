@@ -54,8 +54,26 @@ class IndexController extends GraphingController
 			self::setObjectCache($key, $groupData);
 		}
 
+        $key = 'region_data_' . $dayRange;
+        $regionData = self::getObjectCache($key);
+        if (!$regionData) {
+            $regionData = Model_Region::constructFrontPageData($badgeData, $dayRange);
+            $badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
+            /** @var Zend_View_Helper_TrafficLight $trafficLight */
+            $trafficLight = $this->view->trafficLight();
+            foreach ($regionData as $region) {
+                foreach ($badgeTypes as $type) {
+                    foreach ($region->b[$type] as $value) {
+                        $value->c = $trafficLight->color($value->s, $type);
+                    }
+                }
+            }
+            self::setObjectCache($key, $regionData);
+        }
+
 		$this->view->mapData = $mapData;
 		$this->view->groupData = $groupData;
+        $this->view->regionData = $regionData;
 		$this->view->metricOptions = $metrics;
 		$this->view->dateRangeString = $old->format('d M Y') . ' - ' . $now->format('d M Y');
 		$this->view->currentDate = $now->format('Y-m-d');
