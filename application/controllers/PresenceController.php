@@ -14,6 +14,15 @@ class PresenceController extends GraphingController
         $this->view->titleIcon = Model_Presence::ICON_TYPE;
         $this->view->presences = Model_Presence::fetchAll();
 		$this->view->tableMetrics = self::tableMetrics();
+
+        $rawData = Model_Presence::badgesData();
+
+        $badgeData = array();
+        foreach($rawData as $v){
+            $badgeData[$v->presence_id] = $v;
+        }
+
+        $this->view->badgeData = $badgeData;
 	}
 
 	/**
