@@ -320,6 +320,7 @@ app.init = {
 					$( "#date-slider" ).val( then.toString('dd MMM yyyy') + ' - ' + now.toString('dd MMM yyyy') );
 					app.geochart.refreshMap();
                     app.geochart.refreshGroups();
+                    app.geochart.refreshRegions();
 				}
 			});
 

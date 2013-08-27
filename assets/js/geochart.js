@@ -68,6 +68,7 @@ app.geochart = {
 					.siblings('li.active').removeClass('active');
 				app.geochart.refreshMap();
 				app.geochart.refreshGroups();
+                app.geochart.refreshRegions();
 				var $country = $mapDiv.find('.country');
 				if ($country.length > 0) {
 					var id = $country.data('id');
