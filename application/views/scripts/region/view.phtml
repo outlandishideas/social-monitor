@@ -1,0 +1,129 @@
+<?php
+$buttons = $this->gatekeeper()->filterAll(array(
+	'<a class="button" href="%url%"><span class="icon-edit icon-large"></span> Edit Region</a>' => array('action'=>'edit', 'id'=>$this->region->id),
+	'<a class="button" href="%url%"><span class="icon-tasks icon-large"></span> Manage Presences</a>' => array('action'=>'manage', 'id'=>$this->region->id)
+));
+?>
+
+<div id="pickers">
+    <?php echo $this->render('partials/metricpicker.phtml'); ?>
+    <?php echo $this->render('partials/daterange.phtml'); ?>
+</div>
+
+<?php if ($buttons) : ?>
+<p>
+	<?php echo implode('', $buttons); ?>
+</p>
+<?php endif; ?>
+
+<?php if (empty($this->compareData)) : ?>
+
+    <h3>No presences found</h3>
+
+<?php else : ?>
+
+    <div class="section-title">
+        <h2><span class="icon-certificate icon-large"></span> Badges</h2>
+    </div>
+
+    <div id="badges" data-id="<?php echo $this->region->id; ?>" class="grid justify" data-controller="region">
+        <?php
+        foreach($this->badges as $name => $badge) {
+            echo $this->partial('partials/badges.phtml', array('badge'=>$badge));
+        }
+        ?>
+    </div>
+
+    <div id="charts" data-controller="presence">
+        <?php
+        $currentId = 1;
+        foreach($this->compareData as $data) :
+	    ?>
+	    <div class="presence-charts">
+            <?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>'presence', 'action'=>'view', 'id'=>$data->presence->id)); ?>
+            <div class="section-title">
+                <h2>
+                    <?php if($url) echo '<a href="'.$url.'">'; ?>
+                    <span class="<?php echo $data->presence->getLargePresenceSign(); ?>"></span> <?php echo $data->presence->label; if ($data->presence->label != $data->presence->handle) { echo ' (' . $data->presence->handle . ')'; } ?>
+                    <?php if($url) echo '</a>'; ?>
+                </h2>
+            </div>
+            <?php
+            foreach ($data->graphs as $graph) {
+                $graph->id = $currentId++;
+                $this->graph = $graph;
+                echo $this->render('partials/chart.phtml');
+            }
+	        ?>
+	    </div>
+        <?php endforeach; ?>
+    </div>
+
+    <div class="section-title"><h2><span class="icon-bar-chart icon-large"></span> Scores for the last 30 days:</h2></div>
+
+    <table class="text">
+
+        <tr>
+            <th>Handle</th>
+	        <th>Sign Off</th>
+	        <th>Branding Compliance</th>
+            <?php foreach ($this->tableMetrics as $key=>$label) : ?>
+                <th><?php echo $label; ?></th>
+            <?php endforeach; ?>
+        </tr>
+
+        <?php foreach($this->compareData as $data) : /** @var Model_Presence $presence */ $presence = $data->presence?>
+            <tr>
+                <td>
+	                <?php echo $this->partial('partials/presence_inline.phtml', array('presence'=>$data->presence)); ?>
+                </td>
+                <td>
+                    <span class="<?php echo $presence->sign_off ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
+                          data-value="<?php echo $presence->sign_off ? 1 : 0 ;?>"></span>
+                </td>
+                <td>
+                    <span
+                        class="<?php echo $presence->branding ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
+                        data-value="<?php echo $presence->branding ? 1 : 0 ;?>"></span>
+                </td>
+                <?php $kpiData = $presence->getKpiData(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
+                    <td>
+                        <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
+                        <?php echo $this->trafficLight()->label($value, $key); ?>
+                    </td>
+                <?php endforeach; ?>
+            </tr>
+        <?php endforeach; ?>
+
+        <?php
+        // add row for country average
+        if (count($this->compareData) > 1) :
+        $totalPop = 0;
+        $totalTarget = 0;
+        foreach ($this->compareData as $data) {
+	        /** @var Model_Presence $p */
+            $p = $data->presence;
+            $totalPop += $p->popularity;
+            $totalTarget += $p->getTargetAudience();
+        }
+        $avPop = round(100*$totalPop/count($this->compareData))/100;
+        $avTarget = round(100*$totalTarget/count($this->compareData))/100;
+        ?>
+
+        <tr class="average">
+            <td>Region Average</td>
+            <td></td>
+            <td></td>
+            <?php $kpiData = $this->region->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
+                <td>
+                    <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
+                    <?php echo $this->trafficLight()->label($value, $key); ?>
+                </td>
+            <?php endforeach; ?>
+            <td></td>
+        </tr>
+        <?php endif; ?>
+
+    </table>
+
+<?php endif; ?>

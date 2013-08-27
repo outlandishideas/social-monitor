@@ -1,0 +1,32 @@
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-all-regions">
+
+    <table class="text hoverable dtable standard" id="all-regions">
+        <thead>
+            <tr>
+                <th data-name="name" data-sort="auto">Display name</th>
+                <th data-name="audience" data-sort="fuzzy-numeric">Audience Size</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php /** @var $region Model_Region */ ?>
+        <?php foreach ($this->regions as $region) : ?>
+            <tr>
+                <td>
+                    <input name="<?php echo $region->id; ?>_display_name" value="<?php echo htmlspecialchars($region->display_name); ?>" class="textInput"
+                           type="text" id="<?php echo $region->id; ?>_display_name">
+                </td>
+                <td>
+                    <input name="<?php echo $region->id; ?>_audience" value="<?php echo htmlspecialchars($region->audience); ?>" class="textInput"
+                           type="text" id="<?php echo $region->id; ?>_audience">
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+	<div class="buttonHolder">
+		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true); ?>
+		<input type="submit" value="Save" class="primaryAction">
+	</div>
+</form>
+

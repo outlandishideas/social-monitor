@@ -7,6 +7,12 @@ home:
 #group:
 #  label: Campaigns
 #  controller: group
+region:
+  label: Regions
+  Title: Index of Regions
+  icon: icon-globe icon-large
+  controller: region
+  action: index
 country:
   label: Countries
   Title: Index of Countries

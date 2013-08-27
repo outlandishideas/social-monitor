@@ -1,0 +1,82 @@
+<?php
+$buttons = $this->gatekeeper()->filterAll(array(
+    '<a class="button add" href="%url%"><span class="icon-plus icon-large"></span> Add new</a>' => array('action'=>'new'),
+    //'<a class="button" href="%url%"><span class="icon-edit icon-large"></span> Edit All</a>' => array('action'=>'edit-all')
+));
+?>
+
+<?php if ($buttons) : ?>
+    <p>
+        <?php echo implode('', $buttons); ?>
+    </p>
+<?php endif; ?>
+
+<?php if (!$this->regions) : ?>
+<h3>No regions found</h3>
+<?php else : ?>
+<table class="text hoverable dtable standard" id="all-countries">
+	<thead>
+		<tr>
+			<th data-name="name" data-sort="auto">Name</th>
+            <th data-name="total-rank" data-sort="fuzzy-numeric">Global Rank</th>
+            <th data-name="total-score" data-sort="fuzzy-numeric">Global Score</th>
+            <th data-name="audience" data-sort="fuzzy-numeric">Audience Size</th>
+			<?php foreach ($this->tableMetrics as $key=>$label) : ?>
+				<th data-name="<?php echo $key; ?>" data-sort="traffic-light"><?php echo $label; ?> (average)</th>
+			<?php endforeach; ?>
+			<th data-name="presences">Presences</th>
+			<th data-name="options" data-width="150px"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php /** @var region Model_Region */ ?>
+		<?php foreach ($this->regions as $region) : ?>
+		<tr>
+			<?php $presences = $region->getPresences(); ?>
+			<td>
+				<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'id'=>$region->id)); if ($url) : ?>
+					<a href="<?php echo $url; ?>"><?php echo $region->display_name; ?></a>
+				<?php else : ?>
+					<?php echo $region->display_name; ?>
+				<?php endif; ?>
+			</td>
+            <td><?php echo $this->badgeData[$region->id]->total_rank; ?></td>
+            <td><?php echo round($this->badgeData[$region->id]->total, 1); ?></td>
+            <td><?php echo number_format($region->audience); ?></td>
+			<?php if ($presences == true) : ?>
+                <?php $kpiData = $region->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
+                    <td>
+                        <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
+                        <?php echo $this->trafficLight()->label($value, $key); ?>
+                    </td>
+                <?php endforeach; ?>
+                <td>
+                    <ul class="entity-list">
+                        <?php foreach($presences as $presence) : ?>
+                            <li>
+                                <?php echo $this->partial('partials/presence_inline.phtml',  array('presence' => $presence)); ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </td>
+			<?php else : ?>
+			    <?php foreach ($this->tableMetrics as $key=>$label) : ?>
+                    <td>-</td>
+                <?php endforeach; ?>
+			    <td>-</td>
+			<?php endif; ?>
+			<td>
+				<?php
+					$actions = $this->gatekeeper()->filterAll(array(
+						'- <a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$region->id),
+						'- <a href="%url%">Presences</a>' => array('action'=>'manage', 'id'=>$region->id),
+						'- <a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$region->id)
+					));
+					echo implode('<br />', $actions);
+				?>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
+<?php endif; ?>
