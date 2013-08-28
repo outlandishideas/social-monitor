@@ -10,7 +10,7 @@ home:
 region:
   label: Regions
   Title: Index of Regions
-  icon: icon-globe icon-large
+  icon: icon-compass icon-large
   controller: region
   action: index
 country:

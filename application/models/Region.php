@@ -2,7 +2,7 @@
 
 class Model_Region extends Model_Campaign {
 
-    const ICON_TYPE = 'icon-th-large';
+    const ICON_TYPE = 'icon-compass';
 
 	protected static $countryFilter = '2';
 
