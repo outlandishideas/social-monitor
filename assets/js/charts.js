@@ -141,7 +141,7 @@ app.charts = {
 		c.xAxis = d3.svg.axis()
 			.scale(c.xMap)
 			.tickSize(4)
-			.ticks(10)
+			.ticks(8)
 			.orient('bottom');
 		c.vis.append('svg:g')
 			.attr('class', 'axis axis-x')
