@@ -5,11 +5,6 @@ $buttons = $this->gatekeeper()->filterAll(array(
 ));
 ?>
 
-<div id="pickers">
-    <?php echo $this->render('partials/metricpicker.phtml'); ?>
-    <?php echo $this->render('partials/daterange.phtml'); ?>
-</div>
-
 <?php if ($buttons) : ?>
 <p>
 	<?php echo implode('', $buttons); ?>
@@ -35,6 +30,12 @@ $buttons = $this->gatekeeper()->filterAll(array(
     </div>
 
     <div id="charts" data-controller="presence">
+
+        <div id="pickers">
+            <?php echo $this->render('partials/metricpicker.phtml'); ?>
+            <?php echo $this->render('partials/daterange.phtml'); ?>
+        </div>
+
         <?php
         $currentId = 1;
         foreach($this->compareData as $data) :

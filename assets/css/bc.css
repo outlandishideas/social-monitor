@@ -328,7 +328,7 @@ span.icon-remove-sign {
 #pickers {
     position: absolute;
     right: 20px;
-    top: -55px;
+    top: -13px;
 }
 
 .picker {
@@ -543,6 +543,7 @@ form.autoConfirm {
 
 #charts {
     width: 100%;
+    position: relative;
 }
 
 #charts .presence-charts .presence {
