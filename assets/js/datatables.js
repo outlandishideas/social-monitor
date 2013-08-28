@@ -99,7 +99,7 @@ app.datatables = {
 				bScrollInfinite: true,
 				iDisplayLength: 1000,
 				bScrollCollapse: true,
-				sScrollY: '400px',
+				sScrollY: '600px',
 				bFilter: true,
 				bInfo: false,
 				aoColumns: app.datatables.generateColumns($table)
@@ -113,7 +113,7 @@ app.datatables = {
 				bScrollInfinite: true,
 				iDisplayLength: 1000,
 				bScrollCollapse: true,
-				sScrollY: '400px',
+				sScrollY: '600px',
 				bFilter: true,
 				bInfo: false,
 				aoColumns: app.datatables.generateColumns($table)
