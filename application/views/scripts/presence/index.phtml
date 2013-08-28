@@ -1,13 +1,16 @@
 <?php
 
-$links = $this->gatekeeper()->filterAll(array(
+$buttons = $this->gatekeeper()->filterAll(array(
 	'<a class="button add" href="%url%"><span class="icon-plus"></span> Add new</a>' => array('action' => 'new'),
     '<a class="button compare" data-href="%url%" href="%url%"><span class="icon-eye-open"></span>  Compare</a><ul class="compare list empty"></ul>' => array('action' => 'compare', 'id'=>'')
-));
-if ($links) {
-	echo '<div class="buttons">' . implode('', $links) . '</div>';
-}
-?>
+));?>
+
+<?php if ($buttons) : ?>
+    <p>
+        <?php echo implode('', $buttons); ?>
+    </p>
+<?php endif; ?>
+
 
 <table class="text dtable" id="all-presences">
 	<thead>
