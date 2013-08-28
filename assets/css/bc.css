@@ -1450,6 +1450,7 @@ ul.link-list {
     color: #f2f2f2;
     font-size: 22px;
     position: relative;
+    cursor: pointer;
 }
 
 .group-display .background, .region-display .background {
