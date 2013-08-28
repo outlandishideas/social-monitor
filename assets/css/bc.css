@@ -1430,8 +1430,7 @@ ul.link-list {
     vertical-align: top;
     height: 150px;
     width: 150px;
-    background-color: #000;
-    margin: 20px;
+    margin: 10px;
     text-align: center;
     padding: 10px;
     color: #f2f2f2;
@@ -1439,18 +1438,24 @@ ul.link-list {
     position: relative;
 }
 
-.group-display {
+.group-display .background, .region-display .background {
+    background-color: #000;
+    height: 100%;
+    width: 100%;
+}
+
+.group-display .background {
     border-radius: 50%;
 }
 
-.region-display {
-    -webkit-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    transform: rotate(45deg);
+.region-display .background {
+    -webkit-transform: rotate(49deg) skew(8deg);
+    -moz-transform: rotate(49deg) skew(8deg);
+    -o-transform: rotate(49deg) skew(8deg);
+    transform: rotate(49deg) skew(8deg);
 }
 
-.group-display .title, .region-display .title {
+.vertical-center {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -1458,27 +1463,20 @@ ul.link-list {
     -moz-transform: translate(-50%,-50%);
     -o-transform: translate(-50%,-50%);
     transform: translate(-50%,-50%);
+}
+
+.group-display .title, .region-display .title {
     color: #444;
     z-index: 10;
 }
 
 .group-display .score, .region-display .score {
     font-size: 120px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%,-50%);
-    -moz-transform: translate(-50%,-50%);
-    -o-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
     opacity: 0.5;
 }
 
 .region-display .title, .region-display .score {
-    -webkit-transform: rotate(-45deg) translate(-0%,-60%);
-    -moz-transform: rotate(-45deg) translate(-0%,-60%);
-    -o-transform: rotate(-45deg)mtranslate(-0%,-60%);
-    transform: rotate(-45deg) translate(-0%,-60%);
+
 }
 
 @media print {

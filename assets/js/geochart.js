@@ -88,7 +88,7 @@ app.geochart = {
 		for(var id in groups){
 			var group = groups[id];
 
-			$groupContainer.append('<span id="'+ id +'" class="group-display"><div class="title">'+ group.n +'</div><div class="score"></div></span>');
+			$groupContainer.append('<span id="'+ id +'" class="group-display"><div class="background"></div><div class="title vertical-center">'+ group.n +'</div><div class="score vertical-center"></div></span>');
 			app.state.groupCharts[id] = {
 				$group: $('#'+id),
 				groupData: group
@@ -108,7 +108,7 @@ app.geochart = {
 			var score = Math.round(g.groupData.b[metric][day].s);
             var title = g.groupData.n +' (Presences: '+ g.groupData.p +')\n'+ app.geochart.metrics[metric].label +': '+ g.groupData.b[metric][day].l;
 
-			g.$group.css('background-color', color);
+			g.$group.find('.background').css('background-color', color);
             g.$group.attr('title', title);
 			g.$group.find('.score').empty().append(score);
 		}
@@ -124,7 +124,7 @@ app.geochart = {
         for(var id in regions){
             var region = regions[id];
 
-            $regionContainer.append('<span id="'+ id +'" class="region-display"><div class="title">'+ region.n +'</div><div class="score"></div></span>');
+            $regionContainer.append('<span id="'+ id +'" class="region-display"><div class="background"></div><div class="title vertical-center">'+ region.n +'</div><div class="score vertical-center"></div></span>');
             app.state.regionCharts[id] = {
                 $region: $('#'+id),
                 regionData: region
@@ -144,7 +144,7 @@ app.geochart = {
             var score = Math.round(g.regionData.b[metric][day].s);
             var title = g.regionData.n +' (Presences: '+ g.regionData.p +')\n'+ app.geochart.metrics[metric].label +': '+ g.regionData.b[metric][day].l;
 
-            g.$region.css('background-color', color);
+            g.$region.find('.background').css('background-color', color);
             g.$region.attr('title', title);
             g.$region.find('.score').empty().append(score);
         }
