@@ -88,7 +88,7 @@ app.geochart = {
 		for(var id in groups){
 			var group = groups[id];
 
-			$groupContainer.append('<div id="'+ id +'" class="group-display"><div class="group-display-title">'+ group.n +'</div><div class="group-display-score"></div></div>');
+			$groupContainer.append('<span id="'+ id +'" class="group-display"><div class="title">'+ group.n +'</div><div class="score"></div></span>');
 			app.state.groupCharts[id] = {
 				$group: $('#'+id),
 				groupData: group
@@ -110,7 +110,7 @@ app.geochart = {
 
 			g.$group.css('background-color', color);
             g.$group.attr('title', title);
-			g.$group.find('.group-display-score').empty().append(score);
+			g.$group.find('.score').empty().append(score);
 		}
 	},
 
@@ -118,13 +118,13 @@ app.geochart = {
      * Add the regions in global groupData to the DOM, and store them in app.state.groupCharts
      */
     drawRegions: function() {
-        var $groupContainer = $('#region-map');
+        var $regionContainer = $('#region-map');
 
         var regions = regionData;
         for(var id in regions){
             var region = regions[id];
 
-            $regionContainer.append('<div id="'+ id +'" class="region-display"><div class="region-display-title">'+ region.n +'</div><div class="region-display-score"></div></div>');
+            $regionContainer.append('<span id="'+ id +'" class="region-display"><div class="title">'+ region.n +'</div><div class="score"></div></span>');
             app.state.regionCharts[id] = {
                 $region: $('#'+id),
                 regionData: region
@@ -146,7 +146,7 @@ app.geochart = {
 
             g.$region.css('background-color', color);
             g.$region.attr('title', title);
-            g.$region.find('.region-display-score').empty().append(score);
+            g.$region.find('.score').empty().append(score);
         }
     },
 	currentMetric:function () {
