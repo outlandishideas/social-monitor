@@ -1273,7 +1273,7 @@ li.link.box {
 /* badges */
 
 .grid.justify {
-    text-align: justify;
+    text-align: left;
     width: 100%;
 }
     .grid.justify:after {
@@ -1283,7 +1283,7 @@ li.link.box {
     }
 
 .badge.box {
-    width: 25%;
+    width: auto;
     display: inline-block;
     padding: 20px;
     background: #fff;
@@ -1291,6 +1291,11 @@ li.link.box {
     color: #444;
     position: relative;
     vertical-align: top;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.badge.box:first-child {
+    margin-left: 0;
 }
 
 .badge.box#total {
@@ -1340,11 +1345,11 @@ li.link.box {
 }
 
 .badge .score-card .overall-score,
-.badge .score-card:hover .ranking {
+.badge.show .score-card .ranking {
     display: none;
 }
 
-.badge .score-card:hover .overall-score {
+.badge.show .score-card .overall-score {
     display: block;
 }
 
@@ -1369,6 +1374,14 @@ li.link.box {
     width: 50px;
     margin: 0;
     float: right;
+}
+
+.badge.box dl, .badge.box h4 {
+    display: none;
+}
+
+.badge.box.show dl, .badge.box.show h4 {
+    display: block;
 }
 
 /* ul tabs */

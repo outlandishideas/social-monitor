@@ -10,9 +10,20 @@ app.badges = {
         var $badges = $('#badges');
 
         $badges.find('.badge.box').each(function(){
+            $(this).on('click', function(e){
+                e.preventDefault();
+                if($(this).hasClass('show')){
+                    $('.badge.box').removeClass('show');
+                } else {
+                    $('.badge.box').removeClass('show');
+                    $(this).addClass('show');
+                }
+
+            });
             var selector = '#' + $(this).attr('id');
             app.state.badges[selector] = app.badges.createBadge(selector);
         });
+
 
         app.badges.fetchBadgeData();
 
