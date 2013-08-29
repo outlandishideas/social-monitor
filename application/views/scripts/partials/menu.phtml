@@ -25,11 +25,15 @@
             ?>
 
             <li class="<?php echo implode(' ', $classes); ?>">
-                <a <?php if ($href) { echo 'href="' . $href . '"'; } ?>>
-                    <?php if($icon) : ?>
-		            <span class="<?php echo $icon; ?>"></span>
-		            <?php endif; ?>
-                    <?php echo $page->getLabel(); ?>
+                <a <?php if ($href) { echo 'href="' . $href . '"'; } ?>><?php
+                    if($icon) : ?>
+		                <span class="<?php echo $icon; ?>"></span>  <?php
+                    endif;
+                    if($page->controller == 'user' && $page->action == 'edit-self') :
+                        //echo $this->user->name;
+                    else :
+                        echo $page->getLabel();
+                    endif; ?>
                 </a>
             </li>
 

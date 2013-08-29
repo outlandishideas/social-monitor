@@ -22,7 +22,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
             <th data-name="total-score" data-sort="fuzzy-numeric">Global Score</th>
             <th data-name="audience" data-sort="fuzzy-numeric">Audience Size</th>
 			<?php foreach ($this->tableMetrics as $key=>$label) : ?>
-				<th data-name="<?php echo $key; ?>" data-sort="traffic-light"><?php echo $label; ?> (average)</th>
+				<th data-name="<?php echo $key; ?>" data-sort="traffic-light"><?php echo $label; ?></th>
 			<?php endforeach; ?>
 			<th data-name="presences">Presences</th>
 			<th data-name="options" data-width="150px"></th>

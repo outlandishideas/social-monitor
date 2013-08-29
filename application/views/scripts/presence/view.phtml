@@ -10,10 +10,6 @@ $buttons = $this->gatekeeper()->filterAll(array(
     </p>
 <?php endif; ?>
 
-<div class="section-title">
-    <h2>Badges</h2>
-</div>
-
 <div id="badges" data-id="<?php echo $this->presence->id; ?>" class="grid justify" data-controller="presence">
     <?php
         foreach($this->badges as $name => $badge) {

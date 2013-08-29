@@ -191,15 +191,15 @@ app.geochart = {
 	 * @param id
 	 */
 	loadCountryStats: function(id, model) {
-		var $map = $('#map');
-		var $loading = $map.find('.loading');
+		var $mapSidebar = $('#map-sidebar');
+		var $loading = $mapSidebar.find('.loading');
 		$loading.show();
-		$map.find('.country').remove();
+        $mapSidebar.find('.country').remove();
 		$.get('index/country-stats/', {id: id, model: model, metric: app.geochart.currentMetric()})
 			.done(function(data) {
 				var $country = $(data);
 				$country.data('id', id);
-				$map.append($country);
+                $mapSidebar.append($country);
 				$country.removeClass('hide');
 			})
 			.always(function() {

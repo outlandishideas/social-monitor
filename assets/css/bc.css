@@ -879,9 +879,16 @@ form.management #assigned {
 /* geo map and key */
 
 #map {
-    width: 100%;
+    width: auto;
     position: relative;
-	margin-top: 20px;
+    margin-right: 319px;
+}
+
+#map-sidebar {
+    width: 279px;
+    float: right;
+    padding: 20px;
+    border: 2px solid #afd1e4;
 }
 
 #geo-map {
@@ -898,20 +905,13 @@ form.management #assigned {
 	display: none;
 }
 
-#map .country {
-    position: absolute;
-    top: 130px;
-    right: 0;
-    width: 319px;
-    background: #fff;
-    border: 1px solid #ccc;
-    padding: 20px;
+#map-sidebar .country {
     opacity:1;
     transition: opacity 1s ease-out;
     -webkit-transition: opacity 5s ease-out; /* Safari */
 }
 
-#map .country.hide {
+#map-sidebar .country.hide {
     opacity:0;
 }
 
@@ -925,18 +925,16 @@ form.management #assigned {
     color: #666;
 }
 
-#map .country h3,
-#map .map-date h3 {
+#map-sidebar .country h3 {
     font-size: 20px;
     font-weight: bold;
     margin: 10px -20px;
-    padding: 5px 20px;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    background: #f2f2f2;
+    padding: 8px 20px;
+    background: #edf5f8;
+    border-top: 2px solid #afd1e4;
 }
 
-#map .country ul,
+#map-sidebar .country ul,
 .entity-list {
     margin: 0;
     padding: 0;
@@ -948,24 +946,24 @@ form.management #assigned {
     margin: 3px 0;
 }
 
-#map .country ul li {
+#map-sidebar .country ul li {
     border-top: 1px solid #ccc;
     padding: 8px 0;
 }
 
-#map .country ul li:first-child {
+#map-sidebar .country ul li:first-child {
     border-top-style: none;
 }
 
-#map .country ul li span.icon-ok-sign,
-#map .country ul li span.icon-remove-sign{
+#map-sidebar .country ul li span.icon-ok-sign,
+#map-sidebar .country ul li span.icon-remove-sign{
     opacity: 0;
     transition: opacity 1s ease-out;
     -webkit-transition: opacity 1s ease-out; /* Safari */
 }
 
-#map .country ul li:hover span.icon-ok-sign,
-#map .country ul li:hover span.icon-remove-sign{
+#map-sidebar .country ul li:hover span.icon-ok-sign,
+#map-sidebar .country ul li:hover span.icon-remove-sign{
     opacity: 1;
 }
 
@@ -999,22 +997,16 @@ form.management #assigned {
 /* Slider & Date */
 
 .map-date {
-    border: 1px solid #ccc;
-    padding: 0 20px 20px 20px;
+    padding: 0 0 20px 0;
 }
 
 .map-date #date-slider {
-    float: right;
-}
-
-#map .map-date h3 {
-    border-top-style: none;
-    margin: 0 -20px 10px -20px;
+    margin: 0 auto;
+    display: block;
 }
 
 #slider {
     width: auto;
-    margin-right: 254px;
     margin-top: 20px;
 }
 
@@ -1281,7 +1273,7 @@ li.link.box {
     }
 
 .badge.box {
-    width: auto;
+    width: 18px;
     display: inline-block;
     padding: 20px;
     background: #fff;
@@ -1294,10 +1286,6 @@ li.link.box {
 }
 .badge.box:first-child {
     margin-left: 0;
-}
-
-.badge.box#total {
-    width: auto;
 }
 
 .badge.box:first-child {
@@ -1405,9 +1393,11 @@ ul.tabs li {
     background-color: #c3e9fe;
     text-align: center;
     line-height: 33px;
-    font-size: 18px;
+    font-size: 14px;
     color: #4e869f;
     font-weight: bold;
+    box-shadow: 0px -2px #ddd inset;
+    box-shadow: 0px -2px rgba(0,0,0,0.1) inset;
 }
 
 ul.tabs li:first-child {
@@ -1418,6 +1408,7 @@ ul.tabs li.active {
     cursor: default;
     background-color: #fff;
     color: #444;
+    box-shadow: none;
 }
 
 /* domains */
