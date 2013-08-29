@@ -1,12 +1,12 @@
 <?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>'presence', 'action'=>'view', 'id'=>$this->presence->id));
 if ($url) : ?>
 	<a href="<?php echo $url; ?>" title="<?php echo $this->presence->label; ?>" class="entity presence <?php echo $this->presence->type; ?>">
-		<span class="<?php echo $this->presence->getLargePresenceSign();?>"></span>
+		<span class="<?php echo $this->presence->getPresenceSign();?>"></span>
 		<?php echo $this->presence->handle; ?>
 	</a>
 <?php else : ?>
 	<span title="<?php echo $this->presence->label; ?>" class="entity presence <?php echo $this->presence->type; ?>">
-		<span class="<?php echo $this->presence->getLargePresenceSign();?>"></span>
+		<span class="<?php echo $this->presence->getPresenceSign();?>"></span>
 		<?php echo $this->presence->handle; ?>
 	</span>
 <?php endif; ?>

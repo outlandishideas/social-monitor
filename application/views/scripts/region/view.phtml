@@ -45,7 +45,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
             <div class="section-title">
                 <h2>
                     <?php if($url) echo '<a href="'.$url.'">'; ?>
-                    <span class="<?php echo $data->presence->getLargePresenceSign(); ?>"></span> <?php echo $data->presence->label; if ($data->presence->label != $data->presence->handle) { echo ' (' . $data->presence->handle . ')'; } ?>
+                    <span class="<?php echo $data->presence->getPresenceSign(); ?>"></span> <?php echo $data->presence->label; if ($data->presence->label != $data->presence->handle) { echo ' (' . $data->presence->handle . ')'; } ?>
                     <?php if($url) echo '</a>'; ?>
                 </h2>
             </div>
