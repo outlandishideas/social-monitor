@@ -3,6 +3,15 @@
 #  controller: user
 #  action: edit-self
 #  icon: icon-user icon-large
+logout:
+  label: Signout
+  controller: user
+  action: logout
+user:
+  label: User
+  controller: user
+  action: edit-self
+  icon: icon-user icon-large
 users:
   label: Users
   controller: user
