@@ -200,7 +200,7 @@ a:hover, span.link:hover {
 
 #main-header {
 	background: #edf5f8;
-	padding: 20px 42px;
+	padding: 58px 42px;
 	padding-top: 76px;
 }
 
@@ -1388,8 +1388,9 @@ ul.tabs {
     margin: 0;
     padding: 0;
     list-style: none;
-    border-bottom: 1px solid #ccc;
-    height: 44px;
+    height: 38px;
+    position: absolute;
+    top: -38px;
 }
 
 ul.tabs li {
@@ -1397,15 +1398,16 @@ ul.tabs li {
     float: left;
     margin-left: 20px;
     border: 1px solid #c3e9fe;
-    padding: 5px;
-    border-bottom-color: #fff;
     border-bottom-style: none;
+    padding: 2px 5px;
     height: 33px;
     cursor: pointer;
     background-color: #c3e9fe;
     text-align: center;
     line-height: 33px;
     font-size: 18px;
+    color: #4e869f;
+    font-weight: bold;
 }
 
 ul.tabs li:first-child {
@@ -1413,9 +1415,9 @@ ul.tabs li:first-child {
 }
 
 ul.tabs li.active {
-    border-bottom-style: solid;
     cursor: default;
     background-color: #fff;
+    color: #444;
 }
 
 /* domains */

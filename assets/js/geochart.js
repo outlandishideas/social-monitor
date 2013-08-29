@@ -184,7 +184,7 @@ app.geochart = {
 		if (selection.length > 0) {
 			var id = app.geochart.data.getValue(selection[0].row, 3);
 			app.geochart.loadCountryStats(id, 'country');
-		}
+        }
 	},
 	/**
 	 * Fetches the country summary over ajax, and appends it to the map.
