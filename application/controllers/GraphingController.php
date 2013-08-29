@@ -86,9 +86,32 @@ abstract class GraphingController extends BaseController {
 			'range' => array(0, $responseTimeBest, $responseTimeGood, $responseTimeBad),
 			'colors' => array($colors->green, $colors->yellow, $colors->orange, $colors->red)
 		);
+		$this->assignRgbColors($metrics);
 
-		// convert each hex string to rgb values
-		foreach ($metrics as $args) {
+        $geochart = array();
+        $badges = Model_Badge::$ALL_BADGE_TYPES;
+        foreach($badges as $type){
+            $geochart[$type] = (object)array(
+                'range' => array(0, 20, 50, 80, 100),
+                'colors' => array($colors->red, $colors->red, $colors->yellow, $colors->green, $colors->green)
+            );
+        }
+		foreach (Model_Badge::$ALL_BADGE_TYPES as $type) {
+            $geochart[$type]->label = Model_Badge::badgeTitle($type);
+        }
+		$this->assignRgbColors($geochart);
+
+        $this->view->geochartMetrics = $geochart;
+        $this->view->trafficMetrics = $metrics+$geochart;
+
+	}
+
+	/**
+	 * converts each hex string to rgb values
+	 * @param $items
+	 */
+	function assignRgbColors($items) {
+		foreach ($items as $args) {
 			$args->colorsRgb = array();
 			foreach ($args->colors as $color) {
 				$rgb = array();
@@ -98,32 +121,6 @@ abstract class GraphingController extends BaseController {
 				$args->colorsRgb[] = $rgb;
 			}
 		}
-
-        $geochart = array();
-        $badges = Model_Badge::$ALL_BADGE_TYPES;
-        foreach($badges as $type){
-            $geochart[$type] = (object)array(
-                'range' => array(0, 33, 66, 100),
-                'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
-            );
-        }
-		foreach (Model_Badge::$ALL_BADGE_TYPES as $type) {
-            $geochart[$type]->label = Model_Badge::badgeTitle($type);
-        }
-        foreach ($geochart as $args) {
-            $args->colorsRgb = array();
-            foreach ($args->colors as $color) {
-                $rgb = array();
-                for ($i=1; $i<6; $i+=2) {
-                    $rgb[] = hexdec(substr($color, $i, 2));
-                }
-                $args->colorsRgb[] = $rgb;
-            }
-        }
-        $this->view->geochartMetrics = $geochart;
-        $this->view->trafficMetrics = $metrics+$geochart;
-
 	}
-
 
 }
