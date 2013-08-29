@@ -1,6 +1,6 @@
 body {
 	font: 14px "Prox", Arial, sans-serif;
-	margin: 0 30px;
+	margin: 0;
 	background: #8F8F8F;
 }
 
@@ -121,12 +121,12 @@ fieldset input, fieldset select, fieldset textarea {
 .site-title {
     font-size: 20px;
     font-weight: bold;
-    line-height: 36px;
+    line-height: 56px;
     background: url('../img/British-Council-stacked-negative.png') center center no-repeat;
     background-size: contain;
     color: #065284;
     width: 100px;
-    height: 36px;
+    height: 56px;
     margin-left: 10px;
 }
 
@@ -180,13 +180,17 @@ a:hover, span.link:hover {
 	color: #105b86;
 }
 
+#wrapper {
+    min-width: 940px;
+}
+
 #wrapper,
 #content {
 	background: #FFFFFF;
 }
 
 #content {
-	padding: 20px;
+	padding: 20px 42px;
 	position: relative;
 }
 
@@ -195,10 +199,9 @@ a:hover, span.link:hover {
 }
 
 #main-header {
-	background: #F2F2F2;
-	border-bottom: 1px solid #CCCCCC;
-	padding: 20px;
-	padding-top: 56px;
+	background: #edf5f8;
+	padding: 20px 42px;
+	padding-top: 76px;
 }
 
 #main-header h2 {
@@ -386,10 +389,11 @@ span.icon-remove-sign {
 }
 
 #nav {
-	margin: 0 30px;
-	padding: 0;
+	padding: 0 42px;
 	background: #065284;
-	height: 36px;
+    background: -webkit-gradient(0deg, #065284, #097fcd);
+    background: linear-gradient(0deg, #065284, #097fcd);
+	height: 56px;
 	display: block;
 	position: relative;
 }
@@ -422,30 +426,24 @@ span.icon-remove-sign {
 
 #nav li {
 	float: left;
-    border-width: 1px;
-    border-color: #fff;
-    border-color: rgba(255,255,255,0.5);
-    border-left-style: solid;
     height: inherit;
     text-align: center;
-}
-
-#nav .main li:last-child {
-    border-right-style: solid;
+    line-height: 56px;
 }
 
 #nav li a {
     display: block;
-    padding: 0 10px;
+    padding: 0 20px;
     color: #efefef;
     text-decoration: none;
-    line-height: 36px;
     min-width: 16px;
+    text-shadow: -2px -2px #666;
+    text-shadow: -2px -2px rgba(0,0,0,0.2);
 }
 
 #nav li.enabled a:hover,
 #nav li.active a {
-    background-color: #097fcd;
+    background-color: #065284;
 }
 #nav li.disabled a {
     color: #999;
@@ -1398,16 +1396,20 @@ ul.tabs li {
     width: 140px;
     float: left;
     margin-left: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #c3e9fe;
     padding: 5px;
     border-bottom-color: #fff;
     border-bottom-style: none;
     height: 33px;
     cursor: pointer;
-    background-color: #F2F2F2;
+    background-color: #c3e9fe;
     text-align: center;
     line-height: 33px;
     font-size: 18px;
+}
+
+ul.tabs li:first-child {
+    margin-left: 0;
 }
 
 ul.tabs li.active {
