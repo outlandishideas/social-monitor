@@ -4,18 +4,18 @@
     <?php $first = false; endforeach; ?>
 </ul>
 
-<div id="map">
+<div id="map-sidebar" class="">
     <div class="map-date">
-
-        <h3>Date Range</h3>
         <input type="text" size="25" id="date-slider" disabled value="<?php echo $this->dateRangeString; ?>"
                data-current-date="<?php echo $this->currentDate; ?>" data-day-range="<?php echo $this->dayRange; ?>">
         <div id="slider" data-val="30"></div>
+        <div class="loading"></div>
     </div>
+</div>
+<div id="map">
 	<div id="geo-map"></div>
     <div id="group-map"></div>
     <div id="region-map"></div>
-	<div class="loading"></div>
 </div>
 
 
