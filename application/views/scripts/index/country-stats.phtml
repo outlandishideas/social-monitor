@@ -1,3 +1,4 @@
+<div id="country-stats" data-id="<?php echo $this->campaign->id; ?>" data-model="<?php echo $this->model; ?>">
 	<div class="close"><a href="#"><span class="icon-remove-circle icon-large"></span></a></div>
 	<h3>
 		<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'controller'=>$this->model, 'id'=>$this->campaign->id)); if ($url) : ?>
@@ -41,3 +42,4 @@
 	<?php else : ?>
 		None assigned
 	<?php endif; ?>
+</div>

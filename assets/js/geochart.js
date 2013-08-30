@@ -69,11 +69,11 @@ app.geochart = {
 				app.geochart.refreshMap();
 				app.geochart.refreshGroups();
                 app.geochart.refreshRegions();
-				var $country = $mapDiv.find('.country');
+				var $country = $('#map-sidebar').find('#country-stats');
 				if ($country.length > 0) {
 					var id = $country.data('id');
-					$country.remove();
-					app.geochart.loadCountryStats(id);
+                    var model = $country.data('model');
+					app.geochart.loadCountryStats(id, model);
 				}
 			}
 		})
@@ -197,6 +197,7 @@ app.geochart = {
 		$.get('index/country-stats/', {id: id, model: model, metric: app.geochart.currentMetric()})
 			.done(function(data) {
 				var $country = $(data);
+                console.log($country);
 				$country.data('id', id);
                 $mapSidebar.find('.country').empty().append($country).show();
 			})

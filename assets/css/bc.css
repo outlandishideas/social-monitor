@@ -933,7 +933,7 @@ form.management #assigned {
     border: 2px solid #afd1e4;
     background-color: #fff;
     position: relative;
-    z-index: 999;
+    z-index: 990;
 }
 
 #map-sidebar .loading {
