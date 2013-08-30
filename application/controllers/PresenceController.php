@@ -24,6 +24,7 @@ class PresenceController extends GraphingController
 	{
 		/** @var Model_Presence $presence */
 		$presence = Model_Presence::fetchById($this->_request->id);
+        $presence->getTargetAudience();
 		$this->validateData($presence);
 
 		$this->view->title = $presence->getLabel();

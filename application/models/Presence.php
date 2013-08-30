@@ -70,18 +70,22 @@ class Model_Presence extends Model_Base {
 	/**
 	 * @return Model_Country
 	 */
-	public function getCountry() {
-		$country = null;
+	public function getOwner() {
+        $owner = null;
 		$stmt = $this->_db->prepare('SELECT campaign_id FROM campaign_presences WHERE presence_id = :pid');
 		$stmt->execute(array(':pid'=>$this->id));
 		$campaignIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $campaigns = array('Model_Country', 'Model_Group', 'Model_Region');
 		if ($campaignIds) {
-			$countries = Model_Country::fetchAll('id IN (' . implode(',', $campaignIds) . ')');
-			if ($countries) {
-				$country = $countries[0];
-			}
+            foreach($campaigns as $campaign){
+                $owners = $campaign::fetchAll('id IN (' . implode(',', $campaignIds) . ')');
+                if ($owners) {
+                    $owner = $owners[0];
+                    break;
+                }
+            }
 		}
-		return $country;
+		return $owner;
 	}
 
 	/**
@@ -955,9 +959,9 @@ class Model_Presence extends Model_Base {
 
 	public function getTargetAudience() {
 		$target = 0;
-		$country = $this->getCountry();
-		if ($country) {
-			$target = $country->getTargetAudience();
+		$owner = $this->getOwner();
+		if ($owner) {
+			$target = $owner->getTargetAudience();
 			$target *= BaseController::getOption($this->isForFacebook() ? 'fb_min' : 'tw_min');
 			$target /= 100;
 			$target = round($target);
