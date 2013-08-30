@@ -37,17 +37,20 @@ class Util_Facebook {
 	 * Fetches facebook posts from the given page
 	 * @param $pageId
 	 * @param null $since
+	 * @param null $max
 	 * @param array $fields
 	 * @return array
 	 */
-	public static function pagePosts($pageId, $since = null, $fields = array('post_id', 'message', 'created_time', 'actor_id', 'comments', 'likes', 'permalink', 'type')) {
+	public static function pagePosts($pageId, $since = null, $max = null, $fields = array('post_id', 'message', 'created_time', 'actor_id', 'comments', 'likes', 'permalink', 'type', 'share_count')) {
 		$posts = array();
 		if ($pageId) {
 			if (!in_array('post_id', $fields)) {
 				$fields[] = 'post_id';
 			}
 			$config = Zend_Registry::get('config');
-			$max = time();
+			if (!$max) {
+				$max = time();
+			}
 			do {
 				$clauses = array('source_id = ' . $pageId);
 				if ($since) {

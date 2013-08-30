@@ -13,9 +13,11 @@ class ConfigController extends BaseController {
 
             'fb_min'=>array('label'=>'Facebook Minimum Audience (% of total)'),
 			'fb_opt'=>array('label'=>'Facebook Optimum Audience (% of total)'),
+			'fb_share'=>array('label'=>'Average shares per post target (% of total audience)'),
 
             'tw_min'=>array('label'=>'Twitter Minimum Audience (% of total)'),
 			'tw_opt'=>array('label'=>'Twitter Optimum Audience (% of total)'),
+			'tw_retweet'=>array('label'=>'Average retweets target (% of total audience)'),
 
             'updates_per_day'=>array('label'=>'Updates Per Day'),
 			'updates_per_day_ok_range'=>array('label'=>'Updates Per Day OK range', 'hint'=>'Number above or below [updates per day] that is considered OK'),

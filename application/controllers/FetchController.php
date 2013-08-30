@@ -37,7 +37,7 @@ class FetchController extends BaseController
 						':type'     => 'popularity',
 						':value'    => $p->popularity
 					));
-                    if($p->type == Model_Presence::TYPE_TWITTER){
+                    if($p->isForTwitter()){
                         $infoStmt->execute(array(
                             ':id'       => $p->id,
                             ':datetime' => gmdate('Y-m-d H:i:s'),
@@ -69,6 +69,7 @@ class FetchController extends BaseController
 			$this->log('Fetching ' . ($p->isForTwitter() ? 'tweets' : 'posts') . ' (' . $index . '/' . $presenceCount . '): ' . $p->handle);
 			try {
 				$this->log($p->updateStatuses());
+				$p->refetchStatusInfo();
 				$p->last_fetched = gmdate('Y-m-d H:i:s');
 				$p->save();
 			} catch (Exception $e) {

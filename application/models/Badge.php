@@ -19,21 +19,22 @@ class Model_Badge {
 	);
 
     public static $METRIC_QUALITY = array(
-        Model_Presence::METRIC_POSTS_PER_DAY,
-        Model_Presence::METRIC_LINKS_PER_DAY,
-        Model_Presence::METRIC_LIKES_PER_POST,
-        Model_Presence::METRIC_SIGN_OFF,
-        Model_Presence::METRIC_BRANDING
+        Model_Presence::METRIC_POSTS_PER_DAY => 1,
+        Model_Presence::METRIC_LINKS_PER_DAY => 1,
+        Model_Presence::METRIC_LIKES_PER_POST => 1,
+        Model_Presence::METRIC_SIGN_OFF => 1,
+        Model_Presence::METRIC_BRANDING => 1
     );
 
     public static $METRIC_ENGAGEMENT = array(
-        Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS,
-        Model_Presence::METRIC_RESPONSE_TIME
+        Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS => 1,
+        Model_Presence::METRIC_RESPONSE_TIME => 1
     );
 
     public static $METRIC_REACH = array(
-        Model_Presence::METRIC_POPULARITY_PERCENT,
-        Model_Presence::METRIC_POPULARITY_TIME
+        Model_Presence::METRIC_POPULARITY_PERCENT => 1,
+        Model_Presence::METRIC_POPULARITY_TIME => 2,
+	    Model_Presence::METRIC_SHARING => 1
     );
 
 	public static function badgeTitle($type) {

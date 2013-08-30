@@ -24,9 +24,10 @@ class Util_Twitter {
 	 * Gets an array of tweets for the given user
 	 * @param $userId
 	 * @param null $minTweetId
+	 * @param null $maxTweetId
 	 * @return array
 	 */
-	public static function userTweets($userId, $minTweetId = null) {
+	public static function userTweets($userId, $minTweetId = null, $maxTweetId = null) {
 		$tweets = array();
 		if ($userId) {
 			$token = self::token();
@@ -40,6 +41,9 @@ class Util_Twitter {
 			if ($minTweetId) {
 				// since_id is exclusive
 				$args['since_id'] = $minTweetId;
+			}
+			if ($maxTweetId) {
+				$args['max_id'] = $maxTweetId;
 			}
 
 			do {
@@ -75,38 +79,6 @@ class Util_Twitter {
 //		$minTweetId = ($tweets ? $tweets[0]->tweet_id : null);
 //
 //		return $this->fetchUserTweets($token, $minTweetId);
-//	}
-//
-//	public function refetchTweets($token, $bufferMins = 2) {
-//		$counts = array();
-//		$now = gmdate('Y-m-d H:i:s');
-//		$ages = array(
-//			'1 hour ago' => '1 HOUR',
-//			'1 day ago' => '1 DAY',
-//			'1 week ago' => '1 WEEK'
-//		);
-//		foreach ($ages as $label=>$age) {
-//			$statement = $this->_db->prepare("SELECT * FROM twitter_tweets
-//				WHERE parent_type = :type AND parent_id = :id
-//				AND created_time BETWEEN
-//					:min - INTERVAL $age - INTERVAL $bufferMins MINUTE AND
-//					:max - INTERVAL $age + INTERVAL $bufferMins MINUTE
-//				ORDER BY created_time ASC");
-//			$statement->execute(array(':type'=>$this->type, ':id'=>$this->id, ':min'=>$this->last_fetched, ':max'=>$now));
-//
-//			$tweets = $statement->fetchAll(PDO::FETCH_OBJ);
-//
-//			if ($tweets) {
-//				$minTweetId = $tweets[0]->tweet_id;
-//				$maxTweetId = $tweets[count($tweets)-1]->tweet_id;
-//				$ageCounts = $this->fetchUserTweets($token, $minTweetId, $maxTweetId);
-//				$counts[$label] = $ageCounts->fetched;
-//			} else {
-//				$counts[$label] = 0;
-//			}
-//		}
-//
-//		return $counts;
 //	}
 
 	/**

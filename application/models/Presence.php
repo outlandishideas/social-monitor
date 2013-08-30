@@ -16,6 +16,7 @@ class Model_Presence extends Model_Base {
 	const METRIC_LIKES_PER_POST = 'likes_per_post';
     const METRIC_SIGN_OFF = 'sign_off';
     const METRIC_BRANDING = 'branding';
+    const METRIC_SHARING = 'sharing';
 
 	public static $ALL_METRICS = array(
 		self::METRIC_POPULARITY_PERCENT,
@@ -65,6 +66,10 @@ class Model_Presence extends Model_Base {
 
 	public function isForFacebook() {
 		return $this->type == self::TYPE_FACEBOOK;
+	}
+
+	public function statusTable() {
+		return $this->isForFacebook() ? 'facebook_stream' : 'twitter_tweets';
 	}
 
 	/**
@@ -208,6 +213,68 @@ class Model_Presence extends Model_Base {
 	}
 
 	/**
+	 * Re-fetches the statuses from the time window between the last fetch and now (minus $age) and
+	 * updates their changeable information (retweets/shares/likes/comments)
+	 * @param string $age
+	 * @throws Exception
+	 */
+	public function refetchStatusInfo($age = '2 days') {
+		if (!$this->uid) {
+			throw new Exception('Presence not initialised/found');
+		}
+
+		$buffer = '2 minutes';
+		$max = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' - ' . $age . ' - ' . $buffer));
+		$min = date('Y-m-d H:i:s', strtotime($this->last_fetched . ' - ' . $age . ' - ' . $buffer));
+		$tableName = $this->statusTable();
+		if ($this->isForTwitter()) {
+			$statement = $this->_db->prepare("SELECT tweet_id FROM $tableName
+				WHERE presence_id = :id
+				AND created_time BETWEEN :min AND :max
+				ORDER BY created_time ASC");
+			$statement->execute(array(':id'=>$this->id, ':min'=>$min, ':max'=>$max));
+
+			$tweetIds = $statement->fetchAll(PDO::FETCH_COLUMN);
+			if ($tweetIds) {
+				$updateStatement = $this->_db->prepare("UPDATE $tableName SET retweet_count = :retweets WHERE tweet_id = :tweet_id");
+				$minTweetId = $tweetIds[0];
+				// min_id is exclusive, so need to subtract one
+				$minTweetId = function_exists('bcsub') ? bcsub($minTweetId, 1) : $minTweetId - 1;
+				$maxTweetId = $tweetIds[count($tweetIds)-1];
+				$tweets = Util_Twitter::userTweets($this->uid, $minTweetId, $maxTweetId);
+				foreach ($tweets as $tweet) {
+					if ($tweet->retweet_count > 0) {
+						$updateStatement->execute(array(':retweets'=>$tweet->retweet_count, ':tweet_id'=>$tweet->id_str));
+					}
+				}
+			}
+		} else {
+			$statement = $this->_db->prepare("SELECT created_time FROM $tableName
+				WHERE presence_id = :id
+				AND posted_by_owner = 1
+				AND created_time BETWEEN :min AND :max
+				ORDER BY created_time ASC");
+			$statement->execute(array(':id'=>$this->id, ':min'=>$min, ':max'=>$max));
+
+			$postTimes = $statement->fetchAll(PDO::FETCH_COLUMN);
+			if ($postTimes) {
+				$updateStatement = $this->_db->prepare("UPDATE $tableName SET comments = :comments, likes = :likes, share_count = :share_count WHERE post_id = :post_id");
+				$minPostTime = strtotime($postTimes[0] . ' - 1 second');
+				$maxPostTime = strtotime($postTimes[count($postTimes)-1] . ' + 1 second');
+				$posts = Util_Facebook::pagePosts($this->uid, $minPostTime, $maxPostTime);
+				foreach ($posts as $post) {
+					$comments = isset($post->comments['count']) ? intval($post->comments['count']) : 0;
+					$likes = isset($post->likes['count']) ? intval($post->likes['count']) : 0;
+					$shareCount = $post->share_count;
+					if ($comments > 0 || $likes > 0 || $shareCount > 0) {
+						$updateStatement->execute(array(':comments'=>$comments, ':likes'=>$likes, ':share_count'=>$shareCount, ':post_id'=>$post->post_id));
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Fetches the posts/tweets for the presence, and inserts them into the database
 	 * @return Util_FetchCount
 	 * @throws Exception
@@ -220,135 +287,131 @@ class Model_Presence extends Model_Base {
 		$statuses = array();
 		$responses = array();
 		$links = array();
-		$tableName = null;
+		$tableName = $this->statusTable();
 		$fetchCount = new Util_FetchCount(0, 0);
-		switch($this->type) {
-			case self::TYPE_FACEBOOK:
-				$fetchCount->type = 'post';
-				$tableName = 'facebook_stream';
-				$stmt = $this->_db->prepare("SELECT created_time FROM $tableName WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
-				$stmt->execute(array(':id'=>$this->id));
-				$since = $stmt->fetchColumn();
-				if ($since) {
-					$since = strtotime($since);
-				}
-				$posts = Util_Facebook::pagePosts($this->uid, $since);
-				while ($posts) {
-					$post = array_shift($posts);
-					$postedByOwner = $post->actor_id == $this->uid;
-					if ($postedByOwner) {
-						$newLinks = $this->extractLinks($post->message);
-						foreach ($newLinks as $link) {
-							$link['external_id'] = $post->post_id;
-							$link['type'] = $this->type;
-							$links[] = $link;
-						}
+		if ($this->isForFacebook()) {
+			$fetchCount->type = 'post';
+			$stmt = $this->_db->prepare("SELECT created_time FROM $tableName WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
+			$stmt->execute(array(':id'=>$this->id));
+			$since = $stmt->fetchColumn();
+			if ($since) {
+				$since = strtotime($since);
+			}
+			$posts = Util_Facebook::pagePosts($this->uid, $since);
+			while ($posts) {
+				$post = array_shift($posts);
+				$postedByOwner = $post->actor_id == $this->uid;
+				if ($postedByOwner) {
+					$newLinks = $this->extractLinks($post->message);
+					foreach ($newLinks as $link) {
+						$link['external_id'] = $post->post_id;
+						$link['type'] = $this->type;
+						$links[] = $link;
 					}
-					$statuses[$post->post_id] = array(
-						'post_id' => $post->post_id,
-						'presence_id' => $this->id,
-						'message' => $post->message,
-						'created_time' => gmdate('Y-m-d H:i:s', $post->created_time),
-						'actor_id' => $post->actor_id,
-						'permalink' => $post->permalink,
-						'type' => $post->type,
-						'posted_by_owner' => $postedByOwner,
-						'needs_response' => !$postedByOwner && $post->message
-					);
 				}
+				$statuses[$post->post_id] = array(
+					'post_id' => $post->post_id,
+					'presence_id' => $this->id,
+					'message' => $post->message,
+					'created_time' => gmdate('Y-m-d H:i:s', $post->created_time),
+					'actor_id' => $post->actor_id,
+					'permalink' => $post->permalink,
+					'comments' => isset($post->comments['count']) ? intval($post->comments['count']) : 0,
+					'likes' => isset($post->likes['count']) ? intval($post->likes['count']) : 0,
+					'share_count' => $post->share_count,
+					'type' => $post->type,
+					'posted_by_owner' => $postedByOwner,
+					'needs_response' => !$postedByOwner && $post->message
+				);
+			}
 
-				// update the responses for any non-page posts that don't have a response yet.
-				// Only get those that explicitly need one, or were posted in the last 3 days
-				$necessarySince = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days'));
-				$unnecessarySince = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -3 days'));
-				$stmt = $this->_db->prepare("SELECT DISTINCT a.post_id
-					FROM (
-						SELECT * FROM $tableName
-						WHERE presence_id = :id
-						AND in_response_to IS NULL
-						AND (
-							(needs_response = 1 AND created_time > :necessary_since) OR
-							(posted_by_owner = 0 AND message <> '' AND message IS NOT NULL AND created_time > :unnecessary_since)
-						)
-					) as a
-					LEFT OUTER JOIN $tableName AS b
-						ON b.presence_id = a.presence_id
-						AND b.in_response_to = a.post_id
-					WHERE b.id IS NULL");
-				$stmt->execute(array(':id'=>$this->id, ':necessary_since'=>$necessarySince, ':unnecessary_since'=>$unnecessarySince));
-				$postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
-				$newResponses = Util_Facebook::responses($this->uid, $postIds);
-				foreach ($newResponses as $response) {
-					$responses[$response->id] = array(
-						'post_id' => $response->id,
-						'presence_id' => $this->id,
-						'message' => $response->text,
-						'created_time' => gmdate('Y-m-d H:i:s', $response->time),
-						'actor_id' => $response->fromid,
-						'posted_by_owner' => true,
-						'in_response_to' => $response->post_id
-					);
+			// update the responses for any non-page posts that don't have a response yet.
+			// Only get those that explicitly need one, or were posted in the last 3 days
+			$necessarySince = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days'));
+			$unnecessarySince = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -3 days'));
+			$stmt = $this->_db->prepare("SELECT DISTINCT a.post_id
+				FROM (
+					SELECT * FROM $tableName
+					WHERE presence_id = :id
+					AND in_response_to IS NULL
+					AND (
+						(needs_response = 1 AND created_time > :necessary_since) OR
+						(posted_by_owner = 0 AND message <> '' AND message IS NOT NULL AND created_time > :unnecessary_since)
+					)
+				) as a
+				LEFT OUTER JOIN $tableName AS b
+					ON b.presence_id = a.presence_id
+					AND b.in_response_to = a.post_id
+				WHERE b.id IS NULL");
+			$stmt->execute(array(':id'=>$this->id, ':necessary_since'=>$necessarySince, ':unnecessary_since'=>$unnecessarySince));
+			$postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+			$newResponses = Util_Facebook::responses($this->uid, $postIds);
+			foreach ($newResponses as $response) {
+				$responses[$response->id] = array(
+					'post_id' => $response->id,
+					'presence_id' => $this->id,
+					'message' => $response->text,
+					'created_time' => gmdate('Y-m-d H:i:s', $response->time),
+					'actor_id' => $response->fromid,
+					'posted_by_owner' => true,
+					'in_response_to' => $response->post_id
+				);
+			}
+		} else {
+			$fetchCount->type = 'tweet';
+			$stmt = $this->_db->prepare("SELECT tweet_id FROM $tableName WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
+			$stmt->execute(array(':id'=>$this->id));
+			$lastTweetId = $stmt->fetchColumn();
+			$tweets = Util_Twitter::userTweets($this->uid, $lastTweetId);
+			while ($tweets) {
+				$tweet = array_shift($tweets);
+				foreach ($tweet->entities->urls as $urlInfo) {
+					try {
+						$url = Util_Http::resolveUrl($urlInfo->expanded_url);
+						$domain = $this->extractDomain($url);
+						$links[] = array(
+							'url'=>$url,
+							'domain'=>$domain,
+							'external_id'=>$tweet->id_str,
+							'type'=>$this->type
+						);
+					} catch (Exception $ex) { }
 				}
-				break;
-			case self::TYPE_TWITTER:
-				$fetchCount->type = 'tweet';
-				$tableName = 'twitter_tweets';
-				$stmt = $this->_db->prepare("SELECT tweet_id FROM $tableName WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
-				$stmt->execute(array(':id'=>$this->id));
-				$lastTweetId = $stmt->fetchColumn();
-				$tweets = Util_Twitter::userTweets($this->uid, $lastTweetId);
-				while ($tweets) {
-					$tweet = array_shift($tweets);
-					foreach ($tweet->entities->urls as $urlInfo) {
-						try {
-							$url = Util_Http::resolveUrl($urlInfo->expanded_url);
-							$domain = $this->extractDomain($url);
-							$links[] = array(
-								'url'=>$url,
-								'domain'=>$domain,
-								'external_id'=>$tweet->id_str,
-								'type'=>$this->type
-							);
-						} catch (Exception $ex) { }
-					}
-					$parsedTweet = Util_Twitter::parseTweet($tweet);
-					$statuses[$tweet->id_str] = array(
-						'tweet_id' => $tweet->id_str,
-						'presence_id' => $this->id,
-						'text_expanded' => $parsedTweet['text_expanded'],
-						'created_time' => gmdate('Y-m-d H:i:s', strtotime($tweet->created_at)),
-						'retweet_count' => $tweet->retweet_count,
-						'html_tweet' => $parsedTweet['html_tweet'],
-						'in_reply_to_user_uid' => $tweet->in_reply_to_user_id_str,
-						'in_reply_to_status_uid' => $tweet->in_reply_to_status_id_str
-					);
-				}
-				break;
+				$parsedTweet = Util_Twitter::parseTweet($tweet);
+				$statuses[$tweet->id_str] = array(
+					'tweet_id' => $tweet->id_str,
+					'presence_id' => $this->id,
+					'text_expanded' => $parsedTweet['text_expanded'],
+					'created_time' => gmdate('Y-m-d H:i:s', strtotime($tweet->created_at)),
+					'retweet_count' => $tweet->retweet_count,
+					'html_tweet' => $parsedTweet['html_tweet'],
+					'in_reply_to_user_uid' => $tweet->in_reply_to_user_id_str,
+					'in_reply_to_status_uid' => $tweet->in_reply_to_status_id_str
+				);
+			}
 		}
 
-		if ($tableName) {
-			if ($statuses) {
-				$fetchCount->fetched += count($statuses);
-				$fetchCount->added += $this->insertData($tableName, $statuses);
-			}
-			if ($responses) {
-				$this->insertData($tableName, $responses);
-			}
-			if ($links) {
-				$postIds = array_map(function($a) { return "'" . $a['external_id'] . "'"; }, $links);
-				$postIds = implode(',', $postIds);
-				$columnName = $this->isForFacebook() ? 'post_id' : 'tweet_id';
-				$stmt = $this->_db->prepare("SELECT $columnName, id FROM $tableName WHERE presence_id = :id AND $columnName IN ($postIds)");
-				$stmt->execute(array(':id'=>$this->id));
-				$lookup = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-				foreach ($links as $i=>$link) {
-					if (array_key_exists($link['external_id'], $lookup)) {
-						$links[$i]['status_id'] = $lookup[$link['external_id']];
-						unset($links[$i]['external_id']);
-					}
+		if ($statuses) {
+			$fetchCount->fetched += count($statuses);
+			$fetchCount->added += $this->insertData($tableName, $statuses);
+		}
+		if ($responses) {
+			$this->insertData($tableName, $responses);
+		}
+		if ($links) {
+			$postIds = array_map(function($a) { return "'" . $a['external_id'] . "'"; }, $links);
+			$postIds = implode(',', $postIds);
+			$columnName = $this->isForFacebook() ? 'post_id' : 'tweet_id';
+			$stmt = $this->_db->prepare("SELECT $columnName, id FROM $tableName WHERE presence_id = :id AND $columnName IN ($postIds)");
+			$stmt->execute(array(':id'=>$this->id));
+			$lookup = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+			foreach ($links as $i=>$link) {
+				if (array_key_exists($link['external_id'], $lookup)) {
+					$links[$i]['status_id'] = $lookup[$link['external_id']];
+					unset($links[$i]['external_id']);
 				}
-				$this->insertData('status_links', $links);
 			}
+			$this->insertData('status_links', $links);
 		}
 
 		return $fetchCount;
@@ -440,7 +503,7 @@ class Model_Presence extends Model_Base {
 				);
 		}
 		$metricsArray = array();
-		foreach ($metrics as $m) {
+		foreach ($metrics as $m=>$weight) {
 			$metricsArray[$m] = $this->calculateMetric(null, $m, 'month');
 		}
 		return $metricsArray;
@@ -450,10 +513,10 @@ class Model_Presence extends Model_Base {
 
 		$score = 0;
 		$count = 0;
-		foreach ($metrics as $m) {
+		foreach ($metrics as $m=>$weight) {
 			$metricData = $this->calculateMetric($date, $m, $dateRange);
-			$score += $metricData->score;
-			$count++;
+			$score += $weight*$metricData->score;
+			$count += $weight;
 		}
 
 		return $score / $count;
@@ -541,6 +604,17 @@ class Model_Presence extends Model_Base {
 				$actual = $this->getRatioRepliesToOthersPosts($startDate, $endDate);
 				break;
 
+			case Model_Presence::METRIC_SHARING:
+				$title = 'Shares/Retweets';
+				if ($this->isForFacebook()) {
+					$target = BaseController::getOption('fb_share');
+				} else {
+					$target = BaseController::getOption('tw_retweet');
+				}
+				$target = $target * $this->getTargetAudience() / 100;
+				$actual = $this->getAverageSharesPerStatus($startDate, $endDate);
+				break;
+
 			default:
 				$title = 'Default';
 				$target = 0;
@@ -584,10 +658,8 @@ class Model_Presence extends Model_Base {
 			':end_date'=>$endDate
 		);
 
-		if ($this->isForTwitter()) {
-			$tableName = 'twitter_tweets';
-		} else {
-			$tableName = 'facebook_stream';
+		$tableName = $this->statusTable();
+		if ($this->isForFacebook()) {
 			$clauses[] = 'in_response_to IS NULL';
 		}
 
@@ -730,10 +802,8 @@ class Model_Presence extends Model_Base {
 			'created_time <= :end_date'
 		);
 
-		if ($this->isForTwitter()) {
-			$tableName = 'twitter_tweets';
-		} else {
-			$tableName = 'facebook_stream';
+		$tableName = $this->statusTable();
+		if ($this->isForFacebook()) {
 			$clauses[] = 'posted_by_owner = 1';
 			$clauses[] = 'in_response_to IS NULL';
 		}
@@ -762,13 +832,11 @@ class Model_Presence extends Model_Base {
 
 		if ($this->isForTwitter()) {
 			return null;
-		} else {
-			$tableName = 'facebook_stream';
 		}
 
 		$sql = '
 		SELECT COUNT(1)/SUM(likes) AS av
-		FROM ' . $tableName . '
+		FROM ' . $this->statusTable() . '
 		WHERE ' . implode(' AND ', $clauses);
 		$stmt = $this->_db->prepare($sql);
 		$stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
@@ -787,10 +855,9 @@ class Model_Presence extends Model_Base {
 
 		if ($this->isForTwitter()) {
 			return 0;
-		} else {
-			$tableName = 'facebook_stream';
 		}
 
+		$tableName = $this->statusTable();
 		$sql = '
 		SELECT t1.replies/t2.posts as replies_to_others_posts FROM
 		(
@@ -816,10 +883,9 @@ class Model_Presence extends Model_Base {
 			'created_time >= :start_date',
 			'created_time <= :end_date'
 		);
-		if ($this->isForTwitter()) {
-			$tableName = 'twitter_tweets';
-		} else {
-			$tableName = 'facebook_stream';
+
+		$tableName = $this->statusTable();
+		if ($this->isForFacebook()) {
 			$clauses[] = 'posted_by_owner = 1';
 			$clauses[] = 'in_response_to IS NULL';
 		}
@@ -848,6 +914,26 @@ class Model_Presence extends Model_Base {
 		}
 	}
 
+	public function getAverageSharesPerStatus($startDate, $endDate) {
+		$tableName = $this->statusTable();
+		if ($this->isForFacebook()) {
+			$column = 'share_count';
+		} else {
+			$column = 'retweet_count';
+		}
+		$clauses = array(
+			'presence_id = :pid',
+			'created_time >= :start_date',
+			'created_time <= :end_date',
+			$column . ' > 0'
+		);
+		$sql = "SELECT AVG($column) FROM $tableName WHERE " . implode(' AND ', $clauses);
+		$stmt = $this->_db->prepare($sql);
+		$stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
+		$average = floatval($stmt->fetchColumn());
+		return $average;
+	}
+
 	public function getLinkData($startDate, $endDate) {
 		$clauses = array(
 			'p.presence_id = :pid',
@@ -860,10 +946,8 @@ class Model_Presence extends Model_Base {
 			':end_date'=>$endDate
 		);
 
-		if ($this->isForTwitter()) {
-			$tableName = 'twitter_tweets';
-		} else {
-			$tableName = 'facebook_stream';
+		$tableName = $this->statusTable();
+		if ($this->isForFacebook()) {
 			$clauses[] = 'posted_by_owner = 1';
 			$clauses[] = 'in_response_to IS NULL';
 		}
@@ -883,10 +967,9 @@ class Model_Presence extends Model_Base {
 			'created_time >= :start_date',
 			'created_time <= :end_date'
 		);
-		if ($this->isForTwitter()) {
-			$tableName = 'twitter_tweets';
-		} else {
-			$tableName = 'facebook_stream';
+
+		$tableName = $this->statusTable();
+		if ($this->isForFacebook()) {
 			$clauses[] = 'posted_by_owner = 1';
 			$clauses[] = 'in_response_to IS NULL';
 		}
@@ -914,6 +997,7 @@ class Model_Presence extends Model_Base {
 	public function getResponseData($startDate, $endDate) {
 		$responseData = array();
 		if ($this->isForFacebook()) {
+			$tableName = $this->statusTable();
 			$clauses = array(
 				'presence_id = :pid',
 				'created_time >= :start_date',
@@ -922,7 +1006,7 @@ class Model_Presence extends Model_Base {
 				"(in_response_to IS NULL OR in_response_to = '')"
 			);
 			$args = array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate);
-			$stmt = $this->_db->prepare('SELECT * FROM facebook_stream WHERE ' . implode(' AND ', $clauses) . ' ORDER BY created_time DESC');
+			$stmt = $this->_db->prepare("SELECT * FROM $tableName WHERE " . implode(' AND ', $clauses) . ' ORDER BY created_time DESC');
 			$stmt->execute($args);
 			foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $p) {
 				$responseData[$p->post_id] = (object)array(
@@ -934,7 +1018,7 @@ class Model_Presence extends Model_Base {
 			if ($responseData) {
 				// now get the responses
 				$postIds = array_map(function($a) { return "'" . $a . "'"; }, array_keys($responseData));
-				$stmt = $this->_db->prepare('SELECT * FROM facebook_stream WHERE presence_id = :pid AND in_response_to IN (' . implode(',', $postIds) . ')');
+				$stmt = $this->_db->prepare("SELECT * FROM $tableName WHERE presence_id = :pid AND in_response_to IN (" . implode(',', $postIds) . ')');
 				$stmt->execute(array(':pid'=>$this->id));
 				foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
 					$key = $r->in_response_to;
@@ -1018,16 +1102,9 @@ class Model_Presence extends Model_Base {
 	public function delete() {
 		$tables = array(
 			'campaign_presences',
-			'presence_history'
+			'presence_history',
+			$this->statusTable()
 		);
-		switch($this->type) {
-			case self::TYPE_FACEBOOK:
-				$tables[] = 'facebook_stream';
-				break;
-			case self::TYPE_TWITTER:
-				$tables[] = 'twitter_tweets';
-				break;
-		}
 		foreach ($tables as $table) {
 			$this->_db->prepare("DELETE FROM $table WHERE presence_id = :pid")->execute(array(':pid'=>$this->id));
 		}
