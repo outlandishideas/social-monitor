@@ -47,62 +47,12 @@ class Model_Presence extends Model_Base {
 		return self::fetchAll('type = :type', array(':type'=>self::TYPE_FACEBOOK));
 	}
 
-	public function presenceIcon($append =  null){
-		switch($this->type){
-			case self::TYPE_FACEBOOK:
-				return 'icon-facebook'.$append;
-				break;
-			case self::TYPE_TWITTER:
-				return 'icon-twitter'.$append;
-				break;
-			default:
-				return false;
+	public function getPresenceSign($large = true, $classes = array()) {
+		$classes[] = 'icon-' . ($this->isForTwitter() ? 'twitter' : 'facebook') . '-sign';
+		if ($large) {
+			$classes[] = 'icon-large';
 		}
-	}
-
-	public function getPresenceIcon($classes = array()){
-
-		$icon = $this->presenceIcon();
-
-		if(!$icon) return false;
-
-		$classes[] = $icon;
-
-		$classes = implode(' ',$classes);
-
-		return $classes;
-
-	}
-
-	public function getLargePresenceIcon($classes = array()) {
-
-		$defaults = array('icon-large');
-
-		$classes = $defaults + $classes;
-
-		return $this->getPresenceIcon($classes);
-	}
-
-	public function getPresenceSign($classes = array()) {
-
-		$icon = $this->presenceIcon('-sign');
-
-		if(!$icon) return false;
-
-		$classes[] = $icon;
-
-		$classes = implode(' ',$classes);
-
-		return $classes;
-	}
-
-	public function getLargePresenceSign($classes = array()) {
-
-		$defaults = array('icon-large');
-
-		$classes = $defaults + $classes;
-
-		return $this->getPresenceSign($classes);
+		return implode(' ',$classes);
 	}
 
 	public function getLabel() {
