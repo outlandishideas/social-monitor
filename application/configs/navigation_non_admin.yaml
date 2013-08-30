@@ -1,7 +1,3 @@
-logout:
-  label: Signout
-  controller: user
-  action: logout
 user:
   label: User
   controller: user

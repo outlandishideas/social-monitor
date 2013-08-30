@@ -4,13 +4,15 @@
     <?php $first = false; endforeach; ?>
 </ul>
 
+<div class="map-date">
+    <input type="text" size="25" id="date-slider" disabled value="<?php echo $this->dateRangeString; ?>"
+           data-current-date="<?php echo $this->currentDate; ?>" data-day-range="<?php echo $this->dayRange; ?>">
+    <div id="slider" data-val="30"></div>
+    <div class="loading"></div>
+</div>
+
 <div id="map-sidebar" class="">
-    <div class="map-date">
-        <input type="text" size="25" id="date-slider" disabled value="<?php echo $this->dateRangeString; ?>"
-               data-current-date="<?php echo $this->currentDate; ?>" data-day-range="<?php echo $this->dayRange; ?>">
-        <div id="slider" data-val="30"></div>
-        <div class="loading"></div>
-    </div>
+
 </div>
 <div id="map">
 	<div id="geo-map"></div>

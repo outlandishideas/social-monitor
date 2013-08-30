@@ -3,19 +3,23 @@
 #  controller: user
 #  action: edit-self
 #  icon: icon-user icon-large
-logout:
-  label: Signout
-  controller: user
-  action: logout
-user:
-  label: User
-  controller: user
-  action: edit-self
-  icon: icon-user icon-large
 users:
   label: Users
   controller: user
   icon: icon-group icon-large
+  class: parent
+  pages:
+    account:
+      label: Account
+      controller: user
+      action: edit-self
+    edit-all:
+      label: Edit Users
+      controller: user
+    signout:
+      label: Signout
+      controller: user
+      action: logout
 config:
   label: Settings
   controller: config
