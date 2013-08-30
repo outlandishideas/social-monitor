@@ -936,13 +936,15 @@ form.management #assigned {
     z-index: 999;
 }
 
-#map .loading {
+#map-sidebar .loading {
 	position: absolute;
-	top: 170px;
-	right: 152px;
-	width: 16px;
-	height: 16px;
+	top: 0;
+    bottom: 0;
+	right: 0;
+    left: 0;
 	display: none;
+    background-color: #fff;
+    background-color: rgba(255,255,255,0.8);
 }
 
 #map-sidebar .country {

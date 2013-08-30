@@ -5,9 +5,9 @@ app.geochart = {
 	data: null,
 	metrics: {},
 	setup:function ($mapDiv) {
-		$mapDiv.on('click', '.country .close', function(e) {
+		$('#map-sidebar').on('click', '.country .close', function(e) {
 			e.preventDefault();
-			$(this).closest('.country').remove();
+			$(this).parents('.country').empty().hide().siblings('.instructions').show();
 		});
 
 		// copy the provided metrics to app.geochart, and populate values
@@ -194,13 +194,11 @@ app.geochart = {
 		var $mapSidebar = $('#map-sidebar');
 		var $loading = $mapSidebar.find('.loading');
 		$loading.show();
-        $mapSidebar.find('.country').empty();
 		$.get('index/country-stats/', {id: id, model: model, metric: app.geochart.currentMetric()})
 			.done(function(data) {
 				var $country = $(data);
 				$country.data('id', id);
-                $mapSidebar.find('.country').append($country);
-				$country.removeClass('hide');
+                $mapSidebar.find('.country').empty().append($country).show();
 			})
 			.always(function() {
 				$loading.hide();
