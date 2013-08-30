@@ -16,8 +16,24 @@
 </div>
 <div id="map">
 	<div id="geo-map"></div>
-    <div id="group-map"><ul></ul></div>
-    <div id="region-map"><ul></ul></div>
+    <div id="group-map">
+        <h3><?php
+            $url = $this->gatekeeper()->filter('%url%', array('controller' => 'group'));
+            if($url) : ?>
+            <a href="<?php echo $url; ?>"><span class="<?php echo Model_Group::ICON_TYPE; ?>"> SBUs</span></a><?php
+            endif; ?>
+        </h3>
+        <ul></ul>
+    </div>
+    <div id="region-map">
+        <h3><?php
+            $url = $this->gatekeeper()->filter('%url%', array('controller' => 'region'));
+            if($url) : ?>
+            <a href="<?php echo $url; ?>"><span class="<?php echo Model_Region::ICON_TYPE; ?>"> Regions</span></a><?php
+            endif; ?>
+        </h3>
+        <ul></ul>
+    </div>
 </div>
 
 

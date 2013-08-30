@@ -1470,6 +1470,18 @@ ul.link-list {
 
 /* group display on front page */
 
+#group-map, #region-map {
+    margin-top: 20px;
+}
+
+#group-map h3, #region-map h3 {
+    float: left;
+    width: 70px;
+    margin: 0;
+    padding: 10px;
+    font-size: 14px;
+}
+
 #group-map ul, #region-map ul {
     margin: 0;
     padding: 0;
@@ -1480,11 +1492,11 @@ ul.link-list {
 .group-display, .region-display {
     display: inline-block;
     vertical-align: top;
-    margin: 10px;
     text-align: center;
     padding: 10px;
+    margin: 0 5px;
     color: #666;
-    font-size: 18px;
+    font-size: 14px;
     position: relative;
     cursor: pointer;
 }
