@@ -19,13 +19,13 @@ $buttons = $this->gatekeeper()->filterAll(array(
 			<th data-name="handle" data-sort="auto">Handle</th>
             <th data-name="sign-off" data-sort="data-value-numeric">Sign Off</th>
             <th data-name="branding" data-sort="data-value-numeric">Branding Compliance</th>
-            <th data-name="total-rank" data-sort="fuzzy-numeric">Global Rank</th>
-            <th data-name="total-score" data-sort="fuzzy-numeric">Global Score</th>
+            <th data-name="total-rank" data-sort="numeric">Global Rank</th>
+            <th data-name="total-score" data-sort="numeric">Global Score</th>
 			<th data-name="popularity" data-sort="fuzzy-numeric">Audience</th>
-			<th data-name="target" data-sort="fuzzy-numeric">Target audience</th>
-			<?php foreach ($this->tableMetrics as $key=>$label) : ?>
-			<th data-name="<?php echo $key; ?>" data-sort="traffic-light" data-width="150px"><?php echo $label; ?></th>
-			<?php endforeach; ?>
+			<th data-name="target" data-sort="fuzzy-numeric">Target audience</th><?php
+            foreach ($this->tableMetrics as $key=>$label) : ?>
+			    <th data-name="<?php echo $key; ?>" data-sort="traffic-light" data-width="150px"><?php echo $label; ?></th><?php
+            endforeach; ?>
 			<th data-name="options" data-width="150px"></th>
 		</tr>
 	</thead>
@@ -49,8 +49,9 @@ $buttons = $this->gatekeeper()->filterAll(array(
                     class="<?php echo $presence->branding ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
                     data-value="<?php echo $presence->branding ? 1 : 0 ;?>"></span>
             </td>
-            <td><?php echo $this->badgeData->{$presence->id}->total_rank;?></td>
-            <td><?php echo round($this->badgeData->{$presence->id}->total, 1);?></td>
+            <?php $currentBadge = $this->badgeData->{$presence->id};?>
+            <td><?php if(is_object($currentBadge)){echo (int)$currentBadge->total_rank;} else{echo 'N/A';}?></td>
+            <td><?php if(is_object($currentBadge)){ echo (float)round($currentBadge->total, 1) ;} else {echo 'N/A';}?></td>
 			<td><?php echo number_format($presence->popularity) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
 			<td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
 			<?php

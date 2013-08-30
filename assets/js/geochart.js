@@ -5,9 +5,9 @@ app.geochart = {
 	data: null,
 	metrics: {},
 	setup:function ($mapDiv) {
-		$mapDiv.on('click', '.country .close', function(e) {
+		$('#map-sidebar').on('click', '.country .close', function(e) {
 			e.preventDefault();
-			$(this).closest('.country').remove();
+			$(this).parents('.country').empty().hide().siblings('.instructions').show();
 		});
 
 		// copy the provided metrics to app.geochart, and populate values
@@ -82,13 +82,13 @@ app.geochart = {
 	 * Add the groups in global groupData to the DOM, and store them in app.state.groupCharts
 	 */
 	drawGroups: function() {
-		var $groupContainer = $('#group-map');
+		var $groupContainer = $('#group-map ul');
 
 		var groups = groupData;
 		for(var id in groups){
 			var group = groups[id];
 
-			$groupContainer.append('<span id="'+ id +'" class="group-display"><div class="background"></div><div class="title vertical-center">'+ group.n +'</div><div class="score vertical-center"></div></span>');
+			$groupContainer.append('<li id="'+ id +'" class="region-display"><span class="label">'+ group.n +'</span><span class="score"></span></li>');
 			app.state.groupCharts[id] = {
 				$group: $('#'+id),
 				groupData: group
@@ -108,7 +108,7 @@ app.geochart = {
 			var score = Math.round(g.groupData.b[metric][day].s);
             var title = g.groupData.n +' (Presences: '+ g.groupData.p +')\n'+ app.geochart.metrics[metric].label +': '+ g.groupData.b[metric][day].l;
 
-			g.$group.find('.background').css('background-color', color);
+			g.$group.css('background-color', color);
             g.$group.attr('title', title);
 			g.$group.find('.score').empty().append(score);
 		}
@@ -118,13 +118,13 @@ app.geochart = {
      * Add the regions in global groupData to the DOM, and store them in app.state.groupCharts
      */
     drawRegions: function() {
-        var $regionContainer = $('#region-map');
+        var $regionContainer = $('#region-map ul');
 
         var regions = regionData;
         for(var id in regions){
             var region = regions[id];
 
-            $regionContainer.append('<span id="'+ id +'" class="region-display"><div class="background"></div><div class="title vertical-center">'+ region.n +'</div><div class="score vertical-center"></div></span>');
+            $regionContainer.append('<li id="'+ id +'" class="region-display"><span class="label">'+ region.n +'</span><span class="score"></span></li>');
             app.state.regionCharts[id] = {
                 $region: $('#'+id),
                 regionData: region
@@ -144,7 +144,7 @@ app.geochart = {
             var score = Math.round(g.regionData.b[metric][day].s);
             var title = g.regionData.n +' (Presences: '+ g.regionData.p +')\n'+ app.geochart.metrics[metric].label +': '+ g.regionData.b[metric][day].l;
 
-            g.$region.find('.background').css('background-color', color);
+            g.$region.css('background-color', color);
             g.$region.attr('title', title);
             g.$region.find('.score').empty().append(score);
         }
@@ -194,16 +194,15 @@ app.geochart = {
 		var $mapSidebar = $('#map-sidebar');
 		var $loading = $mapSidebar.find('.loading');
 		$loading.show();
-        $mapSidebar.find('.country').remove();
 		$.get('index/country-stats/', {id: id, model: model, metric: app.geochart.currentMetric()})
 			.done(function(data) {
 				var $country = $(data);
 				$country.data('id', id);
-                $mapSidebar.append($country);
-				$country.removeClass('hide');
+                $mapSidebar.find('.country').empty().append($country).show();
 			})
 			.always(function() {
 				$loading.hide();
+                $mapSidebar.find('.instructions').hide();
 			});
 	},
 	/**

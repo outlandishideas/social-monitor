@@ -62,19 +62,6 @@
 					</div>
 				</div>
 
-                <?php if (Zend_Auth::getInstance()->hasIdentity()) : ?>
-                    <div id="user-nav" class="dropdown">
-                        <a href="" class="dropdown-toggle" data-toggle="dropdown">
-                            <span>Logged in as</span>
-                            <?php echo $this->user->safeName; ?>
-                            <b class="caret"></b>
-                        </a>
-                        <div class="dropdown-menu">
-	                        <div><a href="<?php echo $this->url(array('controller' => 'user', 'action' => 'logout')); ?>">Logout</a> of Social Media Monitor</div>
-                        </div>
-                    </div>
-				<?php endif; ?>
-
 				<div class="page-title <?php if ($this->subtitle) echo 'with-subtitle'; ?>">
 					<?php if($this->titleImage) { echo $this->titleImage; } ?>
 					<h1>
