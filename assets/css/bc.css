@@ -442,7 +442,7 @@ span.icon-remove-sign {
     text-shadow: -2px -2px rgba(0,0,0,0.2);
 }
 
-#nav li.enabled a:hover,
+#nav li.enabled:hover a,
 #nav li.active a {
     background-color: #065284;
 }
@@ -929,8 +929,11 @@ form.management #assigned {
 #map-sidebar {
     width: 279px;
     float: right;
-    padding: 20px;
+    padding: 0 20px 20px;
     border: 2px solid #afd1e4;
+    background-color: #fff;
+    position: relative;
+    z-index: 999;
 }
 
 #map .loading {
@@ -962,13 +965,13 @@ form.management #assigned {
     color: #666;
 }
 
-#map-sidebar .country h3 {
+#map-sidebar h3 {
     font-size: 20px;
     font-weight: bold;
     margin: 10px -20px;
+    margin-top: 0;
     padding: 8px 20px;
     background: #edf5f8;
-    border-top: 2px solid #afd1e4;
 }
 
 #map-sidebar .country ul,

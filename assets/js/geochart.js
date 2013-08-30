@@ -194,16 +194,17 @@ app.geochart = {
 		var $mapSidebar = $('#map-sidebar');
 		var $loading = $mapSidebar.find('.loading');
 		$loading.show();
-        $mapSidebar.find('.country').remove();
+        $mapSidebar.find('.country').empty();
 		$.get('index/country-stats/', {id: id, model: model, metric: app.geochart.currentMetric()})
 			.done(function(data) {
 				var $country = $(data);
 				$country.data('id', id);
-                $mapSidebar.append($country);
+                $mapSidebar.find('.country').append($country);
 				$country.removeClass('hide');
 			})
 			.always(function() {
 				$loading.hide();
+                $mapSidebar.find('.instructions').hide();
 			});
 	},
 	/**
