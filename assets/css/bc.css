@@ -1,7 +1,7 @@
 body {
 	font: 14px "Prox", Arial, sans-serif;
 	margin: 0;
-	background: #8F8F8F;
+    background-color: #0f70a3;
 }
 
 abbr {
@@ -9,9 +9,8 @@ abbr {
 }
 
 #footer {
-    height: 200px;
-    background-color: #F2F2F2;
-    border-top: 1px solid #ccc;
+    height: 100px;
+    background-color: #0f70a3;
 }
 
 #loginWrapper {
@@ -391,8 +390,8 @@ span.icon-remove-sign {
 #nav {
 	padding: 0 42px;
 	background: #065284;
-    background: -webkit-gradient(0deg, #065284, #097fcd);
-    background: linear-gradient(0deg, #065284, #097fcd);
+    background: -webkit-gradient(0deg, #0f70a3, #097fcd);
+    background: linear-gradient(0deg, #0f70a3, #097fcd);
 	height: 56px;
 	display: block;
 	position: relative;
