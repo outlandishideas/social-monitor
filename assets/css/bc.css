@@ -1319,7 +1319,7 @@ li.link.box {
     }
 
 .badge.box {
-    width: 18px;
+    width: auto;
     display: inline-block;
     padding: 20px;
     background: #fff;
