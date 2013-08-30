@@ -26,7 +26,7 @@
         <h3><?php
             $url = $this->gatekeeper()->filter('%url%', array('controller' => 'group'));
             if($url) : ?>
-            <a href="<?php echo $url; ?>"><span class="<?php echo Model_Group::ICON_TYPE; ?>"> SBUs</span></a><?php
+            <a href="<?php echo $url; ?>"><span class="<?php echo Model_Group::ICON_TYPE; ?>"></span> SBUs</a><?php
             endif; ?>
         </h3>
         <ul></ul>
@@ -35,7 +35,7 @@
         <h3><?php
             $url = $this->gatekeeper()->filter('%url%', array('controller' => 'region'));
             if($url) : ?>
-            <a href="<?php echo $url; ?>"><span class="<?php echo Model_Region::ICON_TYPE; ?>"> Regions</span></a><?php
+            <a href="<?php echo $url; ?>"><span class="<?php echo Model_Region::ICON_TYPE; ?>"></span> Regions</a><?php
             endif; ?>
         </h3>
         <ul></ul>
