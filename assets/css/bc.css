@@ -1485,6 +1485,7 @@ ul.link-list {
     margin: 0;
     padding: 10px;
     font-size: 14px;
+    font-weight: normal;
 }
 
 #group-map ul, #region-map ul {
