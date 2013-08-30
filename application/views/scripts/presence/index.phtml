@@ -19,8 +19,8 @@ $buttons = $this->gatekeeper()->filterAll(array(
 			<th data-name="handle" data-sort="auto">Handle</th>
             <th data-name="sign-off" data-sort="data-value-numeric">Sign Off</th>
             <th data-name="branding" data-sort="data-value-numeric">Branding Compliance</th>
-            <th data-name="total-rank" data-sort="fuzzy-numeric">Global Rank</th>
-            <th data-name="total-score" data-sort="fuzzy-numeric">Global Score</th>
+            <th data-name="total-rank" data-sort="numeric">Global Rank</th>
+            <th data-name="total-score" data-sort="numeric">Global Score</th>
 			<th data-name="popularity" data-sort="fuzzy-numeric">Audience</th>
 			<th data-name="target" data-sort="fuzzy-numeric">Target audience</th>
 			<?php foreach ($this->tableMetrics as $key=>$label) : ?>
@@ -50,8 +50,8 @@ $buttons = $this->gatekeeper()->filterAll(array(
                     data-value="<?php echo $presence->branding ? 1 : 0 ;?>"></span>
             </td>
             <?php $currentBadge = $this->badgeData->{$presence->id};?>
-            <td><?php if(is_object($currentBadge)){echo $currentBadge->total_rank;} else{echo 'N/A';}?></td>
-            <td><?php if(is_object($currentBadge)){ echo round($currentBadge->total, 1) ;} else {echo 'N/A';}?></td>
+            <td><?php if(is_object($currentBadge)){echo (int)$currentBadge->total_rank;} else{echo 'N/A';}?></td>
+            <td><?php if(is_object($currentBadge)){ echo (float)round($currentBadge->total, 1) ;} else {echo 'N/A';}?></td>
 			<td><?php echo number_format($presence->popularity) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
 			<td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
 			<?php
