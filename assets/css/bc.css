@@ -933,11 +933,6 @@ form.management #assigned {
     border: 2px solid #afd1e4;
 }
 
-#geo-map {
-    width: 90%;
-    height: 600px;
-}
-
 #map .loading {
 	position: absolute;
 	top: 170px;
@@ -1475,51 +1470,23 @@ ul.link-list {
 
 /* group display on front page */
 
-#group-map, #region-map {
-    margin: 40px auto;
+#group-map ul, #region-map ul {
+    margin: 0;
+    padding: 0;
     width: 700px;
-    text-align: center;
+    text-align: left;
 }
 
 .group-display, .region-display {
     display: inline-block;
     vertical-align: top;
-    height: 150px;
-    width: 150px;
     margin: 10px;
     text-align: center;
     padding: 10px;
-    color: #f2f2f2;
-    font-size: 22px;
+    color: #666;
+    font-size: 18px;
     position: relative;
     cursor: pointer;
-}
-
-.group-display .background, .region-display .background {
-    background-color: #000;
-    height: 100%;
-    width: 100%;
-}
-
-.group-display .background {
-    border-radius: 50%;
-}
-
-.region-display .background {
-    -webkit-transform: rotate(49deg) skew(8deg);
-    -moz-transform: rotate(49deg) skew(8deg);
-    -o-transform: rotate(49deg) skew(8deg);
-    transform: rotate(49deg) skew(8deg);
-}
-
-.vertical-center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%,-50%);
-    -moz-transform: translate(-50%,-50%);
-    -o-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
 }
 
 .group-display .title, .region-display .title {
@@ -1528,8 +1495,7 @@ ul.link-list {
 }
 
 .group-display .score, .region-display .score {
-    font-size: 120px;
-    opacity: 0.5;
+    margin-left: 10px;
 }
 
 .region-display .title, .region-display .score {
