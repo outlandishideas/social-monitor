@@ -15,6 +15,10 @@ class Model_Campaign extends Model_Base {
 		return parent::fetch($clause, $args);
 	}
 
+    public function getTargetAudience() {
+        return $this->audience;
+    }
+
 	protected function count($clause = null, $args = array()) {
 		if ($clause) {
 			$clause .= ' AND ';

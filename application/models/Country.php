@@ -45,10 +45,6 @@ class Model_Country extends Model_Campaign {
 		return self::getNameFromCode($this->country);
 	}
 
-	public function getTargetAudience() {
-		return $this->audience;
-	}
-
 	public static function getNameFromCode($code){
 		$countries = static::countryCodes();
 		if(array_key_exists($code, $countries)){
