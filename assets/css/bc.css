@@ -11,6 +11,32 @@ abbr {
 #footer {
     height: 100px;
     background-color: #0f70a3;
+    padding: 20px;
+}
+
+#footer .navigation {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+#footer .navigation>a, #footer .navigation>span {
+    color: #f2f2f2;
+    color: rgba(255,255,255,0.7);
+}
+
+#footer .navigation>a .label:hover,
+#footer .navigation>a .label:focus {
+    text-decoration: underline;
+    color: rgba(255,255,255,0.9);
+}
+
+#footer .navigation>a:before, #footer .navigation>span:before {
+    content: "  / ";
+}
+
+#footer .navigation>a:first-child:before, #footer .navigation>span:first-child:before {
+    content: none;
 }
 
 #loginWrapper {

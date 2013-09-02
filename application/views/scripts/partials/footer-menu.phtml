@@ -1,0 +1,38 @@
+<p class="navigation">
+
+    <?php
+
+    /** @var Zend_Navigation_Page_Mvc $page */
+    foreach ($this->container as $page) :
+
+        $href = $page->getHref();
+
+        if($href) : ?>
+
+            <?php
+                $classes = isset($page->class) ? array($page->class) : array() ;
+
+                $urlTest = $this->gatekeeper()->filter('%url%', array('controller' => $page->controller, 'action' => $page->action));
+
+                if (!$urlTest) {
+                    $href = null;
+                }
+                if ($page->active) {
+                    $classes[] = 'active';
+                }
+
+                if ($href) : ?>
+                    <a href="<?php echo $href; ?>" class="<?php echo implode(' ', $classes); ?>">
+                        <span class="label"><?php echo $page->getLabel(); ?></span>
+                    </a><?php
+                else : ?>
+                    <span class="<?php echo implode(' ', $classes); ?>">
+                        <span class="label"><?php echo $page->getLabel(); ?></span>
+                    </span><?php
+                endif;
+
+        endif;
+
+    endforeach; ?>
+
+</p>

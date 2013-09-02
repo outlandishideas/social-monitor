@@ -94,7 +94,9 @@
 			<?php echo $this->FlashMessages(); ?>
 			<?php echo $this->layout()->content; ?>
 		</div>
-        <div id="footer"></div>
+        <div id="footer">
+            <?php echo $this->navigation()->menu()->setPartial('partials/footer-menu.phtml')->render(); ?>
+        </div>
 	</div>
 	<div id="loader" class="dead"></div>
 
