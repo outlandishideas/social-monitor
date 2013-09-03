@@ -1035,6 +1035,11 @@ form.management #assigned {
     opacity: 1;
 }
 
+#map-sidebar #campaign-stats ul {
+	max-height: 500px;
+	overflow-y: auto;
+}
+
 .key {
     top: 200px;
     position: absolute;

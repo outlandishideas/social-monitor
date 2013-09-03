@@ -43,7 +43,7 @@ app.geochart = {
 
             g.$group.on('click', function(e){
                 e.preventDefault();
-                app.geochart.loadCountryStats($(this).attr('id'), 'group');
+                app.geochart.loadCampaignStats($(this).attr('id'), 'group');
             });
         }
 
@@ -52,7 +52,7 @@ app.geochart = {
 
             r.$region.on('click', function(e){
                 e.preventDefault();
-                app.geochart.loadCountryStats($(this).attr('id'), 'region');
+                app.geochart.loadCampaignStats($(this).attr('id'), 'region');
             });
         }
 
@@ -69,11 +69,11 @@ app.geochart = {
 				app.geochart.refreshMap();
 				app.geochart.refreshGroups();
                 app.geochart.refreshRegions();
-				var $country = $('#map-sidebar').find('#country-stats');
+				var $country = $('#map-sidebar').find('#campaign-stats');
 				if ($country.length > 0) {
 					var id = $country.data('id');
                     var model = $country.data('model');
-					app.geochart.loadCountryStats(id, model);
+					app.geochart.loadCampaignStats(id, model);
 				}
 			}
 		})
@@ -183,18 +183,19 @@ app.geochart = {
 		var selection = app.geochart.map.getSelection();
 		if (selection.length > 0) {
 			var id = app.geochart.data.getValue(selection[0].row, 3);
-			app.geochart.loadCountryStats(id, 'country');
+			app.geochart.loadCampaignStats(id, 'country');
         }
 	},
 	/**
 	 * Fetches the country summary over ajax, and appends it to the map.
 	 * @param id
+	 * @param type country, group or region
 	 */
-	loadCountryStats: function(id, model) {
+	loadCampaignStats: function(id, type) {
 		var $mapSidebar = $('#map-sidebar');
 		var $loading = $mapSidebar.find('.loading');
 		$loading.show();
-		$.get('index/country-stats/', {id: id, model: model, metric: app.geochart.currentMetric()})
+		$.get('index/campaign-stats/', {id: id, model: type, metric: app.geochart.currentMetric()})
 			.done(function(data) {
 				var $country = $(data);
                 console.log($country);

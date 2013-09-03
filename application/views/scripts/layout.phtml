@@ -42,7 +42,7 @@
 						</div>
 						<div class="extra">
 						    <?php
-                                if (Zend_Auth::getInstance()->hasIdentity()) {
+                                if (Zend_Auth::getInstance()->hasIdentity() && $this->user) {
 	                                switch ($this->user->user_level) {
 		                                case Model_User::USER_LEVEL_ADMIN:
 		                                case Model_User::USER_LEVEL_MANAGER:

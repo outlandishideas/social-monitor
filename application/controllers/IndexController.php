@@ -2,7 +2,7 @@
 
 class IndexController extends GraphingController
 {
-	protected static $publicActions = array('index', 'country-stats', 'build-badge-data');
+	protected static $publicActions = array('index', 'campaign-stats', 'build-badge-data');
 
 	public function indexAction()
 	{
@@ -92,13 +92,20 @@ class IndexController extends GraphingController
 		}
 	}
 
-	public function countryStatsAction()
+	public function campaignStatsAction()
 	{
-		/** @var Model_Country $country */
-        if($this->_request->model == 'group'){
-            $campaign = Model_Group::fetchById($this->_request->id);
-        } else {
-            $campaign = Model_Country::fetchById($this->_request->id);
+		/** @var Model_Campaign $campaign */
+		switch ($this->_request->model) {
+			case 'group':
+	            $campaign = Model_Group::fetchById($this->_request->id);
+				break;
+			case 'region':
+				$campaign = Model_Region::fetchById($this->_request->id);
+				break;
+			case 'country':
+			default:
+	            $campaign = Model_Country::fetchById($this->_request->id);
+				break;
         }
 
 		if ($campaign) {
