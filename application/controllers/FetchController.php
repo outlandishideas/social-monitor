@@ -37,7 +37,7 @@ class FetchController extends BaseController
 						':type'     => 'popularity',
 						':value'    => $p->popularity
 					));
-                    if($p->isForTwitter()){
+                    if($p->isForTwitter() && $p->klout_score){
                         $infoStmt->execute(array(
                             ':id'       => $p->id,
                             ':datetime' => gmdate('Y-m-d H:i:s'),
