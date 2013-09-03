@@ -35,8 +35,12 @@
         <h3><?php
             $url = $this->gatekeeper()->filter('%url%', array('controller' => 'region'));
             if($url) : ?>
-            <a href="<?php echo $url; ?>"><span class="<?php echo Model_Region::ICON_TYPE; ?>"></span> Regions</a><?php
-            endif; ?>
+            <a href="<?php echo $url; ?>">
+	        <?php endif; ?>
+	        <span class="<?php echo Model_Region::ICON_TYPE; ?>"></span> Regions
+	        <?php if($url) : ?>
+            </a>
+            <?php endif; ?>
         </h3>
         <ul></ul>
     </div>
