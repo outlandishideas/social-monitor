@@ -1121,18 +1121,20 @@ class Model_Presence extends Model_Base {
 	 */
 	public function badges(){
 		$data = Model_Presence::badgesData();
-
-		$badgeData = $data->{$this->id};
-		$presenceCount = static::countAll();
 		$badges = array();
-		foreach(Model_Badge::$ALL_BADGE_TYPES as $type){
-			$badges[$type] = (object)array(
-				'type'=>$type,
-				'score'=>floatval($badgeData->{$type}),
-				'rank'=>intval($badgeData->{$type.'_rank'}),
-				'rankTotal'=>$presenceCount,
-				'metrics'=>$this->getMetrics($type)
-			);
+
+		if (isset($data->{$this->id})) {
+			$badgeData = $data->{$this->id};
+			$presenceCount = static::countAll();
+			foreach(Model_Badge::$ALL_BADGE_TYPES as $type){
+				$badges[$type] = (object)array(
+					'type'=>$type,
+					'score'=>floatval($badgeData->{$type}),
+					'rank'=>intval($badgeData->{$type.'_rank'}),
+					'rankTotal'=>$presenceCount,
+					'metrics'=>$this->getMetrics($type)
+				);
+			}
 		}
 
 		return $badges;
