@@ -197,10 +197,9 @@ app.geochart = {
 		$loading.show();
 		$.get('index/campaign-stats/', {id: id, model: type, metric: app.geochart.currentMetric()})
 			.done(function(data) {
-				var $country = $(data);
-                console.log($country);
-				$country.data('id', id);
-                $mapSidebar.find('.country').empty().append($country).show();
+				var $campaign = $(data);
+				$campaign.data('id', id);
+                $mapSidebar.find('.country').empty().append($campaign).show();
 			})
 			.always(function() {
 				$loading.hide();
