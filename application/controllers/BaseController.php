@@ -455,21 +455,23 @@ class BaseController extends Zend_Controller_Action
 
     public static function setObjectCache($key, $value)
     {
-        $sql = 'INSERT INTO object_cache (`key`, value) VALUES (:key, :value)';
+        $sql = 'INSERT INTO object_cache (key, value) VALUES (:key, :value)';
         $statement = self::db()->prepare($sql);
         $statement->execute(array(':key' => $key, ':value' => gzcompress(json_encode($value))));
     }
 
     public static function getObjectCache($key, $expires = 86400)
     {
-        $sql = 'SELECT * FROM object_cache WHERE `key` = :key ORDER BY last_modified DESC LIMIT 1';
+        $sql = 'SELECT * FROM object_cache WHERE key = :key ORDER BY last_modified DESC LIMIT 1';
         $statement = self::db()->prepare($sql);
         $statement->execute(array(':key' => $key));
         $result = $statement->fetch(PDO::FETCH_OBJ);
         if ($result && (time() - strtotime($result->last_modified)) < $expires) {
             return json_decode(gzuncompress( $result->value));
-        } elseif ($result) { //remove the expired value
-            $sql = "DELETE FROM object_cache WHERE id = " . $result->id;
+        } elseif ($result) { //remove the expired values
+            $sql = "DELETE FROM object_cache WHERE key = :key";
+	        $statement = self::db()->prepare($sql);
+	        $statement->execute(array(':key' => $key));
             self::db()->exec($sql);
         }
         return false;
