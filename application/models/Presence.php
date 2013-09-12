@@ -542,7 +542,7 @@ class Model_Presence extends Model_Base {
 		}
 		$startDate = date('Y-m-d', strtotime($endDate . ' -1 ' . $dateRange));
 
-		$score = null;
+		$invert = false;
 
 		switch($metric){
             case Model_Presence::METRIC_SIGN_OFF:
@@ -566,7 +566,12 @@ class Model_Presence extends Model_Base {
 			case Model_Presence::METRIC_POPULARITY_TIME:
 				$title = 'Popularity Trend';
 				$target = BaseController::getOption('achieve_audience_good');
-				$actual = $this->getTargetAudienceDate($startDate, $endDate);
+				$date = $this->getTargetAudienceDate($startDate, $endDate);
+				$now = new DateTime();
+				$estimate = new DateTime($date);
+				$interval = $estimate->diff($now);
+				$actual = $interval->y*12 + $interval->m;
+				$invert = true;
 				break;
 
 			case Model_Presence::METRIC_POSTS_PER_DAY:
@@ -591,15 +596,7 @@ class Model_Presence extends Model_Base {
 				$title = 'Responsiveness';
 				$target = BaseController::getOption('updates_per_day');
 				$actual = $this->getAverageResponseTime($startDate, $endDate);
-
-				// uses different score calculation
-				if(!$target){
-					$score = 0;
-				} else if($actual > $target){
-					$score = ( $target / $actual ) * 100;
-				} else {
-					$score = 100;
-				}
+				$invert = true;
 				break;
 
 			case Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS:
@@ -623,11 +620,19 @@ class Model_Presence extends Model_Base {
 				$title = 'Default';
 				$target = 0;
 				$actual = 0;
-				$score = 0;
+				$invert = true;
 				break;
 		}
 
-		if ($score === null) {
+		if ($invert) {
+			if(!$target){
+				$score = 0;
+			} else if($actual > $target){
+				$score = ( $target / $actual ) * 100;
+			} else {
+				$score = 100;
+			}
+		} else {
             if($target === 0){
                 $score = 100;
             } else if(!$target){
