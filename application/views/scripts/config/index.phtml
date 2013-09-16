@@ -1,20 +1,24 @@
 <form method="post" action="<?php echo $this->url(); ?>" class="uniForm">
 	<fieldset class="inlineLabels">
-		<?php foreach ($this->values as $args) : ?>
-		<div class="ctrlHolder">
-			<label for="<?php echo $args->key; ?>">
-				<?php echo $args->label; ?>
-			</label>
-			<input name="<?php echo $args->key; ?>" value="<?php echo htmlspecialchars($args->value); ?>" class="textInput <?php if ($args->error) { echo 'error'; } ?>"
-			       type="text" id="<?php echo $args->key; ?>">
-			<?php if ($args->hint) : ?>
-			<p class="formHint"><?php echo $args->hint; ?></p>
-			<?php endif; ?>
-			<?php if ($args->error) : ?>
-			<p class="formError"><?php echo $args->error; ?></p>
-			<?php endif; ?>
-		</div>
-		<?php endforeach; ?>
+        <?php foreach ($this->values as $section) : ?>
+            <h2><?php echo $section->title; ?></h2>
+            <p><?php echo $section->description; ?></p>
+            <?php foreach ($section->values as $args) : ?>
+            <div class="ctrlHolder">
+                <label for="<?php echo $args->key; ?>">
+                    <?php echo $args->label; ?>
+                </label>
+                <input name="<?php echo $args->key; ?>" value="<?php echo htmlspecialchars($args->value); ?>" class="textInput <?php if ($args->error) { echo 'error'; } ?>"
+                       type="text" id="<?php echo $args->key; ?>">
+                <?php if ($args->hint) : ?>
+                <p class="formHint"><?php echo $args->hint; ?></p>
+                <?php endif; ?>
+                <?php if ($args->error) : ?>
+                <p class="formError"><?php echo $args->error; ?></p>
+                <?php endif; ?>
+            </div>
+            <?php endforeach; ?>
+        <?php endforeach; ?>
 	</fieldset>
 
 	<div class="buttonHolder">
