@@ -469,10 +469,9 @@ class BaseController extends Zend_Controller_Action
         if ($result && (time() - strtotime($result->last_modified)) < $expires) {
             return json_decode(gzuncompress( $result->value));
         } elseif ($result) { //remove the expired values
-            $sql = "DELETE FROM object_cache WHERE `key` = :key";
+            $sql = 'DELETE FROM object_cache WHERE `key` = :key';
 	        $statement = self::db()->prepare($sql);
 	        $statement->execute(array(':key' => $key));
-            self::db()->exec($sql);
         }
         return false;
     }
