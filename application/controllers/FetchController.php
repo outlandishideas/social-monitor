@@ -97,6 +97,15 @@ class FetchController extends BaseController
 	}
 
 	/**
+	 * @user-level user
+	 */
+	public function clearLockAction() {
+		$this->releaseLock($this->lockName('fetch'));
+		Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger')->clearCurrentMessages();
+		$this->_helper->redirector->gotoRoute(array('controller'=>'index', 'action'=>'index'));
+	}
+
+	/**
 	 * Fetches any 'actors' (users/groups/events/pages) for records in the facebook stream that don't exist, or are outdated
 	 */
 	public function updateFacebookActors($limit = 250) {
