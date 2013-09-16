@@ -43,7 +43,45 @@ class BaseController extends Zend_Controller_Action
 
         }
 
-        //if user hasn't been loaded and this is not a public action, go to login
+	    // check the fetch lock
+	    $lockTime = $this->getOption($this->lockName('fetch'));
+	    if ($lockTime && $this->_request instanceof Zend_Controller_Request_Http && !$this->_request->isXmlHttpRequest()) {
+		    $seconds = time() - $lockTime;
+		    if ($seconds > (10 * $this->config->app->fetch_time_limit)) {
+			    $factors = array(
+				    'day' => 86400,
+				    'hour' => 3600,
+				    'min' => 60,
+				    'sec' => 0
+			    );
+			    $elements = array();
+			    foreach ($factors as $label => $factor) {
+				    if ($seconds > $factor) {
+					    if ($factor) {
+						    $tmp = $seconds % $factor;
+						    $elements[] = array(($seconds - $tmp) / $factor, $label);
+						    $seconds = $tmp;
+					    } else {
+						    $elements[] = array($seconds, $label);
+					    }
+				    }
+			    }
+			    foreach ($elements as $i => $e) {
+				    $elements[$i] = $this->view->pluralise($e[1], $e[0]);
+			    }
+			    $message = 'Fetch process has been inactive for ' . implode(', ', $elements) . ', indicating something has gone wrong. ';
+			    $urlArgs = array('controller'=>'fetch', 'action'=>'clear-lock');
+			    $url = $this->view->gatekeeper()->filter('%url%', $urlArgs);
+			    if ($url) {
+				    $message .= 'Click <a href="' . $url . '">here</a> to clear the lock manually.';
+			    } else {
+				    $message .= 'Please log in to clear the lock.';
+			    }
+			    $this->_helper->FlashMessenger(array('inaction' => $message));
+		    }
+	    }
+
+	    //if user hasn't been loaded and this is not a public action, go to login
         if (!$this->view->user && !in_array($this->_request->getActionName(), static::$publicActions)) {
             $this->auth->clearIdentity();
             if (PHP_SAPI == 'cli') {
@@ -96,36 +134,6 @@ class BaseController extends Zend_Controller_Action
                 }
             }
             $this->view->$property = $navigation;
-        }
-
-        // check the fetch lock
-        $lockTime = $this->getOption($this->lockName('fetch'));
-        if ($lockTime && $this->_request instanceof Zend_Controller_Request_Http && !$this->_request->isXmlHttpRequest()) {
-            $seconds = time() - $lockTime;
-            if ($seconds > (10 * $this->config->app->fetch_time_limit)) {
-                $factors = array(
-                    'day' => 86400,
-                    'hour' => 3600,
-                    'min' => 60,
-                    'sec' => 0
-                );
-                $elements = array();
-                foreach ($factors as $label => $factor) {
-                    if ($seconds > $factor) {
-                        if ($factor) {
-                            $tmp = $seconds % $factor;
-                            $elements[] = array(($seconds - $tmp) / $factor, $label);
-                            $seconds = $tmp;
-                        } else {
-                            $elements[] = array($seconds, $label);
-                        }
-                    }
-                }
-                foreach ($elements as $i => $e) {
-                    $elements[$i] = $this->view->pluralise($e[1], $e[0]);
-                }
-                $this->_helper->FlashMessenger(array('inaction' => 'Fetch process has been inactive for ' . implode(', ', $elements) . '. Please review the fetch lock file.'));
-            }
         }
 
         //set JS config to be output in the page

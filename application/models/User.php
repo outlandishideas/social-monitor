@@ -66,7 +66,6 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	}
 
 	/**
-	 * Returns true if $action is blank, or if the user_level has been assigned the action
 	 * @param $levelName
 	 * @param $controller
 	 * @param $id
