@@ -1,6 +1,8 @@
 <?php
 
 class Model_Presence extends Model_Base {
+
+
 	protected static $tableName = 'presences';
 	protected static $sortColumn = 'handle';
 

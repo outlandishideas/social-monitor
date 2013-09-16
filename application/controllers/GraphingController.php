@@ -13,7 +13,7 @@ abstract class GraphingController extends BaseController {
 
 	protected static function tableMetrics(){
 		return array(
-			Model_Presence::METRIC_POPULARITY_PERCENT => 'Target Audience',
+			Model_Presence::METRIC_POPULARITY_PERCENT => 'Percent of Target Audience',
 			Model_Presence::METRIC_POPULARITY_TIME => 'Time to Target Audience',
 			Model_Presence::METRIC_POSTS_PER_DAY => 'Posts Per Day',
 			Model_Presence::METRIC_RESPONSE_TIME => 'Response Time',

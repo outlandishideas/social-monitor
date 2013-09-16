@@ -12,24 +12,24 @@
 
     <h3><?php echo ucfirst($this->badge); ?></h3>
 
-    <div class="score-card">
+    <div class="score ranking">
+        <h4>Ranking</h4>
 
-        <div class="score ranking">
-            <div class="text title">Ranking</div>
-            <div class="number">
-                ?
-            </div>
-            <div class="text denominator">of ?</div>
+        <div class="bar-chart">
+            <div class="bar"></div>
         </div>
 
-        <div class="score overall-score">
-            <div class="text">Score</div>
-            <div class="number">
-                ?
-            </div>
-            <div class="text">out of 100</div>
+        <div class="text denominator">of ?</div>
+    </div>
+
+    <div class="score overall-score">
+        <h4>Score</h4>
+
+        <div class="bar-chart">
+            <div class="bar"></div>
         </div>
 
+        <div class="text"><span class="number">?</span>%</div>
     </div>
 
 </div>

@@ -13,6 +13,7 @@ class PresenceController extends GraphingController
         $this->view->title = 'Presences';
         $this->view->titleIcon = Model_Presence::ICON_TYPE;
         $this->view->presences = Model_Presence::fetchAll();
+        $this->view->tableHeaders = self::tableIndexHeaders();
 		$this->view->tableMetrics = self::tableMetrics();
         $this->view->badgeData = Model_Presence::badgesData();
 	}
@@ -589,4 +590,159 @@ class PresenceController extends GraphingController
 		print_r($presences);
 		exit;
 	}
+
+    public function downloadAction() {
+        /*if (userHasNoPermissions) {
+            $this->view->msg = 'This file cannot be downloaded!';
+            $this->_forward('error', 'download');
+            return FALSE;
+        }*/
+
+        header("Content-type: text/csv");
+        header("Content-Disposition: attachment; filename=presence_index.csv");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        $data = array();
+
+        $headers = array();
+        foreach(self::tableIndexHeaders() as $header){
+            if(isset($header->csv)){
+                $headers[] = $header->title;
+            }
+        }
+
+        $data[] = $headers;
+
+        $badgeData = Model_Presence::badgesData();
+        $tableMetrics = self::tableMetrics();
+        $presences = Model_Presence::fetchAll();
+
+        foreach($presences as $presence){
+            $row = array();
+            $currentBadge = $badgeData->{$presence->id};
+            $kpiData = $presence->getKpiData();
+            foreach(self::tableIndexHeaders() as $header){
+                $output = null;
+                if(isset($header->csv)){
+                    switch($header->name){
+                        case('handle'):
+                            $output = $presence->handle;
+                            break;
+                        case('sign-off'):
+                            $output = $presence->sign_off;
+                            break;
+                        case('branding'):
+                            $output = $presence->branding;
+                            break;
+                        case('total-rank'):
+                            $output = (int)$currentBadge->total_rank;
+                            break;
+                        case('total-score'):
+                            $output = (float)round($currentBadge->total);
+                            break;
+                        case('current-audience'):
+                            $output = number_format($presence->popularity);
+                            break;
+                        case('target-audience'):
+                            $output = number_format($presence->getTargetAudience());
+                            break;
+                        default:
+                            if( array_key_exists($header->name, $kpiData) ){
+                                $output = $kpiData[$header->name];
+                            }
+                    }
+                    $row[] = $output;
+                }
+            }
+
+            $data[] = $row;
+
+        }
+
+        self::outputCSV($data);
+
+
+        // disable layout and view
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+    }
+
+    function outputCSV($data) {
+        $output = fopen("php://output", "w");
+        foreach ($data as $row) {
+            fputcsv($output, $row);
+        }
+        fclose($output);
+    }
+
+    public static function tableIndexHeaders() {
+
+        $return = array(
+            (object)array(
+                'name' => 'compare',
+                'sort' => 'checkbox',
+                'title' => '<span class="icon-check"></span>'
+            ),
+            (object)array(
+                'name' => 'handle',
+                'sort' => 'auto',
+                'title' => 'Handle',
+                'csv' => true
+            ),
+            (object)array(
+                'name' => 'sign-off',
+                'sort' => 'data-value-numeric',
+                'title' => 'Sign-Off',
+                'csv' => true
+            ),
+            (object)array(
+                'name' => 'branding',
+                'sort' => 'data-value-numeric',
+                'title' => 'Branding',
+                'csv' => true
+            ),
+            (object)array(
+                'name' => 'total-rank',
+                'sort' => 'numeric',
+                'title' => 'Global Rank',
+                'csv' => true
+            ),
+            (object)array(
+                'name' => 'total-score',
+                'sort' => 'numeric',
+                'title' => 'Global Score',
+                'csv' => true
+            ),
+            (object)array(
+                'name' => 'current-audience',
+                'sort' => 'numeric',
+                'title' => 'Audience',
+                'csv' => true
+            ),
+            (object)array(
+                'name' => 'target-audience',
+                'sort' => 'numeric',
+                'title' => 'Target Audience',
+                'csv' => true
+            )
+        );
+
+        foreach(self::tableMetrics() as $name => $title){
+            $return[] = (object)array(
+                'name' => $name,
+                'sort' => 'traffic-light',
+                'width' => '150px',
+                'title' => $title,
+                'csv' => true
+            );
+        }
+
+        $return[] = (object)array(
+            'name' => 'options',
+            'width' => '150px'
+        );
+
+        return $return;
+    }
 }

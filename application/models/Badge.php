@@ -22,8 +22,8 @@ class Model_Badge {
         Model_Presence::METRIC_POSTS_PER_DAY => 1,
         Model_Presence::METRIC_LINKS_PER_DAY => 1,
         Model_Presence::METRIC_LIKES_PER_POST => 1,
-        Model_Presence::METRIC_SIGN_OFF => 1,
-        Model_Presence::METRIC_BRANDING => 1
+        Model_Presence::METRIC_SIGN_OFF => 2,
+        Model_Presence::METRIC_BRANDING => 2
     );
 
     public static $METRIC_ENGAGEMENT = array(

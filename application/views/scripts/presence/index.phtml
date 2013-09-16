@@ -14,8 +14,17 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
 <table class="text dtable" id="all-presences">
 	<thead>
-		<tr>
-            <th data-name="compare" data-sort="checkbox"><span class="icon-check"></span></th>
+    <tr><?php
+        foreach($this->tableHeaders as $headers): ?>
+            <th <?php
+                if(isset($headers->name)) echo "data-name='$headers->name'";
+                if(isset($headers->sort)) echo "data-sort='$headers->sort'";
+                if(isset($headers->width)) echo "data-width='$headers->width'"; ?> ><?php
+                    if(isset($headers->title)) echo $headers->title; ?>
+            </th><?php
+        endforeach; ?>
+
+            <!--<th data-name="compare" data-sort="checkbox"><span class="icon-check"></span></th>
 			<th data-name="handle" data-sort="auto">Handle</th>
             <th data-name="sign-off" data-sort="data-value-numeric">Sign Off</th>
             <th data-name="branding" data-sort="data-value-numeric">Branding Compliance</th>
@@ -23,10 +32,10 @@ $buttons = $this->gatekeeper()->filterAll(array(
             <th data-name="total-score" data-sort="numeric">Global Score</th>
 			<th data-name="popularity" data-sort="fuzzy-numeric">Audience</th>
 			<th data-name="target" data-sort="fuzzy-numeric">Target audience</th><?php
-            foreach ($this->tableMetrics as $key=>$label) : ?>
-			    <th data-name="<?php echo $key; ?>" data-sort="traffic-light" data-width="150px"><?php echo $label; ?></th><?php
-            endforeach; ?>
-			<th data-name="options" data-width="150px"></th>
+/*            foreach ($this->tableMetrics as $key=>$label) : */?>
+			    <th data-name="<?php /*echo $key; */?>" data-sort="traffic-light" data-width="150px"><?php /*echo $label; */?></th><?php
+/*            endforeach; */?>
+			<th data-name="options" data-width="150px"></th>-->
 		</tr>
 	</thead>
 	<tbody>
@@ -77,4 +86,15 @@ $buttons = $this->gatekeeper()->filterAll(array(
 		</tr>
 		<?php endforeach; ?>
 	</tbody>
-</table>
+</table><?php
+
+$buttons = $this->gatekeeper()->filterAll(array(
+    '<a class="button download" href="%url%"><span class="icon-download"></span> Download CSV</a>' => array('action' => 'download'),
+));
+
+
+if ($buttons) : ?>
+    <p><?php
+        echo implode('', $buttons); ?>
+    </p><?php
+endif; ?>
