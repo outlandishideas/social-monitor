@@ -37,6 +37,35 @@ class Model_Badge {
 	    Model_Presence::METRIC_SHARING => 1
     );
 
+    public static function metrics($type) {
+        //todo: check cache first
+        $metrics = array();
+        switch ($type) {
+            case self::BADGE_TYPE_QUALITY:
+                $metrics[Model_Presence::METRIC_POSTS_PER_DAY] = 1;
+                $metrics[Model_Presence::METRIC_LINKS_PER_DAY] = 1;
+                $metrics[Model_Presence::METRIC_LIKES_PER_POST] = 1;
+                $metrics[Model_Presence::METRIC_SIGN_OFF] = 1;//2
+                $metrics[Model_Presence::METRIC_BRANDING] = 1;//2
+                break;
+            case self::BADGE_TYPE_ENGAGEMENT:
+                $metrics[Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS] = 1;
+                $metrics[Model_Presence::METRIC_RESPONSE_TIME] = 1;
+                break;
+            case self::BADGE_TYPE_ENGAGEMENT:
+                $metrics[Model_Presence::METRIC_POPULARITY_PERCENT] =  1;
+                $metrics[Model_Presence::METRIC_POPULARITY_TIME] =  1;//2
+                $metrics[Model_Presence::METRIC_SHARING] =  1;
+                break;
+        }
+
+        foreach ($metrics as $name=>$weight) {
+            //get weight from database, if it exists
+            $metrics[$name] = BaseController::getOption($name . '_weighting');
+        }
+        return $metrics;
+    }
+
 	public static function badgeTitle($type) {
 		switch ($type) {
 			case self::BADGE_TYPE_TOTAL:
@@ -178,9 +207,9 @@ class Model_Badge {
 
 		//foreach presence and foreach badge (not total badge), calculate the metrics
 		$badgeMetrics = array(
-			self::BADGE_TYPE_REACH => self::$METRIC_REACH,
-			self::BADGE_TYPE_ENGAGEMENT => self::$METRIC_ENGAGEMENT,
-			self::BADGE_TYPE_QUALITY => self::$METRIC_QUALITY
+			self::BADGE_TYPE_REACH => self::metrics(self::BADGE_TYPE_REACH),
+			self::BADGE_TYPE_ENGAGEMENT => self::metrics(self::BADGE_TYPE_ENGAGEMENT),
+			self::BADGE_TYPE_QUALITY => self::metrics(self::BADGE_TYPE_QUALITY)
 		);
 
 		foreach($presences as $presence){

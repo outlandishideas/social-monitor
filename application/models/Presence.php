@@ -492,20 +492,20 @@ class Model_Presence extends Model_Base {
 	public function getMetrics($badgeType = null){
 		switch ($badgeType) {
 			case Model_Badge::BADGE_TYPE_ENGAGEMENT:
-				$metrics = Model_Badge::$METRIC_ENGAGEMENT;
+				$metrics = Model_Badge::metrics(self::BADGE_TYPE_ENGAGEMENT);
 				break;
 			case Model_Badge::BADGE_TYPE_QUALITY:
-				$metrics = Model_Badge::$METRIC_QUALITY;
+				$metrics = Model_Badge::metrics(self::BADGE_TYPE_QUALITY);
 				break;
 			case Model_Badge::BADGE_TYPE_REACH:
-				$metrics = Model_Badge::$METRIC_REACH;
+				$metrics = Model_Badge::metrics(self::BADGE_TYPE_REACH);
 				break;
 			case Model_Badge::BADGE_TYPE_TOTAL:
 			default:
 				$metrics = array_merge(
-					Model_Badge::$METRIC_REACH,
-					Model_Badge::$METRIC_ENGAGEMENT,
-					Model_Badge::$METRIC_QUALITY
+					Model_Badge::metrics(self::BADGE_TYPE_ENGAGEMENT),
+					Model_Badge::metrics(self::BADGE_TYPE_QUALITY),
+					Model_Badge::metrics(self::BADGE_TYPE_REACH)
 				);
 		}
 		$metricsArray = array();
