@@ -1,4 +1,4 @@
-<ul id="map-tabs" class="tabs">
+<ul id="map-tabs" class="content-in-header tabs">
     <?php $first = true; foreach($this->metricOptions as $badge => $title) : ?>
         <li class="<?php if ($first) echo 'active';?>" data-val="<?php echo $badge; ?>"><?php echo ucfirst($title); ?></li>
     <?php $first = false; endforeach; ?>

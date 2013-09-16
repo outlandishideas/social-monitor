@@ -232,7 +232,7 @@ a:hover, span.link:hover {
 #content .content-in-header, #content .messages {
     margin: -20px -42px 0 -42px;
     background: #edf5f8;
-    padding: 0 42px;
+    padding: 0 42px 20px 42px;
 }
 
 #main-header h2 {
@@ -1080,7 +1080,7 @@ form.management #assigned {
     width: 279px;
     position: absolute;
     right: 50px;
-    top: -100px;
+    top: -72px;
 }
 
 .map-date #date-slider {
@@ -1378,13 +1378,11 @@ li.link.box {
 
 /* ul tabs */
 
-ul.tabs {
-    margin: 0;
-    padding: 0;
+#content ul.tabs {
+    padding-bottom: 0;
+    margin-bottom: 10px;
     list-style: none;
     height: 38px;
-    position: absolute;
-    top: -38px;
 }
 
 ul.tabs li {
