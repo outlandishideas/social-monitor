@@ -5,7 +5,6 @@ $buttons = $this->gatekeeper()->filterAll(array(
 ?>
 
 <div id="badges" data-id="<?php echo $this->presence->id; ?>" class="grid justify content-in-header" data-controller="presence">
-    <h2>Badges</h2>
     <?php
     foreach($this->badges as $name => $badge) {
         echo $this->partial('partials/badges.phtml', array('badge'=>$badge));

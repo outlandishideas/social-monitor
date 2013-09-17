@@ -1369,11 +1369,35 @@ li.link.box {
     .badge.box h3 {
         margin: 0;
     }
-    .badge.box>div {
-        width: 50%;
+    .badge.box .score {
+        float: right;
+        width: 45%;
+    }
+    .badge.box .bar .barline {
+        width: 0;
+        background-color: #ef5078;
     }
     .badge.box .score.ranking {
         float: left;
+    }
+    .badge.box .score.ranking .barline {
+        background-color: #0a95ce;
+    }
+    .badge.box .score.ranking .text {
+        color: #666;
+        font-size: 18px;
+    }
+    .badge.box .score.ranking .number {
+        color: #0a95ce;
+        font-size: 38px;
+    }
+    .badge.box .score.overall-score .text {
+        font-size: 24px;
+        color: #ef5078;
+    }
+    .badge.box .score.overall-score .number {
+        font-size: 38px;
+        padding-right: 4px;
     }
 
 /* ul tabs */

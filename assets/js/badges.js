@@ -68,6 +68,8 @@ app.badges = {
             .find('.text.denominator').html('of ' + data.rankTotal);
         b.$badge.find('.score.overall-score')
             .find('.number').html(Math.round(data.score));
+        b.$badge.find('.bar .barline')
+            .css('width', Math.round(data.score)+'%');
 
         var ref = '';
 
