@@ -2,7 +2,7 @@
 	<fieldset class="inlineLabels">
         <?php foreach ($this->values as $section) : ?>
             <h2><?php echo $section->title; ?></h2>
-            <p><?php echo $section->description; ?></p>
+            <?php echo $section->description; ?>
             <?php foreach ($section->kpis as $kpi) : ?>
 
                 <h3><?php echo $kpi->title; ?></h3>

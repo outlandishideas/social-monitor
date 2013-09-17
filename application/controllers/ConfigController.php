@@ -9,11 +9,12 @@ class ConfigController extends BaseController {
 	function indexAction() {
 		$this->view->title = 'Settings';
 		$this->view->titleIcon = 'icon-cog';
+
 		$values = array(
 
             (object)array(
                 'title' => 'Reach',
-                'description' => 'Something about the Reach Badge',
+                'description' => Model_Badge::BADGE_TYPE_REACH_DESC,
                 'kpis' => array(
                     (object)array(
                         'title' => 'Target Audience',
@@ -51,7 +52,7 @@ class ConfigController extends BaseController {
             ),
             (object)array(
                 'title' => 'Engagement',
-                'description' => 'Something about the Engagement Badge',
+                'description' => Model_Badge::BADGE_TYPE_ENGAGEMENT_DESC,
                 'kpis' => array(
                     (object)array(
                         'title' => 'Replies to Number of Posts',
@@ -76,16 +77,16 @@ class ConfigController extends BaseController {
             ),
             (object)array(
                 'title' => 'Quality',
-                'description' => 'Something about the Quality Badge',
+                'description' => Model_Badge::BADGE_TYPE_QUALITY_DESC,
                 'kpis' => array(
                     (object)array(
-                        'title' => 'Updates Per Day',
-                        'description' => 'Here goes a description about Updates per Day',
+                        'title' => 'Actions Per Day',
+                        'description' => 'Here goes a description about Actions per Day',
                         'values' => array(
-                            'posts_per_day_weighting'=>array('label'=>'Updates per Day Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
-                            'updates_per_day'=>array('label'=>'Updates Per Day'),
-                            'updates_per_day_ok_range'=>array('label'=>'Updates Per Day OK range', 'hint'=>'Number above or below [updates per day] that is considered OK'),
-                            'updates_per_day_bad_range'=>array('label'=>'Updates Per Day bad range', 'hint'=>'Number above or below [updates per day] that is considered too much or too little'),
+                            'posts_per_day_weighting'=>array('label'=>'Actions per Day Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
+                            'updates_per_day'=>array('label'=>'Actions Per Day'),
+                            'updates_per_day_ok_range'=>array('label'=>'Actions Per Day OK range', 'hint'=>'Number above or below [updates per day] that is considered OK'),
+                            'updates_per_day_bad_range'=>array('label'=>'Actions Per Day bad range', 'hint'=>'Number above or below [updates per day] that is considered too much or too little'),
                         )
                     ),
                     (object)array(
