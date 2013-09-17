@@ -985,6 +985,10 @@ form.management #assigned {
     -webkit-transition: opacity 5s ease-out; /* Safari */
 }
 
+#map-sidebar .desc-box.hide {
+    display: none;
+}
+
 #map-sidebar .country.hide {
     opacity:0;
 }
@@ -1361,13 +1365,18 @@ li.link.box {
 
 .badge.box {
     width: 20%;
-    border: 1px solid #000;
+    border: 1px solid #0a95ce;
     padding: 10px;
     display: inline-block;
+    background-color: #fff;
 
 }
     .badge.box h3 {
         margin: 0;
+        color: #666;
+    }
+    .badge.box h4 {
+        color: #666;
     }
     .badge.box .score {
         float: right;

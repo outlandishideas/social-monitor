@@ -63,6 +63,9 @@ app.geochart = {
 		}
 		$tabs.on('click', 'li', function(event){
 			event.preventDefault();
+
+            var badgeType = $(this).data('val');
+
 			if(!$(this).hasClass('active')){
 				$(this).addClass('active')
 					.siblings('li.active').removeClass('active');
@@ -75,6 +78,14 @@ app.geochart = {
                     var model = $country.data('model');
 					app.geochart.loadCampaignStats(id, model);
 				}
+                $('.desc-box').each(function(){
+                    $(this).addClass('hide');
+                })
+                if(badgeType == 'total'){
+                    $('#instructions-desc').removeClass('hide');
+                } else {
+                    $('#' + badgeType + '-desc').removeClass('hide');
+                }
 			}
 		})
 	},

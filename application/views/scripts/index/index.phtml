@@ -12,12 +12,19 @@
 
 <div id="map-sidebar" class="">
     <div class="country"></div>
-    <div class="instructions">
+    <div id="instructions-desc" class="desc-box">
         <h3>Instructions</h3>
         <p>Choose from either Global Score, Reach, Engagement or Quality to see the health of each country, SBU and region.</p>
         <p>Move the date slider to view the historic trend of the score for each country, SBU and region.</p>
         <p>Click on the map to select a country and preview the individual social media presences.</p>
-    </div>
+    </div><?php
+    foreach($this->badgeDescriptions as $badgeTitle => $badgeDesc) : ?>
+        <div id="<?php echo $badgeTitle; ?>-desc" class="desc-box hide">
+            <h3><?php echo ucfirst($badgeTitle); ?></h3>
+            <p><?php echo $badgeDesc; ?></p>
+        </div><?php
+    endforeach; ?>
+
     <div class="loading"></div>
 </div>
 <div id="map">
