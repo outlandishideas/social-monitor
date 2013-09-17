@@ -1,3 +1,4 @@
+
 <?php
 
 class Model_Badge {
@@ -7,6 +8,10 @@ class Model_Badge {
     const BADGE_TYPE_REACH = 'reach';
     const BADGE_TYPE_ENGAGEMENT = 'engagement';
     const BADGE_TYPE_QUALITY = 'quality';
+
+    const BADGE_TYPE_REACH_DESC = 'This is a description for the Reach Badge';
+    const BADGE_TYPE_ENGAGEMENT_DESC = 'This is a description for the Engagement Badge';
+    const BADGE_TYPE_QUALITY_DESC = 'This is a description for the Quality Badge';
 
     const METRIC_SIGN_OFF = 'sign_off';
     const METRIC_BRANDING = 'branding';
@@ -52,7 +57,7 @@ class Model_Badge {
                 $metrics[Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS] = 1;
                 $metrics[Model_Presence::METRIC_RESPONSE_TIME] = 1;
                 break;
-            case self::BADGE_TYPE_ENGAGEMENT:
+            case self::BADGE_TYPE_REACH:
                 $metrics[Model_Presence::METRIC_POPULARITY_PERCENT] =  1;
                 $metrics[Model_Presence::METRIC_POPULARITY_TIME] =  1;//2
                 $metrics[Model_Presence::METRIC_SHARING] =  1;
