@@ -23,35 +23,21 @@ class Model_Badge {
 	    self::BADGE_TYPE_QUALITY
 	);
 
-    public static $METRIC_QUALITY = array(
-        Model_Presence::METRIC_POSTS_PER_DAY => 1,
-        Model_Presence::METRIC_LINKS_PER_DAY => 1,
-        Model_Presence::METRIC_LIKES_PER_POST => 1,
-        Model_Presence::METRIC_SIGN_OFF => 2,
-        Model_Presence::METRIC_BRANDING => 2
-    );
-
-    public static $METRIC_ENGAGEMENT = array(
-        Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS => 1,
-        Model_Presence::METRIC_RESPONSE_TIME => 1
-    );
-
-    public static $METRIC_REACH = array(
-        Model_Presence::METRIC_POPULARITY_PERCENT => 1,
-        Model_Presence::METRIC_POPULARITY_TIME => 2,
-	    Model_Presence::METRIC_SHARING => 1
-    );
+	private static $metricsCache = array();
 
     public static function metrics($type) {
-        //todo: check cache first
+	    if (array_key_exists($type, self::$metricsCache)) {
+		    return self::$metricsCache[$type];
+	    }
+
         $metrics = array();
         switch ($type) {
             case self::BADGE_TYPE_QUALITY:
                 $metrics[Model_Presence::METRIC_POSTS_PER_DAY] = 1;
                 $metrics[Model_Presence::METRIC_LINKS_PER_DAY] = 1;
                 $metrics[Model_Presence::METRIC_LIKES_PER_POST] = 1;
-                $metrics[Model_Presence::METRIC_SIGN_OFF] = 1;//2
-                $metrics[Model_Presence::METRIC_BRANDING] = 1;//2
+                $metrics[Model_Presence::METRIC_SIGN_OFF] = 1;
+                $metrics[Model_Presence::METRIC_BRANDING] = 1;
                 break;
             case self::BADGE_TYPE_ENGAGEMENT:
                 $metrics[Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS] = 1;
@@ -59,15 +45,19 @@ class Model_Badge {
                 break;
             case self::BADGE_TYPE_REACH:
                 $metrics[Model_Presence::METRIC_POPULARITY_PERCENT] =  1;
-                $metrics[Model_Presence::METRIC_POPULARITY_TIME] =  1;//2
+                $metrics[Model_Presence::METRIC_POPULARITY_TIME] =  1;
                 $metrics[Model_Presence::METRIC_SHARING] =  1;
                 break;
         }
 
         foreach ($metrics as $name=>$weight) {
             //get weight from database, if it exists
-            $metrics[$name] = BaseController::getOption($name . '_weighting');
+	        $weighting = BaseController::getOption($name . '_weighting');
+	        if ($weighting > 0) {
+	            $metrics[$name] = $weighting;
+	        }
         }
+	    self::$metricsCache[$type] = $metrics;
         return $metrics;
     }
 
