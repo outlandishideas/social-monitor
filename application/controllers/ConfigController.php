@@ -18,7 +18,7 @@ class ConfigController extends BaseController {
                 'kpis' => array(
                     (object)array(
                         'title' => 'Target Audience',
-                        'description' => 'Here goes a description about Target Audience',
+                        'description' => 'Each presence has a target audience set against it. The score is given based on how close the presence is to it’s target',
                         'values' => array(
                             'popularity_weighting'=>array('label'=>'Target Audience Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
                             'fb_min'=>array('label'=>'Facebook Minimum Audience (% of total)'),
@@ -30,7 +30,7 @@ class ConfigController extends BaseController {
                     ),
                     (object)array(
                         'title' => 'Time to Target Audience',
-                        'description' => 'Here goes a description about Time to Target Audience',
+                        'description' => 'Each presence has a target audience set against it. The score is given based on how close the presence is to it’s target',
                         'values' => array(
                             'popularity_time_weighting'=>array('label'=>'Time to Target Audience Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
                             'achieve_audience_best'=>array('label'=>'Target audience best score (months)', 'hint'=>'The number of months the target audience should be reached within to get the best score'),
@@ -40,7 +40,7 @@ class ConfigController extends BaseController {
                     ),
                     (object)array(
                         'title' => 'Retweets/Shares',
-                        'description' => 'Here goes a description about Retweets/Shares',
+                        'description' => 'How often each presence’s posts are shared (Facebook) or retweeted (Twitter)',
                         'values' => array(
                             'sharing_weighting'=>array('label'=>'Retweets/Shares Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
                             'fb_share'=>array('label'=>'Average shares per post target (% of total audience)'),
@@ -56,7 +56,7 @@ class ConfigController extends BaseController {
                 'kpis' => array(
                     (object)array(
                         'title' => 'Replies to Number of Posts',
-                        'description' => 'Here goes a description about Replies to Number of Posts',
+                        'description' => 'The more replies that each post receives the higher the engagement score will be',
                         'values' => array(
                             'replies_to_posts_weighting'=>array('label'=>' Replies to Number of Posts Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
                             'replies_to_number_posts_best'=>array('label'=>'Best ratio of replies to number of posts', 'hint'=>'The presence will get the best score if the ratio of replies to the number of posts from others falls below this number'),
@@ -65,7 +65,7 @@ class ConfigController extends BaseController {
                     ),
                     (object)array(
                         'title' => 'Response Time',
-                        'description' => 'Here goes a description about Response Time',
+                        'description' => 'The response time score measures how quickly the presence responds to individual posts',
                         'values' => array(
                             'response_time_weighting'=>array('label'=>'Response Time Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
                             'response_time_best'=>array('label'=>'Perfect response time (hours)'),
@@ -81,7 +81,7 @@ class ConfigController extends BaseController {
                 'kpis' => array(
                     (object)array(
                         'title' => 'Actions Per Day',
-                        'description' => 'Here goes a description about Actions per Day',
+                        'description' => 'A measurement of the average number of actions per day against the benchmark',
                         'values' => array(
                             'posts_per_day_weighting'=>array('label'=>'Actions per Day Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
                             'updates_per_day'=>array('label'=>'Actions Per Day'),
@@ -91,7 +91,7 @@ class ConfigController extends BaseController {
                     ),
                     (object)array(
                         'title' => 'Links Per Day',
-                        'description' => 'Here goes a description about Links per Day',
+                        'description' => 'Measures the average number of links used within posts per day',
                         'values' => array(
                             'links_per_day_weighting'=>array('label'=>'Links Per Day Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
                             'links_per_day'=>array('label'=>'Links Per Day'),
@@ -101,7 +101,7 @@ class ConfigController extends BaseController {
                     ),
                     (object)array(
                         'title' => 'Likes Per Post',
-                        'description' => 'Here goes a description about Likes per Post',
+                        'description' => 'Measures the average number of likes from users on each post',
                         'values' => array(
                             'likes_per_post_weighting'=>array('label'=>'Likes per Post Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
                             'likes_per_post_best'=>array('label'=>'Best likes Per Post','hint'=>'The presence will get the best score if the average likes per post is equal to or more than this'),
@@ -110,14 +110,14 @@ class ConfigController extends BaseController {
                     ),
                     (object)array(
                         'title' => 'Sign Off',
-                        'description' => 'Here goes a description about Sign Off',
+                        'description' => 'The presence has been signed off by key stakeholders',
                         'values' => array(
                             'sign_off_weighting'=>array('label'=>'Sign Off Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
                         )
                     ),
                     (object)array(
                         'title' => 'Branding',
-                        'description' => 'Here goes a description about Branding',
+                        'description' => 'The presence has the correct branding implemented',
                         'values' => array(
                             'branding_weighting'=>array('label'=>'Branding Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
                         )
