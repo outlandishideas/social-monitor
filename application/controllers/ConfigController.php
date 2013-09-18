@@ -20,7 +20,7 @@ class ConfigController extends BaseController {
                         'title' => 'Target Audience',
                         'description' => 'Each presence has a target audience set against it. The score is given based on how close the presence is to it’s target',
                         'values' => array(
-                            'popularity_weighting'=>array('label'=>'Target Audience Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
+                            'popularity_weighting'=>array('label'=>'Target Audience Weighting'),
                             'fb_min'=>array('label'=>'Facebook Minimum Audience (% of total)'),
                             'fb_opt'=>array('label'=>'Facebook Optimum Audience (% of total)'),
 
@@ -32,7 +32,7 @@ class ConfigController extends BaseController {
                         'title' => 'Time to Target Audience',
                         'description' => 'Each presence has a target audience set against it. The score is given based on how close the presence is to it’s target',
                         'values' => array(
-                            'popularity_time_weighting'=>array('label'=>'Time to Target Audience Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
+                            'popularity_time_weighting'=>array('label'=>'Time to Target Audience Weighting'),
                             'achieve_audience_best'=>array('label'=>'Target audience best score (months)', 'hint'=>'The number of months the target audience should be reached within to get the best score'),
                             'achieve_audience_good'=>array('label'=>'Target audience good score (months)', 'hint'=>'The number of months the target audience should be reached within to get a medium score'),
                             'achieve_audience_bad'=>array('label'=>'Target audience bad score (months)', 'hint'=>'If the target audience will be reached after this number of months, the presence will get a bad score'),
@@ -42,7 +42,7 @@ class ConfigController extends BaseController {
                         'title' => 'Retweets/Shares',
                         'description' => 'How often each presence’s posts are shared (Facebook) or retweeted (Twitter)',
                         'values' => array(
-                            'sharing_weighting'=>array('label'=>'Retweets/Shares Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
+                            'sharing_weighting'=>array('label'=>'Retweets/Shares Weighting'),
                             'fb_share'=>array('label'=>'Average shares per post target (% of total audience)'),
                             'tw_retweet'=>array('label'=>'Average retweets target (% of total audience)'),
                         )
@@ -58,7 +58,7 @@ class ConfigController extends BaseController {
                         'title' => 'Replies to Number of Posts',
                         'description' => 'The more replies that each post receives the higher the engagement score will be',
                         'values' => array(
-                            'replies_to_posts_weighting'=>array('label'=>' Replies to Number of Posts Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
+                            'replies_to_posts_weighting'=>array('label'=>' Replies to Number of Posts Weighting'),
                             'replies_to_number_posts_best'=>array('label'=>'Best ratio of replies to number of posts', 'hint'=>'The presence will get the best score if the ratio of replies to the number of posts from others falls below this number'),
                             'replies_to_number_posts_good'=>array('label'=>'Good ratio of replies to number of posts', 'hint'=>'The presence will get a medium score if the ratio of replies to the number of posts from others falls below this number'),
                         )
@@ -67,7 +67,7 @@ class ConfigController extends BaseController {
                         'title' => 'Response Time',
                         'description' => 'The response time score measures how quickly the presence responds to individual posts',
                         'values' => array(
-                            'response_time_weighting'=>array('label'=>'Response Time Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
+                            'response_time_weighting'=>array('label'=>'Response Time Weighting'),
                             'response_time_best'=>array('label'=>'Perfect response time (hours)'),
                             'response_time_good'=>array('label'=>'Good response time (hours)'),
                             'response_time_bad'=>array('label'=>'Bad response time (hours)')
@@ -83,17 +83,17 @@ class ConfigController extends BaseController {
                         'title' => 'Actions Per Day',
                         'description' => 'A measurement of the average number of actions per day against the benchmark',
                         'values' => array(
-                            'posts_per_day_weighting'=>array('label'=>'Actions per Day Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
+                            'posts_per_day_weighting'=>array('label'=>'Actions per Day Weighting'),
                             'updates_per_day'=>array('label'=>'Actions Per Day'),
-                            'updates_per_day_ok_range'=>array('label'=>'Actions Per Day OK range', 'hint'=>'Number above or below [updates per day] that is considered OK'),
-                            'updates_per_day_bad_range'=>array('label'=>'Actions Per Day bad range', 'hint'=>'Number above or below [updates per day] that is considered too much or too little'),
+                            'updates_per_day_ok_range'=>array('label'=>'Actions Per Day OK range', 'hint'=>'Number above or below [actions per day] that is considered OK'),
+                            'updates_per_day_bad_range'=>array('label'=>'Actions Per Day bad range', 'hint'=>'Number above or below [actions per day] that is considered too much or too little'),
                         )
                     ),
                     (object)array(
                         'title' => 'Links Per Day',
                         'description' => 'Measures the average number of links used within posts per day',
                         'values' => array(
-                            'links_per_day_weighting'=>array('label'=>'Links Per Day Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
+                            'links_per_day_weighting'=>array('label'=>'Links Per Day Weighting'),
                             'links_per_day'=>array('label'=>'Links Per Day'),
                             'links_per_day_ok_range'=>array('label'=>'Links Per Day OK range', 'hint'=>'Number above or below [links per day] that is considered OK'),
                             'links_per_day_bad_range'=>array('label'=>'Links Per Day bad range', 'hint'=>'Number above or below [links per day] that is considered too much or too little'),
@@ -103,7 +103,7 @@ class ConfigController extends BaseController {
                         'title' => 'Likes Per Post',
                         'description' => 'Measures the average number of likes from users on each post',
                         'values' => array(
-                            'likes_per_post_weighting'=>array('label'=>'Likes per Post Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
+                            'likes_per_post_weighting'=>array('label'=>'Likes per Post Weighting'),
                             'likes_per_post_best'=>array('label'=>'Best likes Per Post','hint'=>'The presence will get the best score if the average likes per post is equal to or more than this'),
                             'likes_per_post_good'=>array('label'=>'Good likes Per Post', 'hint'=>'The presence will get a good score if the average likes per post is equal to or more than this'),
                         )
@@ -112,14 +112,14 @@ class ConfigController extends BaseController {
                         'title' => 'Sign Off',
                         'description' => 'The presence has been signed off by key stakeholders',
                         'values' => array(
-                            'sign_off_weighting'=>array('label'=>'Sign Off Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
+                            'sign_off_weighting'=>array('label'=>'Sign Off Weighting'),
                         )
                     ),
                     (object)array(
                         'title' => 'Branding',
                         'description' => 'The presence has the correct branding implemented',
                         'values' => array(
-                            'branding_weighting'=>array('label'=>'Branding Weighting', 'hint'=>'A higher weighting will make this metric more important when calculating the Badge Score'),
+                            'branding_weighting'=>array('label'=>'Branding Weighting'),
                         )
                     )
                 )
@@ -133,6 +133,12 @@ class ConfigController extends BaseController {
                     $args = $kpi->values[$key];
                     $args->key = $key;
                     $args->value = $this->getOption($key);
+	                if (preg_match('/weighting$/', $key)) {
+		                if (!$args->value) {
+			                $args->value = 1;
+		                }
+		                $args->hint = 'A higher weighting will make this metric more important when calculating the ' . $section->title . ' Badge Score';
+	                }
                     $args->error = null;
                     if (!isset($args->type)) {
                         $args->type = 'numeric';
