@@ -1,6 +1,6 @@
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm">
-	<fieldset class="inlineLabels">
-        <?php foreach ($this->values as $section) : ?>
+<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" id="settings">
+    <?php foreach ($this->values as $section) : ?>
+		<fieldset class="inlineLabels">
             <h2><?php echo $section->title; ?></h2>
             <div class="config-description"><?php echo $section->description; ?></div>
             <?php foreach ($section->kpis as $kpi) : ?>
@@ -25,12 +25,12 @@
 
                 <?php endforeach; ?>
             <?php endforeach; ?>
-        <?php endforeach; ?>
-	</fieldset>
+		</fieldset>
+    <?php endforeach; ?>
 
 	<div class="buttonHolder">
         <?php $buttons = $this->gatekeeper()->filterAll(array(
-            '<a class="button" href="%url%">Cancel</a>' => array('action'=>'index')
+            '<a class="button" href="%url%">Cancel</a>' => array('controller'=>'index', 'action'=>'index')
         ));
         foreach($buttons as $button) { echo $button; } ?>
 		<input type="submit" value="Save" class="primaryAction">

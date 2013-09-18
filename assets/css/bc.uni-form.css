@@ -241,16 +241,19 @@ ol.messages li a {
 
 /* Config Screen*/
 
-.uniForm .config-description {
+form#settings fieldset + fieldset{
+	margin-top: 80px;
+}
+form#settings .config-description {
     width: 66%;
 }
-.uniForm .config-description ul {
+form#settings .config-description ul {
     list-style: circle;
     width: 100%;
     float: none;
     margin-left: 20px;
 }
-.uniForm .config-description ul li {
+form#settings .config-description ul li {
     list-style: circle;
     width: 100%;
     margin: 0;
