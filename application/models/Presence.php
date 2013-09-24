@@ -19,6 +19,7 @@ class Model_Presence extends Model_Base {
     const METRIC_SIGN_OFF = 'sign_off';
     const METRIC_BRANDING = 'branding';
     const METRIC_SHARING = 'sharing';
+    const METRIC_KLOUT = 'klout_score';
 
 	public static $ALL_METRICS = array(
 		self::METRIC_POPULARITY_PERCENT,
@@ -576,6 +577,13 @@ class Model_Presence extends Model_Base {
 				$invert = true;
 				break;
 
+            case Model_Presence::METRIC_KLOUT:
+                $title = 'Klout Score';
+                $target = BaseController::getOption('klout_target');
+                $actual = round($this->klout_score);
+                $score = ($actual < $target) ? 0 : 100 ;
+                break;
+
 			case Model_Presence::METRIC_POSTS_PER_DAY:
 				$title = 'Average Posts Per Day';
 				$target = BaseController::getOption('updates_per_day');
@@ -626,25 +634,30 @@ class Model_Presence extends Model_Base {
 				break;
 		}
 
-		if ($invert) {
-			if(!$target){
-				$score = 0;
-			} else if($actual > $target){
-				$score = ( $target / $actual ) * 100;
-			} else {
-				$score = 100;
-			}
-		} else {
-            if($target === 0){
-                $score = 100;
-            } else if(!$target){
-				$score = 0;
-			}  else if($actual > $target){
-				$score = 100;
-			} else {
-				$score = ( $actual / $target ) * 100;
-			}
-		}
+        //if score has not already been set, generate it
+        if(!isset($score)){
+
+            if ($invert) {
+                if(!$target){
+                    $score = 0;
+                } else if($actual > $target){
+                    $score = ( $target / $actual ) * 100;
+                } else {
+                    $score = 100;
+                }
+            } else {
+                if($target === 0){
+                    $score = 100;
+                } else if(!$target){
+                    $score = 0;
+                }  else if($actual > $target){
+                    $score = 100;
+                } else {
+                    $score = ( $actual / $target ) * 100;
+                }
+            }
+
+        }
 
 		$metric = (object)array(
 			'score' => $score,
@@ -1053,8 +1066,11 @@ class Model_Presence extends Model_Base {
 		$owner = $this->getOwner();
 		if ($owner) {
 			$target = $owner->getTargetAudience();
-			$target *= BaseController::getOption($this->isForFacebook() ? 'fb_min' : 'tw_min');
-			$target /= 100;
+//			$target *= BaseController::getOption($this->isForFacebook() ? 'fb_min' : 'tw_min');
+//            $target /= 100;
+            $presences = $owner->getPresences();
+            $countPresences = count($presences);
+            $target /= $countPresences;
 			$target = round($target);
 		}
 		return $target;

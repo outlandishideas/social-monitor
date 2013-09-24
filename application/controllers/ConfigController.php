@@ -73,6 +73,14 @@ class ConfigController extends BaseController {
                             'response_time_bad'=>array('label'=>'Bad response time (hours)')
                         )
                     ),
+                    (object)array(
+                        'title' => 'Klout Score (Twitter only)',
+                        'description' => 'The Klout Score is a third party measurement of your engagement with your audience (Twitter only)',
+                        'values' => array(
+                            'klout_score_weighting'=>array('label'=>'Klout Score Weighting'),
+                            'klout_score_target'=>array('label'=>'Klout Score Target', 'hint'=>'The presence will score 100% if it meets or excedes this target, but will only receive 0% if it does not meet it.')
+                        )
+                    ),
                 )
             ),
             (object)array(

@@ -10,11 +10,11 @@ class Model_Badge {
     const BADGE_TYPE_QUALITY = 'quality';
 
     const BADGE_TYPE_REACH_DESC = '<p>The Reach Badge provides an overall score for how well the presence, country or SBU reaches its audience. This score combines the following metrics:</p><ul><li>Current number of Fans / Followers</li><li>Number of months to reach the Target number of Fans / Followers</li><li>Average number of shares / retweets for each post / tweet</li></ul><p>These metrics are compared against their targets, to provide a percentage score, and the average of both metrics is provided as the overall score for the Reach Badge.</p>';
-    const BADGE_TYPE_ENGAGEMENT_DESC = '<p>The Engagement Badge provides an overall score for how well the presence, country or SBU engages with its audience. This score combines the following metrics:</p><ul><li>The ratio of replies by the presence owner to the number of posts / tweets by others.</li><li>The average time it takes to reply to a post / tweet.</li></ul><p>These metrics are compared against their targets to provide a percentage score, and the average of both metrics is provided as the overall score for the Engagement Badge.</p>';
+    const BADGE_TYPE_ENGAGEMENT_DESC = '<p>The Engagement Badge provides an overall score for how well the presence, country or SBU engages with its audience. This score combines the following metrics:</p><ul><li>The ratio of replies by the presence owner to the number of posts / tweets by others.</li><li>The average time it takes to reply to a post / tweet.</li><li>The Klout Score for this presence (Twitter Only).</li></ul><p>These metrics are compared against their targets to provide a percentage score, and the average of both metrics is provided as the overall score for the Engagement Badge.</p>';
     const BADGE_TYPE_QUALITY_DESC = '<p>The Quality Badge provides an overall score for the quality of the posts produced by the presence or presences in a Country or SBU. This score combines the following metrics:</p><ul><li>The average number of posts / tweets per day.</li><li>The average number of links per day.</li><li>The average number of likes / retweets per post / tweet.</li><li>The Sign Off status of presence.</li><li>The Branding status of the presence.</li></ul><p>These metrics are compared against the targets to provide a percentage score, and the average of all three metrics is provided as the overall score for the Quality Badge.</p>';
 
-    const METRIC_SIGN_OFF = 'sign_off';
-    const METRIC_BRANDING = 'branding';
+//    const METRIC_SIGN_OFF = 'sign_off';
+//    const METRIC_BRANDING = 'branding';
 
 	public static $ALL_BADGE_TYPES = array(
 		self::BADGE_TYPE_TOTAL,
@@ -42,6 +42,7 @@ class Model_Badge {
             case self::BADGE_TYPE_ENGAGEMENT:
                 $metrics[Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS] = 1;
                 $metrics[Model_Presence::METRIC_RESPONSE_TIME] = 1;
+                $metrics[Model_Presence::METRIC_KLOUT] = 1;
                 break;
             case self::BADGE_TYPE_REACH:
                 $metrics[Model_Presence::METRIC_POPULARITY_PERCENT] =  1;
