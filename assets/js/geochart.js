@@ -7,8 +7,13 @@ app.geochart = {
 	setup:function ($mapDiv) {
 		$('#map-sidebar').on('click', '.country .close', function(e) {
 			e.preventDefault();
-			$(this).parents('.country').empty().hide().siblings('.instructions').show();
-		});
+
+            var currentTab = $('#map-tabs li.active').data('val');
+            var descBox = '#'+currentTab;
+
+			$(this).parents('.country').empty().hide();
+            $(descBox).removeClass('hide');
+        });
 
 		// copy the provided metrics to app.geochart, and populate values
 		app.geochart.metrics = geochartMetrics;
@@ -195,6 +200,7 @@ app.geochart = {
 		if (selection.length > 0) {
 			var id = app.geochart.data.getValue(selection[0].row, 3);
 			app.geochart.loadCampaignStats(id, 'country');
+            $('.desc-box').addClass('hide');
         }
 	},
 	/**
