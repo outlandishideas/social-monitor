@@ -8,8 +8,8 @@ app.geochart = {
 		$('#map-sidebar').on('click', '.country .close', function(e) {
 			e.preventDefault();
 
-            var currentTab = $('#map-tabs li.active').data('val');
-            var descBox = '#'+currentTab;
+            var currentTab = $('#map-tabs').find('.active').data('val');
+            var descBox = '#'+currentTab+'-desc';
 
 			$(this).parents('.country').empty().hide();
             $(descBox).removeClass('hide');
