@@ -78,5 +78,17 @@ $buttons = $this->gatekeeper()->filterAll(array(
 		</tr>
 		<?php endforeach; ?>
 	</tbody>
-</table>
-<?php endif; ?>
+</table><?php
+
+    $buttons = $this->gatekeeper()->filterAll(array(
+        '<a class="button download" href="%url%"><span class="icon-download"></span> Download CSV</a>' => array('action' => 'download'),
+    ));
+
+
+    if ($buttons) : ?>
+        <p><?php
+        echo implode('', $buttons); ?>
+        </p><?php
+    endif;
+
+endif; ?>
