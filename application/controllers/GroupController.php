@@ -253,4 +253,12 @@ class GroupController extends CampaignController {
 
     }
 
+    public function getAllBadgeData(){
+        return Model_Group::badgesData();
+    }
+
+    public function getAllCampaigns(){
+        return Model_Group::fetchAll();
+    }
+
 }

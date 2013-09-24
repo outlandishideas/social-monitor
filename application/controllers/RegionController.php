@@ -253,4 +253,12 @@ class RegionController extends CampaignController {
 
     }
 
+    public function getAllBadgeData(){
+        return Model_Region::badgesData();
+    }
+
+    public function getAllCampaigns(){
+        return Model_Region::fetchAll();
+    }
+
 }
