@@ -1068,9 +1068,7 @@ class Model_Presence extends Model_Base {
 			$target = $owner->getTargetAudience();
 //			$target *= BaseController::getOption($this->isForFacebook() ? 'fb_min' : 'tw_min');
 //            $target /= 100;
-            $presences = $owner->getPresences();
-            $countPresences = count($presences);
-            $target /= $countPresences;
+            $target /= $owner->getPresenceCount();
 			$target = round($target);
 		}
 		return $target;
