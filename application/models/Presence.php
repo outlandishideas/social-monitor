@@ -1145,8 +1145,8 @@ class Model_Presence extends Model_Base {
 		$badges = array();
 		$presenceCount = static::countAll();
 
-		if (isset($data->{$this->id})) {
-			$badgeData = $data->{$this->id};
+		if (isset($data[$this->id])) {
+			$badgeData = $data[$this->id];
 			foreach(Model_Badge::$ALL_BADGE_TYPES as $type){
 				$badges[$type] = (object)array(
 					'type'=>$type,
@@ -1177,11 +1177,7 @@ class Model_Presence extends Model_Base {
     public static function badgesData(){
         $endDate = new DateTime('now');
         $key = 'presence_badges';
-        $dataObj = BaseController::getObjectCache($key, 3600);
-        $data = array();
-        foreach($dataObj as $badge){
-            $data[$badge->presence_id] = $badge;
-        }
+        $data = BaseController::getObjectCache($key, 3600);
         if (!$data) {
             $startDate = clone $endDate;
             $data = Model_Badge::getAllData('month', $startDate, $endDate);
@@ -1196,7 +1192,12 @@ class Model_Presence extends Model_Base {
             $data = $keyedData;
             BaseController::setObjectCache($key, $data);
         }
-        return $data;
+
+        $return = array();
+        foreach($data as $badge){
+            $return[$badge->presence_id] = $badge;
+        }
+        return $return;
     }
 
 }
