@@ -1066,9 +1066,9 @@ class Model_Presence extends Model_Base {
 		$owner = $this->getOwner();
 		if ($owner) {
 			$target = $owner->getTargetAudience();
-//			$target *= BaseController::getOption($this->isForFacebook() ? 'fb_min' : 'tw_min');
-//            $target /= 100;
             $target /= $owner->getPresenceCount();
+            $target *= BaseController::getOption($this->isForFacebook() ? 'fb_min' : 'tw_min');
+            $target /= 100;
 			$target = round($target);
 		}
 		return $target;
@@ -1177,7 +1177,11 @@ class Model_Presence extends Model_Base {
     public static function badgesData(){
         $endDate = new DateTime('now');
         $key = 'presence_badges';
-        $data = BaseController::getObjectCache($key, 3600);
+        $dataObj = BaseController::getObjectCache($key, 3600);
+        $data = array();
+        foreach($dataObj as $badge){
+            $data[$badge->presence_id] = $badge;
+        }
         if (!$data) {
             $startDate = clone $endDate;
             $data = Model_Badge::getAllData('month', $startDate, $endDate);

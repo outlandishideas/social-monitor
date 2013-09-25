@@ -11,7 +11,6 @@ $buttons = $this->gatekeeper()->filterAll(array(
     </p>
 <?php endif; ?>
 
-
 <table class="text dtable" id="all-presences">
 	<thead>
     <tr><?php
@@ -58,7 +57,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
                     class="<?php echo $presence->branding ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
                     data-value="<?php echo $presence->branding ? 1 : 0 ;?>"></span>
             </td>
-            <?php $currentBadge = $this->badgeData->{$presence->id};?>
+            <?php $currentBadge = (array_key_exists($presence->id, $this->badgeData)) ? $this->badgeData[$presence->id] : null ; ?>
             <td><?php if(is_object($currentBadge)){echo (int)$currentBadge->total_rank;} else{echo 'N/A';}?></td>
             <td><?php if(is_object($currentBadge)){ echo (float)round($currentBadge->total, 1) ;} else {echo 'N/A';}?></td>
 			<td><?php echo number_format($presence->popularity) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
