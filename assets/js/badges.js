@@ -65,11 +65,11 @@ app.badges = {
 
         b.$badge.find('.score.ranking')
             .find('.number').html(data.rank).end()
+            .find('.bar .barline').css('width', Math.round( (data.rank/data.rankTotal) *100)+'%' ).end()
             .find('.text.denominator').html('of ' + data.rankTotal);
         b.$badge.find('.score.overall-score')
-            .find('.number').html(Math.round(data.score));
-        b.$badge.find('.bar .barline')
-            .css('width', Math.round(data.score)+'%');
+            .find('.number').html(Math.round(data.score)).end()
+            .find('.bar .barline').css('width', Math.round(data.score)+'%');
 
         var ref = '';
 

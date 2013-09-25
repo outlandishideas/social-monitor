@@ -342,11 +342,7 @@ span.icon-remove-sign {
 	margin-top: 6px;
 }
 
-.bar {
-	height: 12px;
-	min-width: 100px;
-	background-color: #e8e8e8;
-}
+
 
 .bar div {
 	height: 100%;
@@ -1378,6 +1374,14 @@ li.link.box {
     .badge.box h4 {
         color: #666;
     }
+    .badge.box .bar {
+         height: 12px;
+         min-width: 100px;
+         background-color: #e8e8e8;
+     }
+    .badge.box .score.ranking .bar {
+        background-color: #0a95ce;
+    }
     .badge.box .score {
         float: right;
         width: 45%;
@@ -1390,7 +1394,7 @@ li.link.box {
         float: left;
     }
     .badge.box .score.ranking .barline {
-        background-color: #0a95ce;
+        background-color: #e8e8e8;
     }
     .badge.box .score.ranking .text {
         color: #666;
