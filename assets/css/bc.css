@@ -390,7 +390,7 @@ span.icon-remove-sign {
 }
 
 #metric-picker:focus,
-#date-slider: focus,
+#date-slider:focus,
 #date-picker:focus {
     border-color: #24abf8;
     color: #333;
@@ -1112,6 +1112,7 @@ form.management #assigned {
     position: relative;
     padding: 20px;
     margin-top: 72px;
+    background-color: #ddd;
 }
 
 .health .fieldset h4 {
