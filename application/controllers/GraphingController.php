@@ -6,7 +6,7 @@ abstract class GraphingController extends BaseController {
 	protected static function graphMetrics() {
 		return array(
 			Model_Presence::METRIC_POPULARITY_RATE => 'Audience Rate',
-			Model_Presence::METRIC_POSTS_PER_DAY => 'Posts Per Day',
+			Model_Presence::METRIC_POSTS_PER_DAY => 'Actions Per Day',
 			Model_Presence::METRIC_RESPONSE_TIME => 'Response Time',
 		);
 	}
@@ -15,7 +15,7 @@ abstract class GraphingController extends BaseController {
 		return array(
 			Model_Presence::METRIC_POPULARITY_PERCENT => 'Percent of Target Audience',
 			Model_Presence::METRIC_POPULARITY_TIME => 'Time to Target Audience',
-			Model_Presence::METRIC_POSTS_PER_DAY => 'Posts Per Day',
+			Model_Presence::METRIC_POSTS_PER_DAY => 'Actions Per Day',
 			Model_Presence::METRIC_RESPONSE_TIME => 'Response Time',
 		);
 	}
@@ -25,12 +25,12 @@ abstract class GraphingController extends BaseController {
 		$graphs[] = (object)array(
 			'metric' => Model_Presence::METRIC_POPULARITY_RATE,
 			'yAxisLabel' => ($presence->isForFacebook() ? 'Fans' : 'Followers') . ' gained per day',
-			'title' => 'Audience Rate'
+			'title' => 'Gains in Followers / Fans per day'
 		);
 		$graphs[] = (object)array(
 			'metric' => Model_Presence::METRIC_POSTS_PER_DAY,
 			'yAxisLabel' => 'Posts per day',
-			'title' => 'Posts Per Day'
+			'title' => 'Actions Per Day'
 		);
 		$graphs[] = (object)array(
 			'metric' => Model_Presence::METRIC_RESPONSE_TIME,
@@ -47,6 +47,7 @@ abstract class GraphingController extends BaseController {
 		parent::init();
 
 		$colors = (object)array(
+            'grey' => '#d2d2d2',
 			'red' => '#D06959',
 			'green' => '#84af5b',
 			'orange' => '#F1DC63',
@@ -92,8 +93,8 @@ abstract class GraphingController extends BaseController {
         $badges = Model_Badge::$ALL_BADGE_TYPES;
         foreach($badges as $type){
             $geochart[$type] = (object)array(
-                'range' => array(0, 20, 50, 80, 100),
-                'colors' => array($colors->red, $colors->red, $colors->yellow, $colors->green, $colors->green)
+                'range' => array(0, 1, 20, 50, 80, 100),
+                'colors' => array($colors->grey, $colors->red, $colors->red, $colors->yellow, $colors->green, $colors->green)
             );
         }
 		foreach (Model_Badge::$ALL_BADGE_TYPES as $type) {
