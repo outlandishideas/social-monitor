@@ -320,7 +320,7 @@ class CountryController extends CampaignController {
         ),
         (object)array(
             'name' => 'target-audience',
-            'sort' => 'numeric',
+            'sort' => 'fuzzy-numeric',
             'title' => 'Target Audience',
             'csv' => true
         )

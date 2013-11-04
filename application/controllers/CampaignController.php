@@ -123,7 +123,7 @@ abstract class CampaignController extends GraphingController
             ),
             (object)array(
                 'name' => 'target-audience',
-                'sort' => 'numeric',
+                'sort' => 'fuzzy-numeric',
                 'title' => 'Target Audience',
                 'csv' => true
             )

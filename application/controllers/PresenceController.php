@@ -716,13 +716,13 @@ class PresenceController extends GraphingController
             ),
             (object)array(
                 'name' => 'current-audience',
-                'sort' => 'numeric',
+                'sort' => 'fuzzy-numeric',
                 'title' => 'Audience',
                 'csv' => true
             ),
             (object)array(
                 'name' => 'target-audience',
-                'sort' => 'numeric',
+                'sort' => 'fuzzy-numeric',
                 'title' => 'Target Audience',
                 'csv' => true
             )
