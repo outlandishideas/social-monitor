@@ -585,7 +585,7 @@ class Model_Presence extends Model_Base {
                 break;
 
 			case Model_Presence::METRIC_POSTS_PER_DAY:
-				$title = 'Average Posts Per Day';
+				$title = 'Average Actions Per Day';
 				$target = BaseController::getOption('updates_per_day');
 				$actual = $this->getAveragePostsPerDay($startDate, $endDate);
 				break;
