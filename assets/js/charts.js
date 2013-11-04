@@ -249,10 +249,9 @@ app.charts = {
 					break;
 				case 'response_time':
 					$health.find('.value')
-						.text(app.utils.numberFixedDecimal(data.average, 2))
+						.text(app.utils.numberFixedDecimal(data.average, 2) + ' hours')
 						.css('color', data.color);
 					$health.find('.target').text('Target Response Time: ' + data.target);
-
 					app.charts.addBars(c, data.points, data.chart, data.color);
 					break;
 			}
