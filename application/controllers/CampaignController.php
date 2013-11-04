@@ -118,7 +118,7 @@ abstract class CampaignController extends GraphingController
             (object)array(
                 'name' => 'total-score',
                 'sort' => 'numeric',
-                'title' => 'Global Score',
+                'title' => 'Overall Score',
                 'csv' => true
             ),
             (object)array(

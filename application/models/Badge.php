@@ -65,7 +65,7 @@ class Model_Badge {
 	public static function badgeTitle($type) {
 		switch ($type) {
 			case self::BADGE_TYPE_TOTAL:
-				return 'Global Score';
+				return 'Overall Score';
 			case self::BADGE_TYPE_REACH:
 				return 'Reach';
 			case self::BADGE_TYPE_ENGAGEMENT:
