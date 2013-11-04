@@ -1,3 +1,6 @@
+<div class="login-title">
+    <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>" class="site-title-link"><div class="site-title"><span>British Council Social Media Monitor</span></div></a>
+</div>
 <h1>Login</h1>
 <form method="post" action="<?php echo $this->url(array('controller'=>'user', 'action'=>'login')); ?>">
 	<input type="hidden" name="redirect_to" value="<?php echo $this->redirect_to; ?>" />

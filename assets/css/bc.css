@@ -45,6 +45,13 @@ abbr {
 	background: #eee;
 	padding: 20px;
 	border: 10px solid #fff;
+    position: relative;
+}
+
+#loginWrapper .login-title {
+    position: absolute;
+    top: -58px;
+    left: -19px;
 }
 
 #loginWrapper h1 {
