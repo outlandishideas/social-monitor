@@ -87,7 +87,7 @@ app.geochart = {
                     $(this).addClass('hide');
                 })
                 if(badgeType == 'total'){
-                    $('#instructions-desc').removeClass('hide');
+                    $('#' + badgeType + '-desc').removeClass('hide');
                 } else {
                     $('#' + badgeType + '-desc').removeClass('hide');
                 }
