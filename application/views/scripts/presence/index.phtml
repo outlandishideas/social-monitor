@@ -2,6 +2,7 @@
 
 $buttons = $this->gatekeeper()->filterAll(array(
 	'<a class="button add" href="%url%"><span class="icon-plus"></span> Add new</a>' => array('action' => 'new'),
+    '<a class="button download" href="%url%"><span class="icon-download"></span> Download CSV</a>' => array('action' => 'download'),
     '<a class="button compare" data-href="%url%" href="%url%"><span class="icon-eye-open"></span>  Compare</a><ul class="compare list empty"></ul>' => array('action' => 'compare', 'id'=>'')
 ));?>
 
