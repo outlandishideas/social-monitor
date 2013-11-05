@@ -37,6 +37,8 @@ class IndexController extends GraphingController
 			self::setObjectCache($key, $mapData);
 		}
 
+        $smallMapData = Model_Country::constructSmallMapData($mapData);
+
 		$key = 'group_data_' . $dayRange;
 		$groupData = self::getObjectCache($key);
 		if (!$groupData) {
@@ -72,6 +74,7 @@ class IndexController extends GraphingController
         }
 
 		$this->view->mapData = $mapData;
+        $this->view->smallMapData = $smallMapData;
 		$this->view->groupData = $groupData;
         $this->view->regionData = $regionData;
 		$this->view->metricOptions = $metrics;

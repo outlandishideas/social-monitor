@@ -29,6 +29,11 @@
 </div>
 <div id="map">
 	<div id="geo-map"></div>
+    <div id="small-maps" class="grid justify">
+        <?php foreach($this->smallMapData as $country) : ?>
+            <div id="small-map-<?php echo $country->id; ?>"></div>
+        <?php endforeach; ?>
+    </div>
     <div id="group-map">
         <h3><?php
             $url = $this->gatekeeper()->filter('%url%', array('controller' => 'group'));
@@ -57,6 +62,7 @@
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>
 	var mapData = <?php echo json_encode((object) $this->mapData); ?>;
+    var smallMapData = <?php echo json_encode(array_values($this->smallMapData)); ?>;
     var groupData = <?php echo json_encode((object) $this->groupData); ?>;
     var regionData = <?php echo json_encode((object) $this->regionData); ?>;
 </script>
