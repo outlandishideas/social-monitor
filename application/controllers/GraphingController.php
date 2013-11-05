@@ -264,4 +264,17 @@ abstract class GraphingController extends BaseController {
         return $return;
     }
 
+    public static function tableIndexHeaders() {
+
+        return array();
+    }
+
+    public static function generateTableHeaders(){
+        $return = array();
+        foreach(static::tableIndexHeaders() as $type =>  $csv){
+            $return[] = self::tableHeader($type,$csv);
+        }
+        return $return;
+    }
+
 }
