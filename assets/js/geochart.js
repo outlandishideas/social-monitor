@@ -224,8 +224,18 @@ app.geochart = {
 	 */
  	mapClickHandler: function (e) {
 		var selection = app.geochart.map.getSelection();
+        var data = app.geochart.data;
+        if(selection.length == 0){
+            for(var i in app.geochart.smallMaps){
+                selection = app.geochart.smallMaps[i].map.getSelection();
+                if(selection.length > 0) {
+                    data = app.geochart.smallMaps[i].data;
+                    break;
+                }
+            }
+        }
 		if (selection.length > 0) {
-			var id = app.geochart.data.getValue(selection[0].row, 3);
+			var id = data.getValue(selection[0].row, 3);
 			app.geochart.loadCampaignStats(id, 'country');
             $('.desc-box').addClass('hide');
         }
