@@ -236,8 +236,10 @@ app.geochart = {
         }
 		if (selection.length > 0) {
 			var id = data.getValue(selection[0].row, 3);
-			app.geochart.loadCampaignStats(id, 'country');
-            $('.desc-box').addClass('hide');
+            if(id != -1){
+                app.geochart.loadCampaignStats(id, 'country');
+                $('.desc-box').addClass('hide');
+            }
         }
 	},
 	/**
