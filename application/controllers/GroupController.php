@@ -16,6 +16,7 @@ class GroupController extends CampaignController {
 	public function indexAction() {
         $this->view->title = 'SBUs';
 		$this->view->groups = Model_Group::fetchAll();
+        $this->view->tableHeaders = static::generateTableHeaders();
 		$this->view->tableMetrics = self::tableMetrics();
         $this->view->badgeData = Model_Group::badgesData();
 	}

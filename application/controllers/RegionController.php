@@ -16,6 +16,7 @@ class RegionController extends CampaignController {
 	public function indexAction() {
         $this->view->title = 'Regions';
 		$this->view->regions = Model_Region::fetchAll();
+        $this->view->tableHeaders = self::generateTableHeaders();
 		$this->view->tableMetrics = self::tableMetrics();
         $this->view->badgeData = Model_Region::badgesData();
 	}

@@ -13,7 +13,7 @@ class CountryController extends CampaignController {
 	 */
 	public function indexAction() {
         $this->view->title = 'Countries';
-        $this->view->tableHeaders = static::tableIndexHeaders();
+        $this->view->tableHeaders = static::generateTableHeaders();
 		$this->view->tableMetrics = self::tableMetrics();
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->badgeData = Model_Country::badgesData();
@@ -293,61 +293,21 @@ class CountryController extends CampaignController {
 
     public static function tableIndexHeaders() {
 
-    $return = array(
-        (object)array(
-            'name' => 'name',
-            'sort' => 'auto',
-            'title' => 'Name',
-            'csv' => true
-        ),
-        (object)array(
-            'name' => 'country',
-            'sort' => 'auto',
-            'title' => 'Country',
-            'csv' => true
-        ),
-        (object)array(
-            'name' => 'total-rank',
-            'sort' => 'numeric',
-            'title' => 'Global Rank',
-            'csv' => true
-        ),
-        (object)array(
-            'name' => 'total-score',
-            'sort' => 'numeric',
-            'title' => 'Overall Score',
-            'csv' => true
-        ),
-        (object)array(
-            'name' => 'target-audience',
-            'sort' => 'fuzzy-numeric',
-            'title' => 'Target Audience',
-            'csv' => true
-        )
-    );
-
-    foreach(self::tableMetrics() as $name => $title){
-        $return[] = (object)array(
-            'name' => $name,
-            'sort' => 'traffic-light',
-            'width' => '150px',
-            'title' => $title,
-            'csv' => true
+        $return = array(
+            'name' => true,
+            'country' => true,
+            'total-rank' => true,
+            'total-score' => true,
+            'target-audience' => true
         );
+
+        foreach(self::tableMetrics() as $name => $title){
+            $return[$name] = true;
+        }
+        $return['presences'] = true;
+        $return['options'] = false;
+
+        return $return;
     }
-
-    $return[] = (object)array(
-        'name' => 'presences',
-        'title' => 'Presences',
-        'csv' => true
-    );
-
-    $return[] = (object)array(
-        'name' => 'options',
-        'width' => '150px'
-    );
-
-    return $return;
-}
 
 }

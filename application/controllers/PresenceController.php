@@ -679,69 +679,21 @@ class PresenceController extends GraphingController
     public static function tableIndexHeaders() {
 
         $return = array(
-            (object)array(
-                'name' => 'compare',
-                'sort' => 'checkbox',
-                'title' => '<span class="icon-check"></span>'
-            ),
-            (object)array(
-                'name' => 'handle',
-                'sort' => 'auto',
-                'title' => 'Handle',
-                'csv' => true
-            ),
-            (object)array(
-                'name' => 'sign-off',
-                'sort' => 'data-value-numeric',
-                'title' => 'Sign-Off',
-                'csv' => true
-            ),
-            (object)array(
-                'name' => 'branding',
-                'sort' => 'data-value-numeric',
-                'title' => 'Branding',
-                'csv' => true
-            ),
-            (object)array(
-                'name' => 'total-rank',
-                'sort' => 'numeric',
-                'title' => 'Global Rank',
-                'csv' => true
-            ),
-            (object)array(
-                'name' => 'total-score',
-                'sort' => 'numeric',
-                'title' => 'Overall Score',
-                'csv' => true
-            ),
-            (object)array(
-                'name' => 'current-audience',
-                'sort' => 'fuzzy-numeric',
-                'title' => 'Audience',
-                'csv' => true
-            ),
-            (object)array(
-                'name' => 'target-audience',
-                'sort' => 'fuzzy-numeric',
-                'title' => 'Target Audience',
-                'csv' => true
-            )
+            'compare' => false,
+            'handle' => true,
+            'sign-off' => true,
+            'branding' => true,
+            'total-rank' => true,
+            'total-score' => true,
+            'current-audience' => true,
+            'target-audience' => true
         );
 
         foreach(self::tableMetrics() as $name => $title){
-            $return[] = (object)array(
-                'name' => $name,
-                'sort' => 'traffic-light',
-                'width' => '150px',
-                'title' => $title,
-                'csv' => true
-            );
+            $return[$name] = true;
         }
 
-        $return[] = (object)array(
-            'name' => 'options',
-            'width' => '150px'
-        );
+        $return['options'] = false;
 
         return $return;
     }
