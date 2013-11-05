@@ -961,8 +961,31 @@ form.management #assigned {
     max-width: 940px;
 }
 
-#small-maps>div{
-    border: 1px solid #000;
+#map-container {
+
+}
+
+#small-maps {
+    float: right;
+    width: 180px;
+}
+
+#small-maps ul {
+    padding: 0;
+    margin:0;
+}
+
+#small-maps li {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+#small-maps h4 {
+    margin-bottom: 4px;
+}
+
+#geo-map {
+    /*margin-right: 200px;*/
 }
 
 #map-sidebar {

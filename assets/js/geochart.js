@@ -36,7 +36,7 @@ app.geochart = {
 			google.visualization.events.addListener(app.geochart.map, 'select', app.geochart.mapClickHandler);
 
 			app.geochart.data = app.geochart.buildDataTable(mapData);
-            if(smallMapData.length > 0){
+            if(typeof(smallMapData) != 'undefined' && smallMapData.length > 0){
                 for(var i in smallMapData){
                     var smallMap = smallMapData[i];
                     app.geochart.smallMaps[smallMap.id] = {};
@@ -45,7 +45,7 @@ app.geochart = {
                         datalessRegionColor: '#D5D5D5',
                         colorAxis: {},
                         region: smallMap.c,
-                        width: (document.getElementById('small-maps').offsetWidth/(smallMapData.length+1))
+                        width: (document.getElementById('small-maps').offsetWidth)
                     };
                     app.geochart.smallMaps[smallMap.id].map.options.region = smallMap.c;
                     google.visualization.events.addListener(app.geochart.smallMaps[smallMap.id].map, 'select', app.geochart.mapClickHandler);
