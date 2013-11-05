@@ -264,8 +264,6 @@ class Model_Campaign extends Model_Base {
 		$badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
 
 		$campaigns = array();
-        $existingCountries = array();
-
 
 		/** @var Model_Campaign $campaign */
 		foreach (static::fetchAll('id IN (' . implode(',', array_filter(array_keys($campaignIds))) . ')') as $campaign) {
@@ -276,8 +274,6 @@ class Model_Campaign extends Model_Base {
 				'p' => $campaign->getPresenceCount(),
 				'b' => array()
 			);
-
-            $existingCountries[$campaign->country] = $campaign->display_name;
 
 			// add data structures for keeping scores in
 			foreach ($badgeTypes as $type) {
@@ -331,21 +327,6 @@ class Model_Campaign extends Model_Base {
 			}
 			$campaign->b[Model_Badge::BADGE_TYPE_TOTAL] = $total;
 		}
-
-        $exampleData = reset($campaigns)->b;
-
-        array_walk_recursive($exampleData, function(&$item){if(is_object($item)){$item = (object)array('s'=>0,'l'=>'N/A');}});
-
-        foreach(array_diff_key(Model_Country::countryCodes(), $existingCountries) as $code => $name){
-            $row = (object)array(
-                'id'=>-1,
-                'c' => $code,
-                'n' => $name,
-                'p' => 0,
-                'b' => $exampleData
-            );
-            $campaigns[] = $row;
-        }
 
 		return $campaigns;
 	}

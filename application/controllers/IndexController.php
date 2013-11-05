@@ -34,6 +34,7 @@ class IndexController extends GraphingController
 		$mapData = self::getObjectCache($key);
 		if (!$mapData) {
 			$mapData = Model_Country::constructFrontPageData($badgeData, $dayRange);
+            $mapData = Model_Country::addNonCountries($mapData);
 			self::setObjectCache($key, $mapData);
 		}
 

@@ -68,6 +68,33 @@ class Model_Country extends Model_Campaign {
         return $smallMapData;
     }
 
+    public static function addNonCountries($countries){
+
+        $existingCountries = array();
+
+        foreach($countries as $country){
+            $existingCountries[$country->c] = $country->n;
+        }
+
+        $exampleData = reset($campaigns)->b;
+
+        array_walk_recursive($exampleData, function(&$item){if(is_object($item)){$item = (object)array('s'=>0,'l'=>'N/A');}});
+
+        foreach(array_diff_key(Model_Country::countryCodes(), $existingCountries) as $code => $name){
+            $row = (object)array(
+                'id'=>-1,
+                'c' => $code,
+                'n' => $name,
+                'p' => 0,
+                'b' => $exampleData
+            );
+            $campaigns[] = $row;
+        }
+
+        return $countries;
+
+    }
+
     public static function smallCountryCodes(){
         return array(
             'SG' => 'Singapore',
