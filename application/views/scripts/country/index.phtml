@@ -18,6 +18,7 @@
             foreach($this->tableHeaders as $headers): ?>
                 <th <?php
                 if(isset($headers->name)) echo "data-name='$headers->name'";
+                if(isset($headers->desc)) echo "title='$headers->desc'";
                 if(isset($headers->sort)) echo "data-sort='$headers->sort'";
                 if(isset($headers->width)) echo "data-width='$headers->width'"; ?> ><?php
                 if(isset($headers->title)) echo $headers->title; ?>
