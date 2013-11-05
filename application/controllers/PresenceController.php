@@ -13,7 +13,7 @@ class PresenceController extends GraphingController
         $this->view->title = 'Presences';
         $this->view->titleIcon = Model_Presence::ICON_TYPE;
         $this->view->presences = Model_Presence::fetchAll();
-        $this->view->tableHeaders = self::tableIndexHeaders();
+        $this->view->tableHeaders = self::generateTableHeaders();
 		$this->view->tableMetrics = self::tableMetrics();
         $this->view->badgeData = Model_Presence::badgesData();
 	}
