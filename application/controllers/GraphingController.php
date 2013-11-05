@@ -133,7 +133,7 @@ abstract class GraphingController extends BaseController {
                     'name' => 'name',
                     'sort' => 'auto',
                     'title' => 'Name',
-                    'desc' => 'This is a description for name'
+                    'desc' => null
                 );
                 break;
             case('country'):
@@ -141,15 +141,15 @@ abstract class GraphingController extends BaseController {
                     'name' => 'country',
                     'sort' => 'auto',
                     'title' => 'Country',
-                    'desc' => 'This is a description for country'
+                    'desc' => null
                 );
                 break;
             case('total-rank'):
                 $return = (object)array(
                     'name' => 'total-rank',
                     'sort' => 'numeric',
-                    'title' => 'Global Rank',
-                    'desc' => 'This is a description for total rank'
+                    'title' => 'Overall Rank',
+                    'desc' => 'Overall Rank shows the rank of this presence or group when compared against others.'
                 );
                 break;
             case('total-score'):
@@ -157,7 +157,7 @@ abstract class GraphingController extends BaseController {
                     'name' => 'total-score',
                     'sort' => 'numeric',
                     'title' => 'Overall Score',
-                    'desc' => 'This is a description for total score'
+                    'desc' => 'Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality.'
                 );
                 break;
             case('current-audience'):
@@ -165,7 +165,7 @@ abstract class GraphingController extends BaseController {
                     'name' => 'current-audience',
                     'sort' => 'fuzzy-numeric',
                     'title' => 'Audience',
-                    'desc' => 'This is a description for current audience'
+                    'desc' => 'Audience is the currently measured audience for this presence.'
                 );
                 break;
             case('target-audience'):
@@ -173,7 +173,7 @@ abstract class GraphingController extends BaseController {
                     'name' => 'target-audience',
                     'sort' => 'fuzzy-numeric',
                     'title' => 'Target Audience',
-                    'desc' => 'This is a description for target audience'
+                    'desc' => 'Target Audience is the audience that must be reached by this presence or group of presences.'
                 );
                 break;
             case(Model_Presence::METRIC_POPULARITY_PERCENT):
@@ -182,7 +182,7 @@ abstract class GraphingController extends BaseController {
                     'sort' => 'traffic-light',
                     'width' => '150px',
                     'title' => $metrics[Model_Presence::METRIC_POPULARITY_PERCENT],
-                    'desc' => 'This is a description for popularity percent'
+                    'desc' => 'Percent of target audience shows the current audience as a percentage against the target audience.'
                 );
                 break;
             case(Model_Presence::METRIC_POPULARITY_TIME):
@@ -191,7 +191,7 @@ abstract class GraphingController extends BaseController {
                     'sort' => 'traffic-light',
                     'width' => '150px',
                     'title' => $metrics[Model_Presence::METRIC_POPULARITY_TIME],
-                    'desc' => 'This is a description for popularity time'
+                    'desc' => 'Time to target audience shows the calculated time it will take to reach the target audience given the current trend in gains of followers / fans per day.'
                 );
                 break;
             case(Model_Presence::METRIC_POSTS_PER_DAY):
@@ -200,7 +200,7 @@ abstract class GraphingController extends BaseController {
                     'sort' => 'traffic-light',
                     'width' => '150px',
                     'title' => $metrics[Model_Presence::METRIC_POSTS_PER_DAY],
-                    'desc' => 'This is a description for actions per day'
+                    'desc' => 'Actions per day measures the average number of posts, comments and other actions per day.'
                 );
                 break;
             case(Model_Presence::METRIC_RESPONSE_TIME):
@@ -209,21 +209,21 @@ abstract class GraphingController extends BaseController {
                     'sort' => 'traffic-light',
                     'width' => '150px',
                     'title' => $metrics[Model_Presence::METRIC_RESPONSE_TIME],
-                    'desc' => 'This is a description for response time'
+                    'desc' => 'Response time measures the average time it takes to reply to a post or tweet'
                 );
                 break;
             case('presences'):
                 $return = (object)array(
                     'name' => 'presences',
                     'title' => 'Presences',
-                    'desc' => 'This is a description for presences'
+                    'desc' => null
                 );
                 break;
             case('options'):
                 $return = (object)array(
                     'name' => 'options',
                     'width' => '100px',
-                    'desc' => 'This is a description for options'
+                    'desc' => null
                 );
                 break;
             case('compare'):
@@ -231,7 +231,7 @@ abstract class GraphingController extends BaseController {
                     'name' => 'compare',
                     'sort' => 'checkbox',
                     'title' => '<span class="icon-check"></span>',
-                    'desc' => 'This is a description for compare'
+                    'desc' => 'Select all the presences that you would like to compare, and then click on the Compare Button above'
                 );
                 break;
             case('handle'):
@@ -239,7 +239,7 @@ abstract class GraphingController extends BaseController {
                     'name' => 'handle',
                     'sort' => 'auto',
                     'title' => 'Handle',
-                    'desc' => 'This is a description for options'
+                    'desc' => null
                 );
                 break;
             case('sign-off'):
@@ -247,7 +247,7 @@ abstract class GraphingController extends BaseController {
                     'name' => 'sign-off',
                     'sort' => 'data-value-numeric',
                     'title' => 'Sign-Off',
-                    'desc' => 'This is a description for sign off'
+                    'desc' => 'Sign Off shows whether a presence has been signed off by the Head of Digital.'
                 );
                 break;
             case('branding'):
@@ -255,7 +255,7 @@ abstract class GraphingController extends BaseController {
                     'name' => 'branding',
                     'sort' => 'data-value-numeric',
                     'title' => 'Branding',
-                    'desc' => 'This is a description for sign off'
+                    'desc' => 'Branding shows whether a presence meets the British Council branding guidelines for social media presences.'
                 );
                 break;
             default:
