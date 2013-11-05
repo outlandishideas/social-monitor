@@ -961,6 +961,10 @@ form.management #assigned {
     max-width: 940px;
 }
 
+#small-maps>div{
+    border: 1px solid #000;
+}
+
 #map-sidebar {
     width: 279px;
     float: right;
@@ -1366,12 +1370,14 @@ li.link.box {
         display: inline-block;
         width: 100%;
     }
+    .grid.justify>div {
+        display: inline-block;
+    }
 
 .badge.box {
     width: 20%;
     border: 1px solid #0a95ce;
     padding: 10px;
-    display: inline-block;
     background-color: #fff;
 
 }
