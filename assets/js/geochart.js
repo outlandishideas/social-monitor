@@ -2,6 +2,7 @@ var app = app || {};
 
 app.geochart = {
 	map: null,
+    smallMaps: [],
 	data: null,
 	metrics: {},
 	setup:function ($mapDiv) {
@@ -29,12 +30,29 @@ app.geochart = {
 		google.setOnLoadCallback(function() {
 			app.geochart.map = new google.visualization.GeoChart(document.getElementById('geo-map'));
 			app.geochart.map.options = {
-				datalessRegionColor: '#D5D5D5',
-				colorAxis: {}
-			};
+                datalessRegionColor: '#D5D5D5',
+                colorAxis: {}
+            };
 			google.visualization.events.addListener(app.geochart.map, 'select', app.geochart.mapClickHandler);
-			app.geochart.buildDataTable();
-			app.geochart.refreshMap();
+
+			app.geochart.data = app.geochart.buildDataTable(mapData);
+            if(smallMapData.length > 0){
+                for(var i in smallMapData){
+                    var smallMap = smallMapData[i];
+                    app.geochart.smallMaps[smallMap.id] = {};
+                    app.geochart.smallMaps[smallMap.id].map = new google.visualization.GeoChart(document.getElementById('small-map-'+smallMap.id));
+                    app.geochart.smallMaps[smallMap.id].map.options = {
+                        datalessRegionColor: '#D5D5D5',
+                        colorAxis: {},
+                        region: smallMap.c,
+                        width: (document.getElementById('small-maps').offsetWidth/(smallMapData.length+1))
+                    };
+                    app.geochart.smallMaps[smallMap.id].map.options.region = smallMap.c;
+                    google.visualization.events.addListener(app.geochart.smallMaps[smallMap.id].map, 'select', app.geochart.mapClickHandler);
+                    app.geochart.smallMaps[smallMap.id].data = app.geochart.buildDataTable([smallMap]);
+                }
+            }
+            app.geochart.refreshMap();
 		});
 
 		app.geochart.drawGroups();
@@ -190,6 +208,15 @@ app.geochart = {
 		view.setColumns([0, metric.days[day].columnIndex]);
 
 		app.geochart.map.draw(view, app.geochart.map.options);
+
+        for(var i in app.geochart.smallMaps){
+            var country = app.geochart.smallMaps[i];
+            country.map.options.colorAxis.values = metric.range;
+            country.map.options.colorAxis.colors = metric.colors;
+            view = new google.visualization.DataView(country.data);
+            view.setColumns([0, metric.days[day].columnIndex]);
+            country.map.draw(view, country.map.options);
+        }
 	},
 	/**
 	 * Called when a country is clicked
@@ -227,7 +254,7 @@ app.geochart = {
 	 * Creates the data structure used by the geochart.
 	 * Called when the geochart is ready for data to be added to it
 	 */
-	buildDataTable:function(){
+	buildDataTable:function(mapData){
 		if (typeof mapData == 'undefined' || mapData.length == 0) {
 			return;
 		}
@@ -235,12 +262,12 @@ app.geochart = {
 		var i, m, metric;
 
 		// define the columns
-		app.geochart.data = new google.visualization.DataTable();
-		app.geochart.data.addColumn('string', 'Country');
-		app.geochart.data.addColumn('string', 'Display Name');
-		app.geochart.data.addColumn('number', 'Presences');
-		app.geochart.data.addColumn('number', 'id');
-		var columnIndex = app.geochart.data.getNumberOfColumns();
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Country');
+        data.addColumn('string', 'Display Name');
+        data.addColumn('number', 'Presences');
+        data.addColumn('number', 'id');
+		var columnIndex = data.getNumberOfColumns();
 
 		// add 2 columns per metric (value & label)
 		for (m in app.geochart.metrics) {
@@ -249,8 +276,8 @@ app.geochart = {
 			for(i = 1; i < 31; i++ ){
 				metric.days[i] = {};
 				metric.days[i].columnIndex = columnIndex;
-				app.geochart.data.addColumn('number', metric.label);
-				app.geochart.data.addColumn('string', metric.key + '_' + i + '-label');
+				data.addColumn('number', metric.label);
+                data.addColumn('string', metric.key + '_' + i + '-label');
 				columnIndex += 2;
 			}
 		}
@@ -271,19 +298,21 @@ app.geochart = {
 				}
 
 			}
-			app.geochart.data.addRow(row);
+            data.addRow(row);
 		}
 
 		// apply the tooltip formatters for each metric
 		var titleFormatter = new google.visualization.PatternFormat('{1} (Presences: {2})');
-		titleFormatter.format(app.geochart.data, [0, 1, 2], 0);
+		titleFormatter.format(data, [0, 1, 2], 0);
 		var kpiFormatter = new google.visualization.PatternFormat('{1}');
 		for (m in app.geochart.metrics) {
 			metric = app.geochart.metrics[m];
 			for(i = 1; i < 31; i++ ){
 				var ci = metric.days[i].columnIndex;
-				kpiFormatter.format(app.geochart.data, [ci, ci+1]);
+				kpiFormatter.format(data, [ci, ci+1]);
 			}
 		}
+
+        return data;
 	}
 };
