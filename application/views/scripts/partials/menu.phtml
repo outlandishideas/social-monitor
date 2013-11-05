@@ -13,7 +13,6 @@
             $classes = array($page->class);
             $urlTest = $this->gatekeeper()->filter('%url%', array('controller' => $page->controller, 'action' => $page->action));
             if (!$urlTest) {
-	            $href = '';
 	            $classes[] = 'disabled';
             } else {
 	            $classes[] = 'enabled';
