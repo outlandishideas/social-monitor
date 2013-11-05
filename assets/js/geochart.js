@@ -224,11 +224,13 @@ app.geochart = {
 	 */
  	mapClickHandler: function (e) {
 		var selection = app.geochart.map.getSelection();
+        app.geochart.map.setSelection();
         var data = app.geochart.data;
         if(selection.length == 0){
             for(var i in app.geochart.smallMaps){
                 selection = app.geochart.smallMaps[i].map.getSelection();
                 if(selection.length > 0) {
+                    app.geochart.smallMaps[i].map.setSelection();
                     data = app.geochart.smallMaps[i].data;
                     break;
                 }
