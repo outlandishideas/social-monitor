@@ -222,6 +222,7 @@ abstract class GraphingController extends BaseController {
             case('options'):
                 $return = (object)array(
                     'name' => 'options',
+                    'width' => '100px',
                     'desc' => 'This is a description for options'
                 );
                 break;
