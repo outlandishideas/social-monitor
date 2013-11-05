@@ -95,19 +95,20 @@ app.geochart = {
 				app.geochart.refreshMap();
 				app.geochart.refreshGroups();
                 app.geochart.refreshRegions();
+                $('.desc-box').each(function(){
+                    $(this).addClass('hide');
+                })
 				var $country = $('#map-sidebar').find('#campaign-stats');
 				if ($country.length > 0) {
 					var id = $country.data('id');
                     var model = $country.data('model');
 					app.geochart.loadCampaignStats(id, model);
-				}
-                $('.desc-box').each(function(){
-                    $(this).addClass('hide');
-                })
-                if(badgeType == 'total'){
-                    $('#' + badgeType + '-desc').removeClass('hide');
-                } else {
-                    $('#' + badgeType + '-desc').removeClass('hide');
+				} else {
+                    if(badgeType == 'total'){
+                        $('#' + badgeType + '-desc').removeClass('hide');
+                    } else {
+                        $('#' + badgeType + '-desc').removeClass('hide');
+                    }
                 }
 			}
 		})
@@ -249,7 +250,7 @@ app.geochart = {
 	 * @param id
 	 * @param type country, group or region
 	 */
-	loadCampaignStats: function(id, type) {
+	loadCampaignStats: function(id, type, score) {
 		var $mapSidebar = $('#map-sidebar');
 		var $loading = $mapSidebar.find('.loading');
 		$loading.show();
