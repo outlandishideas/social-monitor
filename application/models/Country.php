@@ -54,6 +54,28 @@ class Model_Country extends Model_Campaign {
 		}
 	}
 
+    public static function constructSmallMapData($mapData){
+        $smallCountries = self::smallCountryCodes();
+
+        $smallMapData = array();
+
+        foreach($mapData as $country){
+            if(array_key_exists($country->c, $smallCountries)){
+                $smallMapData[$country->id] = $country;
+            }
+        }
+
+        return $smallMapData;
+    }
+
+    public static function smallCountryCodes(){
+        return array(
+            'SG' => 'Singapore',
+            'AL' => 'Albania',
+            'HK' => 'Hong Kong'
+        );
+    }
+
 	public static function countryCodes() {
 		return array(
 			'AF' => 'Afghanistan',
