@@ -76,7 +76,7 @@ class Model_Country extends Model_Campaign {
             $existingCountries[$country->c] = $country->n;
         }
 
-        $exampleData = reset($campaigns)->b;
+        $exampleData = reset($countries)->b;
 
         array_walk_recursive($exampleData, function(&$item){if(is_object($item)){$item = (object)array('s'=>0,'l'=>'N/A');}});
 
@@ -88,7 +88,7 @@ class Model_Country extends Model_Campaign {
                 'p' => 0,
                 'b' => $exampleData
             );
-            $campaigns[] = $row;
+            $countries[] = $row;
         }
 
         return $countries;
