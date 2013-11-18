@@ -1036,16 +1036,17 @@ class Model_Presence extends Model_Base {
             );
             $args = array(':pid'=>$this->id);
             $stmt = $this->_db->prepare("
-              SELECT t.post_id as id, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
+              SELECT t.post_id as id, t.created_time as created, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
               FROM $tableName AS t
                 INNER JOIN $tableName AS r ON t.post_id = r.in_response_to
                 WHERE " . implode(' AND ', $clauses) ."");
             $stmt->execute($args);
             foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
                 $key = $r->id;
-                if(!array_key_exists($key, $responseData)) $responseData[$key] = 0;
-                if (empty($responseData[$key]) || $r->time < $responseData[$key]) {
-                    $responseData[$key] = $r->time;
+                if(!array_key_exists($key, $responseData)) $responseData[$key] = (object)array('diff' => null, 'created' => null);
+                if (empty($responseData[$key]->diff) || $r->time < $responseData[$key]->diff) {
+                    $responseData[$key]->diff = $r->time;
+                    $responseData[$key]->created = $r->created;
                 }
             }
 		} else {
@@ -1054,16 +1055,17 @@ class Model_Presence extends Model_Base {
             );
             $args = array(':pid'=>$this->id);
             $stmt = $this->_db->prepare("
-              SELECT t.tweet_id as id, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
+              SELECT t.tweet_id as id, t.created_time as created, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
               FROM $tableName AS t
                 INNER JOIN $tableName AS r ON t.tweet_id = r.in_reply_to_status_uid
                 WHERE " . implode(' AND ', $clauses) ."");
             $stmt->execute($args);
             foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
                 $key = $r->id;
-                if(!array_key_exists($key, $responseData)) $responseData[$key] = 0;
-                if (empty($responseData[$key]) || $r->time < $responseData[$key]) {
-                    $responseData[$key] = $r->time;
+                if(!array_key_exists($key, $responseData)) $responseData[$key] = (object)array('diff' => null, 'created' => null);
+                if (empty($responseData[$key]->diff) || $r->time < $responseData[$key]->diff) {
+                    $responseData[$key]->diff = $r->time;
+                    $responseData[$key]->created = $r->created;
                 }
             }
         }

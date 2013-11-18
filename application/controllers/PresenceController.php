@@ -408,14 +408,13 @@ class PresenceController extends GraphingController
 		} else {
 			$now = time();
 			$totalTime = 0;
-			foreach ($data as $row) {
-				$key = gmdate('Y-m-d', strtotime($row->post->created_time));
+			foreach ($data as $id => $row) {
+				$key = gmdate('Y-m-d', strtotime($row->created));
 				if (!array_key_exists($key, $points)) {
 					$points[$key] = (object)array('date'=>$key, 'value'=>array());
 				}
 
-				$diff = ($row->first_response ? strtotime($row->first_response->created_time) : $now) - strtotime($row->post->created_time);
-				$diff /= (60*60);
+				$diff = $row->diff;
 				$diff = min($badTime, $diff);
 				$totalTime += $diff;
 				$points[$key]->value[] = $diff;
