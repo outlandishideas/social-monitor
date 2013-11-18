@@ -20,6 +20,50 @@ class Util_Twitter {
 		return self::token()->apiRequest('users/show', array('screen_name'=>$screenName));
 	}
 
+    /**
+     * Gets an array of tweets that mention the user
+     * @param $userHandle
+     * @param null $minTweetId
+     * @param null $maxTweetId
+     * @return array
+     */
+    public static function userMentions($userHandle, $minTweetId = null, $maxTweetId = null) {
+        $tweets = array();
+        if ($userHandle) {
+            $token = self::token();
+            $args = array(
+                'user_id'         => '@'.$userHandle,
+                'count'           => Zend_Registry::get('config')->twitter->fetch_per_page,
+                'exclude_replies' => true,
+                'include_rts'     => false,
+                'trim_user'       => true
+            );
+            if ($minTweetId) {
+                // since_id is exclusive
+                $args['since_id'] = $minTweetId;
+            }
+            if ($maxTweetId) {
+                $args['max_id'] = $maxTweetId;
+            }
+
+            do {
+                $result = $token->apiRequest('statuses/user_timeline', $args);
+                $tweets = array_merge($tweets, $result);
+
+                // if we have a minimum tweet id, and we fetch the exact number we asked for, we likely need to fill in the gap using another request
+                $repeat = ($minTweetId && count($result) == $args['count']);
+
+                if ($repeat) {
+                    $lowestId = min(array_map(function($t) { return $t->id_str; }, $result));
+                    //TODO check whether system is 64-bit
+                    // max_id is inclusive, so need to subtract 1
+                    $args['max_id'] = function_exists('bcsub') ? bcsub($lowestId, 1) : $lowestId - 1;
+                }
+            } while ($repeat);
+        }
+        return $tweets;
+    }
+
 	/**
 	 * Gets an array of tweets for the given user
 	 * @param $userId
