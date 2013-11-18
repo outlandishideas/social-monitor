@@ -144,6 +144,15 @@ app.init = {
             })
         },
 
+        '.desc-box': function($items) {
+            $items.each(function(){
+                var $item = $(this);
+                $item.on('click', 'h3 [class^="icon-"]', function(){
+                    $items.toggleClass('min').find('h3 [class^="icon-"]').toggleClass('icon-rotate-270');
+                });
+            });
+        },
+
 		'#date-picker': function($item) {
 			$item.daterangepicker({
 				dateFormat:jsConfig.dateFormat,

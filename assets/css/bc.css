@@ -1019,6 +1019,20 @@ form.management #assigned {
     display: none;
 }
 
+#map-sidebar .desc-box h3 [class^="icon-"] {
+    float: right;
+    cursor: pointer;
+}
+
+#map-sidebar .desc-box.min .desc-content {
+    display: none;
+}
+
+#map-sidebar .desc-box.min h3 [class^="icon-"] {
+    float: right;
+    cursor: pointer;
+}
+
 #map-sidebar .country.hide {
     opacity:0;
 }
