@@ -370,32 +370,10 @@ class Model_Presence extends Model_Base {
 			$stmt->execute(array(':id'=>$this->id));
 			$lastTweetId = $stmt->fetchColumn();
 			$tweets = Util_Twitter::userTweets($this->uid, $lastTweetId);
-			while ($tweets) {
-				$tweet = array_shift($tweets);
-				foreach ($tweet->entities->urls as $urlInfo) {
-					try {
-						$url = Util_Http::resolveUrl($urlInfo->expanded_url);
-						$domain = $this->extractDomain($url);
-						$links[] = array(
-							'url'=>$url,
-							'domain'=>$domain,
-							'external_id'=>$tweet->id_str,
-							'type'=>$this->type
-						);
-					} catch (Exception $ex) { }
-				}
-				$parsedTweet = Util_Twitter::parseTweet($tweet);
-				$statuses[$tweet->id_str] = array(
-					'tweet_id' => $tweet->id_str,
-					'presence_id' => $this->id,
-					'text_expanded' => $parsedTweet['text_expanded'],
-					'created_time' => gmdate('Y-m-d H:i:s', strtotime($tweet->created_at)),
-					'retweet_count' => $tweet->retweet_count,
-					'html_tweet' => $parsedTweet['html_tweet'],
-					'in_reply_to_user_uid' => $tweet->in_reply_to_user_id_str,
-					'in_reply_to_status_uid' => $tweet->in_reply_to_status_id_str
-				);
-			}
+            $mentions = Util_Twitter::userMentions($this->handle, $lastTweetId);
+            $statusesTweets = $this->extractTweets($tweets);
+            $statusesMentions = $this->extractTweets($mentions, true);
+            $statuses = array_merge($statusesTweets, $statusesMentions);
 		}
 
 		if ($statuses) {
@@ -457,6 +435,38 @@ class Model_Presence extends Model_Base {
 		}
 		return $links;
 	}
+
+    private function extractTweets($tweets = array(), $mentions = false){
+        $statuses = array();
+        while ($tweets) {
+            $tweet = array_shift($tweets);
+            foreach ($tweet->entities->urls as $urlInfo) {
+                try {
+                    $url = Util_Http::resolveUrl($urlInfo->expanded_url);
+                    $domain = $this->extractDomain($url);
+                    $links[] = array(
+                        'url'=>$url,
+                        'domain'=>$domain,
+                        'external_id'=>$tweet->id_str,
+                        'type'=>$this->type
+                    );
+                } catch (Exception $ex) { }
+            }
+            $parsedTweet = Util_Twitter::parseTweet($tweet);
+            $statuses[$tweet->id_str] = array(
+                'tweet_id' => $tweet->id_str,
+                'presence_id' => $this->id,
+                'text_expanded' => $parsedTweet['text_expanded'],
+                'created_time' => gmdate('Y-m-d H:i:s', strtotime($tweet->created_at)),
+                'retweet_count' => $tweet->retweet_count,
+                'html_tweet' => $parsedTweet['html_tweet'],
+                'responsible_presence' => $mentions ? $this->id : null,
+                'in_reply_to_user_uid' => $tweet->in_reply_to_user_id_str,
+                'in_reply_to_status_uid' => $tweet->in_reply_to_status_id_str
+            );
+        }
+        return $statuses;
+    }
 
 	/**
 	 * Gets historical information about this presence
