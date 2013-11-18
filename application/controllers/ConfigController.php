@@ -179,7 +179,7 @@ class ConfigController extends BaseController {
 			}
             $adapter = new Zend_File_Transfer();
 
-            $adapter->addFilter('Rename', array('target' => APPLICATION_PATH . '/../data/uploads/KPIs.pdf',
+            $adapter->addFilter('Rename', array('target' => APPLICATION_PATH . '/../data/uploads/kpis.pdf',
                 'overwrite' => true));
 
             if (!$adapter->receive()) {
