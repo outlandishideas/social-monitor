@@ -84,7 +84,7 @@ app.geochart = {
 		if ($active.length == 0) {
 			$active.find('li:first').addClass('active');
 		}
-		$tabs.on('click', 'li', function(event){
+		$tabs.on('click', 'li:not(.download)', function(event){
 			event.preventDefault();
 
             var badgeType = $(this).data('val');
