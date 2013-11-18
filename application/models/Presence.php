@@ -1031,52 +1031,33 @@ class Model_Presence extends Model_Base {
 		$responseData = array();
         $tableName = $this->statusTable();
         if ($this->isForFacebook()) {
-			$clauses = array(
-				'presence_id = :pid',
-				'created_time >= :start_date',
-				'created_time <= :end_date',
-				'posted_by_owner = 0',
-				"(in_response_to IS NULL OR in_response_to = '')"
-			);
-			$args = array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate);
-			$stmt = $this->_db->prepare("SELECT * FROM $tableName WHERE " . implode(' AND ', $clauses) . ' ORDER BY created_time DESC');
-			$stmt->execute($args);
-			foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $p) {
-				$responseData[$p->post_id] = (object)array(
-					'post'=>$p,
-					'first_response'=>null
-				);
-			}
-
-			if ($responseData) {
-				// now get the responses
-				$postIds = array_map(function($a) { return "'" . $a . "'"; }, array_keys($responseData));
-				$stmt = $this->_db->prepare("SELECT * FROM $tableName WHERE presence_id = :pid AND in_response_to IN (" . implode(',', $postIds) . ')');
-				$stmt->execute(array(':pid'=>$this->id));
-				foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
-					$key = $r->in_response_to;
-					if (!$responseData[$key]->first_response || $r->created_time < $responseData[$key]->first_response->created_time) {
-						$responseData[$key]->first_response = $r;
-					}
-				}
-			}
-
-			foreach ($responseData as $i=>$row) {
-				if (!$row->post->needs_response && !$row->first_response) {
-					unset($responseData[$i]);
-				}
-			}
+            $clauses = array(
+                'r.presence_id = :pid',
+            );
+            $args = array(':pid'=>$this->id);
+            $stmt = $this->_db->prepare("
+              SELECT t.post_id as id, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
+              FROM $tableName AS t
+                INNER JOIN $tableName AS r ON t.post_id = r.in_response_to
+                WHERE " . implode(' AND ', $clauses) ."");
+            $stmt->execute($args);
+            foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
+                $key = $r->id;
+                if(!array_key_exists($key, $responseData)) $responseData[$key] = 0;
+                if (empty($responseData[$key]) || $r->time < $responseData[$key]) {
+                    $responseData[$key] = $r->time;
+                }
+            }
 		} else {
             $clauses = array(
                 't.responsible_presence = :pid',
             );
             $args = array(':pid'=>$this->id);
             $stmt = $this->_db->prepare("
-              SELECT t.tweet_id as id, TIME_FORMAT( TIMEDIFF( r.created_time, t.created_time ) ,  '%h:%i' ) AS time
+              SELECT t.tweet_id as id, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
               FROM $tableName AS t
                 INNER JOIN $tableName AS r ON t.tweet_id = r.in_reply_to_status_uid
-                WHERE " . implode(' AND ', $clauses) ."
-                GROUP BY t.tweet_id");
+                WHERE " . implode(' AND ', $clauses) ."");
             $stmt->execute($args);
             foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
                 $key = $r->id;
