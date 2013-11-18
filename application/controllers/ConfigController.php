@@ -177,6 +177,19 @@ class ConfigController extends BaseController {
                     }
                 }
 			}
+            $adapter = new Zend_File_Transfer();
+
+            $adapter->addFilter('Rename', array('target' => APPLICATION_PATH . '/../data/uploads/KPIs.pdf',
+                'overwrite' => true));
+
+            if (!$adapter->receive()) {
+                $messages = $adapter->getMessages();
+                foreach($messages as $message){
+                    $this->_helper->FlashMessenger(array('error' => $message));
+                }
+            } else {
+                $this->_helper->FlashMessenger(array('info' => 'File Successfully uploaded'));
+            }
 
 			if ($valid) {
                 foreach($values as $section){

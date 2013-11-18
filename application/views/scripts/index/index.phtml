@@ -2,7 +2,7 @@
     <?php $first = true; foreach($this->metricOptions as $badge => $title) : ?>
         <li class="<?php if ($first) echo 'active';?>" data-val="<?php echo $badge; ?>"><?php echo ucfirst($title); ?></li>
     <?php $first = false; endforeach; ?>
-        <li class="fl-right download"><a href="#"><span class="icon-download icon-large"></span> KPIs</a></li>
+        <li class="fl-right download"><a href="<?php echo $this->url() . 'data/uploads/KPIs.pdf'; ?>" target="_blank"><span class="icon-download icon-large"></span> KPIs</a></li>
 </ul>
 
 <div class="map-date">

@@ -1,4 +1,4 @@
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" id="settings">
+<form method="post" action="<?php echo $this->url(); ?>" enctype="multipart/form-data" class="uniForm" id="settings">
     <?php foreach ($this->values as $section) : ?>
 		<fieldset class="inlineLabels">
             <h2><?php echo $section->title; ?></h2>
@@ -27,6 +27,16 @@
             <?php endforeach; ?>
 		</fieldset>
     <?php endforeach; ?>
+    <fieldset class="inlineLabels">
+        <h2>Upload KPI File</h2>
+        <div class="config-description">Upload the KPI file that can be downloaded from the front page</div>
+        <div class="ctrlHolder">
+            <label  for="uploadedfile">
+                Choose a file to upload:
+            </label>
+            <input name="uploadedfile" id="uploadedfile" type="file" />
+        </div>
+    </fieldset>
 
 	<div class="buttonHolder">
         <?php $buttons = $this->gatekeeper()->filterAll(array(

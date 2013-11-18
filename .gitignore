@@ -5,3 +5,5 @@
 !/log/index.html
 /lib/bin
 /application/configs/config.yaml
+/data/uploads/*
+!/data/uploads/nothing.txt
