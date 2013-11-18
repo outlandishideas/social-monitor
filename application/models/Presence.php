@@ -1029,8 +1029,8 @@ class Model_Presence extends Model_Base {
 
 	public function getResponseData($startDate, $endDate) {
 		$responseData = array();
-		if ($this->isForFacebook()) {
-			$tableName = $this->statusTable();
+        $tableName = $this->statusTable();
+        if ($this->isForFacebook()) {
 			$clauses = array(
 				'presence_id = :pid',
 				'created_time >= :start_date',
@@ -1066,7 +1066,26 @@ class Model_Presence extends Model_Base {
 					unset($responseData[$i]);
 				}
 			}
-		}
+		} else {
+            $clauses = array(
+                't.responsible_presence = :pid',
+            );
+            $args = array(':pid'=>$this->id);
+            $stmt = $this->_db->prepare("
+              SELECT t.tweet_id as id, TIME_FORMAT( TIMEDIFF( r.created_time, t.created_time ) ,  '%h:%i' ) AS time
+              FROM $tableName AS t
+                INNER JOIN $tableName AS r ON t.tweet_id = r.in_reply_to_status_uid
+                WHERE " . implode(' AND ', $clauses) ."
+                GROUP BY t.tweet_id");
+            $stmt->execute($args);
+            foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
+                $key = $r->id;
+                if(!array_key_exists($key, $responseData)) $responseData[$key] = 0;
+                if (empty($responseData[$key]) || $r->time < $responseData[$key]) {
+                    $responseData[$key] = $r->time;
+                }
+            }
+        }
 		return $responseData;
 	}
 
