@@ -911,7 +911,6 @@ class Model_Presence extends Model_Base {
 		$tableName = $this->statusTable();
 		if ($this->isForFacebook()) {
 			$clauses[] = 'posted_by_owner = 1';
-			$clauses[] = 'in_response_to IS NULL';
 		}
 
 		$sql = 'SELECT COUNT(1)/DATEDIFF(:end_date, :start_date) AS av FROM ' . $tableName . ' WHERE ' . implode(' AND ', $clauses);
