@@ -932,12 +932,9 @@ class Model_Presence extends Model_Base {
 	public function getAverageResponseTime($startDate, $endDate) {
 		$data = $this->getResponseData($startDate, $endDate);
 		$maxTime = floatval(BaseController::getOption('response_time_bad'));
-		$now = time();
 		$totalTime = 0;
 		if ($data) {
-			foreach ($data as $row) {
-				$diff = ($row->first_response ? strtotime($row->first_response->created_time) : $now) - strtotime($row->post->created_time);
-				$diff /= (60*60);
+			foreach ($data as $diff) {
 				$diff = min($maxTime, $diff);
 				$totalTime += $diff;
 			}
@@ -1033,8 +1030,10 @@ class Model_Presence extends Model_Base {
         if ($this->isForFacebook()) {
             $clauses = array(
                 'r.presence_id = :pid',
+//                'created_time >= :start_date',
+//                'created_time <= :end_date'
             );
-            $args = array(':pid'=>$this->id);
+            $args = array(':pid'=>$this->id/*,':start_date' => $startDate, ':end_date' => $endDate*/);
             $stmt = $this->_db->prepare("
               SELECT t.post_id as id, t.created_time as created, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
               FROM $tableName AS t
@@ -1052,8 +1051,10 @@ class Model_Presence extends Model_Base {
 		} else {
             $clauses = array(
                 't.responsible_presence = :pid',
+//                'created_time >= :start_date',
+//                'created_time <= :end_date'
             );
-            $args = array(':pid'=>$this->id);
+            $args = array(':pid'=>$this->id/*,':start_date' => $startDate, ':end_date' => $endDate*/);
             $stmt = $this->_db->prepare("
               SELECT t.tweet_id as id, t.created_time as created, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
               FROM $tableName AS t
