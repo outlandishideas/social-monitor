@@ -32,7 +32,7 @@ class Util_Twitter {
         if ($userHandle) {
             $token = self::token();
             $args = array(
-                'user_id'         => '@'.$userHandle,
+                'q'         => '@'.$userHandle,
                 'count'           => Zend_Registry::get('config')->twitter->fetch_per_page,
                 'exclude_replies' => true,
                 'include_rts'     => false,
