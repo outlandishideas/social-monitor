@@ -1060,6 +1060,7 @@ class Model_Presence extends Model_Base {
 		} else {
             $clauses = array(
                 't.responsible_presence = :pid',
+                't.needs_response = 1',
                 't.created_time >= :start_date',
                 't.created_time <= :end_date'
             );
