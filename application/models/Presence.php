@@ -461,11 +461,20 @@ class Model_Presence extends Model_Base {
                 'retweet_count' => $tweet->retweet_count,
                 'html_tweet' => $parsedTweet['html_tweet'],
                 'responsible_presence' => $mentions ? $this->id : null,
+                'needs_response' => $mentions && !$this->isRetweet($tweet) ? 1 : 0,
                 'in_reply_to_user_uid' => $tweet->in_reply_to_user_id_str,
                 'in_reply_to_status_uid' => $tweet->in_reply_to_status_id_str
             );
         }
         return $statuses;
+    }
+
+    private function isRetweet($tweet){
+        if(isset($tweet->retweeted_status) && $tweet->retweeted_status->user->id == $this->uid) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 	/**
@@ -934,8 +943,8 @@ class Model_Presence extends Model_Base {
 		$maxTime = floatval(BaseController::getOption('response_time_bad'));
 		$totalTime = 0;
 		if ($data) {
-			foreach ($data as $diff) {
-				$diff = min($maxTime, $diff);
+			foreach ($data as $row) {
+				$diff = min($maxTime, $row->diff);
 				$totalTime += $diff;
 			}
 			return $totalTime/count($data);
@@ -1030,8 +1039,8 @@ class Model_Presence extends Model_Base {
         if ($this->isForFacebook()) {
             $clauses = array(
                 'r.presence_id = :pid',
-//                'created_time >= :start_date',
-//                'created_time <= :end_date'
+                'created_time >= :start_date',
+                'created_time <= :end_date'
             );
             $args = array(':pid'=>$this->id/*,':start_date' => $startDate, ':end_date' => $endDate*/);
             $stmt = $this->_db->prepare("
@@ -1051,8 +1060,8 @@ class Model_Presence extends Model_Base {
 		} else {
             $clauses = array(
                 't.responsible_presence = :pid',
-//                'created_time >= :start_date',
-//                'created_time <= :end_date'
+                'created_time >= :start_date',
+                'created_time <= :end_date'
             );
             $args = array(':pid'=>$this->id/*,':start_date' => $startDate, ':end_date' => $endDate*/);
             $stmt = $this->_db->prepare("

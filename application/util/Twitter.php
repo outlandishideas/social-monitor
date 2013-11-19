@@ -47,14 +47,14 @@ class Util_Twitter {
             }
 
             do {
-                $result = $token->apiRequest('statuses/user_timeline', $args);
-                $tweets = array_merge($tweets, $result);
+                $result = $token->apiRequest('search/tweets', $args);
+                $tweets = array_merge($tweets, $result->statuses);
 
                 // if we have a minimum tweet id, and we fetch the exact number we asked for, we likely need to fill in the gap using another request
-                $repeat = ($minTweetId && count($result) == $args['count']);
+                $repeat = ($minTweetId && count($result->statuses) == $args['count']);
 
                 if ($repeat) {
-                    $lowestId = min(array_map(function($t) { return $t->id_str; }, $result));
+                    $lowestId = min(array_map(function($t) { return $t->id_str; }, $result->statuses));
                     //TODO check whether system is 64-bit
                     // max_id is inclusive, so need to subtract 1
                     $args['max_id'] = function_exists('bcsub') ? bcsub($lowestId, 1) : $lowestId - 1;
