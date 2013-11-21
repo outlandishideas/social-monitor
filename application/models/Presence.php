@@ -625,6 +625,7 @@ class Model_Presence extends Model_Base {
 				$title = 'Responsiveness';
 				$target = BaseController::getOption('updates_per_day');
 				$actual = $this->getAverageResponseTime($startDate, $endDate);
+                if($actual === 0) $score = 0;
 				$invert = true;
 				break;
 

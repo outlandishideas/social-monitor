@@ -219,7 +219,9 @@ class Model_Badge {
 			);
 
 			foreach($badgeMetrics as $badgeType => $metrics){
-				$dataRow->$badgeType = $presence->getMetricsScore($date, $metrics, $range);
+
+                if($presence->isForFacebook() && $badgeType == self::BADGE_TYPE_ENGAGEMENT) unset($metrics[Model_Presence::METRIC_KLOUT]);
+                $dataRow->$badgeType = $presence->getMetricsScore($date, $metrics, $range);
 			}
 
 			$data[] = $dataRow;
