@@ -224,6 +224,7 @@ class Model_Country extends Model_Campaign {
 			'KI' => 'Kiribati',
 			'KP' => 'Korea, Democratic People\'s Republic of',
 			'KR' => 'Korea, Republic of',
+            'XK' => 'Kosovo',
 			'KW' => 'Kuwait',
 			'KG' => 'Kyrgyzstan',
 			'LA' => 'Lao People\'s Democratic Republic',
