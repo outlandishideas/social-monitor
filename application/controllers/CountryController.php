@@ -79,6 +79,13 @@ class CountryController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 //			$oldTimeZone = $editingCountry->timezone;
+            if (!$this->_request->facebook_pop) {
+                $this->_request->facebook_pop = 50;
+            }
+            if (!$this->_request->twitter_pop) {
+                $this->_request->twitter_pop = 50;
+            }
+
 			$editingCountry->fromArray($this->_request->getParams());
 
 			$errorMessages = array();
