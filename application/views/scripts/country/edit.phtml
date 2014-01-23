@@ -40,6 +40,27 @@ if ($buttons && $this->showButtons) :
 			<input name="audience" value="<?php echo htmlspecialchars($this->editingCountry->audience); ?>" class="textInput"
 			       type="text" id="audience">
 		</div>
+        <div class="ctrlHolder">
+            <label for="population">
+                Country population
+            </label>
+            <input name="population" value="<?php echo htmlspecialchars($this->editingCountry->population); ?>" class="textInput"
+                   type="text" id="population">
+        </div>
+        <div class="ctrlHolder">
+            <label for="facebook_pop">
+                Facebook population %
+            </label>
+            <input name="facebook_pop" value="<?php echo htmlspecialchars($this->editingCountry->facebook_pop); ?>" class="textInput"
+                   type="text" id="facebook_pop">
+        </div>
+        <div class="ctrlHolder">
+            <label for="twitter_pop">
+                Twitter population %
+            </label>
+            <input name="twitter_pop" value="<?php echo htmlspecialchars($this->editingCountry->twitter_pop); ?>" class="textInput"
+                   type="text" id="twitter_pop">
+        </div>
 	</fieldset>
 
 	<div class="buttonHolder">
