@@ -1089,6 +1089,10 @@ class Model_Presence extends Model_Base {
 		$owner = $this->getOwner();
 		if ($owner) {
 			$target = $owner->getTargetAudience();
+            if($owner->is_country == 1) {
+                $target += $this->isForFacebook() ? $owner->getFacebookDigitalPopulation() : $owner->getTwitterDigitalPopulation();
+                $target /= 2;
+            }
             $target /= $owner->getPresenceCount();
             $target *= BaseController::getOption($this->isForFacebook() ? 'fb_min' : 'tw_min');
             $target /= 100;
