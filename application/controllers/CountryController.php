@@ -78,13 +78,6 @@ class CountryController extends CampaignController {
 		$this->view->countryCodes = Model_Country::countryCodes();
 
 		if ($this->_request->isPost()) {
-//			$oldTimeZone = $editingCountry->timezone;
-            if (!$this->_request->facebook_pop) {
-                $this->_request->facebook_pop = 50;
-            }
-            if (!$this->_request->twitter_pop) {
-                $this->_request->twitter_pop = 50;
-            }
 
 			$editingCountry->fromArray($this->_request->getParams());
 
@@ -95,6 +88,9 @@ class CountryController extends CampaignController {
 			if (!$this->_request->country) {
 				$errorMessages[] = 'Please select a country';
 			}
+
+            $editingCountry->penetration = max(0, $editingCountry->penetration);
+            $editingCountry->penetration = min(100, $editingCountry->penetration);
 
 			if ($errorMessages) {
 				foreach ($errorMessages as $message) {
