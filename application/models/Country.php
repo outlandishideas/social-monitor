@@ -54,6 +54,26 @@ class Model_Country extends Model_Campaign {
 		}
 	}
 
+    public function getDigitalPopulation() {
+        return $this->population ?: 0;
+    }
+
+    public function getFacebookPopulation() {
+        return $this->facebook_pop;
+    }
+
+    public function getTwitterPopulation() {
+        return $this->twitter_pop;
+    }
+
+    public function getFacebookDigitalPopulation() {
+        return $this->getDigitalPopulation() * $this->getFacebookPopulation() / 100;
+    }
+
+    public function getTwitterDigitalPopulation() {
+        return $this->getDigitalPopulation() * $this->getTwitterPopulation() / 100;
+    }
+
     public static function constructSmallMapData($mapData){
         $smallCountries = self::smallCountryCodes();
 
