@@ -965,25 +965,6 @@ form.management #assigned {
 
 }
 
-#small-maps {
-    float: right;
-    width: 180px;
-}
-
-#small-maps ul {
-    padding: 0;
-    margin:0;
-}
-
-#small-maps li {
-    list-style: none;
-    margin-bottom: 20px;
-}
-
-#small-maps h4 {
-    margin-bottom: 4px;
-}
-
 #geo-map {
     margin-right: 200px;
 }
@@ -1522,11 +1503,11 @@ ul.link-list {
 
 /* group display on front page */
 
-#group-map, #region-map {
+#group-map, #small-maps {
     margin-top: 20px;
 }
 
-#group-map h3, #region-map h3 {
+#group-map h3, #small-maps h3 {
     float: left;
     width: 70px;
     margin: 0;
@@ -1535,14 +1516,14 @@ ul.link-list {
     font-weight: normal;
 }
 
-#group-map ul, #region-map ul {
+#group-map ul, #small-maps ul {
     margin: 0;
     padding: 0;
     width: 700px;
     text-align: left;
 }
 
-.group-display, .region-display {
+.group-display, .small-maps-display {
     display: inline-block;
     vertical-align: top;
     text-align: center;
@@ -1554,16 +1535,16 @@ ul.link-list {
     cursor: pointer;
 }
 
-.group-display .title, .region-display .title {
+.group-display .title, .small-maps-display .title {
     color: #444;
     z-index: 10;
 }
 
-.group-display .score, .region-display .score {
+.group-display .score, .small-maps-display .score {
     margin-left: 10px;
 }
 
-.region-display .title, .region-display .score {
+.region-display .title, .small-maps-display .score {
 
 }
 

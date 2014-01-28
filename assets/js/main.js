@@ -19,7 +19,7 @@ $.extend(app, {
         barDate: [],
         badges: [],
         groupCharts: [],
-        regionCharts: []
+        smallMapsCharts: []
 	},
 	templates: {
 		legendLabel: '<div class="dataset <%=className%>" data-line-id="<%=line_id%>">\

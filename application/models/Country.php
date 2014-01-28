@@ -57,11 +57,11 @@ class Model_Country extends Model_Campaign {
     public static function constructSmallMapData($mapData){
         $smallCountries = self::smallCountryCodes();
 
-        $smallMapData = array();
+        $smallMapData = (object)array();
 
         foreach($mapData as $country){
             if(array_key_exists($country->c, $smallCountries)){
-                $smallMapData[$country->id] = $country;
+                $smallMapData->{$country->id} = $country;
             }
         }
 

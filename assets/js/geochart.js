@@ -36,30 +36,15 @@ app.geochart = {
 			google.visualization.events.addListener(app.geochart.map, 'select', app.geochart.mapClickHandler);
 
 			app.geochart.data = app.geochart.buildDataTable(mapData);
-            if(typeof(smallMapData) != 'undefined' && smallMapData.length > 0){
-                for(var i in smallMapData){
-                    var smallMap = smallMapData[i];
-                    app.geochart.smallMaps[smallMap.id] = {};
-                    app.geochart.smallMaps[smallMap.id].map = new google.visualization.GeoChart(document.getElementById('small-map-'+smallMap.id));
-                    app.geochart.smallMaps[smallMap.id].map.options = {
-                        datalessRegionColor: '#D5D5D5',
-                        colorAxis: {},
-                        region: smallMap.c,
-                        width: (document.getElementById('small-maps').offsetWidth)
-                    };
-                    app.geochart.smallMaps[smallMap.id].map.options.region = smallMap.c;
-                    google.visualization.events.addListener(app.geochart.smallMaps[smallMap.id].map, 'select', app.geochart.mapClickHandler);
-                    app.geochart.smallMaps[smallMap.id].data = app.geochart.buildDataTable([smallMap]);
-                }
-            }
+
             app.geochart.refreshMap();
 		});
 
 		app.geochart.drawGroups();
 		app.geochart.refreshGroups();
 
-        app.geochart.drawRegions();
-        app.geochart.refreshRegions();
+        app.geochart.drawSmallMaps();
+        app.geochart.refreshSmallMaps();
 
         for(var id in app.state.groupCharts){
             var g = app.state.groupCharts[id];
@@ -70,12 +55,12 @@ app.geochart = {
             });
         }
 
-        for(var id in app.state.regionCharts){
-            var r = app.state.regionCharts[id];
+        for(var id in app.state.smallMapsCharts){
+            var r = app.state.smallMapsCharts[id];
 
-            r.$region.on('click', function(e){
+            r.$smallMap.on('click', function(e){
                 e.preventDefault();
-                app.geochart.loadCampaignStats($(this).attr('id'), 'region');
+                app.geochart.loadCampaignStats($(this).attr('id'), 'country');
             });
         }
 
@@ -94,7 +79,7 @@ app.geochart = {
 					.siblings('li.active').removeClass('active');
 				app.geochart.refreshMap();
 				app.geochart.refreshGroups();
-                app.geochart.refreshRegions();
+                app.geochart.refreshSmallMaps();
                 $('.desc-box').each(function(){
                     $(this).addClass('hide');
                 })
@@ -123,7 +108,7 @@ app.geochart = {
 		for(var id in groups){
 			var group = groups[id];
 
-			$groupContainer.append('<li id="'+ id +'" class="region-display"><span class="label">'+ group.n +'</span><span class="score"></span></li>');
+			$groupContainer.append('<li id="'+ id +'" class="group-display"><span class="label">'+ group.n +'</span><span class="score"></span></li>');
 			app.state.groupCharts[id] = {
 				$group: $('#'+id),
 				groupData: group
@@ -152,36 +137,38 @@ app.geochart = {
     /**
      * Add the regions in global groupData to the DOM, and store them in app.state.groupCharts
      */
-    drawRegions: function() {
-        var $regionContainer = $('#region-map ul');
+    drawSmallMaps: function() {
+        var $smallMapsContainer = $('#small-maps ul');
 
-        var regions = regionData;
-        for(var id in regions){
-            var region = regions[id];
+        var smallMaps = smallMapData;
+        for(var id in smallMaps){
+            var smallMap = smallMaps[id];
 
-            $regionContainer.append('<li id="'+ id +'" class="region-display"><span class="label">'+ region.n +'</span><span class="score"></span></li>');
-            app.state.regionCharts[id] = {
-                $region: $('#'+id),
-                regionData: region
+            $smallMapsContainer.append('<li id="'+ id +'" class="small-maps-display"><span class="label">'+ smallMap.n +'</span><span class="score"></span></li>');
+            app.state.smallMapsCharts[id] = {
+                $smallMap: $('#'+id),
+                smallMapData: smallMap
             };
         }
     },
     /**
      * Update the value and colour of each of the region
      */
-    refreshRegions: function() {
+    refreshSmallMaps: function() {
         var day = app.geochart.currentDay();
         var metric = app.geochart.currentMetric();
 
-        for(var id in app.state.regionCharts){
-            var g = app.state.regionCharts[id];
-            var color = g.regionData.b[metric][day].c;
-            var score = Math.round(g.regionData.b[metric][day].s);
-            var title = g.regionData.n +' (Presences: '+ g.regionData.p +')\n'+ app.geochart.metrics[metric].label +': '+ g.regionData.b[metric][day].l;
+        for(var id in app.state.smallMapsCharts){
+            var g = app.state.smallMapsCharts[id];
+            var color = g.smallMapData.b[metric][day].c;
+            var score = Math.round(g.smallMapData.b[metric][day].s);
+            var title = g.smallMapData.n +' (Presences: '+ g.smallMapData.p +')\n'+ app.geochart.metrics[metric].label +': '+ g.smallMapData.b[metric][day].l;
 
-            g.$region.css('background-color', color);
-            g.$region.attr('title', title);
-            g.$region.find('.score').empty().append(score);
+            console.log(color,score,title);
+
+            g.$smallMap.css('background-color', color);
+            g.$smallMap.attr('title', title);
+            g.$smallMap.find('.score').empty().append(score);
         }
     },
 	currentMetric:function () {

@@ -36,16 +36,20 @@
 </div>
 <div id="map">
     <div id="map-container">
-        <div id="small-maps">
-            <ul>
-                <?php foreach($this->smallMapData as $country) : ?>
-                    <li>
-                        <h4><?php echo $country->n;?></h4><div id="small-map-<?php echo $country->id; ?>"></div>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
         <div id="geo-map"></div>
+    </div>
+    <div id="small-maps">
+        <h3><?php
+            $url = $this->gatekeeper()->filter('%url%', array('controller' => 'country'));
+            if($url) : ?>
+            <a href="<?php echo $url; ?>">
+                <?php endif; ?>
+                <span class="<?php echo Model_Country::ICON_TYPE; ?>"></span> Small Countries
+                <?php if($url) : ?>
+            </a>
+        <?php endif; ?>
+        </h3>
+        <ul></ul>
     </div>
     <div id="group-map">
         <h3><?php
@@ -60,26 +64,12 @@
         </h3>
         <ul></ul>
     </div>
-    <div id="region-map">
-        <h3><?php
-            $url = $this->gatekeeper()->filter('%url%', array('controller' => 'region'));
-            if($url) : ?>
-            <a href="<?php echo $url; ?>">
-	        <?php endif; ?>
-	        <span class="<?php echo Model_Region::ICON_TYPE; ?>"></span> Regions
-	        <?php if($url) : ?>
-            </a>
-            <?php endif; ?>
-        </h3>
-        <ul></ul>
-    </div>
 </div>
 
 
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>
 	var mapData = <?php echo json_encode((object) $this->mapData); ?>;
-    var smallMapData = <?php echo json_encode(array_values($this->smallMapData)); ?>;
+    var smallMapData = <?php echo json_encode((object)$this->smallMapData); ?>;
     var groupData = <?php echo json_encode((object) $this->groupData); ?>;
-    var regionData = <?php echo json_encode((object) $this->regionData); ?>;
 </script>
