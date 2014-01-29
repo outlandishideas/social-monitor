@@ -36,6 +36,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
                 <?php if (!$presence->uid) : ?>
                 [not found]
                 <?php endif; ?>
+                <?php echo $presence->getFacebookEngagementScore('2013-08-20 00:00:00', '2013-08-20 23:59:59') ;?>
 			</td>
             <td>
                 <span class="<?php echo $presence->sign_off ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
