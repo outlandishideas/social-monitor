@@ -42,6 +42,11 @@
             <td><?php echo $this->badgeData[$country->id]->total_rank; ?></td>
             <td><?php echo round($this->badgeData[$country->id]->total, 1); ?></td>
 			<td><?php echo number_format($country->audience); ?></td>
+            <td>
+                <?php $value = number_format($country->getDigitalPopulationHealth()); $key = 'digital_population'; ?>
+                <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
+                <?php echo $this->trafficLight()->label($value, $key); ?>
+            </td>
 			<?php if ($presences) : ?>
 			<?php $kpiData = $country->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
 				<td>
