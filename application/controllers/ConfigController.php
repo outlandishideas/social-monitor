@@ -137,6 +137,13 @@ class ConfigController extends BaseController {
                         'values' => array(
                             'branding_weighting'=>array('label'=>'Branding Weighting'),
                         )
+                    ),
+                    (object)array(
+                        'title' => 'Relevance',
+                        'description' => 'How relevant the presence\'s actions have been. This is currently based on the number of relevant, British Council domains that have been linked to in their actions per day.',
+                        'values' => array(
+                            'relevance_weighting'=>array('label'=>'Relevance Weighting'),
+                        )
                     )
                 )
             ),

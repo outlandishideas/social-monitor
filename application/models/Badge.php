@@ -39,6 +39,7 @@ class Model_Badge {
                 $metrics[Model_Presence::METRIC_LIKES_PER_POST] = 1;
                 $metrics[Model_Presence::METRIC_SIGN_OFF] = 1;
                 $metrics[Model_Presence::METRIC_BRANDING] = 1;
+                $metrics[Model_Presence::METRIC_RELEVANCE] = 1;
                 break;
             case self::BADGE_TYPE_ENGAGEMENT:
                 $metrics[Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS] = 1;

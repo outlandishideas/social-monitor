@@ -21,6 +21,7 @@ class Model_Presence extends Model_Base {
     const METRIC_SHARING = 'sharing';
     const METRIC_KLOUT = 'klout_score';
     const METRIC_FB_ENGAGEMENT = 'fb_engagement_score';
+    const METRIC_RELEVANCE = 'relevance';
 
 	public static $ALL_METRICS = array(
 		self::METRIC_POPULARITY_PERCENT,
@@ -658,6 +659,12 @@ class Model_Presence extends Model_Base {
 				$target = $this->getTargetAudience();
 				$actual = $this->popularity;
 				break;
+
+            case Model_Presence::METRIC_RELEVANCE:
+                $title = 'Relevance';
+                $target = 100; //$this->getRelevanceTarget();
+                $actual = 55; //$this->getRelevance();
+                break;
 
 			case Model_Presence::METRIC_POPULARITY_TIME:
 				$title = 'Popularity Trend';
