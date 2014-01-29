@@ -55,6 +55,11 @@ abstract class GraphingController extends BaseController {
 		);
 		$metrics = array();
 
+        $metrics['digital_population'] = (object)array(
+            'range' => array(0, 25, 50, 75, 100),
+            'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green, $colors->green)
+        );
+
 		$metrics[Model_Presence::METRIC_POPULARITY_PERCENT] = (object)array(
 			'range' => array(0, 50, 100),
 			'colors' => array($colors->red, $colors->yellow, $colors->green)
@@ -174,6 +179,14 @@ abstract class GraphingController extends BaseController {
                     'sort' => 'fuzzy-numeric',
                     'title' => 'Target Audience',
                     'desc' => 'Target Audience is the audience that must be reached by this presence or group of presences.'
+                );
+                break;
+            case('digital-population'):
+                $return = (object)array(
+                    'name' => 'digital-population',
+                    'sort' => 'traffic-light',
+                    'title' => 'Percent of Digital Population',
+                    'desc' => 'Target Audience as a percent of the Digital Population based on internet penetration in the country.'
                 );
                 break;
             case(Model_Presence::METRIC_POPULARITY_PERCENT):
