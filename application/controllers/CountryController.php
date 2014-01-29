@@ -301,7 +301,8 @@ class CountryController extends CampaignController {
             'country' => true,
             'total-rank' => true,
             'total-score' => true,
-            'target-audience' => true
+            'target-audience' => true,
+            'digital-population' => true
         );
 
         foreach(self::tableMetrics() as $name => $title){
