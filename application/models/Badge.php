@@ -44,6 +44,7 @@ class Model_Badge {
                 $metrics[Model_Presence::METRIC_RATIO_REPLIES_TO_OTHERS_POSTS] = 1;
                 $metrics[Model_Presence::METRIC_RESPONSE_TIME] = 1;
                 $metrics[Model_Presence::METRIC_KLOUT] = 1;
+                $metrics[Model_Presence::METRIC_FB_ENGAGEMENT] = 1;
                 break;
             case self::BADGE_TYPE_REACH:
                 $metrics[Model_Presence::METRIC_POPULARITY_PERCENT] =  1;
@@ -221,6 +222,7 @@ class Model_Badge {
 			foreach($badgeMetrics as $badgeType => $metrics){
 
                 if($presence->isForFacebook() && $badgeType == self::BADGE_TYPE_ENGAGEMENT) unset($metrics[Model_Presence::METRIC_KLOUT]);
+                if(!$presence->isForFacebook() && $badgeType == self::BADGE_TYPE_ENGAGEMENT) unset($metrics[Model_Presence::METRIC_FB_ENGAGEMENT]);
                 $dataRow->$badgeType = $presence->getMetricsScore($date, $metrics, $range);
 			}
 
