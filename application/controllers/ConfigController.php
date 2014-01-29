@@ -143,6 +143,8 @@ class ConfigController extends BaseController {
                         'description' => 'How relevant the presence\'s actions have been. This is currently based on the number of relevant, British Council domains that have been linked to in their actions per day.',
                         'values' => array(
                             'relevance_weighting'=>array('label'=>'Relevance Weighting'),
+                            'facebook_relevance_percentage'=>array('label'=>'Percent of Actions Per Day that should be relevant for Facebook'),
+                            'twitter_relevance_percentage'=>array('label'=>'Percent of Actions Per Day that should be relevant for Twitter'),
                         )
                     )
                 )
