@@ -6,6 +6,8 @@
                 <th data-name="name" data-sort="auto">Display name</th>
                 <th data-name="country" data-sort="auto">Country</th>
                 <th data-name="audience" data-sort="fuzzy-numeric">Audience Size</th>
+                <th data-name="population" data-sort="fuzzy-numeric">Population</th>
+                <th data-name="penetration" data-sort="fuzzy-numeric">Internet Penetration</th>
             </tr>
         </thead>
         <tbody>
@@ -27,6 +29,14 @@
                 <td>
                     <input name="<?php echo $country->id; ?>_audience" value="<?php echo htmlspecialchars($country->audience); ?>" class="textInput"
                            type="text" id="<?php echo $country->id; ?>_audience">
+                </td>
+                <td>
+                    <input name="<?php echo $country->id; ?>_population" value="<?php echo htmlspecialchars($country->population); ?>" class="textInput"
+                           type="text" id="<?php echo $country->id; ?>_population">
+                </td>
+                <td>
+                    <input name="<?php echo $country->id; ?>_penetration" value="<?php echo htmlspecialchars($country->penetration); ?>" class="textInput"
+                           type="text" id="<?php echo $country->id; ?>_penetration">
                 </td>
             </tr>
         <?php endforeach; ?>
