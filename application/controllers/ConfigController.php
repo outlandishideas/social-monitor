@@ -81,6 +81,14 @@ class ConfigController extends BaseController {
                             'klout_score_target'=>array('label'=>'Klout Score Target', 'hint'=>'The presence will score 100% if it meets or excedes this target, but will only receive 0% if it does not meet it.')
                         )
                     ),
+                    (object)array(
+                        'title' => 'Facebook Engagement Score (Facebook only)',
+                        'description' => 'The Facebook Engagement Score is based on Social Baker\'s Daily Page Engagment Rate calculation.',
+                        'values' => array(
+                            'fb_engagement_score_weighting'=>array('label'=>'Facebook Engagement Score Weighting'),
+                            'fb_engagment_score_target'=>array('label'=>'Facebook Engagement Score Target', 'hint'=>'The presence will score 100% if it meets or excedes this target, but will only receive 0% if it does not meet it.')
+                        )
+                    ),
                 )
             ),
             (object)array(
