@@ -510,6 +510,49 @@ class Model_Presence extends Model_Base {
 		return $this->getHistoryData('popularity', $startDate, $endDate);
 	}
 
+    /**
+     * returns the facebook engagment score based on the following calculation
+     * ( Likes + Comments + Shares on a given day / Total fans on a given day )* 100
+     * @param $startDate
+     * @param $endDate
+     * @return float
+     */
+    public function getFacebookEngagementScore($startDate, $endDate)
+    {
+        $comments = 0;
+
+        $status = $this->getFacebookCommentsSharesLikes($startDate, $endDate);
+
+        $comments += $status[0]->comments + $status[0]->likes + $status[0]->share_count;
+
+        if(!$comments || !$this->popularity){
+            return 0;
+        } else {
+            return round(( $comments / $this->popularity ) * 100);
+        }
+
+    }
+
+    public function getFacebookCommentsSharesLikes($startDate, $endDate)
+    {
+        $args = array(
+            ':pid' => $this->id,
+            ':start_time' => $startDate,
+            ':end_time' => $endDate
+        );
+
+        $sql = "
+            SELECT presence_id, SUM( comments ) AS comments, SUM( likes ) AS likes, SUM( share_count ) AS share_count
+            FROM  facebook_stream
+            WHERE presence_id = :pid
+            AND created_time >= :start_time
+            AND created_time <= :end_time";
+
+        $stmt = $this->_db->prepare($sql);
+        $stmt->execute($args);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
 	public function getMetrics($badgeType = null){
 		switch ($badgeType) {
 			case Model_Badge::BADGE_TYPE_ENGAGEMENT:
@@ -607,7 +650,7 @@ class Model_Presence extends Model_Base {
             case Model_Presence::METRIC_FB_ENGAGEMENT:
                 $title = 'Facebook Engagement Score';
                 $target = BaseController::getOption('fb_engagement_target');
-                $actual = round(0);
+                $actual = round($this->getFacebookEngagementScore($startDate, $endDate));
                 $score = ($actual < $target) ? 0 : 100 ;
                 break;
 
