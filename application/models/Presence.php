@@ -20,6 +20,7 @@ class Model_Presence extends Model_Base {
     const METRIC_BRANDING = 'branding';
     const METRIC_SHARING = 'sharing';
     const METRIC_KLOUT = 'klout_score';
+    const METRIC_FB_ENGAGEMENT = 'fb_engagement_score';
 
 	public static $ALL_METRICS = array(
 		self::METRIC_POPULARITY_PERCENT,
@@ -600,6 +601,13 @@ class Model_Presence extends Model_Base {
                 $title = 'Klout Score';
                 $target = BaseController::getOption('klout_target');
                 $actual = round($this->klout_score);
+                $score = ($actual < $target) ? 0 : 100 ;
+                break;
+
+            case Model_Presence::METRIC_FB_ENGAGEMENT:
+                $title = 'Facebook Engagement Score';
+                $target = BaseController::getOption('fb_engagement_target');
+                $actual = round(0);
                 $score = ($actual < $target) ? 0 : 100 ;
                 break;
 
