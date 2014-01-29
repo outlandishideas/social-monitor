@@ -511,6 +511,7 @@ class Model_Presence extends Model_Base {
 	}
 
     /**
+     * todo: find a better way of getting popularity. It should be page views in the time period.
      * returns the facebook engagment score based on the following calculation
      * ( Likes + Comments + Shares on a given day / Total fans on a given day )* 100
      * @param $startDate
@@ -519,18 +520,38 @@ class Model_Presence extends Model_Base {
      */
     public function getFacebookEngagementScore($startDate, $endDate)
     {
-        $comments = 0;
+        $week = new DateInterval('P1W');
+        $startDate = new DateTime($startDate);
+        $endDate = new DateTime($endDate);
+        $startDate = $startDate->sub($week)->format('Y-m-d');
+        $endDate = $endDate->sub($week)->format('Y-m-d');
 
-        $status = $this->getFacebookCommentsSharesLikes($startDate, $endDate);
+        $comments = array();
 
-        $comments += $status[0]->comments + $status[0]->likes + $status[0]->share_count;
+        $total = 0;
 
-        if(!$comments || !$this->popularity){
-            return 0;
-        } else {
-            return round(( $comments / $this->popularity ) * 100);
+        $s = $this->getFacebookCommentsSharesLikes($startDate, $endDate);
+
+        if(empty($s)) return 0;
+
+        foreach($s as $status)
+        {
+            $e = $status->comments + $status->likes + $status->share_count;
+
+            $comments[$status->time] = (object)array(
+                'score' => ($e / $status->popularity ) * 100,
+                'engagement' => $e,
+                'popularity' => $status->popularity );
         }
 
+        foreach($comments as $date => $score)
+        {
+            $total += $score->score;
+        }
+
+        if(!$total) return 0;
+
+        return $total / count($comments);
     }
 
     public function getFacebookCommentsSharesLikes($startDate, $endDate)
@@ -542,11 +563,20 @@ class Model_Presence extends Model_Base {
         );
 
         $sql = "
-            SELECT presence_id, SUM( comments ) AS comments, SUM( likes ) AS likes, SUM( share_count ) AS share_count
-            FROM  facebook_stream
-            WHERE presence_id = :pid
-            AND created_time >= :start_time
-            AND created_time <= :end_time";
+            SELECT DATE(fs.created_time) as time, SUM(fs.comments) as comments, SUM(fs.likes) as likes, SUM(fs.share_count) as share_count, ph.popularity
+            FROM facebook_stream as fs
+            INNER JOIN (
+                SELECT presence_id, DATE(datetime) as created_time, MAX(value) as popularity
+                FROM presence_history
+                WHERE type = 'popularity'
+                AND presence_id = :pid
+                AND DATE(datetime) >= :start_time
+                AND DATE(datetime) <= :end_time
+                GROUP BY DATE(datetime) ) as ph ON DATE(fs.created_time) = ph.created_time
+            WHERE fs.presence_id = :pid
+            AND DATE(fs.created_time) >= :start_time
+            AND DATE(fs.created_time) <= :end_time
+            GROUP BY DATE(fs.created_time)";
 
         $stmt = $this->_db->prepare($sql);
         $stmt->execute($args);
