@@ -62,7 +62,7 @@ class Model_Country extends Model_Campaign {
 
         if($this->penetration)
         {
-            return ( $this->population ?:1 / 100 ) * $this->penetration;
+            return ( $this->population / 100 ) * $this->penetration;
         }
         else
         {
