@@ -91,6 +91,9 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
                 case Model_Presence::METRIC_POPULARITY_PERCENT:
                     $label .= '%';
                     break;
+                case 'digital_population':
+                    $label .= '%';
+                    break;
                 case Model_Presence::METRIC_RESPONSE_TIME:
                     $label .= ' hours';
                     break;
