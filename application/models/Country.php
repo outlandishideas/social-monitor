@@ -54,9 +54,40 @@ class Model_Country extends Model_Campaign {
 		}
 	}
 
+    /**
+     * calculates the digital population from the country population and internet penetration in that country (penetration presented as a percentage)
+     * @return int
+     */
     public function getDigitalPopulation() {
-        return ( $this->population ?:1 / 100 ) * $this->penetration ?: 0;
+
+        if($this->penetration)
+        {
+            return ( $this->population ?:1 / 100 ) * $this->penetration;
+        }
+        else
+        {
+            return 0;
+        }
+
     }
+
+    /**
+     * turns country target audience into a percentage of country's digital pop
+     * @return float
+     */
+    public function getDigitalPopulationHealth()
+    {
+        if($this->getDigitalPopulation())
+        {
+            return ( $this->audience / $this->getDigitalPopulation()) * 100;
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+
 
     public static function constructSmallMapData($mapData){
         $smallCountries = self::smallCountryCodes();
