@@ -511,6 +511,54 @@ class Model_Presence extends Model_Base {
 		return $this->getHistoryData('popularity', $startDate, $endDate);
 	}
 
+    public function getRelevance($startDate, $endDate)
+    {
+        $data = $this->getRelevanceData($startDate, $endDate);
+
+        $diff = date_diff(new DateTime($startDate), new DateTime($endDate), true);
+
+        $total = 0;
+        $total_links = 0;
+        $total_bc_links = 0;
+
+        $days = $diff->days + 1;
+
+        foreach($data as $day)
+        {
+            $total += $day->total;
+            $total_links += $day->total_links;
+            $total_bc_links += $day->total_bc_links;
+        }
+
+        return $total_bc_links / $days;
+    }
+
+    public function getRelevanceData($startDate, $endDate)
+    {
+
+        $args = array(
+            ':pid' => $this->id,
+            ':start_time' => $startDate,
+            ':end_time' => $endDate
+        );
+
+        $sql ="
+            SELECT DATE(fs.created_time) as created_time, COUNT(fs.id) as total, COUNT(sl.domain) as total_links, IFNULL(SUM(IF(d.is_bc=1,1,NULL)), 0) as total_bc_links
+            FROM facebook_stream as fs
+            LEFT JOIN status_links as sl ON fs.id = sl.status_id
+            LEFT JOIN domains as d ON sl.domain = d.domain
+            WHERE presence_id = :pid
+                AND posted_by_owner = 1
+                AND DATE(fs.created_time) >= :start_time
+                AND DATE(fs.created_time) <= :end_time
+            GROUP BY DATE(fs.created_time)";
+
+        $stmt = $this->_db->prepare($sql);
+        $stmt->execute($args);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+
+    }
+
     /**
      * todo: find a better way of getting popularity. It should be page views in the time period.
      * returns the facebook engagment score based on the following calculation
@@ -662,8 +710,8 @@ class Model_Presence extends Model_Base {
 
             case Model_Presence::METRIC_RELEVANCE:
                 $title = 'Relevance';
-                $target = 100; //$this->getRelevanceTarget();
-                $actual = 55; //$this->getRelevance();
+                $target = (BaseController::getOption('updates_per_day') / 100) * BaseController::getOption($this->isForFacebook() ? 'facebook_relevance_percentage' : 'twitter_relevance_percentage'); //$this->getRelevanceTarget();
+                $actual = $this->getRelevance($startDate, $endDate);
                 break;
 
 			case Model_Presence::METRIC_POPULARITY_TIME:
