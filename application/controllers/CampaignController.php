@@ -3,6 +3,9 @@
 abstract class CampaignController extends GraphingController
 {
 
+    /**
+     * Action to download csv of campaign index page
+     */
     public function downloadAction() {
         /*if (userHasNoPermissions) {
             $this->view->msg = 'This file cannot be downloaded!';
@@ -84,6 +87,10 @@ abstract class CampaignController extends GraphingController
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
+    /**
+     * method to produce CSV for download action from $data
+     * @param $data
+     */
     function outputCSV($data) {
         $output = fopen("php://output", "w");
         foreach ($data as $row) {
@@ -92,14 +99,29 @@ abstract class CampaignController extends GraphingController
         fclose($output);
     }
 
+    /**
+     * unused methhod to return all badge data
+     * todo: delete
+     * @return array
+     */
     public function getAllBadgeData(){
         return array();
     }
 
+    /**
+     * unused method to return all campaign data
+     * todo: delete
+     * @return array
+     */
     public function getAllCampaigns(){
         return array();
     }
 
+    /**
+     * function to generate tableIndexHeaders for tbe campaign index pages
+     * refer to tableHeader() in GraphingController
+     * @return array
+     */
     public static function tableIndexHeaders() {
 
         $return = array(

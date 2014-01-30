@@ -286,14 +286,27 @@ class CountryController extends CampaignController {
 
     }
 
+    /**
+     * Gets all badge data
+     * @return array
+     */
     public function getAllBadgeData(){
         return Model_Country::badgesData();
     }
 
+    /**
+     * Gets all countries
+     * @return array|Model_Base[]
+     */
     public function getAllCampaigns(){
         return Model_Country::fetchAll();
     }
 
+    /**
+     * function to generate tableIndexHeaders for tbe campaign index pages
+     * refer to tableHeader() in GraphingController
+     * @return array
+     */
     public static function tableIndexHeaders() {
 
         $return = array(
@@ -301,8 +314,8 @@ class CountryController extends CampaignController {
             'country' => true,
             'total-rank' => true,
             'total-score' => true,
-            'target-audience' => true,
-            'digital-population' => true
+            'digital-population' => true,
+            'target-audience' => true
         );
 
         foreach(self::tableMetrics() as $name => $title){
