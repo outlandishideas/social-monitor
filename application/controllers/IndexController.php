@@ -44,9 +44,16 @@ class IndexController extends GraphingController
         $trafficLight = $this->view->trafficLight();
         foreach ($smallMapData as $group) {
             foreach ($badgeTypes as $type) {
-                foreach ($group->b->{$type} as $value) {
+                if(is_array($group->b)){
+                    $typeArray = $group->b[$type];
+                } else {
+                    $typeArray = $group->b->{$type};
+                }
+
+                foreach ($typeArray as $value) {
                     $value->c = $trafficLight->color($value->s, $type);
                 }
+
             }
         }
 
