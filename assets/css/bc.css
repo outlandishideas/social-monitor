@@ -1102,6 +1102,10 @@ form.management #assigned {
 	line-height: 18px;
 }
 
+.klout.facebook {
+    background: url(../img/facebook_engagement.png) no-repeat 0 0;
+}
+
 /* Slider & Date */
 
 .map-date {

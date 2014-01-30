@@ -25,9 +25,6 @@
                       style="color: <?php echo $this->trafficLight()->color($metricValue, $this->metric); ?>;">
                 </span>
                 <?php echo $this->partial('partials/presence_inline.phtml',  array('presence' => $presence)); ?>
-	            <?php if ($presence->isForTwitter()) : ?>
-		            <span class="klout" title="Klout score: <?php echo $presence->klout_score; ?>"><?php echo round($presence->klout_score); ?></span>
-	            <?php endif; ?>
                 <span style="float:right;">
                     <span class="<?php echo $presence->sign_off ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
                           title="Sign off"></span>
