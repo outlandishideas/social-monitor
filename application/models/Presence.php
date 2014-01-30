@@ -569,11 +569,11 @@ class Model_Presence extends Model_Base {
      */
     public function getFacebookEngagementScore($startDate, $endDate)
     {
-        $week = new DateInterval('P1W');
-        $startDate = new DateTime($startDate);
-        $endDate = new DateTime($endDate);
-        $startDate = $startDate->sub($week)->format('Y-m-d');
-        $endDate = $endDate->sub($week)->format('Y-m-d');
+//        $week = new DateInterval('P1W');
+//        $startDate = new DateTime($startDate);
+//        $endDate = new DateTime($endDate);
+//        $startDate = $startDate->sub($week)->format('Y-m-d');
+//        $endDate = $endDate->sub($week)->format('Y-m-d');
 
         $comments = array();
 
@@ -585,22 +585,16 @@ class Model_Presence extends Model_Base {
 
         foreach($s as $status)
         {
-            $e = $status->comments + $status->likes + $status->share_count;
+            $total += $status->comments + $status->likes + $status->share_count;
 
-            $comments[$status->time] = (object)array(
-                'score' => ($e / $status->popularity ) * 100,
-                'engagement' => $e,
-                'popularity' => $status->popularity );
-        }
-
-        foreach($comments as $date => $score)
-        {
-            $total += $score->score;
         }
 
         if(!$total) return 0;
 
-        return $total / count($comments);
+        $last = end($s);
+        $first = reset($s);
+
+        return ($total / ($last->popularity - $first->popularity)) * 100;
     }
 
     public function getFacebookCommentsSharesLikes($startDate, $endDate)
@@ -613,15 +607,15 @@ class Model_Presence extends Model_Base {
 
         $sql = "
             SELECT DATE(fs.created_time) as time, SUM(fs.comments) as comments, SUM(fs.likes) as likes, SUM(fs.share_count) as share_count, ph.popularity
-            FROM facebook_stream as fs
-            INNER JOIN (
+            FROM (
                 SELECT presence_id, DATE(datetime) as created_time, MAX(value) as popularity
                 FROM presence_history
                 WHERE type = 'popularity'
                 AND presence_id = :pid
                 AND DATE(datetime) >= :start_time
                 AND DATE(datetime) <= :end_time
-                GROUP BY DATE(datetime) ) as ph ON DATE(fs.created_time) = ph.created_time
+                GROUP BY DATE(datetime) ) as ph
+            LEFT JOIN facebook_stream as fs ON DATE(fs.created_time) = ph.created_time
             WHERE fs.presence_id = :pid
             AND DATE(fs.created_time) >= :start_time
             AND DATE(fs.created_time) <= :end_time

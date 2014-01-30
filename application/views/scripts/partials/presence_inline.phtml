@@ -7,7 +7,11 @@ if ($url) : ?>
             <span class="klout" title="Klout score: <?php echo $this->presence->klout_score; ?>">
                 <?php echo round($this->presence->klout_score); ?>
             </span><?php
-        else: $fb = $this->presence->getFacebookEngagementScore(date('y-m-d'),date('y-m-d')); ?>
+        else:
+            $endDate = new DateTime();
+            $startDate = clone $endDate;
+            $startDate->sub(new DateInterval('P1M'));
+            $fb = $this->presence->getFacebookEngagementScore($startDate->format('Y-m-d'),$endDate->format('Y-m-d')); ?>
             <span class="klout facebook" title="Facebook Engagement score: <?php echo $fb; ?>">
                 <?php echo round($fb); ?>
             </span><?php
