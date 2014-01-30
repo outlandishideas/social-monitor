@@ -569,32 +569,50 @@ class Model_Presence extends Model_Base {
      */
     public function getFacebookEngagementScore($startDate, $endDate)
     {
-//        $week = new DateInterval('P1W');
-//        $startDate = new DateTime($startDate);
-//        $endDate = new DateTime($endDate);
-//        $startDate = $startDate->sub($week)->format('Y-m-d');
-//        $endDate = $endDate->sub($week)->format('Y-m-d');
+        $week = new DateInterval('P6D');
+        $newStartDate = new DateTime($startDate);
+        $newStartDate = $newStartDate->sub($week)->format('Y-m-d');
 
-        $comments = array();
+        $total = array();
 
-        $total = 0;
+        $rollingTotal = 0;
 
-        $s = $this->getFacebookCommentsSharesLikes($startDate, $endDate);
+        $score = 0;
+
+        $s = $this->getFacebookCommentsSharesLikes($newStartDate, $endDate);
 
         if(empty($s)) return 0;
 
-        foreach($s as $status)
-        {
-            $total += $status->comments + $status->likes + $status->share_count;
+        $continue = false;
 
+        foreach($s as $i => $status)
+        {
+            $rollingTotal += $status->comments + $status->likes + $status->share_count;
+
+            if($status->time != $startDate && !$continue) continue;
+
+            if($status->time == $startDate)
+            {
+                $number = $i+1;
+                $continue = true;
+            }
+            else
+            {
+                $rollingTotal -= $s[$i-$number]->comments - $s[$i-$number]->likes - $s[$i-$number]->share_count;
+            }
+
+            $total[$status->time] = $rollingTotal / $status->popularity;
+
+        }
+
+        foreach($total as $t)
+        {
+            $score += $t;
         }
 
         if(!$total) return 0;
 
-        $last = end($s);
-        $first = reset($s);
-
-        return ($total / ($last->popularity - $first->popularity)) * 100;
+        return ($score / count($total)) * 100;
     }
 
     public function getFacebookCommentsSharesLikes($startDate, $endDate)
@@ -606,7 +624,7 @@ class Model_Presence extends Model_Base {
         );
 
         $sql = "
-            SELECT DATE(fs.created_time) as time, SUM(fs.comments) as comments, SUM(fs.likes) as likes, SUM(fs.share_count) as share_count, ph.popularity
+            SELECT ph.created_time as time, SUM(fs.comments) as comments, SUM(fs.likes) as likes, SUM(fs.share_count) as share_count, ph.popularity
             FROM (
                 SELECT presence_id, DATE(datetime) as created_time, MAX(value) as popularity
                 FROM presence_history
@@ -615,11 +633,12 @@ class Model_Presence extends Model_Base {
                 AND DATE(datetime) >= :start_time
                 AND DATE(datetime) <= :end_time
                 GROUP BY DATE(datetime) ) as ph
-            LEFT JOIN facebook_stream as fs ON DATE(fs.created_time) = ph.created_time
-            WHERE fs.presence_id = :pid
-            AND DATE(fs.created_time) >= :start_time
-            AND DATE(fs.created_time) <= :end_time
-            GROUP BY DATE(fs.created_time)";
+            LEFT JOIN facebook_stream as fs
+            ON DATE(fs.created_time) = ph.created_time
+            AND fs.presence_id = ph.presence_id
+            WHERE ph.created_time >= :start_time
+            AND ph.created_time <= :end_time
+            GROUP BY ph.created_time";
 
         $stmt = $this->_db->prepare($sql);
         $stmt->execute($args);
