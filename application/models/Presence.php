@@ -186,6 +186,7 @@ class Model_Presence extends Model_Base {
 				$this->name = $data['name'];
 				$this->page_url = $data['page_url'];
 				$this->popularity = $data['fan_count'];
+                $this->facebook_engagement = $this->calculateFacebookEngagement();
 				break;
 			case self::TYPE_TWITTER:
 				try {
@@ -511,18 +512,31 @@ class Model_Presence extends Model_Base {
 		return $this->getHistoryData('popularity', $startDate, $endDate);
 	}
 
+    /**
+     * Get the relevance KPI for a presence
+     * Finds all the statuses in a given time period ($startDate -> $endDate)
+     * todo: neaten this up as some data isn't need (eg. total actions, and total links)
+     * @param $startDate
+     * @param $endDate
+     * @return float
+     */
     public function getRelevance($startDate, $endDate)
     {
+        //get array of row objects of statuses, their links, and their bc links
+        //data is grouped by day
         $data = $this->getRelevanceData($startDate, $endDate);
 
-        $diff = date_diff(new DateTime($startDate), new DateTime($endDate), true);
-
+        //set up variables to capture sum of actions, links, and bc links
         $total = 0;
         $total_links = 0;
         $total_bc_links = 0;
 
+        //returned row won't cover all days, as some days no posts are made.
+        //To get the correct number of days to divide the result by get diff between the two days and +1 (as we are inclusive)
+        $diff = date_diff(new DateTime($startDate), new DateTime($endDate), true);
         $days = $diff->days + 1;
 
+        //sum the actions, links and bc links across all days.
         foreach($data as $day)
         {
             $total += $day->total;
@@ -530,9 +544,16 @@ class Model_Presence extends Model_Base {
             $total_bc_links += $day->total_bc_links;
         }
 
+        //divide the result by the number of days, not the number of rows
         return $total_bc_links / $days;
     }
 
+    /**
+     * gets the number of actions per day, links per day and bc links per day
+     * @param $startDate
+     * @param $endDate
+     * @return array
+     */
     public function getRelevanceData($startDate, $endDate)
     {
 
@@ -560,59 +581,55 @@ class Model_Presence extends Model_Base {
     }
 
     /**
-     * todo: find a better way of getting popularity. It should be page views in the time period.
      * returns the facebook engagment score based on the following calculation
-     * ( Likes + Comments + Shares on a given day / Total fans on a given day )* 100
+     * [(Likes + Comments + Shares) 7 day sum ] / popularity.
+     * @return float
+     */
+    public function calculateFacebookEngagement()
+    {
+        $week = new DateInterval('P6D');
+        $endDate = new DateTime();
+        $startDate = clone $endDate;
+        $startDate = $startDate->sub($week);
+
+        $total = 0;
+
+        $s = $this->getFacebookCommentsSharesLikes($startDate->format('Y-m-d'), $endDate->format('Y-m-d'));
+
+        if(empty($s)) return 0;
+
+        foreach($s as $i => $status)
+        {
+            $total += $status->comments + $status->likes + $status->share_count;
+        }
+
+        if(!$total) return 0;
+
+        $last = end($s);
+
+        return ($total / $last->popularity) * 1000;
+    }
+
+    /**
+     * returns the facebook engagment scores from the presence history table
      * @param $startDate
      * @param $endDate
      * @return float
      */
     public function getFacebookEngagementScore($startDate, $endDate)
     {
-        $week = new DateInterval('P6D');
-        $newStartDate = new DateTime($startDate);
-        $newStartDate = $newStartDate->sub($week)->format('Y-m-d');
+        $data = $this->getHistoryData('facebook_engagement_score', $startDate, $endDate);
 
-        $total = array();
+        if(empty($data)) return 0;
 
-        $rollingTotal = 0;
+        $total = 0;
 
-        $score = 0;
-
-        $s = $this->getFacebookCommentsSharesLikes($newStartDate, $endDate);
-
-        if(empty($s)) return 0;
-
-        $continue = false;
-
-        foreach($s as $i => $status)
+        foreach($data as $d)
         {
-            $rollingTotal += $status->comments + $status->likes + $status->share_count;
-
-            if($status->time != $startDate && !$continue) continue;
-
-            if($status->time == $startDate)
-            {
-                $number = $i+1;
-                $continue = true;
-            }
-            else
-            {
-                $rollingTotal -= $s[$i-$number]->comments - $s[$i-$number]->likes - $s[$i-$number]->share_count;
-            }
-
-            $total[$status->time] = $rollingTotal / $status->popularity;
-
+            $total += $d;
         }
 
-        foreach($total as $t)
-        {
-            $score += $t;
-        }
-
-        if(!$total) return 0;
-
-        return ($score / count($total)) * 100;
+        return $total/count($data);
     }
 
     public function getFacebookCommentsSharesLikes($startDate, $endDate)

@@ -45,6 +45,14 @@ class FetchController extends BaseController
                             ':value'    => $p->klout_score
                         ));
                     }
+                    if($p->isForFacebook() && $p->facebook_engagement){
+                        $infoStmt->execute(array(
+                                ':id'       => $p->id,
+                                ':datetime' => gmdate('Y-m-d H:i:s'),
+                                ':type'     => 'facebook_engagment_score',
+                                ':value'    => $p->facebook_engagement
+                            ));
+                    }
 				} catch (Exception_TwitterNotFound $e) {
 					$this->log($e->getMessage());
 				} catch (Exception_FacebookNotFound $e) {
