@@ -544,8 +544,21 @@ class Model_Presence extends Model_Base {
             $total_bc_links += $day->total_bc_links;
         }
 
-        //divide the result by the number of days, not the number of rows
-        return $total_bc_links / $days;
+        //calculate the target
+        //target is a percentage of the total actions per day
+        //however target must reach a minimum, which is the percentage of the target actions per day
+        //EXAMPLE:
+        //Target Actions per Day = 5, Target Relevant Actions per Day = 60% (min 3)
+        //1 relevant post out of 1 post on 1 day will not satisfy this metric
+        //3 relevant posts out of 10 posts on 1 day will not satisfy this metric (if metric is 60%)
+
+        $targetPercent = BaseController::getOption($this->isForFacebook() ? 'facebook_relevance_percentage' : 'twitter_relevance_percentage' );
+        $target = max( $total / $days, BaseController::getOption('updates_per_day') ) / 100 * $targetPercent;
+
+        //return target and actual
+        return array(
+            'target' => $target,
+            'actual' => $total_bc_links / $days );
     }
 
     /**
@@ -740,8 +753,9 @@ class Model_Presence extends Model_Base {
 
             case Model_Presence::METRIC_RELEVANCE:
                 $title = 'Relevance';
-                $target = (BaseController::getOption('updates_per_day') / 100) * BaseController::getOption($this->isForFacebook() ? 'facebook_relevance_percentage' : 'twitter_relevance_percentage'); //$this->getRelevanceTarget();
-                $actual = $this->getRelevance($startDate, $endDate);
+                $data = $this->getRelevance($startDate, $endDate);
+                $target = $data['target'];
+                $actual = $data['actual']; ;
                 break;
 
 			case Model_Presence::METRIC_POPULARITY_TIME:
