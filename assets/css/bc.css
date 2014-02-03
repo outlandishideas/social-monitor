@@ -444,10 +444,18 @@ span.icon-remove-sign {
     margin-right: 10px;
 }
 
+#nav .main p.beta-tag {
+    padding-top: 14px;
+    padding-left: 8px;
+    float: left;
+    text-shadow: 0.5px 0.5px 1px #065284;
+    color: #065284;
+}
+
 #nav .main ul {
     height: inherit;
     margin-left: 140px;
-    padding-left: 0;
+    /*padding-left: 0;*/
 }
 #nav .extra {
     float: right;

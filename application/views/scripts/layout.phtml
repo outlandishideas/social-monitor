@@ -34,6 +34,7 @@
 					<div id="nav">
 						<div class="main">
                             <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>" class="site-title-link"><div class="site-title"><span>British Council Social Media Monitor</span></div></a>
+                                <p class="beta-tag">BETA</p>
                             <?php
                                 //if (Zend_Auth::getInstance()->hasIdentity()) :
                                     echo $this->navigation()->menu()->setPartial('partials/menu.phtml')->render();
