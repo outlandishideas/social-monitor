@@ -252,6 +252,18 @@ a:hover, span.link:hover {
 	margin: 0;
     line-height: 56px;
     height: 56px;
+    padding-top: 20px;
+}
+
+#main-header .beta-tag {
+    margin-top: -16px;
+    line-height: 2;
+    background-color: #b94a48;
+    color: #fff;
+    margin: -20px -42px 0 -42px;
+    padding: 0 40px;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 span.icon-ok-sign {
@@ -442,14 +454,6 @@ span.icon-remove-sign {
     height: 100%;
     float: left;
     margin-right: 10px;
-}
-
-#nav .main p.beta-tag {
-    padding-top: 14px;
-    padding-left: 8px;
-    float: left;
-    text-shadow: 0.5px 0.5px 1px #065284;
-    color: #065284;
 }
 
 #nav .main ul {
