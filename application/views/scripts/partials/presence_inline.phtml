@@ -8,8 +8,7 @@ if ($url) : ?>
                 <?php echo round($this->presence->klout_score); ?>
             </span><?php
         else:
-            $today = new DateTime();
-            $fb = $this->presence->getFacebookEngagementScore($today->format('Y-m-d'),$today->format('Y-m-d')); ?>
+            $fb = $this->presence->facebook_engagement; ?>
             <span class="klout facebook" title="Facebook Engagement score: <?php echo $fb; ?>">
                 <?php echo round($fb); ?>
             </span><?php
