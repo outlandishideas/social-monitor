@@ -358,36 +358,21 @@ class PresenceController extends GraphingController
 			$average = $total/count($postsPerDay);
 		}
 
-		$bc = array();
-		$nonBc = array();
+		$relevance = array();
 		foreach ($postsPerDay as $entry) {
 			$date = $entry->date;
-			$bc[$date] = (object)array('date'=>$date, 'value'=>0, 'subtitle'=>'(with BC links)', 'statusIds'=>array());
-			$nonBc[$date] = (object)array('date'=>$date, 'value'=>0, 'subtitle'=>'(with non-BC links)', 'statusIds'=>array());
+			$relevance[$date] = (object)array('date'=>$date, 'value'=>0, 'subtitle'=>'Relevance', 'statusIds'=>array());
 		}
 
-		foreach ($presence->getLinkData($startDate, $endDate) as $row) {
-			if ($row->is_bc) {
-				$bc[$row->date]->statusIds[] = $row->status_id;
-			} else {
-				$nonBc[$row->date]->statusIds[] = $row->status_id;
-			}
-		}
-		$bc = array_values($bc);
-		$nonBc = array_values($nonBc);
-		foreach (array($bc, $nonBc) as $set) {
-			foreach ($set as $row) {
-				$row->value = count(array_unique($row->statusIds));
-				unset($row->statusIds);
-			}
+		foreach ($presence->getRelevanceData($startDate, $endDate) as $row) {
+            $relevance[$row->created_time]->value = $row->total_bc_links;
 		}
 
 		return array(
 			'average' => $average,
 			'target' => $target,
 			'points' => $postsPerDay,
-			'bc' => $bc,
-			'non_bc' => $nonBc
+			'relevance' => array_values($relevance),
 		);
 	}
 
