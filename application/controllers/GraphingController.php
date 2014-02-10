@@ -184,6 +184,14 @@ abstract class GraphingController extends BaseController {
             case('digital-population'):
                 $return = (object)array(
                     'name' => 'digital-population',
+                    'sort' => 'fuzzy-numeric',
+                    'title' => 'Digital Population',
+                    'desc' => 'The Digital Population is based on internet penetration in the country.'
+                );
+                break;
+            case('digital-population-health'):
+                $return = (object)array(
+                    'name' => 'digital-population-health',
                     'sort' => 'traffic-light',
                     'title' => 'Percent of Digital Population',
                     'desc' => 'Target Audience as a percent of the Digital Population based on internet penetration in the country.'

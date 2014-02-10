@@ -41,8 +41,9 @@
 			<td><?php echo $country->getName() . ' (' . $country->country . ')'; ?></td>
             <td><?php echo $this->badgeData[$country->id]->total_rank; ?></td>
             <td><?php echo round($this->badgeData[$country->id]->total, 1); ?></td>
-            <td title="Digital Population = <?php echo number_format($country->getDigitalPopulation()); ?>">
-                <?php $value = number_format($country->getDigitalPopulationHealth()); $key = 'digital_population'; ?>
+            <td><?php echo number_format($country->getDigitalPopulation()); ?></td>
+            <td>
+                <?php $value = $country->getDigitalPopulationHealth(); $key = 'digital_population'; ?>
                 <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
                 <?php echo $this->trafficLight()->label($value, $key); ?>
             </td>

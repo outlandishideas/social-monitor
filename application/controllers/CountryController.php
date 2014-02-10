@@ -315,6 +315,7 @@ class CountryController extends CampaignController {
             'total-rank' => true,
             'total-score' => true,
             'digital-population' => true,
+            'digital-population-health' => true,
             'target-audience' => true
         );
 
