@@ -217,12 +217,15 @@ class Model_Badge {
 		foreach (self::$ALL_BADGE_TYPES as $badgeType) {
 			if ($badgeType != self::BADGE_TYPE_TOTAL) {
 				$badgeMetrics[$badgeType] = self::metrics($badgeType);
-
-				foreach ($data as $row) {
-					$row->$badgeType = floatval($row->$badgeType);
-				}
-
 			}
+		}
+
+		foreach ($data as $row) {
+			foreach ($badgeMetrics as $badgeType=>$ignored) {
+				$row->$badgeType = floatval($row->$badgeType);
+			}
+			unset($row->id);
+			unset($row->campaign_id);
 		}
 
 		foreach($presences as $presence){
