@@ -239,12 +239,13 @@ abstract class Model_Base
 		array_push($data, $sampleItem);
 
 		//create placeholders
-		$columnNames = implode(',', array_keys($sampleItem));
-		$placeholders = '(' . implode(',', array_fill(0, count($sampleItem), '?')) . ')';
+		$columns = array_keys($sampleItem);
+		$columnNames = implode(',', $columns);
+		$placeholders = '(' . implode(',', array_fill(0, count($columns), '?')) . ')';
 
 		//create update clause
 		$updaters = array();
-		foreach ($sampleItem as $column => $value) {
+		foreach ($columns as $column) {
 			$updaters[] = "$column = VALUES($column)";
 		}
 		$updateClause = implode(',', $updaters);
@@ -262,7 +263,9 @@ abstract class Model_Base
 			//make single array of all values
 			$values = array();
 			foreach ($sliceData as $row) {
-				foreach ($row as $col) $values[] = $col;
+				foreach ($columns as $column) {
+					$values[] = $row[$column];
+				}
 			}
 
 			//insert the data

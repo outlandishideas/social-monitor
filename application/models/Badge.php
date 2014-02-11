@@ -230,7 +230,6 @@ class Model_Badge {
 
 		foreach($presences as $presence){
 
-			//$dataRow is an object with four properties: presence_id, type, value, datetime (matching columns in presence_history table)
 			$dataRow = (object)array(
 				'presence_id' => $presence->id,
 				'date' => $date,
