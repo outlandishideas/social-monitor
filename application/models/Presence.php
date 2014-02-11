@@ -678,13 +678,9 @@ class Model_Presence extends Model_Base {
 	public function getMetrics($badgeType = null){
 		switch ($badgeType) {
 			case Model_Badge::BADGE_TYPE_ENGAGEMENT:
-				$metrics = Model_Badge::metrics(Model_Badge::BADGE_TYPE_ENGAGEMENT);
-				break;
 			case Model_Badge::BADGE_TYPE_QUALITY:
-				$metrics = Model_Badge::metrics(Model_Badge::BADGE_TYPE_QUALITY);
-				break;
 			case Model_Badge::BADGE_TYPE_REACH:
-				$metrics = Model_Badge::metrics(Model_Badge::BADGE_TYPE_REACH);
+				$metrics = Model_Badge::metrics($badgeType);
 				break;
 			case Model_Badge::BADGE_TYPE_TOTAL:
 			default:
@@ -1030,15 +1026,29 @@ class Model_Presence extends Model_Base {
 		if ($this->isForFacebook()) {
 			$clauses[] = 'posted_by_owner = 1';
 			$clauses[] = 'in_response_to IS NULL';
+			$linkType = 'facebook';
+		} else {
+			$linkType = 'twitter';
 		}
 
-		$sql = '
-		SELECT SUM(links.count) AS links, COUNT(statuses.id) AS posts, SUM(links.count)/COUNT(statuses.id) as av
-		FROM ' . $tableName . ' AS statuses
-		lEFT JOIN (
-			SELECT status_id, COUNT(url) as count FROM `status_links` GROUP BY status_id
-		) AS links ON statuses.id = links.status_id
-		WHERE ' . implode(' AND ', $clauses);
+		$where = implode(' AND ', $clauses);
+		$sql = "
+		SELECT SUM(link_count) AS links, COUNT(id) AS posts, SUM(link_count)/COUNT(id) as av FROM
+		(
+			SELECT status.*, COUNT(link.id) AS link_count
+			FROM $tableName AS status
+			LEFT JOIN status_links AS link ON link.type = '$linkType' AND status.id = link.status_id
+			WHERE $where
+			GROUP BY status.id
+		) as data";
+
+//		$sql = '
+//		SELECT SUM(links.count) AS links, COUNT(statuses.id) AS posts, SUM(links.count)/COUNT(statuses.id) as av
+//		FROM ' . $tableName . ' AS statuses
+//		LEFT JOIN (
+//			SELECT status_id, COUNT(url) as count FROM `status_links` GROUP BY status_id
+//		) AS links ON statuses.id = links.status_id
+//		WHERE ' . implode(' AND ', $clauses);
 		$stmt = $this->_db->prepare($sql);
 		$stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
 		return floatval($stmt->fetchColumn());

@@ -158,21 +158,29 @@ class Model_Badge {
 			if (!isset($groupedData[$row->date][$row->daterange])) {
 				$groupedData[$row->date][$row->daterange] = array();
 			}
-			$groupedData[$row->date][$row->daterange][] = $row;
+			$groupedData[$row->date][$row->daterange][$row->presence_id] = $row;
 		}
 
 		$fetchAgain = false;
 		/** @var Model_Presence[] $presences */
-		$presences = null;
-		$presenceCount = Model_Presence::countAll();
+		$presences = array();
+		foreach (Model_Presence::fetchAll() as $p) {
+			$presences[$p->id] = $p;
+		}
 		$currentDate = clone $startDate;
 		while ($currentDate <= $endDate) {
 			$dateString = $currentDate->format('Y-m-d');
-			if (empty($groupedData[$dateString][$dateRange]) || count($groupedData[$dateString][$dateRange]) < $presenceCount) {
-				if (!$presences) {
-					$presences = Model_Presence::fetchAll();
+			$toUpdate = $presences;
+			if (!empty($groupedData[$dateString][$dateRange])) {
+				$existing = $groupedData[$dateString][$dateRange];
+				foreach ($groupedData[$dateString][$dateRange] as $id=>$ignored) {
+					unset($toUpdate[$id]);
 				}
-				self::populateBadgeHistory($presences, $dateString, $dateRange);
+			} else {
+				$existing = array();
+			}
+			if ($toUpdate) {
+				self::populateBadgeHistory($existing, $toUpdate, $dateString, $dateRange);
 				$fetchAgain = true;
 			}
 			$currentDate = $currentDate->add(DateInterval::createFromDateString('1 day'));
@@ -196,20 +204,26 @@ class Model_Badge {
 	}
 
 	/**
+	 * @param $data array
 	 * @param $presences Model_Presence[]
 	 * @param $date string
 	 * @param $range string
 	 * @return array
 	 */
-	public static function populateBadgeHistory($presences, $date, $range){
-		$data = array();
+	public static function populateBadgeHistory($data, $presences, $date, $range){
 
 		//foreach presence and foreach badge (not total badge), calculate the metrics
-		$badgeMetrics = array(
-			self::BADGE_TYPE_REACH => self::metrics(self::BADGE_TYPE_REACH),
-			self::BADGE_TYPE_ENGAGEMENT => self::metrics(self::BADGE_TYPE_ENGAGEMENT),
-			self::BADGE_TYPE_QUALITY => self::metrics(self::BADGE_TYPE_QUALITY)
-		);
+		$badgeMetrics = array();
+		foreach (self::$ALL_BADGE_TYPES as $badgeType) {
+			if ($badgeType != self::BADGE_TYPE_TOTAL) {
+				$badgeMetrics[$badgeType] = self::metrics($badgeType);
+
+				foreach ($data as $row) {
+					$row->$badgeType = floatval($row->$badgeType);
+				}
+
+			}
+		}
 
 		foreach($presences as $presence){
 
@@ -221,20 +235,22 @@ class Model_Badge {
 			);
 
 			foreach($badgeMetrics as $badgeType => $metrics){
-
-                if($presence->isForFacebook() && $badgeType == self::BADGE_TYPE_ENGAGEMENT) unset($metrics[Model_Presence::METRIC_KLOUT]);
-                if(!$presence->isForFacebook() && $badgeType == self::BADGE_TYPE_ENGAGEMENT) unset($metrics[Model_Presence::METRIC_FB_ENGAGEMENT]);
-                $dataRow->$badgeType = $presence->getMetricsScore($date, $metrics, $range);
+				if ($badgeType == self::BADGE_TYPE_ENGAGEMENT) {
+	                if($presence->isForFacebook()) {
+		                unset($metrics[Model_Presence::METRIC_KLOUT]);
+	                } else {
+	                    unset($metrics[Model_Presence::METRIC_FB_ENGAGEMENT]);
+		            }
+				}
+				$dataRow->$badgeType = $presence->getMetricsScore($date, $metrics, $range);
 			}
 
 			$data[] = $dataRow;
 		}
 
-		//foreach badge (not total), sort the data and then rank it
-		foreach(Model_Badge::$ALL_BADGE_TYPES as $badgeType){
-			if($badgeType != Model_Badge::BADGE_TYPE_TOTAL) {
-				self::assignRanks($data, $badgeType);
-			}
+		//foreach calculated badge, sort the data and then rank it
+		foreach($badgeMetrics as $badgeType => $metrics){
+			self::assignRanks($data, $badgeType);
 		}
 
 		//insert the newly calculated data back into the presence_history table, so next time its ready for us.
