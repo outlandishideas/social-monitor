@@ -244,7 +244,6 @@ app.charts = {
 					$health.find('.target').text('Target Actions Per Day: ' + data.target);
 
 					app.charts.addBars(c, data.points, data.chart, data.color);
-                    console.log(data);
 					app.charts.addBars(c, data.relevance, data.chart, '#00f', 0.3, -1);
 					break;
 				case 'response_time':

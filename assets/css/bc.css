@@ -266,7 +266,7 @@ a:hover, span.link:hover {
     position: fixed;
     width: 100%;
     top: 56px;
-    z-index: 999;
+    z-index: 5;
     box-shadow: 2px 2px 4px #666;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.4);
     text-shadow: -2px -2px #666;
@@ -528,6 +528,7 @@ span.icon-remove-sign {
     min-width: 140%;
     right: 0;
     box-shadow: 2px 2px 4px #666;
+    z-index: 10;
 }
 
 #nav li.child {
