@@ -241,7 +241,7 @@ app.charts = {
 						.text(app.utils.numberFixedDecimal(data.average, 2))
 						.css('color', data.color)
 						.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
-					$health.find('.target').text('Target Actions Per Day: ' + data.target + '<br />Target Relevant Links per Day: ' + data.rTarget);
+					$health.find('.target').html('Target Actions Per Day: ' + data.target + '<br />Target Relevant Links per Day: ' + data.rTarget);
 
 					app.charts.addBars(c, data.points, data.chart, data.color);
 					app.charts.addBars(c, data.relevance, data.chart, '#00f', 0.3, -1);
