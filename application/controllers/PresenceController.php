@@ -368,9 +368,12 @@ class PresenceController extends GraphingController
             $relevance[$row->created_time]->value = $row->total_bc_links;
 		}
 
+        $relevancePercentage = $presence->isForFacebook() ? 'facebook_relevance_percentage' : 'twitter_relevance_percentage';
+
 		return array(
 			'average' => $average,
 			'target' => $target,
+            'rTarget' => ($target/100)*BaseController::getOption($relevancePercentage),
 			'points' => $postsPerDay,
 			'relevance' => array_values($relevance),
 		);
