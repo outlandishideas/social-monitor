@@ -15,8 +15,18 @@ if ($url) : ?>
         endif; ?>
 	</a>
 <?php else : ?>
-	<span title="<?php echo $this->presence->label; ?>" class="entity presence <?php echo $this->presence->type; ?>">
+    <span title="<?php echo $this->presence->label; ?>" class="entity presence <?php echo $this->presence->type; ?>">
 		<span class="<?php echo $this->presence->getPresenceSign();?>"></span>
-		<?php echo $this->presence->handle; ?>
+        <?php echo $this->presence->handle;
+        if ($this->presence->isForTwitter()) : ?>
+        <span class="klout" title="Klout score: <?php echo $this->presence->klout_score; ?>">
+            <?php echo round($this->presence->klout_score); ?>
+            </span><?php
+        else:
+            $fb = $this->presence->facebook_engagement; ?>
+        <span class="klout facebook" title="Facebook Engagement score: <?php echo $fb; ?>">
+            <?php echo round($fb); ?>
+            </span><?php
+        endif; ?>
 	</span>
 <?php endif; ?>
