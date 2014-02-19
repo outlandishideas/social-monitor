@@ -224,6 +224,7 @@ class PresenceController extends GraphingController
 						$point->color = $trafficLight->color(isset($point->health) ? $point->health : $point->value, $metric);
 					}
 					$data['color'] = $trafficLight->color(isset($data['health']) ? $data['health'] : $data['average'], $metric);
+                    if(isset($data['rAverage'])) $data['rColor'] = $trafficLight->color($data['rAverage'], Model_Presence::METRIC_RELEVANCE);
                     $data['chart'] = $chart;
 					$series[] = $data;
 				}
@@ -367,11 +368,17 @@ class PresenceController extends GraphingController
 		foreach ($presence->getRelevanceData($startDate, $endDate) as $row) {
             $relevance[$row->created_time]->value = $row->total_bc_links;
 		}
+        $rAverage = 0;
+        foreach($relevance as $r){
+            $rAverage += $r->value;
+        }
+        $rAverage /= count($relevance);
 
         $relevancePercentage = $presence->isForFacebook() ? 'facebook_relevance_percentage' : 'twitter_relevance_percentage';
 
 		return array(
-			'average' => $average,
+            'average' => $average,
+            'rAverage' => $rAverage,
 			'target' => $target,
             'rTarget' => ($target/100)*BaseController::getOption($relevancePercentage),
 			'points' => $postsPerDay,

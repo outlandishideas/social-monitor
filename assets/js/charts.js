@@ -212,7 +212,8 @@ app.charts = {
 				case 'popularity_rate':
 					$health.find('.value')
 						.text(app.utils.numberFormat(data.current.value))
-						.css('color', data.color);
+						.css('color', data.color)
+                        .attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');;
 					$health.find('.legend').text('As of ' + data.current.date);
 					var targetText = 'Target audience: '+ app.utils.numberFormat(data.target);
 					if (data.timeToTarget) {
@@ -237,10 +238,27 @@ app.charts = {
 					app.charts.addBars(c, data.points, data.chart, data.color);
 					break;
 				case 'posts_per_day':
-					$health.find('.value')
-						.text(app.utils.numberFixedDecimal(data.average, 2))
-						.css('color', data.color)
-						.attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
+
+                    var $action = $health.find('.value').find('.action-value');
+                    if($action.length == 0) {
+                        $health.find('.value').append('<span class="action-value"></span>');
+                        var $action = $health.find('.value').find('.action-value');
+                    }
+
+                    var $relevance = $health.find('.value').find('.relevance-value');
+                    if($relevance.length == 0) {
+                        $health.find('.value').append(' / <span class="relevance-value"></span>');
+                        var $relevance = $health.find('.value').find('.relevance-value');
+                    }
+                    $action
+                        .text(app.utils.numberFixedDecimal(data.average, 2))
+                        .css('color', data.color)
+                        .attr('title', 'Average number of posts per day');
+                    $relevance
+                        .text(app.utils.numberFixedDecimal(data.rAverage, 2))
+                        .css('color', data.rColor)
+                        .attr('title', 'Average number of relevant links per day');
+
 					$health.find('.target').html('Target Actions Per Day: ' + data.target + '<br />Target Relevant Links per Day: ' + data.rTarget);
 
 					app.charts.addBars(c, data.points, data.chart, data.color);
