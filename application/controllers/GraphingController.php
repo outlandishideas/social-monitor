@@ -85,6 +85,12 @@ abstract class GraphingController extends BaseController {
 			'colors' => array($colors->red, $colors->yellow, $colors->green, $colors->green, $colors->yellow, $colors->red)
 		);
 
+        $relevanceTarget = (self::getOption('updates_per_day')/100)*self::getOption('facebook_relevance_percentage');
+        $metrics[Model_Presence::METRIC_RELEVANCE] = (object)array(
+            'range' => array(0, $relevanceTarget/2, $relevanceTarget),
+            'colors' => array($colors->red, $colors->yellow, $colors->green)
+        );
+
 		$responseTimeBest = self::getOption('response_time_best');
 		$responseTimeGood = self::getOption('response_time_good');
 		$responseTimeBad = self::getOption('response_time_bad');
