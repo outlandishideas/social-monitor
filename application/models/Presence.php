@@ -1277,13 +1277,14 @@ class Model_Presence extends Model_Base {
 	public function getTargetAudience() {
 		$target = 0;
 		$owner = $this->getOwner();
-		if ($owner) {
-			$target = $owner->getTargetAudience();
-            $target /= $owner->getPresenceCount();
-            $target *= BaseController::getOption($this->isForFacebook() ? 'fb_min' : 'tw_min');
-            $target /= 100;
-			$target = round($target);
-		}
+//		if ($owner) {
+//			$target = $owner->getTargetAudience();
+//            $target /= $owner->getPresenceCount();
+//            $target *= BaseController::getOption($this->isForFacebook() ? 'fb_min' : 'tw_min');
+//            $target /= 100;
+//			$target = round($target);
+//		}
+        $target = $owner->getTargetAudience();
 		return $target;
 	}
 
