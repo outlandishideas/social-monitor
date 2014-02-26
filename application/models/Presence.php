@@ -1285,6 +1285,8 @@ class Model_Presence extends Model_Base {
 //			$target = round($target);
 //		}
         $target = $owner->getTargetAudience();
+        $target *= BaseController::getOption($this->isForFacebook() ? 'fb_min' : 'tw_min');
+        $target /= 100;
 		return $target;
 	}
 
