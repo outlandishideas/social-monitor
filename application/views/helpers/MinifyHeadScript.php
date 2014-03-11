@@ -19,7 +19,7 @@
  * in the same way that you used to call headScript. Here is an example:
  * 
   echo $this->minifyHeadScript()
-  ->prependFile('http://ajax.googleapis.com/ajax/libs/someObject/2.2/object.js') // 12th	   
+  ->prependFile('//ajax.googleapis.com/ajax/libs/someObject/2.2/object.js') // 12th
 	->prependFile('/js/jquery.delaytrigger.js') // 11th
 	->prependFile('/js/sorttable.js')           // 10th
 	->prependFile('/js/jquery.alerts.js')       // 9th
@@ -53,7 +53,7 @@
                     /js/jquery.autocomplete.js,/js/jquery.tablesorter.min.js,/js/jquery.checkbox.js,
                     /js/jquery.maskedinput.js,/js/jqModal.js,/js/jquery.alerts.js,/js/sorttable.js,
                     /js/jquery.delaytrigger.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/someObject/2.2/object.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/someObject/2.2/object.js"></script>
 <script type="text/javascript">
     //<![CDATA[
 
