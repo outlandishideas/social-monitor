@@ -164,8 +164,6 @@ app.geochart = {
             var score = Math.round(g.smallMapData.b[metric][day].s);
             var title = g.smallMapData.n +' (Presences: '+ g.smallMapData.p +')\n'+ app.geochart.metrics[metric].label +': '+ g.smallMapData.b[metric][day].l;
 
-            console.log(color,score,title);
-
             g.$smallMap.css('background-color', color);
             g.$smallMap.attr('title', title);
             g.$smallMap.find('.score').empty().append(score);
