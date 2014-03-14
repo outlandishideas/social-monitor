@@ -1538,6 +1538,7 @@ ul.link-list {
     padding: 10px;
     font-size: 14px;
     font-weight: normal;
+    clear: left;
 }
 
 #group-map ul, #small-maps ul {
@@ -1548,8 +1549,8 @@ ul.link-list {
 }
 
 .group-display, .small-maps-display {
-    display: inline-block;
-    vertical-align: top;
+    display: block;
+    float: left;
     text-align: center;
     padding: 10px;
     margin: 0 5px;
