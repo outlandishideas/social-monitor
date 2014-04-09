@@ -174,7 +174,26 @@ class IndexController extends GraphingController
 
 		$end = new DateTime('now');
 		$start = new DateTime('now -60 days');
+
+        //build badge data if it doesn't exist
 		Model_Badge::getAllData('month', $start, $end);
+
+        //get object cache which will return false if badge_data_30 is too old, or flagged as temp
+        $oldData = self::getObjectCache('badge_data_30', true);
+        if(!$oldData) {
+            //if no oldData (too old or temp) get current data (which is now up to date) and set it in the object cache
+            $data = Model_Badge::getAllCurrentData('month', new DateTime(), new DateTime("now -30 days"));
+            self::setObjectCache('badge_data_30', $data);
+        }
+
+        //get object cache which will return false if badge_data_30 is too old, or flagged as temp
+        $oldData = self::getObjectCache('presence_badges', true);
+        if(!$oldData) {
+            //if no oldData (too old or temp) get current data (which is now up to date) and set it in the object cache
+            $data = Model_Badge::getAllCurrentData('month', new DateTime(), new DateTime());
+            self::setObjectCache('presence_badges', $data);
+        }
+
 //		Model_Badge::getAllData('week', $start, $end); //todo: uncomment this when it is needed
 		exit;
 	}
