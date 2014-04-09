@@ -22,12 +22,12 @@ class IndexController extends GraphingController
 		$key = 'badge_data_'.$dayRange;
 		$badgeData = self::getObjectCache($key);
 		if(!$badgeData){
-			$endDate = new DateTime('now');
+			$endDate = new DateTime('now + 1 day');
 			$startDate = new DateTime("now -$dayRange days");
 
 			//todo include week data in the data that we send out as json
-			$badgeData = Model_Badge::getAllData('month', $startDate, $endDate);
-			self::setObjectCache($key, $badgeData);
+			$badgeData = Model_Badge::getAllCurrentData('month', $startDate, $endDate);
+			self::setObjectCache($key, $badgeData, 1);
 		}
 
 		$key = 'map_data_' . $dayRange;
