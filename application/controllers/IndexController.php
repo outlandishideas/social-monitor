@@ -58,7 +58,7 @@ class IndexController extends GraphingController
         }
 
 		$key = 'group_data_' . $dayRange;
-		$groupData = null; //self::getObjectCache($key);
+		$groupData = self::getObjectCache($key);
 		if (!$groupData) {
 			$groupData = Model_Group::constructFrontPageData($badgeData, $dayRange);
 			$badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
