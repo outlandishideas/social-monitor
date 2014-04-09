@@ -183,15 +183,7 @@ class Model_Campaign extends Model_Base {
 
     public static function badgesData(){
         $badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
-
-        // get the raw presence data
-        $startDate = new DateTime('now');
-        $endDate = new DateTime('now');
-        $data = Model_Badge::getAllData('month', $startDate, $endDate);
-        $keyedData = array();
-        foreach ($data as $row) {
-            $keyedData[$row->presence_id] = $row;
-        }
+        $keyedData = parent::badgesData();
 
         // get all of the campaign-presence relationships for this type (country or group)
         $class = new Model_Campaign();

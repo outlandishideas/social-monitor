@@ -1393,24 +1393,7 @@ class Model_Presence extends Model_Base {
      * function to get badges data
      */
     public static function badgesData(){
-        $endDate = new DateTime('now');
-        $key = 'presence_badges';
-        $data = BaseController::getObjectCache($key, 3600);
-        if (!$data) {
-            $startDate = clone $endDate;
-            $data = Model_Badge::getAllData('month', $startDate, $endDate);
-            foreach ($data as $row) {
-                Model_Badge::calculateTotalScore($row);
-            }
-            Model_Badge::assignRanks($data, 'total');
-            $keyedData = new stdClass();
-            foreach ($data as $row) {
-                $keyedData->{$row->presence_id} = $row;
-            }
-            $data = $keyedData;
-            BaseController::setObjectCache($key, $data);
-        }
-
+        $data = parent::badgesData();
         $return = array();
         foreach($data as $badge){
             $return[$badge->presence_id] = $badge;

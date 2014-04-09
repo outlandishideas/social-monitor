@@ -298,4 +298,29 @@ abstract class Model_Base
 		$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
 		return $date->format('Y-m-d H:i:s');
 	}
+
+    /**
+     * function to get badges data
+     */
+    public static function badgesData(){
+        $key = 'presence_badges';
+        $data = BaseController::getObjectCache($key, false);
+        if (!$data) {
+            $endDate = new DateTime("now");
+            $startDate = clone $endDate;
+            $data = Model_Badge::getAllCurrentData('month', $startDate, $endDate);
+            foreach ($data as $row) {
+                Model_Badge::calculateTotalScore($row);
+            }
+            Model_Badge::assignRanks($data, 'total');
+            $keyedData = new stdClass();
+            foreach ($data as $row) {
+                $keyedData->{$row->presence_id} = $row;
+            }
+            $data = $keyedData;
+            BaseController::setObjectCache($key, $data, 1);
+        }
+
+        return $data;
+    }
 }
