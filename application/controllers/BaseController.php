@@ -461,11 +461,11 @@ class BaseController extends Zend_Controller_Action
         return in_array($action, static::$publicActions);
     }
 
-    public static function setObjectCache($key, $value)
+    public static function setObjectCache($key, $value, $temp = 0)
     {
-        $sql = 'INSERT INTO object_cache (`key`, value) VALUES (:key, :value)';
+        $sql = 'INSERT INTO object_cache (`key`, value, `temporary`) VALUES (:key, :value, :temp)';
         $statement = self::db()->prepare($sql);
-        $statement->execute(array(':key' => $key, ':value' => gzcompress(json_encode($value))));
+        $statement->execute(array(':key' => $key, ':value' => gzcompress(json_encode($value)), ':temp' => $temp));
     }
 
     public static function getObjectCache($key, $expires = 86400)
