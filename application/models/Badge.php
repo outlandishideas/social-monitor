@@ -198,8 +198,7 @@ class Model_Badge {
 		}
 
 		if($fetchAgain){
-			$stmt->execute($args);
-			$data = $stmt->fetchAll(PDO::FETCH_OBJ);
+			$data = self::getAllCurrentData($dateRange, $startDate, $endDate);
 		}
 
 		// convert all the badge scores and ranks from strings to integers
