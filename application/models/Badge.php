@@ -116,6 +116,40 @@ class Model_Badge {
 //		return $indexedData;
 //	}
 
+    /**
+     * Fetches all of the historical data using the given date range, between the given dates
+     * @param $dateRange string 'week' or 'month'
+     * @param $startDate DateTime
+     * @param $endDate DateTime
+     * @return array
+     */
+    public static function getAllCurrentData($dateRange, $startDate, $endDate) {
+        $clauses = array(
+            'h.date >= :start_date',
+            'h.date <= :end_date',
+            'h.daterange = :date_range'
+        );
+        $args = array(
+            ':start_date' => $startDate->format('Y-m-d'),
+            ':end_date' => $endDate->format('Y-m-d'),
+            ':date_range' => $dateRange
+        );
+
+        $sql =
+            'SELECT h.*, c.campaign_id
+            FROM badge_history as h
+            LEFT OUTER JOIN campaign_presences as c
+                ON h.presence_id = c.presence_id
+            WHERE '.implode(' AND ', $clauses).'
+            ORDER BY
+                h.presence_id ASC,
+                h.date DESC';
+
+        $stmt = BaseController::db()->prepare($sql);
+        $stmt->execute($args);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
 	/**
 	 * Fetches all of the historical data using the given date range, between the given dates
 	 * @param $dateRange string 'week' or 'month'
@@ -124,30 +158,7 @@ class Model_Badge {
 	 * @return array
 	 */
 	public static function getAllData($dateRange, $startDate, $endDate) {
-		$clauses = array(
-			'h.date >= :start_date',
-			'h.date <= :end_date',
-			'h.daterange = :date_range'
-		);
-		$args = array(
-			':start_date' => $startDate->format('Y-m-d'),
-			':end_date' => $endDate->format('Y-m-d'),
-			':date_range' => $dateRange
-		);
-
-		$sql =
-			'SELECT h.*, c.campaign_id
-			FROM badge_history as h
-			LEFT OUTER JOIN campaign_presences as c
-				ON h.presence_id = c.presence_id
-			WHERE '.implode(' AND ', $clauses).'
-            ORDER BY
-                h.presence_id ASC,
-                h.date DESC';
-
-		$stmt = BaseController::db()->prepare($sql);
-		$stmt->execute($args);
-		$data = $stmt->fetchAll(PDO::FETCH_OBJ);
+		$data = self::getAllCurrentData($dateRange, $startDate, $endDate);
 
 		// group the data by date and range, just to check that everything is present
 		$groupedData = array();
