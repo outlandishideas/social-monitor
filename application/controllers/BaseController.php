@@ -468,7 +468,7 @@ class BaseController extends Zend_Controller_Action
         $statement->execute(array(':key' => $key, ':value' => gzcompress(json_encode($value)), ':temp' => $temp));
     }
 
-    public static function getObjectCache($key, $expires = 86400)
+    public static function getObjectCache($key, $checkTemp = false, $expires = 86400)
     {
         $sql = 'SELECT * FROM object_cache WHERE `key` = :key ORDER BY last_modified DESC LIMIT 1';
         $statement = self::db()->prepare($sql);
