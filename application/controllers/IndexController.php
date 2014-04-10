@@ -22,7 +22,7 @@ class IndexController extends GraphingController
 		$key = 'badge_data_'.$dayRange;
 		$badgeData = self::getObjectCache($key);
 		if(!$badgeData){
-			$endDate = new DateTime('now + 1 day');
+			$endDate = new DateTime('now');
 			$startDate = new DateTime("now -$dayRange days");
 
 			//todo include week data in the data that we send out as json
