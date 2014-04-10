@@ -44,8 +44,10 @@ $buttons = $this->gatekeeper()->filterAll(array(
             <td><?php echo $this->badgeData[$group->id]->total_rank; ?></td>
             <td><?php echo round($this->badgeData[$group->id]->total, 1); ?></td>
             <td><?php echo number_format($group->audience); ?></td>
-			<?php if ($presences == true) : ?>
-                <?php $kpiData = $group->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
+			<?php if ($presences == true) :
+                $kpiData = $group->getKpiAverages();
+                foreach ($this->tableMetrics as $key=>$label) :
+                    $value = $kpiData[$key]; ?>
                     <td>
                         <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
                         <?php echo $this->trafficLight()->label($value, $key); ?>
