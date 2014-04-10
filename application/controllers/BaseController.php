@@ -474,7 +474,7 @@ class BaseController extends Zend_Controller_Action
         $statement = self::db()->prepare($sql);
         $statement->execute(array(':key' => $key));
         $result = $statement->fetch(PDO::FETCH_OBJ);
-        if ($result && (time() - strtotime($result->last_modified)) < $expires) {
+        if ($result && (time() - strtotime($result->last_modified)) < $expires && ( !$checkTemp || $result->temporary == 0)) {
             return json_decode(gzuncompress( $result->value));
         } elseif ($result) { //remove the expired values
             $sql = 'DELETE FROM object_cache WHERE `key` = :key';
