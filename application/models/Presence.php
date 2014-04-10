@@ -116,13 +116,18 @@ class Model_Presence extends Model_Base {
 				$startDate->sub(DateInterval::createFromDateString('1 month'));
 			}
 
-			$endDateString = $endDate->format('Y-m-d');
-			$startDateString = $startDate->format('Y-m-d');
-
 			if ($useCache) {
+
 				$stmt = $this->_db->prepare('SELECT metric, value FROM kpi_cache WHERE presence_id = :pid AND start_date = :start AND end_date = :end');
-				$stmt->execute(array(':pid'=>$this->id, ':start'=>$startDateString, ':end'=>$endDateString));
-				$cachedValues = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+                $count = 0;
+                do {
+                    $stmt->execute(array(':pid'=>$this->id, ':start'=>$startDate->format('Y-m-d'), ':end'=>$endDate->format('Y-m-d')));
+                    $cachedValues = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+                    $startDate->modify("-1 day");
+                    $endDate->modify("-1 day");
+                    $count++;
+                } while (count($cachedValues) < 1 && $count < 5);
+
 			} else {
 				$cachedValues = array();
 			}
@@ -133,7 +138,7 @@ class Model_Presence extends Model_Base {
 			} else {
 				$currentAudience = $this->popularity;
 				$targetAudience = $this->getTargetAudience();
-				$targetAudienceDate = $this->getTargetAudienceDate($startDateString, $endDateString);
+				$targetAudienceDate = $this->getTargetAudienceDate($startDate->format('Y-m-d'), $endDate->format('Y-m-d'));
 
 				// target audience %
 				$kpiData[self::METRIC_POPULARITY_PERCENT] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
@@ -155,7 +160,7 @@ class Model_Presence extends Model_Base {
 			if (array_key_exists($metric, $cachedValues)) {
 				$kpiData[$metric] = $cachedValues[$metric];
 			} else {
-				$kpiData[$metric] = $this->getAveragePostsPerDay($startDateString, $endDateString);
+				$kpiData[$metric] = $this->getAveragePostsPerDay($startDate->format('Y-m-d'), $endDate->format('Y-m-d'));
 			}
 
 			//response time
@@ -163,7 +168,7 @@ class Model_Presence extends Model_Base {
 			if (array_key_exists($metric, $cachedValues)) {
 				$kpiData[$metric] = $cachedValues[$metric];
 			} else {
-				$kpiData[$metric] = $this->getAverageResponseTime($startDateString, $endDateString);
+				$kpiData[$metric] = $this->getAverageResponseTime($startDate->format('Y-m-d'), $endDate->format('Y-m-d'));
 			}
 
 			$this->kpiData = $kpiData;

@@ -308,7 +308,15 @@ abstract class Model_Base
         if (!$data) {
             $endDate = new DateTime("now");
             $startDate = clone $endDate;
-            $data = Model_Badge::getAllCurrentData('month', $startDate, $endDate);
+            $count = 0;
+            do{
+                $data = Model_Badge::getAllCurrentData('month', $startDate, $endDate);
+                $startDate->modify("-1 day");
+                $endDate->modify("-1 day");
+                $count++;
+                //while no count data keep trying further back in the past
+                // break out if attempted 5 times, as it is probably a new presence and so has no cached data
+            } while(count($data) < 1 && $count < 5);
             foreach ($data as $row) {
                 Model_Badge::calculateTotalScore($row);
             }
