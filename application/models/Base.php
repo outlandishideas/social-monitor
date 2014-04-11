@@ -2,7 +2,7 @@
 
 abstract class Model_Base
 {
-	protected static $columns = array();
+	protected static $tableColumns = array();
 	protected static $tableName;
 	protected static $sortColumn = 'id';
 
@@ -28,16 +28,20 @@ abstract class Model_Base
 
 	public function getColumnNames()
 	{
-		$classname = get_called_class();
-		if (!array_key_exists($classname, Model_Base::$columns)) {
-			Model_Base::$columns[$classname] = array();
-			$statement = $this->_db->prepare('SELECT column_name AS name FROM information_schema.columns WHERE table_schema=database() AND table_name=:tableName');
-			$statement->execute(array(':tableName'=>static::$tableName));
-			foreach ($statement as $row) {
-				Model_Base::$columns[$classname][] = $row['name'];
+		if (empty(self::$tableColumns)) {
+			$statement = $this->_db->prepare('SELECT table_name, column_name FROM information_schema.columns WHERE table_schema=database()');
+			$statement->execute();
+			foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
+				if (!isset(Model_Base::$tableColumns[$row['table_name']])){
+					Model_Base::$tableColumns[$row['table_name']] = array();
+				}
+				Model_Base::$tableColumns[$row['table_name']][] = $row['column_name'];
 			}
 		}
-		return Model_Base::$columns[$classname];
+		if (isset(Model_Base::$tableColumns[static::$tableName])) {
+			return Model_Base::$tableColumns[static::$tableName];
+		}
+		return array();
 	}
 	
 	public function __get($name)

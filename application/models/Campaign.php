@@ -5,7 +5,7 @@ class Model_Campaign extends Model_Base {
 	protected static $sortColumn = 'display_name';
 
 	// use this to filter campaigns table by is_country column
-	protected static $countryFilter = null;
+	public static $countryFilter = null;
 
 	protected function fetch($clause = null, $args = array()) {
 		if ($clause) {
@@ -39,26 +39,41 @@ class Model_Campaign extends Model_Base {
 		return intval($statement->fetchColumn());
 	}
 
-	function getPresenceIds() {
+	function getPresenceIds($mapping = null) {
 		if (!isset($this->presenceIds)) {
-			$statement = $this->_db->prepare('SELECT presence_id FROM campaign_presences WHERE campaign_id = :cid');
-			$statement->execute(array(':cid'=>$this->id));
-			$this->presenceIds = $statement->fetchAll(PDO::FETCH_COLUMN);
+			if (isset($mapping[$this->id])) {
+				$this->presenceIds = $mapping[$this->id];
+			} else {
+				$statement = $this->_db->prepare('SELECT presence_id FROM campaign_presences WHERE campaign_id = :cid');
+				$statement->execute(array(':cid'=>$this->id));
+				$this->presenceIds = $statement->fetchAll(PDO::FETCH_COLUMN);
+			}
 		}
 		return $this->presenceIds;
 	}
 
 	/**
+	 * Gets the presences for this campaign. If $mapping and $allPresences are present, they will be used instead
+	 * of doing a database query
+	 * @param array $mapping
+	 * @param Model_Presence[] $allPresences
 	 * @return Model_Presence[]
 	 */
-	function getPresences() {
+	function getPresences($mapping = null, $allPresences = null) {
 		if (!isset($this->presences)) {
-			$ids = $this->getPresenceIds();
+			$this->presences = array();
+			$ids = $this->getPresenceIds($mapping);
 			if ($ids) {
-				$clause = 'id IN (' . implode(',', $ids) . ')';
-				$this->presences = Model_Presence::fetchAll($clause);
-			} else {
-				$this->presences = array();
+				if ($allPresences) {
+					foreach ($ids as $id) {
+						if (isset($allPresences[$id])) {
+							$this->presences[] = $allPresences[$id];
+						}
+					}
+				} else {
+					$clause = 'id IN (' . implode(',', $ids) . ')';
+					$this->presences = Model_Presence::fetchAll($clause);
+				}
 			}
 		}
 		return $this->presences;

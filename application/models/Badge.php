@@ -1,4 +1,3 @@
-
 <?php
 
 class Model_Badge {
@@ -151,13 +150,14 @@ class Model_Badge {
     }
 
 	/**
-	 * Fetches all of the historical data using the given date range, between the given dates
+	 * Fetches all of the historical data using the given date range, between the given dates,
+	 * and populates any that should be there but isn't
 	 * @param $dateRange string 'week' or 'month'
 	 * @param $startDate DateTime
 	 * @param $endDate DateTime
 	 * @return array
 	 */
-	public static function getAllData($dateRange, $startDate, $endDate) {
+	public static function populateHistoricalData($dateRange, $startDate, $endDate) {
 		$data = self::getAllCurrentData($dateRange, $startDate, $endDate);
 
 		// group the data by date and range, just to check that everything is present
@@ -172,7 +172,6 @@ class Model_Badge {
 			$groupedData[$row->date][$row->daterange][$row->presence_id] = $row;
 		}
 
-		$fetchAgain = false;
 		/** @var Model_Presence[] $presences */
 		$presences = array();
 		foreach (Model_Presence::fetchAll() as $p) {
@@ -192,25 +191,9 @@ class Model_Badge {
 			}
 			if ($toUpdate) {
 				self::populateBadgeHistory($existing, $toUpdate, $dateString, $dateRange);
-				$fetchAgain = true;
 			}
 			$currentDate = $currentDate->add(DateInterval::createFromDateString('1 day'));
 		}
-
-		if($fetchAgain){
-			$data = self::getAllCurrentData($dateRange, $startDate, $endDate);
-		}
-
-		// convert all the badge scores and ranks from strings to integers
-		foreach ($data as $row) {
-			foreach ($row as $key=>$value) {
-				if (strpos($key, '_rank') > 0 || in_array($key, self::$ALL_BADGE_TYPES)) {
-					$row->$key = intval($value);
-				}
-			}
-		}
-
-		return $data;
 	}
 
 	/**
@@ -275,6 +258,18 @@ class Model_Badge {
 		return $data;
 	}
 
+	public static function calculateTotalScores($data) {
+		foreach ($data as $row) {
+			Model_Badge::calculateTotalScore($row);
+		}
+		Model_Badge::assignRanks($data, 'total');
+		$keyedData = new stdClass();
+		foreach ($data as $row) {
+			$keyedData->{$row->presence_id} = $row;
+		}
+		return $keyedData;
+	}
+
 	public static function calculateTotalScore($badgeData) {
 		$badgeTypes = self::$ALL_BADGE_TYPES;
 		$total = 0;
@@ -317,28 +312,21 @@ class Model_Badge {
 	 */
 	public static function badgesData($array = false){
 		$key = 'presence_badges';
-		$data = BaseController::getObjectCache($key, false);
+		$data = BaseController::getObjectCache($key);
 		if (!$data) {
 			$endDate = new DateTime("now");
 			$startDate = clone $endDate;
-			$count = 0;
-			do{
-				$data = Model_Badge::getAllCurrentData('month', $startDate, $endDate);
-				$startDate->modify("-1 day");
-				$endDate->modify("-1 day");
-				$count++;
+			for ($i=0; $i<5; $i++) {
 				//while no count data keep trying further back in the past
 				// break out if attempted 5 times, as it is probably a new presence and so has no cached data
-			} while(count($data) < 1 && $count < 5);
-			foreach ($data as $row) {
-				Model_Badge::calculateTotalScore($row);
+				$data = Model_Badge::getAllCurrentData('month', $startDate, $endDate);
+				if ($data) {
+					break;
+				}
+				$startDate->modify("-1 day");
+				$endDate->modify("-1 day");
 			}
-			Model_Badge::assignRanks($data, 'total');
-			$keyedData = new stdClass();
-			foreach ($data as $row) {
-				$keyedData->{$row->presence_id} = $row;
-			}
-			$data = $keyedData;
+			$data = self::calculateTotalScores($data);
 			BaseController::setObjectCache($key, $data, true);
 		}
 

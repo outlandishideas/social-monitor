@@ -4,7 +4,7 @@ class Model_Country extends Model_Campaign {
 
 	const ICON_TYPE = 'icon-globe';
 
-	protected static $countryFilter = '1';
+	public static $countryFilter = '1';
 
 	public function countryInfo(){
 		return array(

@@ -12,10 +12,29 @@ class CountryController extends CampaignController {
 	 * @user-level user
 	 */
 	public function indexAction() {
+		/** @var Model_Country[] $countries */
+		$countries = Model_Country::fetchAll();
+		/** @var Model_Presence[] $presences */
+		$presences = array();
+		foreach (Model_Presence::fetchAll() as $p) {
+			$presences[$p->id] = $p;
+		}
+		$query = self::db()->prepare('SELECT c.id, cp.presence_id FROM campaigns AS c LEFT OUTER JOIN campaign_presences AS cp ON c.id = cp.campaign_id');
+		$query->execute();
+		$mapping = array();
+		foreach ($query->fetchAll(PDO::FETCH_OBJ) as $row) {
+			if (!isset($mapping[$row->id])) {
+				$mapping[$row->id] = array();
+			}
+			$mapping[$row->id][] = $row->presence_id;
+		}
+		foreach ($countries as $country) {
+			$country->getPresences($mapping, $presences);
+		}
         $this->view->title = 'Countries';
         $this->view->tableHeaders = static::generateTableHeaders();
 		$this->view->tableMetrics = self::tableMetrics();
-		$this->view->countries = Model_Country::fetchAll();
+		$this->view->countries = $countries;
         $this->view->badgeData = Model_Country::badgesData();
 	}
 

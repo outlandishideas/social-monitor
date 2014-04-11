@@ -10,9 +10,37 @@ class PresenceController extends GraphingController
 	 */
 	public function indexAction()
 	{
+		$query = self::db()->prepare('SELECT campaign_id, presence_id FROM campaign_presences');
+		$query->execute();
+		$mapping = array();
+		foreach ($query->fetchAll(PDO::FETCH_OBJ) as $row) {
+			if (!isset($mapping[$row->campaign_id])) {
+				$mapping[$row->campaign_id] = array();
+			}
+			$mapping[$row->campaign_id][] = $row->presence_id;
+		}
+
+		$campaignTypes = array('Model_Country', 'Model_Group', 'Model_Region');
+		$campaigns = array();
+		foreach ($campaignTypes as $type) {
+			$current = array();
+			foreach ($type::fetchAll() as $c) {
+				if (isset($mapping[$c->id])) {
+					foreach ($mapping[$c->id] as $pId) {
+						$current[$pId] = $c;
+					}
+				}
+			}
+			$campaigns[$type::$countryFilter] = $current;
+		}
+		/** @var Model_Presence[] $presences */
+		$presences = Model_Presence::fetchAll();
+		foreach ($presences as $p) {
+			$p->getOwner($campaigns);
+		}
         $this->view->title = 'Presences';
         $this->view->titleIcon = Model_Presence::ICON_TYPE;
-        $this->view->presences = Model_Presence::fetchAll();
+        $this->view->presences = $presences;
         $this->view->tableHeaders = self::generateTableHeaders();
 		$this->view->tableMetrics = self::tableMetrics();
         $this->view->badgeData = Model_Badge::badgesData(true);

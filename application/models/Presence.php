@@ -79,31 +79,73 @@ class Model_Presence extends Model_Base {
 	}
 
 	/**
+	 * Gets the primary owner of this presence. If $allCampaigns is present, it will be used instead of
+	 * querying the database
+	 * @param array $allCampaigns
 	 * @return Model_Country
 	 */
-	public function getOwner() {
-        $owner = null;
-		$stmt = $this->_db->prepare('SELECT campaign_id FROM campaign_presences WHERE presence_id = :pid');
-		$stmt->execute(array(':pid'=>$this->id));
-		$campaignIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
-        $campaigns = array('Model_Country', 'Model_Group', 'Model_Region');
-		if ($campaignIds) {
-            foreach($campaigns as $campaign){
-                $owners = $campaign::fetchAll('id IN (' . implode(',', $campaignIds) . ')');
-                if ($owners) {
-                    $owner = $owners[0];
-                    break;
-                }
-            }
+	public function getOwner($allCampaigns = array()) {
+		if (!property_exists($this, 'owner')) {
+	        $this->owner = null;
+			// prioritise country over group and region
+			$campaignTypes = array('Model_Country', 'Model_Group', 'Model_Region');
+			if ($allCampaigns) {
+				foreach($campaignTypes as $campaignType) {
+					if (isset($allCampaigns[$campaignType::$countryFilter][$this->id])) {
+						$this->owner = $allCampaigns[$campaignType::$countryFilter][$this->id];
+						break;
+					}
+				}
+			} else {
+				$stmt = $this->_db->prepare('SELECT campaign_id FROM campaign_presences WHERE presence_id = :pid');
+				$stmt->execute(array(':pid'=>$this->id));
+				$campaignIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+				if ($campaignIds) {
+		            foreach($campaignTypes as $campaignType){
+		                $owners = $campaignType::fetchAll('id IN (' . implode(',', $campaignIds) . ')');
+		                if ($owners) {
+		                    $this->owner = $owners[0];
+		                    break;
+		                }
+		            }
+				}
+			}
 		}
-		return $owner;
+		return $this->owner;
+	}
+
+	static $kpiCache = array();
+
+	protected function getCachedKpiData($startDateString, $endDateString) {
+		for($i=0; $i<5; $i++) {
+			// get the data for the given range. If not found, move the window back by one day at a time until data is found
+			$key = $startDateString . $endDateString;
+			if (!isset(self::$kpiCache[$key])) {
+				$kpiCache = array();
+				$stmt = $this->_db->prepare('SELECT presence_id, metric, value FROM kpi_cache WHERE start_date = :start AND end_date = :end');
+				$stmt->execute(array(':start'=>$startDateString, ':end'=>$endDateString));
+				foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
+					if (!isset($kpiCache[$row->presence_id])) {
+						$kpiCache[$row->presence_id] = array();
+					}
+					$kpiCache[$row->presence_id][$row->metric] = floatval($row->value);
+				}
+				self::$kpiCache[$key] = $kpiCache;
+			}
+			if (isset(self::$kpiCache[$key][$this->id])) {
+				return self::$kpiCache[$key][$this->id];
+			}
+			$startDateString = date('Y-m-d', strtotime($startDateString . ' -1 day'));
+			$endDateString = date('Y-m-d', strtotime($endDateString . ' -1 day'));
+		}
+		return array();
 	}
 
 	/**
 	 * Calculates the KPIs for this presence, based on the given start and end dates.
 	 * If not given, calculates using the last month's worth of data
-	 * @param null $startDate
-	 * @param null $endDate
+	 * @param DateTime $startDate
+	 * @param DateTime $endDate
 	 * @param bool $useCache
 	 * @return array
 	 */
@@ -124,18 +166,7 @@ class Model_Presence extends Model_Base {
 			$cachedValues = array();
 
 			if ($useCache) {
-				$stmt = $this->_db->prepare('SELECT metric, value FROM kpi_cache WHERE presence_id = :pid AND start_date = :start AND end_date = :end');
-	            $count = 0;
-	            do {
-		            // get the data for the given range. If not found, move the window back by one day at a time until data is found
-	                $endDateString = $endDate->format('Y-m-d');
-	                $startDateString = $startDate->format('Y-m-d');
-	                $stmt->execute(array(':pid'=>$this->id, ':start'=>$startDateString, ':end'=>$endDateString));
-	                $cachedValues = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-	                $startDate->modify("-1 day");
-	                $endDate->modify("-1 day");
-	                $count++;
-	            } while (count($cachedValues) < 1 && $count < 5);
+				$cachedValues = $this->getCachedKpiData($startDateString, $endDateString);
 			}
 
 			if (array_key_exists(self::METRIC_POPULARITY_PERCENT, $cachedValues)) {

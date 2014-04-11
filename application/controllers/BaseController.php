@@ -461,26 +461,26 @@ class BaseController extends Zend_Controller_Action
         return in_array($action, static::$publicActions);
     }
 
-    public static function setObjectCache($key, $value, $temp = 0)
+    public static function setObjectCache($key, $value, $temp = false)
     {
-        $sql = 'INSERT INTO object_cache (`key`, value, `temporary`) VALUES (:key, :value, :temp)';
-        $statement = self::db()->prepare($sql);
-        $statement->execute(array(':key' => $key, ':value' => gzcompress(json_encode($value)), ':temp' => $temp));
+        $insert = self::db()->prepare('INSERT INTO object_cache (`key`, value, `temporary`) VALUES (:key, :value, :temp)');
+        $delete = self::db()->prepare('DELETE FROM object_cache WHERE `key` = :key AND `temporary` = :temp');
+		// delete any temporary entries for this key
+        $delete->execute(array(':key' => $key, ':temp' => 1));
+        $insert->execute(array(':key' => $key, ':value' => gzcompress(json_encode($value)), ':temp' => $temp ? 1 : 0));
     }
 
-    public static function getObjectCache($key, $checkTemp = false, $expires = 86400)
+    public static function getObjectCache($key, $allowTemp = true, $expires = 86400)
     {
         $sql = 'SELECT * FROM object_cache WHERE `key` = :key ORDER BY last_modified DESC LIMIT 1';
         $statement = self::db()->prepare($sql);
         $statement->execute(array(':key' => $key));
         $result = $statement->fetch(PDO::FETCH_OBJ);
-        if ($result && (time() - strtotime($result->last_modified)) < $expires && ( !$checkTemp || $result->temporary == 0)) {
-            return json_decode(gzuncompress( $result->value));
-        } elseif ($result) { //remove the expired values
-            $sql = 'DELETE FROM object_cache WHERE `key` = :key';
-	        $statement = self::db()->prepare($sql);
-	        $statement->execute(array(':key' => $key));
-        }
+	    if ($result) {
+	        if ((time() - strtotime($result->last_modified)) < $expires && ( $allowTemp || $result->temporary == 0)) {
+	            return json_decode(gzuncompress( $result->value));
+	        }
+	    }
         return false;
     }
 
