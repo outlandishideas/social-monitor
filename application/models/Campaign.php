@@ -183,17 +183,19 @@ class Model_Campaign extends Model_Base {
 
     public static function badgesData(){
         $badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
-        $keyedData = parent::badgesData();
+        $keyedData = Model_Badge::badgesData(true);
 
         // get all of the campaign-presence relationships for this type (country or group)
-        $class = new Model_Campaign();
-        $stmt = $class->_db->prepare(
+	    /** @var PDO $db */
+        $db = Zend_Registry::get('db')->getConnection();
+        $stmt = $db->prepare(
             'SELECT c.id AS campaign_id, cp.presence_id
             FROM campaigns AS c
             LEFT OUTER JOIN campaign_presences AS cp
                 ON cp.campaign_id = c.id
             WHERE c.is_country = :is_country');
-        $stmt->execute(array(':is_country'=>static::$countryFilter));
+	    $args = array(':is_country'=>static::$countryFilter);
+        $stmt->execute($args);
         $mapping = $stmt->fetchAll(PDO::FETCH_OBJ);
 
         // calculate averages badge scores for each campaign

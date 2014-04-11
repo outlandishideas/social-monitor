@@ -254,12 +254,8 @@ class GroupController extends CampaignController {
 
     }
 
-    public function getAllBadgeData(){
-        return Model_Group::badgesData();
-    }
-
-    public function getAllCampaigns(){
-        return Model_Group::fetchAll();
-    }
+	public function downloadAction() {
+		parent::downloadAsCsv('group_index', Model_Group::badgesData(), Model_Group::fetchAll(), self::tableIndexHeaders());
+	}
 
 }

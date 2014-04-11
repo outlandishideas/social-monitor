@@ -286,21 +286,9 @@ class CountryController extends CampaignController {
 
     }
 
-    /**
-     * Gets all badge data
-     * @return array
-     */
-    public function getAllBadgeData(){
-        return Model_Country::badgesData();
-    }
-
-    /**
-     * Gets all countries
-     * @return array|Model_Base[]
-     */
-    public function getAllCampaigns(){
-        return Model_Country::fetchAll();
-    }
+	public function downloadAction() {
+		parent::downloadAsCsv('country_index', Model_Country::badgesData(), Model_Country::fetchAll(), self::tableIndexHeaders());
+	}
 
     /**
      * function to generate tableIndexHeaders for tbe campaign index pages

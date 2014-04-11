@@ -44,6 +44,7 @@ class Model_Presence extends Model_Base {
 	const KLOUT_API_ENDPOINT = 'http://api.klout.com/v2/';
 
 	protected $metrics = array(); // stores the calculated metrics
+	protected $kpiData = array();
 
 	public static function fetchAllTwitter() {
 		return self::fetchAll('type = :type', array(':type'=>self::TYPE_TWITTER));
@@ -107,29 +108,34 @@ class Model_Presence extends Model_Base {
 	 * @return array
 	 */
 	public function getKpiData($startDate = null, $endDate = null, $useCache = true) {
-		if (!isset($this->kpiData)) {
-			$kpiData = array();
+		$kpiData = array();
 
-			if (!$startDate || !$endDate) {
-				$endDate = new DateTime();
-				$startDate = new DateTime();
-				$startDate->sub(DateInterval::createFromDateString('1 month'));
-			}
+		if (!$startDate || !$endDate) {
+			$endDate = new DateTime();
+			$startDate = new DateTime();
+			$startDate->sub(DateInterval::createFromDateString('1 month'));
+		}
+
+		$endDateString = $endDate->format('Y-m-d');
+		$startDateString = $startDate->format('Y-m-d');
+		$key = $startDateString . $endDateString;
+
+		if (!isset($this->kpiData[$key])) {
+			$cachedValues = array();
 
 			if ($useCache) {
-
 				$stmt = $this->_db->prepare('SELECT metric, value FROM kpi_cache WHERE presence_id = :pid AND start_date = :start AND end_date = :end');
-                $count = 0;
-                do {
-                    $stmt->execute(array(':pid'=>$this->id, ':start'=>$startDate->format('Y-m-d'), ':end'=>$endDate->format('Y-m-d')));
-                    $cachedValues = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-                    $startDate->modify("-1 day");
-                    $endDate->modify("-1 day");
-                    $count++;
-                } while (count($cachedValues) < 1 && $count < 5);
-
-			} else {
-				$cachedValues = array();
+	            $count = 0;
+	            do {
+		            // get the data for the given range. If not found, move the window back by one day at a time until data is found
+	                $endDateString = $endDate->format('Y-m-d');
+	                $startDateString = $startDate->format('Y-m-d');
+	                $stmt->execute(array(':pid'=>$this->id, ':start'=>$startDateString, ':end'=>$endDateString));
+	                $cachedValues = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+	                $startDate->modify("-1 day");
+	                $endDate->modify("-1 day");
+	                $count++;
+	            } while (count($cachedValues) < 1 && $count < 5);
 			}
 
 			if (array_key_exists(self::METRIC_POPULARITY_PERCENT, $cachedValues)) {
@@ -138,7 +144,7 @@ class Model_Presence extends Model_Base {
 			} else {
 				$currentAudience = $this->popularity;
 				$targetAudience = $this->getTargetAudience();
-				$targetAudienceDate = $this->getTargetAudienceDate($startDate->format('Y-m-d'), $endDate->format('Y-m-d'));
+				$targetAudienceDate = $this->getTargetAudienceDate($startDateString, $endDateString);
 
 				// target audience %
 				$kpiData[self::METRIC_POPULARITY_PERCENT] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
@@ -160,7 +166,7 @@ class Model_Presence extends Model_Base {
 			if (array_key_exists($metric, $cachedValues)) {
 				$kpiData[$metric] = $cachedValues[$metric];
 			} else {
-				$kpiData[$metric] = $this->getAveragePostsPerDay($startDate->format('Y-m-d'), $endDate->format('Y-m-d'));
+				$kpiData[$metric] = $this->getAveragePostsPerDay($startDateString, $endDateString);
 			}
 
 			//response time
@@ -168,13 +174,13 @@ class Model_Presence extends Model_Base {
 			if (array_key_exists($metric, $cachedValues)) {
 				$kpiData[$metric] = $cachedValues[$metric];
 			} else {
-				$kpiData[$metric] = $this->getAverageResponseTime($startDate->format('Y-m-d'), $endDate->format('Y-m-d'));
+				$kpiData[$metric] = $this->getAverageResponseTime($startDateString, $endDateString);
 			}
 
-			$this->kpiData = $kpiData;
+			$this->kpiData[$key] = $kpiData;
 		}
 
-		return $this->kpiData;
+		return $this->kpiData[$key];
 	}
 
 	public function updateInfo() {
@@ -1364,7 +1370,7 @@ class Model_Presence extends Model_Base {
 	 * @return array
 	 */
 	public function badges(){
-		$data = Model_Presence::badgesData();
+		$data = Model_Badge::badgesData(true);
 		$badges = array();
 		$presenceCount = static::countAll();
 
@@ -1393,17 +1399,5 @@ class Model_Presence extends Model_Base {
 
 		return $badges;
 	}
-
-    /**
-     * function to get badges data
-     */
-    public static function badgesData(){
-        $data = parent::badgesData();
-        $return = array();
-        foreach($data as $badge){
-            $return[$badge->presence_id] = $badge;
-        }
-        return $return;
-    }
 
 }

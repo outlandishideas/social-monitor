@@ -311,4 +311,45 @@ class Model_Badge {
 			$lastRank = $rank;
 		}
 	}
+
+	/**
+	 * function to get badges data
+	 */
+	public static function badgesData($array = false){
+		$key = 'presence_badges';
+		$data = BaseController::getObjectCache($key, false);
+		if (!$data) {
+			$endDate = new DateTime("now");
+			$startDate = clone $endDate;
+			$count = 0;
+			do{
+				$data = Model_Badge::getAllCurrentData('month', $startDate, $endDate);
+				$startDate->modify("-1 day");
+				$endDate->modify("-1 day");
+				$count++;
+				//while no count data keep trying further back in the past
+				// break out if attempted 5 times, as it is probably a new presence and so has no cached data
+			} while(count($data) < 1 && $count < 5);
+			foreach ($data as $row) {
+				Model_Badge::calculateTotalScore($row);
+			}
+			Model_Badge::assignRanks($data, 'total');
+			$keyedData = new stdClass();
+			foreach ($data as $row) {
+				$keyedData->{$row->presence_id} = $row;
+			}
+			$data = $keyedData;
+			BaseController::setObjectCache($key, $data, true);
+		}
+
+		if ($array) {
+			$tmp = array();
+			foreach($data as $badge){
+				$tmp[$badge->presence_id] = $badge;
+			}
+			$data = $tmp;
+		}
+
+		return $data;
+	}
 }

@@ -136,160 +136,98 @@ abstract class GraphingController extends BaseController {
 	}
 
     public static function tableHeader($type, $csv = true){
-        $return = null;
+        $header = new stdClass();
+	    $header->name = $type;
+	    $header->csv = $csv;
+	    $header->sort = 'auto';
+	    $header->title = '';
+	    $header->desc = null;
+
         $metrics = self::tableMetrics();
+
+	    if (array_key_exists($type, $metrics)) {
+		    $header->sort = 'traffic-light';
+		    $header->width = '150px';
+		    $header->title = $metrics[$type];
+	    }
+
         switch($type){
-            case('name'):
-                $return = (object)array(
-                    'name' => 'name',
-                    'sort' => 'auto',
-                    'title' => 'Name',
-                    'desc' => null
-                );
+            case 'name' :
+				$header->title = 'Name';
                 break;
-            case('country'):
-                $return = (object)array(
-                    'name' => 'country',
-                    'sort' => 'auto',
-                    'title' => 'Country',
-                    'desc' => null
-                );
+            case 'country':
+				$header->title = 'Country';
                 break;
-            case('total-rank'):
-                $return = (object)array(
-                    'name' => 'total-rank',
-                    'sort' => 'numeric',
-                    'title' => 'Overall Rank',
-                    'desc' => 'Overall Rank shows the rank of this presence or group when compared against others.'
-                );
+            case 'total-rank':
+				$header->sort = 'numeric';
+				$header->title = 'Overall Rank';
+                $header->desc = 'Overall Rank shows the rank of this presence or group when compared against others.';
                 break;
-            case('total-score'):
-                $return = (object)array(
-                    'name' => 'total-score',
-                    'sort' => 'numeric',
-                    'title' => 'Overall Score',
-                    'desc' => 'Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality.'
-                );
+            case 'total-score':
+				$header->sort = 'numeric';
+				$header->title = 'Overall Score';
+				$header->desc = 'Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality.';
                 break;
-            case('current-audience'):
-                $return = (object)array(
-                    'name' => 'current-audience',
-                    'sort' => 'fuzzy-numeric',
-                    'title' => 'Audience',
-                    'desc' => 'Audience is the currently measured audience for this presence.'
-                );
+            case 'current-audience':
+				$header->sort = 'fuzzy-numeric';
+				$header->title = 'Audience';
+				$header->desc = 'Audience is the currently measured audience for this presence.';
                 break;
-            case('target-audience'):
-                $return = (object)array(
-                    'name' => 'target-audience',
-                    'sort' => 'fuzzy-numeric',
-                    'title' => 'Target Audience',
-                    'desc' => 'Target Audience is the audience that must be reached by this presence or group of presences.'
-                );
+            case 'target-audience':
+				$header->sort = 'fuzzy-numeric';
+	            $header->title = 'Target Audience';
+                $header->desc = 'Target Audience is the audience that must be reached by this presence or group of presences.';
                 break;
-            case('digital-population'):
-                $return = (object)array(
-                    'name' => 'digital-population',
-                    'sort' => 'fuzzy-numeric',
-                    'title' => 'Digital Population',
-                    'desc' => 'The Digital Population is based on internet penetration in the country.'
-                );
+            case 'digital-population':
+                $header->sort = 'fuzzy-numeric';
+                $header->title = 'Digital Population';
+                $header->desc = 'The Digital Population is based on internet penetration in the country.';
                 break;
-            case('digital-population-health'):
-                $return = (object)array(
-                    'name' => 'digital-population-health',
-                    'sort' => 'traffic-light',
-                    'title' => 'Percent of Digital Population',
-                    'desc' => 'Target Audience as a percent of the Digital Population based on internet penetration in the country.'
-                );
+            case 'digital-population-health':
+                $header->sort = 'traffic-light';
+                $header->title = 'Percent of Digital Population';
+                $header->desc = 'Target Audience as a percent of the Digital Population based on internet penetration in the country.';
+	            break;
+            case Model_Presence::METRIC_POPULARITY_PERCENT:
+                $header->desc = 'Percent of target audience shows the current audience as a percentage against the target audience.';
                 break;
-            case(Model_Presence::METRIC_POPULARITY_PERCENT):
-                $return = (object)array(
-                    'name' => Model_Presence::METRIC_POPULARITY_PERCENT,
-                    'sort' => 'traffic-light',
-                    'width' => '150px',
-                    'title' => $metrics[Model_Presence::METRIC_POPULARITY_PERCENT],
-                    'desc' => 'Percent of target audience shows the current audience as a percentage against the target audience.'
-                );
+            case Model_Presence::METRIC_POPULARITY_TIME:
+                $header->desc = 'Time to target audience shows the calculated time it will take to reach the target audience given the current trend in gains of followers / fans per day.';
                 break;
-            case(Model_Presence::METRIC_POPULARITY_TIME):
-                $return = (object)array(
-                    'name' => Model_Presence::METRIC_POPULARITY_TIME,
-                    'sort' => 'traffic-light',
-                    'width' => '150px',
-                    'title' => $metrics[Model_Presence::METRIC_POPULARITY_TIME],
-                    'desc' => 'Time to target audience shows the calculated time it will take to reach the target audience given the current trend in gains of followers / fans per day.'
-                );
+            case Model_Presence::METRIC_POSTS_PER_DAY:
+                $header->desc = 'Actions per day measures the average number of posts, comments and other actions per day.';
                 break;
-            case(Model_Presence::METRIC_POSTS_PER_DAY):
-                $return = (object)array(
-                    'name' => Model_Presence::METRIC_POSTS_PER_DAY,
-                    'sort' => 'traffic-light',
-                    'width' => '150px',
-                    'title' => $metrics[Model_Presence::METRIC_POSTS_PER_DAY],
-                    'desc' => 'Actions per day measures the average number of posts, comments and other actions per day.'
-                );
+            case Model_Presence::METRIC_RESPONSE_TIME:
+                $header->desc = 'Response time measures the average time it takes to reply to a post or tweet';
                 break;
-            case(Model_Presence::METRIC_RESPONSE_TIME):
-                $return = (object)array(
-                    'name' => Model_Presence::METRIC_RESPONSE_TIME,
-                    'sort' => 'traffic-light',
-                    'width' => '150px',
-                    'title' => $metrics[Model_Presence::METRIC_RESPONSE_TIME],
-                    'desc' => 'Response time measures the average time it takes to reply to a post or tweet'
-                );
+            case 'presences':
+                $header->title = 'Presences';
                 break;
-            case('presences'):
-                $return = (object)array(
-                    'name' => 'presences',
-                    'title' => 'Presences',
-                    'desc' => null
-                );
+            case 'options':
+                $header->width = '100px';
                 break;
-            case('options'):
-                $return = (object)array(
-                    'name' => 'options',
-                    'width' => '100px',
-                    'desc' => null
-                );
+            case 'compare':
+                $header->sort = 'checkbox';
+                $header->title = '<span class="icon-check"></span>';
+                $header->desc = 'Select all the presences that you would like to compare, and then click on the Compare Button above';
                 break;
-            case('compare'):
-                $return = (object)array(
-                    'name' => 'compare',
-                    'sort' => 'checkbox',
-                    'title' => '<span class="icon-check"></span>',
-                    'desc' => 'Select all the presences that you would like to compare, and then click on the Compare Button above'
-                );
+            case 'handle':
+                $header->title = 'Handle';
                 break;
-            case('handle'):
-                $return = (object)array(
-                    'name' => 'handle',
-                    'sort' => 'auto',
-                    'title' => 'Handle',
-                    'desc' => null
-                );
+            case 'sign-off':
+                $header->sort = 'data-value-numeric';
+                $header->title = 'Sign-Off';
+                $header->desc = 'Sign Off shows whether a presence has been signed off by the Head of Digital.';
                 break;
-            case('sign-off'):
-                $return = (object)array(
-                    'name' => 'sign-off',
-                    'sort' => 'data-value-numeric',
-                    'title' => 'Sign-Off',
-                    'desc' => 'Sign Off shows whether a presence has been signed off by the Head of Digital.'
-                );
-                break;
-            case('branding'):
-                $return = (object)array(
-                    'name' => 'branding',
-                    'sort' => 'data-value-numeric',
-                    'title' => 'Branding',
-                    'desc' => 'Branding shows whether a presence meets the British Council branding guidelines for social media presences.'
-                );
+            case 'branding':
+                $header->sort = 'data-value-numeric';
+                $header->title = 'Branding';
+                $header->desc = 'Branding shows whether a presence meets the British Council branding guidelines for social media presences.';
                 break;
             default:
                 return null;
         }
-        $return->csv = $csv;
-        return $return;
+        return $header;
     }
 
     public static function tableIndexHeaders() {

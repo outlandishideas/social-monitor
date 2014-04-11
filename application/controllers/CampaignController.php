@@ -3,88 +3,85 @@
 abstract class CampaignController extends GraphingController
 {
 
-    /**
-     * Action to download csv of campaign index page
-     */
-    public function downloadAction() {
-        /*if (userHasNoPermissions) {
-            $this->view->msg = 'This file cannot be downloaded!';
-            $this->_forward('error', 'download');
-            return FALSE;
-        }*/
-
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment; filename=presence_index.csv");
-        header("Pragma: no-cache");
-        header("Expires: 0");
+	public function downloadAsCsv($name, $badgeData, $campaigns, $tableHeaders) {
 
         $data = array();
 
+        $columns = array();
         $headers = array();
-        foreach(static::tableIndexHeaders() as $header){
-            if(isset($header->csv)){
-                $headers[] = $header->title;
+        foreach($tableHeaders as $key=>$csv){
+            if ($csv){
+		        $column = self::tableHeader($key, $csv);
+		        $columns[] = $column;
+                $headers[] = $column->title;
             }
         }
 
         $data[] = $headers;
 
-        $badgeData = static::getAllBadgeData();
-        $campaigns = static::getAllCampaigns();
-
+	    /** @var Model_Campaign[] $campaigns */
         foreach($campaigns as $campaign){
             $row = array();
             $currentBadge = (array_key_exists($campaign->id, $badgeData)) ? $badgeData[$campaign->id] : null ;
 
             $kpiData = $campaign->getKpiAverages();
-            foreach(self::tableIndexHeaders() as $header){
+            foreach($columns as $column){
                 $output = null;
-                if(isset($header->csv)){
-                    switch($header->name){
-                        case('name'):
-                            $output = $campaign->display_name;
-                            break;
-                        case('country'):
-                            $output = $campaign->getName() . ' (' . $campaign->country . ')';
-                            break;
-                        case('total-rank'):
-                            $output = (!empty($currentBadge)) ? (int)$currentBadge->total_rank : "N/A";
-                            break;
-                        case('total-score'):
-                            $output = (!empty($currentBadge)) ? (float)round($currentBadge->total) : "N/A";
-                            break;
-                        case('current-audience'):
-                            $output = number_format($campaign->popularity);
-                            break;
-                        case('target-audience'):
-                            $output = number_format($campaign->getTargetAudience());
-                            break;
-                        case('presences'):
-                            $presenceNames = array();
-                            foreach($campaign->getPresences() as $presence){
-                                $presenceNames[] = $presence->handle;
-                            }
-                            $output = implode(' ', $presenceNames);
-                            break;
-                        default:
-                            if( array_key_exists($header->name, $kpiData) ){
-                                $output = $kpiData[$header->name];
-                            }
-                    }
-                    $row[] = $output;
+                switch($column->name){
+                    case('name'):
+                        $output = $campaign->display_name;
+                        break;
+                    case('country'):
+                        $output = $campaign->getName() . ' (' . $campaign->country . ')';
+                        break;
+                    case('total-rank'):
+                        $output = (!empty($currentBadge)) ? (int)$currentBadge->total_rank : "N/A";
+                        break;
+                    case('total-score'):
+                        $output = (!empty($currentBadge)) ? (float)round($currentBadge->total) : "N/A";
+                        break;
+                    case('current-audience'):
+                        $output = number_format($campaign->popularity);
+                        break;
+                    case('target-audience'):
+                        $output = number_format($campaign->getTargetAudience());
+                        break;
+                    case('presences'):
+                        $presenceNames = array();
+                        foreach($campaign->getPresences() as $presence){
+                            $presenceNames[] = $presence->handle;
+                        }
+                        $output = implode(' ', $presenceNames);
+                        break;
+	                case 'digital-population':
+						if ($campaign instanceof Model_Country) {
+							$output = $campaign->getDigitalPopulation();
+						}
+		                break;
+	                case 'digital-population-health':
+						if ($campaign instanceof Model_Country) {
+							$output = $campaign->getDigitalPopulationHealth();
+						}
+		                break;
+                    default:
+                        if( array_key_exists($column->name, $kpiData) ){
+                            $output = $kpiData[$column->name];
+                        }
                 }
+                $row[] = $output;
             }
 
             $data[] = $row;
 
         }
 
-        self::outputCSV($data);
+	    header("Content-type: text/csv");
+	    header("Content-Disposition: attachment; filename=$name.csv");
+	    header("Pragma: no-cache");
+	    header("Expires: 0");
 
-
-        // disable layout and view
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
+	    self::outputCSV($data);
+		exit;
     }
 
     /**
@@ -97,24 +94,6 @@ abstract class CampaignController extends GraphingController
             fputcsv($output, $row);
         }
         fclose($output);
-    }
-
-    /**
-     * unused methhod to return all badge data
-     * todo: delete
-     * @return array
-     */
-    public function getAllBadgeData(){
-        return array();
-    }
-
-    /**
-     * unused method to return all campaign data
-     * todo: delete
-     * @return array
-     */
-    public function getAllCampaigns(){
-        return array();
     }
 
     /**

@@ -15,7 +15,7 @@ class PresenceController extends GraphingController
         $this->view->presences = Model_Presence::fetchAll();
         $this->view->tableHeaders = self::generateTableHeaders();
 		$this->view->tableMetrics = self::tableMetrics();
-        $this->view->badgeData = Model_Presence::badgesData();
+        $this->view->badgeData = Model_Badge::badgesData(true);
 	}
 
 	/**
@@ -592,74 +592,71 @@ class PresenceController extends GraphingController
             return FALSE;
         }*/
 
-        header("Content-type: text/csv");
-        header("Content-Disposition: attachment; filename=presence_index.csv");
-        header("Pragma: no-cache");
-        header("Expires: 0");
-
         $data = array();
 
+	    $columns = array();
         $headers = array();
-        foreach(self::tableIndexHeaders() as $header){
-            if(isset($header->csv)){
-                $headers[] = $header->title;
+        foreach(self::tableIndexHeaders() as $key=>$csv){
+	        if ($csv) {
+		        $column = self::tableHeader($key, $csv);
+		        $columns[] = $column;
+                $headers[] = $column->title;
             }
         }
 
         $data[] = $headers;
 
-        $badgeData = Model_Presence::badgesData();
-        $tableMetrics = self::tableMetrics();
+        $badgeData = Model_Badge::badgesData(true);
+	    /** @var Model_Presence[] $presences */
         $presences = Model_Presence::fetchAll();
 
         foreach($presences as $presence){
             $row = array();
-            $currentBadge = $badgeData->{$presence->id};
+            $currentBadge = $badgeData[$presence->id];
             $kpiData = $presence->getKpiData();
-            foreach(self::tableIndexHeaders() as $header){
+            foreach($columns as $column){
                 $output = null;
-                if(isset($header->csv)){
-                    switch($header->name){
-                        case('handle'):
-                            $output = $presence->handle;
-                            break;
-                        case('sign-off'):
-                            $output = $presence->sign_off;
-                            break;
-                        case('branding'):
-                            $output = $presence->branding;
-                            break;
-                        case('total-rank'):
-                            $output = (int)$currentBadge->total_rank;
-                            break;
-                        case('total-score'):
-                            $output = (float)round($currentBadge->total);
-                            break;
-                        case('current-audience'):
-                            $output = number_format($presence->popularity);
-                            break;
-                        case('target-audience'):
-                            $output = number_format($presence->getTargetAudience());
-                            break;
-                        default:
-                            if( array_key_exists($header->name, $kpiData) ){
-                                $output = $kpiData[$header->name];
-                            }
-                    }
-                    $row[] = $output;
+                switch($column->name){
+                    case('handle'):
+                        $output = $presence->handle;
+                        break;
+                    case('sign-off'):
+                        $output = $presence->sign_off;
+                        break;
+                    case('branding'):
+                        $output = $presence->branding;
+                        break;
+                    case('total-rank'):
+                        $output = (int)$currentBadge->total_rank;
+                        break;
+                    case('total-score'):
+                        $output = (float)round($currentBadge->total);
+                        break;
+                    case('current-audience'):
+                        $output = number_format($presence->popularity);
+                        break;
+                    case('target-audience'):
+                        $output = number_format($presence->getTargetAudience());
+                        break;
+                    default:
+                        if( array_key_exists($column->name, $kpiData) ){
+                            $output = $kpiData[$column->name];
+                        }
                 }
+                $row[] = $output;
             }
 
             $data[] = $row;
 
         }
 
-        self::outputCSV($data);
+	    header("Content-type: text/csv");
+	    header("Content-Disposition: attachment; filename=presence_index.csv");
+	    header("Pragma: no-cache");
+	    header("Expires: 0");
 
-
-        // disable layout and view
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
+	    self::outputCSV($data);
+	    exit;
     }
 
     function outputCSV($data) {
