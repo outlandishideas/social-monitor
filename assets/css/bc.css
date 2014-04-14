@@ -979,7 +979,7 @@ form.management #assigned {
 #map {
     width: auto;
     position: relative;
-    margin-left: 325px;
+    margin-left: 345px;
     max-width: 940px;
 }
 
@@ -992,9 +992,9 @@ form.management #assigned {
 }
 
 #map-sidebar {
-    width: 279px;
+    width: 299px;
     float: left;
-    padding: 0 20px 20px;
+    padding: 0 15px 15px;
     border: 2px solid #afd1e4;
     background-color: #fff;
     position: relative;
@@ -1053,8 +1053,7 @@ form.management #assigned {
 #map-sidebar h3 {
     font-size: 20px;
     font-weight: bold;
-    margin: 10px -20px;
-    margin-top: 0;
+    margin: 0 -15px 10px;
     padding: 8px 20px;
     background: #edf5f8;
 }
