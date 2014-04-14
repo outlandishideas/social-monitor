@@ -1159,7 +1159,7 @@ form.management #assigned {
 
 .health .fieldset {
     border: 1px solid #ccc;
-    margin: 72px 20% 0;
+    margin: 72px 15% 0;
     text-align: center;
     position: relative;
     padding: 20px 10px;
@@ -1180,13 +1180,19 @@ form.management #assigned {
 	background: #d6d6d6;
 }
 
+.health .fieldset.hidden,
 .health .fieldset .legend.hidden {
 	display: none;
 }
 
-.health .fieldset p {
+.health .fieldset .value {
     font-size: 30px;
     margin: 0;
+	text-shadow: 1px 0 0 #000, -1px 0 0 #000, 0 1px 0 #000, 0 -1px 0 #000;
+}
+.health .fieldset .value .separator {
+	text-shadow: none;
+	margin: 0 10px;
 }
 
 .health p .small {

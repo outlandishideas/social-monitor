@@ -192,6 +192,7 @@ app.charts = {
 	renderDataset: function(data) {
 		var c = app.state.charts[data.chart.selector];
 		var $health = c.$chart.siblings('.health');
+		$health.find('.fieldset').removeClass('hidden');
 
 		// remove the old dataset(s)
 		var $datasets = c.$chart.find('.dataset');
@@ -241,14 +242,14 @@ app.charts = {
 
                     var $action = $health.find('.value').find('.action-value');
                     if($action.length == 0) {
-                        $health.find('.value').append('<span class="action-value"></span>');
-                        $action = $health.find('.value').find('.action-value');
+	                    $action = $('<span class="action-value"></span>');
+                        $health.find('.value').append($action);
                     }
 
                     var $relevance = $health.find('.value').find('.relevance-value');
                     if($relevance.length == 0) {
 	                    $relevance = $('<span class="relevance-value"></span>');
-                        $health.find('.value').append(' | ').append($relevance);
+                        $health.find('.value').append('<span class="separator">|</span>').append($relevance);
                     }
                     $action
                         .text(app.utils.numberFixedDecimal(data.average, 2))
