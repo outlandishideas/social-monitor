@@ -6,27 +6,6 @@ class Model_Country extends Model_Campaign {
 
 	public static $countryFilter = '1';
 
-	public function countryInfo(){
-		return array(
-			'audience' => (object)array(
-				'title' => 'Audience',
-				'value' => number_format($this->audience),
-			),
-			'pages' => (object)array(
-				'title' => 'Facebook Pages',
-				'value' => count($this->getFacebookPages()),
-			),
-			'handles' => (object)array(
-				'title' => 'Twitter Accounts',
-				'value' => count($this->getTwitterAccounts()),
-			),
-			'notes' => (object)array(
-				'title' => 'Notes',
-				'value' => '' //$this->notes
-			)
-		);
-	}
-
 	public function fromArray($data) {
 		if (array_key_exists('audience', $data)) {
 			$data['audience'] = str_replace(',', '', $data['audience']);

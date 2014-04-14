@@ -59,7 +59,24 @@ class CountryController extends CampaignController {
         $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
 		$this->view->title = $country->display_name;
-		$this->view->titleInfo = $country->countryInfo();
+		$this->view->titleInfo = array(
+			'audience' => (object)array(
+					'title' => 'Audience',
+					'value' => number_format($country->audience),
+				),
+			'pages' => (object)array(
+					'title' => 'Facebook Pages',
+					'value' => count($country->getFacebookPages()),
+				),
+			'handles' => (object)array(
+					'title' => 'Twitter Accounts',
+					'value' => count($country->getTwitterAccounts()),
+//			),
+//			'notes' => (object)array(
+//				'title' => 'Notes',
+//				'value' => '' //$this->notes
+			)
+		);
         $this->view->country = $country;
         $this->view->badges = Model_Badge::$ALL_BADGE_TYPES;
 	}
