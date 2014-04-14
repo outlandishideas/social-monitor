@@ -1,17 +1,11 @@
 <div id="campaign-stats" data-id="<?php echo $this->campaign->id; ?>" data-model="<?php echo $this->model; ?>">
 	<div class="close"><a href="#"><span class="icon-remove-circle icon-large"></span></a></div>
 	<h3>
-		<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'controller'=>$this->model, 'id'=>$this->campaign->id)); if ($url) : ?>
-        <a href="<?php echo $url; ?>">
-            <span class="icon-globe icon-large"></span>
+		<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'controller'=>$this->model, 'id'=>$this->campaign->id)); ?>
+		<?php if ($url) : ?><a href="<?php echo $url; ?>"><?php endif; ?>
+            <span class="<?php echo $this->model == 'group' ? Model_Group::ICON_TYPE : Model_Country::ICON_TYPE; ?> icon-large"></span>
             <?php echo $this->campaign->display_name; ?>
-        </a>
-		<?php else : ?>
-		<span>
-			<span class="icon-globe icon-large"></span>
-			<?php echo $this->campaign->display_name; ?>
-		</span>
-		<?php endif; ?>
+        <?php if ($url) : ?></a><?php endif; ?>
     </h3>
 	<?php if ($this->campaign->presences) : ?>
     <h4><?php echo Model_Badge::badgeTitle($this->metric); ?> (<?php echo $this->date->format('d M Y'); ?>)</h4>
