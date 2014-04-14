@@ -203,7 +203,7 @@ app.charts = {
 			$health.find('.value')
 				.text('No data found')
 				.css('color', data.color);
-			$health.find('.legend').text('');
+			$health.find('.legend').text('').addClass('hidden');
 			$health.find('.target').html('');
 		} else {
 			c.yMin = Infinity;
@@ -213,8 +213,8 @@ app.charts = {
 					$health.find('.value')
 						.text(app.utils.numberFormat(data.current.value))
 						.css('color', data.color)
-                        .attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');;
-					$health.find('.legend').text('As of ' + data.current.date);
+                        .attr('title', data.timeToTarget ? ('Estimated date to reach target: ' + data.timeToTarget) : '');
+					$health.find('.legend').text('As of ' + data.current.date).removeClass('hidden');
 					var targetText = 'Target audience: '+ app.utils.numberFormat(data.target);
 					if (data.timeToTarget) {
 						var components = [];
@@ -242,13 +242,13 @@ app.charts = {
                     var $action = $health.find('.value').find('.action-value');
                     if($action.length == 0) {
                         $health.find('.value').append('<span class="action-value"></span>');
-                        var $action = $health.find('.value').find('.action-value');
+                        $action = $health.find('.value').find('.action-value');
                     }
 
                     var $relevance = $health.find('.value').find('.relevance-value');
                     if($relevance.length == 0) {
-                        $health.find('.value').append(' / <span class="relevance-value"></span>');
-                        var $relevance = $health.find('.value').find('.relevance-value');
+	                    $relevance = $('<span class="relevance-value"></span>');
+                        $health.find('.value').append(' | ').append($relevance);
                     }
                     $action
                         .text(app.utils.numberFixedDecimal(data.average, 2))

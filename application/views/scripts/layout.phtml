@@ -64,13 +64,15 @@
 					</div>
                     <div class="beta-tag">[ BETA ]</div>
 				</div>
-				<div class="page-title <?php if ($this->subtitle) echo 'with-subtitle'; ?>">
+				<div class="page-title<?php if ($this->subtitle) { echo ' with-subtitle'; } if ($this->titleImage) { echo ' with-image'; } ?>">
 					<?php if($this->titleImage) { echo $this->titleImage; } ?>
 					<h1>
 						<?php if ($this->titleIcon) : ?>
 						<span class="<?php echo $this->titleIcon; ?> icon-large"></span>
 						<?php endif; ?>
+
 						<?php echo $this->title; ?>
+
 						<?php if ($this->titleInfo) : ?>
 						<a href="#" class="accordion-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>
 						<?php endif; ?>

@@ -282,28 +282,26 @@ span.icon-remove-sign {
     color: #D06959;
 }
 
-#main-header h1 img,
-#main-header .with-subtitle img {
+#main-header .page-title.with-image img {
 	margin-top: 20px;
 	margin-right: 10px;
 	width: 50px;
 	height: 50px;
 	border: 3px solid #ccc;
+	float: left;
 }
 
-#main-header .with-subtitle h1 {
+#main-header .page-title.with-subtitle h1 {
     line-height: 40px;
     height: 40px;
+}
+#main-header .page-title.with-image h1 {
     margin-left: 60px;
 }
 
-#main-header .with-subtitle h2 {
+#main-header .page-title.with-subtitle h2 {
     margin: 0;
     margin-left: 60px;
-}
-
-#main-header .with-subtitle img {
-    float: left;
 }
 
 #title-info {
@@ -1161,25 +1159,29 @@ form.management #assigned {
 
 .health .fieldset {
     border: 1px solid #ccc;
-    margin: 0 20%;
+    margin: 72px 20% 0;
     text-align: center;
     position: relative;
-    padding: 20px;
-    margin-top: 72px;
+    padding: 20px 10px;
     background-color: #ddd;
 }
 
-.health .fieldset h4 {
+.health .fieldset .legend {
     margin: 0;
     padding: 0 10px;
-    background: #fff;
     position: absolute;
     display: inline-block;
     top: -8px;
     left: 10px;
     font-weight: normal;
     font-size: 12px;
-    color: #888;
+    color: #555;
+	border: 1px solid #aaa;
+	background: #d6d6d6;
+}
+
+.health .fieldset .legend.hidden {
+	display: none;
 }
 
 .health .fieldset p {
