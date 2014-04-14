@@ -146,7 +146,17 @@ class Model_Badge {
 
         $stmt = BaseController::db()->prepare($sql);
         $stmt->execute($args);
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
+        $data = $stmt->fetchAll(PDO::FETCH_OBJ);
+	    foreach ($data as $row) {
+		    foreach (self::$ALL_BADGE_TYPES as $badgeType) {
+			    if ($badgeType != self::BADGE_TYPE_TOTAL) {
+				    $row->$badgeType = intval($row->$badgeType);
+				    $rank = $badgeType . '_rank';
+				    $row->$rank = intval($row->$rank);
+			    }
+		    }
+	    }
+	    return $data;
     }
 
 	/**
@@ -169,27 +179,44 @@ class Model_Badge {
 			if (!isset($groupedData[$row->date][$row->daterange])) {
 				$groupedData[$row->date][$row->daterange] = array();
 			}
+			unset($row->campaign_id);
 			$groupedData[$row->date][$row->daterange][$row->presence_id] = $row;
 		}
+		unset($data);
 
-		/** @var Model_Presence[] $presences */
 		$presences = array();
 		foreach (Model_Presence::fetchAll() as $p) {
 			$presences[$p->id] = $p;
 		}
+		ksort($presences);
+		Model_Presence::populateOwners($presences);
+
 		$currentDate = clone $startDate;
 		while ($currentDate <= $endDate) {
 			$dateString = $currentDate->format('Y-m-d');
 			$toUpdate = $presences;
+			$missingRank = false;
 			if (!empty($groupedData[$dateString][$dateRange])) {
 				$existing = $groupedData[$dateString][$dateRange];
-				foreach ($groupedData[$dateString][$dateRange] as $id=>$ignored) {
+				foreach ($groupedData[$dateString][$dateRange] as $id=>$fields) {
 					unset($toUpdate[$id]);
+					if (!$missingRank) {
+						foreach ($fields as $name=>$value) {
+							if (substr($name, -5) == '_rank' && $value == 0) {
+								$missingRank = true;
+								break;
+							}
+						}
+					}
+				}
+				unset($groupedData[$dateString][$dateRange]);
+				if (empty($groupedData[$dateString])) {
+					unset($groupedData[$dateString]);
 				}
 			} else {
 				$existing = array();
 			}
-			if ($toUpdate) {
+			if ($toUpdate || $missingRank) {
 				self::populateBadgeHistory($existing, $toUpdate, $dateString, $dateRange);
 			}
 			$currentDate = $currentDate->add(DateInterval::createFromDateString('1 day'));
@@ -201,9 +228,8 @@ class Model_Badge {
 	 * @param $presences Model_Presence[]
 	 * @param $date string
 	 * @param $range string
-	 * @return array
 	 */
-	public static function populateBadgeHistory($data, $presences, $date, $range){
+	private static function populateBadgeHistory($data, $presences, $date, $range){
 
 		//foreach presence and foreach badge (not total badge), calculate the metrics
 		$badgeMetrics = array();
@@ -218,12 +244,11 @@ class Model_Badge {
 				$row->$badgeType = floatval($row->$badgeType);
 			}
 			unset($row->id);
-			unset($row->campaign_id);
 		}
 
+		$currentBatch = array();
 		foreach($presences as $presence){
-
-			$dataRow = (object)array(
+			$dataRow = array(
 				'presence_id' => $presence->id,
 				'date' => $date,
 				'daterange' => $range
@@ -237,10 +262,19 @@ class Model_Badge {
 	                    unset($metrics[Model_Presence::METRIC_FB_ENGAGEMENT]);
 		            }
 				}
-				$dataRow->$badgeType = $presence->getMetricsScore($date, $metrics, $range);
+				$dataRow[$badgeType] = $presence->getMetricsScore($date, $metrics, $range);
+				$dataRow[$badgeType . '_rank'] = 0;
 			}
 
-			$data[] = $dataRow;
+			$currentBatch[] = $dataRow;
+			if (count($currentBatch) >= 25) {
+				Model_Base::insertData('badge_history', $currentBatch);
+				$currentBatch = array();
+			}
+			$data[$presence->id] = (object)$dataRow;
+		}
+		if ($currentBatch) {
+			Model_Base::insertData('badge_history', $currentBatch);
 		}
 
 		//foreach calculated badge, sort the data and then rank it
@@ -249,25 +283,25 @@ class Model_Badge {
 		}
 
 		//insert the newly calculated data back into the presence_history table, so next time its ready for us.
-		usort($data, function($a, $b) {
-			return $a->presence_id > $b->presence_id ? 1 : -1;
-		});
-		$setHistoryArgs = array_map(function($a) { return (array)$a; }, $data);
-		Model_Base::insertData('badge_history', $setHistoryArgs);
-
-		return $data;
+		ksort($data);
+		$data = array_map(function($a) { return (array)$a; }, $data);
+		Model_Base::insertData('badge_history', $data);
 	}
 
-	public static function calculateTotalScores($data) {
+	public static function calculateTotalScoresAndRanks($data) {
+		$keyedData = array();
 		foreach ($data as $row) {
-			Model_Badge::calculateTotalScore($row);
+			if (!isset($keyedData[$row->presence_id])) {
+				Model_Badge::calculateTotalScore($row);
+				$keyedData[$row->presence_id] = $row;
+			}
 		}
-		Model_Badge::assignRanks($data, 'total');
-		$keyedData = new stdClass();
-		foreach ($data as $row) {
-			$keyedData->{$row->presence_id} = $row;
+		Model_Badge::assignRanks($keyedData, 'total');
+		$obj = new stdClass();
+		foreach ($keyedData as $key=>$value) {
+			$obj->$key = $value;
 		}
-		return $keyedData;
+		return $obj;
 	}
 
 	public static function calculateTotalScore($badgeData) {
@@ -317,8 +351,8 @@ class Model_Badge {
 			$endDate = new DateTime("now");
 			$startDate = clone $endDate;
 			for ($i=0; $i<5; $i++) {
-				//while no count data keep trying further back in the past
-				// break out if attempted 5 times, as it is probably a new presence and so has no cached data
+				// while no count data keep trying further back in the past.
+				// only try 5 times, as it is probably a new presence and so has no cached data
 				$data = Model_Badge::getAllCurrentData('month', $startDate, $endDate);
 				if ($data) {
 					break;
@@ -326,14 +360,14 @@ class Model_Badge {
 				$startDate->modify("-1 day");
 				$endDate->modify("-1 day");
 			}
-			$data = self::calculateTotalScores($data);
+			$data = self::calculateTotalScoresAndRanks($data);
 			BaseController::setObjectCache($key, $data, true);
 		}
 
 		if ($array) {
 			$tmp = array();
-			foreach($data as $badge){
-				$tmp[$badge->presence_id] = $badge;
+			foreach($data as $key=>$value){
+				$tmp[$key] = $value;
 			}
 			$data = $tmp;
 		}

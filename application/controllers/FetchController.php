@@ -12,7 +12,6 @@ class FetchController extends BaseController
 		$lockName = $this->acquireLock();
 		set_time_limit($this->config->app->fetch_time_limit);
 
-		/** @var $presences Model_Presence[] */
 		$presences = Model_Presence::fetchAll();
 		$presenceCount = count($presences);
 

@@ -174,7 +174,6 @@ class IndexController extends GraphingController
 		$start = new DateTime('now -60 days');
 		Model_Badge::populateHistoricalData('month', $start, $end);
 
-        //get object cache which will return false if badge_data_30 is too old, or flagged as temp
         $oldData = self::getObjectCache('badge_data_30', false);
         if(!$oldData) {
             //if no oldData (too old or temp) get current data (which is now up to date) and set it in the object cache
@@ -182,12 +181,11 @@ class IndexController extends GraphingController
             self::setObjectCache('badge_data_30', $data);
         }
 
-        //get object cache which will return false if badge_data_30 is too old, or flagged as temp
         $oldData = self::getObjectCache('presence_badges', false);
         if(!$oldData) {
             //if no oldData (too old or temp) get current data (which is now up to date) and set it in the object cache
             $data = Model_Badge::getAllCurrentData('month', new DateTime(), new DateTime());
-	        $data = Model_Badge::calculateTotalScores($data);
+	        $data = Model_Badge::calculateTotalScoresAndRanks($data);
             self::setObjectCache('presence_badges', $data);
         }
 

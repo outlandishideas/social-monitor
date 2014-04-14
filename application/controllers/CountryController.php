@@ -14,7 +14,6 @@ class CountryController extends CampaignController {
 	public function indexAction() {
 		/** @var Model_Country[] $countries */
 		$countries = Model_Country::fetchAll();
-		/** @var Model_Presence[] $presences */
 		$presences = array();
 		foreach (Model_Presence::fetchAll() as $p) {
 			$presences[$p->id] = $p;

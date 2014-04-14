@@ -54,6 +54,51 @@ class Model_Presence extends Model_Base {
 		return self::fetchAll('type = :type', array(':type'=>self::TYPE_FACEBOOK));
 	}
 
+	/**
+	 * @param string $clause
+	 * @param array $args
+	 * @return Model_Presence[]
+	 */
+	public static function fetchAll($clause = null, $args = array()) {
+		return parent::fetchAll($clause, $args);
+	}
+
+
+	/**
+	 * @param Model_Presence[] $presences
+	 * @return Model_Presence[]
+	 */
+	public static function populateOwners($presences) {
+		// fetch all campaigns in one query instead of ~300 individual queries
+		$query = BaseController::db()->prepare('SELECT campaign_id, presence_id FROM campaign_presences');
+		$query->execute();
+		$mapping = array();
+		foreach ($query->fetchAll(PDO::FETCH_OBJ) as $row) {
+			if (!isset($mapping[$row->campaign_id])) {
+				$mapping[$row->campaign_id] = array();
+			}
+			$mapping[$row->campaign_id][] = $row->presence_id;
+		}
+		/** @var Model_Presence[] $presences */
+		$campaignTypes = array('Model_Country', 'Model_Group', 'Model_Region');
+		$campaigns = array();
+		foreach ($campaignTypes as $type) {
+			$current = array();
+			foreach ($type::fetchAll() as $c) {
+				if (isset($mapping[$c->id])) {
+					foreach ($mapping[$c->id] as $pId) {
+						$current[$pId] = $c;
+					}
+				}
+			}
+			$campaigns[$type::$countryFilter] = $current;
+		}
+		foreach ($presences as $p) {
+			$p->getOwner($campaigns);
+		}
+		return $presences;
+	}
+
 	public function getPresenceSign($large = true, $classes = array()) {
 		$classes[] = 'icon-' . ($this->isForTwitter() ? 'twitter' : 'facebook') . '-sign';
 		if ($large) {

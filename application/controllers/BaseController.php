@@ -463,10 +463,17 @@ class BaseController extends Zend_Controller_Action
 
     public static function setObjectCache($key, $value, $temp = false)
     {
-        $insert = self::db()->prepare('INSERT INTO object_cache (`key`, value, `temporary`) VALUES (:key, :value, :temp)');
-        $delete = self::db()->prepare('DELETE FROM object_cache WHERE `key` = :key AND `temporary` = :temp');
-		// delete any temporary entries for this key
-        $delete->execute(array(':key' => $key, ':temp' => 1));
+		// delete any old/temporary entries for this key
+	    $deleteSql = 'DELETE FROM object_cache WHERE `key` = :key';
+	    $deleteArgs = array(':key' => $key);
+	    if ($temp) {
+		    $deleteSql .= ' AND `temporary` = :temp';
+		    $deleteArgs[':temp'] = 1;
+	    }
+        $delete = self::db()->prepare($deleteSql);
+        $delete->execute($deleteArgs);
+
+	    $insert = self::db()->prepare('INSERT INTO object_cache (`key`, value, `temporary`) VALUES (:key, :value, :temp)');
         $insert->execute(array(':key' => $key, ':value' => gzcompress(json_encode($value)), ':temp' => $temp ? 1 : 0));
     }
 

@@ -274,6 +274,7 @@ abstract class Model_Base
 
 			//insert the data
 			if ($query != $lastQuery) {
+				$lastQuery = $query;
 				$statement = Zend_Registry::get('db')->prepare($query);
 			}
 			/** @var $statement PDOStatement */
