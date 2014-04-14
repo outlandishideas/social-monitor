@@ -23,6 +23,13 @@ class Model_Badge {
 	    self::BADGE_TYPE_QUALITY
 	);
 
+	public static $BADGE_DESCRIPTIONS = array(
+		self::BADGE_TYPE_TOTAL => self::BADGE_TYPE_TOTAL_DESC,
+		self::BADGE_TYPE_REACH => self::BADGE_TYPE_REACH_DESC,
+		self::BADGE_TYPE_ENGAGEMENT => self::BADGE_TYPE_ENGAGEMENT_DESC,
+	    self::BADGE_TYPE_QUALITY => self::BADGE_TYPE_QUALITY_DESC
+	);
+
 	private static $metricsCache = array();
 
     public static function metrics($type) {
@@ -342,9 +349,11 @@ class Model_Badge {
 	}
 
 	/**
-	 * function to get badges data
+	 * gets the badges data based on the last month, using the data in the cache (if available)
+	 * @param bool $asArray determines the return type
+	 * @return array|stdClass
 	 */
-	public static function badgesData($array = false){
+	public static function badgesData($asArray = false){
 		$key = 'presence_badges';
 		$data = BaseController::getObjectCache($key);
 		if (!$data) {
@@ -364,7 +373,7 @@ class Model_Badge {
 			BaseController::setObjectCache($key, $data, true);
 		}
 
-		if ($array) {
+		if ($asArray) {
 			$tmp = array();
 			foreach($data as $key=>$value){
 				$tmp[$key] = $value;

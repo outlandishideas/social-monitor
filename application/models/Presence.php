@@ -1443,34 +1443,30 @@ class Model_Presence extends Model_Base {
 
 	/**
 	 * Gets the badges for this presence
+	 * @param $includeBreakdown
 	 * @return array
 	 */
-	public function badges(){
+	public function badges($includeBreakdown = true){
 		$data = Model_Badge::badgesData(true);
 		$badges = array();
 		$presenceCount = static::countAll();
 
-		if (isset($data[$this->id])) {
-			$badgeData = $data[$this->id];
-			foreach(Model_Badge::$ALL_BADGE_TYPES as $type){
-				$badges[$type] = (object)array(
-					'type'=>$type,
-					'score'=>floatval($badgeData->{$type}),
-					'rank'=>intval($badgeData->{$type.'_rank'}),
-					'rankTotal'=>$presenceCount,
-					'metrics'=>$this->getMetrics($type)
-				);
+		foreach(Model_Badge::$ALL_BADGE_TYPES as $type){
+			$row = array(
+				'type' => $type,
+				'score' => 0,
+				'rank' => $presenceCount,
+				'rankTotal' => $presenceCount
+			);
+			if ($includeBreakdown) {
+				$row['metrics'] = $this->getMetrics($type);
 			}
-		} else {
-			foreach(Model_Badge::$ALL_BADGE_TYPES as $type){
-				$badges[$type] = (object)array(
-					'type'=>$type,
-					'score'=>0,
-					'rank'=>$presenceCount,
-					'rankTotal'=>$presenceCount,
-					'metrics'=>$this->getMetrics($type)
-				);
+			if (isset($data[$this->id])) {
+				$badgeData = $data[$this->id];
+				$row['score'] = floatval($badgeData->{$type});
+				$row['rank'] = intval($badgeData->{$type.'_rank'});
 			}
+			$badges[$type] = (object)$row;
 		}
 
 		return $badges;

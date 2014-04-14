@@ -40,29 +40,8 @@ app.geochart = {
             app.geochart.refreshMap();
 		});
 
-		app.geochart.drawGroups();
-		app.geochart.refreshGroups();
-
-        app.geochart.drawSmallMaps();
-        app.geochart.refreshSmallMaps();
-
-        for(var id in app.state.groupCharts){
-            var g = app.state.groupCharts[id];
-
-            g.$group.on('click', function(e){
-                e.preventDefault();
-                app.geochart.loadCampaignStats($(this).attr('id'), 'group');
-            });
-        }
-
-        for(var id in app.state.smallMapsCharts){
-            var r = app.state.smallMapsCharts[id];
-
-            r.$smallMap.on('click', function(e){
-                e.preventDefault();
-                app.geochart.loadCampaignStats($(this).attr('id'), 'country');
-            });
-        }
+		app.state.groupCharts = app.geochart.initCampaigns('#group-map ul', groupData, 'group-display', 'group');
+		app.state.smallMapsCharts = app.geochart.initCampaigns('#small-maps ul', smallMapData, 'small-maps-display', 'country');
 
 		var $tabs = $('#map-tabs');
 		var $active = $tabs.find('li.active');
@@ -78,11 +57,11 @@ app.geochart = {
 				$(this).addClass('active')
 					.siblings('li.active').removeClass('active');
 				app.geochart.refreshMap();
-				app.geochart.refreshGroups();
-                app.geochart.refreshSmallMaps();
+				app.geochart.refreshCampaigns(app.state.groupCharts);
+                app.geochart.refreshCampaigns(app.state.smallMapsCharts);
                 $('.desc-box').each(function(){
                     $(this).addClass('hide');
-                })
+                });
 				var $country = $('#map-sidebar').find('#campaign-stats');
 				if ($country.length > 0) {
 					var id = $country.data('id');
@@ -99,76 +78,58 @@ app.geochart = {
 		})
 	},
 	/**
-	 * Add the groups in global groupData to the DOM, and store them in app.state.groupCharts
+	 * Creates DOM elements, adds them to the screen and initialises their data
+	 * @param selector
+	 * @param data
+	 * @param className
+	 * @param modelType
+	 * @returns {Array}
 	 */
-	drawGroups: function() {
-		var $groupContainer = $('#group-map ul');
+	initCampaigns: function(selector, data, className, modelType) {
+		var $container = $(selector);
 
-		var groups = groupData;
-		for(var id in groups){
-			var group = groups[id];
+		var wrapper = [];
+		for(var i in data){
+			var campaignData = data[i];
+			var id = campaignData.id;
 
-			$groupContainer.append('<li id="'+ id +'" class="group-display"><span class="label">'+ group.n +'</span><span class="score"></span></li>');
-			app.state.groupCharts[id] = {
-				$group: $('#'+id),
-				groupData: group
-			};
+			var $dom = $('<li></li>')
+				.addClass(className)
+				.data('id', id)
+				.append('<span class="label">'+ campaignData.n +'</span>')
+				.append('<span class="score"></span>')
+				.appendTo($container);
+
+			$dom.on('click', function(e){
+				e.preventDefault();
+				app.geochart.loadCampaignStats($(this).data('id'), modelType);
+			});
+
+			wrapper.push({
+				$dom: $dom,
+				data: campaignData
+			});
 		}
+		app.geochart.refreshCampaigns(wrapper);
+		return wrapper;
 	},
-	/**
-	 * Update the value and colour of each of the groups
-	 */
-	refreshGroups: function() {
+	refreshCampaigns: function(campaigns) {
 		var day = app.geochart.currentDay();
 		var metric = app.geochart.currentMetric();
 
-		for(var id in app.state.groupCharts){
-			var g = app.state.groupCharts[id];
-			var color = g.groupData.b[metric][day].c;
-			var score = Math.round(g.groupData.b[metric][day].s);
-            var title = g.groupData.n +' (Presences: '+ g.groupData.p +')\n'+ app.geochart.metrics[metric].label +': '+ g.groupData.b[metric][day].l;
+		for(var i in campaigns){
+			var g = campaigns[i];
+			var data = g.data;
+			var color = data.b[metric][day].c;
+			var score = Math.round(data.b[metric][day].s);
+			var title = data.n +' (Presences: '+ data.p +')\n'+ app.geochart.metrics[metric].label +': '+ data.b[metric][day].l;
 
-			g.$group.css('background-color', color);
-            g.$group.attr('title', title);
-			g.$group.find('.score').empty().append(score);
+			g.$dom
+				.css('background-color', color)
+				.attr('title', title)
+				.find('.score').empty().append(score);
 		}
 	},
-
-    /**
-     * Add the regions in global groupData to the DOM, and store them in app.state.groupCharts
-     */
-    drawSmallMaps: function() {
-        var $smallMapsContainer = $('#small-maps ul');
-
-        var smallMaps = smallMapData;
-        for(var id in smallMaps){
-            var smallMap = smallMaps[id];
-
-            $smallMapsContainer.append('<li id="'+ id +'" class="small-maps-display"><span class="label">'+ smallMap.n +'</span><span class="score"></span></li>');
-            app.state.smallMapsCharts[id] = {
-                $smallMap: $('#'+id),
-                smallMapData: smallMap
-            };
-        }
-    },
-    /**
-     * Update the value and colour of each of the region
-     */
-    refreshSmallMaps: function() {
-        var day = app.geochart.currentDay();
-        var metric = app.geochart.currentMetric();
-
-        for(var id in app.state.smallMapsCharts){
-            var g = app.state.smallMapsCharts[id];
-            var color = g.smallMapData.b[metric][day].c;
-            var score = Math.round(g.smallMapData.b[metric][day].s);
-            var title = g.smallMapData.n +' (Presences: '+ g.smallMapData.p +')\n'+ app.geochart.metrics[metric].label +': '+ g.smallMapData.b[metric][day].l;
-
-            g.$smallMap.css('background-color', color);
-            g.$smallMap.attr('title', title);
-            g.$smallMap.find('.score').empty().append(score);
-        }
-    },
 	currentMetric:function () {
 		return $('#map-tabs').find('li.active').data('val');
 	},
@@ -226,7 +187,6 @@ app.geochart = {
 			var id = data.getValue(selection[0].row, 3);
             if(id != -1){
                 app.geochart.loadCampaignStats(id, 'country');
-                $('.desc-box').addClass('hide');
             }
         }
 	},
@@ -235,7 +195,7 @@ app.geochart = {
 	 * @param id
 	 * @param type country, group or region
 	 */
-	loadCampaignStats: function(id, type, score) {
+	loadCampaignStats: function(id, type) {
 		var $mapSidebar = $('#map-sidebar');
 		var $loading = $mapSidebar.find('.loading');
 		$loading.show();
@@ -247,26 +207,27 @@ app.geochart = {
 			})
 			.always(function() {
 				$loading.hide();
-                $mapSidebar.find('.instructions').hide();
+				$mapSidebar.find('.desc-box').addClass('hide');
 			});
 	},
 	/**
 	 * Creates the data structure used by the geochart.
 	 * Called when the geochart is ready for data to be added to it
 	 */
-	buildDataTable:function(mapData){
+	buildDataTable: function(mapData){
+		// define the columns
+		var data = new google.visualization.DataTable();
+		data.addColumn('string', 'Country');
+		data.addColumn('string', 'Display Name');
+		data.addColumn('number', 'Presences');
+		data.addColumn('number', 'id');
+
 		if (typeof mapData == 'undefined' || mapData.length == 0) {
-			return;
+			return data;
 		}
 
 		var i, m, metric;
 
-		// define the columns
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Country');
-        data.addColumn('string', 'Display Name');
-        data.addColumn('number', 'Presences');
-        data.addColumn('number', 'id');
 		var columnIndex = data.getNumberOfColumns();
 
 		// add 2 columns per metric (value & label)
