@@ -8,40 +8,43 @@ app.datatables = {
 	statusesTable: null,
 	init:function () {
         // add a 'fuzzy numeric' sort type, which just ignores all non-numeric characters
-        $.extend($.fn.dataTableExt.oSort, {
-            "fuzzy-numeric-pre": function ( a ) { if (typeof(a) == 'string') { return parseInt(a.replace(/[^\d]/g, "")); } else { return 0; }},
-            "fuzzy-numeric-asc": function ( a, b ) { return a - b; },
-            "fuzzy-numeric-desc": function ( a, b ) { return b - a; }
+        app.datatables.addSortFunction('fuzzy-numeric', function ( a ) {
+	        if (typeof(a) == 'string') {
+		        return parseInt(a.replace(/[^\d]/g, ""));
+	        } else {
+		        return 0;
+	        }
         });
 
         // sort by a numeric value in data-value on the direct child of the table cell
-        $.extend($.fn.dataTableExt.oSort, {
-            "data-value-numeric-pre": function ( a ) { var value = $(a).data('value'); if(value){return value;}else{return 0}},
-            "data-value-numeric-asc": function ( a, b ) { return a - b; },
-            "data-value-numeric-desc": function ( a, b ) { return b - a; }
+        app.datatables.addSortFunction('data-value-numeric', function ( a ) {
+	        var value = $(a).data('value');
+	        return value ? value : 0;
         });
 
         // add a 'checkbox' sort type, which sorts by whether a checkbox is checked or not
-        $.extend($.fn.dataTableExt.oSort, {
-            "checkbox-pre": function ( a ) {
-                var $checkbox = $('#' + $(a).filter('input[type=checkbox]').attr('id'));
-                return ($checkbox.is(':checked') ? 1 : 0);
-            },
-            "checkbox-asc": function ( a, b ) { return a - b; },
-            "checkbox-desc": function ( a, b ) { return b - a; }
+		app.datatables.addSortFunction('checkbox', function ( a ) {
+            var $checkbox = $('#' + $(a).filter('input[type=checkbox]').attr('id'));
+            return ($checkbox.is(':checked') ? 1 : 0);
         });
 
+        // add a 'forminput' sort type, which sorts by the contents of a text field or select
+		app.datatables.addSortFunction('forminput', function ( a ) {
+			var $a = $(a);
+			if ($a.find('option').length > 0) {
+				return $a.find('option:selected').text();
+			} else {
+				return $(a).val();
+			}
+        }, false);
+
 		// add a 'traffic light' sort type, which uses the value in the traffic light
-		$.extend($.fn.dataTableExt.oSort, {
-			"traffic-light-pre": function ( a ) {
-		  		var value = $(a).filter('.icon-circle').data('value');
-				if (typeof value == 'undefined') {
-					value = -1;
-				}
-				return value;
-			},
-			"traffic-light-asc": function ( a, b ) { return a - b; },
-			"traffic-light-desc": function ( a, b ) { return b - a; }
+		app.datatables.addSortFunction('traffic-light', function ( a ) {
+	        var value = $(a).filter('.icon-circle').data('value');
+			if (typeof value == 'undefined') {
+				value = -1;
+			}
+			return value;
 		});
 
 		//run conditional init functions if selector exists on page
@@ -55,6 +58,21 @@ app.datatables = {
 				.on('dateRangeUpdated', app.datatables.refreshStatuses)
 				.on('dataChanged', app.datatables.refreshStatuses);
 		}
+	},
+	addSortFunction: function(name, sortFunc, isNumeric) {
+		if (typeof isNumeric == 'undefined') {
+			isNumeric = true;
+		}
+		var sort = {};
+		sort[name + "-pre"] = sortFunc;
+		if (isNumeric) {
+			sort[name + "-asc"] = function(a, b) { return a - b; };
+			sort[name + "-desc"] = function(a, b) { return b - a; };
+		} else {
+			sort[name + "-asc"] = function(a, b) { return a < b ? -1 : 1; };
+			sort[name + "-desc"] = function(a, b) { return a < b ? 1 : -1; };
+		}
+		$.extend($.fn.dataTableExt.oSort, sort);
 	},
 	refreshStatuses: function () {
 		if (app.datatables.statusesTable.length) {

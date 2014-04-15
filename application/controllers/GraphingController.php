@@ -204,6 +204,7 @@ abstract class GraphingController extends BaseController {
                 $header->title = 'Presences';
                 break;
             case 'options':
+				$header->sort = null;
                 $header->width = '100px';
                 break;
             case 'compare':

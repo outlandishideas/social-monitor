@@ -774,6 +774,12 @@ table.dtable.dataTable {
 	display: table;
 }
 
+.uniForm .dataTables_filter input[type=text] {
+	padding: 4px 2px;
+	border: 1px solid #aaa;
+	background: #fff;
+}
+
 .dataTables_filter {
 	margin-bottom: 10px;
 }
