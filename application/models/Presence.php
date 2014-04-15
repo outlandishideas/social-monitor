@@ -291,10 +291,8 @@ class Model_Presence extends Model_Base {
 				// update the klout score (not currently possible for facebook pages)
 				try {
 					$apiKey = Zend_Registry::get('config')->klout->api_key;
-					if (!$this->klout_id) {
-						$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $this->uid . '?key=' . $apiKey);
-						$this->klout_id = $json->id;
-					}
+					$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $this->uid . '?key=' . $apiKey);
+					$this->klout_id = $json->id;
 					if ($this->klout_id) {
 						$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'user.json/' . $this->klout_id . '?key=' . $apiKey);
 						$this->klout_score = $json->score->score;
