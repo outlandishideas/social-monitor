@@ -1126,7 +1126,9 @@ class Model_Presence extends Model_Base {
 		$tableName = $this->statusTable();
 		if ($this->isForFacebook()) {
 			$clauses[] = 'posted_by_owner = 1';
-		}
+		} else {
+            $clauses[] = 'responsible_presence IS NULL';
+        }
 
 		$sql = 'SELECT COUNT(1)/DATEDIFF(:end_date, :start_date) AS av FROM ' . $tableName . ' WHERE ' . implode(' AND ', $clauses);
 		$stmt = $this->_db->prepare($sql);
@@ -1207,7 +1209,9 @@ class Model_Presence extends Model_Base {
 		if ($this->isForFacebook()) {
 			$clauses[] = 'posted_by_owner = 1';
 			$clauses[] = 'in_response_to IS NULL';
-		}
+		} else {
+            $clauses[] = 'responsible_presence IS NULL';
+        }
 
 		$sql = 'SELECT date, COUNT(date) AS value
 			FROM (
