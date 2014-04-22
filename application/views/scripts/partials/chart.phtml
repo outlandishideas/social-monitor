@@ -4,10 +4,8 @@
 
     <div class="health">
 
-<!--        <h3 class="title">--><?php ////echo $graph->title; ?><!--</h3>-->
-
-        <div class="fieldset">
-            <h4 class="legend"></h4>
+        <div class="fieldset hidden">
+            <h4 class="legend hidden"></h4>
             <p class="value"></p>
         </div>
 
@@ -15,11 +13,11 @@
 
     </div>
 
-    <div id="chart_<?php echo $graph->id; ?>" class="chart" data-metric="<?php echo $graph->metric; ?>" data-y-label="<?php echo $graph->yAxisLabel; ?>" data-presence-id="<?php echo $graph->presence_id; ?>">
-
-	    <?php // this is causing problems, and isn't even used, so removing ?>
-<!--        <div class="downloadChart">Download as <span class="link">PNG</span> or <span class="link">SVG</span></div>-->
-
+    <div id="chart_<?php echo $graph->id; ?>"
+         class="chart"
+         data-metric="<?php echo $graph->metric; ?>"
+         data-y-label="<?php echo $graph->yAxisLabel; ?>"
+         data-presence-id="<?php echo $graph->presence_id; ?>">
     </div>
 
     <div class="clearfix"></div>

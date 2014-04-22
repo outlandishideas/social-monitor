@@ -2,7 +2,7 @@
 
 abstract class Model_Base
 {
-	protected static $columns = array();
+	protected static $tableColumns = array();
 	protected static $tableName;
 	protected static $sortColumn = 'id';
 
@@ -28,16 +28,20 @@ abstract class Model_Base
 
 	public function getColumnNames()
 	{
-		$classname = get_called_class();
-		if (!array_key_exists($classname, Model_Base::$columns)) {
-			Model_Base::$columns[$classname] = array();
-			$statement = $this->_db->prepare('SELECT column_name AS name FROM information_schema.columns WHERE table_schema=database() AND table_name=:tableName');
-			$statement->execute(array(':tableName'=>static::$tableName));
-			foreach ($statement as $row) {
-				Model_Base::$columns[$classname][] = $row['name'];
+		if (empty(self::$tableColumns)) {
+			$statement = $this->_db->prepare('SELECT table_name, column_name FROM information_schema.columns WHERE table_schema=database()');
+			$statement->execute();
+			foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
+				if (!isset(Model_Base::$tableColumns[$row['table_name']])){
+					Model_Base::$tableColumns[$row['table_name']] = array();
+				}
+				Model_Base::$tableColumns[$row['table_name']][] = $row['column_name'];
 			}
 		}
-		return Model_Base::$columns[$classname];
+		if (isset(Model_Base::$tableColumns[static::$tableName])) {
+			return Model_Base::$tableColumns[static::$tableName];
+		}
+		return array();
 	}
 	
 	public function __get($name)
@@ -270,6 +274,7 @@ abstract class Model_Base
 
 			//insert the data
 			if ($query != $lastQuery) {
+				$lastQuery = $query;
 				$statement = Zend_Registry::get('db')->prepare($query);
 			}
 			/** @var $statement PDOStatement */
@@ -299,36 +304,4 @@ abstract class Model_Base
 		return $date->format('Y-m-d H:i:s');
 	}
 
-    /**
-     * function to get badges data
-     */
-    public static function badgesData(){
-        $key = 'presence_badges';
-        $data = BaseController::getObjectCache($key, false);
-        if (!$data) {
-            $endDate = new DateTime("now");
-            $startDate = clone $endDate;
-            $count = 0;
-            do{
-                $data = Model_Badge::getAllCurrentData('month', $startDate, $endDate);
-                $startDate->modify("-1 day");
-                $endDate->modify("-1 day");
-                $count++;
-                //while no count data keep trying further back in the past
-                // break out if attempted 5 times, as it is probably a new presence and so has no cached data
-            } while(count($data) < 1 && $count < 5);
-            foreach ($data as $row) {
-                Model_Badge::calculateTotalScore($row);
-            }
-            Model_Badge::assignRanks($data, 'total');
-            $keyedData = new stdClass();
-            foreach ($data as $row) {
-                $keyedData->{$row->presence_id} = $row;
-            }
-            $data = $keyedData;
-            BaseController::setObjectCache($key, $data, 1);
-        }
-
-        return $data;
-    }
 }

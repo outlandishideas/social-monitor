@@ -5,7 +5,7 @@ class Model_Campaign extends Model_Base {
 	protected static $sortColumn = 'display_name';
 
 	// use this to filter campaigns table by is_country column
-	protected static $countryFilter = null;
+	public static $countryFilter = null;
 
 	protected function fetch($clause = null, $args = array()) {
 		if ($clause) {
@@ -39,26 +39,41 @@ class Model_Campaign extends Model_Base {
 		return intval($statement->fetchColumn());
 	}
 
-	function getPresenceIds() {
+	function getPresenceIds($mapping = null) {
 		if (!isset($this->presenceIds)) {
-			$statement = $this->_db->prepare('SELECT presence_id FROM campaign_presences WHERE campaign_id = :cid');
-			$statement->execute(array(':cid'=>$this->id));
-			$this->presenceIds = $statement->fetchAll(PDO::FETCH_COLUMN);
+			if (isset($mapping[$this->id])) {
+				$this->presenceIds = $mapping[$this->id];
+			} else {
+				$statement = $this->_db->prepare('SELECT presence_id FROM campaign_presences WHERE campaign_id = :cid');
+				$statement->execute(array(':cid'=>$this->id));
+				$this->presenceIds = $statement->fetchAll(PDO::FETCH_COLUMN);
+			}
 		}
 		return $this->presenceIds;
 	}
 
 	/**
+	 * Gets the presences for this campaign. If $mapping and $allPresences are present, they will be used instead
+	 * of doing a database query
+	 * @param array $mapping
+	 * @param Model_Presence[] $allPresences
 	 * @return Model_Presence[]
 	 */
-	function getPresences() {
+	function getPresences($mapping = null, $allPresences = null) {
 		if (!isset($this->presences)) {
-			$ids = $this->getPresenceIds();
+			$this->presences = array();
+			$ids = $this->getPresenceIds($mapping);
 			if ($ids) {
-				$clause = 'id IN (' . implode(',', $ids) . ')';
-				$this->presences = Model_Presence::fetchAll($clause);
-			} else {
-				$this->presences = array();
+				if ($allPresences) {
+					foreach ($ids as $id) {
+						if (isset($allPresences[$id])) {
+							$this->presences[] = $allPresences[$id];
+						}
+					}
+				} else {
+					$clause = 'id IN (' . implode(',', $ids) . ')';
+					$this->presences = Model_Presence::fetchAll($clause);
+				}
 			}
 		}
 		return $this->presences;
@@ -183,17 +198,19 @@ class Model_Campaign extends Model_Base {
 
     public static function badgesData(){
         $badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
-        $keyedData = parent::badgesData();
+        $keyedData = Model_Badge::badgesData(true);
 
         // get all of the campaign-presence relationships for this type (country or group)
-        $class = new Model_Campaign();
-        $stmt = $class->_db->prepare(
+	    /** @var PDO $db */
+        $db = Zend_Registry::get('db')->getConnection();
+        $stmt = $db->prepare(
             'SELECT c.id AS campaign_id, cp.presence_id
             FROM campaigns AS c
             LEFT OUTER JOIN campaign_presences AS cp
                 ON cp.campaign_id = c.id
             WHERE c.is_country = :is_country');
-        $stmt->execute(array(':is_country'=>static::$countryFilter));
+	    $args = array(':is_country'=>static::$countryFilter);
+        $stmt->execute($args);
         $mapping = $stmt->fetchAll(PDO::FETCH_OBJ);
 
         // calculate averages badge scores for each campaign
@@ -264,18 +281,19 @@ class Model_Campaign extends Model_Base {
 				'c' => $campaign->country,
 				'n' => $campaign->display_name,
 				'p' => $campaign->getPresenceCount(),
-				'b' => array()
+				'b' => new stdClass()
 			);
 
 			// add data structures for keeping scores in
 			foreach ($badgeTypes as $type) {
 				if ($type != Model_Badge::BADGE_TYPE_TOTAL) {
-					$row->b[$type] = array();
+					$row->b->$type = array();
 				}
 			}
 			$campaigns[$campaign->id] = $row;
 		}
 
+		$daysList = array();
 		//now that we have campaign objects set up, go though the data and assign it to the appropriate object
 		foreach ($data as $row) {
 			if (array_key_exists($row->campaign_id, $campaigns)){
@@ -286,12 +304,13 @@ class Model_Campaign extends Model_Base {
 				//turn it around so that the most recent data is the has the highest score
 				//this is because jquery slider has a value going 0-30 (left to right) and we want time to go in reverse
 				$days = $dayRange - $rowDiff->days;
+				$daysList[$days] = 1;
 
-				foreach (array_keys($campaign->b) as $badgeType) {
-					if(!isset($campaign->b[$badgeType][$days])) {
-						$campaign->b[$badgeType][$days] = $row->$badgeType;
+				foreach ($campaign->b as $badgeType=>$ignored) {
+					if(!isset($campaign->b->{$badgeType}[$days])) {
+						$campaign->b->{$badgeType}[$days] = $row->$badgeType;
 					} else {
-						$campaign->b[$badgeType][$days] += $row->$badgeType;
+						$campaign->b->{$badgeType}[$days] += $row->$badgeType;
 					}
 				}
 			}
@@ -299,12 +318,14 @@ class Model_Campaign extends Model_Base {
 
 		//calculate the total scores for each day for each campaign object
 		foreach ($campaigns as $campaign) {
+			$badgeCount = 0;
 			$total = array();
 			//go though each day in each badge in each campaign and convert the score into an score/label object for geochart
-			foreach (array_keys($campaign->b) as $badgeType){
-				foreach ($campaign->b[$badgeType] as $day => $value){
+			foreach ($campaign->b as $badgeType => $ignored){
+				$badgeCount++;
+				foreach ($campaign->b->$badgeType as $day => $value){
 					$value /= $campaign->p; //average out the score
-					$campaign->b[$badgeType][$day] = (object)array('s'=>round($value*10)/10, 'l'=>round($value).'%');
+					$campaign->b->{$badgeType}[$day] = (object)array('s'=>round($value*10)/10, 'l'=>round($value).'%');
 					if(!isset($total[$day])) {
 						$total[$day] = $value;
 					} else {
@@ -314,13 +335,36 @@ class Model_Campaign extends Model_Base {
 			}
 
 			foreach ($total as $day => $value) {
-				$value /= count($campaign->b); // average out the badges
+				$value /= $badgeCount; // average out the badges
 				$total[$day] = (object)array('s'=>round($value*10)/10, 'l'=>round($value).'%');
 			}
-			$campaign->b[Model_Badge::BADGE_TYPE_TOTAL] = $total;
+			$campaign->b->{Model_Badge::BADGE_TYPE_TOTAL} = $total;
 		}
 
-		return $campaigns;
+		// fill in any holes by copying the closest day
+		$daysList = array_keys($daysList);
+		foreach ($campaigns as $campaign) {
+			foreach ($campaign->b as $badgeType=>$days) {
+				$missing = array_diff($daysList, array_keys($days));
+				foreach ($missing as $day) {
+					$key = '';
+					for ($i=1; $i<30; $i++) {
+						if (array_key_exists($day-$i, $days)) {
+							$key = $day-$i;
+							break;
+						} else if (array_key_exists($day+$i, $days)) {
+							$key = $day+$i;
+							break;
+						}
+					}
+					if ($key) {
+						$campaign->b->{$badgeType}[$day] = $campaign->b->{$badgeType}[$key];
+					}
+				}
+			}
+		}
+
+		return array_values($campaigns);
 	}
 
 }

@@ -94,7 +94,9 @@ Zend_Layout::startMvc();
 //    php index.php fetch analyse silent=1
 if (PHP_SAPI == 'cli') {
 
-	//first two arguments are controller and actin to run
+	echo 'env: ' . APPLICATION_ENV . PHP_EOL;
+
+	//first two arguments are controller and action to run
 	$controller = isset($argv[1]) ? $argv[1] : 'index';
 	$action = isset($argv[2]) ? $argv[2] : 'index';
 

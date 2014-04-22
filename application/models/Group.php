@@ -4,7 +4,7 @@ class Model_Group extends Model_Campaign {
 
     const ICON_TYPE = 'icon-th-large';
 
-	protected static $countryFilter = '0';
+	public static $countryFilter = '0';
 
     public function fromArray($data) {
         if (array_key_exists('presences', $data)) {

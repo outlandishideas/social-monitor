@@ -254,12 +254,8 @@ class RegionController extends CampaignController {
 
     }
 
-    public function getAllBadgeData(){
-        return Model_Region::badgesData();
-    }
-
-    public function getAllCampaigns(){
-        return Model_Region::fetchAll();
-    }
+	public function downloadAction() {
+		parent::downloadAsCsv('region_index', Model_Region::badgesData(), Model_Region::fetchAll(), self::tableIndexHeaders());
+	}
 
 }

@@ -329,8 +329,8 @@ app.init = {
 					$( "#slider" ).data('val', ui.value);
 					$( "#date-slider" ).val( then.toString('dd MMM yyyy') + ' - ' + now.toString('dd MMM yyyy') );
 					app.geochart.refreshMap();
-                    app.geochart.refreshGroups();
-                    app.geochart.refreshSmallMaps();
+					app.geochart.refreshCampaigns(app.state.groupCharts);
+					app.geochart.refreshCampaigns(app.state.smallMapsCharts);
 				}
 			});
 

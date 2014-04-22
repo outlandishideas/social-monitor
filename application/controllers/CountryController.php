@@ -12,10 +12,28 @@ class CountryController extends CampaignController {
 	 * @user-level user
 	 */
 	public function indexAction() {
+		/** @var Model_Country[] $countries */
+		$countries = Model_Country::fetchAll();
+		$presences = array();
+		foreach (Model_Presence::fetchAll() as $p) {
+			$presences[$p->id] = $p;
+		}
+		$query = self::db()->prepare('SELECT c.id, cp.presence_id FROM campaigns AS c LEFT OUTER JOIN campaign_presences AS cp ON c.id = cp.campaign_id');
+		$query->execute();
+		$mapping = array();
+		foreach ($query->fetchAll(PDO::FETCH_OBJ) as $row) {
+			if (!isset($mapping[$row->id])) {
+				$mapping[$row->id] = array();
+			}
+			$mapping[$row->id][] = $row->presence_id;
+		}
+		foreach ($countries as $country) {
+			$country->getPresences($mapping, $presences);
+		}
         $this->view->title = 'Countries';
         $this->view->tableHeaders = static::generateTableHeaders();
 		$this->view->tableMetrics = self::tableMetrics();
-		$this->view->countries = Model_Country::fetchAll();
+		$this->view->countries = $countries;
         $this->view->badgeData = Model_Country::badgesData();
 	}
 
@@ -41,7 +59,24 @@ class CountryController extends CampaignController {
         $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
 		$this->view->title = $country->display_name;
-		$this->view->titleInfo = $country->countryInfo();
+		$this->view->titleInfo = array(
+			'audience' => (object)array(
+					'title' => 'Audience',
+					'value' => number_format($country->audience),
+				),
+			'pages' => (object)array(
+					'title' => 'Facebook Pages',
+					'value' => count($country->getFacebookPages()),
+				),
+			'handles' => (object)array(
+					'title' => 'Twitter Accounts',
+					'value' => count($country->getTwitterAccounts()),
+//			),
+//			'notes' => (object)array(
+//				'title' => 'Notes',
+//				'value' => '' //$this->notes
+			)
+		);
         $this->view->country = $country;
         $this->view->badges = Model_Badge::$ALL_BADGE_TYPES;
 	}
@@ -286,21 +321,9 @@ class CountryController extends CampaignController {
 
     }
 
-    /**
-     * Gets all badge data
-     * @return array
-     */
-    public function getAllBadgeData(){
-        return Model_Country::badgesData();
-    }
-
-    /**
-     * Gets all countries
-     * @return array|Model_Base[]
-     */
-    public function getAllCampaigns(){
-        return Model_Country::fetchAll();
-    }
+	public function downloadAction() {
+		parent::downloadAsCsv('country_index', Model_Country::badgesData(), Model_Country::fetchAll(), self::tableIndexHeaders());
+	}
 
     /**
      * function to generate tableIndexHeaders for tbe campaign index pages

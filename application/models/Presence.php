@@ -44,6 +44,7 @@ class Model_Presence extends Model_Base {
 	const KLOUT_API_ENDPOINT = 'http://api.klout.com/v2/';
 
 	protected $metrics = array(); // stores the calculated metrics
+	protected $kpiData = array();
 
 	public static function fetchAllTwitter() {
 		return self::fetchAll('type = :type', array(':type'=>self::TYPE_TWITTER));
@@ -51,6 +52,51 @@ class Model_Presence extends Model_Base {
 
 	public static function fetchAllFacebook() {
 		return self::fetchAll('type = :type', array(':type'=>self::TYPE_FACEBOOK));
+	}
+
+	/**
+	 * @param string $clause
+	 * @param array $args
+	 * @return Model_Presence[]
+	 */
+	public static function fetchAll($clause = null, $args = array()) {
+		return parent::fetchAll($clause, $args);
+	}
+
+
+	/**
+	 * @param Model_Presence[] $presences
+	 * @return Model_Presence[]
+	 */
+	public static function populateOwners($presences) {
+		// fetch all campaigns in one query instead of ~300 individual queries
+		$query = BaseController::db()->prepare('SELECT campaign_id, presence_id FROM campaign_presences');
+		$query->execute();
+		$mapping = array();
+		foreach ($query->fetchAll(PDO::FETCH_OBJ) as $row) {
+			if (!isset($mapping[$row->campaign_id])) {
+				$mapping[$row->campaign_id] = array();
+			}
+			$mapping[$row->campaign_id][] = $row->presence_id;
+		}
+		/** @var Model_Presence[] $presences */
+		$campaignTypes = array('Model_Country', 'Model_Group', 'Model_Region');
+		$campaigns = array();
+		foreach ($campaignTypes as $type) {
+			$current = array();
+			foreach ($type::fetchAll() as $c) {
+				if (isset($mapping[$c->id])) {
+					foreach ($mapping[$c->id] as $pId) {
+						$current[$pId] = $c;
+					}
+				}
+			}
+			$campaigns[$type::$countryFilter] = $current;
+		}
+		foreach ($presences as $p) {
+			$p->getOwner($campaigns);
+		}
+		return $presences;
 	}
 
 	public function getPresenceSign($large = true, $classes = array()) {
@@ -78,58 +124,94 @@ class Model_Presence extends Model_Base {
 	}
 
 	/**
+	 * Gets the primary owner of this presence. If $allCampaigns is present, it will be used instead of
+	 * querying the database
+	 * @param array $allCampaigns
 	 * @return Model_Country
 	 */
-	public function getOwner() {
-        $owner = null;
-		$stmt = $this->_db->prepare('SELECT campaign_id FROM campaign_presences WHERE presence_id = :pid');
-		$stmt->execute(array(':pid'=>$this->id));
-		$campaignIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
-        $campaigns = array('Model_Country', 'Model_Group', 'Model_Region');
-		if ($campaignIds) {
-            foreach($campaigns as $campaign){
-                $owners = $campaign::fetchAll('id IN (' . implode(',', $campaignIds) . ')');
-                if ($owners) {
-                    $owner = $owners[0];
-                    break;
-                }
-            }
+	public function getOwner($allCampaigns = array()) {
+		if (!property_exists($this, 'owner')) {
+	        $this->owner = null;
+			// prioritise country over group and region
+			$campaignTypes = array('Model_Country', 'Model_Group', 'Model_Region');
+			if ($allCampaigns) {
+				foreach($campaignTypes as $campaignType) {
+					if (isset($allCampaigns[$campaignType::$countryFilter][$this->id])) {
+						$this->owner = $allCampaigns[$campaignType::$countryFilter][$this->id];
+						break;
+					}
+				}
+			} else {
+				$stmt = $this->_db->prepare('SELECT campaign_id FROM campaign_presences WHERE presence_id = :pid');
+				$stmt->execute(array(':pid'=>$this->id));
+				$campaignIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+				if ($campaignIds) {
+		            foreach($campaignTypes as $campaignType){
+		                $owners = $campaignType::fetchAll('id IN (' . implode(',', $campaignIds) . ')');
+		                if ($owners) {
+		                    $this->owner = $owners[0];
+		                    break;
+		                }
+		            }
+				}
+			}
 		}
-		return $owner;
+		return $this->owner;
+	}
+
+	static $kpiCache = array();
+
+	protected function getCachedKpiData($startDateString, $endDateString) {
+		for($i=0; $i<5; $i++) {
+			// get the data for the given range. If not found, move the window back by one day at a time until data is found
+			$key = $startDateString . $endDateString;
+			if (!isset(self::$kpiCache[$key])) {
+				$kpiCache = array();
+				$stmt = $this->_db->prepare('SELECT presence_id, metric, value FROM kpi_cache WHERE start_date = :start AND end_date = :end');
+				$stmt->execute(array(':start'=>$startDateString, ':end'=>$endDateString));
+				foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
+					if (!isset($kpiCache[$row->presence_id])) {
+						$kpiCache[$row->presence_id] = array();
+					}
+					$kpiCache[$row->presence_id][$row->metric] = floatval($row->value);
+				}
+				self::$kpiCache[$key] = $kpiCache;
+			}
+			if (isset(self::$kpiCache[$key][$this->id])) {
+				return self::$kpiCache[$key][$this->id];
+			}
+			$startDateString = date('Y-m-d', strtotime($startDateString . ' -1 day'));
+			$endDateString = date('Y-m-d', strtotime($endDateString . ' -1 day'));
+		}
+		return array();
 	}
 
 	/**
 	 * Calculates the KPIs for this presence, based on the given start and end dates.
 	 * If not given, calculates using the last month's worth of data
-	 * @param null $startDate
-	 * @param null $endDate
+	 * @param DateTime $startDate
+	 * @param DateTime $endDate
 	 * @param bool $useCache
 	 * @return array
 	 */
 	public function getKpiData($startDate = null, $endDate = null, $useCache = true) {
-		if (!isset($this->kpiData)) {
-			$kpiData = array();
+		$kpiData = array();
 
-			if (!$startDate || !$endDate) {
-				$endDate = new DateTime();
-				$startDate = new DateTime();
-				$startDate->sub(DateInterval::createFromDateString('1 month'));
-			}
+		if (!$startDate || !$endDate) {
+			$endDate = new DateTime();
+			$startDate = new DateTime();
+			$startDate->sub(DateInterval::createFromDateString('1 month'));
+		}
+
+		$endDateString = $endDate->format('Y-m-d');
+		$startDateString = $startDate->format('Y-m-d');
+		$key = $startDateString . $endDateString;
+
+		if (!isset($this->kpiData[$key])) {
+			$cachedValues = array();
 
 			if ($useCache) {
-
-				$stmt = $this->_db->prepare('SELECT metric, value FROM kpi_cache WHERE presence_id = :pid AND start_date = :start AND end_date = :end');
-                $count = 0;
-                do {
-                    $stmt->execute(array(':pid'=>$this->id, ':start'=>$startDate->format('Y-m-d'), ':end'=>$endDate->format('Y-m-d')));
-                    $cachedValues = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-                    $startDate->modify("-1 day");
-                    $endDate->modify("-1 day");
-                    $count++;
-                } while (count($cachedValues) < 1 && $count < 5);
-
-			} else {
-				$cachedValues = array();
+				$cachedValues = $this->getCachedKpiData($startDateString, $endDateString);
 			}
 
 			if (array_key_exists(self::METRIC_POPULARITY_PERCENT, $cachedValues)) {
@@ -138,7 +220,7 @@ class Model_Presence extends Model_Base {
 			} else {
 				$currentAudience = $this->popularity;
 				$targetAudience = $this->getTargetAudience();
-				$targetAudienceDate = $this->getTargetAudienceDate($startDate->format('Y-m-d'), $endDate->format('Y-m-d'));
+				$targetAudienceDate = $this->getTargetAudienceDate($startDateString, $endDateString);
 
 				// target audience %
 				$kpiData[self::METRIC_POPULARITY_PERCENT] = $targetAudience ? min(100, 100*$currentAudience/$targetAudience) : 100;
@@ -160,7 +242,7 @@ class Model_Presence extends Model_Base {
 			if (array_key_exists($metric, $cachedValues)) {
 				$kpiData[$metric] = $cachedValues[$metric];
 			} else {
-				$kpiData[$metric] = $this->getAveragePostsPerDay($startDate->format('Y-m-d'), $endDate->format('Y-m-d'));
+				$kpiData[$metric] = $this->getAveragePostsPerDay($startDateString, $endDateString);
 			}
 
 			//response time
@@ -168,13 +250,13 @@ class Model_Presence extends Model_Base {
 			if (array_key_exists($metric, $cachedValues)) {
 				$kpiData[$metric] = $cachedValues[$metric];
 			} else {
-				$kpiData[$metric] = $this->getAverageResponseTime($startDate->format('Y-m-d'), $endDate->format('Y-m-d'));
+				$kpiData[$metric] = $this->getAverageResponseTime($startDateString, $endDateString);
 			}
 
-			$this->kpiData = $kpiData;
+			$this->kpiData[$key] = $kpiData;
 		}
 
-		return $this->kpiData;
+		return $this->kpiData[$key];
 	}
 
 	public function updateInfo() {
@@ -209,18 +291,33 @@ class Model_Presence extends Model_Base {
 				// update the klout score (not currently possible for facebook pages)
 				try {
 					$apiKey = Zend_Registry::get('config')->klout->api_key;
-					if (!$this->klout_id) {
-						$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $this->uid . '?key=' . $apiKey);
-						$this->klout_id = $json->id;
-					}
-					if ($this->klout_id) {
-						$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'user.json/' . $this->klout_id . '?key=' . $apiKey);
-						$this->klout_score = $json->score->score;
+					$success = $this->updateKloutScore($apiKey);
+					if (!$success) {
+						$this->klout_id = null;
+						$this->updateKloutScore($apiKey);
 					}
 				} catch (Exception $ex) { /* ignore */ }
 
 				break;
 		}
+	}
+
+	protected function updateKloutScore($apiKey) {
+		if (!$this->klout_id) {
+			$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $this->uid . '?key=' . $apiKey);
+			$this->klout_id = $json->id;
+		}
+		if ($this->klout_id) {
+			try {
+				$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'user.json/' . $this->klout_id . '?key=' . $apiKey);
+				$this->klout_score = $json->score->score;
+			} catch (RuntimeException $ex) {
+				if ($ex->getCode() == 404) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	public function getTypeLabel() {
@@ -1365,49 +1462,33 @@ class Model_Presence extends Model_Base {
 
 	/**
 	 * Gets the badges for this presence
+	 * @param $includeBreakdown
 	 * @return array
 	 */
-	public function badges(){
-		$data = Model_Presence::badgesData();
+	public function badges($includeBreakdown = true){
+		$data = Model_Badge::badgesData(true);
 		$badges = array();
 		$presenceCount = static::countAll();
 
-		if (isset($data[$this->id])) {
-			$badgeData = $data[$this->id];
-			foreach(Model_Badge::$ALL_BADGE_TYPES as $type){
-				$badges[$type] = (object)array(
-					'type'=>$type,
-					'score'=>floatval($badgeData->{$type}),
-					'rank'=>intval($badgeData->{$type.'_rank'}),
-					'rankTotal'=>$presenceCount,
-					'metrics'=>$this->getMetrics($type)
-				);
+		foreach(Model_Badge::$ALL_BADGE_TYPES as $type){
+			$row = array(
+				'type' => $type,
+				'score' => 0,
+				'rank' => $presenceCount,
+				'rankTotal' => $presenceCount
+			);
+			if ($includeBreakdown) {
+				$row['metrics'] = $this->getMetrics($type);
 			}
-		} else {
-			foreach(Model_Badge::$ALL_BADGE_TYPES as $type){
-				$badges[$type] = (object)array(
-					'type'=>$type,
-					'score'=>0,
-					'rank'=>$presenceCount,
-					'rankTotal'=>$presenceCount,
-					'metrics'=>$this->getMetrics($type)
-				);
+			if (isset($data[$this->id])) {
+				$badgeData = $data[$this->id];
+				$row['score'] = floatval($badgeData->{$type});
+				$row['rank'] = intval($badgeData->{$type.'_rank'});
 			}
+			$badges[$type] = (object)$row;
 		}
 
 		return $badges;
 	}
-
-    /**
-     * function to get badges data
-     */
-    public static function badgesData(){
-        $data = parent::badgesData();
-        $return = array();
-        foreach($data as $badge){
-            $return[$badge->presence_id] = $badge;
-        }
-        return $return;
-    }
 
 }

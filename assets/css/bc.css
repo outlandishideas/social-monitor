@@ -282,27 +282,26 @@ span.icon-remove-sign {
     color: #D06959;
 }
 
-#main-header h1 img,
-#main-header .with-subtitle img {
+#main-header .page-title.with-image img {
+	margin-top: 20px;
 	margin-right: 10px;
 	width: 50px;
 	height: 50px;
 	border: 3px solid #ccc;
+	float: left;
 }
 
-#main-header .with-subtitle h1 {
+#main-header .page-title.with-subtitle h1 {
     line-height: 40px;
     height: 40px;
+}
+#main-header .page-title.with-image h1 {
     margin-left: 60px;
 }
 
-#main-header .with-subtitle h2 {
+#main-header .page-title.with-subtitle h2 {
     margin: 0;
     margin-left: 60px;
-}
-
-#main-header .with-subtitle img {
-    float: left;
 }
 
 #title-info {
@@ -775,6 +774,12 @@ table.dtable.dataTable {
 	display: table;
 }
 
+.uniForm .dataTables_filter input[type=text] {
+	padding: 4px 2px;
+	border: 1px solid #aaa;
+	background: #fff;
+}
+
 .dataTables_filter {
 	margin-bottom: 10px;
 }
@@ -978,7 +983,7 @@ form.management #assigned {
 #map {
     width: auto;
     position: relative;
-    margin-left: 325px;
+    margin-left: 345px;
     max-width: 940px;
 }
 
@@ -991,9 +996,9 @@ form.management #assigned {
 }
 
 #map-sidebar {
-    width: 279px;
+    width: 299px;
     float: left;
-    padding: 0 20px 20px;
+    padding: 0 15px 15px;
     border: 2px solid #afd1e4;
     background-color: #fff;
     position: relative;
@@ -1052,8 +1057,7 @@ form.management #assigned {
 #map-sidebar h3 {
     font-size: 20px;
     font-weight: bold;
-    margin: 10px -20px;
-    margin-top: 0;
+    margin: 0 -15px 10px;
     padding: 8px 20px;
     background: #edf5f8;
 }
@@ -1161,30 +1165,40 @@ form.management #assigned {
 
 .health .fieldset {
     border: 1px solid #ccc;
-    margin: 0 20%;
+    margin: 72px 15% 0;
     text-align: center;
     position: relative;
-    padding: 20px;
-    margin-top: 72px;
+    padding: 20px 10px;
     background-color: #ddd;
 }
 
-.health .fieldset h4 {
+.health .fieldset .legend {
     margin: 0;
     padding: 0 10px;
-    background: #fff;
     position: absolute;
     display: inline-block;
     top: -8px;
     left: 10px;
     font-weight: normal;
     font-size: 12px;
-    color: #888;
+    color: #555;
+	border: 1px solid #aaa;
+	background: #d6d6d6;
 }
 
-.health .fieldset p {
+.health .fieldset.hidden,
+.health .fieldset .legend.hidden {
+	display: none;
+}
+
+.health .fieldset .value {
     font-size: 30px;
     margin: 0;
+	text-shadow: 1px 0 0 #000, -1px 0 0 #000, 0 1px 0 #000, 0 -1px 0 #000;
+}
+.health .fieldset .value .separator {
+	text-shadow: none;
+	margin: 0 10px;
 }
 
 .health p .small {
@@ -1461,6 +1475,9 @@ li.link.box {
         color: #0a95ce;
         font-size: 38px;
     }
+	.badge.box .score.ranking .denominator {
+		white-space: nowrap;
+	}
     .badge.box .score.overall-score .text {
         font-size: 24px;
         color: #ef5078;
