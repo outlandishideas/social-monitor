@@ -214,10 +214,14 @@ class FetchController extends BaseController
 			WHERE d.id IS NULL');
 		$stmt->execute();
 		$toInsert = $stmt->fetchAll(PDO::FETCH_COLUMN);
-		$stmt = $db->prepare('INSERT INTO domains (domain) VALUES (:domain)');
+		$stmt = $db->prepare('INSERT INTO domains (domain, is_bc) VALUES (:domain, :is_bc)');
 		foreach ($toInsert as $domain) {
+            $is_bc = 0;
+            if(preg_match('/britishcouncil/i', $domain)){
+                $is_bc = 1;
+            }
 			try {
-				$stmt->execute(array(':domain'=>$domain));
+				$stmt->execute(array(':domain'=>$domain, ':is_bc' => $is_bc));
 				$inserted[] = $domain;
 			} catch (Exception $ex) {}
 		}
