@@ -1438,6 +1438,15 @@ class Model_Presence extends Model_Base {
 				}
 			}
 
+            //we've been having some difficulties with DateTime and
+            //large numbers. Try to run a DateTime construct to see if it works
+            //if not nullify $date so that we can create a DateTime from PHP_INI_MAX
+            try {
+                new DateTime($date);
+            } catch (Exception $e) {
+                $date = null;
+            }
+
 			if (!$date || $date < date('Y-m-d')) {
 				$date = date('Y-m-d', PHP_INT_MAX);
 			}
