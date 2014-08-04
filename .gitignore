@@ -7,3 +7,5 @@
 /application/configs/config.yaml
 /data/uploads/*
 !/data/uploads/nothing.txt
+bcmonitor.sublime-project
+bcmonitor.sublime-workspace
