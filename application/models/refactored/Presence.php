@@ -1,6 +1,6 @@
 <?php
 
-abstract class iPresence
+class Model_Presence
 {
 	protected $provider;
 	protected $metrics;
@@ -8,15 +8,15 @@ abstract class iPresence
 	protected $id;
 	protected $handle;
 
-	public function __construct(array $internals, iProvider $provider, array $metrics = array())
+	public function __construct(array $internals, Model_iProvider $provider, array $metrics = array())
 	{
 		$this->provider = $provider;
 		$this->metrics = $metrics;
 
-		if (!array_key_exists('id', $intenals)) {
+		if (!array_key_exists('id', $internals)) {
 			throw new \InvalidArgumentException('Missing id for Presence');
 		}
-		if (!array_key_exists('handle', $intenals)) {
+		if (!array_key_exists('handle', $internals)) {
 			throw new \InvalidArgumentException('Missing handle for Presence');
 		}
 		$this->id = $internals['id'];

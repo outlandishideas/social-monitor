@@ -1,0 +1,1 @@
+phpunit --configuration tests/phpunit-ronald.xml tests/

@@ -11,7 +11,7 @@
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
  */
-abstract class Enum
+abstract class Model_Enum
 {
     /**
      * Enum value
