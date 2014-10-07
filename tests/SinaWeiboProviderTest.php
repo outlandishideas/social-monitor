@@ -26,7 +26,7 @@ class SinaWeiboProviderTest extends PHPUnit_Extensions_Database_TestCase
 
     public function getDataSet()
     {
-    	return $this->createFlatXmlDataSet('tests/dataset.xml');
+    	return $this->createFlatXmlDataSet('tests/sina-weibo-dataset.xml');
     }
 
     public function setUp()
