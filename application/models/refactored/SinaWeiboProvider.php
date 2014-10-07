@@ -9,6 +9,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 	protected $connection = null;
 
 	protected $tableName = 'sina_weibo_posts';
+	protected $type = null;
 
 	public function __construct(PDO $db) {
 		parent::__construct($db);
@@ -16,6 +17,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		if (!array_key_exists('REMOTE_ADDR', $_SERVER)) {
 			$this->connection->set_remote_ip('127.0.0.1');
 		}
+		$this->type = NewModel_PresenceType::SINA_WEIBO();
 	}
 
 	public function fetchData(NewModel_Presence $presence)
@@ -32,6 +34,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 			foreach ($data['statuses'] as $s) {
 				if ($s['user']['profile_url'] != $presence->getHandle()) continue;
 				$s['presence_id'] = $presence->getId();
+				$s['posted_by_presence'] = 1;
 				$this->parseStatus($s);
 			}
 		} while (count($data['statuses']));
@@ -46,13 +49,14 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 
 	protected function parseStatus($status)
 	{
-		//var_dump(date_create($status['created_at'])); exit;
-		var_dump($status);exit;
-		$status['posted_by_presence'] = 1;
 		$this->saveStatus($status);
 		if (array_key_exists('retweeted_status', $status)) {
 			$s = $status['retweeted_status'];
-			$s['posted_by_presence'] = ($s['user']['idstr'] == $status['user']['idstr'] ? 1 : 0);
+			NewModel_PresenceFactory::setDatabase($this->db);
+			$presence = NewModel_PresenceFactory::getPresenceByHandle($s['user']['profile_url'], $this->type);
+			$s['posted_by_presence'] = $presence ? 1 : 0;
+			$s['presence_id'] = $presence ? $presence->getId() : null;
+			$this->parseStatus($s);
 		}
 	}
 
@@ -76,8 +80,8 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 			':posted_by_presence'	=> $status['posted_by_presence'],
 			':included_retweet'		=> array_key_exists('retweeted_status', $status) ? $status['retweeted_status']['idstr'] : null,
 			':repost_count'			=> $status['reposts_count'],
-			':comment_count'			=> $status['comment_count'],
-			':attitude_count'			=> $status['attitude_count']
+			':comment_count'			=> $status['comments_count'],
+			':attitude_count'			=> $status['attitudes_count']
 		);
 		$stmt->execute($args);
 	}
