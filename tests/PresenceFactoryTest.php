@@ -82,6 +82,11 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
     	$this->assertEquals('learnenglish', $presence->getHandle());
     }
 
+	public function testFetchPresenceByHandleReturnsNullWhenHandleNotInDb()
+	{
+		$this->assertNull(NewModel_PresenceFactory::getPresenceByHandle('learnenglish', NewModel_PresenceType::SINA_WEIBO()));
+	}
+
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
 	 */
@@ -104,6 +109,11 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 		$this->assertEquals('learnenglish', $presence->getHandle());
 	}
 
+	public function testFetchPresenceByIdReturnsNullWhenIdNotInDb()
+	{
+		$this->assertNull(NewModel_PresenceFactory::getPresenceById(1));
+	}
+
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
 	 */
@@ -115,6 +125,11 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 		$this->assertEquals(2, count($presences));
 		$this->assertEquals('invalid', $presences[0]->getHandle());
 		$this->assertEquals('learnenglish', $presences[1]->getHandle());
+	}
+
+	public function testFetchPresencesByTypeReturnsEmptyArrayWhenTypeNotInDb()
+	{
+		$this->assertEmpty(NewModel_PresenceFactory::getPresencesByType(NewModel_PresenceType::SINA_WEIBO()));
 	}
 
 	/**
@@ -130,6 +145,11 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 		$this->assertEquals(2, count($presences));
 		$this->assertEquals('learnenglish', $presences[0]->getHandle());
 		$this->assertEquals('invalid', $presences[1]->getHandle());
+	}
+
+	public function testFetchPresencesByIdReturnsEmptyArrayWhenIdsNotInDb()
+	{
+		$this->assertEmpty(NewModel_PresenceFactory::getPresencesById(array(1,2)));
 	}
 
 	/**

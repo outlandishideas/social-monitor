@@ -10,9 +10,14 @@ abstract class NewModel_PresenceFactory
 		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `id` = :id");
 		$stmt->execute(array(':id' => $id));
 		$internals = $stmt->fetch(PDO::FETCH_ASSOC);
-		$type = new NewModel_PresenceType($internals['type']);
-		$provider = $type->getProvider(self::$db);
-		return new NewModel_Presence($internals, $provider);
+
+		if($internals != false) {
+			$type = new NewModel_PresenceType($internals['type']);
+			$provider = $type->getProvider(self::$db);
+			return new NewModel_Presence($internals, $provider);
+		} else {
+			return null;
+		}
 	}
 
 	public static function getPresenceByHandle($handle, NewModel_PresenceType $type)
@@ -20,9 +25,13 @@ abstract class NewModel_PresenceFactory
 		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `handle` = :handle AND `type` = :t");
 		$stmt->execute(array(':handle' => $handle, ':t' => $type));
 		$internals = $stmt->fetch(PDO::FETCH_ASSOC);
-		if (!$internals || count($internals) == 0) return null;
-		$provider = $type->getProvider(self::$db);
-		return new NewModel_Presence($internals, $provider);
+
+		if($internals != false) {
+			$provider = $type->getProvider(self::$db);
+			return new NewModel_Presence($internals, $provider);
+		} else {
+			return null;
+		}
 	}
 
 	public static function getPresencesByType(NewModel_PresenceType $type)
@@ -32,9 +41,13 @@ abstract class NewModel_PresenceFactory
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		$presences = array_map(function($internals){
-			$type = new NewModel_PresenceType($internals['type']);
-			$provider = $type->getProvider(self::$db);
-			return new NewModel_Presence($internals, $provider);
+			if($internals != false) {
+				$type = new NewModel_PresenceType($internals['type']);
+				$provider = $type->getProvider(self::$db);
+				return new NewModel_Presence($internals, $provider);
+			} else {
+				return null;
+			}
 		}, $results);
 
 		return $presences;
@@ -48,12 +61,16 @@ abstract class NewModel_PresenceFactory
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		$presences = array_map(function($internals){
-			$type = new NewModel_PresenceType($internals['type']);
-			$provider = $type->getProvider(self::$db);
-			return new NewModel_Presence($internals, $provider);
+			if($internals != false) {
+				$type = new NewModel_PresenceType($internals['type']);
+				$provider = $type->getProvider(self::$db);
+				return new NewModel_Presence($internals, $provider);
+			} else {
+				return null;
+			}
 		}, $results);
 
-		return $presences;
+		return array_filter($presences);
 	}
 
 	public static function getPresencesByCampaign($campaign)
