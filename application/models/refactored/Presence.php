@@ -128,7 +128,6 @@ class NewModel_Presence
 			$stmt = $this->db->prepare('SELECT campaign_id FROM campaign_presences WHERE presence_id = :pid');
 			$stmt->execute(array(':pid'=>$this->getId()));
 			$campaignId = $stmt->fetchColumn(0);
-			exit();
 			if($campaignId === false) return null;
 			$this->owner = Model_Campaign::fetchById($campaignId);
 		}
