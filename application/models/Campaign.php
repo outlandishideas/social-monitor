@@ -8,11 +8,29 @@ class Model_Campaign extends Model_Base {
 	public static $countryFilter = null;
 
 	protected function fetch($clause = null, $args = array()) {
-		if ($clause) {
-			$clause .= ' AND ';
+		if( static::$countryFilter) {
+			if ($clause) {
+				$clause .= ' AND ';
+			}
+			$clause .= ' is_country = ' . static::$countryFilter;
 		}
-		$clause .= ' is_country = ' . static::$countryFilter;
 		return parent::fetch($clause, $args);
+	}
+
+	/**
+	 * @param $data
+	 * @return Model_Base[]
+	 */
+	public static function objectify($data) {
+		$objects = array();
+		foreach ($data as $row) {
+			if($row['is_country'] == 1){
+				$objects[] = new Model_Country($row, true);
+			} else {
+				$objects[] = new Model_Group($row, true);
+			}
+		}
+		return $objects;
 	}
 
     public function getTargetAudience() {

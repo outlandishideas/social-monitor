@@ -223,7 +223,6 @@ abstract class Model_Base
 			$orderBy = $columnNames[0];
 		}
 		$sql .= ' ORDER BY ' . $orderBy;
-		var_dump($sql);
 
 		$statement = $this->_db->prepare($sql);
 		$statement->execute($args);
