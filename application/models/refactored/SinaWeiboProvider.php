@@ -10,6 +10,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 
 	protected $tableName = 'sina_weibo_posts';
 	protected $type = null;
+	protected $sign = "fa-weibo";
 
 	public function __construct(PDO $db) {
 		parent::__construct($db);

@@ -4,6 +4,7 @@ abstract class NewModel_iProvider
 {
 	protected $db;
 	protected $tableName;
+	protected $sign;
 
 	public function __construct(PDO $db)
 	{
@@ -40,4 +41,11 @@ abstract class NewModel_iProvider
 	 * @return array|false Return false when handle is invalid, otherwise an array with the following data in order: `type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`
 	 */
 	abstract public function testHandle($handle);
+
+	public function getSign($large = false)
+	{
+		$classes = array($this->sign);
+		if($large) $classes[] = 'large';
+		return implode(' ',$classes);
+	}
 }
