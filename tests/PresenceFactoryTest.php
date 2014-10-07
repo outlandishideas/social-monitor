@@ -81,4 +81,64 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
     	$presence = Model_PresenceFactory::getPresenceByHandle('learnenglish');
     	$this->assertEquals('learnenglish', $presence->getHandle());
     }
+
+	/**
+	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 */
+	public function testFetchPresenceByIdHasCorrectHandle()
+	{
+		Model_PresenceFactory::createNewPresence(Model_PresenceType::SINA_WEIBO(), 'learnenglish', false, false);
+		$presence = Model_PresenceFactory::getPresenceById(1);
+		$this->assertEquals('learnenglish', $presence->getHandle());
+	}
+
+	/**
+	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 */
+	public function testFetchPresencesByType()
+	{
+		Model_PresenceFactory::createNewPresence(Model_PresenceType::SINA_WEIBO(), 'learnenglish', false, false);
+		Model_PresenceFactory::createNewPresence(Model_PresenceType::SINA_WEIBO(), 'invalid', false, false);
+		$presences = Model_PresenceFactory::getPresencesByType(Model_PresenceType::SINA_WEIBO());
+		$this->assertEquals(2, count($presences));
+		$this->assertEquals('invalid', $presences[0]->getHandle());
+		$this->assertEquals('learnenglish', $presences[1]->getHandle());
+	}
+
+	/**
+	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 */
+	public function testFetchPresencesById()
+	{
+		Model_PresenceFactory::createNewPresence(Model_PresenceType::SINA_WEIBO(), 'learnenglish', false, false);
+		Model_PresenceFactory::createNewPresence(Model_PresenceType::SINA_WEIBO(), 'invalid', false, false);
+
+		$presences = Model_PresenceFactory::getPresencesById(array(1,2));
+
+		$this->assertEquals(2, count($presences));
+		$this->assertEquals('learnenglish', $presences[0]->getHandle());
+		$this->assertEquals('invalid', $presences[1]->getHandle());
+	}
+
+	/**
+	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 */
+	public function testFetchPresencesByCampaign()
+	{
+		Model_PresenceFactory::createNewPresence(Model_PresenceType::SINA_WEIBO(), 'learnenglish', false, false);
+		Model_PresenceFactory::createNewPresence(Model_PresenceType::SINA_WEIBO(), 'invalid', false, false);
+
+		$stmt = self::$pdo->prepare("INSERT INTO `campaign_presences` (campaign_id, presence_id) VALUES(:cid,:pid1),(:cid,:pid2)");
+		$stmt->execute(array(':cid' => 1, ':pid1' => 1, ':pid2' => 2));
+
+		$campaign = 1;
+
+		$presences = Model_PresenceFactory::getPresencesByCampaign($campaign);
+
+		$this->assertEquals(2, count($presences));
+		$this->assertEquals('learnenglish', $presences[0]->getHandle());
+		$this->assertEquals('invalid', $presences[1]->getHandle());
+	}
+
+
 }
