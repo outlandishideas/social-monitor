@@ -20,7 +20,7 @@ abstract class NewModel_PresenceFactory
 		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `handle` = :handle AND `type` = :t");
 		$stmt->execute(array(':handle' => $handle, ':t' => $type));
 		$internals = $stmt->fetch(PDO::FETCH_ASSOC);
-		$type = new NewModel_PresenceType($internals['type']);
+		if (!$internals || count($internals) == 0) return null;
 		$provider = $type->getProvider(self::$db);
 		return new NewModel_Presence($internals, $provider);
 	}
