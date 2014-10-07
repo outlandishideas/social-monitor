@@ -1,6 +1,6 @@
 <?php
 
-class Model_PresenceType extends Model_Enum
+class NewModel_PresenceType extends NewModel_Enum
 {
 	const TWITTER 		= 'twitter';
 	const FACEBOOK 	= 'facebook';
@@ -9,13 +9,13 @@ class Model_PresenceType extends Model_Enum
 	public function getProvider(PDO $db) {
 		switch ($this->value) {
 			case self::SINA_WEIBO:
-				return new Model_SinaWeiboProvider($db);
+				return new NewModel_SinaWeiboProvider($db);
 				break;
 			case self::FACEBOOK:
-				return new Model_FacebookProvider($db);
+				return new NewModel_FacebookProvider($db);
 				break;
 			case self::TWITTER:
-				return new Model_TwitterProvider($db);
+				return new NewModel_TwitterProvider($db);
 				break;
 			default:
 				throw new \LogicException("Not implemented yet.");

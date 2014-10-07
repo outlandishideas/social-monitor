@@ -1,6 +1,6 @@
 <?php
 
-class Model_Presence_New
+class NewModel_Presence
 {
 	protected $provider;
 	protected $metrics;
@@ -8,7 +8,7 @@ class Model_Presence_New
 	protected $id;
 	protected $handle;
 
-	public function __construct(array $internals, Model_iProvider $provider, array $metrics = array())
+	public function __construct(array $internals, NewModel_iProvider $provider, array $metrics = array())
 	{
 		$this->provider = $provider;
 		$this->metrics = $metrics;

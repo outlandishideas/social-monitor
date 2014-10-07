@@ -2,7 +2,7 @@
 
 require_once(__DIR__.'/../../../lib/sina_weibo/sinaweibo.php');
 
-class Model_SinaWeiboProvider extends Model_iProvider
+class NewModel_SinaWeiboProvider extends NewModel_iProvider
 {
 	const BASEURL = 'http://www.weibo.com/';
 
@@ -18,13 +18,13 @@ class Model_SinaWeiboProvider extends Model_iProvider
 		}
 	}
 
-	public function fetchData(Model_Presence_New $presence)
+	public function fetchData(NewModel_Presence $presence)
 	{
 		return array();
 	}
 
 
-	public function getHistoricData(Model_Presence_New $presence, \DateTime $start, \DateTime $end)
+	public function getHistoricData(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
 	{
 		return null;
 	}
@@ -50,7 +50,7 @@ class Model_SinaWeiboProvider extends Model_iProvider
 		}
 
 		return array(
-			Model_PresenceType::SINA_WEIBO, //type
+			NewModel_PresenceType::SINA_WEIBO, //type
 			$handle, //handle
 			$ret['idstr'], //uid
 			$ret['profile_image_url'], //image_url

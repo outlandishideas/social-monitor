@@ -1,6 +1,6 @@
 <?php
 
-abstract class Model_iProvider
+abstract class NewModel_iProvider
 {
 	protected $db;
 	protected $tableName;
@@ -12,20 +12,20 @@ abstract class Model_iProvider
 
 	/**
 	 * Fetch data for a certain handle (twitter handle, facebook name, sina weibo name etc)
-	 * @param Model_Presence_New $presence  The handle to fetch data for
+	 * @param NewModel_Presence $presence  The handle to fetch data for
 	 * @return array         The normalized data
 	 * @uses findAndSaveLinks
 	 */
-	abstract public function fetchData(Model_Presence_New $presence);
+	abstract public function fetchData(NewModel_Presence $presence);
 
 	/**
 	 * Get all posts/tweets/streamdata for a specific presence between 2 dates
-	 * @param Model_Presence_New $presence  The presence to get the data for
+	 * @param NewModel_Presence $presence  The presence to get the data for
 	 * @param \DateTime $start      The first day to fetch the data for (inclusive)
 	 * @param \DateTime $end        The last day to fetch the data for (inclusive)
 	 * @return array   The historic streamdata
 	 */
-	abstract public function getHistoricData(Model_Presence_New $presence, \DateTime $start, \DateTime $end);
+	abstract public function getHistoricData(NewModel_Presence $presence, \DateTime $start, \DateTime $end);
 
 	/**
 	 * Find links in a single post/tweet/streamdatum and save them (and the corresponding domain)

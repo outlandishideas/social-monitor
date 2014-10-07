@@ -1,7 +1,7 @@
 <?php
 
 
-class Model_FacebookProvider extends Model_iProvider
+class NewModel_FacebookProvider extends NewModel_iProvider
 {
 	protected $connection = null;
 
@@ -11,13 +11,13 @@ class Model_FacebookProvider extends Model_iProvider
 		parent::__construct($db);
 	}
 
-	public function fetchData(Model_Presence_New $presence)
+	public function fetchData(NewModel_Presence $presence)
 	{
 		return array();
 	}
 
 
-	public function getHistoricData(Model_Presence_New $presence, \DateTime $start, \DateTime $end)
+	public function getHistoricData(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
 	{
 		return null;
 	}
@@ -31,7 +31,7 @@ class Model_FacebookProvider extends Model_iProvider
 	public function testHandle($handle) {
 		//test if user exists
 		return array(
-			Model_PresenceType::FACEBOOK, //type
+			NewModel_PresenceType::FACEBOOK, //type
 			$handle, //handle
 			"00000000", //uid
 			"http://", //image_url
