@@ -37,7 +37,8 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 			"http://", //image_url
 			"TwitterPresenceTest", //name
 			"http://", //page_url
-			0  //popularity
+			0, //popularity
+			gmdate('Y-m-d H:i:s') //last_updated
 		);
 	}
 }
