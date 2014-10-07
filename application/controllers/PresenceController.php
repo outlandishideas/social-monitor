@@ -10,7 +10,10 @@ class PresenceController extends GraphingController
 	 */
 	public function indexAction()
 	{
-		$presences = Model_Presence::populateOwners(Model_Presence::fetchAll());
+//		$presences = Model_Presence::populateOwners(Model_Presence::fetchAll());
+
+		NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
+		$presences = NewModel_PresenceFactory::getPresences();
 
         $this->view->title = 'Presences';
         $this->view->titleIcon = Model_Presence::ICON_TYPE;
@@ -26,7 +29,9 @@ class PresenceController extends GraphingController
 	public function viewAction()
 	{
 		/** @var Model_Presence $presence */
-		$presence = Model_Presence::fetchById($this->_request->id);
+		NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
+		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
+//		$presence = Model_Presence::fetchById($this->_request->id);
 		$this->validateData($presence);
 
 		$this->view->title = $presence->getLabel();
