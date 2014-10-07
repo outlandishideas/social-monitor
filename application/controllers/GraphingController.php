@@ -20,7 +20,7 @@ abstract class GraphingController extends BaseController {
 		);
 	}
 
-	protected function graphs(Model_Presence $presence) {
+	protected function graphs(NewModel_Presence $presence) {
 		$graphs = array();
 		$graphs[] = (object)array(
 			'metric' => Model_Presence::METRIC_POPULARITY_RATE,

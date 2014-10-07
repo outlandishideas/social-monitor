@@ -6,9 +6,12 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 	protected $connection = null;
 
 	protected $tableName = 'twitter_tweets';
+	protected $type = null;
+	protected $sign = "fa-facebook";
 
 	public function __construct(PDO $db) {
 		parent::__construct($db);
+		$this->type = NewModel_PresenceType::FACEBOOK();
 	}
 
 	public function fetchData(NewModel_Presence $presence)
