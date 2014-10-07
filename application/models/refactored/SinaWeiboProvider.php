@@ -36,6 +36,9 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 				$s['presence_id'] = $presence->getId();
 				$s['posted_by_presence'] = 1;
 				$this->parseStatus($s);
+				if ($s['user']) {
+					$ret['popularity'] = $s['user']['followers_count'];
+				}
 			}
 		} while (count($data['statuses']));
 		return $ret;
@@ -50,6 +53,8 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 	protected function parseStatus($status)
 	{
 		$id = $this->saveStatus($status);
+		$status['local_id'] = $id;
+		$this->findAndSaveLinks($status);
 		if (array_key_exists('retweeted_status', $status)) {
 			$s = $status['retweeted_status'];
 			NewModel_PresenceFactory::setDatabase($this->db);
@@ -87,9 +92,34 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		return $this->db->lastInsertId();
 	}
 
-	protected function findAndSaveLinks($streamdatum)
+	protected function findAndSaveLinks($status)
 	{
-		return 0;
+		$text = $status['text'];
+		$stmt = $this->db->prepare("INSERT INTO status_links (`type`, `status_id`, `url`, `domain`) VALUES (:type, :status_id, :url, :domain)");
+		$domainstmt = $this->db->prepare("INSERT IGNORE INTO domains (domain) VALUES (?)");
+		if (preg_match_all('@((https?://[\w\d-_]+(\.[\w\d-_]+)+(/[\w\d-_]+)*/?[^\s]*)|(^|\s)([\w\d-_]+(\.[\w\d-_]+){2,}(/[\w\d-_]+)*/?[^\s]*))(\s|$)@', $text, $matches, PREG_SET_ORDER)) {
+			foreach ($matches as $match) {
+				$fullurl = $match[0];
+				$finalPart = $match[4];
+				$finalStart = strpos($fullurl, $finalPart);
+				$url = substr($fullurl, 0, $finalStart + strlen($finalPart));
+				try {
+					$url = Util_Http::resolveUrl($url);
+				} catch (RuntimeException $e) {
+					continue; //something is wrong with this URL, so act like it isn't there
+				}
+				$domain = parse_url($url, PHP_URL_HOST);
+				$stmt->execute(array(
+					':type'			=> 'sina_weibo',
+					':status_id'	=> $status['local_id'],
+					':url'			=> $url,
+					':domain'		=> $domain
+				));
+				//insert domain (if not already exists)
+				$domainstmt->execute(array($domain));
+				$this->db->query("ALTER TABLE domains AUTO_INCREMENT=1"); //reset auto_increment because insert ignore will increment the auto_increment value even when no rows are inserted.
+			}
+		}
 	}
 
 	public function testHandle($handle) {
