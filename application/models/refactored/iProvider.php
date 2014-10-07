@@ -12,20 +12,20 @@ abstract class Model_iProvider
 
 	/**
 	 * Fetch data for a certain handle (twitter handle, facebook name, sina weibo name etc)
-	 * @param mixed $handle  The handle to fetch data for
+	 * @param Model_Presence_New $presence  The handle to fetch data for
 	 * @return array         The normalized data
 	 * @uses findAndSaveLinks
 	 */
-	abstract public function fetchData(Model_Presence $presence);
+	abstract public function fetchData(Model_Presence_New $presence);
 
 	/**
 	 * Get all posts/tweets/streamdata for a specific presence between 2 dates
-	 * @param iPresence $presence  The presence to get the data for
-	 * @param DateTime $start      The first day to fetch the data for (inclusive)
-	 * @param DataTime $end        The last day to fetch the data for (inclusive)
+	 * @param Model_Presence_New $presence  The presence to get the data for
+	 * @param \DateTime $start      The first day to fetch the data for (inclusive)
+	 * @param \DateTime $end        The last day to fetch the data for (inclusive)
 	 * @return array   The historic streamdata
 	 */
-	abstract public function getHistoricData(Model_Presence $presence, \DateTime $start, \DateTime $end);
+	abstract public function getHistoricData(Model_Presence_New $presence, \DateTime $start, \DateTime $end);
 
 	/**
 	 * Find links in a single post/tweet/streamdatum and save them (and the corresponding domain)

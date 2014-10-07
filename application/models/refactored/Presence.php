@@ -1,6 +1,6 @@
 <?php
 
-class Model_Presence
+class Model_Presence_New
 {
 	protected $provider;
 	protected $metrics;

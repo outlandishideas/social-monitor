@@ -11,13 +11,13 @@ class Model_FacebookProvider extends Model_iProvider
 		parent::__construct($db);
 	}
 
-	public function fetchData(Model_Presence $presence)
+	public function fetchData(Model_Presence_New $presence)
 	{
 		return array();
 	}
 
 
-	public function getHistoricData(Model_Presence $presence, \DateTime $start, \DateTime $end)
+	public function getHistoricData(Model_Presence_New $presence, \DateTime $start, \DateTime $end)
 	{
 		return null;
 	}

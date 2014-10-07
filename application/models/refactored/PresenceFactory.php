@@ -12,7 +12,7 @@ abstract class Model_PresenceFactory
 		$internals = $stmt->fetch(PDO::FETCH_ASSOC);
 		$type = new Model_PresenceType($internals['type']);
 		$provider = $type->getProvider(self::$db);
-		return new Model_Presence($internals, $provider);
+		return new Model_Presence_New($internals, $provider);
 	}
 
 	public static function getPresenceByHandle($handle, Model_PresenceType $type)
@@ -22,7 +22,7 @@ abstract class Model_PresenceFactory
 		$internals = $stmt->fetch(PDO::FETCH_ASSOC);
 		$type = new Model_PresenceType($internals['type']);
 		$provider = $type->getProvider(self::$db);
-		return new Model_Presence($internals, $provider);
+		return new Model_Presence_New($internals, $provider);
 	}
 
 	public static function getPresencesByType(Model_PresenceType $type)
@@ -34,7 +34,7 @@ abstract class Model_PresenceFactory
 		$presences = array_map(function($internals){
 			$type = new Model_PresenceType($internals['type']);
 			$provider = $type->getProvider(self::$db);
-			return new Model_Presence($internals, $provider);
+			return new Model_Presence_New($internals, $provider);
 		}, $results);
 
 		return $presences;
@@ -50,7 +50,7 @@ abstract class Model_PresenceFactory
 		$presences = array_map(function($internals){
 			$type = new Model_PresenceType($internals['type']);
 			$provider = $type->getProvider(self::$db);
-			return new Model_Presence($internals, $provider);
+			return new Model_Presence_New($internals, $provider);
 		}, $results);
 
 		return $presences;
