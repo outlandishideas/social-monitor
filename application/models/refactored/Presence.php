@@ -162,4 +162,9 @@ class NewModel_Presence
 	public function getHistoricData(\DateTime $start, \DateTime $end) {
 		return $this->provider->getHistoricData($this, $start, $end);
 	}
+
+	public function update() {
+		$data = $this->provider->fetchData($this);
+
+	}
 }
