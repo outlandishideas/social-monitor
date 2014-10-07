@@ -15,10 +15,10 @@ abstract class Model_PresenceFactory
 		return new Model_Presence($internals, $provider);
 	}
 
-	public static function getPresenceByHandle($handle)
+	public static function getPresenceByHandle($handle, Model_PresenceType $type)
 	{
-		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `handle` = :handle");
-		$stmt->execute(array(':handle' => $handle));
+		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `handle` = :handle AND `type` = :t");
+		$stmt->execute(array(':handle' => $handle, ':t' => $type));
 		$internals = $stmt->fetch(PDO::FETCH_ASSOC);
 		$type = new Model_PresenceType($internals['type']);
 		$provider = $type->getProvider(self::$db);

@@ -21,6 +21,7 @@ class Model_Presence
 		}
 		$this->id = $internals['id'];
 		$this->handle = $internals['handle'];
+		$this->type = $internals['type'];
 	}
 
 	public function getId()
@@ -31,6 +32,11 @@ class Model_Presence
 	public function getHandle()
 	{
 		return $this->handle;
+	}
+
+	public function getType()
+	{
+		return $this->type;
 	}
 
 	public function getHistoricData(\DateTime $start, \DateTime $end) {

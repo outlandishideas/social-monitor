@@ -78,9 +78,21 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
     public function testFetchPresenceByHandleHasCorrectHandle()
     {
     	Model_PresenceFactory::createNewPresence(Model_PresenceType::SINA_WEIBO(), 'learnenglish', false, false);
-    	$presence = Model_PresenceFactory::getPresenceByHandle('learnenglish');
+    	$presence = Model_PresenceFactory::getPresenceByHandle('learnenglish', Model_PresenceType::SINA_WEIBO());
     	$this->assertEquals('learnenglish', $presence->getHandle());
     }
+
+	/**
+	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 */
+	public function testFetchPresenceByHandleReturnsCorrectPresenceWhenMultipleExist()
+	{
+		Model_PresenceFactory::createNewPresence(Model_PresenceType::FACEBOOK(), 'learnenglish', false, false);
+		Model_PresenceFactory::createNewPresence(Model_PresenceType::SINA_WEIBO(), 'learnenglish', false, false);
+		$presence = Model_PresenceFactory::getPresenceByHandle('learnenglish', Model_PresenceType::SINA_WEIBO());
+		$this->assertEquals('learnenglish', $presence->getHandle());
+		$this->assertEquals(Model_PresenceType::SINA_WEIBO, $presence->getType());
+	}
 
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
