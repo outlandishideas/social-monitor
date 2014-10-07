@@ -1,30 +1,70 @@
 <?php
 
-abstract class Model_PresenceFactory
+abstract class NewModel_PresenceFactory
 {
 
 	protected static $db;
 
 	public static function getPresenceById($id)
-	{}
-
-	public static function getPresenceByHandle($handle)
 	{
-		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `handle` = :handle");
-		$stmt->execute(array(':handle' => $handle));
+		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `id` = :id");
+		$stmt->execute(array(':id' => $id));
 		$internals = $stmt->fetch(PDO::FETCH_ASSOC);
-		$type = new Model_PresenceType($internals['type']);
+		$type = new NewModel_PresenceType($internals['type']);
 		$provider = $type->getProvider(self::$db);
-		return new Model_Presence($internals, $provider);
+		return new NewModel_Presence($internals, $provider);
 	}
 
-	public static function getPresencesByType(Model_PresenceType $type)
-	{}
+	public static function getPresenceByHandle($handle, NewModel_PresenceType $type)
+	{
+		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `handle` = :handle AND `type` = :t");
+		$stmt->execute(array(':handle' => $handle, ':t' => $type));
+		$internals = $stmt->fetch(PDO::FETCH_ASSOC);
+		$type = new NewModel_PresenceType($internals['type']);
+		$provider = $type->getProvider(self::$db);
+		return new NewModel_Presence($internals, $provider);
+	}
 
-	public static function getPresencesByCampaign(Model_Campaign $campaign)
-	{}
+	public static function getPresencesByType(NewModel_PresenceType $type)
+	{
+		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `type` = :type");
+		$stmt->execute(array(':type' => $type));
+		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-	public static function createNewPresence(Model_PresenceType $type, $handle, $signed_off, $branding)
+		$presences = array_map(function($internals){
+			$type = new NewModel_PresenceType($internals['type']);
+			$provider = $type->getProvider(self::$db);
+			return new NewModel_Presence($internals, $provider);
+		}, $results);
+
+		return $presences;
+	}
+
+	public static function getPresencesById(array $ids)
+	{
+		$inQuery = implode(',', array_fill(0, count($ids), '?'));
+		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `id` IN ({$inQuery})");
+		$stmt->execute($ids);
+		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		$presences = array_map(function($internals){
+			$type = new NewModel_PresenceType($internals['type']);
+			$provider = $type->getProvider(self::$db);
+			return new NewModel_Presence($internals, $provider);
+		}, $results);
+
+		return $presences;
+	}
+
+	public static function getPresencesByCampaign($campaign)
+	{
+		$stmt = self::$db->prepare("SELECT presence_id FROM `campaign_presences` WHERE `campaign_id` = :cid");
+		$stmt->execute(array(":cid" => $campaign));
+		$presence_ids = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+		return self::getPresencesById($presence_ids);
+	}
+
+	public static function createNewPresence(NewModel_PresenceType $type, $handle, $signed_off, $branding)
 	{
 		$signed_off = !!$signed_off;
 		$branding = !!$branding;

@@ -1,6 +1,6 @@
 <?php
 
-class Model_Presence
+class NewModel_Presence
 {
 	protected $provider;
 	protected $metrics;
@@ -8,7 +8,7 @@ class Model_Presence
 	protected $id;
 	protected $handle;
 
-	public function __construct(array $internals, Model_iProvider $provider, array $metrics = array())
+	public function __construct(array $internals, NewModel_iProvider $provider, array $metrics = array())
 	{
 		$this->provider = $provider;
 		$this->metrics = $metrics;
@@ -21,6 +21,7 @@ class Model_Presence
 		}
 		$this->id = $internals['id'];
 		$this->handle = $internals['handle'];
+		$this->type = $internals['type'];
 	}
 
 	public function getId()
@@ -31,6 +32,11 @@ class Model_Presence
 	public function getHandle()
 	{
 		return $this->handle;
+	}
+
+	public function getType()
+	{
+		return $this->type;
 	}
 
 	public function getHistoricData(\DateTime $start, \DateTime $end) {
