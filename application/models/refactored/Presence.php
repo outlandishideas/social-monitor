@@ -5,8 +5,10 @@ class NewModel_Presence
 	protected $provider;
 	protected $metrics;
 
-	protected $id;
-	protected $handle;
+	//these should be public to mimic existing Presence Class
+	public $id;
+	public $handle;
+	public $type;
 
 	public function __construct(array $internals, NewModel_iProvider $provider, array $metrics = array())
 	{
