@@ -77,7 +77,10 @@ abstract class NewModel_PresenceFactory
 			return false;
 		} else {
 			//insert presence
-			$stmt = self::$db->prepare("INSERT INTO `presences` (`type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `sign_off`, `branding`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			$stmt = self::$db->prepare("
+				INSERT INTO `presences`
+				(`type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `last_updated`, `sign_off`, `branding`)
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			$args[] = $signed_off ? 1 : 0;
 			$args[] = $branding ? 1 : 0;
 			return $stmt->execute($args);

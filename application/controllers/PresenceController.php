@@ -126,8 +126,18 @@ class PresenceController extends GraphingController
 					$handle = $this->_request->handle;
 					$signOff = $this->_request->sign_off;
 					$branding = $this->_request->branding;
+
 					NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
-					NewModel_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
+
+					try {
+						NewModel_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
+					} catch (Exception $ex) {
+						if (strpos($ex->getMessage(), '23000') !== false) {
+							$errorMessages[] = 'Presence already exists';
+						} else {
+							$errorMessages[] = $ex->getMessage();
+						}
+					}
 					$presence = NewModel_PresenceFactory::getPresenceByHandle($handle, $type);
 				}
 
