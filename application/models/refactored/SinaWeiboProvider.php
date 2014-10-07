@@ -112,7 +112,8 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 			$ret['profile_image_url'], //image_url
 			$ret['name'], //name
 			self::BASEURL.$ret['profile_url'], //page_url
-			$ret['followers_count']  //popularity
+			$ret['followers_count'],  //popularity
+			gmdate('Y-m-d H:i:s') //last_updated
 		);
 	}
 }

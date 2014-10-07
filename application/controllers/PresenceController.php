@@ -98,6 +98,9 @@ class PresenceController extends GraphingController
 	{
 		if ($this->_request->action == 'edit') {
 			$presence = Model_Presence::fetchById($this->_request->id);
+			if($this->_request->type == NewModel_PresenceType::SINA_WEIBO){
+				$presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
+			}
             $this->view->showButtons = true;
 		} else {
 			$presence = new Model_Presence();
@@ -107,7 +110,6 @@ class PresenceController extends GraphingController
 		$this->validateData($presence);
 
 		if ($this->_request->isPost()) {
-			$presence->fromArray($this->_request->getParams());
 
 			$errorMessages = array();
 			if (empty($this->_request->type)) {
@@ -117,21 +119,49 @@ class PresenceController extends GraphingController
 				$errorMessages[] = 'Please enter a handle';
 			}
 
-			if (!$errorMessages) {
-				try {
-					$presence->updateInfo();
-					$presence->last_updated = gmdate('Y-m-d H:i:s');
-					$presence->save();
+			$type = NewModel_PresenceType::{$this->_request->type}();
+			if($type == NewModel_PresenceType::SINA_WEIBO){
 
-					$this->_helper->FlashMessenger(array('info' => 'Presence saved'));
-					$this->_helper->redirector->gotoSimple('index');
-				} catch (Exception $ex) {
-					if (strpos($ex->getMessage(), '23000') !== false) {
-						$errorMessages[] = 'Presence already exists';
-					} else {
-						$errorMessages[] = $ex->getMessage();
+				if($presence instanceof Model_Presence){
+					$handle = $this->_request->handle;
+					$signOff = $this->_request->sign_off;
+					$branding = $this->_request->branding;
+
+					NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
+
+					try {
+						NewModel_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
+					} catch (Exception $ex) {
+						if (strpos($ex->getMessage(), '23000') !== false) {
+							$errorMessages[] = 'Presence already exists';
+						} else {
+							$errorMessages[] = $ex->getMessage();
+						}
+					}
+					$presence = NewModel_PresenceFactory::getPresenceByHandle($handle, $type);
+				}
+
+			} else {
+
+				$presence->fromArray($this->_request->getParams());
+
+				if (!$errorMessages) {
+					try {
+						$presence->updateInfo();
+						$presence->last_updated = gmdate('Y-m-d H:i:s');
+						$presence->save();
+
+						$this->_helper->FlashMessenger(array('info' => 'Presence saved'));
+						$this->_helper->redirector->gotoSimple('index');
+					} catch (Exception $ex) {
+						if (strpos($ex->getMessage(), '23000') !== false) {
+							$errorMessages[] = 'Presence already exists';
+						} else {
+							$errorMessages[] = $ex->getMessage();
+						}
 					}
 				}
+
 			}
 
 			if ($errorMessages) {
@@ -144,7 +174,7 @@ class PresenceController extends GraphingController
 		}
 
         $this->view->editType = false;
-		$this->view->types = array(Model_Presence::TYPE_TWITTER=>'Twitter', Model_Presence::TYPE_FACEBOOK=>'Facebook');
+		$this->view->types = NewModel_PresenceType::toArray();
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->groups = Model_Group::fetchAll();
 		$this->view->presence = $presence;
