@@ -49,7 +49,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 
 	protected function parseStatus($status)
 	{
-		$this->saveStatus($status);
+		$id = $this->saveStatus($status);
 		if (array_key_exists('retweeted_status', $status)) {
 			$s = $status['retweeted_status'];
 			NewModel_PresenceFactory::setDatabase($this->db);
@@ -84,6 +84,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 			':attitude_count'			=> $status['attitudes_count']
 		);
 		$stmt->execute($args);
+		return $this->db->lastInsertId();
 	}
 
 	protected function findAndSaveLinks($streamdatum)

@@ -20,3 +20,5 @@ CREATE TABLE `sina_weibo_posts` (
   KEY `presence_id` (`presence_id`),
   KEY `included_retweet` (`included_retweet`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+ALTER TABLE  `status_links` CHANGE  `type`  `type` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
