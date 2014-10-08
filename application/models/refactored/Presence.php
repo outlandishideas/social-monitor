@@ -5,6 +5,7 @@ class NewModel_Presence
 	protected $provider;
 	protected $db;
 	protected $metrics;
+	protected $kpiData = array();
 
 	//these should be public to mimic existing Presence Class
 	public $id;
@@ -141,7 +142,7 @@ class NewModel_Presence
 			$presence = Model_Presence::fetchById($this->getId());
 			return $presence->getTargetAudience();
 		}
-		$target = 0;
+		$target = null;
 		$owner = $this->getOwner();
 		if($owner){
 			$target = $owner->getTargetAudience();
@@ -151,12 +152,105 @@ class NewModel_Presence
 		return $target;
 	}
 
-	public function getKpiData()
+
+	/**
+	 * Gets the date at which the target audience size will be reached, based on the trend over the given time period.
+	 * If the target is already reached, or there is no target, this will return null.
+	 * If any of these conditions are met, this will return the maximum date possible:
+	 * - popularity has never varied
+	 * - the calculated date is in the past
+	 * - there are fewer than 2 data points
+	 * - the calculated date would be too far in the future (32-bit date problem)
+	 * @param DateTime $start
+	 * @param DateTime $end
+	 * @return null|DateTime
+	 */
+	public function getTargetAudienceDate(DateTime $start, DateTime $end)
+	{
+		$date = null; //the return value
+
+		$target = $this->getTargetAudience();
+		$popularity = $this->getPopularity();
+		if(is_numeric($target) && $target > 0 && $popularity < $target) {
+
+			$data = $this->getHistoricData($start, $end);
+
+			//remove any non-popularity values
+			$cleanData = array_filter($data, function($row){
+				return $row['type'] == 'popularity';
+			});
+
+			$count = count($cleanData);
+
+			if ($count > 1) {
+				// calculate line of best fit (see http://www.endmemo.com/statistics/lr.php)
+				$meanX = $meanY = $sumXY = $sumXX = 0;
+
+				foreach ($data as $row) {
+					$row->datetime = strtotime($row->datetime);
+					$meanX += $row->datetime;
+					$meanY += $row->value;
+					$sumXY += $row->datetime*$row->value;
+					$sumXX += $row->datetime*$row->datetime;
+				}
+
+				$meanX /= $count;
+				$meanY /= $count;
+
+				$a = ($sumXY - $count*$meanX*$meanY)/($sumXX - $count*$meanX*$meanX);
+				$b = $meanY - $a*$meanX;
+
+				if ($a > 0) {
+					$timestamp = ($target - $b)/$a;
+					if ($timestamp < PHP_INT_MAX) {
+
+						//we've been having some difficulties with DateTime and
+						//large numbers. Try to run a DateTime construct to see if it works
+						//if not nullify $date so that we can create a DateTime from PHP_INI_MAX
+						try {
+							$date = new DateTime($timestamp);
+						} catch (Exception $e) {
+							$date = null;
+						}
+
+					}
+				}
+			}
+
+			if (!($date instanceof DateTime) || $date->getTimestamp() < time()) {
+				$date = new DateTime(PHP_INT_MAX);
+			}
+		}
+		return $date;
+	}
+
+	public function getKpiData($startDate = null, $endDate = null, $useCache = true)
 	{
 		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
 			$presence = Model_Presence::fetchById($this->getId());
-			return $presence->getKpiData();
+			return $presence->getKpiData($startDate, $startDate, $useCache);
 		}
+
+		if (!$startDate || !$endDate) {
+			$endDate = new DateTime();
+			$startDate = clone $endDate;
+			$startDate->sub(DateInterval::createFromDateString('1 month'));
+		}
+
+		$endDateString = $endDate->format('Y-m-d');
+		$startDateString = $startDate->format('Y-m-d');
+		$key = $startDateString . $endDateString;
+
+		if(array_key_exists($key, $this->kpiData)){
+			return $this->kpiData[$key];
+		}
+
+		$cachedValues = array();
+		if ($useCache) {
+			$cachedValues = $this->getCachedKpiData($startDateString, $endDateString);
+		}
+
+
 		throw new \LogicException("Not implemented yet.");
 	}
 
@@ -182,5 +276,16 @@ class NewModel_Presence
 				':popularity'	=> $data['popularity']
 			));
 		}
+	}
+
+	public function saveMetric($metric, DateTime $start, DateTime $end, $value){
+		$stmt = $this->db->prepare("INSERT INTO `kpi_cache` (`presence_id`, `metric`, `start_date`, `end_date`, `value`) VALUES(?,?,?,?,?)");
+		$stmt->execute(array(
+			$this->getId(),
+			$metric,
+			$start->format("Y-m-d"),
+			$end->format("Y-m-d"),
+			$value
+		));
 	}
 }
