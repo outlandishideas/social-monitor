@@ -17,7 +17,7 @@ class Metric_ActionsPerDay {
 
         $target = BaseController::getOption('updates_per_day');
         $actual = array_reduce($data, function($actions, $row){
-            return $actions + $row['actions_per_day'];
+            return $actions + $row['number_of_actions'];
         }, 0) / count($data);
 
         return min(100, $actual / $target * 100);
