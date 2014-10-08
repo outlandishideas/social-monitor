@@ -17,10 +17,11 @@ class Metric_PopularityTime {
         $estimate = $presence->getTargetAudienceDate($start, $end);
         $diff = $estimate->diff(new DateTime());
 
-        $targetMonths = BaseController::getOption('achieve_audience_good');
+//        $targetMonths = BaseController::getOption('achieve_audience_good');
         $actualMonths = $diff->y*12 + $diff->m;
 
-        return min(100, $actualMonths / $targetMonths * 100);
+//        return min(100, $actualMonths / $targetMonths * 100);
+        return $actualMonths;
     }
 
 }

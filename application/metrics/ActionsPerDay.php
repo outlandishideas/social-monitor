@@ -15,12 +15,13 @@ class Metric_ActionsPerDay {
     protected function doCalculations(NewModel_Presence $presence, DateTime $start, DateTime $end){
         $data = $presence->getHistoricStreamMeta($start, $end);
 
-        $target = BaseController::getOption('updates_per_day');
+//        $target = BaseController::getOption('updates_per_day');
         $actual = array_reduce($data, function($actions, $row){
             return $actions + $row['number_of_actions'];
         }, 0) / count($data);
-
-        return min(100, $actual / $target * 100);
+//
+//        return min(100, $actual / $target * 100);
+        return $actual;
 
     }
 

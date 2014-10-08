@@ -13,7 +13,8 @@ class Metric_SignOff {
      * @return int
      */
     protected function doCalculations(NewModel_Presence $presence, DateTime $start, DateTime $end){
-        return $presence->getSignOff() == 1 ? 100 : 0;
+//        return $presence->getSignOff() == 1 ? 100 : 0;
+        return $presence->getSignOff();
     }
 
 }

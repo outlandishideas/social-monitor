@@ -41,7 +41,8 @@ class Metric_Relevance {
 
         $actual = $totals['bc_links'] / count($data);
 
-        return min(100, $actual / $target * 100);
+//        return min(100, $actual / $target * 100);
+        return $actual;
 
     }
 
