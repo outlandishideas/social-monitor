@@ -2,8 +2,8 @@
 
 abstract class Metric_Abstract {
 
-    protected $name;
-    protected $title;
+    protected static $name;
+    protected static $title;
 
     /**
      * Calculate a given metric for the passed presence within the $start and $end
@@ -14,8 +14,8 @@ abstract class Metric_Abstract {
      */
     public function calculate(NewModel_Presence $presence, DateTime $start, DateTime $end)
     {
-        $result = self::doCalculations($presence, $start, $end);
-        $presence->saveMetric($this->getName(), $start, $end, $result);
+        $result = static::doCalculations($presence, $start, $end);
+        $presence->saveMetric(static::getName(), $start, $end, $result);
         return $result;
     }
 
@@ -28,13 +28,13 @@ abstract class Metric_Abstract {
      */
     abstract protected function doCalculations(NewModel_Presence $presence, DateTime $start, DateTime $end);
 
-    public function getName()
+    public static function getName()
     {
-        return $this->name;
+        return static::$name;
     }
-    public function getTitle()
+    public static function getTitle()
     {
-        return $this->name;
+        return static::$title;
     }
 
 }

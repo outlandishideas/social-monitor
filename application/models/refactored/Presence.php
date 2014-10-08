@@ -53,6 +53,14 @@ class NewModel_Presence
 		return $this->id;
 	}
 
+	/**
+	 * @return Metric_Abstract[]
+	 */
+	public function getMetrics()
+	{
+		return $this->metrics;
+	}
+
 	public function getHandle()
 	{
 		return $this->handle;
@@ -224,38 +232,77 @@ class NewModel_Presence
 		return $date;
 	}
 
-	public function getKpiData($startDate = null, $endDate = null, $useCache = true)
+	public function getKpiData(DateTime $start = null, DateTime $end = null, $useCache = true)
 	{
 		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
 			$presence = Model_Presence::fetchById($this->getId());
-			return $presence->getKpiData($startDate, $startDate, $useCache);
+			return $presence->getKpiData($start, $end, $useCache);
 		}
 
-		if (!$startDate || !$endDate) {
-			$endDate = new DateTime();
-			$startDate = clone $endDate;
-			$startDate->sub(DateInterval::createFromDateString('1 month'));
+		if (!$start || !$end) {
+			$end = new DateTime();
+			$start = clone $end;
+			$start->sub(DateInterval::createFromDateString('1 month'));
 		}
 
-		$endDateString = $endDate->format('Y-m-d');
-		$startDateString = $startDate->format('Y-m-d');
-		$key = $startDateString . $endDateString;
+		$endString = $end->format('Y-m-d');
+		$startString = $start->format('Y-m-d');
+		$key = $startString . $endString;
 
-		if(array_key_exists($key, $this->kpiData)){
-			return $this->kpiData[$key];
+		if(!array_key_exists($key, $this->kpiData)){
+
+			$cachedValues = array();
+			if ($useCache) {
+				$cachedValues = $this->getCachedKpiData($start, $end);
+			}
+
+			foreach($this->getMetrics() as $metric){
+				if(!array_key_exists($metric->getName(), $cachedValues)){
+					$cachedValues[$metric->getName()] = $metric->calculate($this, $start, $end);
+				}
+			}
+
+			$this->updateKpiData($key, $cachedValues);
 		}
 
-		$cachedValues = array();
-		if ($useCache) {
-			$cachedValues = $this->getCachedKpiData($startDateString, $endDateString);
+		return $this->kpiData[$key];
+	}
+
+	public function getCachedKpiData(DateTime $start, DateTime $end)
+	{
+		$kpis = array();
+		$stmt = $this->db->prepare(
+			"SELECT * FROM `kpi_cache`
+				WHERE `presence_id` = :pid
+				AND `start_date` = :start
+				AND `end_date` = :end");
+		$stmt->execute(array(
+			':pid' => $this->getId(),
+			':start' => $start->format("Y-m-d"),
+			':end' => $end->format("Y-m-d")
+		));
+		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		foreach($results as $row){
+			$kpis[$row['metric']] = $row['value'];
 		}
+		return $kpis;
+	}
 
-
-		throw new \LogicException("Not implemented yet.");
+	public function updateKpiData($key, $value)
+	{
+		$this->kpiData[$key] = $value;
 	}
 
 	public function getHistoricData(\DateTime $start, \DateTime $end) {
 		return $this->provider->getHistoricData($this, $start, $end);
+	}
+
+	public function getHistoricStream(\DateTime $start, \DateTime $end) {
+		return $this->provider->getHistoricStream($this, $start, $end);
+	}
+
+	public function getHistoricStreamMeta(\DateTime $start, \DateTime $end) {
+		return $this->provider->getHistoricStreamMeta($this, $start, $end);
 	}
 
 	public function update() {

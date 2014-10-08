@@ -33,7 +33,8 @@ abstract class NewModel_PresenceFactory
 			if($internals != false) {
 				$type = new NewModel_PresenceType($internals['type']);
 				$provider = $type->getProvider(self::$db);
-				return new NewModel_Presence(self::$db, $internals, $provider);
+				$metrics = $type->getMetrics();
+				return new NewModel_Presence(self::$db, $internals, $provider, $metrics);
 			} else {
 				return null;
 			}
@@ -51,7 +52,8 @@ abstract class NewModel_PresenceFactory
 		if($internals != false) {
 			$type = new NewModel_PresenceType($internals['type']);
 			$provider = $type->getProvider(self::$db);
-			return new NewModel_Presence(self::$db, $internals, $provider);
+			$metrics = $type->getMetrics();
+			return new NewModel_Presence(self::$db, $internals, $provider, $metrics);
 		} else {
 			return null;
 		}
@@ -65,7 +67,8 @@ abstract class NewModel_PresenceFactory
 
 		if($internals != false) {
 			$provider = $type->getProvider(self::$db);
-			return new NewModel_Presence(self::$db, $internals, $provider);
+			$metrics = $type->getMetrics();
+			return new NewModel_Presence(self::$db, $internals, $provider, $metrics);
 		} else {
 			return null;
 		}
@@ -92,7 +95,8 @@ abstract class NewModel_PresenceFactory
 			if($internals != false) {
 				$type = new NewModel_PresenceType($internals['type']);
 				$provider = $type->getProvider(self::$db);
-				return new NewModel_Presence(self::$db, $internals, $provider);
+				$metrics = $type->getMetrics();
+				return new NewModel_Presence(self::$db, $internals, $provider, $metrics);
 			} else {
 				return null;
 			}
@@ -123,7 +127,8 @@ abstract class NewModel_PresenceFactory
 			if($internals != false) {
 				$type = new NewModel_PresenceType($internals['type']);
 				$provider = $type->getProvider(self::$db);
-				return new NewModel_Presence(self::$db, $internals, $provider);
+				$metrics = $type->getMetrics();
+				return new NewModel_Presence(self::$db, $internals, $provider, $metrics);
 			} else {
 				return null;
 			}
@@ -153,7 +158,8 @@ abstract class NewModel_PresenceFactory
 			if($internals != false) {
 				$type = new NewModel_PresenceType($internals['type']);
 				$provider = $type->getProvider(self::$db);
-				return new NewModel_Presence(self::$db, $internals, $provider);
+				$metrics = $type->getMetrics();
+				return new NewModel_Presence(self::$db, $internals, $provider, $metrics);
 			} else {
 				return null;
 			}

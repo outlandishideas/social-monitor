@@ -1,9 +1,9 @@
 <?php
 
-class Metric_SignOff {
+class Metric_SignOff extends Metric_Abstract {
 
-    protected $name = "sign_off";
-    protected $title = "Signed Off";
+    protected static $name = "sign_off";
+    protected static $title = "Signed Off";
 
     /**
      * Returns 100 if presence has been signed off, else returns 0

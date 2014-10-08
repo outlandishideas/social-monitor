@@ -1,9 +1,9 @@
 <?php
 
-class Metric_ActionsPerDay {
+class Metric_ActionsPerDay extends Metric_Abstract {
 
-    protected $name = "posts_per_day";
-    protected $title = "Actions Per Day";
+    protected static $name = "posts_per_day";
+    protected static $title = "Actions Per Day";
 
     /**
      * Returns score depending on number of actions per day against target

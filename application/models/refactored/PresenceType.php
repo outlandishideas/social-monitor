@@ -21,4 +21,42 @@ class NewModel_PresenceType extends NewModel_Enum
 				throw new \LogicException("Not implemented yet.");
 		}
 	}
+
+	public function getMetrics()
+	{
+		switch ($this->value) {
+			case self::SINA_WEIBO:
+				return array(
+					Metric_Factory::getMetric(Metric_Popularity::getName()),
+					Metric_Factory::getMetric(Metric_PopularityTime::getName()),
+					Metric_Factory::getMetric(Metric_SignOff::getName()),
+					Metric_Factory::getMetric(Metric_Branding::getName()),
+					Metric_Factory::getMetric(Metric_Relevance::getName()),
+					Metric_Factory::getMetric(Metric_ActionsPerDay::getName())
+				);
+				break;
+			case self::FACEBOOK:
+				return array(
+					Metric_Factory::getMetric(Metric_Popularity::getName()),
+					Metric_Factory::getMetric(Metric_PopularityTime::getName()),
+					Metric_Factory::getMetric(Metric_SignOff::getName()),
+					Metric_Factory::getMetric(Metric_Branding::getName()),
+					Metric_Factory::getMetric(Metric_Relevance::getName()),
+					Metric_Factory::getMetric(Metric_ActionsPerDay::getName())
+				);
+				break;
+			case self::TWITTER:
+				return array(
+					Metric_Factory::getMetric(Metric_Popularity::getName()),
+					Metric_Factory::getMetric(Metric_PopularityTime::getName()),
+					Metric_Factory::getMetric(Metric_SignOff::getName()),
+					Metric_Factory::getMetric(Metric_Branding::getName()),
+					Metric_Factory::getMetric(Metric_Relevance::getName()),
+					Metric_Factory::getMetric(Metric_ActionsPerDay::getName())
+				);
+				break;
+			default:
+				throw new \LogicException("Not implemented yet.");
+		}
+	}
 }

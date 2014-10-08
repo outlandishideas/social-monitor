@@ -1,9 +1,9 @@
 <?php
 
-class Metric_Popularity {
+class Metric_Popularity extends Metric_Abstract {
 
-    protected $name = "popularity";
-    protected $title = "Popularity";
+    static protected $name = "popularity";
+    static protected $title = "Popularity";
 
     /**
      * Calculates the average percentage of target popularity from a range of popularity values
