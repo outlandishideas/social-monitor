@@ -81,6 +81,55 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		return count($ret) ? $ret : null;
 	}
 
+	public function getHistoricStreamMeta(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+	{
+		$stmt = $this->db->prepare("
+			SELECT
+				posts.date AS date,
+				posts.number_of_posts AS number_of_actions,
+				links.number_of_links,
+				links.number_of_bc_links
+			FROM
+				(
+					SELECT
+						DATE_FORMAT(created_at, '%Y-%m-%d') AS `date`,
+						COUNT(*) AS `number_of_posts`
+					FROM
+						{$this->tableName}
+					WHERE
+						created_at >= :start
+						AND created_at <= :end
+						AND presence_id = :id
+					GROUP BY
+						DATE_FORMAT(created_at, '%Y-%m-%d')
+				) AS posts
+				LEFT JOIN (
+					SELECT
+						DATE_FORMAT(p.created_at, '%Y-%m-%d') AS `date`,
+						COUNT(sl.id) AS `number_of_links`,
+						SUM(d.is_bc) AS `number_of_bc_links`
+					FROM
+						{$this->tableName} AS p
+						LEFT JOIN status_links AS sl ON (p.id = sl.status_id AND sl.type = 'sina_weibo')
+						LEFT JOIN domains AS d ON (sl.domain = d.domain)
+					WHERE
+						p.created_at >= :start
+						AND p.created_at <= :end
+						AND p.presence_id = :id
+					GROUP BY
+						DATE_FORMAT(p.created_at, '%Y-%m-%d')
+				) AS links ON (posts.date = links.date)
+			ORDER BY
+				`date`
+		");
+		$stmt->execute(array(
+			':id'		=> $presence->getId(),
+			':start'	=> $start->format('Y-m-d H:i:s'),
+			':end'	=> $end->format('Y-m-d H:i:s')
+		));
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
 	protected function parseStatus($status)
 	{
 		$id = $this->saveStatus($status);
