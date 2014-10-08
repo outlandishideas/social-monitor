@@ -129,6 +129,7 @@ class NewModel_Presence
 			$stmt->execute(array(':pid'=>$this->getId()));
 			$campaignId = $stmt->fetchColumn(0);
 			if($campaignId === false) return null;
+			Model_Base::setDb($this->db);
 			$this->owner = Model_Campaign::fetchById($campaignId);
 		}
 		return $this->owner;

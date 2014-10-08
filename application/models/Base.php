@@ -11,13 +11,22 @@ abstract class Model_Base
 	/**
 	 * @var PDO
 	 */
+	protected static $db;
+
+	/**
+	 * @var PDO
+	 */
 	protected $_db;
 
 	protected $_row, $_isNew;
 	
 	public function __construct($data = null, $fromDb = false)
 	{
-		$this->_db = Zend_Registry::get('db')->getConnection();
+		if(empty(self::$db)){
+			$this->_db = Zend_Registry::get('db')->getConnection();
+		} else {
+			$this->_db = self::$db;
+		}
 		$this->_row = array();
 		$this->_isNew = !$fromDb;
 
@@ -302,6 +311,11 @@ abstract class Model_Base
 		$date = DateTime::createFromFormat('Y-m-d H:i:s', $datetime, new DateTimeZone('UTC'));
 		$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
 		return $date->format('Y-m-d H:i:s');
+	}
+
+	public static function setDb(PDO $db)
+	{
+		self::$db = $db;
 	}
 
 }
