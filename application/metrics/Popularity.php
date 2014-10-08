@@ -13,11 +13,12 @@ class Metric_Popularity {
      * @return int
      */
     protected function doCalculations(NewModel_Presence $presence, DateTime $start, DateTime $end){
-        $target = $presence->getTargetAudience();
+//        $target = $presence->getTargetAudience();
         $popularity = $presence->getPopularity();
 
         //if target is null, then we haven't got a good target and should return null
-        return $target ? min(100, 100 * $popularity / $target) : null;
+//        return $target ? min(100, 100 * $popularity / $target) : null;
+        return $popularity;
     }
 
 }

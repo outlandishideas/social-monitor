@@ -26,6 +26,18 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 	}
 
 
+	public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+	{
+		return null;
+	}
+
+
+	public function getHistoricStreamMeta(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+	{
+		return null;
+	}
+
+
 	protected function findAndSaveLinks($streamdatum)
 	{
 		return 0;

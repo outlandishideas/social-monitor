@@ -10,18 +10,13 @@ abstract class Metric_Abstract {
      * @param NewModel_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
-     * @return array
+     * @return mixed
      */
     public function calculate(NewModel_Presence $presence, DateTime $start, DateTime $end)
     {
         $result = self::doCalculations($presence, $start, $end);
         $presence->saveMetric($this->getName(), $start, $end, $result);
-        return array(
-            "metric" => $this->name,
-            "start_date" => $start->format('Y-m-d'),
-            "end_date" => $end->format('Y-m-d'),
-            "value" => $result,
-        );
+        return $result;
     }
 
     /**

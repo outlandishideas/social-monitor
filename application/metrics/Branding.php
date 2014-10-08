@@ -13,7 +13,8 @@ class Metric_Branding {
      * @return int
      */
     protected function doCalculations(NewModel_Presence $presence, DateTime $start, DateTime $end){
-        return $presence->getBranding() == 1 ? 100 : 0;
+//        return $presence->getBranding() == 1 ? 100 : 0;
+        return $presence->getBranding();
     }
 
 }
