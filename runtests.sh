@@ -1,1 +1,1 @@
-phpunit --configuration tests/phpunit-ronald.xml tests/
+phpunit --colors --configuration tests/phpunit-ronald.xml tests/

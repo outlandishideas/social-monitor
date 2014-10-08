@@ -5,9 +5,25 @@ abstract class NewModel_PresenceFactory
 
 	protected static $db;
 
-	public static function getPresences()
+	protected static $defaultQueryOptions = array(
+		'orderColumn'		=> '`p`.`handle`',
+		'orderDirection'	=> 'ASC',
+		'offset'				=> 0,
+		'limit'				=> 0
+	);
+
+	public static function getPresences(array $queryOptions = array())
 	{
-		$stmt = self::$db->prepare("SELECT * FROM `presences`");
+		$queryOptions = array_merge(self::$defaultQueryOptions, $queryOptions);
+		$sql = "SELECT * FROM `presences` AS `p`";
+		if (strlen($queryOptions['orderColumn'])) {
+			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
+		}
+		if ($queryOptions['limit'] > 0) {
+			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
+		}
+
+		$stmt = self::$db->prepare($sql);
 		$stmt->execute();
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -55,9 +71,18 @@ abstract class NewModel_PresenceFactory
 		}
 	}
 
-	public static function getPresencesByType(NewModel_PresenceType $type)
+	public static function getPresencesByType(NewModel_PresenceType $type, array $queryOptions = array())
 	{
-		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `type` = :type");
+		$queryOptions = array_merge(self::$defaultQueryOptions, $queryOptions);
+		$sql = "SELECT * FROM `presences` AS `p` WHERE `type` = :type";
+		if (strlen($queryOptions['orderColumn'])) {
+			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
+		}
+		if ($queryOptions['limit'] > 0) {
+			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
+		}
+
+		$stmt = self::$db->prepare($sql);
 		$stmt->execute(array(':type' => $type));
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -76,10 +101,19 @@ abstract class NewModel_PresenceFactory
 		return $presences;
 	}
 
-	public static function getPresencesById(array $ids)
+	public static function getPresencesById(array $ids, array $queryOptions = array())
 	{
+		$queryOptions = array_merge(self::$defaultQueryOptions, $queryOptions);
 		$inQuery = implode(',', array_fill(0, count($ids), '?'));
-		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `id` IN ({$inQuery})");
+		$sql = "SELECT * FROM `presences` AS `p` WHERE `id` IN ({$inQuery})";
+		if (strlen($queryOptions['orderColumn'])) {
+			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
+		}
+		if ($queryOptions['limit'] > 0) {
+			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
+		}
+
+		$stmt = self::$db->prepare($sql);
 		$stmt->execute($ids);
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -98,15 +132,34 @@ abstract class NewModel_PresenceFactory
 		return array_filter($presences);
 	}
 
-	public static function getPresencesByCampaign($campaign)
+	public static function getPresencesByCampaign($campaign, array $queryOptions = array())
 	{
-		$stmt = self::$db->prepare("SELECT presence_id FROM `campaign_presences` WHERE `campaign_id` = :cid");
+		$queryOptions = array_merge(self::$defaultQueryOptions, $queryOptions);
+		$sql = "SELECT `p`.* FROM `campaign_presences` AS `cp` LEFT JOIN `presences` AS `p` ON (`cp`.`presence_id` = `p`.`id`) WHERE `cp`.`campaign_id` = :cid";
+		if (strlen($queryOptions['orderColumn'])) {
+			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
+		}
+		if ($queryOptions['limit'] > 0) {
+			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
+		}
+
+		$stmt = self::$db->prepare($sql);
 		$stmt->execute(array(":cid" => $campaign));
-		$presence_ids = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-		if($presence_ids == false) return array();
+		if($results == false) return array();
 
-		return self::getPresencesById($presence_ids);
+		$presences = array_map(function($internals){
+			if($internals != false) {
+				$type = new NewModel_PresenceType($internals['type']);
+				$provider = $type->getProvider(self::$db);
+				return new NewModel_Presence(self::$db, $internals, $provider);
+			} else {
+				return null;
+			}
+		}, $results);
+
+		return array_filter($presences);
 	}
 
 	public static function createNewPresence(NewModel_PresenceType $type, $handle, $signed_off, $branding)
