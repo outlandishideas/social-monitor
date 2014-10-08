@@ -41,6 +41,7 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 		$resourceLoader->addResourceType('exception', 'exceptions/', 'Exception');
 		$resourceLoader->addResourceType('util', 'util/', 'Util');
 		$resourceLoader->addResourceType('refactored', 'models/refactored/', 'NewModel');
+		$resourceLoader->addResourceType('metric', 'metrics/', 'Metric');
 		NewModel_PresenceFactory::setDatabase(self::$pdo);
     }
 

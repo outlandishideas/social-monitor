@@ -42,6 +42,7 @@ class SinaWeiboProviderTest extends PHPUnit_Extensions_Database_TestCase
 		$resourceLoader->addResourceType('exception', 'exceptions/', 'Exception');
 		$resourceLoader->addResourceType('util', 'util/', 'Util');
 		$resourceLoader->addResourceType('refactored', 'models/refactored/', 'Model');
+        $resourceLoader->addResourceType('metric', 'metrics/', 'Metric');
 		$this->getConnection();
     	$this->provider = new Model_SinaWeiboProvider(self::$pdo);
     }
