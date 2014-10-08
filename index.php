@@ -45,6 +45,7 @@ $resourceLoader = new Zend_Application_Module_Autoloader(array(
 $resourceLoader->addResourceType('exception', 'exceptions/', 'Exception');
 $resourceLoader->addResourceType('util', 'util/', 'Util');
 $resourceLoader->addResourceType('refactored', 'models/refactored/', 'NewModel');
+$resourceLoader->addResourceType('metric', 'metrics/', 'Metric');
 
 //load config
 if (!file_exists(APPLICATION_PATH . '/configs/config.yaml')) {
