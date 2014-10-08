@@ -165,6 +165,21 @@ class NewModel_Presence
 
 	public function update() {
 		$data = $this->provider->fetchData($this);
-
+		$stmt = $this->db->prepare("INSERT INTO presence_history (presence_id, datetime, type, value) VALUES (:id, :ts, :type, :val)");
+		foreach ($data as $type => $val) {
+			$stmt->execute(array(
+				':id'		=> $this->getId(),
+				':ts'		=> date('Y-m-d H:i:s'),
+				':type'	=> $type,
+				':val'	=> $val
+			));
+		}
+		if (array_key_exists('popularity', $data)) {
+			$stmt = $this->db->prepare("UPDATE presences SET popularity = :popularity WHERE id = :id");
+			$stmt->execute(array(
+				':id'				=> $this->getId(),
+				':popularity'	=> $data['popularity']
+			));
+		}
 	}
 }
