@@ -5,7 +5,7 @@ ALTER TABLE  `presences` CHANGE  `type`  `type` VARCHAR( 20 ) CHARACTER SET utf8
 CREATE TABLE `sina_weibo_posts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `remote_id` varchar(20) COLLATE utf8_bin NOT NULL,
-  `text` decimal(10,0) NOT NULL,
+  `text` mediumtext NOT NULL,
   `presence_id` int(11) DEFAULT NULL COMMENT 'NULL when not posted by a known presence',
   `remote_user_id` varchar(20) COLLATE utf8_bin NOT NULL,
   `created_at` datetime NOT NULL,

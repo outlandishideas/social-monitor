@@ -45,10 +45,40 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		return $ret;
 	}
 
-
-	public function getHistoricData(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+	public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
 	{
-		return null;
+		$ret = array();
+		$stmt = $this->db->prepare("
+			SELECT * FROM {$this->table} WHERE `created_at` >= :start AND `created_at` <= :end AND `presence_id` = :id
+		");
+		$stmt->execute(array(
+			':start'	=> $start->format('Y-m-d H:i:s'),
+			':end'	=> $end->format('Y-m-d H:i:s'),
+			':id'		=> $presence->getId()
+		));
+		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		$stmt = $this->db->prepare("
+			SELECT * FROM {$this->table} WHERE `remote_id` IN (
+				SELECT DISTINCT `included_retweet` FROM {$this->table} WHERE `created_at` >= :start AND `created_at` <= :end AND `presence_id` = :id
+			)
+		");
+		$stmt->execute(array(
+			':start'	=> $start->format('Y-m-d H:i:s'),
+			':end'	=> $end->format('Y-m-d H:i:s'),
+			':id'		=> $presence->getId()
+		));
+		$r = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$retweets = array();
+		foreach ($r as $retweet) {
+			$retweets[$retweet['remote_id']] = $retweet;
+		}
+		foreach ($ret as &$r) {
+			if (!is_null($r['included_retweet'])) {
+				$r['included_retweet'] = $retweets[$r['included_retweet']];
+			}
+		}
+		return count($ret) ? $ret : null;
 	}
 
 	protected function parseStatus($status)
