@@ -49,7 +49,35 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 	{
 		$ret = array();
 		$stmt = $this->db->prepare("
-			SELECT * FROM {$this->table} WHERE `created_at` >= :start AND `created_at` <= :end AND `presence_id` = :id
+			SELECT
+				p.*,
+				l.links
+			FROM
+				{$this->tableName} AS p
+				LEFT JOIN (
+					SELECT
+						status_id,
+						GROUP_CONCAT(url) AS links
+					FROM
+						status_links
+					WHERE
+						status_id IN (
+							SELECT
+								`id`
+							FROM
+								{$this->tableName}
+							WHERE
+								`created_at` >= :start
+								AND `created_at` <= :end
+								AND `presence_id` = :id
+						)
+					GROUP BY
+						status_id
+				) AS l ON (p.id = l.status_id)
+			WHERE
+				p.`created_at` >= :start
+				AND p.`created_at` <= :end
+				AND p.`presence_id` = :id
 		");
 		$stmt->execute(array(
 			':start'	=> $start->format('Y-m-d H:i:s'),
@@ -58,9 +86,10 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		));
 		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+		//get retweets
 		$stmt = $this->db->prepare("
-			SELECT * FROM {$this->table} WHERE `remote_id` IN (
-				SELECT DISTINCT `included_retweet` FROM {$this->table} WHERE `created_at` >= :start AND `created_at` <= :end AND `presence_id` = :id
+			SELECT * FROM {$this->tableName} WHERE `remote_id` IN (
+				SELECT DISTINCT `included_retweet` FROM {$this->tableName} WHERE `created_at` >= :start AND `created_at` <= :end AND `presence_id` = :id
 			)
 		");
 		$stmt->execute(array(
@@ -73,10 +102,13 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		foreach ($r as $retweet) {
 			$retweets[$retweet['remote_id']] = $retweet;
 		}
+
+		//add retweets and links to posts
 		foreach ($ret as &$r) {
 			if (!is_null($r['included_retweet'])) {
 				$r['included_retweet'] = $retweets[$r['included_retweet']];
 			}
+			$r['links'] = is_null($r['links']) ? array() : explode(',', $r['links']);
 		}
 		return count($ret) ? $ret : null;
 	}
