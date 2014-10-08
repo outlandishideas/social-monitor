@@ -29,6 +29,15 @@ abstract class NewModel_iProvider
 	abstract public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end);
 
 	/**
+	 * Get all metadata for posts/tweets/streamdata for a specific presence between 2 dates
+	 * @param NewModel_Presence $presence  The presence to get the data for
+	 * @param \DateTime $start      The first day to fetch the data for (inclusive)
+	 * @param \DateTime $end        The last day to fetch the data for (inclusive)
+	 * @return array   The historic metadata for the stream
+	 */
+	abstract public function getHistoricStreamMeta(NewModel_Presence $presence, \DateTime $start, \DateTime $end);
+
+	/**
 	 * Get performancedata for a specific presence between 2 dates
 	 * @param NewModel_Presence $presence  The presence to get the data for
 	 * @param \DateTime $start      The first day to fetch the data for (inclusive)
