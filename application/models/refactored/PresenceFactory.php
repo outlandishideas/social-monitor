@@ -32,9 +32,9 @@ abstract class NewModel_PresenceFactory
 		$presences = array_map(function($internals){
 			if($internals != false) {
 				$type = new NewModel_PresenceType($internals['type']);
-				$provider = $type->getProvider(self::$db);
+				$provider = $type->getProvider(static::$db);
 				$metrics = $type->getMetrics();
-				return new NewModel_Presence(self::$db, $internals, $provider, $metrics);
+				return new NewModel_Presence(static::$db, $internals, $provider, $metrics);
 			} else {
 				return null;
 			}
@@ -45,15 +45,15 @@ abstract class NewModel_PresenceFactory
 
 	public static function getPresenceById($id)
 	{
-		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `id` = :id");
+		$stmt = static::$db->prepare("SELECT * FROM `presences` WHERE `id` = :id");
 		$stmt->execute(array(':id' => $id));
 		$internals = $stmt->fetch(PDO::FETCH_ASSOC);
 
 		if($internals != false) {
 			$type = new NewModel_PresenceType($internals['type']);
-			$provider = $type->getProvider(self::$db);
+			$provider = $type->getProvider(static::$db);
 			$metrics = $type->getMetrics();
-			return new NewModel_Presence(self::$db, $internals, $provider, $metrics);
+			return new NewModel_Presence(static::$db, $internals, $provider, $metrics);
 		} else {
 			return null;
 		}
@@ -61,14 +61,14 @@ abstract class NewModel_PresenceFactory
 
 	public static function getPresenceByHandle($handle, NewModel_PresenceType $type)
 	{
-		$stmt = self::$db->prepare("SELECT * FROM `presences` WHERE `handle` = :handle AND `type` = :t");
+		$stmt = static::$db->prepare("SELECT * FROM `presences` WHERE `handle` = :handle AND `type` = :t");
 		$stmt->execute(array(':handle' => $handle, ':t' => $type));
 		$internals = $stmt->fetch(PDO::FETCH_ASSOC);
 
 		if($internals != false) {
-			$provider = $type->getProvider(self::$db);
+			$provider = $type->getProvider(static::$db);
 			$metrics = $type->getMetrics();
-			return new NewModel_Presence(self::$db, $internals, $provider, $metrics);
+			return new NewModel_Presence(static::$db, $internals, $provider, $metrics);
 		} else {
 			return null;
 		}
@@ -76,7 +76,7 @@ abstract class NewModel_PresenceFactory
 
 	public static function getPresencesByType(NewModel_PresenceType $type, array $queryOptions = array())
 	{
-		$queryOptions = array_merge(self::$defaultQueryOptions, $queryOptions);
+		$queryOptions = array_merge(static::$defaultQueryOptions, $queryOptions);
 		$sql = "SELECT * FROM `presences` AS `p` WHERE `type` = :type";
 		if (strlen($queryOptions['orderColumn'])) {
 			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
@@ -85,7 +85,7 @@ abstract class NewModel_PresenceFactory
 			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
 		}
 
-		$stmt = self::$db->prepare($sql);
+		$stmt = static::$db->prepare($sql);
 		$stmt->execute(array(':type' => $type));
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -94,9 +94,9 @@ abstract class NewModel_PresenceFactory
 		$presences = array_map(function($internals){
 			if($internals != false) {
 				$type = new NewModel_PresenceType($internals['type']);
-				$provider = $type->getProvider(self::$db);
+				$provider = $type->getProvider(static::$db);
 				$metrics = $type->getMetrics();
-				return new NewModel_Presence(self::$db, $internals, $provider, $metrics);
+				return new NewModel_Presence(static::$db, $internals, $provider, $metrics);
 			} else {
 				return null;
 			}
@@ -107,7 +107,7 @@ abstract class NewModel_PresenceFactory
 
 	public static function getPresencesById(array $ids, array $queryOptions = array())
 	{
-		$queryOptions = array_merge(self::$defaultQueryOptions, $queryOptions);
+		$queryOptions = array_merge(static::$defaultQueryOptions, $queryOptions);
 		$inQuery = implode(',', array_fill(0, count($ids), '?'));
 		$sql = "SELECT * FROM `presences` AS `p` WHERE `id` IN ({$inQuery})";
 		if (strlen($queryOptions['orderColumn'])) {
@@ -117,7 +117,7 @@ abstract class NewModel_PresenceFactory
 			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
 		}
 
-		$stmt = self::$db->prepare($sql);
+		$stmt = static::$db->prepare($sql);
 		$stmt->execute($ids);
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -126,9 +126,9 @@ abstract class NewModel_PresenceFactory
 		$presences = array_map(function($internals){
 			if($internals != false) {
 				$type = new NewModel_PresenceType($internals['type']);
-				$provider = $type->getProvider(self::$db);
+				$provider = $type->getProvider(static::$db);
 				$metrics = $type->getMetrics();
-				return new NewModel_Presence(self::$db, $internals, $provider, $metrics);
+				return new NewModel_Presence(static::$db, $internals, $provider, $metrics);
 			} else {
 				return null;
 			}
@@ -139,7 +139,7 @@ abstract class NewModel_PresenceFactory
 
 	public static function getPresencesByCampaign($campaign, array $queryOptions = array())
 	{
-		$queryOptions = array_merge(self::$defaultQueryOptions, $queryOptions);
+		$queryOptions = array_merge(static::$defaultQueryOptions, $queryOptions);
 		$sql = "SELECT `p`.* FROM `campaign_presences` AS `cp` LEFT JOIN `presences` AS `p` ON (`cp`.`presence_id` = `p`.`id`) WHERE `cp`.`campaign_id` = :cid";
 		if (strlen($queryOptions['orderColumn'])) {
 			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
@@ -148,7 +148,7 @@ abstract class NewModel_PresenceFactory
 			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
 		}
 
-		$stmt = self::$db->prepare($sql);
+		$stmt = static::$db->prepare($sql);
 		$stmt->execute(array(":cid" => $campaign));
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -157,9 +157,9 @@ abstract class NewModel_PresenceFactory
 		$presences = array_map(function($internals){
 			if($internals != false) {
 				$type = new NewModel_PresenceType($internals['type']);
-				$provider = $type->getProvider(self::$db);
+				$provider = $type->getProvider(static::$db);
 				$metrics = $type->getMetrics();
-				return new NewModel_Presence(self::$db, $internals, $provider, $metrics);
+				return new NewModel_Presence(static::$db, $internals, $provider, $metrics);
 			} else {
 				return null;
 			}
@@ -173,7 +173,7 @@ abstract class NewModel_PresenceFactory
 		$signed_off = !!$signed_off;
 		$branding = !!$branding;
 
-		$provider = $type->getProvider(self::$db);
+		$provider = $type->getProvider(static::$db);
 
 		$args = $provider->testHandle($handle);
 
@@ -181,7 +181,7 @@ abstract class NewModel_PresenceFactory
 			return false;
 		} else {
 			//insert presence
-			$stmt = self::$db->prepare("
+			$stmt = static::$db->prepare("
 				INSERT INTO `presences`
 				(`type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `last_updated`, `sign_off`, `branding`)
 				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -193,6 +193,6 @@ abstract class NewModel_PresenceFactory
 
 	public static function setDatabase(PDO $db)
 	{
-		self::$db = $db;
+		static::$db = $db;
 	}
 }
