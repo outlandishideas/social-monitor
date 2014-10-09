@@ -125,9 +125,9 @@ class PresenceController extends GraphingController
 			}
 
 			$typeName = $this->_request->type;
-			$type = NewModel_PresenceType::$$typeName();
-			if($type == NewModel_PresenceType::SINA_WEIBO){
+			if($typeName == "SINA_WEIBO"){
 
+				$type = NewModel_PresenceType::SINA_WEIBO();
 				if($presence instanceof Model_Presence){
 					$handle = $this->_request->handle;
 					$signOff = $this->_request->sign_off;
@@ -604,6 +604,7 @@ class PresenceController extends GraphingController
 	 * This should be called via a cron job (~hourly), and does not output anything
 	 */
 	public function updateKpiCacheAction() {
+		/** @var NewModel_Presence[] $presences */
 		$presences = NewModel_PresenceFactory::getPresences();
 		$endDate = new DateTime();
 		$startDate = new DateTime();
