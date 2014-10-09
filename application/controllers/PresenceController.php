@@ -124,7 +124,8 @@ class PresenceController extends GraphingController
 				$errorMessages[] = 'Please enter a handle';
 			}
 
-			$type = NewModel_PresenceType::{$this->_request->type}();
+			$typeName = $this->_request->type;
+			$type = NewModel_PresenceType::$$typeName();
 			if($type == NewModel_PresenceType::SINA_WEIBO){
 
 				if($presence instanceof Model_Presence){
