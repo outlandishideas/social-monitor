@@ -54,7 +54,11 @@ $buttons = $this->gatekeeper()->filterAll(array(
 			<?php
 			$kpiData = $presence->getKpiData();
 			foreach ($this->tableMetrics as $key=>$label) :
-				$value = $kpiData[$key];
+                if(array_key_exists($key, $kpiData)){
+                    $value = $kpiData[$key];
+                } else {
+                    $value = "n/a";
+                }
 			?>
 
                 <td>
