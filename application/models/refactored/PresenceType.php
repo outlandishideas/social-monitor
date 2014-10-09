@@ -103,8 +103,10 @@ class NewModel_PresenceType extends NewModel_Enum
 				);
 				break;
 			case self::FACEBOOK:
+				return array();
 				break;
-			case self:TWITTER:
+			case self::TWITTER:
+				return array();
 				break;
 			default:
 				throw new \LogicException("Not implemented yet.");
