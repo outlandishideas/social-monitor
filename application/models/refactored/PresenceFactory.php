@@ -154,7 +154,8 @@ abstract class NewModel_PresenceFactory
 			$type = new NewModel_PresenceType($internals['type']);
 			$provider = $type->getProvider(static::$db);
 			$metrics = $type->getMetrics();
-			return new NewModel_Presence(static::$db, $internals, $provider, $metrics);
+			$badges = $type->getBadges();
+			return new NewModel_Presence(static::$db, $internals, $provider, $metrics, $badges);
 		} else {
 			return null;
 		}

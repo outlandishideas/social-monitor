@@ -59,4 +59,21 @@ class NewModel_PresenceType extends NewModel_Enum
 				throw new \LogicException("Not implemented yet.");
 		}
 	}
+
+	public function getBadges()
+	{
+		switch ($this->value) {
+			case self::SINA_WEIBO:
+				return array(
+					Badge_Factory::getBadge(Badge_Reach::getName())
+				);
+				break;
+			case self::FACEBOOK:
+				break;
+			case self:TWITTER:
+				break;
+			default:
+				throw new \LogicException("Not implemented yet.");
+		}
+	}
 }

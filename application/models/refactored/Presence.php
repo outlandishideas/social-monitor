@@ -5,6 +5,7 @@ class NewModel_Presence
 	protected $provider;
 	protected $db;
 	protected $metrics;
+	protected $badges;
 	protected $kpiData = array();
 
 	//these should be public to mimic existing Presence Class
@@ -22,11 +23,12 @@ class NewModel_Presence
 	public $image_url;
 	public $owner;
 
-	public function __construct(PDO $db, array $internals, NewModel_iProvider $provider, array $metrics = array())
+	public function __construct(PDO $db, array $internals, NewModel_iProvider $provider, array $metrics = array(), array $badges = array())
 	{
 		$this->db = $db;
 		$this->provider = $provider;
 		$this->metrics = $metrics;
+		$this->badges = $badges;
 
 		if (!array_key_exists('id', $internals)) {
 			throw new \InvalidArgumentException('Missing id for Presence');
@@ -59,6 +61,14 @@ class NewModel_Presence
 	public function getMetrics()
 	{
 		return $this->metrics;
+	}
+
+	/**
+	 * @return Badge_Abstract[]
+	 */
+	public function getBadges()
+	{
+		return $this->badges;
 	}
 
 	public function getHandle()
