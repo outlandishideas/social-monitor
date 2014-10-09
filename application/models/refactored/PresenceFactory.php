@@ -148,7 +148,7 @@ abstract class NewModel_PresenceFactory
 	}
 
 
-	protected function instantiatePresence($internals)
+	protected static function instantiatePresence($internals)
 	{
 		if($internals != false) {
 			$type = new NewModel_PresenceType($internals['type']);

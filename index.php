@@ -62,6 +62,10 @@ $db = Zend_Db::factory($config->db);
 Zend_Db_Table::setDefaultAdapter($db);
 Zend_Registry::set('db', $db);
 
+
+//set db for PresenceFactory
+NewModel_PresenceFactory::setDatabase($db->getConnection());
+
 //set up logging
 //$logger = new Zend_Log();
 //if (APPLICATION_ENV != 'live') {
