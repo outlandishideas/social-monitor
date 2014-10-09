@@ -281,6 +281,8 @@ class PresenceController extends GraphingController
 	private function generatePopularityGraphData(NewModel_Presence $presence, DateTime $start, DateTime $end)
 	{
 		// subtract 1 from the first day, as we're calculating a daily difference
+		$start = clone $start;
+		$end = clone $end;
 		$start->modify('-1 day');
 
 		$data = $presence->getPopularityData($start, $end);
@@ -329,7 +331,7 @@ class PresenceController extends GraphingController
 
 			if ($targetDiff > 0) {
 				if ($targetDate) {
-					$interval = date_create($targetDate)->diff(date_create($start));
+					$interval = $targetDate->diff($start);
 					$timeToTarget = array('y'=>$interval->y, 'm'=>$interval->m);
 					$graphHealth = $healthCalc($targetDiff/$interval->days);
 				}

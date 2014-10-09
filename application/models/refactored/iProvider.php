@@ -60,7 +60,7 @@ abstract class NewModel_iProvider
 		));
 		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-		return count($ret) ? $ret : null;
+		return $ret; //don't return null, just return an empty array
 	}
 
 	/**

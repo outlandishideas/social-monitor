@@ -197,46 +197,50 @@ class NewModel_Presence
 
 			$data = $this->getHistoricData($start, $end);
 
-			//remove any non-popularity values
-			$cleanData = array_filter($data, function($row){
-				return $row['type'] == 'popularity';
-			});
+			if(count($data) > 0) {
 
-			$count = count($cleanData);
+				//remove any non-popularity values
+				$cleanData = array_filter($data, function($row){
+					return $row['type'] == 'popularity';
+				});
 
-			if ($count > 1) {
-				// calculate line of best fit (see http://www.endmemo.com/statistics/lr.php)
-				$meanX = $meanY = $sumXY = $sumXX = 0;
+				$count = count($cleanData);
 
-				foreach ($data as $row) {
-					$row->datetime = strtotime($row->datetime);
-					$meanX += $row->datetime;
-					$meanY += $row->value;
-					$sumXY += $row->datetime*$row->value;
-					$sumXX += $row->datetime*$row->datetime;
-				}
+				if ($count > 1) {
+					// calculate line of best fit (see http://www.endmemo.com/statistics/lr.php)
+					$meanX = $meanY = $sumXY = $sumXX = 0;
 
-				$meanX /= $count;
-				$meanY /= $count;
+					foreach ($data as $row) {
+						$row->datetime = strtotime($row->datetime);
+						$meanX += $row->datetime;
+						$meanY += $row->value;
+						$sumXY += $row->datetime*$row->value;
+						$sumXX += $row->datetime*$row->datetime;
+					}
 
-				$a = ($sumXY - $count*$meanX*$meanY)/($sumXX - $count*$meanX*$meanX);
-				$b = $meanY - $a*$meanX;
+					$meanX /= $count;
+					$meanY /= $count;
 
-				if ($a > 0) {
-					$timestamp = ($target - $b)/$a;
-					if ($timestamp < PHP_INT_MAX) {
+					$a = ($sumXY - $count*$meanX*$meanY)/($sumXX - $count*$meanX*$meanX);
+					$b = $meanY - $a*$meanX;
 
-						//we've been having some difficulties with DateTime and
-						//large numbers. Try to run a DateTime construct to see if it works
-						//if not nullify $date so that we can create a DateTime from PHP_INI_MAX
-						try {
-							$date = new DateTime($timestamp);
-						} catch (Exception $e) {
-							$date = null;
+					if ($a > 0) {
+						$timestamp = ($target - $b)/$a;
+						if ($timestamp < PHP_INT_MAX) {
+
+							//we've been having some difficulties with DateTime and
+							//large numbers. Try to run a DateTime construct to see if it works
+							//if not nullify $date so that we can create a DateTime from PHP_INI_MAX
+							try {
+								$date = new DateTime($timestamp);
+							} catch (Exception $e) {
+								$date = null;
+							}
+
 						}
-
 					}
 				}
+
 			}
 
 			if (!($date instanceof DateTime) || $date->getTimestamp() < time()) {
