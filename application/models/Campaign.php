@@ -8,7 +8,7 @@ class Model_Campaign extends Model_Base {
 	public static $countryFilter = null;
 
 	protected function fetch($clause = null, $args = array()) {
-		if( static::$countryFilter) {
+		if( static::$countryFilter !== null) {
 			if ($clause) {
 				$clause .= ' AND ';
 			}
@@ -89,8 +89,7 @@ class Model_Campaign extends Model_Base {
 						}
 					}
 				} else {
-					$clause = 'id IN (' . implode(',', $ids) . ')';
-					$this->presences = Model_Presence::fetchAll($clause);
+					$this->presences = NewModel_PresenceFactory::getPresencesById($ids);
 				}
 			}
 		}

@@ -15,7 +15,7 @@ class CountryController extends CampaignController {
 		/** @var Model_Country[] $countries */
 		$countries = Model_Country::fetchAll();
 		$presences = array();
-		foreach (Model_Presence::fetchAll() as $p) {
+		foreach (NewModel_PresenceFactory::getPresences() as $p) {
 			$presences[$p->id] = $p;
 		}
 		$query = self::db()->prepare('SELECT c.id, cp.presence_id FROM campaigns AS c LEFT OUTER JOIN campaign_presences AS cp ON c.id = cp.campaign_id');
@@ -287,8 +287,7 @@ class CountryController extends CampaignController {
 		$this->view->title = 'Manage Country Presences';
 		$this->view->titleIcon = 'icon-tasks';
 		$this->view->country = $country;
-		$this->view->twitterPresences = Model_Presence::fetchAllTwitter();
-		$this->view->facebookPresences = Model_Presence::fetchAllFacebook();
+		$this->view->presences = $this->managePresencesList();
 	}
 
 	/**

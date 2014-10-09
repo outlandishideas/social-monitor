@@ -65,7 +65,7 @@ class GroupController extends CampaignController {
         if($presenceIds){
 	        $presenceIds = explode(',',html_entity_decode($presenceIds));
             foreach($presenceIds as $id){
-                $presences[$id] = Model_Presence::fetchById($id);
+                $presences[$id] = NewModel_PresenceFactory::getPresenceById($id);
             }
         }
 
@@ -220,8 +220,7 @@ class GroupController extends CampaignController {
         $this->view->title = 'Manage SBU Presences';
         $this->view->titleIcon = 'icon-tasks';
         $this->view->group = $group;
-        $this->view->twitterPresences = Model_Presence::fetchAllTwitter();
-        $this->view->facebookPresences = Model_Presence::fetchAllFacebook();
+        $this->view->presences = $this->managePresencesList();
 	}
 
 	/**

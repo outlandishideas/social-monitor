@@ -118,5 +118,21 @@ abstract class CampaignController extends GraphingController
 
         return $return;
     }
+
+    public function managePresencesList()
+    {
+        $presences = array();
+        foreach(array_keys(NewModel_PresenceType::toArray()) as $type) {
+            /** @var NewModel_PresenceType $type */
+            $type = NewModel_PresenceType::$type();
+            $presences[] = array(
+                'type' => $type->getValue(),
+                'title' => "Avaliable " . $type->getTitle() . " Presences",
+                'presences' => NewModel_PresenceFactory::getPresencesByType($type),
+                'sign' => $type->getSign()
+            );
+        }
+        return $presences;
+    }
 }
 

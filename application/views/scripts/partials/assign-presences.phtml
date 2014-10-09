@@ -1,39 +1,61 @@
 <fieldset class="inlineLabels">
 	<legend><?php echo $this->owner->display_name; ?></legend>
-	<div class="ctrlHolder">
-		<label for="twitter">
-			Available twitter presences
-		</label>
-		<button type="button" class="button add-item">Add</button>
-		<select id="twitter" class="selectInput" data-icon="icon-twitter-sign" data-type="twitter">
-			<option value="">-- Select --</option>
-			<?php foreach ($this->twitterPresences as $p) : ?>
-				<option value="<?php echo $p->id; ?>"
-				        data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
-				        data-label="<?php echo '@' . $p->handle; ?>"
-				        data-hover="<?php echo $p->label; ?>">
-					<?php echo '@' . $p->handle . ' (' . $p->label . ')'; ?>
-				</option>
-			<?php endforeach; ?>
-		</select>
-	</div>
-	<div class="ctrlHolder">
-		<label for="facebook">
-			Available facebook presences
-		</label>
-		<button type="button" class="button add-item">Add</button>
-		<select id="facebook" class="selectInput" data-icon="icon-facebook-sign" data-type="facebook">
-			<option value="">-- Select --</option>
-			<?php foreach ($this->facebookPresences as $p) : ?>
-				<option value="<?php echo $p->id; ?>"
-						data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
-				        data-label="<?php echo $p->handle; ?>"
-				        data-hover="<?php echo $p->label; ?>">
-					<?php echo $p->handle . ' (' . $p->label . ')'; ?>
-				</option>
-			<?php endforeach; ?>
-		</select>
-	</div>
+<!--	<div class="ctrlHolder">-->
+<!--		<label for="twitter">-->
+<!--			Available twitter presences-->
+<!--		</label>-->
+<!--		<button type="button" class="button add-item">Add</button>-->
+<!--		<select id="twitter" class="selectInput" data-icon="icon-twitter-sign" data-type="twitter">-->
+<!--			<option value="">-- Select --</option>-->
+<!--			--><?php //foreach ($this->twitterPresences as $p) : ?>
+<!--				<option value="--><?php //echo $p->id; ?><!--"-->
+<!--				        data-url="--><?php //echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?><!--"-->
+<!--				        data-label="--><?php //echo '@' . $p->handle; ?><!--"-->
+<!--				        data-hover="--><?php //echo $p->label; ?><!--">-->
+<!--					--><?php //echo '@' . $p->handle . ' (' . $p->label . ')'; ?>
+<!--				</option>-->
+<!--			--><?php //endforeach; ?>
+<!--		</select>-->
+<!--	</div>-->
+<!--	<div class="ctrlHolder">-->
+<!--		<label for="facebook">-->
+<!--			Available facebook presences-->
+<!--		</label>-->
+<!--		<button type="button" class="button add-item">Add</button>-->
+<!--		<select id="facebook" class="selectInput" data-icon="icon-facebook-sign" data-type="facebook">-->
+<!--			<option value="">-- Select --</option>-->
+<!--			--><?php //foreach ($this->facebookPresences as $p) : ?>
+<!--				<option value="--><?php //echo $p->id; ?><!--"-->
+<!--						data-url="--><?php //echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?><!--"-->
+<!--				        data-label="--><?php //echo $p->handle; ?><!--"-->
+<!--				        data-hover="--><?php //echo $p->label; ?><!--">-->
+<!--					--><?php //echo $p->handle . ' (' . $p->label . ')'; ?>
+<!--				</option>-->
+<!--			--><?php //endforeach; ?>
+<!--		</select>-->
+<!--	</div>-->
+	<?php foreach($this->presences as $presenceType): ?>
+		<div class="ctrlHolder">
+			<label for="<?php echo $presenceType['type']; ?>">
+				<?php echo $presenceType['title']; ?>
+			</label>
+			<button type="button" class="button add-item">Add</button>
+			<select id="<?php echo $presenceType['type']; ?>"
+					class="selectInput"
+					data-icon="<?php echo $presenceType['sign']; ?>"
+					data-type="<?php echo $presenceType['type']; ?>">
+				<option value="">-- Select --</option>
+				<?php foreach ($presenceType['presences'] as $p) : ?>
+					<option value="<?php echo $p->id; ?>"
+							data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
+							data-label="<?php echo $p->handle; ?>"
+							data-hover="<?php echo $p->getLabel(); ?>">
+						<?php echo $p->handle . ' (' . $p->getLabel() . ')'; ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+	<?php endforeach; ?>
 	<div class="ctrlHolder">
 		<label>
 			Currently assigned presences

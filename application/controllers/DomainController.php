@@ -108,6 +108,8 @@ class DomainController extends BaseController {
 	 * @user-level user
 	 */
 	function viewAction() {
+
+
 		/** @var Model_Domain $domain */
 		$domain = Model_Domain::fetchById($this->_request->id);
 		$this->validateData($domain);
@@ -122,7 +124,7 @@ class DomainController extends BaseController {
 			$status = $lookup->fetchAll(PDO::FETCH_OBJ);
 			if ($status) {
 				$status = array_pop($status);
-				$status->presence = Model_Presence::fetchById($status->presence_id);
+				$status->presence = NewModel_PresenceFactory::getPresenceById($status->presence_id);
 				if ($status->presence) {
 					if (!array_key_exists($link->url, $links)) {
 						$link->statuses = array($status);

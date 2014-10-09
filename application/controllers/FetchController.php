@@ -12,7 +12,7 @@ class FetchController extends BaseController
 		$lockName = $this->acquireLock();
 		set_time_limit($this->config->app->fetch_time_limit);
 
-		$presences = Model_Presence::fetchAll();
+		$presences = NewModel_PresenceFactory::getPresences();
 		$presenceCount = count($presences);
 
 		$db = self::db();

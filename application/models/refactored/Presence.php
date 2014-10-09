@@ -39,7 +39,7 @@ class NewModel_Presence
 		$this->id = $internals['id'];
 		$this->handle = $internals['handle'];
 		$this->type = $internals['type'];
-		$this->label = $internals['name'];
+		$this->name = $internals['name'];
 		$this->uid = $internals['uid'];
 		$this->sign_off = $internals['sign_off'];
 		$this->branding = $internals['branding'];
@@ -81,9 +81,9 @@ class NewModel_Presence
 		return $this->type;
 	}
 
-	public function getLabel()
+	public function getName()
 	{
-		return $this->label;
+		return $this->name;
 	}
 
 	public function getPageUrl()
@@ -94,6 +94,10 @@ class NewModel_Presence
 	public function getImageUrl()
 	{
 		return $this->page_url;
+	}
+
+	public function getLabel() {
+		return $this->getName() ?: $this->getHandle();
 	}
 
 	public function getUID()

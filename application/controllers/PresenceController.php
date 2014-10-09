@@ -66,7 +66,7 @@ class PresenceController extends GraphingController
         $compareData = array();
         foreach(explode(',',$this->_request->id) as $id){
 	        /** @var Model_Presence $presence */
-            $presence = Model_Presence::fetchById($id);
+            $presence = NewModel_PresenceFactory::getPresenceById($id);
             $this->validateData($presence);
             $compareData[$id] = (object)array(
 	            'presence'=>$presence,
@@ -194,7 +194,7 @@ class PresenceController extends GraphingController
 	 */
 	public function deleteAction()
 	{
-		$presence = Model_Presence::fetchById($this->_request->id);
+		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
 		$this->validateData($presence, 'page');
 
 		if ($this->_request->isPost()) {
@@ -211,7 +211,7 @@ class PresenceController extends GraphingController
         Zend_Session::writeClose(); // release session on long running actions
 
 	    /** @var Model_Presence $presence */
-        $presence = Model_Presence::fetchById($this->_request->id);
+        $presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
 
         $response = $presence->badges();
 
@@ -240,7 +240,7 @@ class PresenceController extends GraphingController
 		$series = array();
 
 		foreach ($chartData as $chart) {
-			$presence = Model_Presence::fetchById($chart['presence_id']);
+			$presence = NewModel_PresenceFactory::getPresenceById($chart['presence_id']);
 			if ($presence) {
                 $data = null;
 				$metric = $chart['metric'];
@@ -495,7 +495,7 @@ class PresenceController extends GraphingController
 		}
 
 		/** @var $presence Model_Presence */
-		$presence = Model_Presence::fetchById($this->_request->id);
+		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
 		if (!$presence) {
 			$this->apiError('Presence not found');
 		}
@@ -600,7 +600,7 @@ class PresenceController extends GraphingController
 	 * This should be called via a cron job (~hourly), and does not output anything
 	 */
 	public function updateKpiCacheAction() {
-		$presences = Model_Presence::fetchAll();
+		$presences = NewModel_PresenceFactory::getPresences();
 		$endDate = new DateTime();
 		$startDate = new DateTime();
 		$startDate->sub(DateInterval::createFromDateString('1 month'));

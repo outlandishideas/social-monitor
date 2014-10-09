@@ -22,6 +22,40 @@ class NewModel_PresenceType extends NewModel_Enum
 		}
 	}
 
+	public function getSign()
+	{
+		switch ($this->value) {
+			case self::SINA_WEIBO:
+				return "fa-weibo";
+				break;
+			case self::FACEBOOK:
+				return "fa-facebook";
+				break;
+			case self::TWITTER:
+				return "fa-twitter";
+				break;
+			default:
+				throw new \LogicException("Not implemented yet.");
+		}
+	}
+
+	public function getTitle()
+	{
+		switch ($this->value) {
+			case self::SINA_WEIBO:
+				return "Sina Weibo";
+				break;
+			case self::FACEBOOK:
+				return "Facebook";
+				break;
+			case self::TWITTER:
+				return "Twitter";
+				break;
+			default:
+				throw new \LogicException("Not implemented yet.");
+		}
+	}
+
 	public function getMetrics()
 	{
 		switch ($this->value) {

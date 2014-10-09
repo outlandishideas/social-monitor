@@ -1322,11 +1322,18 @@ body .compare.list li {
 
 .entity.twitter .icon-large { color: #4099FF; }
 .entity.facebook .icon-large { color: #3B5998; }
+.entity.sina_weibo .icon-large { color: #e6162d; }
 .entity.country .icon-large { color: #009600; }
 .entity.group .icon-large { color: #960000; }
+
 a.presence.twitter .icon-large,
 .icon-twitter-sign {
 	color: #4099FF;
+}
+
+a.presence.sina_weibo .icon-large,
+.icon-sina_weibo-sign {
+	color: #e6162d;
 }
 
 a.presence.facebook .icon-large,
@@ -1392,6 +1399,15 @@ li.link.box {
 .link.box.twitter a:hover,
 .link.box.twitter a:focus {
     background-color: #4099FF;
+}
+
+.link.box.sina_weibo a {
+    background-color: #ed4255;
+}
+
+.link.box.sina_weibo a:hover,
+.link.box.sina_weibo a:focus {
+    background-color: #e6162d;
 }
 
 .link.box.country a {
