@@ -352,4 +352,99 @@ class NewModel_Presence
 
 	public function saveBadgeResult($result, \DateTime $date, Badge_Period $range, $badgeName)
 	{}
+
+	/**
+	 * DEPRECATED: Use getHistoricStream() instead
+	 * @param $start
+	 * @param $end
+	 * @param $search
+	 * @param $order
+	 * @param $limit
+	 * @param $offset
+	 * @return array
+	 */
+	public function getStatuses(DateTime $start, DateTime $end, $search, $order, $limit, $offset)
+	{
+//		trigger_error("Deprecated function called.", E_USER_NOTICE);
+		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
+			$presence = Model_Presence::fetchById($this->getId());
+			return $presence->getStatuses($start->format("Y-m-d"), $end->format("Y-m-d"), $search, $order, $limit, $offset);
+		}
+
+		return $this->getHistoricStream($start, $end);
+	}
+
+	/**
+	 * DEPRECATED: Use getHistoricData()
+	 * @param DateTime $start
+	 * @param DateTime $end
+	 * @return array
+	 */
+	public function getPopularityData(DateTime $start, DateTime $end){
+//		trigger_error("Deprecated function called.", E_USER_NOTICE);
+		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
+			$presence = Model_Presence::fetchById($this->getId());
+			return $presence->getPopularityData($start->format("Y-m-d"), $end->format("Y-m-d"));
+		}
+		$data = $this->getHistoricData($start, $end);
+		return array_filter($data, function($row){
+			return $row['type'] == Metric_Popularity::getName();
+		});
+	}
+
+	/**
+	 * @param DateTime $start
+	 * @param DateTime $end
+	 * @return mixed
+	 */
+	public function getPostsPerDayData(DateTime $start, DateTime $end)
+	{
+//		trigger_error("Deprecated function called.", E_USER_NOTICE);
+		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
+			$presence = Model_Presence::fetchById($this->getId());
+			return $presence->getPostsPerDayData($start->format("Y-m-d"), $end->format("Y-m-d"));
+		}
+	}
+
+	/**
+	 * @param DateTime $start
+	 * @param DateTime $end
+	 * @return mixed
+	 */
+	public function getRelevanceData(DateTime $start, DateTime $end)
+	{
+//		trigger_error("Deprecated function called.", E_USER_NOTICE);
+		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
+			$presence = Model_Presence::fetchById($this->getId());
+			return $presence->getRelevanceData($start->format("Y-m-d"), $end->format("Y-m-d"));
+		}
+	}
+
+	/**
+	 * @param DateTime $start
+	 * @param DateTime $end
+	 * @return mixed
+	 */
+	public function getResponseData(DateTime $start, DateTime $end)
+	{
+//		trigger_error("Deprecated function called.", E_USER_NOTICE);
+		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
+			$presence = Model_Presence::fetchById($this->getId());
+			return $presence->getResponseData($start->format("Y-m-d"), $end->format("Y-m-d"));
+		}
+	}
+
+	/**
+	 * @param bool $includeBreakdown
+	 * @return array
+	 */
+	public function badges($includeBreakdown = true)
+	{
+//		trigger_error("Deprecated function called.", E_USER_NOTICE);
+		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
+			$presence = Model_Presence::fetchById($this->getId());
+			return $presence->badges($includeBreakdown);
+		}
+	}
+
 }

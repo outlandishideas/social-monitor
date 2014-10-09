@@ -273,20 +273,20 @@ class PresenceController extends GraphingController
 	}
 
 	/**
-	 * @param Model_Presence $presence
-	 * @param $startDate
-	 * @param $endDate
+	 * @param NewModel_Presence $presence
+	 * @param DateTime $start
+	 * @param DateTime $end
 	 * @return array
 	 */
-	private function generatePopularityGraphData($presence, $startDate, $endDate)
+	private function generatePopularityGraphData(NewModel_Presence $presence, DateTime $start, DateTime $end)
 	{
 		// subtract 1 from the first day, as we're calculating a daily difference
-		$startDate = date('Y-m-d', strtotime($startDate . ' -1 day'));
+		$start->modify('-1 day');
 
-		$data = $presence->getPopularityData($startDate, $endDate);
+		$data = $presence->getPopularityData($start, $end);
 		$points = array();
 		$target = $presence->getTargetAudience();
-		$targetDate = $presence->getTargetAudienceDate($startDate, $endDate);
+		$targetDate = $presence->getTargetAudienceDate($start, $end);
 		$graphHealth = 100;
 		$requiredRates = null;
 		$timeToTarget = null;
@@ -329,7 +329,7 @@ class PresenceController extends GraphingController
 
 			if ($targetDiff > 0) {
 				if ($targetDate) {
-					$interval = date_create($targetDate)->diff(date_create($startDate));
+					$interval = date_create($targetDate)->diff(date_create($start));
 					$timeToTarget = array('y'=>$interval->y, 'm'=>$interval->m);
 					$graphHealth = $healthCalc($targetDiff/$interval->days);
 				}
@@ -356,7 +356,7 @@ class PresenceController extends GraphingController
 				}
 			}
 
-			$points = $this->fillDateGaps($points, $startDate, $endDate, 0);
+			$points = $this->fillDateGaps($points, $start, $end, 0);
 			$points = array_values($points);
 
 			$current = array(
@@ -407,11 +407,12 @@ class PresenceController extends GraphingController
             $relevance[$row->created_time]->value = $row->total_bc_links;
 		}
         $rAverage = 0;
-        foreach($relevance as $r){
-            $rAverage += $r->value;
-        }
-        $rAverage /= count($relevance);
-
+		if(count($relevance) > 0){
+			foreach($relevance as $r){
+				$rAverage += $r->value;
+			}
+			$rAverage /= count($relevance);
+		}
         $relevancePercentage = $presence->isForFacebook() ? 'facebook_relevance_percentage' : 'twitter_relevance_percentage';
 
 		return array(
@@ -584,13 +585,14 @@ class PresenceController extends GraphingController
 
 	}
 
-	private function fillDateGaps($points, $startDate, $endDate, $value) {
-		$currentDate = $startDate;
-		while ($currentDate < $endDate) {
-			if (!array_key_exists($currentDate, $points)) {
-				$points[$currentDate] = (object)array('date'=>$currentDate, 'value'=>$value);
+	private function fillDateGaps($points, DateTime $start, DateTime $end, $value) {
+		$currentDate = clone $start;
+		while ($currentDate < $end) {
+			$currentDateKey = $currentDate->format("Y-m-d");
+			if (!array_key_exists($currentDateKey, $points)) {
+				$points[$currentDateKey] = (object)array('date'=>$currentDateKey, 'value'=>$value);
 			}
-			$currentDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+			$currentDate->modify('+1 day');
 		}
 		ksort($points);
 		return $points;
