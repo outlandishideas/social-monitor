@@ -15,12 +15,14 @@ class Metric_ActionsPerDay extends Metric_Abstract {
     protected function doCalculations(NewModel_Presence $presence, DateTime $start, DateTime $end){
         $data = $presence->getHistoricStreamMeta($start, $end);
 
-//        $target = BaseController::getOption('updates_per_day');
-        $actual = array_reduce($data, function($actions, $row){
-            return $actions + $row['number_of_actions'];
-        }, 0) / count($data);
-//
-//        return min(100, $actual / $target * 100);
+        $actual = 0;
+        //if no data, do not try and calculate anything
+        if(count($data) > 0){
+            $actual = array_reduce($data, function($actions, $row){
+                    return $actions + $row['number_of_actions'];
+                }, 0) / count($data);
+        }
+
         return $actual;
 
     }
