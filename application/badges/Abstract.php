@@ -25,7 +25,7 @@ abstract class Badge_Abstract
 
 	public static function getName()
 	{
-		return $this->name;
+		return static::$name;
 	}
 
 	abstract protected function doCalculation($data);

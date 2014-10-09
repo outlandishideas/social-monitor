@@ -345,4 +345,7 @@ class NewModel_Presence
 			$value
 		));
 	}
+
+	public function saveBadgeResult($result, \DateTime $date, Badge_Period $range, $badgeName)
+	{}
 }

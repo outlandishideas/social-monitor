@@ -6,7 +6,9 @@ abstract class Badge_Factory
 
 	protected static function getClassName($name)
 	{
-		$classNames = array();
+		$classNames = array(
+			Badge_Reach::getName() => 'Badge_Reach'
+		);
 		return $classNames[$name];
 	}
 

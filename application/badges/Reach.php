@@ -2,7 +2,7 @@
 
 class Badge_Reach extends Badge_Abstract
 {
-	protected $name = 'reach';
+	protected static $name = 'reach';
 
 	protected function doCalculation($data)
 	{

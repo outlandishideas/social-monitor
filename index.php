@@ -46,6 +46,7 @@ $resourceLoader->addResourceType('exception', 'exceptions/', 'Exception');
 $resourceLoader->addResourceType('util', 'util/', 'Util');
 $resourceLoader->addResourceType('refactored', 'models/refactored/', 'NewModel');
 $resourceLoader->addResourceType('metric', 'metrics/', 'Metric');
+$resourceLoader->addResourceType('badge', 'badges/', 'Badge');
 
 //load config
 if (!file_exists(APPLICATION_PATH . '/configs/config.yaml')) {
