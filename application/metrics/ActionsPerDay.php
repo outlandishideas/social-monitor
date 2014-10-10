@@ -12,7 +12,7 @@ class Metric_ActionsPerDay extends Metric_Abstract {
      * @param DateTime $end
      * @return int
      */
-    protected function doCalculations(NewModel_Presence $presence, DateTime $start, DateTime $end){
+    protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end){
         $data = $presence->getHistoricStreamMeta($start, $end);
 
         $actual = 0;
@@ -25,6 +25,17 @@ class Metric_ActionsPerDay extends Metric_Abstract {
 
         return $actual;
 
+    }
+
+    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        $data = $presence->getKpiData($start, $end);
+        $current = $data[self::getName()];
+        $target = BaseController::getOption('updates_per_day');
+        if ($target == 0) return null;
+        $score = round($current/$target * 100);
+        $score = max(0, min(100, $score)); //clamp score to the 0-100 range
+        return $score;
     }
 
 }

@@ -112,4 +112,19 @@ class NewModel_PresenceType extends NewModel_Enum
 				throw new \LogicException("Not implemented yet.");
 		}
 	}
+
+	public function getRelevancePercentage()
+	{
+		switch ($this->value) {
+			case self::SINA_WEIBO:
+				return BaseController::getOption('sina_weibo_relevance_percentage');
+				break;
+			case self::FACEBOOK:
+				return BaseController::getOption('facebook_relevance_percentage');
+				break;
+			case self::TWITTER:
+				return BaseController::getOptions('twitter_relevance_percentage');
+				break;
+		}
+	}
 }

@@ -12,13 +12,21 @@ class Metric_Popularity extends Metric_Abstract {
      * @param DateTime $end
      * @return int
      */
-    protected function doCalculations(NewModel_Presence $presence, DateTime $start, DateTime $end){
-//        $target = $presence->getTargetAudience();
+    protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    {
         $popularity = $presence->getPopularity();
-
-        //if target is null, then we haven't got a good target and should return null
-//        return $target ? min(100, 100 * $popularity / $target) : null;
         return $popularity;
     }
 
+    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        $current = $presence->getPopularity();
+        $target = $presence->getTargetAudience();
+
+        if ($target == 0) return null;
+
+        $score = round($current / $target * 100);
+        $score = max(0, min(100, $score));
+        return $score;
+    }
 }

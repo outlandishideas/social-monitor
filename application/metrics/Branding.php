@@ -12,9 +12,14 @@ class Metric_Branding extends Metric_Abstract {
      * @param DateTime $end
      * @return int
      */
-    protected function doCalculations(NewModel_Presence $presence, DateTime $start, DateTime $end){
-//        return $presence->getBranding() == 1 ? 100 : 0;
+    protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    {
         return $presence->getBranding();
+    }
+
+    protected function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        return $presence->getBranding() == 1 ? 100 : 0;
     }
 
 }

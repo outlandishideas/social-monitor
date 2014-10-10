@@ -144,6 +144,7 @@ class ConfigController extends BaseController {
                             'relevance_weighting'=>array('label'=>'Relevance Weighting'),
                             'facebook_relevance_percentage'=>array('label'=>'Percent of Actions Per Day that should be relevant for Facebook'),
                             'twitter_relevance_percentage'=>array('label'=>'Percent of Actions Per Day that should be relevant for Twitter'),
+                            'sina_weibo_relevance_percentage'=>array('label'=>'Percent of Actions Per Day that should be relevant for Sina Weibo'),
                         )
                     )
                 )
