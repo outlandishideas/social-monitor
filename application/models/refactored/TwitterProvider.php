@@ -132,7 +132,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 		return 0;
 	}
 
-	public function update($presence)
+	public function update(NewModel_Presence $presence)
 	{
 		$data = parent::updateNew($presence->getHandle());
 		if($data){
