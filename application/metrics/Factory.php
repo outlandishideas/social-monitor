@@ -12,7 +12,12 @@ abstract class Metric_Factory {
             Metric_Branding::getName() => "Metric_Branding",
             Metric_SignOff::getName() => "Metric_SignOff",
             Metric_PopularityTime::getName() => "Metric_PopularityTime",
-            Metric_Relevance::getName() => "Metric_Relevance"
+            Metric_Relevance::getName() => "Metric_Relevance",
+            Metric_FBEngagement::getName() => "Metric_FBEngagement",
+            Metric_Klout::getName() => "Metric_Klout",
+            Metric_LikesPerPost::getName() => "Metric_LikesPerPost",
+            Metric_ResponseTime::getName() => "Metric_ResponseTime",
+            Metric_ResponseRatio::getName() => "Metric_ResponseRatio"
         );
 
         if(!array_key_exists($name, $names)){
