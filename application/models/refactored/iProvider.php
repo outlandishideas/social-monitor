@@ -95,7 +95,7 @@ abstract class NewModel_iProvider
 		return $this->handleData($handle);
 	}
 
-	public function getKloutId() {
+	public function getKloutId($uid) {
 		return null;
 	}
 
