@@ -3,6 +3,7 @@
 abstract class Badge_Abstract
 {
 	protected static $name = '';
+	protected static $title = '';
 
 	protected $metrics = array();
 
@@ -33,6 +34,11 @@ abstract class Badge_Abstract
 	public static function getName()
 	{
 		return static::$name;
+	}
+
+	public static function getTitle()
+	{
+		return static::$title;
 	}
 
 	abstract protected function getMetrics();

@@ -364,7 +364,22 @@ class NewModel_Presence
 	}
 
 	public function saveBadgeResult($result, \DateTime $date, Badge_Period $range, $badgeName)
-	{}
+	{
+		$stmt = $this->db->prepare("SELECT `id` FROM `badge_history` WHERE `presence_id` = :id AND `date` = :date AND `daterange` = :range");
+		$stmt->execute(array(
+			':id'	=> $this->getId(),
+			':date'	=> $date->format('Y-m-d'),
+			':daterange'	=> (string) $range
+		));
+		$id = $stmt->fetchColumn(0);
+		if (false === $id) {
+			$stmt = $this->db->prepare("INSERT INTO `badge_history` (`presence_id`, `daterange`, `date`, `{$badgeName}`) VALUES (?, ?, ?, ?)");
+			$stmt->execute(array($this->getId(), (string) $range, $date->format('Y-m-d'), $result));
+		} else {
+			$stmt = $this->db->prepare("UPDATE `badge_history` SET `{$badgeName}` = :result WHERE `id` = :id");
+			$stmt->execute(array(':result' => $result, ':id' => $id));
+		}
+	}
 
 	/**
 	 * DEPRECATED: Use getHistoricStream() instead
