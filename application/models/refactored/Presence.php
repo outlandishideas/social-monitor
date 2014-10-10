@@ -40,7 +40,7 @@ class NewModel_Presence
 		}
 		$this->id = $internals['id'];
 		$this->handle = $internals['handle'];
-		$this->type = $internals['type'];
+		$this->setType($internals['type']);
 		$this->name = $internals['name'];
 		$this->uid = $internals['uid'];
 		$this->sign_off = $internals['sign_off'];
@@ -98,6 +98,16 @@ class NewModel_Presence
 	public function getType()
 	{
 		return $this->type;
+	}
+
+	public function setType($typeName)
+	{
+		$types = array_flip(NewModel_PresenceType::toArray());
+		if(array_key_exists($typeName, $types)){
+			$type = $types[$typeName];
+			$this->type = NewModel_PresenceType::$type();
+		}
+
 	}
 
 	public function getName()
