@@ -12,7 +12,43 @@ class FetchController extends BaseController
 		$lockName = $this->acquireLock();
 		set_time_limit($this->config->app->fetch_time_limit);
 
-		$presences = NewModel_PresenceFactory::getPresences();
+		$presences = NewModel_PresenceFactory::getPresencesByType(NewModel_PresenceType::SINA_WEIBO());
+		$presenceCount = count($presences);
+
+		$infoInterval = ($this->config->presence->cache_data_hours ?: 4) * 3600;
+		usort($presences, function($a, $b) { return strcmp($a->last_updated ?: '000000', $b->last_updated ?: '000000'); });
+
+		$index = 0;
+		foreach($presences as $presence) {
+			$index++;
+			$now = time();
+			$lastUpdated = strtotime($presence->getLastUpdated());
+			if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
+				$saveLastUpdated = true;
+
+				$this->log('Updating ' . $presence->type . ' info (' . $index . '/' . $presenceCount . '): ' . $presence->handle);
+
+				try {
+					$presence->update();
+				} catch (Exception $e) {
+					$this->log("Error updating presence info: " . $e->getMessage());
+					$saveLastUpdated = false;
+				}
+				$this->touchLock($lockName);
+			}
+		}
+//
+//		$this->touchLock($lockName);
+//
+//		$this->log('Finished');
+//		$this->releaseLock($lockName);
+
+		/*
+		 * THIS IS GOING TO GO ONCE WE MOVE FACEBOOK AND TWITTER TO NEW PRESENCES
+		 *
+		 * */
+		$presences = null;
+		$presences = array_merge(Model_Presence::fetchAllFacebook(), Model_Presence::fetchAllTwitter());
 		$presenceCount = count($presences);
 
 		$db = self::db();
@@ -68,6 +104,7 @@ class FetchController extends BaseController
 			}
 			$this->touchLock($lockName);
 		}
+
 
 		usort($presences, function($a, $b) { return strcmp($a->last_fetched ?: '000000', $b->last_fetched ?: '000000'); });
 		$index = 0;
@@ -254,6 +291,10 @@ class FetchController extends BaseController
 			ob_end_flush();
 		}
 		ob_implicit_flush(true);
+
+		if (!file_exists(APP_ROOT_PATH . '/log')) {
+			mkdir(APP_ROOT_PATH . '/log', 0777, true);
+		}
 
 		// backup the last log file
 		@copy($this->logFileName('fetch'), $this->logFileName('fetch') . '.last');

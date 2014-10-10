@@ -22,6 +22,8 @@ class NewModel_Presence
 	public $page_url;
 	public $image_url;
 	public $owner;
+	public $last_updated;
+	public $last_fetched;
 
 	public function __construct(PDO $db, array $internals, NewModel_iProvider $provider, array $metrics = array(), array $badges = array())
 	{
@@ -38,7 +40,7 @@ class NewModel_Presence
 		}
 		$this->id = $internals['id'];
 		$this->handle = $internals['handle'];
-		$this->type = $internals['type'];
+		$this->setType($internals['type']);
 		$this->name = $internals['name'];
 		$this->uid = $internals['uid'];
 		$this->sign_off = $internals['sign_off'];
@@ -48,6 +50,8 @@ class NewModel_Presence
 		$this->facebook_engagement = $internals['facebook_engagement'];
 		$this->page_url = $internals['page_url'];
 		$this->image_url = $internals['image_url'];
+		$this->last_updated = $internals['last_updated'];
+		$this->last_fetched = $internals['last_fetched'];
 	}
 
 	public function getId()
@@ -76,6 +80,16 @@ class NewModel_Presence
 		return $this->badges;
 	}
 
+	public function getLastFetched()
+	{
+		return $this->last_fetched;
+	}
+
+	public function getLastUpdated()
+	{
+		return $this->last_updated;
+	}
+
 	public function getHandle()
 	{
 		return $this->handle;
@@ -84,6 +98,16 @@ class NewModel_Presence
 	public function getType()
 	{
 		return $this->type;
+	}
+
+	public function setType($typeName)
+	{
+		$types = array_flip(NewModel_PresenceType::toArray());
+		if(array_key_exists($typeName, $types)){
+			$type = $types[$typeName];
+			$this->type = NewModel_PresenceType::$type();
+		}
+
 	}
 
 	public function getName()
@@ -130,16 +154,25 @@ class NewModel_Presence
 		return $this->popularity;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getFacebookEngagement()
 	{
 		return $this->facebook_engagement;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getPresenceSign()
 	{
-		return $this->provider->getSign();
+		return $this->getType()->getSign();
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isForTwitter()
 	{
 		return $this->getType() == NewModel_PresenceType::TWITTER();

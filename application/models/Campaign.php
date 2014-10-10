@@ -75,7 +75,7 @@ class Model_Campaign extends Model_Base {
 	 * of doing a database query
 	 * @param array $mapping
 	 * @param Model_Presence[] $allPresences
-	 * @return Model_Presence[]
+	 * @return NewModel_Presence[]
 	 */
 	function getPresences($mapping = null, $allPresences = null) {
 		if (!isset($this->presences)) {

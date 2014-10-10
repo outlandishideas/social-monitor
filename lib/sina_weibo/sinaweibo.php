@@ -5,12 +5,7 @@
  * @author Elmer Zhang <freeboy6716@gmail.com>
  */
 
-/**
- * @ignore
- */
-class OAuthException extends Exception {
-	// pass
-}
+require_once APP_ROOT_PATH.'/lib/twitteroauth/OAuth.php';
 
 
 /**
