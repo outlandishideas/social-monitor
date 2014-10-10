@@ -198,7 +198,7 @@ class Model_Campaign extends Model_Base {
 						$badge['metrics'][$m] = (object)array(
 							'score' => 0,
 							'type' => $m,
-							'title' => $metric->title
+							'title' => $metric->getTitle()
 						);
 					}
 					$badge['metrics'][$m]->score += $metric->score;
