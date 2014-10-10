@@ -1,6 +1,6 @@
 <?php
 
-class Metric_ResponseTime extends Metric_Abstract {
+class Metric_ResponseRatio extends Metric_Abstract {
 
     protected static $name = "response_ratio";
     protected static $title = "Conversation";
