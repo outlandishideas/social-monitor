@@ -66,8 +66,13 @@ class NewModel_Presence
 	/**
 	 * @return Badge_Abstract[]
 	 */
-	public function getBadges()
+	public function getBadges($badgeType = null)
 	{
+//		trigger_error("Deprecated function called.", E_USER_NOTICE);
+		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()) {
+			$presence = Model_Presence::fetchById($this->getId());
+			return $presence->getBadges($badgeType);
+		}
 		return $this->badges;
 	}
 
@@ -244,7 +249,11 @@ class NewModel_Presence
 			}
 
 			if (!($date instanceof DateTime) || $date->getTimestamp() < time()) {
-				$date = new DateTime(PHP_INT_MAX);
+				try {
+					$date = new DateTime(PHP_INT_MAX);
+				} catch (Exception $e) {
+					$date = null;
+				}
 			}
 		}
 		return $date;
@@ -450,5 +459,33 @@ class NewModel_Presence
 			return $presence->badges($includeBreakdown);
 		}
 	}
+
+	/**
+	 * @return array
+	 */
+	public function updateInfo()
+	{
+//		trigger_error("Deprecated function called.", E_USER_NOTICE);
+		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
+			$presence = Model_Presence::fetchById($this->getId());
+			return $presence->updateInfo();
+		}
+		$this->provider->fetchData($this);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function save()
+	{
+//		trigger_error("Deprecated function called.", E_USER_NOTICE);
+		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
+			$presence = Model_Presence::fetchById($this->getId());
+			$presence->last_updated = gmdate('Y-m-d H:i:s');
+			$presence->save();
+		}
+	}
+
+
 
 }
