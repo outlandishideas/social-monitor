@@ -144,16 +144,25 @@ class NewModel_Presence
 		return $this->popularity;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getFacebookEngagement()
 	{
 		return $this->facebook_engagement;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getPresenceSign()
 	{
-		return $this->provider->getSign();
+		return $this->getType()->getSign();
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isForTwitter()
 	{
 		return $this->getType() == NewModel_PresenceType::TWITTER();
