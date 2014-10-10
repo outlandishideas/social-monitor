@@ -272,11 +272,11 @@ class NewModel_Presence
 					$meanX = $meanY = $sumXY = $sumXX = 0;
 
 					foreach ($data as $row) {
-						$row->datetime = strtotime($row->datetime);
-						$meanX += $row->datetime;
-						$meanY += $row->value;
-						$sumXY += $row->datetime*$row->value;
-						$sumXX += $row->datetime*$row->datetime;
+						$rowDate = strtotime($row['datetime']);
+						$meanX += $rowDate;
+						$meanY += $row['value'];
+						$sumXY += $rowDate*$row['value'];
+						$sumXX += $rowDate*$rowDate;
 					}
 
 					$meanX /= $count;
