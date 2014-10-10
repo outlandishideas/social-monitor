@@ -174,6 +174,11 @@ class Model_Campaign extends Model_Base {
 	 * @return array
 	 */
 	public function badges(){
+
+		$end = new DateTime();
+		$start = clone $end;
+		$start->modify("-1 month");
+
 		$badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
 
         $allCampaigns = static::badgesData();
@@ -201,7 +206,7 @@ class Model_Campaign extends Model_Base {
 							'title' => $metric->getTitle()
 						);
 					}
-					$badge['metrics'][$m]->score += $metric->score;
+					$badge['metrics'][$m]->score += $metric->getScore($presence, $start, $end);
 				}
 			}
 			foreach($badge['metrics'] as $metric){

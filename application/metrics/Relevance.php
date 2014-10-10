@@ -68,7 +68,7 @@ class Metric_Relevance extends Metric_Abstract {
             $totals['links'] += $row['number_of_links'];
             $totals['bc_links'] += $row['number_of_bc_links'];
             return $totals;
-        });
+        }, $totals);
 
         if ($totals['total'] < BaseController::getOption('updates_per_day')) return 0;
 

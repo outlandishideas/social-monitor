@@ -123,7 +123,7 @@ class NewModel_PresenceType extends NewModel_Enum
 				return BaseController::getOption('facebook_relevance_percentage');
 				break;
 			case self::TWITTER:
-				return BaseController::getOptions('twitter_relevance_percentage');
+				return BaseController::getOption('twitter_relevance_percentage');
 				break;
 		}
 	}
