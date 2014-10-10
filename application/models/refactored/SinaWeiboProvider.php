@@ -10,7 +10,6 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 
 	protected $tableName = 'sina_weibo_posts';
 	protected $type = null;
-	protected $sign = "fa-weibo";
 
 	public function __construct(PDO $db) {
 		parent::__construct($db);
@@ -164,16 +163,19 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 
 	protected function parseStatus($status)
 	{
-		$id = $this->saveStatus($status);
-		$status['local_id'] = $id;
-		$this->findAndSaveLinks($status);
-		if (array_key_exists('retweeted_status', $status)) {
-			$s = $status['retweeted_status'];
-			NewModel_PresenceFactory::setDatabase($this->db);
-			$presence = NewModel_PresenceFactory::getPresenceByHandle($s['user']['profile_url'], $this->type);
-			$s['posted_by_presence'] = $presence ? 1 : 0;
-			$s['presence_id'] = $presence ? $presence->getId() : null;
-			$this->parseStatus($s);
+		$statusExists = $this->db->prepare("SELECT EXISTS(SELECT 1 FROM {$this->tableName} WHERE `remote_id` = ?)");
+		if($statusExists->execute($status['idstr']) == 0){
+			$id = $this->saveStatus($status);
+			$status['local_id'] = $id;
+			$this->findAndSaveLinks($status);
+			if (array_key_exists('retweeted_status', $status)) {
+				$s = $status['retweeted_status'];
+				NewModel_PresenceFactory::setDatabase($this->db);
+				$presence = NewModel_PresenceFactory::getPresenceByHandle($s['user']['profile_url'], $this->type);
+				$s['posted_by_presence'] = $presence ? 1 : 0;
+				$s['presence_id'] = $presence ? $presence->getId() : null;
+				$this->parseStatus($s);
+			}
 		}
 	}
 
