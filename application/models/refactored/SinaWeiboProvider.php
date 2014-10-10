@@ -70,6 +70,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 								AND `created_at` <= :end
 								AND `presence_id` = :id
 						)
+						AND type = 'sina_weibo'
 					GROUP BY
 						status_id
 				) AS l ON (p.id = l.status_id)
