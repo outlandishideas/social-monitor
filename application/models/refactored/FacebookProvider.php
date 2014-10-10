@@ -174,7 +174,7 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function update($presence)
+	public function update(NewModel_Presence $presence)
 	{
 		$data = parent::updateNew($presence->getHandle());
 		if($data){
