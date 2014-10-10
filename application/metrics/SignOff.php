@@ -17,7 +17,7 @@ class Metric_SignOff extends Metric_Abstract {
         return $presence->getSignOff();
     }
 
-    protected function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         return $presence->getSignOff() == 1 ? 100 : 0;
     }

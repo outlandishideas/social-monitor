@@ -51,7 +51,7 @@ class Metric_Relevance extends Metric_Abstract {
     }
 
 
-    protected function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $data = $presence->getHistoricStreamMeta($start, $end);
 

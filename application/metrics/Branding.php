@@ -17,7 +17,7 @@ class Metric_Branding extends Metric_Abstract {
         return $presence->getBranding();
     }
 
-    protected function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         return $presence->getBranding() == 1 ? 100 : 0;
     }
