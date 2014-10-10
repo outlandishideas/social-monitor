@@ -70,9 +70,40 @@ abstract class NewModel_iProvider
 	abstract protected function findAndSaveLinks($streamdatum);
 
 	/**
-	 * Test if a handle is retrievable
-	 * @param mixed $handle  The handle to test
-	 * @return array|false Return false when handle is invalid, otherwise an array with the following data in order: `type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`
+	 * returns the data from handleData() without type and uid, which should not be updated
+	 *
+	 * @param NewModel_Presence $presence
+	 * @return array|null Return null when handle is invalid, otherwise an array with the following data in order: `image_url`, `name`, `page_url`, `popularity`, `klout_id`, `klout_score`, `facebook_engagement`, `last_updated`
 	 */
-	abstract public function testHandle($handle);
+	public function update(NewModel_Presence $presence) {
+		$data = $this->handleData($presence->getHandle());
+		if($data){
+			unset($data['type']);
+			unset($data['handle']);
+			unset($data['uid']);
+		}
+		return $data;
+	}
+
+	/**
+	 * returns the data from handleData() without type and uid, which should not be updated
+	 *
+	 * @param mixed $handle
+	 * @return array|null Return null when handle is invalid, otherwise an array with the following data in order: `type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `klout_id`, `klout_score`, `facebook_engagement`, `last_updated`
+	 */
+	public function updateNew($handle) {
+		return $this->handleData($handle);
+	}
+
+	public function getKloutId() {
+		return null;
+	}
+
+	/**
+	 * gets the data for a handle. Returns null if handle cannot be got or throws Logic Exception if we don't know what went wrong
+	 *
+	 * @param mixed $handle  The handle to test
+	 * @return array|null Return null when handle is invalid, otherwise an array with the following data in order: `type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `klout_id`, `klout_score`, `facebook_engagement`, `last_updated`
+	 */
+	abstract public function handleData($handle);
 }

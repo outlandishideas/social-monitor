@@ -126,15 +126,15 @@ abstract class NewModel_PresenceFactory
 
 		$provider = $type->getProvider(static::$db);
 
-		$args = $provider->testHandle($handle);
+		$args = $provider->updateNew($handle);
 
-		if (false === $args) {
-			return false;
+		if (!$args) {
+			return 0;
 		} else {
 			//insert presence
 			$stmt = static::$db->prepare("
 				INSERT INTO `presences`
-				(`type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `last_updated`, `sign_off`, `branding`)
+				(`type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `klout_id`, `klout_score`, `facebook_engagement`, `last_updated`, `sign_off`, `branding`)
 				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			$args[] = $signed_off ? 1 : 0;
 			$args[] = $branding ? 1 : 0;

@@ -7,6 +7,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 
 	protected $tableName = 'twitter_tweets';
 	protected $type = null;
+	protected $kloutApi = null;
 
 	const KLOUT_API_ENDPOINT = 'http://api.klout.com/v2/';
 
@@ -131,51 +132,98 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 		return 0;
 	}
 
-	public function testHandle($handle) {#
+	public function update($presence)
+	{
+		$data = parent::updateNew($presence->getHandle());
+		if($data){
+			$kloutId = $presence->getKloutId();
+			if($kloutId){
+				$data['klout_id'] = $kloutId;
+				$data['klout_score'] = $this->getKloutScore($kloutId);
+			}
+		}
+		return $data;
+	}
+
+	public function updateNew($handle)
+	{
+		$data = parent::updateNew($handle);
+		$kloutId = $this->getKloutId($data['uid']);
+		if($kloutId){
+			$data['klout_id'] = $kloutId;
+			$data['klout_score'] = $this->getKloutScore($kloutId);
+		}
+		return $data;
+	}
+
+	protected function getKloutApi()
+	{
+		if(!$this->kloutApi){
+			try {
+				$this->kloutApi = Zend_Registry::get('config')->klout->api_key;
+			} catch (Exception $e) {
+				$this->kloutApi = null;
+			}
+		}
+		return $this->kloutApi;
+	}
+
+	/**
+	 * @param $uid
+	 * @return mixed|null
+	 */
+	public function getKloutId($uid)
+	{
+		$apiKey = $this->getKloutApi();
+		if($apiKey){
+			$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $this->uid . '?key=' . $apiKey);
+			return $json->id;
+		}
+		return null;
+	}
+
+	/**
+	 * @param $kloutId
+	 * @return mixed|null
+	 */
+	public function getKloutScore($kloutId)
+	{
+		$apiKey = $this->getKloutApi();
+		if($apiKey){
+			try {
+				$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'user.json/' . $this->klout_id . '?key=' . $apiKey);
+				return $json->score->score;
+			} catch (RuntimeException $ex) {
+				if ($ex->getCode() == 404) {
+					/* Do Something */
+				}
+			}
+		}
+		return null;
+	}
+
+	public function handleData($handle) {#
 
 		try {
 			$data = Util_Twitter::userInfo($handle);
 		} catch (Exception_TwitterNotFound $e) {
-			return false;
+			return null;
 //			throw new Exception_TwitterNotFound('Twitter user not found: ' . $this->handle, $e->getCode(), $e->getPath(), $e->getErrors());
 		}
 
-		// update the klout score (not currently possible for facebook pages)
-		//todo: get klout score
-//		try {
-//			$apiKey = Zend_Registry::get('config')->klout->api_key;
-//			$success = $this->updateKloutScore($apiKey);
-//			if (!$success) {
-//				$this->klout_id = null;
-//				$this->updateKloutScore($apiKey);
-//			}
-//		} catch (Exception $ex) { /* ignore */ }
-
-//		if (!$this->klout_id) {
-//			$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $this->uid . '?key=' . $apiKey);
-//			$this->klout_id = $json->id;
-//		}
-//		if ($this->klout_id) {
-//			try {
-//				$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'user.json/' . $this->klout_id . '?key=' . $apiKey);
-//				$this->klout_score = $json->score->score;
-//			} catch (RuntimeException $ex) {
-//				if ($ex->getCode() == 404) {
-//					/* Do Something */
-//				}
-//			}
-//		}
-
 		//test if user exists
 		return array(
-			NewModel_PresenceType::TWITTER, //type
-			$handle, //handle
-			$data->id_str, //uid
-			$data->profile_image_url, //image_url
-			$data->name, //name
-			'http://www.twitter.com/' . $data->screen_name, //page_url
-			$data->followers_count, //popularity
-			gmdate('Y-m-d H:i:s') //last_updated
+			"type" => NewModel_PresenceType::TWITTER, //type
+			"handle" => $handle, //handle
+			"uid" => $data->id_str, //uid
+			"image_url" => $data->profile_image_url, //image_url
+			"name" => $data->name, //name
+			"page_url" => 'http://www.twitter.com/' . $data->screen_name, //page_url
+			"followers" => $data->followers_count,  //popularity
+			"klout_id" => null,  //klout_id
+			"klout_score" => null,  //klout_score
+			"facebook_engagement" => null,  //facebook_engagement
+			"last_updated" => gmdate('Y-m-d H:i:s') //last_updated
 		);
 	}
 }
