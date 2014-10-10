@@ -4,11 +4,6 @@ class Badge_Reach extends Badge_Abstract
 {
 	protected static $name = 'reach';
 
-	protected function doCalculation($data)
-	{
-		var_dump($data);
-	}
-
 	protected function getMetrics()
 	{
 		if (count($this->metrics) == 0) {

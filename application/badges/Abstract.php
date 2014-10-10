@@ -14,9 +14,16 @@ abstract class Badge_Abstract
 		if (is_null($range)) {
 			$range = Badge_Period::MONTH();
 		}
-		$start = $range->getBegin($date);
-		$data = $presence->getKpiData($start, $date);
-		$result = $this->doCalculation($data);
+
+		$totalWeight = 0;
+		$totalScore = 0;
+		$start = $range->getStart($date);
+		foreach ($this->getMetrics as $metric => $weight) {
+			$totalScore += (Metric_Factory::getMetric($metric)->getScore($presence, $start, $date) * $weight);
+			$totalWeight += $weight;
+		}
+		$result = round($totalScore/$totalWeight);
+		$result = max(0, min(100, $result));
 
 		$presence->saveBadgeResult($result, $date, $range, static::getName());
 
@@ -27,8 +34,6 @@ abstract class Badge_Abstract
 	{
 		return static::$name;
 	}
-
-	abstract protected function doCalculation($data);
 
 	abstract protected function getMetrics();
 }
