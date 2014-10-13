@@ -7,3 +7,4 @@
         <var name="DB_DBNAME" value="bcmonitor_test" />
     </php>
 </phpunit>
+
