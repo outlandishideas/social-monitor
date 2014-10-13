@@ -6,12 +6,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>British Council :: <?php echo strip_tags($this->title); ?></title>
     <link rel="shortcut icon" href="<?php echo $this->baseUrl('/') . 'assets/img/favicon.ico';?>"/>
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
-    <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css" rel="stylesheet"/>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+	<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/lib/foundation/css/normalize.css';?>" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/lib/foundation/css/foundation.min.css';?>" rel="stylesheet"/>
 	<?php
 		echo $this->minifyHeadLink()
 			->appendStylesheet('assets/fonts/proxima-nova-fontfacekit/stylesheet.css')
-			->appendStylesheet('assets/lib/bootstrap/bootstrap.css')
+//			->appendStylesheet('assets/lib/bootstrap/bootstrap.css')
+//			->appendStylesheet('assets/lib/foundation/css/normalize.css')
+//			->appendStylesheet('assets/lib/foundation/css/foundation.css')
 			->appendStylesheet('assets/lib/tipsy/css/tipsy.css')
 			->appendStylesheet('assets/css/svg.css')
 			->appendStylesheet('assets/css/bc.css')
