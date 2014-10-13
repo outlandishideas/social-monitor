@@ -5,6 +5,9 @@
  * @author Elmer Zhang <freeboy6716@gmail.com>
  */
 
+defined('APP_ROOT_PATH')
+    || define('APP_ROOT_PATH', realpath(__DIR__.'/../../'));
+
 require_once APP_ROOT_PATH.'/lib/twitteroauth/OAuth.php';
 
 

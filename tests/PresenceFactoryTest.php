@@ -32,6 +32,8 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
     	parent::setUp();
     	defined('APPLICATION_PATH')
     		|| define('APPLICATION_PATH', __DIR__ . '/../application');
+    	defined('APPLICATION_ENV')
+    		|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
     	require_once 'Zend/Loader/Autoloader.php';
 		$autoloader = Zend_Loader_Autoloader::getInstance();
 		$resourceLoader = new Zend_Application_Module_Autoloader(array(
@@ -42,7 +44,17 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 		$resourceLoader->addResourceType('util', 'util/', 'Util');
 		$resourceLoader->addResourceType('refactored', 'models/refactored/', 'NewModel');
 		$resourceLoader->addResourceType('metric', 'metrics/', 'Metric');
+		$resourceLoader->addResourceType('badge', 'badges/', 'Badge');
 		NewModel_PresenceFactory::setDatabase(self::$pdo);
+		//load config
+		if (!file_exists(APPLICATION_PATH . '/configs/config.yaml')) {
+			die('Please copy configs/config.sample.yaml to configs/config.yaml');
+		}
+		$config = new Zend_Config_Yaml(
+		    APPLICATION_PATH . '/configs/config.yaml',
+		    APPLICATION_ENV
+		);
+		Zend_Registry::set('config', $config);
     }
 
     public function testCreateNewSinaWeiboPresenceReturnsFalseWhenInvalid()
@@ -60,7 +72,7 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
     {
     	NewModel_PresenceFactory::createNewPresence(NewModel_PresenceType::SINA_WEIBO(), 'learnenglish', false, false);
     	$provider = new NewModel_SinaWeiboProvider(self::$pdo);
-    	$data = $provider->testHandle('learnenglish');
+    	$data = array_values($provider->handleData('learnenglish'));
     	$dbdata = self::$pdo->query("SELECT * FROM `presences` WHERE `handle` = 'learnenglish'");
     	$dbdata = $dbdata->fetch(PDO::FETCH_ASSOC);
 

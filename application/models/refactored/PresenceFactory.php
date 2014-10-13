@@ -129,16 +129,16 @@ abstract class NewModel_PresenceFactory
 		$args = $provider->updateNew($handle);
 
 		if (!$args) {
-			return 0;
+			return false;
 		} else {
 			//insert presence
 			$stmt = static::$db->prepare("
 				INSERT INTO `presences`
 				(`type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `klout_id`, `klout_score`, `facebook_engagement`, `last_updated`, `sign_off`, `branding`)
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			$args[] = $signed_off ? 1 : 0;
 			$args[] = $branding ? 1 : 0;
-			return $stmt->execute($args);
+			return $stmt->execute(array_values($args));
 		}
 	}
 

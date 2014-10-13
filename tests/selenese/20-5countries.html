@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="https://bcmonitor.beta.gd/" />
-<title>Domains</title>
+<title>5countries_ok</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Domains</td></tr>
+<tr><td rowspan="1" colspan="3">5countries_ok</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -17,14 +17,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>storeElementPresent</td>
-	<td>link=Users</td>
-	<td>isPresent</td>
-</tr>
-<tr>
-	<td>gotoIf</td>
-	<td>${isPresent}==true</td>
-	<td>Gocheck</td>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
@@ -42,21 +37,21 @@
 	<td></td>
 </tr>
 <tr>
-	<td>label</td>
-	<td>Gocheck</td>
+	<td>open</td>
+	<td>/country/view/id/162</td>
 	<td></td>
 </tr>
-<!--Check if there's an error message for 5 chosen domains-->
-<!--aau.ac.ae -->
+<!--Check for 5 countries if the circle stays forever-->
+<!--Afghanistan-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Domains</td>
+	<td>link=Countries</td>
 	<td></td>
 </tr>
 <tr>
-	<td>open</td>
-	<td>/domain/view/id/6041</td>
-	<td></td>
+	<td>click</td>
+	<td>link=Afghanistan</td>
+	<td>Afghanistan</td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -64,20 +59,21 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextNotPresent</td>
-	<td>error</td>
+	<td>verifyNotVisible</td>
+	<td>class=spinner</td>
 	<td></td>
 </tr>
-<!--apps.facebook.com-->
+<!--#################################################-->
+<!--France-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Domains</td>
+	<td>link=Countries</td>
 	<td></td>
 </tr>
 <tr>
-	<td>open</td>
-	<td>/domain/view/id/1704</td>
-	<td></td>
+	<td>click</td>
+	<td>link=France</td>
+	<td>France</td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -85,20 +81,20 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextNotPresent</td>
-	<td>error</td>
+	<td>verifyNotVisible</td>
+	<td>class=spinner</td>
 	<td></td>
 </tr>
-<!--befestival.org-->
+<!--UK-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Domains</td>
+	<td>link=Countries</td>
 	<td></td>
 </tr>
 <tr>
-	<td>open</td>
-	<td>/domain/view/id/4191</td>
-	<td></td>
+	<td>click</td>
+	<td>link=UK</td>
+	<td>UK</td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -106,20 +102,20 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextNotPresent</td>
-	<td>error</td>
+	<td>verifyNotVisible</td>
+	<td>class=spinner</td>
 	<td></td>
 </tr>
-<!--discover.twitter.com-->
+<!--Vietnam-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Domains</td>
+	<td>link=Countries</td>
 	<td></td>
 </tr>
 <tr>
-	<td>open</td>
-	<td>/domain/view/id/6041</td>
-	<td></td>
+	<td>click</td>
+	<td>link=Vietnam</td>
+	<td>Vietnam</td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -127,20 +123,20 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextNotPresent</td>
-	<td>error</td>
+	<td>verifyNotVisible</td>
+	<td>class=spinner</td>
 	<td></td>
 </tr>
-<!--c4lpt.co.uk-->
+<!--Malaysia-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Domains</td>
+	<td>link=Countries</td>
 	<td></td>
 </tr>
 <tr>
-	<td>open</td>
-	<td>/domain/view/id/4938</td>
-	<td></td>
+	<td>click</td>
+	<td>link=Malaysia</td>
+	<td>Malaysia</td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -148,8 +144,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextNotPresent</td>
-	<td>error</td>
+	<td>verifyNotVisible</td>
+	<td>class=spinner</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Signout</td>
 	<td></td>
 </tr>
 </tbody></table>

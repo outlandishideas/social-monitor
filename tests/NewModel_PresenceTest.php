@@ -49,6 +49,7 @@ class NewModel_PresenceTest extends PHPUnit_Extensions_Database_TestCase {
         $resourceLoader->addResourceType('util', 'util/', 'Util');
         $resourceLoader->addResourceType('refactored', 'models/refactored/', 'NewModel');
         $resourceLoader->addResourceType('metric', 'metrics/', 'Metric');
+        $resourceLoader->addResourceType('badge', 'badges/', 'Badge');
         NewModel_PresenceFactory::setDatabase(self::$pdo);
         $this->presence = NewModel_PresenceFactory::getPresenceById(1);
     }
@@ -73,4 +74,3 @@ class NewModel_PresenceTest extends PHPUnit_Extensions_Database_TestCase {
         $this->assertEquals(2, $owner->id);
     }
 }
- 

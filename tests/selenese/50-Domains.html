@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="https://bcmonitor.beta.gd/" />
-<title>all_tabs_ok</title>
+<title>Domains</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">all_tabs_ok</td></tr>
+<tr><td rowspan="1" colspan="3">Domains</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -17,17 +17,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>storeElementPresent</td>
-	<td>link=Users</td>
-	<td>isPresent</td>
-</tr>
-<tr>
-	<td>gotoIf</td>
-	<td>${isPresent}==true</td>
-	<td>Gocheck</td>
-</tr>
-<tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Login</td>
 	<td></td>
 </tr>
@@ -46,70 +36,21 @@
 	<td>css=input.button.add</td>
 	<td></td>
 </tr>
-<tr>
-	<td>label</td>
-	<td>Gocheck</td>
-	<td></td>
-</tr>
-<!--Go through all tabs + check if there's an error msg-->
-<tr>
-	<td>verifyTextNotPresent</td>
-	<td>error</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Countries</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextNotPresent</td>
-	<td>error</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=SBUs</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextNotPresent</td>
-	<td>error</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Presences</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextNotPresent</td>
-	<td>error</td>
-	<td></td>
-</tr>
+<!--Check if there's an error message for 5 chosen domains-->
+<!--aau.ac.ae -->
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Domains</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextNotPresent</td>
-	<td>error</td>
+	<td>open</td>
+	<td>/domain/view/id/6041</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>link=Users</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextNotPresent</td>
-	<td>error</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Account</td>
+	<td>pause</td>
+	<td>5000</td>
 	<td></td>
 </tr>
 <tr>
@@ -117,9 +58,20 @@
 	<td>error</td>
 	<td></td>
 </tr>
+<!--apps.facebook.com-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Edit Users</td>
+	<td>link=Domains</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/domain/view/id/1704</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
 	<td></td>
 </tr>
 <tr>
@@ -127,9 +79,62 @@
 	<td>error</td>
 	<td></td>
 </tr>
+<!--befestival.org-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Settings</td>
+	<td>link=Domains</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/domain/view/id/4191</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>error</td>
+	<td></td>
+</tr>
+<!--discover.twitter.com-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Domains</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/domain/view/id/6041</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>error</td>
+	<td></td>
+</tr>
+<!--c4lpt.co.uk-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Domains</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/domain/view/id/4938</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>5000</td>
 	<td></td>
 </tr>
 <tr>
@@ -140,11 +145,6 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>link=Signout</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextNotPresent</td>
-	<td>error</td>
 	<td></td>
 </tr>
 </tbody></table>

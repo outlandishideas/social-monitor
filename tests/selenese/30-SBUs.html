@@ -4,27 +4,22 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="https://bcmonitor.beta.gd/" />
-<title>5countries_ok</title>
+<title>SBUs</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">5countries_ok</td></tr>
+<tr><td rowspan="1" colspan="3">SBUs</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/country/view/id/162</td>
+	<td>/</td>
 	<td></td>
 </tr>
 <tr>
-	<td>storeElementPresent</td>
-	<td>link=Users</td>
-	<td>isPresent</td>
-</tr>
-<tr>
-	<td>gotoIf</td>
-	<td>${isPresent}==true</td>
-	<td>Gocheck</td>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
@@ -41,22 +36,17 @@
 	<td>css=input.button.add</td>
 	<td></td>
 </tr>
-<tr>
-	<td>label</td>
-	<td>Gocheck</td>
-	<td></td>
-</tr>
-<!--Check for 5 countries if the circle stays forever-->
-<!--Afghanistan-->
+<!--Check for the 3 links -->
+<!--UK Arts-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Countries</td>
+	<td>link=SBUs</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Afghanistan</td>
-	<td>Afghanistan</td>
+	<td>link=UK Arts</td>
+	<td>UK Arts</td>
 </tr>
 <tr>
 	<td>pause</td>
@@ -68,21 +58,20 @@
 	<td>class=spinner</td>
 	<td></td>
 </tr>
-<!--#################################################-->
-<!--France-->
+<!--UK Education & Society-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Countries</td>
+	<td>link=SBUs</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=France</td>
-	<td>France</td>
+	<td>link=UK Education &amp; Society</td>
+	<td>UK Education &amp; Society</td>
 </tr>
 <tr>
 	<td>pause</td>
-	<td>5000</td>
+	<td>10000</td>
 	<td></td>
 </tr>
 <tr>
@@ -90,20 +79,20 @@
 	<td>class=spinner</td>
 	<td></td>
 </tr>
-<!--UK-->
+<!--UK English & Exams-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Countries</td>
+	<td>link=SBUs</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=UK</td>
-	<td>UK</td>
+	<td>link=UK English &amp; Exams</td>
+	<td>UK English &amp; Exams</td>
 </tr>
 <tr>
 	<td>pause</td>
-	<td>5000</td>
+	<td>7500</td>
 	<td></td>
 </tr>
 <tr>
@@ -111,46 +100,9 @@
 	<td>class=spinner</td>
 	<td></td>
 </tr>
-<!--Vietnam-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Countries</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Vietnam</td>
-	<td>Vietnam</td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>5000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyNotVisible</td>
-	<td>class=spinner</td>
-	<td></td>
-</tr>
-<!--Malaysia-->
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Countries</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Malaysia</td>
-	<td>Malaysia</td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>5000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyNotVisible</td>
-	<td>class=spinner</td>
+	<td>link=Signout</td>
 	<td></td>
 </tr>
 </tbody></table>

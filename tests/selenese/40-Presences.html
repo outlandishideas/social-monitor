@@ -17,14 +17,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>storeElementPresent</td>
-	<td>link=Users</td>
-	<td>isPresent</td>
-</tr>
-<tr>
-	<td>gotoIf</td>
-	<td>${isPresent}==true</td>
-	<td>Gocheck</td>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
@@ -39,11 +34,6 @@
 <tr>
 	<td>clickAndWait</td>
 	<td>css=input.button.add</td>
-	<td></td>
-</tr>
-<tr>
-	<td>label</td>
-	<td>Gocheck</td>
 	<td></td>
 </tr>
 <!--Check for 5 fb links and 5 twitter links if the circle stays forever-->
@@ -207,6 +197,11 @@
 <tr>
 	<td>verifyNotVisible</td>
 	<td>class=spinner</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Signout</td>
 	<td></td>
 </tr>
 </tbody></table>

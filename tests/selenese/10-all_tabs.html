@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="https://bcmonitor.beta.gd/" />
-<title>SBUs</title>
+<title>all_tabs_ok</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">SBUs</td></tr>
+<tr><td rowspan="1" colspan="3">all_tabs_ok</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -17,14 +17,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>storeElementPresent</td>
-	<td>link=Users</td>
-	<td>isPresent</td>
-</tr>
-<tr>
-	<td>gotoIf</td>
-	<td>${isPresent}==true</td>
-	<td>Gocheck</td>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
@@ -41,73 +36,95 @@
 	<td>css=input.button.add</td>
 	<td></td>
 </tr>
+<!--Go through all tabs + check if there's an error msg-->
 <tr>
-	<td>label</td>
-	<td>Gocheck</td>
+	<td>verifyTextNotPresent</td>
+	<td>error</td>
 	<td></td>
 </tr>
-<!--Check for the 3 links -->
-<!--UK Arts-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Countries</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>error</td>
+	<td></td>
+</tr>
 <tr>
 	<td>clickAndWait</td>
 	<td>link=SBUs</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=UK Arts</td>
-	<td>UK Arts</td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>5000</td>
+	<td>verifyTextNotPresent</td>
+	<td>error</td>
 	<td></td>
 </tr>
-<tr>
-	<td>verifyNotVisible</td>
-	<td>class=spinner</td>
-	<td></td>
-</tr>
-<!--UK Education & Society-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=SBUs</td>
+	<td>link=Presences</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=UK Education &amp; Society</td>
-	<td>UK Education &amp; Society</td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>5000</td>
+	<td>verifyTextNotPresent</td>
+	<td>error</td>
 	<td></td>
 </tr>
-<tr>
-	<td>verifyNotVisible</td>
-	<td>class=spinner</td>
-	<td></td>
-</tr>
-<!--UK English & Exams-->
 <tr>
 	<td>clickAndWait</td>
-	<td>link=SBUs</td>
+	<td>link=Domains</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=UK English &amp; Exams</td>
-	<td>UK English &amp; Exams</td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>5000</td>
+	<td>verifyTextNotPresent</td>
+	<td>error</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyNotVisible</td>
-	<td>class=spinner</td>
+	<td>clickAndWait</td>
+	<td>link=Users</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>error</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Account</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>error</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Edit Users</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>error</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Settings</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>error</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Signout</td>
 	<td></td>
 </tr>
 </tbody></table>
