@@ -3,6 +3,7 @@
 class Badge_Total extends Badge_Abstract
 {
 	protected static $name = 'total';
+	protected static $title = 'Overall';
 
 	public function calculate(NewModel_Presence $presence, \DateTime $date = null, Badge_Period $range = null)
 	{
@@ -28,10 +29,5 @@ class Badge_Total extends Badge_Abstract
 		$result = max(0, min(100, $result));
 
 		return $result;
-	}
-
-	protected function getMetrics()
-	{
-		//do nothing, this badge doesn't work on metrics
 	}
 }

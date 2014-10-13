@@ -4,6 +4,7 @@ class Metric_Branding extends Metric_Abstract {
 
     protected static $name = "branding";
     protected static $title = "Correct Branding";
+    protected static $icon = "fa fa-tag";
 
     /**
      * Returns 100 if presence has been branded correctly, else returns 0

@@ -6,30 +6,73 @@
  * Time: 12:36
  * To change this template use File | Settings | File Templates.
  */
+
+$locale = 'en_US';
+$nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
+
 ?>
 
-<div id="<?php echo $this->badge; ?>" class="badge box">
+<div class="badge-main bd-btm">
+    <?php $badge = $this->badges['main']; //echo $this->partial('partials/badge.phtml', array('badge' => $this->badges['main'])) ;?>
+    <h2 class="bd-btm"><?php echo $badge['title']; ?></h2>
+    <div class="row">
+        <div class="small-12 columns">
 
-    <h3><?php echo ucfirst($this->badge); ?></h3>
+            <div class="badge-rank">
+                <h3>Rank</h3>
+                <div class="rank-value">
+                    <span class="numerator" style="color:<?php echo $badge['rank']['color']; ?>;"><?php echo $badge['rank']['value']; ?><span><?php echo trim(str_replace(range(0,9),'',$nf->format($badge['rank']['value'])));?></span></span><span class="denominator">/<?php echo $badge['rank']['denominator']; ?></span>
+                </div>
+            </div>
 
-    <div class="score ranking">
-        <h4>Ranking</h4>
-
-        <div class="bar-chart">
-            <div class="bar"><div class="barline"></div></div>
         </div>
-        <div class="text"><span class="number">?</span> <span class="text denominator">of ?</span></div>
+        <div class="small-12 columns">
 
+            <div class="badge-score">
+                <h3>Score</h3>
+                <div class="score-value" style="color:<?php echo $badge['score']['color']; ?>;">
+                    <?php echo $badge['score']['value']; ?>%
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <div class="score overall-score">
-        <h4>Score</h4>
+</div>
+<div class="row">
+    <?php foreach($this->badges['small'] as $badge) : ?>
+        <div class="small-8 columns">
+            <div class="badge-small">
+                <?php //echo $this->partial('partials/badge.phtml', array('badge' => $badge)) ;?>
+                <h2 class="bd-btm"><?php echo $badge['title']; ?></h2>
 
-        <div class="bar-chart">
-            <div class="bar"><div class="barline"></div></div>
+                <div class="badge-rank bd-btm">
+                    <h3>Rank</h3>
+                    <div class="rank-value">
+                        <!-- breaking the line causes the display not display properly -->
+                        <span class="numerator" style="color:<?php echo $badge['rank']['color']; ?>;"><?php echo $badge['rank']['value']; ?><span><?php echo trim(str_replace(range(0,9),'',$nf->format($badge['rank']['value'])));?></span></span><span class="denominator">/<?php echo $badge['rank']['denominator']; ?></span>
+                    </div>
+                </div>
+
+                <div class="badge-score bd-btm">
+                    <h3>Score</h3>
+                    <div class="score-value" style="color:<?php echo $badge['score']['color']; ?>;">
+                        <?php echo $badge['score']['value']; ?>%
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-bar-score" style="background:<?php echo $badge['score']['color']; ?>; width: <?php echo $badge['score']['value']; ?>%;"></div>
+                    </div>
+                </div>
+
+                <ul class="badge-metrics">
+                    <?php foreach($badge['metrics'] as $metric): ?>
+                        <li class="bd-btm">
+                            <span class="<?php echo $metric['icon']; ?> fa-fw"></span> <?php echo $metric['title']; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+
+            </div>
         </div>
-
-        <div class="text"><span class="number">?</span>%</div>
-    </div>
-
+    <?php endforeach; ?>
 </div>

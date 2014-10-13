@@ -26,13 +26,13 @@ class NewModel_PresenceType extends NewModel_Enum
 	{
 		switch ($this->value) {
 			case self::SINA_WEIBO:
-				return "fa-weibo";
+				return "fa fa-weibo";
 				break;
 			case self::FACEBOOK:
-				return "fa-facebook";
+				return "fa fa-facebook";
 				break;
 			case self::TWITTER:
-				return "fa-twitter";
+				return "fa fa-twitter";
 				break;
 			default:
 				throw new \LogicException("Not implemented yet.");

@@ -1,0 +1,35 @@
+<?php foreach ($this->container as $page) :
+
+    $href = $page->getHref();
+
+    if($href) :
+
+        $urlTest = $this->gatekeeper()->filter('%url%', array('controller' => $page->controller, 'action' => $page->action));
+        $classes = array_filter(array(
+            $urlTest ? 'enabled' : 'disabled',
+            $page->active ? 'active' : null,
+            !empty($page->pages) ? 'has-dropdown' : null
+        ));
+        ?>
+
+        <li class="<?php echo implode(' ', $classes); ?>">
+            <a href="<?php echo $href; ?>">
+                <span class="<?php echo $page->icon; ?>"></span>
+                <span class="text"><?php echo $page->getLabel(); ?></span>
+            </a>
+            <?php if(!empty($page->pages)) : ?>
+                <ul class="dropdown">
+                    <?php foreach($page->pages as $subPage) : ?>
+                        <li>
+                            <a href="<?php echo $subPage->getHref(); ?>">
+                                <?php echo $subPage->getLabel(); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </li>
+
+    <?php endif; ?>
+
+<?php endforeach; ?>

@@ -4,6 +4,7 @@ class Metric_PopularityTime extends Metric_Abstract {
 
     protected static $name = "popularity_time";
     protected static $title = "Popularity Trend";
+    protected static $icon = "fa fa-line-chart";
 
     /**
      * Counts the months between now and estimated date of reaching target audience

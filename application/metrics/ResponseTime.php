@@ -4,6 +4,7 @@ class Metric_ResponseTime extends Metric_Abstract {
 
     protected static $name = "response_time";
     protected static $title = "Responsiveness";
+    protected static $icon = "fa fa-clock-o";
 
     /**
      * Counts the months between now and estimated date of reaching target audience

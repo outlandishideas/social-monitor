@@ -4,6 +4,7 @@ class Metric_Klout extends Metric_Abstract {
 
     protected static $name = "klout_score";
     protected static $title = "Klout Score";
+    protected static $icon = "fa fa-hand-o-right";
 
     /**
      * Returns 100 if presence has been signed off, else returns 0

@@ -39,6 +39,8 @@ class GroupController extends CampaignController {
             );
         }
 
+        $this->view->badgePartial = $this->badgeDetails($group);
+
 		$this->view->metricOptions = self::graphMetrics();
 		$this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;

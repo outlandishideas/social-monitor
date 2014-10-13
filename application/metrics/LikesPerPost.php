@@ -4,6 +4,7 @@ class Metric_LikesPerPost extends Metric_Abstract {
 
     protected static $name = "likes_per_post";
     protected static $title = "Applause";
+    protected static $icon = "fa fa-thumbs-o-up";
 
     /**
      * Returns score depending on number of actions per day against target

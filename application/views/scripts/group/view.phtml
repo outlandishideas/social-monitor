@@ -5,29 +5,22 @@ $buttons = $this->gatekeeper()->filterAll(array(
 ));
 ?>
 
-<?php if ($buttons) : ?>
-<p>
-	<?php echo implode('', $buttons); ?>
-</p>
-<?php endif; ?>
+
+<div class="row">
+    <div class="small-24 large-12 xlarge-8 columns">
+
+        <?php //echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
+
+        <?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial)); ?>
+
+    </div>
+</div>
 
 <?php if (empty($this->compareData)) : ?>
 
     <h3>No presences found</h3>
 
 <?php else : ?>
-
-    <div class="section-title">
-        <h2><span class="icon-certificate icon-large"></span> Badges</h2>
-    </div>
-
-    <div id="badges" data-id="<?php echo $this->group->id; ?>" class="grid justify" data-controller="group">
-        <?php
-        foreach($this->badges as $name => $badge) {
-            echo $this->partial('partials/badges.phtml', array('badge'=>$badge));
-        }
-        ?>
-    </div>
 
     <div id="charts" data-controller="presence">
 

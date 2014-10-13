@@ -4,6 +4,7 @@ abstract class Metric_Abstract {
 
     protected static $name;
     protected static $title;
+    protected static $icon;
 
     /**
      * Calculate a given metric for the passed presence within the $start and $end
@@ -44,6 +45,11 @@ abstract class Metric_Abstract {
     public static function getTitle()
     {
         return static::$title;
+    }
+
+    public static function getIcon()
+    {
+        return static::$icon;
     }
 
 }

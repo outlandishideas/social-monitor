@@ -4,6 +4,7 @@ class Metric_ActionsPerDay extends Metric_Abstract {
 
     protected static $name = "posts_per_day";
     protected static $title = "Actions Per Day";
+    protected static $icon = "fa fa-tachometer";
 
     /**
      * Returns score depending on number of actions per day against target

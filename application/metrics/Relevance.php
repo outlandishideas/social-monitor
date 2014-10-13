@@ -4,6 +4,7 @@ class Metric_Relevance extends Metric_Abstract {
 
     protected static $name = "relevance";
     protected static $title = "Relevance";
+    protected static $icon = "fa fa-tags";
 
     /**
      * Returns score depending on number of relevant links per day against target

@@ -4,6 +4,7 @@ class Metric_ResponseRatio extends Metric_Abstract {
 
     protected static $name = "response_ratio";
     protected static $title = "Conversation";
+    protected static $icon = "fa fa-reply";
 
     /**
      * Counts the months between now and estimated date of reaching target audience
