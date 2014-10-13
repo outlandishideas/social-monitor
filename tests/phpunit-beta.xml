@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit>
+    <php>
+        <var name="DB_DSN" value="mysql:dbname=bcmonitor_test;host=212.13.212.66" />
+        <var name="DB_USER" value="a_bcmonitor" />
+        <var name="DB_PASSWD" value="AaIYXUWJEmC0eaGTWpfTBSeSpURbaTp7ygxzABTA" />
+        <var name="DB_DBNAME" value="bcmonitor_test" />
+    </php>
+</phpunit>
