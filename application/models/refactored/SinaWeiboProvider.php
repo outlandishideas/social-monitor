@@ -237,13 +237,13 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		}
 	}
 
-	public function testHandle($handle) {
+	public function handleData($handle) {
 		//test if user exists
 		$ret = $this->connection->show_user_by_name($handle);
 		if (array_key_exists('error_code', $ret)) {
 			switch ($ret['error_code']) {
 				case 20003:
-					return false;
+					return null;
 					break;
 				default:
 					throw new LogicException("Unknown error code {$ret['error_code']} encountered.");
@@ -252,14 +252,17 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		}
 
 		return array(
-			NewModel_PresenceType::SINA_WEIBO, //type
-			$handle, //handle
-			$ret['idstr'], //uid
-			$ret['profile_image_url'], //image_url
-			$ret['name'], //name
-			self::BASEURL.$ret['profile_url'], //page_url
-			$ret['followers_count'],  //popularity
-			gmdate('Y-m-d H:i:s') //last_updated
+			"type" => NewModel_PresenceType::SINA_WEIBO, //type
+			"handle" => $handle, //handle
+			"uid" => $ret['idstr'], //uid
+			"image_url" => $ret['profile_image_url'], //image_url
+			"name" => $ret['name'], //name
+			"page_url" => self::BASEURL.$ret['profile_url'], //page_url
+			"followers" => $ret['followers_count'],  //popularity
+			"klout_id" => null,  //klout_id
+			"klout_score" => null,  //klout_score
+			"facebook_engagement" => null,  //facebook_engagement
+			"last_updated" => gmdate('Y-m-d H:i:s') //last_updated
 		);
 	}
 }

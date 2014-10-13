@@ -26,13 +26,19 @@ class Metric_PopularityTime extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
+        $score = null;
+
         $data = $presence->getKpiData($start, $end);
         $current = $data[self::getName()];
-        $target = BaseController::getOption('achieve_audience_good');
-        if ($target == 0) return null;
 
-        $score = round($target / $current * 100);
-        $score = max(0, min(100, $score));
+        if($current > 0){
+            $target = BaseController::getOption('achieve_audience_good');
+            if ($target > 0) {
+                $score = round($target / $current * 100);
+                $score = max(0, min(100, $score));
+            }
+        }
+
         return $score;
     }
 }

@@ -8,6 +8,10 @@ class NewModel_Presence
 	protected $badges;
 	protected $kpiData = array();
 
+	protected $presenceHistoryColumns = array(
+		'popularity', 'klout_score', 'facebook_engagement'
+	);
+
 	//these should be public to mimic existing Presence Class
 	public $id;
 	public $handle;
@@ -17,6 +21,7 @@ class NewModel_Presence
 	public $sign_off;
 	public $branding;
 	public $popularity;
+	public $klout_id;
 	public $klout_score;
 	public $facebook_engagement;
 	public $page_url;
@@ -144,6 +149,24 @@ class NewModel_Presence
 		return $this->branding;
 	}
 
+	public function getKloutId()
+	{
+		if(!$this->klout_id){
+			$kloutId = $this->provider->getKloutId();
+			if($kloutId){
+				$stmt = $this->db->prepare("UPDATE `presence` SET `klout_id` WHERE `id` = :id");
+				try {
+					$stmt->execute(array(':id' => $this->getId()));
+				} catch (Exception $e){
+					$this->klout_id = null;
+				}
+			} else {
+				$this->klout_id = null;
+			}
+		}
+		return $this->klout_id;
+	}
+
 	public function getKloutScore()
 	{
 		return $this->klout_score;
@@ -249,11 +272,11 @@ class NewModel_Presence
 					$meanX = $meanY = $sumXY = $sumXX = 0;
 
 					foreach ($data as $row) {
-						$row->datetime = strtotime($row->datetime);
-						$meanX += $row->datetime;
-						$meanY += $row->value;
-						$sumXY += $row->datetime*$row->value;
-						$sumXX += $row->datetime*$row->datetime;
+						$rowDate = strtotime($row['datetime']);
+						$meanX += $rowDate;
+						$meanY += $row['value'];
+						$sumXY += $rowDate*$row['value'];
+						$sumXX += $rowDate*$rowDate;
 					}
 
 					$meanX /= $count;
@@ -353,36 +376,84 @@ class NewModel_Presence
 		$this->kpiData[$key] = $value;
 	}
 
-	public function getHistoricData(\DateTime $start, \DateTime $end) {
+	public function getHistoricData(\DateTime $start, \DateTime $end)
+	{
 		return $this->provider->getHistoricData($this, $start, $end);
 	}
 
-	public function getHistoricStream(\DateTime $start, \DateTime $end) {
+	public function getHistoricStream(\DateTime $start, \DateTime $end)
+	{
 		return $this->provider->getHistoricStream($this, $start, $end);
 	}
 
-	public function getHistoricStreamMeta(\DateTime $start, \DateTime $end) {
+	public function getHistoricStreamMeta(\DateTime $start, \DateTime $end)
+	{
 		return $this->provider->getHistoricStreamMeta($this, $start, $end);
 	}
 
-	public function update() {
-		$data = $this->provider->fetchData($this);
-		$stmt = $this->db->prepare("INSERT INTO presence_history (presence_id, datetime, type, value) VALUES (:id, :ts, :type, :val)");
-		foreach ($data as $type => $val) {
-			$stmt->execute(array(
-				':id'		=> $this->getId(),
-				':ts'		=> date('Y-m-d H:i:s'),
-				':type'	=> $type,
-				':val'	=> $val
-			));
+	public function fetch()
+	{
+		$results = $this->provider->fetchData($this);
+
+		$stmt = $this->db->prepare("UPDATE presences SET `last_fetched` = :last_fetched WHERE `id` = :id");
+		$stmt->execute(array(
+			':id'				=> $this->getId(),
+			':last_fetched'	=> gmdate('Y-m-d H:i:s')
+		));
+
+		return $results;
+	}
+
+	/**
+	 * method for updating a presence's info
+	 * if successful we also update the presence_history table with the latest info
+	 *
+	 * @return array|null
+	 */
+	public function update()
+	{
+		try {
+			$data = $this->provider->update($this);
+		} catch (Exception $e) {
+			return null;
 		}
-		if (array_key_exists('popularity', $data)) {
-			$stmt = $this->db->prepare("UPDATE presences SET popularity = :popularity WHERE id = :id");
-			$stmt->execute(array(
-				':id'				=> $this->getId(),
-				':popularity'	=> $data['popularity']
-			));
+		if($data) {
+			$date = gmdate('Y-m-d H:i:s');
+
+			$sql = "UPDATE presences
+						SET `image_url` = ?,
+							`name` = ?,
+							`page_url` = ?,
+							`popularity` = ?,
+							`klout_id` = ?,
+							`klout_score` = ?,
+							`facebook_engagement` = ?,
+							`last_updated` = ?
+						WHERE `id` = ?";
+			$stmt = $this->db->prepare($sql);
+			try {
+				//update presence in presences table
+				$stmt->execute(array_merge(array_values($data), array($this->getId())));
+			} catch(Exception $e) {
+				//if we can't update the presence in the db return null
+				return null;
+			}
+
+			//if the presence was updated, update presence_history
+			$stmt = $this->db->prepare("INSERT INTO `presence_history` (`presence_id`, `datetime`, `type`, `value`) VALUES (:id, :datetime, :type, :value)");
+			foreach($data as $type => $value){
+				if(in_array($type, $this->presenceHistoryColumns) && $value){
+					$stmt->execute(array(
+						':id' => $this->getId(),
+						':datetime' => $date,
+						':type'	=> $type,
+						':value'	=> $value
+					));
+				}
+			}
+
 		}
+		return $data;
 	}
 
 	public function saveMetric($metric, DateTime $start, DateTime $end, $value){

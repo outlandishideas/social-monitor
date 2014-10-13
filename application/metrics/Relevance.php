@@ -53,6 +53,8 @@ class Metric_Relevance extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
+        $score = null;
+
         $data = $presence->getHistoricStreamMeta($start, $end);
 
         if (empty($data)) return null;
@@ -68,17 +70,19 @@ class Metric_Relevance extends Metric_Abstract {
             $totals['links'] += $row['number_of_links'];
             $totals['bc_links'] += $row['number_of_bc_links'];
             return $totals;
-        });
+        }, $totals);
 
         if ($totals['total'] < BaseController::getOption('updates_per_day')) return 0;
 
         $targetPercent = $presence->getType()->getRelevancePercentage()/100;
         $target = $totals['total'] * $targetPercent;
 
-        $current = $totals['bc_links'];
+        if($target > 0){
+            $current = $totals['bc_links'];
+            $score = round($current/$target * 100);
+            $score = max(0, min(100, $score));
+        }
 
-        $score = round($current/$target * 100);
-        $score = max(0, min(100, $score));
         return $score;
     }
 

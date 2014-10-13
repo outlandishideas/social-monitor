@@ -18,24 +18,35 @@ class FetchController extends BaseController
 		$infoInterval = ($this->config->presence->cache_data_hours ?: 4) * 3600;
 		usort($presences, function($a, $b) { return strcmp($a->last_updated ?: '000000', $b->last_updated ?: '000000'); });
 
+		//updating presence info
 		$index = 0;
 		foreach($presences as $presence) {
 			$index++;
 			$now = time();
 			$lastUpdated = strtotime($presence->getLastUpdated());
 			if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
-				$saveLastUpdated = true;
-
 				$this->log('Updating ' . $presence->type . ' info (' . $index . '/' . $presenceCount . '): ' . $presence->handle);
-
 				try {
 					$presence->update();
 				} catch (Exception $e) {
 					$this->log("Error updating presence info: " . $e->getMessage());
-					$saveLastUpdated = false;
 				}
 				$this->touchLock($lockName);
 			}
+		}
+
+		//updating presence statuses
+		usort($presences, function($a, $b) { return strcmp($a->getLastFetched() ?: '000000', $b->getLastFetched() ?: '000000'); });
+		$index = 0;
+		foreach($presences as $presence) {
+			$index++;
+			$this->log('Fetching statuses (' . $index . '/' . $presenceCount . '): ' . $presence->handle);
+			try {
+				$presence->fetch();
+			} catch (Exception $e) {
+				$this->log("Error updating presence statuses: " . $e->getMessage());
+			}
+			$this->touchLock($lockName);
 		}
 //
 //		$this->touchLock($lockName);

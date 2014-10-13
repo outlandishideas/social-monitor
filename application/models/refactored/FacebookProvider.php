@@ -174,6 +174,75 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	public function update(NewModel_Presence $presence)
+	{
+		$data = parent::updateNew($presence->getHandle());
+		if($data){
+			$data['facebook_engagement'] = $this->calculateFacebookEngagement($presence);
+		}
+		return $data;
+	}
+
+	protected function calculateFacebookEngagement(NewModel_Presence $presence)
+	{
+		$week = new DateInterval('P6D');
+		$end = new DateTime();
+		$start = clone $end;
+		$start = $start->sub($week);
+
+		$score = null;
+
+		$results = $this->getFacebookCommentsSharesLikes($presence, $start, $end);
+
+		if(!empty($results)){
+
+			$total = array_reduce($results, function($total, $status){
+				$total += $status['comments'];
+				$total += $status['likes'];
+				$total += $status['share_count'];
+				return $total;
+			}, 0);
+
+			if($total > 0) {
+				$last = end($s);
+				if($last['popularity'] < 0){
+					$score = ($total / $last['popularity']) * 1000;
+				}
+			}
+		}
+		return $score;
+	}
+
+	protected function getFacebookCommentsSharesLikes(NewModel_Presence $presence, DateTime $start, DateTime $end)
+	{
+		$args = array(
+			':pid' => $presence->getId(),
+			':start_time' => $start->format("Y-m-d"),
+			':end_time' => $end->format("Y-m-d")
+		);
+
+		$sql = "
+            SELECT ph.created_time as time, SUM(fs.comments) as comments, SUM(fs.likes) as likes, SUM(fs.share_count) as share_count, ph.popularity
+            FROM (
+                SELECT presence_id, DATE(datetime) as created_time, MAX(value) as popularity
+                FROM presence_history
+                WHERE type = 'popularity'
+                AND presence_id = :pid
+                AND DATE(datetime) >= :start_time
+                AND DATE(datetime) <= :end_time
+                GROUP BY DATE(datetime) ) as ph
+            LEFT JOIN facebook_stream as fs
+            ON DATE(fs.created_time) = ph.created_time
+            AND fs.presence_id = ph.presence_id
+            WHERE ph.created_time >= :start_time
+            AND ph.created_time <= :end_time
+            GROUP BY ph.created_time";
+
+		$stmt = $this->_db->prepare($sql);
+		$stmt->execute($args);
+		return $stmt->fetchAll(PDO::FETCH_OBJ);
+	}
+
 
 	protected function findAndSaveLinks($streamdatum)
 	{
@@ -185,28 +254,27 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 		}
 	}
 
-	public function testHandle($handle) {
+	public function handleData($handle) {
 
 		try {
 			$data = Util_Facebook::pageInfo($handle);
 		} catch (Exception_FacebookNotFound $e) {
-			return false;
+			return null;
 //			throw new Exception_FacebookNotFound('Facebook page not found: ' . $this->handle, $e->getCode(), $e->getFql(), $e->getErrors());
 		}
 
-		$this->facebook_engagement = $this->calculateFacebookEngagement();
-
-		//test if user exists
-		//todo: add facebook engagement to this
 		return array(
-			NewModel_PresenceType::FACEBOOK, //type
-			$handle, //handle
-			$data['page_id'], //uid
-			$data['pic_square'], //image_url
-			$data['name'], //name
-			$data['page_url'], //page_url
-			$data['fan_count'], //popularity
-			gmdate('Y-m-d H:i:s') //last_updated
+			"type" => NewModel_PresenceType::FACEBOOK, //type
+			"handle" => $handle, //handle
+			"uid" => $data['page_id'], //uid
+			"image_url" => $data['pic_square'], //image_url
+			"name" => $data['name'], //name
+			"page_url" => $data['page_url'], //page_url
+			"followers" => $data['fan_count'],  //popularity
+			"klout_id" => null,  //klout_id
+			"klout_score" => null,  //klout_score
+			"facebook_engagement" => null,  //facebook_engagement
+			"last_updated" => gmdate('Y-m-d H:i:s') //last_updated
 		);
 	}
 }

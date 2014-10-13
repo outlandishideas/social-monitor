@@ -386,43 +386,51 @@ class PresenceController extends GraphingController
 	 * @return array
 	 */
 	private function generatePostsPerDayGraphData($presence, $startDate, $endDate) {
-		$postsPerDay = $presence->getPostsPerDayData($startDate, $endDate);
-		usort($postsPerDay, function($a, $b) { return strcmp($a->date, $b->date); });
 
 		$target = BaseController::getOption('updates_per_day');
 		$average = 0;
-		if ($postsPerDay) {
-			$total = 0;
-			foreach ($postsPerDay as $row) {
-				$total += $row->value;
-			}
-			$average = $total/count($postsPerDay);
-		}
-
+		$rAverage = 0;
+		$relevancePercentage = $presence->isForFacebook() ? 'facebook_relevance_percentage' : 'twitter_relevance_percentage';
+		$rTarget = ($target/100)*BaseController::getOption($relevancePercentage);
 		$relevance = array();
-		foreach ($postsPerDay as $entry) {
-			$date = $entry->date;
-			$relevance[$date] = (object)array('date'=>$date, 'value'=>0, 'subtitle'=>'Relevance', 'statusIds'=>array());
+
+
+		$postsPerDay = $presence->getPostsPerDayData($startDate, $endDate);
+		if($postsPerDay){
+			usort($postsPerDay, function($a, $b) { return strcmp($a->date, $b->date); });
+
+			if ($postsPerDay) {
+				$total = 0;
+				foreach ($postsPerDay as $row) {
+					$total += $row->value;
+				}
+				$average = $total/count($postsPerDay);
+			}
+
+			$relevance = array();
+			foreach ($postsPerDay as $entry) {
+				$date = $entry->date;
+				$relevance[$date] = (object)array('date'=>$date, 'value'=>0, 'subtitle'=>'Relevance', 'statusIds'=>array());
+			}
+
+			foreach ($presence->getRelevanceData($startDate, $endDate) as $row) {
+				$relevance[$row->created_time]->value = $row->total_bc_links;
+			}
+			if(count($relevance) > 0){
+				foreach($relevance as $r){
+					$rAverage += $r->value;
+				}
+				$rAverage /= count($relevance);
+			}
 		}
 
-		foreach ($presence->getRelevanceData($startDate, $endDate) as $row) {
-            $relevance[$row->created_time]->value = $row->total_bc_links;
-		}
-        $rAverage = 0;
-		if(count($relevance) > 0){
-			foreach($relevance as $r){
-				$rAverage += $r->value;
-			}
-			$rAverage /= count($relevance);
-		}
-        $relevancePercentage = $presence->isForFacebook() ? 'facebook_relevance_percentage' : 'twitter_relevance_percentage';
 
 		return array(
             'average' => $average,
             'rAverage' => $rAverage,
 			'target' => $target,
-            'rTarget' => ($target/100)*BaseController::getOption($relevancePercentage),
-			'points' => $postsPerDay,
+            'rTarget' => $rTarget,
+			'points' => $postsPerDay ? $postsPerDay : array(),
 			'relevance' => array_values($relevance),
 		);
 	}
