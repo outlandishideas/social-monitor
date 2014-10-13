@@ -201,17 +201,17 @@ h3 {
 }
 
 /* links */
-a:link, a:visited, span.link {
-	color: #4083a9;
-	outline: none;
-	text-decoration: none;
-	cursor: pointer;
-}
+/*a:link, a:visited, span.link {*/
+	/*color: #4083a9;*/
+	/*outline: none;*/
+	/*text-decoration: none;*/
+	/*cursor: pointer;*/
+/*}*/
 
-a:hover, span.link:hover {
-	text-decoration: none;
-	color: #105b86;
-}
+/*a:hover, span.link:hover {*/
+	/*text-decoration: none;*/
+	/*color: #105b86;*/
+/*}*/
 
 #wrapper {
     min-width: 940px;
@@ -1243,41 +1243,6 @@ body .ui-daterangepicker ul {
 }
 
 /* buttons */
-
-body .buttons {
-    margin-bottom: 20px;
-}
-
-body .button {
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border: 0;
-	border-radius: 5px;
-	text-decoration: none;
-	display: inline-block;
-	background: #BBB;
-	color: #fff;
-	padding: 10px 15px;
-	margin: 0 10px 0 0;
-	cursor: pointer;
-}
-
-body .button:hover {
-	background-color: #24abf8;
-}
-
-body .button.add {
-	background: #191919;
-}
-
-body .button-right {
-	text-align: right;
-}
-
-body .button-right .button {
-	margin-left: 10px;
-	margin-right: 0;
-}
 
 body .button.compare {
 	display: none;
