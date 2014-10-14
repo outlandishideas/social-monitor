@@ -369,58 +369,6 @@ span.icon-remove-sign {
 	left: 50px;
 }
 
-#pickers {
-    position: absolute;
-    right: 20px;
-    top: -13px;
-}
-
-.picker {
-    padding: 20px;
-    background: #e4e4e4;
-    border: 1px solid #ccc;
-	float: left;
-}
-
-.picker + .picker {
-	margin-left: 10px;
-}
-
-.picker label {
-	font-size: 16px;
-	font-weight: bold;
-	color: #555;
-}
-
-#metric-picker {
-    border: 2px solid #555;
-    outline: none;
-    line-height: 34px;
-    height: 34px;
-    color: #888;
-    padding: 0 0 0 5px;
-    margin-left: 10px;
-    min-width: 221px;
-}
-
-#metric-picker:focus,
-#date-slider:focus,
-#date-picker:focus {
-    border-color: #24abf8;
-    color: #333;
-}
-
-#date-picker, #date-slider {
-    background: #fff url(../img/calendar.png) 5px center no-repeat;
-    border: 2px solid #555;
-    outline: none;
-    line-height: 30px;
-    height: 30px;
-    color: #888;
-    padding: 0 5px 0 30px;
-    margin-left: 10px;
-}
-
 #nav-bar {
 	position: fixed;
 	top: 0;
@@ -1217,19 +1165,6 @@ form.management #assigned {
 	font-weight: normal;
 }
 
-/* date picker */
-
-body .ui-daterangepickercontain .ui-daterangepicker {
-	margin-top: -2px;
-	border-width: 1px 2px 2px;
-	border-color: #24abf8;
-	border-top-color: #CCCCCC;
-}
-
-body .ui-daterangepicker ul {
-	width: 206px;
-}
-
 /* buttons */
 
 body .button.compare {
@@ -1644,6 +1579,10 @@ body {
 	background: #0071bc;
 }
 
+.top-bar {
+    margin-bottom: 0.5rem;
+}
+
 .top-bar-section li:not(.has-form) a:not(.button):hover {
 	background: #234a55;
 }
@@ -1737,4 +1676,96 @@ h3 {
 	padding: 0.8rem 0;
 	font-size: 0.8rem;
 	text-overflow: ellipsis
+}
+
+/* New Pickers */
+
+
+#pickers {
+    text-align: right;
+}
+
+.picker {
+    display: inline-block;
+    margin-left: 20px;
+    vertical-align: top;
+}
+
+.picker label {
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: #fff;
+    color: rgba(255,255,255, 0.5);
+    text-align: left;
+}
+
+.picker input,
+.picker select {
+    border: 1px solid #44656f;
+    background-color: #051b21;
+    background-color: rgba(0,0,0,0.5);
+    color: #fff;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    outline: none;
+}
+
+
+#metric-picker {
+    min-width: 221px;
+}
+
+#date-picker, #date-slider {
+}
+
+#metric-picker:focus,
+#date-slider:focus,
+#date-picker:focus {
+    border-color: #fff;
+    background-color: #051b21;
+    background-color: rgba(0,0,0,0.5);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.45s, border-color 0.45s ease-in-out;
+}
+
+
+/* date picker */
+
+body .ui-daterangepickercontain .ui-daterangepicker {
+    border: 1px solid #fff;
+    background-color: #051b21;
+    background-color: rgba(0,0,0,0.5);
+    color: #fff;
+}
+
+body .ui-daterangepicker ul {
+    width: 206px;
+}
+
+body .ui-daterangepicker li a {
+    color: #fff;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.8rem;
+}
+
+body .ui-daterangepicker li.ui-state-hover,
+body .ui-daterangepicker li.ui-state-active {
+    background-image: none;
+    background-color: #051b21;
+    background-color: rgba(0,0,0,0.1);
+    border-color: transparent;
+}
+
+body .ui-daterangepicker li.ui-state-hover a,
+body .ui-daterangepicker li.ui-state-hover a:hover,
+body .ui-daterangepicker li.ui-state-hover a:link,
+body .ui-daterangepicker li.ui-state-hover a:visited,
+body .ui-daterangepicker li.ui-state-active a,
+body .ui-daterangepicker li.ui-state-active a:hover,
+body .ui-daterangepicker li.ui-state-active a:link,
+body .ui-daterangepicker li.ui-state-active a:visited {
+    color: #fff;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
 }

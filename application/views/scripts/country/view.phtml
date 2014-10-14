@@ -17,6 +17,16 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
 
     </div>
+    <div class="small-24 large-12 xlarge-16 columns">
+
+        <div id="pickers" class="bd-btm">
+            <?php echo $this->render('partials/metricpicker.phtml'); ?>
+            <?php echo $this->render('partials/daterange.phtml'); ?>
+        </div>
+
+
+
+    </div>
 </div>
 
 
@@ -29,11 +39,6 @@ $buttons = $this->gatekeeper()->filterAll(array(
 <?php else : ?>
 
     <div id="charts" data-controller="presence">
-
-        <div id="pickers">
-            <?php echo $this->render('partials/metricpicker.phtml'); ?>
-            <?php echo $this->render('partials/daterange.phtml'); ?>
-        </div>
 
         <?php
         $currentId = 1;
