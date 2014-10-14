@@ -55,6 +55,8 @@ class CountryController extends CampaignController {
             );
         }
 
+		$this->view->badgePartial = $this->badgeDetails($country);
+
 		$this->view->metricOptions = self::graphMetrics();
         $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;

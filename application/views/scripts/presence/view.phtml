@@ -4,19 +4,15 @@ $buttons = $this->gatekeeper()->filterAll(array(
 ));
 ?>
 
-<div id="badges" data-id="<?php echo $this->presence->id; ?>" class="grid justify content-in-header" data-controller="presence">
-    <?php
-    foreach($this->badges as $name => $badge) {
-        echo $this->partial('partials/badges.phtml', array('badge'=>$badge));
-    }
-    ?>
-</div>
+<div class="row">
+	<div class="small-24 large-12 xlarge-8 columns">
 
-<?php if ($buttons) : ?>
-    <p>
-        <?php echo implode('', $buttons); ?>
-    </p>
-<?php endif; ?>
+		<?php //echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
+
+		<?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial)); ?>
+
+	</div>
+</div>
 
 <div id="charts" data-controller="presence">
 

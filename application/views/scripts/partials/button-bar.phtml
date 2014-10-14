@@ -1,0 +1,9 @@
+<?php if ($this->buttons && is_array($this->buttons)) : ?>
+    <div class="button-bar">
+        <ul class="button-group">
+            <?php foreach($this->buttons as $button): ?>
+                <li><?php echo $button; ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

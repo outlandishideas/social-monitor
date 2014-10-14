@@ -4,6 +4,7 @@ class Metric_Popularity extends Metric_Abstract {
 
     static protected $name = "popularity";
     static protected $title = "Popularity";
+    protected static $icon = "fa fa-users";
 
     /**
      * Calculates the average percentage of target popularity from a range of popularity values

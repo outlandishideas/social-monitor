@@ -4,6 +4,7 @@ class Metric_FBEngagement extends Metric_Abstract {
 
     protected static $name = "facebook_engagement_score";
     protected static $title = "Facebook Engagement Score";
+    protected static $icon = "fa fa-facebook-square";
 
     /**
      * Returns 100 if presence has been signed off, else returns 0

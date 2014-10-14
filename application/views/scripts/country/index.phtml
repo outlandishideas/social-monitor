@@ -1,16 +1,20 @@
 <?php
     $buttons = $this->gatekeeper()->filterAll(array(
-        '<a class="button add" href="%url%"><span class="icon-plus icon-large"></span> Add new</a>' => array('action'=>'new'),
-        '<a class="button" href="%url%"><span class="icon-edit icon-large"></span> Edit All</a>' => array('action'=>'edit-all'),
-            '<a class="button download" href="%url%"><span class="icon-download"></span> Download CSV</a>' => array('action' => 'download')
+        '<a class="button add" href="%url%"><span class="fa fa-plus fa-fw fa-lg"></span> Add new</a>' => array('action'=>'new'),
+        '<a class="button" href="%url%"><span class="fa fa-edit fa-fw fa-lg"></span> Edit All</a>' => array('action'=>'edit-all'),
+            '<a class="button download" href="%url%"><span class="fa fa-download fa-fw fa-lg"></span> Download CSV</a>' => array('action' => 'download')
     ));
 ?>
 
-<?php if ($buttons) : ?>
-    <p>
-        <?php echo implode('', $buttons); ?>
-    </p>
-<?php endif; ?>
+<div class="row">
+	<div class="large-12 columns">
+		<div id="table-filter"></div>
+	</div>
+	<div class="large-12 columns">
+		<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
+	</div>
+</div>
+
 
 <table class="text dtable standard" id="all-countries">
 	<thead>
@@ -86,13 +90,11 @@
 </table><?php
 
 $buttons = $this->gatekeeper()->filterAll(array(
-    '<a class="button download" href="%url%"><span class="icon-download"></span> Download CSV</a>' => array('action' => 'download'),
+    '<a class="button download" href="%url%"><span class="fa fa-download fa-fw fa-lg"></span> Download CSV</a>' => array('action' => 'download'),
 ));
 
+if ($buttons) {
+	echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons));
+} ?>
 
-if ($buttons) : ?>
-    <p><?php
-    echo implode('', $buttons); ?>
-    </p><?php
-endif; ?>
 

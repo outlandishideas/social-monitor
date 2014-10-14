@@ -1,8 +1,10 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,700);
+
 body {
 	font-size: 14px;
     font-family: Arial, Helvetica, sans-serif;
 	margin: 0;
-    background-color: #0f70a3;
+    background-color: #0a3542;
 }
 
 abbr {
@@ -201,34 +203,20 @@ h3 {
 }
 
 /* links */
-a:link, a:visited, span.link {
-	color: #4083a9;
-	outline: none;
-	text-decoration: none;
-	cursor: pointer;
-}
+/*a:link, a:visited, span.link {*/
+	/*color: #4083a9;*/
+	/*outline: none;*/
+	/*text-decoration: none;*/
+	/*cursor: pointer;*/
+/*}*/
 
-a:hover, span.link:hover {
-	text-decoration: none;
-	color: #105b86;
-}
+/*a:hover, span.link:hover {*/
+	/*text-decoration: none;*/
+	/*color: #105b86;*/
+/*}*/
 
 #wrapper {
     min-width: 940px;
-}
-
-#wrapper,
-#content {
-	background: #FFFFFF;
-}
-
-#content {
-	padding: 20px 42px;
-	position: relative;
-}
-
-#content p:first-child {
-	margin-top: 0;
 }
 
 #main-header {
@@ -1244,41 +1232,6 @@ body .ui-daterangepicker ul {
 
 /* buttons */
 
-body .buttons {
-    margin-bottom: 20px;
-}
-
-body .button {
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border: 0;
-	border-radius: 5px;
-	text-decoration: none;
-	display: inline-block;
-	background: #BBB;
-	color: #fff;
-	padding: 10px 15px;
-	margin: 0 10px 0 0;
-	cursor: pointer;
-}
-
-body .button:hover {
-	background-color: #24abf8;
-}
-
-body .button.add {
-	background: #191919;
-}
-
-body .button-right {
-	text-align: right;
-}
-
-body .button-right .button {
-	margin-left: 10px;
-	margin-right: 0;
-}
-
 body .button.compare {
 	display: none;
 }
@@ -1672,4 +1625,116 @@ ul.link-list {
     h3 {
         page-break-after: avoid;
     }
+}
+
+
+/* body styles */
+
+body {
+	font-family: 'Open Sans', sans-serif;
+	color: #fff;
+	color: rgba(255,255,255, 0.5);
+}
+
+/* foundation styles */
+.top-bar,
+.top-bar-section li:not(.has-form) a:not(.button),
+.top-bar-section ul li,
+.top-bar-section .dropdown li:not(.has-form):not(.active)>a:not(.button) {
+	background: #0071bc;
+}
+
+.top-bar-section li:not(.has-form) a:not(.button):hover {
+	background: #234a55;
+}
+
+.bd-btm {
+	border-bottom: 1px solid #44656f;
+}
+
+h2 {
+	font-family: 'Open Sans', sans-serif;
+	color: #fff;
+	color: rgba(255,255,255, 0.5);
+	font-size: 1.2rem;
+	text-transform: uppercase;
+	font-weight: 300;
+	margin: 0;
+	padding: 0.25rem 0;
+}
+
+h3 {
+	font-family: 'Open Sans', sans-serif;
+	color: #fff;
+	color: rgba(255,255,255, 0.5);
+	font-size: 1.1rem;
+	font-weight: 300;
+	margin: 0;
+	padding: 0.25rem 0;
+}
+
+/* Badge CSS */
+
+.badge-main {
+	margin-bottom: 3rem;
+}
+
+.rank-value,
+.score-value {
+	font-size: 4rem;
+	color: #476871;
+	line-height: 1;
+	margin-bottom: 1rem;
+}
+
+.numerator span {
+	vertical-align: super;
+	font-size: 2rem;
+}
+
+.badge-small .rank-value {
+	font-size: 3rem;
+}
+
+.badge-small .badge-score {
+	position: relative;
+}
+
+.badge-small .score-value {
+	font-size: 1.1rem;
+	line-height: 1.4;
+	position: absolute;
+	right: 0;
+	top: 3px;
+}
+
+.badge-small .score-bar {
+	height: 0.25rem;
+	background: #000;
+	margin-bottom: 0.5rem;
+}
+
+.badge-small .score-bar div {
+	height: 100%;
+}
+
+.badge-small .numerator span {
+	font-size: 1.4rem;
+}
+
+.badge-small .denominator {
+	display: none;
+}
+
+.badge-metrics {
+	list-style: none;
+	margin-left: 0;
+}
+
+.badge-metrics li {
+	white-space: nowrap;
+	overflow: hidden;
+	padding: 0.8rem 0;
+	font-size: 0.8rem;
+	text-overflow: ellipsis
 }

@@ -6,101 +6,78 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<title>British Council :: <?php echo strip_tags($this->title); ?></title>
     <link rel="shortcut icon" href="<?php echo $this->baseUrl('/') . 'assets/img/favicon.ico';?>"/>
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
-    <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css" rel="stylesheet"/>
-	<?php
-		echo $this->minifyHeadLink()
-			->appendStylesheet('assets/fonts/proxima-nova-fontfacekit/stylesheet.css')
-			->appendStylesheet('assets/lib/bootstrap/bootstrap.css')
-			->appendStylesheet('assets/lib/tipsy/css/tipsy.css')
-			->appendStylesheet('assets/css/svg.css')
-			->appendStylesheet('assets/css/bc.css')
-			->appendStylesheet('assets/css/uni-form.css')
-			->appendStylesheet('assets/css/bc.uni-form.css')
-			->appendStylesheet('assets/css/ui.daterangepicker.css')
-//			->appendStylesheet('assets/lib/datatables/media/css/jquery.dataTables.css')
-//			->appendStylesheet('assets/css/jquery.dataTables.custom.css')
-			->appendStylesheet('assets/lib/farbtastic/farbtastic.css')
-	?>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+	<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/fonts/proxima-nova-fontfacekit/stylesheet.css';?>" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/lib/foundation/css/normalize.css';?>" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/lib/foundation/css/foundation.css';?>" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/lib/tipsy/css/tipsy.css';?>" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/css/svg.css';?>" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/css/bc.css';?>" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/css/uni-form.css';?>" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/css/bc.uni-form.css';?>" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/css/ui.daterangepicker.css';?>" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/lib/farbtastic/farbtastic.css';?>" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/css/font-awesome.min.css';?>" rel="stylesheet"/>
+
     <!--[if lte IE 8]>
     <link rel="stylesheet" media="print" href="assets/css/print.css" type="text/css" />
     <![endif]-->
     <script type="text/javascript" src="<?php echo $this->baseUrl('/') . 'assets/js/modernizr.min.js';?>"></script>
 </head>
 <body class="<?php echo $this->bodyClass; ?>">
-	<div id="wrapper">
-		<header id="main-header">
-			<div class="hold">
+	<nav class="top-bar" data-topbar role="navigation">
+		<ul class="title-area">
+			<li class="name">
+				<h1>
+					<a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>">
+						British Council Social Media Monitor
+					</a>
+				</h1>
+			</li>
+			<!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+			<li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+		</ul>
 
-				<div id="nav-bar">
-					<div id="nav">
-						<div class="main">
-                            <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>" class="site-title-link"><div class="site-title"><span>British Council Social Media Monitor</span></div></a>
-                            <?php
-                                //if (Zend_Auth::getInstance()->hasIdentity()) :
-                                    echo $this->navigation()->menu()->setPartial('partials/menu.phtml')->render();
-                                //endif;
-                            ?>
-						</div>
-						<div class="extra">
-						    <?php
-                                if (Zend_Auth::getInstance()->hasIdentity() && $this->user) {
-	                                switch ($this->user->user_level) {
-		                                case Model_User::USER_LEVEL_ADMIN:
-		                                case Model_User::USER_LEVEL_MANAGER:
-											$menu = $this->adminMenu;
-										    break;
-		                                case Model_User::USER_LEVEL_USER:
-										default:
-											$menu = $this->nonAdminMenu;
-										    break;
-						            }
-                                    echo $this->navigation()->menu()->render($menu);
-							    } else {
-                                    echo $this->navigation()->menu()->render($this->nonUserMenu);
-						        }
-                            ?>
-						</div>
-					</div>
-                    <div class="beta-tag">[ BETA ]</div>
-				</div>
-				<div class="page-title<?php if ($this->subtitle) { echo ' with-subtitle'; } if ($this->titleImage) { echo ' with-image'; } ?>">
-					<?php if($this->titleImage) { echo $this->titleImage; } ?>
-					<h1>
-						<?php if ($this->titleIcon) : ?>
-						<span class="<?php echo $this->titleIcon; ?> icon-large"></span>
-						<?php endif; ?>
+		<section class="top-bar-section">
+			<!-- Right Nav Section -->
+			<ul class="right">
+				<?php
+					$this->navigation()->menu()->setPartial('partials/foundation-menu.phtml');
+					if (Zend_Auth::getInstance()->hasIdentity() && $this->user) {
+						switch ($this->user->user_level) {
+							case Model_User::USER_LEVEL_ADMIN:
+							case Model_User::USER_LEVEL_MANAGER:
+								$menu = $this->adminMenu;
+								break;
+							case Model_User::USER_LEVEL_USER:
+							default:
+								$menu = $this->nonAdminMenu;
+								break;
+						}
+						echo $this->navigation()->menu()->render($menu);
+					} else {
+						echo $this->navigation()->menu()->render($this->nonUserMenu);
+					}
+				?>
+			</ul>
 
-						<?php echo $this->title; ?>
-
-						<?php if ($this->titleInfo) : ?>
-						<a href="#" class="accordion-btn" data-id="title-info"><span class="icon-caret-down icon-small"></span></a>
-						<?php endif; ?>
-					</h1>
-					<?php if($this->subtitle) { echo '<h2>'.$this->subtitle.'</h2>'; } ?>
-				</div>
-                <?php if(isset($this->titleInfo)) : ?>
-                    <div id="title-info" class="accordion">
-                        <dl>
-                            <?php foreach($this->titleInfo as $k => $info) : ?>
-
-                                <?php $value = $k == 'notes' ? '<p>'.$info->value.'</p>' : $info->value ; ?>
-                                <dt><?php echo $info->title; ?>:</dt>
-                                <dd><?php echo $value; ?></dd>
-
-                            <?php endforeach; ?>
-                        </dl>
-                    </div>
-                <?php endif; ?>
+			<!-- Left Nav Section -->
+			<ul class="left">
+				<?php echo $this->navigation()->menu()->render(); ?>
+			</ul>
+		</section>
+	</nav>
+	<div id="content" class="clearfix">
+		<div class="row">
+			<div class="small-24 columns">
+				<?php echo $this->layout()->content; ?>
+				<?php echo $this->FlashMessages(); ?>
 			</div>
-		</header>
-		<div id="content" class="clearfix">
-			<?php echo $this->FlashMessages(); ?>
-			<?php echo $this->layout()->content; ?>
 		</div>
-        <div id="footer">
-            <?php echo $this->navigation()->menu()->setPartial('partials/footer-menu.phtml')->render(); ?>
-        </div>
+	</div>
+	<div id="footer">
+		<?php echo $this->navigation()->menu()->setPartial('partials/footer-menu.phtml')->render(); ?>
 	</div>
 	<div id="loader" class="dead"></div>
 
@@ -120,7 +97,9 @@
 		array('link', 'assets/lib/farbtastic/farbtastic.js'),
 		array('link', 'assets/js/plugins.js'),
 		array('link', 'assets/lib/backbone/underscore.js'),
-		array('link', 'assets/lib/bootstrap/bootstrap.js'),
+//		array('link', 'assets/lib/bootstrap/bootstrap.js'),
+		array('link', 'assets/lib/foundation/js/foundation/foundation.js'),
+		array('link', 'assets/lib/foundation/js/foundation/foundation.topbar.js'),
 		array('link', 'assets/js/datatables.js'),
 		array('link', 'assets/js/charts.js'),
         array('link', 'assets/js/badges.js'),
@@ -154,7 +133,9 @@
 		echo $minify;
 	}
 	?>
-
+	<script>
+		$(document).foundation();
+	</script>
 	<script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

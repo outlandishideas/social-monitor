@@ -244,4 +244,50 @@ abstract class GraphingController extends BaseController {
         return $return;
     }
 
+	public function badgeInformation($model, $badge)
+	{
+		$badgeArr = array();
+		$badgeArr["title"] = $badge->getTitle();
+		$badgeArr["rank"] = array(
+			"value" => 0, //get rank for badge
+			"denominator" => 0, //get count of $model type
+			"color" => "#d9e021" ///get colour for this rank
+		);
+		$badgeArr['score'] = array(
+			"value"	=> 0, //get score badge
+			"color" => '#d9e021' //get colour for this score
+		);
+		if(count($badge->getMetrics()) > 0){
+			$metrics = array();
+			foreach($badge->getMetrics() as $metric){
+				$metrics[] = array(
+					"title" => $metric::getTitle(),
+					"icon" => $metric::getIcon()
+				);
+			}
+			$badgeArr['metrics'] = $metrics;
+		}
+		return $badgeArr;
+	}
+
+	public function badgeDetails($model)
+	{
+		$badgeArr = array();
+		$badges = Badge_Factory::getBadges();
+
+		//get total and handle it separately
+		$total = $badges[Badge_Total::getName()];
+
+		$badgeArr['main'] = $this->badgeInformation($model, $total);
+
+		$small = array();
+		foreach($badges as $badge){
+			if($badge instanceof Badge_Total) continue;
+			$small[] = $this->badgeInformation($model, $badge);
+		}
+		$badgeArr['small'] = $small;
+
+		return $badgeArr;
+	}
+
 }
