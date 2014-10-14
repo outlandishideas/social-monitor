@@ -78,7 +78,10 @@ abstract class Badge_Abstract
 
 	public function assignRanks(\DateTime $date = null, Badge_Period $range = null)
 	{
-		if (is_null($data)) $data = new \DateTime();
+		if (is_null($date)) {
+			$date = new \DateTime();
+			$date = $date->sub(new \DateInterval('P1D')); //badges always work on yesterday as the most recent day
+		}
 		if (is_null($range)) $range = Badge_Period::MONTH();
 
 		$sql = "

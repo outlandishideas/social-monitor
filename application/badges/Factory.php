@@ -78,6 +78,9 @@ abstract class Badge_Factory
 		$stmt = self::getDb()->prepare($sql);
 		$stmt->execute($args);
 		$data = $stmt->fetchAll(PDO::FETCH_OBJ);
+		if (!$data) {
+			return null;
+		}
 		foreach ($data as $row) {
 			foreach (self::getBadgeNames() as $badgeType) {
 				if ($badgeType != Badge_Total::getName()) {
