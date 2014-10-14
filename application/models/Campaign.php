@@ -134,18 +134,18 @@ class Model_Campaign extends Model_Base {
 
 	function getKpiAverages() {
 		if (!isset($this->kpiAverages)) {
+
 			$scores = array();
-			$metrics = Model_Presence::$ALL_METRICS;
-			foreach ($metrics as $m) {
-				$scores[$m] = array();
-			}
 			foreach ($this->getKpiData() as $p) {
-				foreach ($metrics as $m) {
-					if (array_key_exists($m, $p)) {
-						$scores[$m][] = $p[$m];
+				foreach ($p as $m => $v) {
+					if ($m == 'name' || $m == 'id') continue;
+					if (!array_key_exists($m, $scores)) {
+						$scores[$m] = array();
 					}
+					$scores[$m][] = $v;
 				}
 			}
+
 			$averages = array();
 			foreach ($scores as $key=>$s) {
 				$total = 0;
@@ -160,6 +160,7 @@ class Model_Campaign extends Model_Base {
 				$averages[$key] = $average;
 			}
 			$this->kpiAverages = $averages;
+
 		}
 
 		return $this->kpiAverages;
