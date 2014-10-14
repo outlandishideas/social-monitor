@@ -93,6 +93,37 @@ abstract class Badge_Factory
 		return $data;
 	}
 
+	public static function badgesData($asArray = false)
+	{
+		$key = 'presence_badges';
+		$data = BaseController::getObjectCache($key);
+		if (!$data) {
+			$endDate = new DateTime("now");
+			$startDate = clone $endDate;
+			for ($i=0; $i<5; $i++) {
+				// while no count data keep trying further back in the past.
+				// only try 5 times, as it is probably a new presence and so has no cached data
+				$data = Model_Badge::getAllCurrentData(Badge_Period::MONTH(), $startDate, $endDate);
+				if ($data) {
+					break;
+				}
+				$startDate->modify("-1 day");
+				$endDate->modify("-1 day");
+			}
+			BaseController::setObjectCache($key, $data, true);
+		}
+
+		if ($asArray) {
+			$tmp = array();
+			foreach($data as $key=>$value){
+				$tmp[$key] = $value;
+			}
+			$data = $tmp;
+		}
+
+		return $data;
+	}
+
 	public static function setDB(PDO $db)
 	{
 		self::$db = $db;

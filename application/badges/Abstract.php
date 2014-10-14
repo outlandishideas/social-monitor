@@ -80,7 +80,7 @@ abstract class Badge_Abstract
 	{
 		if (is_null($date)) {
 			$date = new \DateTime();
-			$date = $date->sub(new \DateInterval('P1D')); //badges always work on yesterday as the most recent day
+			$date->modify('-1 day'); //badges always work on yesterday as the most recent day
 		}
 		if (is_null($range)) $range = Badge_Period::MONTH();
 

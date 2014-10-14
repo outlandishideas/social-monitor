@@ -130,6 +130,7 @@ class Model_Badge {
      * @return array
      */
     public static function getAllCurrentData($dateRange, $startDate, $endDate) {
+    	trigger_error("Deprecated method. Moved to Badge_Factory.");
         $clauses = array(
             'h.date >= :start_date',
             'h.date <= :end_date',
@@ -323,6 +324,7 @@ class Model_Badge {
 	}
 
 	public static function assignRanks($presenceData, $badgeType) {
+		trigger_error("Deprecated function. Moved to new Badge classes.");
 		//sorts the data by the current badge score (descending)
 		usort($presenceData, function($a, $b) use ($badgeType){
 			$aVal = $a->$badgeType;
@@ -354,6 +356,7 @@ class Model_Badge {
 	 * @return array|stdClass
 	 */
 	public static function badgesData($asArray = false){
+		trigger_error("Deprecated method. Moved to Badge_Factory.");
 		$key = 'presence_badges';
 		$data = BaseController::getObjectCache($key);
 		if (!$data) {
