@@ -317,10 +317,10 @@ class NewModel_Presence
 
 	public function getKpiData(DateTime $start = null, DateTime $end = null, $useCache = true)
 	{
-		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
-			$presence = Model_Presence::fetchById($this->getId());
-			return $presence->getKpiData($start, $end, $useCache);
-		}
+		// if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
+		// 	$presence = Model_Presence::fetchById($this->getId());
+		// 	return $presence->getKpiData($start, $end, $useCache);
+		// }
 
 		if (!$start || !$end) {
 			$end = new DateTime();
