@@ -457,13 +457,20 @@ class NewModel_Presence
 	}
 
 	public function saveMetric($metric, DateTime $start, DateTime $end, $value){
-		$stmt = $this->db->prepare("INSERT INTO `kpi_cache` (`presence_id`, `metric`, `start_date`, `end_date`, `value`) VALUES(?,?,?,?,?)");
+		$stmt = $this->db->prepare("
+			INSERT INTO `kpi_cache`
+				(`presence_id`, `metric`, `start_date`, `end_date`, `value`)
+			VALUES
+				(:id, :metric, :start, :end, :value)
+			ON DUPLICATE KEY UPDATE
+				`value` = VALUES(`value`)
+		");
 		$stmt->execute(array(
-			$this->getId(),
-			$metric,
-			$start->format("Y-m-d"),
-			$end->format("Y-m-d"),
-			$value
+			':id' => $this->getId(),
+			':metric' => $metric,
+			':start' => $start->format("Y-m-d"),
+			':end' => $end->format("Y-m-d"),
+			':value' => $value
 		));
 	}
 
