@@ -125,7 +125,7 @@ class IndexController extends GraphingController
 			//$badgeData = Model_Badge::getAllCurrentData('month', new DateTime("now -$dayRange days"), new DateTime('now'));
 			$badgeData = Badge_Factory::getAllCurrentData(
 				Badge_Period::MONTH(),
-				new \DateTime("no -$dayRange days"),
+				new \DateTime("now -$dayRange days"),
 				new \DateTime('now')
 			);
 			self::setObjectCache($key, $badgeData, $temp);
