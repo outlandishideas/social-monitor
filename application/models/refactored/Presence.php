@@ -92,6 +92,13 @@ class NewModel_Presence
 		return $this->type;
 	}
 
+	public function getCharts()
+	{
+		return array(
+			Chart_Compare::getName() => Chart_Compare::getTitle()
+		);
+	}
+
 	public function setType($typeName)
 	{
 		$types = array_flip(NewModel_PresenceType::toArray());

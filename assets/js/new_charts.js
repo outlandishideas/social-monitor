@@ -8,11 +8,26 @@ app.newCharts = {
 
     setup: function() {
 
+        var $metricPicker = $('#metric-picker');
+        if ($metricPicker.length > 0) {
+            $metricPicker.on('change', app.newCharts.refreshCharts);
+        }
+
         app.newCharts.loadData();
 
     },
+
+    refreshCharts: function() {
+        app.state.chart = null;
+        app.newCharts.loadData();
+    },
+
+    currentMetric:function () {
+        return $('#metric-picker').val();
+    },
+
     loadData: function() {
-        var chart = "compare";
+        var chart = app.newCharts.currentMetric();
         var dateRange = "2014-09-15,2014-10-15";
 
         var $chart = $('#new-chart');

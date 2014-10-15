@@ -29,6 +29,9 @@ abstract class Chart_Factory {
         return array(
             Chart_Compare::getName() => 'Chart_Compare',
             Chart_Popularity::getName() => 'Chart_Popularity',
+            Chart_Reach::getName() => 'Chart_Reach',
+            Chart_Engagement::getName() => 'Chart_Engagement',
+            Chart_Quality::getName() => 'Chart_Quality',
         );
     }
 

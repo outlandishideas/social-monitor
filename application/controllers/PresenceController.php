@@ -52,6 +52,14 @@ class PresenceController extends GraphingController
         }
 
 		$this->view->badgePartial = $this->badgeDetails($presence->getBadges());
+
+		$this->view->metricOptions = array(
+			Chart_Compare::getName() => Chart_Compare::getTitle(),
+			Chart_Reach::getName() => Chart_Reach::getTitle(),
+			Chart_Engagement::getName() => Chart_Engagement::getTitle(),
+			Chart_Quality::getName() => Chart_Quality::getTitle(),
+			Chart_Popularity::getName() => Chart_Popularity::getTitle()
+		);
         
 		$this->view->titleImage = '<img src="' . $presence->image_url . '" alt="' . $presence->getLabel() . '"/>';
 		$this->view->presence = $presence;
@@ -256,7 +264,7 @@ class PresenceController extends GraphingController
 
 		$chartObject = Chart_Factory::getChart($chart);
 
-		$this->apiSuccess($chartObject->getData($presence, $start, $end));
+		$this->apiSuccess($chartObject->getChart($presence, $start, $end));
 	}
 
 	/**
