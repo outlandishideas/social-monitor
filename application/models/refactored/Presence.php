@@ -521,6 +521,11 @@ class NewModel_Presence
 		return $badges;
 	}
 
+	public function getBadgeHistory(DateTime $start, DateTime $end)
+	{
+		return Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), $start, $end, array($this->getId()));
+	}
+
 	public static function getAllBadges($presenceId = null)
 	{
 		if(empty(static::$badges)){

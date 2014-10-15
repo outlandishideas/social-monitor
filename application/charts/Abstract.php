@@ -8,34 +8,55 @@
 
 abstract class Chart_Abstract {
 
-    protected $title;
-    protected $description;
-    protected $name;
+    protected static $title;
+    protected static $description;
+    protected static $name;
+
+    protected $xLabel;
+    protected $yLabel;
+
+    public function __construct(PDO $db = null)
+    {
+        if (is_null($db)) {
+            $db = Zend_Registry::get('db')->getConnection();
+        }
+        $this->db = $db;
+    }
 
     abstract public function getData(NewModel_Presence $presence, DateTime $start, DateTime $end);
 
     /**
      * @return mixed
      */
-    public function getTitle()
+    public static function getTitle()
     {
-        return $this->title;
+        return self::$title;
     }
 
     /**
      * @return mixed
      */
-    public function getDescription()
+    public static function getDescription()
     {
-        return $this->description;
+        return static::$description;
     }
 
     /**
      * @return mixed
      */
-    public function getName()
+    public static function getName()
     {
-        return $this->name;
+        return static::$name;
+    }
+
+    public function getYLabel()
+    {
+        return $this->yLabel;
+    }
+
+    public function getXLabel()
+    {
+        return $this->xLabel;
     }
 
 

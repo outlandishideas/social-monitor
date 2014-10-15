@@ -226,52 +226,37 @@ class PresenceController extends GraphingController
 	public function graphDataAction() {
 		Zend_Session::writeClose(); //release session on long running actions
 
+		$id = $this->_request->id;
+		if(!$id) {
+			$this->apiError('Missing Id range');
+		}
+
+		/** @var $presence NewModel_Presence */
+		$presence = NewModel_PresenceFactory::getPresenceById($id);
+		if(!$presence) {
+			$this->apiError('Presence could not be found');
+		}
+
 		$dateRange = $this->getRequestDateRange();
 		if (!$dateRange) {
 			$this->apiError('Missing date range');
 		}
-		/** @var $presence Model_Presence */
-        $chartData = $this->_request->chartData;
-		if (!$chartData) {
-			$this->apiError('Missing chart options');
+
+		$chart = $this->_request->chart;
+		if (!$chart) {
+			$this->apiError('Missing chart type');
 		}
 
-		$startDate = $dateRange[0];
-		$endDate = $dateRange[1];
-
-		$series = array();
-
-		foreach ($chartData as $chart) {
-			$presence = NewModel_PresenceFactory::getPresenceById($chart['presence_id']);
-			if ($presence) {
-                $data = null;
-				$metric = $chart['metric'];
-				switch ($metric) {
-					case Model_Presence::METRIC_POPULARITY_RATE:
-						$data = $this->generatePopularityGraphData($presence, $startDate, $endDate);
-						break;
-					case Model_Presence::METRIC_POSTS_PER_DAY:
-                        $data = $this->generatePostsPerDayGraphData($presence, $startDate, $endDate);
-						break;
-					case Model_Presence::METRIC_RESPONSE_TIME:
-						$data = $this->generateResponseTimeGraphData($presence, $startDate, $endDate);
-						break;
-				}
-				if ($data) {
-					/** @var Zend_View_Helper_TrafficLight $trafficLight */
-					$trafficLight = $this->view->trafficLight();
-					foreach ($data['points'] as $point) {
-						$point->color = $trafficLight->color(isset($point->health) ? $point->health : $point->value, $metric);
-					}
-					$data['color'] = $trafficLight->color(isset($data['health']) ? $data['health'] : $data['average'], $metric);
-                    if(isset($data['rAverage'])) $data['rColor'] = $trafficLight->color($data['rAverage'], Model_Presence::METRIC_RELEVANCE);
-                    $data['chart'] = $chart;
-					$series[] = $data;
-				}
-			}
+		if(!in_array($chart, Chart_Factory::getChartNames())) {
+			$this->apiError('Chart type doesn\'t exist');
 		}
 
-		$this->apiSuccess($series);
+		$start = $dateRange[0];
+		$end = $dateRange[1];
+
+		$chartObject = Chart_Factory::getChart($chart);
+
+		$this->apiSuccess($chartObject->getData($presence, $start, $end));
 	}
 
 	/**

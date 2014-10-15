@@ -124,7 +124,7 @@ abstract class Badge_Factory
 			':date_range' => (string) $dateRange
 		);
 		if (count($presenceIds)) {
-			$clauses[] = 'h.presenceId IN ('.implode(',', array_map('intval', $presenceIds)).')';
+			$clauses[] = 'h.presence_id IN ('.implode(',', array_map('intval', $presenceIds)).')';
 		}
 
 		$sql = '
