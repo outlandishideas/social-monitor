@@ -7,7 +7,8 @@ var app = app || {};
 app.newCharts = {
 
     setup: function() {
-
+        $(document)
+            .on('dateRangeUpdated', app.newCharts.loadData)
         var $metricPicker = $('#metric-picker');
         if ($metricPicker.length > 0) {
             $metricPicker.on('change', app.newCharts.refreshCharts);
@@ -28,7 +29,9 @@ app.newCharts = {
 
     loadData: function() {
         var chart = app.newCharts.currentMetric();
-        var dateRange = "2014-09-15,2014-10-15";
+        var dateRange = app.state.dateRange.map(function(d){
+            return $.datepicker.formatDate('yy-mm-dd', Date.parse(d));
+        });
 
         var $chart = $('#new-chart');
         var url = $chart.data('controller') + '/graph-data';
@@ -42,12 +45,7 @@ app.newCharts = {
 
         app.api.get(url, params)
             .done(function(response) {
-                console.log(response.data);
-                if(app.state.chart){
-                    app.state.chart.flow({data: response.data.data, duration: 1500});
-                } else {
-                    app.state.chart = c3.generate(response.data)
-                }
+                app.state.chart = c3.generate(response.data)
             })
             .always(function() {
                 //$('.chart-container').hideLoader();
