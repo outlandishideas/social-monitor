@@ -46,6 +46,7 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 		$resourceLoader->addResourceType('metric', 'metrics/', 'Metric');
 		$resourceLoader->addResourceType('badge', 'badges/', 'Badge');
 		NewModel_PresenceFactory::setDatabase(self::$pdo);
+		Badge_Factory::setDB(self::$pdo);
 		//load config
 		if (!file_exists(APPLICATION_PATH . '/configs/config.yaml')) {
 			die('Please copy configs/config.sample.yaml to configs/config.yaml');

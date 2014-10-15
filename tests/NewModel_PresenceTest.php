@@ -51,6 +51,7 @@ class NewModel_PresenceTest extends PHPUnit_Extensions_Database_TestCase {
         $resourceLoader->addResourceType('metric', 'metrics/', 'Metric');
         $resourceLoader->addResourceType('badge', 'badges/', 'Badge');
         NewModel_PresenceFactory::setDatabase(self::$pdo);
+        Badge_Factory::setDB(self::$pdo);
         $this->presence = NewModel_PresenceFactory::getPresenceById(1);
     }
 
