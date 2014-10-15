@@ -21,7 +21,7 @@ $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
             <div class="badge-rank">
                 <h3>Rank</h3>
                 <div class="rank-value">
-                    <span class="numerator" style="color:<?php echo $badge['rank']['color']; ?>;"><?php echo $badge['rank']['value']; ?><span><?php echo trim(str_replace(range(0,9),'',$nf->format($badge['rank']['value'])));?></span></span><span class="denominator">/<?php echo $badge['rank']['denominator']; ?></span>
+                    <span class="numerator"><?php echo $badge['rank']['value']; ?><span><?php echo trim(str_replace(range(0,9),'',$nf->format($badge['rank']['value'])));?></span></span><span class="denominator">/<?php echo $badge['rank']['denominator']; ?></span>
                 </div>
             </div>
 
@@ -50,7 +50,7 @@ $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
                     <h3>Rank</h3>
                     <div class="rank-value">
                         <!-- breaking the line causes the display not display properly -->
-                        <span class="numerator" style="color:<?php echo $badge['rank']['color']; ?>;"><?php echo $badge['rank']['value']; ?><span><?php echo trim(str_replace(range(0,9),'',$nf->format($badge['rank']['value'])));?></span></span><span class="denominator">/<?php echo $badge['rank']['denominator']; ?></span>
+                        <span class="numerator"><?php echo $badge['rank']['value']; ?><span><?php echo trim(str_replace(range(0,9),'',$nf->format($badge['rank']['value'])));?></span></span><span class="denominator">/<?php echo $badge['rank']['denominator']; ?></span>
                     </div>
                 </div>
 

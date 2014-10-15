@@ -159,17 +159,18 @@ abstract class Badge_Factory
 		return $data;
 	}
 
-	public static function badgesData($asArray = false)
+	public static function badgesData($asArray = false, $presenceIds = array())
 	{
+		if(!is_array($presenceIds)) $presenceIds = array($presenceIds);
 		$key = 'presence_badges';
 		$data = BaseController::getObjectCache($key);
-		if (!$data) {
+		if (!$data || count((array)$data) < 1) {
 			$endDate = new DateTime("now");
 			$startDate = clone $endDate;
-			for ($i=0; $i<5; $i++) {
+			for ($i = 0; $i < 5; $i++) {
 				// while no count data keep trying further back in the past.
 				// only try 5 times, as it is probably a new presence and so has no cached data
-				$data = Model_Badge::getAllCurrentData(Badge_Period::MONTH(), $startDate, $endDate);
+				$data = Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), $startDate, $endDate);
 				if ($data) {
 					break;
 				}
@@ -179,12 +180,18 @@ abstract class Badge_Factory
 			BaseController::setObjectCache($key, $data, true);
 		}
 
-		if ($asArray) {
-			$tmp = array();
-			foreach($data as $key=>$value){
-				$tmp[$key] = $value;
-			}
-			$data = $tmp;
+		if(!empty($presenceIds)){
+			$data = array_filter($data, function($a) use($presenceIds) {
+				if(in_array($a->presence_id, $presenceIds)){
+					return true;
+				}
+				return false;
+			});
+		}
+		if($asArray){
+			$data = array_map(function($a){
+				return (array)$a;
+			}, $data);
 		}
 
 		return $data;

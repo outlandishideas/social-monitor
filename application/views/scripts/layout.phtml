@@ -13,6 +13,7 @@
 	<link href="<?php echo $this->baseUrl('/') . 'assets/lib/foundation/css/foundation.css';?>" rel="stylesheet"/>
 	<link href="<?php echo $this->baseUrl('/') . 'assets/lib/tipsy/css/tipsy.css';?>" rel="stylesheet"/>
 	<link href="<?php echo $this->baseUrl('/') . 'assets/css/svg.css';?>" rel="stylesheet"/>
+	<link href="<?php echo $this->baseUrl('/') . 'assets/lib/c3/css/c3.css';?>" rel="stylesheet"/>
 	<link href="<?php echo $this->baseUrl('/') . 'assets/css/ui.daterangepicker.css';?>" rel="stylesheet"/>
 	<link href="<?php echo $this->baseUrl('/') . 'assets/css/uni-form.css';?>" rel="stylesheet"/>
 	<link href="<?php echo $this->baseUrl('/') . 'assets/css/bc.uni-form.css';?>" rel="stylesheet"/>
@@ -87,7 +88,8 @@
 		array('link', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js'),
 		array('code', 'var jsConfig = ' . json_encode($this->jsConfig) . ';'),
 		array('code', 'var geochartMetrics = ' . json_encode($this->geochartMetrics) . ';'),
-		array('link', 'assets/lib/d3/d3.v2.min.js'), //use preminified version to avoid error
+		array('link', 'assets/lib/d3/v3/d3.min.js'), //use preminified version to avoid error
+		array('link', 'assets/lib/c3/js/c3.js'),
 		array('link', 'assets/lib/jquery/date.js'),
 		array('link', 'assets/lib/jquery/daterangepicker.jQuery.js'),
 		array('link', 'assets/lib/tipsy/js/jquery.tipsy.js'),
@@ -101,7 +103,8 @@
 		array('link', 'assets/lib/foundation/js/foundation/foundation.js'),
 		array('link', 'assets/lib/foundation/js/foundation/foundation.topbar.js'),
 		array('link', 'assets/js/datatables.js'),
-		array('link', 'assets/js/charts.js'),
+//		array('link', 'assets/js/charts.js'),
+		array('link', 'assets/js/new_charts.js'),
         array('link', 'assets/js/badges.js'),
 		array('link', 'assets/js/geochart.js'),
 		array('link', 'assets/js/main.js')

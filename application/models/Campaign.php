@@ -3,6 +3,7 @@
 class Model_Campaign extends Model_Base {
 	protected static $tableName = 'campaigns';
 	protected static $sortColumn = 'display_name';
+	protected static $badges = array();
 
 	// use this to filter campaigns table by is_country column
 	public static $countryFilter = null;
@@ -217,6 +218,89 @@ class Model_Campaign extends Model_Base {
 		}
 
 		return $badges;
+	}
+
+	public function getBadges()
+	{
+		return $this->getAllBadges($this->id);
+	}
+
+	public static function getAllBadges($presenceId = null)
+	{
+		if(empty(static::$badges)){
+			$campaignIds = array_reduce(static::fetchAll(), function($carry, $campaign){
+				$carry[] = $campaign->id;
+				return $carry;
+			}, array());
+
+			$data =  Badge_Factory::badgesData(true);
+
+			$badgeNames = Badge_Factory::getBadgeNames();
+
+
+			$sortedData = array_reduce($data, function($carry, $row) use ($campaignIds, $badgeNames) {
+				$campaignId = $row['campaign_id'];
+				if(in_array($campaignId, $campaignIds)) {
+					if(!array_key_exists($campaignId, $carry)){
+						$carry[$campaignId] = array('presences' => 0, 'denominator' => count($campaignIds));
+						foreach($badgeNames as $name){
+							$carry[$campaignId][$name] = 0;
+						}
+					}
+					foreach($badgeNames as $name){
+						if($name == Badge_Total::getName()) continue;
+						$carry[$campaignId][$name] += $row[$name];
+					}
+					$carry[$campaignId]['presences'] += 1;
+				}
+				return $carry;
+
+			}, array());
+
+			foreach($sortedData as &$campaignData){
+				foreach($badgeNames as $name){
+					if($name == Badge_Total::getName()) continue;
+					//get average for kpi scores by dividing by number of presences
+					$campaignData[$name] /= $campaignData['presences'];
+					//add average to total score
+					$campaignData[Badge_Total::getName()] += $campaignData[$name];
+				}
+				//divide the total score by the number of badges (-1 for the totalbadge)
+				$campaignData[Badge_Total::getName()] /= count($badgeNames) - 1;
+				unset($campaignData['presences']);
+			}
+
+			foreach($badgeNames as $name){
+				uasort($sortedData, function($a, $b) use ($name) {
+					if($a[$name] == $b[$name]) return 0;
+					return $a[$name] > $b[$name] ? -1 : 1;
+				});
+				$lastScore = null;
+				$lastRank = null;
+				$i = 0;
+				foreach($sortedData as &$row) {
+					if ($row[$name] == $lastScore){
+						$rank = $lastRank;
+					} else {
+						$rank = $i+1;
+					}
+					$row[$name."_rank"] = $rank;
+					$lastScore = $row[$name];
+					$lastRank = $rank;
+					$i++;
+				}
+			}
+			static::$badges = $sortedData;
+		}
+		if($presenceId){
+			if(array_key_exists($presenceId, static::$badges)){
+				return static::$badges[$presenceId];
+			} else {
+				return null;
+			}
+		}
+		return static::$badges;
+
 	}
 
     public static function badgesData(){

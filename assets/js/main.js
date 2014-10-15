@@ -12,6 +12,7 @@ $.extend(app, {
 	colors: ['CD3667', '177AB9', '22B5E9', '47918E', '8EBD3D', '645691', 'FF0000', '0000FF', 'FFFF00', 'FF00FF'],
 	state: {
 		charts: {},
+		chart: null,
 		chartData: [],
 		colors: {},
 		timestamps: [],
@@ -198,8 +199,8 @@ app.init = {
 			app.state.dateRange = $item.data('date-range');
 		},
 
-		'#charts': function($item) {
-			app.charts.setup();
+		'#new-chart': function($item) {
+			app.newCharts.setup();
 		},
 
         '#badges': function($item) {

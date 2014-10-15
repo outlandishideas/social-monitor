@@ -51,7 +51,7 @@ class PresenceController extends GraphingController
             $this->view->title .= ' <span class="icon-remove-sign" title="Is lacking correct branding"></span>';
         }
 
-		$this->view->badgePartial = $this->badgeDetails($presence);
+		$this->view->badgePartial = $this->badgeDetails($presence->getBadges());
         
 		$this->view->titleImage = '<img src="' . $presence->image_url . '" alt="' . $presence->getLabel() . '"/>';
 		$this->view->presence = $presence;
