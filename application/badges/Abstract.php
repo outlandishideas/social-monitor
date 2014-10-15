@@ -4,6 +4,7 @@ abstract class Badge_Abstract
 {
 	protected static $name = '';
 	protected static $title = '';
+	protected $db;
 
 	protected $metrics = array();
 	protected $metricsWeighting = array();
@@ -27,14 +28,14 @@ abstract class Badge_Abstract
 
 		$totalWeight = 0;
 		$totalScore = 0;
-		$start = $range->getStart($date);
-		foreach ($this->getMetrics as $metric => $weight) {
+		$start = $range->getBegin($date);
+		foreach ($this->getMetricsWeighting() as $metric => $weight) {
 			$score = Metric_Factory::getMetric($metric)->getScore($presence, $start, $date);
 			if (is_null($score)) continue;
 			$totalScore += ($score * $weight);
 			$totalWeight += $weight;
 		}
-		$result = round($totalScore/$totalWeight);
+		$result = $totalWeight > 0 ? round($totalScore/$totalWeight) : 0; //prevent division by 0 in case of no available scores
 		$result = max(0, min(100, $result));
 
 		$presence->saveBadgeResult($result, $date, $range, static::getName());
@@ -84,10 +85,12 @@ abstract class Badge_Abstract
 		}
 		if (is_null($range)) $range = Badge_Period::MONTH();
 
+		$name = static::getName();
+
 		$sql = "
 			SELECT
 				`h`.`presence_id`,
-				`h`.`{static::getName()}` AS `score`
+				`h`.`$name` AS `score`
 			FROM
 				badge_history AS h
 			WHERE
@@ -112,11 +115,11 @@ abstract class Badge_Abstract
 		});
 
 		//foreach row (ordered by score of the current badge type) set the ranking
-		$stmt = $this->db->prepare("UPDATE `badge_history` SET `{static::getName()}_rank` = :rank WHERE `presence_id` = :id AND `date` = :date AND `daterange` = :range");
+		$stmt = $this->db->prepare("UPDATE `badge_history` SET `{$name}_rank` = :rank WHERE `presence_id` = :id AND `date` = :date AND `daterange` = :range");
 		$lastScore = null;
 		$lastRank = null;
 		foreach($data as $i => $row) {
-			if ($row->$badgeType == $lastScore){
+			if ($row['score'] == $lastScore){
 				$rank = $lastRank;
 			} else {
 				$rank = $i+1;

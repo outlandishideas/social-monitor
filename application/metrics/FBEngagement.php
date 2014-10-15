@@ -22,7 +22,7 @@ class Metric_FBEngagement extends Metric_Abstract {
     {
         if ($presence->getType() != NewModel_PresenceType::FACEBOOK) return null;
 
-        $data = $presence->getHistoricData();
+        $data = $presence->getHistoricData($start, $end);
         $total = 0;
         $count = 0;
         foreach ($data as $d) {

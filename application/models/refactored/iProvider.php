@@ -106,4 +106,9 @@ abstract class NewModel_iProvider
 	 * @return array|null Return null when handle is invalid, otherwise an array with the following data in order: `type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `klout_id`, `klout_score`, `facebook_engagement`, `last_updated`
 	 */
 	abstract public function handleData($handle);
+
+	public function getTableName()
+	{
+		return $this->tableName;
+	}
 }

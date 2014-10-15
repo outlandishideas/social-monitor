@@ -113,7 +113,8 @@ class IndexController extends GraphingController
 	}
 
 	protected function getCacheableData($dayRange, $temp) {
-		$allBadgeTypes = Model_Badge::$ALL_BADGE_TYPES;
+		//$allBadgeTypes = Model_Badge::$ALL_BADGE_TYPES;
+		$allBadgeTypes = Badge_Factory::getBadgeNames();
 		/** @var Zend_View_Helper_TrafficLight $trafficLight */
 		$trafficLight = $this->view->trafficLight();
 
@@ -121,7 +122,12 @@ class IndexController extends GraphingController
 		$badgeData = self::getObjectCache($key, $temp);
 		if(!$badgeData){
 			//todo include week data in the data that we send out as json
-			$badgeData = Model_Badge::getAllCurrentData('month', new DateTime("now -$dayRange days"), new DateTime('now'));
+			//$badgeData = Model_Badge::getAllCurrentData('month', new DateTime("now -$dayRange days"), new DateTime('now'));
+			$badgeData = Badge_Factory::getAllCurrentData(
+				Badge_Period::MONTH(),
+				new \DateTime("no -$dayRange days"),
+				new \DateTime('now')
+			);
 			self::setObjectCache($key, $badgeData, $temp);
 		}
 
@@ -198,7 +204,7 @@ class IndexController extends GraphingController
 	public function buildBadgeDataAction()
 	{
 		// make sure that the last 60 day's worth of badge_history data exists
-		Model_Badge::populateHistoricalData('month', new DateTime('now -60 days'), new DateTime('now'));
+		Badge_Factory::guaranteeHistoricalData(Badge_Period::MONTH(), new \DateTime('now -60 days'), new \DateTime('now'));
 
 		// do everything that the index page does, but using the (potentially) updated data
 		$this->getCacheableData(30, false);
@@ -208,13 +214,14 @@ class IndexController extends GraphingController
         $oldData = self::getObjectCache($key, false);
         if(!$oldData) {
             //if no oldData (too old or temp) get current data (which is now up to date) and set it in the object cache
-            $data = Model_Badge::getAllCurrentData('month', new DateTime(), new DateTime());
-	        $data = Model_Badge::calculateTotalScoresAndRanks($data);
+            $data = Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), new DateTime(), new DateTime());
+	        //$data = Model_Badge::calculateTotalScoresAndRanks($data);
             self::setObjectCache($key, $data, false);
         }
 
 //		Model_Badge::getAllData('week', $start, $end); //todo: uncomment this when it is needed
 		exit;
+
 	}
 
 	public function servefileAction()

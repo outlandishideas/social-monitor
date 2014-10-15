@@ -15,19 +15,24 @@ class Badge_Total extends Badge_Abstract
 		}
 
 		$badges = array(
-			new Badge_Reach($presence, $data, $range),
-			new Badge_Engagement($presence, $data, $range),
-			new Badge_Quality($presence, $data, $range)
+			new Badge_Reach($this->db),
+			new Badge_Engagement($this->db),
+			new Badge_Quality($this->db)
 		);
 
 		$total = 0;
 		foreach ($badges as $b) {
-			$total += $b->calculate();
+			$total += $b->calculate($presence, $date, $range);
 		}
 
 		$result = round($total/count($badges));
 		$result = max(0, min(100, $result));
 
 		return $result;
+	}
+
+	public function assignRanks(\DateTime $date = null, Badge_Period $range = null)
+	{
+		return; //do nothing
 	}
 }

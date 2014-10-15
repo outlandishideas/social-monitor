@@ -315,6 +315,42 @@ class NewModel_Presence
 		return $date;
 	}
 
+	public function getRatioRepliesToOthersPosts(\DateTime $startDate, \DateTime $endDate)
+	{
+		$clauses = array(
+			'presence_id = :pid',
+			'created_time >= :start_date',
+			'created_time <= :end_date'
+		);
+
+		if (!$this->isForFacebook()) {
+			return 0;
+		}
+
+		$tableName = $this->provider->getTableName();
+		$sql = '
+		SELECT t1.replies/t2.posts as replies_to_others_posts FROM
+		(
+			SELECT presence_id, COUNT(*) as replies
+			FROM ' . $tableName . '
+			WHERE ' . implode(' AND ', $clauses) .'
+			AND in_response_to IS NOT NULL
+		) as t1,
+		(
+			SELECT presence_id, COUNT(*) as posts
+			FROM ' . $tableName . '
+			WHERE ' . implode(' AND ', $clauses) .'
+			AND posted_by_owner = 0
+		) as t2';
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute(array(
+			':pid'			=> $this->id,
+			':start_date'	=> $startDate->format('Y-m-d H:i:s'),
+			':end_date'		=> $endDate->format('Y-m-d H:i:s')
+		));
+		return floatval($stmt->fetchColumn());
+	}
+
 	public function getKpiData(DateTime $start = null, DateTime $end = null, $useCache = true)
 	{
 		// if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
@@ -480,7 +516,7 @@ class NewModel_Presence
 		$stmt->execute(array(
 			':id'	=> $this->getId(),
 			':date'	=> $date->format('Y-m-d'),
-			':daterange'	=> (string) $range
+			':range'=> (string) $range
 		));
 		$id = $stmt->fetchColumn(0);
 		if (false === $id) {

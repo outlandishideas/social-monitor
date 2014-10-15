@@ -21,7 +21,7 @@ abstract class Metric_Factory {
         );
 
         if(!array_key_exists($name, $names)){
-            throw new \LogicException("Not implemented yet.");
+            throw new \LogicException("$name is not implemented yet.");
         }
 
         return $names[$name];

@@ -18,6 +18,7 @@ class Badge_Period extends NewModel_Enum
 				throw new LogicException("Not implemented yet");
 				break;
 		}
-		return $date->sub(new \DateInterval($intervalString));
+		$ret = clone $date;
+		return $ret->sub(new \DateInterval($intervalString));
 	}
 }

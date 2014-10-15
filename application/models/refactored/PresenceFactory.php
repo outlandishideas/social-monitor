@@ -27,7 +27,7 @@ abstract class NewModel_PresenceFactory
 		$stmt->execute();
 		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-		if($results == false) return array();
+		if ($results == false) return array();
 
 		$presences = array_map('self::instantiatePresence', $results);
 

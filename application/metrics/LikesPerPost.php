@@ -39,8 +39,16 @@ class Metric_LikesPerPost extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
+        switch ((string) $presence->getType()) {
+            case NewModel_PresenceType::FACEBOOK:
+                //do nothing and continue to calculations
+                break;
+            default:
+                return null; //Likes only are available for facebook
+                break;
+        }
         $data = $presence->getKpiData($start, $end);
-        $current = $data[self::getName()];
+        $current = array_key_exists(self::getName(), $data) ? $data[self::getName()] : 0;
         $target = BaseController::getOption('likes_per_post_best');
         if ($target == 0) return null;
         $score = round($current/$target * 100);

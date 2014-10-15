@@ -15,10 +15,10 @@ abstract class Badge_Factory
 	public static function getClassNames()
 	{
 		return array(
-			Badge_Total::getName() => 'Badge_Total',
 			Badge_Reach::getName() => 'Badge_Reach',
 			Badge_Engagement::getName() => 'Badge_Engagement',
-			Badge_Quality::getName() => 'Badge_Quality'
+			Badge_Quality::getName() => 'Badge_Quality',
+			Badge_Total::getName() => 'Badge_Total'
 		);
 	}
 
@@ -46,7 +46,73 @@ abstract class Badge_Factory
 		return $badges;
 	}
 
-	public static function getAllCurrentData(Badge_Period $dateRange, $startDate, $endDate, $presenceIds = array()) {
+	public static function guaranteeHistoricalData(
+		Badge_Period $daterange,
+		\DateTime $startDate,
+		\DateTime $endDate,
+		$presenceIds = array()
+	) {
+		$data = static::getAllCurrentData($daterange, $startDate, $endDate, $presenceIds);
+		if (is_null($data)) $data = array();
+		$sorted = array();
+		foreach ($data as $row) {
+			if (!array_key_exists($row->date, $sorted)) {
+				$sorted[$row->date] = array();
+			}
+			$sorted[$row->date][$row->presence_id] = $row;
+		}
+
+		if (count($presenceIds)) {
+			$presences = NewModel_PresenceFactory::getPresencesById($presenceIds);
+		} else {
+			$presences = NewModel_PresenceFactory::getPresences();
+		}
+
+		$currentDate = clone $startDate;
+		while ($currentDate <= $endDate) {
+			if (!array_key_exists($currentDate->format('Y-m-d'), $sorted)) {
+				foreach ($presences as $p) {
+					foreach (static::getBadges() as $b) {
+						if ($b->getName() == Badge_Total::getName()) {
+							continue;
+						}
+						$b->calculate($p, $currentDate, $daterange);
+					}
+					static::getBadge(Badge_Total::getName())->calculate($p, $currentDate, $daterange);
+				}
+				foreach (static::getBadges() as $b) {
+					$b->assignRanks($currentDate, $daterange);
+				}
+			} else {
+				$doRanking = false;
+				foreach ($presences as $p) {
+					if (!array_key_exists($p->getId(), $sorted[$currentDate->format('Y-m-d')])) {
+						foreach (static::getBadges() as $b) {
+							if ($b->getName() == Badge_Total::getName()) {
+								continue;
+							}
+							$b->calculate($p, $currentDate, $daterange);
+						}
+						static::getBadge(Badge_Total::getName())->calculate($p, $currentDate, $daterange);
+						$doRanking = true;
+					}
+				}
+				if ($doRanking) {
+					foreach (static::getBadges() as $b) {
+						$b->assignRanks($currentDate, $daterange);
+					}
+				}
+			}
+			$currentDate->modify('+1 day');
+		}
+	}
+
+	public static function getAllCurrentData(
+		Badge_Period $dateRange,
+		\DateTime $startDate,
+		\DateTime $endDate,
+		$presenceIds = array()
+	) {
 		$clauses = array(
 			'h.date >= :start_date',
 			'h.date <= :end_date',

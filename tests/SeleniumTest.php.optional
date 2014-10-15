@@ -1,28 +1,430 @@
 <?php
 
-class SeleniumTest extends PHPUnit_Extensions_SeleniumTestCase
+class SeleniumTest extends PHPUnit_Extensions_Selenium2TestCase
 {
-	public static $seleneseDirectory = 'tests/selenese';
+  const BROWSERSTACK_USER = 'abimurphy1';
+  const BROWSERSTACK_KEY = '32Fn5qy9eBqiGs45sYpL';
 
-	public static $browsers = array(
-      array(
-        'name'    => 'Firefox on Linux',
-        'browser' => '*firefox',
-        'host'    => 'localhost',
-        'port'    => 4444,
-        'timeout' => 30000,
-      ),
-      array(
-        'name'    => 'Chrome on Linux',
-        'browser' => '*googlechrome',
-        'host'    => 'localhost',
-        'port'    => 4444,
-        'timeout' => 30000,
+  public static $browsers = array(
+    array(
+      'browserName' => 'chrome',
+      'host' => 'hub.browserstack.com',
+      'port' => 80,
+      'desiredCapabilities' => array(
+        'version' => '30',
+        'browserstack.user' => self::BROWSERSTACK_USER,
+        'browserstack.key' => self::BROWSERSTACK_KEY,
+        'os' => 'OS X',
+        'os_version' => 'Mountain Lion',
+        'project' => 'BC Monitor',
+        'acceptSslCerts' => 'true'
       )
-    );
+    // ),
+    // array(
+    //   'browserName' => 'chrome',
+    //   'host' => 'hub.browserstack.com',
+    //   'port' => 80,
+    //   'desiredCapabilities' => array(
+    //     'version' => '30',
+    //     'browserstack.user' => self::BROWSERSTACK_USER,
+    //     'browserstack.key' => self::BROWSERSTACK_KEY,
+    //     'os' => 'Windows',
+    //     'os_version' => '8.1',
+    //     'project' => 'BC Monitor',
+    //     'acceptSslCerts' => 'true'
+    //   )
+    )
+  );
 
-    protected function setUp()
-    {
-        $this->setBrowserUrl('https://bcmonitor.beta.gd/');
+  protected function setUp()
+  {
+    parent::setUp();
+    $this->setBrowserUrl('https://outlandish:strangeCharm@bcmonitor.beta.gd/');
+  }
+
+  /**
+  * Method testAllTestTabs
+  */
+  public function testAllTestTabs()
+  {
+    $this->url("/");
+    $this->byLinkText("Login")->click();
+    $this->byId("username")->value("outlandish");
+    $this->byId("password")->value("strangeCharm");
+    $this->byCssSelector("input.button.add")->click();
+    // Go through all tabs + check if there's an error msg
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
     }
+    $this->byLinkText("Countries")->click();
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    $this->byLinkText("SBUs")->click();
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    $this->byLinkText("Presences")->click();
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    $this->byLinkText("Domains")->click();
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    $this->byLinkText("Users")->click();
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    $this->byLinkText("Account")->click();
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    $this->byLinkText("Edit Users")->click();
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    $this->byLinkText("Settings")->click();
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    $this->byLinkText("Signout")->click();
+  }
+
+  /**
+  * Method test5countries
+  */
+  protected function XXX5countries()
+  {
+    $this->url("/");
+    $this->byLinkText("Login")->click();
+    $this->byId("username")->value("outlandish");
+    $this->byId("password")->value("strangeCharm");
+    $this->byCssSelector("input.button.add")->click();
+    $this->url("/country/view/id/162");
+    // Check for 5 countries if the circle stays forever
+    // Afghanistan
+    $this->byLinkText("Countries")->click();
+    $this->byLinkText("Afghanistan")->click();
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // France
+    $this->byLinkText("Countries")->click();
+    $this->byLinkText("France")->click();
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // UK
+    $this->byLinkText("Countries")->click();
+    $this->byLinkText("UK")->click();
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // Vietnam
+    $this->byLinkText("Countries")->click();
+    $this->byLinkText("Vietnam")->click();
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // Malaysia
+    $this->byLinkText("Countries")->click();
+    $this->byLinkText("Malaysia")->click();
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    $this->byLinkText("Signout")->click();
+  }
+
+  /**
+  * Method testSBUs
+  */
+  protected function XXXSBUs()
+  {
+    $this->url("/");
+    $this->byLinkText("Login")->click();
+    $this->byId("username")->value("outlandish");
+    $this->byId("password")->value("strangeCharm");
+    $this->byCssSelector("input.button.add")->click();
+    // Check for the 3 links
+    // UK Arts
+    $this->byLinkText("SBUs")->click();
+    $this->byLinkText("UK Arts")->click();
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // UK Education & Society
+    $this->byLinkText("SBUs")->click();
+    $this->byLinkText("UK Education & Society")->click();
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // UK English & Exams
+    $this->byLinkText("SBUs")->click();
+    $this->byLinkText("UK English & Exams")->click();
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    $this->byLinkText("Signout")->click();
+  }
+
+  /**
+  * Method testPresences
+  */
+  protected function XXXPresences()
+  {
+    $this->url("/");
+    $this->byLinkText("Login")->click();
+    $this->byId("username")->value("outlandish");
+    $this->byId("password")->value("strangeCharm");
+    $this->byCssSelector("input.button.add")->click();
+    // Check for 5 fb links and 5 twitter links if the circle stays forever
+    // Facebook
+    // alBritish
+    $this->url("/presence/view/id/189");
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // BCsoundpad
+    $this->url("/presence/view/id/247");
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // premierskillsmalaysia
+    $this->url("/presence/view/id/225");
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // YCEAwards
+    $this->url("/presence/view/id/251");
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // UKalumni.HK
+    $this->url("/presence/view/id/222");
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // Twiiter
+    // BritishMusic
+    $this->url("/presence/view/id/368");
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // cyBritish
+    $this->url("/presence/view/id/287");
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // cobritish
+    $this->url("/presence/view/id/121");
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // uaBritish
+    $this->url("/presence/view/id/200");
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    // zwBritish
+    $this->url("/presence/view/id/330");
+    try {
+      $elem = $this->byClassName('spinner');
+      $size = $elem->size();
+      $this->assertEqual(0, $size['width']);
+      $this->assertEqual(0, $size['height']);
+    } catch (\InvalidArgumentException $e) {
+      //element not found
+      $this->assertTrue(false);
+    }
+    $this->byLinkText("Signout")->click();
+  }
+
+  /**
+  * Method testDomains
+  */
+  protected function XXXDomains()
+  {
+    $this->url("/");
+    $this->byLinkText("Login")->click();
+    $this->byId("username")->value("outlandish");
+    $this->byId("password")->value("strangeCharm");
+    $this->byCssSelector("input.button.add")->click();
+    // Check if there's an error message for 5 chosen domains
+    // aau.ac.ae
+    $this->byLinkText("Domains")->click();
+    $this->url("/domain/view/id/6041");
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    // apps.facebook.com
+    $this->byLinkText("Domains")->click();
+    $this->url("/domain/view/id/1704");
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    // befestival.org
+    $this->byLinkText("Domains")->click();
+    $this->url("/domain/view/id/4191");
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    // discover.twitter.com
+    $this->byLinkText("Domains")->click();
+    $this->url("/domain/view/id/6041");
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    // c4lpt.co.uk
+    $this->byLinkText("Domains")->click();
+    $this->url("/domain/view/id/4938");
+    // Warning: verifyTextNotPresent may require manual changes
+    try {
+      $this->assertFalse((bool)preg_match('/^[\s\S]*error[\s\S]*$/',$this->byCssSelector("BODY")->text()));
+    } catch (PHPUnit_Framework_AssertionFailedError $e) {
+      array_push($this->verificationErrors, $e->__toString());
+    }
+    $this->byLinkText("Signout")->click();
+  }
 }
