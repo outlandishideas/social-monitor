@@ -11,29 +11,19 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
 		<?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial)); ?>
 
+
+
 	</div>
-</div>
+	<div class="small-24 large-12 xlarge-16 columns">
 
-<div id="charts" data-controller="presence">
+		<div id="pickers" class="bd-btm">
+			<?php echo $this->render('partials/metricpicker.phtml'); ?>
+			<?php echo $this->render('partials/daterange.phtml'); ?>
+		</div>
 
-    <div id="pickers">
-        <?php echo $this->render('partials/daterange.phtml'); ?>
-    </div>
+		<div id="new-chart"></div>
 
-    <?php
-	$currentId = 1;
-	foreach ($this->graphs as $graph) {
-		$graph->id = $currentId++;
-		$graph->presence_id = $this->presence->id;
-		$this->graph = $graph;
-    ?>
-        <div class="section-title">
-            <h2><?php echo $graph->title; ?></h2>
-        </div>
-    <?php
-		echo $this->render('partials/chart.phtml');
-	}
-	?>
+	</div>
 </div>
 
 <div id="statuses" class="statusesDisplay <?php echo $this->presence->type; ?>" data-presence-id="<?php echo $this->presence->id; ?>">

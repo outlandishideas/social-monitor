@@ -244,18 +244,25 @@ abstract class GraphingController extends BaseController {
         return $return;
     }
 
-	public function badgeInformation($model, $badge)
+	public function badgeInformation($badgeData, $badge)
 	{
+		$score = round($badgeData[$badge->getName()]);
+
+		$colors = $this->view->geochartMetrics[$badge->getName()];
+		$color = $colors->colors[0];
+		foreach($colors->range as $i => $value){
+			if($score >= $value) $color = $colors->colors[$i];
+		}
+
 		$badgeArr = array();
 		$badgeArr["title"] = $badge->getTitle();
 		$badgeArr["rank"] = array(
-			"value" => 0, //get rank for badge
-			"denominator" => 0, //get count of $model type
-			"color" => "#d9e021" ///get colour for this rank
+			"value" => $badgeData[$badge->getName()."_rank"], //get rank for badge
+			"denominator" => $badgeData['denominator'] //get count of $model type
 		);
 		$badgeArr['score'] = array(
-			"value"	=> 0, //get score badge
-			"color" => '#d9e021' //get colour for this score
+			"value"	=> $score, //get score badge
+			"color" => $color //get colour for this score
 		);
 		if(count($badge->getMetrics()) > 0){
 			$metrics = array();
@@ -270,7 +277,7 @@ abstract class GraphingController extends BaseController {
 		return $badgeArr;
 	}
 
-	public function badgeDetails($model)
+	public function badgeDetails($badgeData)
 	{
 		$badgeArr = array();
 		$badges = Badge_Factory::getBadges();
@@ -278,12 +285,12 @@ abstract class GraphingController extends BaseController {
 		//get total and handle it separately
 		$total = $badges[Badge_Total::getName()];
 
-		$badgeArr['main'] = $this->badgeInformation($model, $total);
+		$badgeArr['main'] = $this->badgeInformation($badgeData, $total);
 
 		$small = array();
 		foreach($badges as $badge){
 			if($badge instanceof Badge_Total) continue;
-			$small[] = $this->badgeInformation($model, $badge);
+			$small[] = $this->badgeInformation($badgeData, $badge);
 		}
 		$badgeArr['small'] = $small;
 

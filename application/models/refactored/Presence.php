@@ -5,7 +5,7 @@ class NewModel_Presence
 	protected $provider;
 	protected $db;
 	protected $metrics;
-	protected $badges;
+	protected static $badges = array();
 	protected $kpiData = array();
 
 	protected $presenceHistoryColumns = array(
@@ -35,7 +35,7 @@ class NewModel_Presence
 		$this->db = $db;
 		$this->provider = $provider;
 		$this->metrics = $metrics;
-		$this->badges = $badges;
+//		$this->badges = $badges;
 
 		if (!array_key_exists('id', $internals)) {
 			throw new \InvalidArgumentException('Missing id for Presence');
@@ -70,19 +70,6 @@ class NewModel_Presence
 	public function getMetrics()
 	{
 		return $this->metrics;
-	}
-
-	/**
-	 * @return Badge_Abstract[]
-	 */
-	public function getBadges($badgeType = null)
-	{
-//		trigger_error("Deprecated function called.", E_USER_NOTICE);
-		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()) {
-			$presence = Model_Presence::fetchById($this->getId());
-			return $presence->getBadges($badgeType);
-		}
-		return $this->badges;
 	}
 
 	public function getLastFetched()
@@ -490,6 +477,60 @@ class NewModel_Presence
 			$stmt = $this->db->prepare("UPDATE `badge_history` SET `{$badgeName}` = :result WHERE `id` = :id");
 			$stmt->execute(array(':result' => $result, ':id' => $id));
 		}
+	}
+
+	public function getBadges()
+	{
+		$badges = static::getAllBadges($this->getId());
+		return $badges;
+	}
+
+	public static function getAllBadges($presenceId = null)
+	{
+		if(empty(static::$badges)){
+			$data =  Badge_Factory::badgesData(true);
+			$badgeNames = Badge_Factory::getBadgeNames();
+
+			foreach($data as &$presenceData){
+				$presenceData[Badge_Total::getName()] = 0;
+				foreach($badgeNames as $name){
+					if($name == Badge_Total::getName()) continue;
+					//add average to total score
+					$presenceData[Badge_Total::getName()] += $presenceData[$name];
+				}
+				//divide the total score by the number of badges (-1 for the totalbadge)
+				$presenceData[Badge_Total::getName()] /= count($badgeNames) - 1;
+				$presenceData['denominator'] = count($data);
+			}
+
+			$name = Badge_Total::getName();
+			uasort($data, function($a, $b) use ($name) {
+				if($a[$name] == $b[$name]) return 0;
+				return $a[$name] > $b[$name] ? -1 : 1;
+			});
+			$lastScore = null;
+			$lastRank = null;
+			$i = 0;
+			foreach($data as &$row) {
+				if ($row[$name] == $lastScore){
+					$rank = $lastRank;
+				} else {
+					$rank = $i+1;
+				}
+				$row[$name."_rank"] = $rank;
+				$lastScore = $row[$name];
+				$lastRank = $rank;
+				$i++;
+			}
+			static::$badges = $data;
+		}
+		if($presenceId){
+			foreach(static::$badges as $badge){
+				if($badge['presence_id'] == $presenceId) return $badge;
+			}
+			return null;
+		}
+		return static::$badges;
 	}
 
 	/**
