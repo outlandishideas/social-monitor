@@ -508,21 +508,6 @@ table.dataTable {
 	margin-top: 0;
 }
 
-table.text th {
-	background: #F5F5F5;
-	font-weight: bold;
-	text-align: left;
-	border-bottom: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-	padding: 10px 8px;
-	vertical-align: middle;
-}
-
-table.text td {
-	padding: 10px 8px;
-    vertical-align: top;
-}
-
 table th.options,
 table td.options {
 	width: 350px;
@@ -1593,13 +1578,18 @@ body {
 
 h2 {
 	font-family: 'Open Sans', sans-serif;
-	color: #fff;
-	color: rgba(255,255,255, 0.5);
+	color: #0071bc;
 	font-size: 1.2rem;
 	text-transform: uppercase;
-	font-weight: 300;
+	font-weight: 400;
 	margin: 0;
 	padding: 0.25rem 0;
+	border-bottom: 1px solid #0071bc;
+}
+
+h2.page-title {
+	color: #fff;
+	border-color: #fff;
 }
 
 h3 {
@@ -1828,3 +1818,103 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 .fa.fa-weibo {
 	color: #e6162d;
 }
+
+/* bc buttons */
+
+.button-bc {
+	display: block;
+	background-color: transparent;
+	border: 1px solid #fff;
+	padding: 0.25rem 1rem;
+	color: #fff;
+	transition: background-color 400ms ease-out, border-color 400ms ease-out;
+}
+
+.button-bc:hover,
+.button-bc.active {
+	color: #fff;
+	background-color: #0071bc;
+	border-color: #0071bc;
+}
+
+.button-bc-bar {
+	margin: 2rem 0;
+}
+
+.button-bc-bar .row {
+	background-color: #000;
+	background-color: rgba(0,0,0,0.5);
+}
+
+.button-bc-bar .inline-list {
+	margin: 1rem 0;
+}
+
+.button-bc-bar .inline-list input {
+	margin: 0;
+	min-width: 20rem;
+	border: 1px solid #fff;
+	padding: 0.25rem 1rem;
+	background-color: #000;
+	background-color: rgba(0,0,0,0.5);
+	font-size: 1rem;
+	height: auto;
+	line-height: 1.6;
+	color: #fff;
+}
+
+/* tables */
+
+table,
+table thead,
+table body,
+table tr td,
+table tr th {
+	background-color: transparent;
+	border-color: transparent;
+}
+
+table thead {
+	border-bottom: 1px solid #fff;
+}
+
+table thead tr th,
+table tbody tr td {
+	color: #fff;
+}
+
+table tbody tr td {
+	text-align: center;
+}
+
+table tbody tr td:nth-child(0n+2),
+table tbody tr td:last-child {
+	text-align: left;
+}
+
+table tr.even,
+table tr.alt,
+table tr:nth-of-type(even) {
+	background: #000;
+	background: rgba(255,255,255,0.1);
+}
+
+table .fa-circle {
+	color: #D06959;
+}
+
+table .fa-circle.value-ok {
+	color: #FFFF50;
+}
+
+table .fa-circle.value-good {
+	color: #84af5b;
+}
+
+table td a,
+table td a:link,
+table td a:visited,
+table td a:hover {
+	color: #fff;
+}
+

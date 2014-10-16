@@ -1,0 +1,50 @@
+<?php
+/**
+ * Need the following params
+ * $tableId = id of the table that is being created
+ * $tableHeaders = a list of
+ */
+
+?>
+
+<table class="text dtable" id="<?php echo $this->tableId; ?>">
+    <thead>
+    <tr>
+        <?php
+        /** @var Header_Abstract $header */
+        foreach($this->tableHeaders as $header){
+            echo $header->getTableHeaderElement();
+        } ?>
+    </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->rows as $row) : ?>
+            <tr>
+                <?php
+                /** @var Header_Abstract $header */
+                foreach($this->tableHeaders as $header) {
+                    switch($header->getName()) {
+                        case "options":
+                            $options = $header->getTableCellValue($row);
+                            $links = $this->view->gatekeeper()->filterAll($options);
+                            echo "<td>" . implode("<br/>", $links) . "</td>";
+                            break;
+                        case "handle":
+                            $url = $this->view->gatekeeper()->filter('%url%', array("action" => "view", "id" => $row->id));
+                            echo "<td>";
+                            echo $url ? "<a href='{$url}'>" : "";
+                            echo $header->getTableCellValue($row);
+                            echo $url ? "</a>" : "";
+                            echo "</td>";
+                            break;
+                        default:
+                            echo "<td>{$header->getTableCellValue($row)}</td>";
+                            break;
+                    }
+                } ?>
+            </tr>
+        <?php endforeach; ?>
+
+    </tbody>
+</table>
+

@@ -48,6 +48,7 @@ $resourceLoader->addResourceType('refactored', 'models/refactored/', 'NewModel')
 $resourceLoader->addResourceType('metric', 'metrics/', 'Metric');
 $resourceLoader->addResourceType('badge', 'badges/', 'Badge');
 $resourceLoader->addResourceType('chart', 'charts/', 'Chart');
+$resourceLoader->addResourceType('header', 'table_headers/', 'Header');
 
 //load config
 if (!file_exists(APPLICATION_PATH . '/configs/config.yaml')) {

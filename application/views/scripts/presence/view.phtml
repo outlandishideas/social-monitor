@@ -4,14 +4,14 @@ $buttons = $this->gatekeeper()->filterAll(array(
 ));
 ?>
 
+<h2 class="page-title"><span class="<?php echo $this->presence->getPresenceSign(); ?> fa-lg fa-fw"></span> <?php echo $this->presence->getName(); ?></h2>
+
 <div class="row">
 	<div class="small-24 large-12 xlarge-8 columns">
 
 		<?php //echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
 
-		<div class="model-header bd-btm">
-			<h2><span class="<?php echo $this->presence->getPresenceSign(); ?>"></span> <?php echo $this->presence->getName(); ?></h2>
-		</div>
+
 
 		<?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial)); ?>
 
