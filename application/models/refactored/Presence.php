@@ -244,7 +244,7 @@ class NewModel_Presence
 	 */
 	public function getTargetAudienceDate(DateTime $start, DateTime $end)
 	{
-		$date = null; //the return value
+		$date = new DateTime; //the return value
 
 		$target = $this->getTargetAudience();
 		$popularity = $this->getPopularity();
@@ -305,6 +305,10 @@ class NewModel_Presence
 					$date = null;
 				}
 			}
+		}
+
+		if ($date instanceof DateTime) {
+			$date->setTime(0,0,0);
 		}
 		return $date;
 	}

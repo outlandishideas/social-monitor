@@ -18,9 +18,12 @@ class Metric_PopularityTime extends Metric_Abstract {
     {
         $estimate = $presence->getTargetAudienceDate($start, $end);
         $actualMonths = null;
-        if($estimate){
-            $diff = $estimate->diff(new DateTime());
+        if ($estimate instanceof \DateTime) {
+            $now = new DateTime('now');
+            $now->setTime(0,0,0);
+            $diff = $estimate->diff($now);
             $actualMonths = $diff->y*12 + $diff->m;
+            //var_dump($diff);
         }
         return $actualMonths;
     }
