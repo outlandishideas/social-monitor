@@ -21,7 +21,9 @@ $buttons = $this->gatekeeper()->filterAll(array(
 			<?php echo $this->render('partials/daterange.phtml'); ?>
 		</div>
 
-		<div id="new-chart"></div>
+		<div class="chart-description"></div>
+
+		<div id="new-chart" data-controller="presence" data-id="<?php echo $this->presence->getId(); ?>"></div>
 
 	</div>
 </div>

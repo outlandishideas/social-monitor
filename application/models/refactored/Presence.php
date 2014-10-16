@@ -92,6 +92,13 @@ class NewModel_Presence
 		return $this->type;
 	}
 
+	public function getCharts()
+	{
+		return array(
+			Chart_Compare::getName() => Chart_Compare::getTitle()
+		);
+	}
+
 	public function setType($typeName)
 	{
 		$types = array_flip(NewModel_PresenceType::toArray());
@@ -519,6 +526,11 @@ class NewModel_Presence
 	{
 		$badges = static::getAllBadges($this->getId());
 		return $badges;
+	}
+
+	public function getBadgeHistory(DateTime $start, DateTime $end)
+	{
+		return Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), $start, $end, array($this->getId()));
 	}
 
 	public static function getAllBadges($presenceId = null)

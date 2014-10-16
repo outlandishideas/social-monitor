@@ -306,7 +306,11 @@ class BaseController extends Zend_Controller_Action
                     $dateRange = null;
                     break;
                 } else {
-                    $dateRange[$i] = new DateTime($date);
+                    try {
+                        $dateRange[$i] = new DateTime($date);
+                    } catch (Exception $e) {
+                        $dateRange = null;
+                    }
                 }
             }
         }

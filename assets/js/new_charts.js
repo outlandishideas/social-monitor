@@ -7,17 +7,52 @@ var app = app || {};
 app.newCharts = {
 
     setup: function() {
+        $(document)
+            .on('dateRangeUpdated', app.newCharts.loadData)
+        var $metricPicker = $('#metric-picker');
+        if ($metricPicker.length > 0) {
+            $metricPicker.on('change', app.newCharts.refreshCharts);
+        }
 
-        app.state.chart = c3.generate({
-            bindto: '#new-chart',
-            data: {
-                columns: [
-                    ['data1', 30, 200, 100, 400, 150, 250],
-                    ['data2', 50, 20, 10, 40, 15, 25]
-                ]
-            }
+        app.newCharts.loadData();
+
+    },
+
+    refreshCharts: function() {
+        app.state.chart = null;
+        app.newCharts.loadData();
+    },
+
+    currentMetric:function () {
+        return $('#metric-picker').val();
+    },
+
+    loadData: function() {
+        var chart = app.newCharts.currentMetric();
+        var dateRange = app.state.dateRange.map(function(d){
+            return $.datepicker.formatDate('yy-mm-dd', Date.parse(d));
         });
 
+        var $chart = $('#new-chart');
+        var url = $chart.data('controller') + '/graph-data';
+        var id = $chart.data('id');
+
+        var params = {
+            dateRange: dateRange,
+            chart: chart,
+            id: id
+        };
+
+        app.api.get(url, params)
+            .done(function(response) {
+                app.state.chart = c3.generate(response.data)
+            })
+            .always(function() {
+                //$('.chart-container').hideLoader();
+            });
     }
+
+
+
 
 };
