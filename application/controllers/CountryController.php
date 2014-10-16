@@ -47,40 +47,9 @@ class CountryController extends CampaignController {
 		$country = Model_Country::fetchById($this->_request->id);
 		$this->validateData($country);
 
-        $compareData = array();
-        foreach($country->getPresences() as $presence){
-            $compareData[$presence->id] = (object)array(
-                'presence'=>$presence,
-                'graphs'=>$this->graphs($presence)
-            );
-        }
-
 		$this->view->badgePartial = $this->badgeDetails($country->getBadges());
-
 		$this->view->metricOptions = self::graphMetrics();
-        $this->view->tableMetrics = self::tableMetrics();
-        $this->view->compareData = $compareData;
-		$this->view->title = $country->display_name;
-		$this->view->titleInfo = array(
-			'audience' => (object)array(
-					'title' => 'Audience',
-					'value' => number_format($country->audience),
-				),
-			'pages' => (object)array(
-					'title' => 'Facebook Pages',
-					'value' => count($country->getFacebookPages()),
-				),
-			'handles' => (object)array(
-					'title' => 'Twitter Accounts',
-					'value' => count($country->getTwitterAccounts()),
-//			),
-//			'notes' => (object)array(
-//				'title' => 'Notes',
-//				'value' => '' //$this->notes
-			)
-		);
         $this->view->country = $country;
-        $this->view->badges = Model_Badge::$ALL_BADGE_TYPES;
 	}
 
 	/**
@@ -321,6 +290,29 @@ class CountryController extends CampaignController {
         $this->apiSuccess($response);
 
     }
+
+	/**
+	 * Gets all of the graph data for the requested presence
+	 */
+	public function graphDataAction() {
+		Zend_Session::writeClose(); //release session on long running actions
+
+		$this->validateChartRequest();
+
+		/** @var $presence NewModel_Presence */
+		$presence = Model_Country::fetchById($this->_request->id);
+		if(!$presence) {
+			$this->apiError('Country could not be found');
+		}
+
+		$dateRange = $this->getRequestDateRange();
+		$start = $dateRange[0];
+		$end = $dateRange[1];
+
+		$chartObject = Chart_Factory::getChart($this->_request->chart);
+
+		$this->apiSuccess($chartObject->getChart($presence, $start, $end));
+	}
 
 	public function downloadAction() {
 		parent::downloadAsCsv('country_index', Model_Country::badgesData(), Model_Country::fetchAll(), self::tableIndexHeaders());

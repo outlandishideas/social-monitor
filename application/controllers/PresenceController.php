@@ -29,42 +29,12 @@ class PresenceController extends GraphingController
 	public function viewAction()
 	{
 		/** @var Model_Presence $presence */
-		NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
 		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
-//		$presence = Model_Presence::fetchById($this->_request->id);
 		$this->validateData($presence);
 
-		$this->view->title = $presence->getLabel();
-		if($presence->getLabel() != $presence->handle){
-			$this->view->subtitle = '<a href="'.$presence->page_url.'" target="_blank">' . $presence->handle . ' <span class="icon-external-link"></span></a>';
-		}
-
-        if($presence->sign_off){
-            $this->view->title .= ' <span class="icon-ok-sign" title="Has been signed off by Head of Digital"></span>';
-        } else {
-            $this->view->title .= ' <span class="icon-remove-sign" title="Has not been signed off by Head of Digital"></span>';
-        }
-
-        if($presence->branding){
-            $this->view->title .= ' <span class="icon-ok-sign" title="Has been correctly branded"></span>';
-        } else {
-            $this->view->title .= ' <span class="icon-remove-sign" title="Is lacking correct branding"></span>';
-        }
-
 		$this->view->badgePartial = $this->badgeDetails($presence->getBadges());
-
-		$this->view->metricOptions = array(
-			Chart_Compare::getName() => Chart_Compare::getTitle(),
-			Chart_Reach::getName() => Chart_Reach::getTitle(),
-			Chart_Engagement::getName() => Chart_Engagement::getTitle(),
-			Chart_Quality::getName() => Chart_Quality::getTitle(),
-			Chart_Popularity::getName() => Chart_Popularity::getTitle()
-		);
-        
-		$this->view->titleImage = '<img src="' . $presence->image_url . '" alt="' . $presence->getLabel() . '"/>';
+		$this->view->metricOptions = $this->graphMetrics();
 		$this->view->presence = $presence;
-        $this->view->graphs = $this->graphs($presence);
-        $this->view->badges = Model_Badge::$ALL_BADGE_TYPES;
 	}
 
 	/**
@@ -234,246 +204,22 @@ class PresenceController extends GraphingController
 	public function graphDataAction() {
 		Zend_Session::writeClose(); //release session on long running actions
 
-		$id = $this->_request->id;
-		if(!$id) {
-			$this->apiError('Missing Id range');
-		}
+		$this->validateChartRequest();
 
 		/** @var $presence NewModel_Presence */
-		$presence = NewModel_PresenceFactory::getPresenceById($id);
+		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
 		if(!$presence) {
 			$this->apiError('Presence could not be found');
 		}
 
 		$dateRange = $this->getRequestDateRange();
-		if (!$dateRange) {
-			$this->apiError('Missing date range');
-		}
-
-		$chart = $this->_request->chart;
-		if (!$chart) {
-			$this->apiError('Missing chart type');
-		}
-
-		if(!in_array($chart, Chart_Factory::getChartNames())) {
-			$this->apiError('Chart type doesn\'t exist');
-		}
-
 		$start = $dateRange[0];
 		$end = $dateRange[1];
 
-		$chartObject = Chart_Factory::getChart($chart);
+		$chartObject = Chart_Factory::getChart($this->_request->chart);
 
 		$this->apiSuccess($chartObject->getChart($presence, $start, $end));
 	}
-
-	/**
-	 * @param NewModel_Presence $presence
-	 * @param DateTime $start
-	 * @param DateTime $end
-	 * @return array
-	 */
-	private function generatePopularityGraphData(NewModel_Presence $presence, DateTime $start, DateTime $end)
-	{
-		// subtract 1 from the first day, as we're calculating a daily difference
-		$start = clone $start;
-		$end = clone $end;
-		$start->modify('-1 day');
-
-		$data = $presence->getPopularityData($start, $end);
-		$points = array();
-		$target = $presence->getTargetAudience();
-		$targetDate = $presence->getTargetAudienceDate($start, $end);
-		$graphHealth = 100;
-		$requiredRates = null;
-		$timeToTarget = null;
-
-		if ($data) {
-			$current = $data[count($data)-1];
-
-			$targetDiff = $target - $current->value;
-
-			$bestScore = BaseController::getOption('achieve_audience_best');
-			$goodScore = BaseController::getOption('achieve_audience_good');
-			$badScore = BaseController::getOption('achieve_audience_bad');
-
-			$daysPerMonth = 365/12;
-			$bestRate = $targetDiff/($daysPerMonth*$bestScore);
-			$goodRate = $targetDiff/($daysPerMonth*$goodScore);
-			$badRate = $targetDiff/($daysPerMonth*$badScore);
-
-			$healthCalc = function($value) use ($bestRate, $goodRate, $badRate, $targetDiff) {
-				if ($targetDiff < 0 || $value >= $bestRate) {
-					return 100;
-				} else if ($value < 0 || $value <= $badRate) {
-					return 0;
-				} else if ($value >= $goodRate) {
-					return 50 + 50*($value - $goodRate)/($bestRate - $goodRate);
-				} else {
-					return 50*($value - $badRate)/($goodRate - $badRate);
-				}
-			};
-			$requiredRates = array();
-			if ($bestRate > 0) {
-				$requiredRates[] = array('rate'=>$bestRate, 'date'=>date('F Y', strtotime($current->datetime . ' +' . $bestScore . ' months')));
-			}
-			if ($goodRate > 0) {
-				$requiredRates[] = array('rate'=>$goodRate, 'date'=>date('F Y', strtotime($current->datetime . ' +' . $goodScore . ' months')));
-			}
-			if ($badRate > 0) {
-				$requiredRates[] = array('rate'=>$badRate, 'date'=>date('F Y', strtotime($current->datetime . ' +' . $badScore . ' months')));
-			}
-
-			if ($targetDiff > 0) {
-				if ($targetDate) {
-					$interval = $targetDate->diff($start);
-					$timeToTarget = array('y'=>$interval->y, 'm'=>$interval->m);
-					$graphHealth = $healthCalc($targetDiff/$interval->days);
-				}
-			} else {
-				$graphHealth = 100;
-			}
-
-			foreach ($data as $point) {
-				$key = gmdate('Y-m-d', strtotime($point->datetime));
-				$points[$key] = $point->value; // overwrite any previous value, as data is sorted by datetime ASC
-			}
-
-			foreach ($points as $key=>$value) {
-				$points[$key] = (object)array('date'=>$key, 'total'=>$value);
-			}
-
-			foreach ($points as $key=>$point) {
-				$prevDay = date('Y-m-d', strtotime($key . ' -1 day'));
-				if (array_key_exists($prevDay, $points)) {
-					$point->value = $point->total - $points[$prevDay]->total;
-					$point->health = $healthCalc($point->value);
-				} else {
-					$point->value = 0;
-				}
-			}
-
-			$points = $this->fillDateGaps($points, $start, $end, 0);
-			$points = array_values($points);
-
-			$current = array(
-				'value'=>$current->value,
-				'date'=>gmdate('d F Y', strtotime($current->datetime))
-			);
-		} else {
-			$current = null;
-		}
-
-		return array(
-			'target' => $target,
-			'timeToTarget' => $timeToTarget,
-			'points' => $points,
-			'current' => $current,
-			'health' => $graphHealth,
-			'requiredRates' => $requiredRates
-		);
-	}
-
-	/**
-	 * @param Model_Presence $presence
-	 * @param $startDate
-	 * @param $endDate
-	 * @return array
-	 */
-	private function generatePostsPerDayGraphData($presence, $startDate, $endDate) {
-
-		$target = BaseController::getOption('updates_per_day');
-		$average = 0;
-		$rAverage = 0;
-		$relevancePercentage = $presence->isForFacebook() ? 'facebook_relevance_percentage' : 'twitter_relevance_percentage';
-		$rTarget = ($target/100)*BaseController::getOption($relevancePercentage);
-		$relevance = array();
-
-
-		$postsPerDay = $presence->getPostsPerDayData($startDate, $endDate);
-		if($postsPerDay){
-			usort($postsPerDay, function($a, $b) { return strcmp($a->date, $b->date); });
-
-			if ($postsPerDay) {
-				$total = 0;
-				foreach ($postsPerDay as $row) {
-					$total += $row->value;
-				}
-				$average = $total/count($postsPerDay);
-			}
-
-			$relevance = array();
-			foreach ($postsPerDay as $entry) {
-				$date = $entry->date;
-				$relevance[$date] = (object)array('date'=>$date, 'value'=>0, 'subtitle'=>'Relevance', 'statusIds'=>array());
-			}
-
-			foreach ($presence->getRelevanceData($startDate, $endDate) as $row) {
-				$relevance[$row->created_time]->value = $row->total_bc_links;
-			}
-			if(count($relevance) > 0){
-				foreach($relevance as $r){
-					$rAverage += $r->value;
-				}
-				$rAverage /= count($relevance);
-			}
-		}
-
-
-		return array(
-            'average' => $average,
-            'rAverage' => $rAverage,
-			'target' => $target,
-            'rTarget' => $rTarget,
-			'points' => $postsPerDay ? $postsPerDay : array(),
-			'relevance' => array_values($relevance),
-		);
-	}
-
-	/**
-	 * @param Model_Presence $presence
-	 * @param $startDate
-	 * @param $endDate
-	 * @return array
-	 */
-	private function generateResponseTimeGraphData($presence, $startDate, $endDate) {
-		$data = $presence->getResponseData($startDate, $endDate);
-		$points = array();
-		$goodTime = floatval(BaseController::getOption('response_time_good'));
-		$badTime = floatval(BaseController::getOption('response_time_bad'));
-
-		if (!$data) {
-			$average = 0;
-		} else {
-			$now = time();
-			$totalTime = 0;
-			foreach ($data as $id => $row) {
-				$key = gmdate('Y-m-d', strtotime($row->created));
-				if (!array_key_exists($key, $points)) {
-					$points[$key] = (object)array('date'=>$key, 'value'=>array());
-				}
-
-				$diff = $row->diff;
-				$diff = min($badTime, $diff);
-				$totalTime += $diff;
-				$points[$key]->value[] = $diff;
-			}
-			$average = $totalTime/count($data);
-
-			foreach ($points as $key=>$diffs) {
-				$points[$key]->value = round(10*array_sum($diffs->value)/count($diffs->value))/10;
-			}
-			$points = $this->fillDateGaps($points, $startDate, $endDate, 0);
-			$points = array_values($points);
-		}
-
-		return array(
-			'average' => $average,
-			'target' => $goodTime,
-			'points' => $points,
-		);
-	}
-
 
 	/**
 	 * AJAX function for toggling whether a facebook status needs a response

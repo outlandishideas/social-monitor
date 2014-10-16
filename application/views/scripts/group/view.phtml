@@ -11,17 +11,27 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
         <?php //echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
 
+        <div class="model-header bd-btm">
+            <h2><?php echo $this->group->display_name; ?></h2>
+        </div>
+
         <?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial)); ?>
 
     </div>
     <div class="small-24 large-12 xlarge-16 columns">
 
-        <div id="pickers" class="bd-btm">
-            <?php echo $this->render('partials/metricpicker.phtml'); ?>
-            <?php echo $this->render('partials/daterange.phtml'); ?>
-        </div>
+        <div class="show-for-medium-up">
 
-        <div id="new-chart"></div>
+            <div id="pickers" class="bd-btm">
+                <?php echo $this->render('partials/metricpicker.phtml'); ?>
+                <?php echo $this->render('partials/daterange.phtml'); ?>
+            </div>
+
+            <div class="chart-description"></div>
+
+            <div id="new-chart" data-controller="group" data-id="<?php echo $this->group->id; ?>"></div>
+
+        </div>
 
     </div>
 </div>

@@ -31,25 +31,35 @@ class GroupController extends CampaignController {
 		$group = Model_Group::fetchById($this->_request->id);
 		$this->validateData($group);
 
-        $compareData = array();
-        foreach($group->presences as $presence){
-            $compareData[$presence->id] = (object)array(
-                'presence'=>$presence,
-                'graphs'=>$this->graphs($presence)
-            );
-        }
-
         $this->view->badgePartial = $this->badgeDetails($group->getBadges());
 
 		$this->view->metricOptions = self::graphMetrics();
 		$this->view->tableMetrics = self::tableMetrics();
-        $this->view->compareData = $compareData;
-		$this->view->title = $group->display_name;
-		$this->view->titleIcon = 'icon-th-list';
-		$this->view->titleInfo = $group->groupInfo();
         $this->view->group = $group;
-        $this->view->badges = Model_Badge::$ALL_BADGE_TYPES;
 	}
+
+    /**
+     * Gets all of the graph data for the requested presence
+     */
+    public function graphDataAction() {
+        Zend_Session::writeClose(); //release session on long running actions
+
+        $this->validateChartRequest();
+
+        /** @var $group NewModel_Presence */
+        $group = Model_Group::fetchById($this->_request->id);
+        if(!$group) {
+            $this->apiError('Group could not be found');
+        }
+
+        $dateRange = $this->getRequestDateRange();
+        $start = $dateRange[0];
+        $end = $dateRange[1];
+
+        $chartObject = Chart_Factory::getChart($this->_request->chart);
+
+        $this->apiSuccess($chartObject->getChart($group, $start, $end));
+    }
 
 	/**
 	 * Creates a new SBU

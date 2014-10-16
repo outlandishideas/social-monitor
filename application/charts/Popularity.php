@@ -47,7 +47,7 @@ class Chart_Popularity extends Chart_Abstract {
         return "date";
     }
 
-    protected function getData(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    protected function getData($model, DateTime $start, DateTime $end)
     {
         return array(
             "x" => $this->getXColumn(),
