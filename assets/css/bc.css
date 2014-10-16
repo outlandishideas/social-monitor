@@ -1616,7 +1616,11 @@ h3 {
 
 .badge-main {
 	margin-bottom: 3rem;
-	margin-top: 2.4rem;
+	/*margin-top: 2.4rem;*/
+}
+
+.badge-main h2 {
+	display: none;
 }
 
 .rank-value,
@@ -1796,4 +1800,31 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 
 #new-chart .c3-lines path {
 	stroke-width: 3;
+}
+
+/* Model Header */
+.model-header {
+	padding-bottom: 1rem;
+	margin-top: 0.1rem;
+}
+
+.model-header h2 {
+	color: #fff;
+	font-size: 2rem;
+	background-color: #000;
+	background-color: rgba(0,0,0,0.5);
+	padding: 0.25rem 1rem;
+	border: 1px solid #44656f;
+	text-overflow: ellipsis;
+}
+
+.fa.fa-twitter {
+	color: #4099FF;
+}
+
+.fa.fa-facebook {
+	color: #335795;
+}
+.fa.fa-weibo {
+	color: #e6162d;
 }

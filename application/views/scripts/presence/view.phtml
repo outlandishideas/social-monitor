@@ -9,6 +9,10 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
 		<?php //echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
 
+		<div class="model-header bd-btm">
+			<h2><span class="<?php echo $this->presence->getPresenceSign(); ?>"></span> <?php echo $this->presence->getName(); ?></h2>
+		</div>
+
 		<?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial)); ?>
 
 	</div>
