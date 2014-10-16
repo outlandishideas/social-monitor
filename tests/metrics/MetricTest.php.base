@@ -68,4 +68,37 @@ abstract class MetricTest extends PHPUnit_Framework_TestCase
 		$ret = $this->metric->calculate($this->emptyPresence, new DateTime('now -30 days'), new DateTime());
 		$this->assertNull($ret);
 	}
+
+
+	public function historicStreamMetaData()
+	{
+		return array(
+			array(
+				array(
+					array('date' => 'X', 'number_of_actions' => 0, 'number_of_links' => 0, 'number_of_bc_links' => 0),
+					array('date' => 'X', 'number_of_actions' => 0, 'number_of_links' => 0, 'number_of_bc_links' => 0),
+					array('date' => 'X', 'number_of_actions' => 0, 'number_of_links' => 0, 'number_of_bc_links' => 0),
+					array('date' => 'X', 'number_of_actions' => 0, 'number_of_links' => 0, 'number_of_bc_links' => 0),
+					array('date' => 'X', 'number_of_actions' => 0, 'number_of_links' => 0, 'number_of_bc_links' => 0)
+				),
+				array(
+					'actions' => 0,
+					'relevance' => 0
+				)
+			),
+			array(
+				array(
+					array('date' => 'X', 'number_of_actions' => 3, 'number_of_links' => 3, 'number_of_bc_links' => 3),
+					array('date' => 'X', 'number_of_actions' => 4, 'number_of_links' => 4, 'number_of_bc_links' => 4),
+					array('date' => 'X', 'number_of_actions' => 5, 'number_of_links' => 5, 'number_of_bc_links' => 5),
+					array('date' => 'X', 'number_of_actions' => 6, 'number_of_links' => 6, 'number_of_bc_links' => 6),
+					array('date' => 'X', 'number_of_actions' => 7, 'number_of_links' => 7, 'number_of_bc_links' => 7)
+				),
+				array(
+					'actions' => 5,
+					'relevance' => 5
+				)
+			)
+		);
+	}
 }

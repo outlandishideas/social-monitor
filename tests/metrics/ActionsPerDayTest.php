@@ -9,4 +9,18 @@ class ActionsPerDayTest extends MetricTest
 	{
 		$this->metric = new Metric_ActionsPerDay();
 	}
+
+	/**
+	 * @dataProvider historicStreamMetaData
+	 * @group metrics
+	 */
+	public function testCalculation($input, $expected)
+	{
+		$presence = $this->getMockBuilder('NewModel_Presence')
+									->disableOriginalConstructor()
+									->getMock()
+		;
+		$presence->method('getHistoricStreamMeta')->willReturn($input);
+		$this->assertEquals($expected['actions'], $this->metric->calculate($presence, new DateTime, new DateTime));
+	}
 }
