@@ -4,6 +4,7 @@ abstract class Badge_Abstract
 {
 	protected static $name = '';
 	protected static $title = '';
+	protected static $description;
 	protected $db;
 
 	protected $metrics = array();
@@ -51,6 +52,11 @@ abstract class Badge_Abstract
 	public static function getTitle()
 	{
 		return static::$title;
+	}
+
+	public static function getDescription()
+	{
+		return static::$description;
 	}
 
 	public function getMetrics()

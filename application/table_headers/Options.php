@@ -26,14 +26,14 @@ class Header_Options extends Header_Abstract {
                 $options = array(
                     '<a href="%url%"><span class="fa fa-eye fa-fw"></span> View Country</a>' => array('action'=>'view', 'id'=>$model->id),
                     '<a href="%url%"><span class="fa fa-wrench fa-fw"></span> Edit Country</a>' => array('action'=>'edit', 'id'=>$model->id),
-                    '<a href="%url%"><span class="fa fa-sliders fa-fw"></span> Manage Presences</a>' => array('action'=>'manage', 'id'=>$model->id)
+                    '<a href="%url%"><span class="fa fa-sliders fa-fw"></span> Presences</a>' => array('action'=>'manage', 'id'=>$model->id)
                 );
                 break;
             case "Model_Group":
                 $options = array(
                     '<a href="%url%"><span class="fa fa-eye fa-fw"></span> View SBU</a>' => array('action'=>'view', 'id'=>$model->id),
                     '<a href="%url%"><span class="fa fa-wrench fa-fw"></span> Edit SBU</a>' => array('action'=>'edit', 'id'=>$model->id),
-                    '<a href="%url%"><span class="fa fa-sliders fa-fw"></span> Manage Presences</a>' => array('action'=>'manage', 'id'=>$model->id)
+                    '<a href="%url%"><span class="fa fa-sliders fa-fw"></span> Presences</a>' => array('action'=>'manage', 'id'=>$model->id)
                 );
                 break;
             default:

@@ -1,76 +1,161 @@
-<ul id="map-tabs" class="content-in-header tabs">
-    <?php $first = true; foreach($this->metricOptions as $badge => $title) : ?>
-        <li class="<?php if ($first) echo 'active';?>" data-val="<?php echo $badge; ?>"><?php echo ucfirst($title); ?></li>
-    <?php $first = false; endforeach; ?>
-    <?php if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')): ?>
-        <li class="fl-right download"><a href="<?php echo $this->url() . 'data/uploads/kpis.pdf'; ?>" target="_blank"><span class="icon-download icon-large"></span> KPIs</a></li>
-    <?php endif; ?>
-</ul>
+<h2 class="page-title">Social Media Monitor</h2>
 
-<div class="map-date">
-    <input type="text" size="25" id="date-slider" disabled value="<?php echo $this->dateRangeString; ?>"
-           data-current-date="<?php echo $this->currentDate; ?>" data-day-range="<?php echo $this->dayRange; ?>">
-    <div id="slider" data-val="30"></div>
+<div class="row">
+    <div class="small-24 medium-8 columns">
+        <p>Choose from either Overall, Reach, Engagement or Quality to see the health of each country and SBU.</p>
+    </div>
+    <div class="small-24 medium-8 columns">
+        <p>Move the data slider to view the historic trend of the score for each country and SBU.</p>
+    </div>
+    <div class="small-24 medium-8 columns">
+        <p>Click on a map to select a country and preview the individual social media presences.</p>
+    </div>
 </div>
 
-<div id="map-sidebar" class="">
-    <div class="country"></div>
-    <div id="instructions-desc" class="desc-box">
-        <h3>Instructions <span class="icon-chevron-up"></span></h3>
-        <div class="desc-content">
-            <p>Choose from either Overall Score, Reach, Engagement or Quality to see the health of each country, SBU and region.</p>
-            <p>Move the date slider to view the historic trend of the score for each country, SBU and region.</p>
-            <p>Click on the map to select a country and preview the individual social media presences.</p>
-            <p>These scores are derived from the organisation’s social media KPIs. You can download a copy by clicking the KPI image on the top right of the screen.</p>
-        </div>
-    </div><?php
-    foreach($this->badgeDescriptions as $badgeTitle => $badgeDesc) : ?>
-        <div id="<?php echo $badgeTitle; ?>-desc" class="desc-box hide">
-            <h3><?php echo ucfirst($badgeTitle); ?> <span class="icon-chevron-up"></span></h3>
-            <div class="desc-content">
-                <?php echo $badgeDesc; ?>
+<h2 data-badge-title></h2>
+<div class="row">
+    <div class="small-24 large-6 columns">
+        <div class="row">
+            <div class="small-12 large-24 columns">
+                <?php
+                /** @var Badge_Abstract $badge */
+                foreach($this->badges as $badge): ?>
+                    <div class="badge-description" data-badge-description="<?= $badge->getName(); ?>">
+                        <?= $badge->getDescription(); ?>
+                    </div>
+                <?php endforeach; ?>
             </div>
-        </div><?php
-    endforeach; ?>
+            <div class="small-12 large-24 columns">
+                <h4>Small Countries</h4>
+                <ul>
+                    <?php
+                    /** @var Model_Country $country */
+                    foreach($this->smallCountries as $country):
+                        $badges = $country->getBadges(); ?>
+                        <li><?= $country->getName(); ?> <span data-badge-score></span></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="small-24 large-12 columns">
+<!--        <div id="map"></div>-->
+    </div><?php
+    /** @var Model_Country $country */
+    $country = $this->countries[0];
+    $badges = $country->getBadges();
+    $presences = $country->getPresences(); ?>
+    <div class="small-24 large-6 columns">
+        <div class="badge-small"
+             data-total="<?= round($badges['total']); ?>"
+             data-reach="<?= round($badges['reach']); ?>"
+             data-engagement="<?= round($badges['engagement']); ?>"
+             data-quality="<?= round($badges['quality']); ?>">
+            <h3><?= $country->display_name; ?></h3>
+            <div class="badge-score bd-btm">
+                <h4><span data-badge-title></span> Score</h4>
+                <div class="score-value" data-badge-score>63%</div>
+                <div class="score-bar"><div data-badge-bar></div></div>
+            </div>
+            <div class="bd-btm">
+                <h4>Presences</h4>
+                <div class="score-value"><?= count($presences);?></div>
+            </div>
+            <div class="bd-btm">
+                <h4>Twitter</h4>
+                <ul class="badge-presences">
+                    <?php
+                    /** @var NewModel_Presence $presence */
+                    foreach($presences as $presence):
+                        if($presence->getType() != NewModel_PresenceType::TWITTER) continue; ?>
+                        <li>
+                            <span class="<?= $presence->getPresenceSign(); ?>"></span> <?= $presence->getName(); ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <div>
+                <h4>Facebook</h4>
+                <ul class="badge-presences">
+                    <?php
+                    /** @var NewModel_Presence $presence */
+                    foreach($presences as $presence):
+                        if($presence->getType() != NewModel_PresenceType::FACEBOOK) continue; ?>
+                        <li>
+                            <span class="<?= $presence->getPresenceSign(); ?> fa-lg fa-fw"></span> <?= $presence->getName(); ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
 
-    <div class="loading"></div>
+    </div>
 </div>
-<div id="map">
-    <div id="map-container">
-        <div id="geo-map"></div>
-    </div>
-    <div id="small-maps">
-        <h3><?php
-            $url = $this->gatekeeper()->filter('%url%', array('controller' => 'country'));
-            if($url) : ?>
-            <a href="<?php echo $url; ?>">
-                <?php endif; ?>
-                <span class="<?php echo Model_Country::ICON_TYPE; ?>"></span> Small Countries
-                <?php if($url) : ?>
-            </a>
-        <?php endif; ?>
-        </h3>
-        <ul></ul>
-    </div>
-    <div id="group-map">
-        <h3><?php
-            $url = $this->gatekeeper()->filter('%url%', array('controller' => 'group'));
-            if($url) : ?>
-            <a href="<?php echo $url; ?>">
-                <?php endif; ?>
-                <span class="<?php echo Model_Group::ICON_TYPE; ?>"></span> SBUs
-                <?php if($url) : ?>
-            </a>
-            <?php endif; ?>
-        </h3>
-        <ul></ul>
+
+<div class="button-bc-bar">
+    <div class="row">
+        <div class="small-24 columns">
+            <ul class="inline-list badge-buttons">
+                <?php
+                /** @var Badge_Abstract $badge */
+                foreach($this->badges as $badge): ?>
+                    <li><a href="#<?= $badge->getName(); ?>" class="button-bc"><?= $badge->getTitle(); ?></a></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
     </div>
 </div>
 
+<?php if(isset($this->groups) && count($this->groups) > 0): ?>
+    <h2>SBUs</h2>
+    <div class="row">
+        <div class="small-24 large-23 large-centered columns">
+            <div class="row">
+                <?php
+                /** @var Model_Group $group */
+                foreach($this->groups as $group):
+                    $badges = $group->getBadges(); ?>
+                    <div class="small-24 large-8 columns">
+                        <div class="badge-small"
+                             data-total="<?= round($badges['total']); ?>"
+                             data-reach="<?= round($badges['reach']); ?>"
+                             data-engagement="<?= round($badges['engagement']); ?>"
+                             data-quality="<?= round($badges['quality']); ?>">
+                            <h3><?= $group->display_name; ?></h3>
+                            <h4><span data-badge-title></span> Score</h4>
+                            <div class="score-value" data-badge-score></div>
+                            <div class="score-bar">
+                                <div data-badge-bar></div>
+                            </div>
+                            <div class="row">
+                                <div class="small-24 large-8 columns">
+                                    <h4>Presences</h4>
+                                    <div class="score-value">26</div>
+                                </div>
+                                <div class="small-24 large-8 columns">
+                                    <h4>Twitter</h4>
+                                    <div class="score-value">13</div>
+                                </div>
+                                <div class="small-24 large-8 columns">
+                                    <h4>Facebook</h4>
+                                    <div class="score-value">13</div>
+                                </div>
+                            </div>
+                            <ul class="presence-list">
+                                <?php foreach($group->presences as $presence): ?>
+                                    <li><span class="<?= $presence->getPresenceSign(); ?>"></span> <?= $presence->getHandle(); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
-<script type='text/javascript' src='https://www.google.com/jsapi'></script>
-<script type='text/javascript'>
-	var mapData = <?php echo json_encode($this->mapData); ?>;
-    var smallMapData = <?php echo json_encode($this->smallMapData); ?>;
-    var groupData = <?php echo json_encode($this->groupData); ?>;
-</script>
+<div id="badge-titles"
+     data-total-title="<?= $this->badges['total']->getTitle(); ?>"
+     data-quality-title="<?= $this->badges['quality']->getTitle(); ?>"
+     data-reach-title="<?= $this->badges['reach']->getTitle(); ?>"
+     data-engagement-title="<?= $this->badges['engagement']->getTitle(); ?>"></div>

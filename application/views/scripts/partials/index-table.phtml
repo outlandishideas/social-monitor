@@ -7,7 +7,7 @@
 
 ?>
 
-<table class="text dtable" id="<?php echo $this->tableId; ?>">
+<table class="text dtable standard" id="<?php echo $this->tableId; ?>">
     <thead>
     <tr>
         <?php
@@ -28,6 +28,11 @@
                             $options = $header->getTableCellValue($row);
                             $links = $this->view->gatekeeper()->filterAll($options);
                             echo "<td>" . implode("<br/>", $links) . "</td>";
+                            break;
+                        case "presences":
+//                            $options = $header->getTableCellValue($row);
+//                            $links = $this->view->gatekeeper()->filterAll($options);
+                            echo "<td></td>";
                             break;
                         case "handle":
                             $url = $this->view->gatekeeper()->filter('%url%', array("action" => "view", "id" => $row->id));

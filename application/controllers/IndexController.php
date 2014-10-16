@@ -33,6 +33,9 @@ class IndexController extends GraphingController
 		$this->view->currentDate = $now->format('Y-m-d');
 		$this->view->dayRange = $dayRange;
         $this->view->badgeDescriptions = Model_Badge::$BADGE_DESCRIPTIONS;
+		$this->view->badges = Badge_Factory::getBadges();
+		$this->view->smallCountries = array();
+		$this->view->groups = Model_Group::fetchAll();
 	}
 
 	public function dateRangeAction()
