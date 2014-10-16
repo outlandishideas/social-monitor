@@ -17,7 +17,7 @@ class Metric_ResponseRatio extends Metric_Abstract {
     protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $ret = $presence->getRatioRepliesToOthersPosts($start, $end);
-        return $ret == 0 ? null : $ret;
+        return $ret;
     }
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)

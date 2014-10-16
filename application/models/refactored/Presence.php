@@ -322,7 +322,7 @@ class NewModel_Presence
 		);
 
 		if (!$this->isForFacebook()) {
-			return 0;
+			return null;
 		}
 
 		$tableName = $this->provider->getTableName();

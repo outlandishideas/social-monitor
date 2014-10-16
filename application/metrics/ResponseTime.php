@@ -17,7 +17,7 @@ class Metric_ResponseTime extends Metric_Abstract {
     protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $data = $presence->getResponseData($start, $end);
-        if (!$data) return null;
+        if (!$data || empty($data)) return null;
         $total = 0;
         foreach ($data as $d) {
             $total += $d->diff;

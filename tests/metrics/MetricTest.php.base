@@ -36,7 +36,7 @@ abstract class MetricTest extends PHPUnit_Framework_TestCase
 		$this->emptyPresence->method('getPopularity')->willReturn(0);
 		$this->emptyPresence->method('getTargetAudienceDate')->willReturn(null);
 		$this->emptyPresence->method('getTargetAudience')->willReturn(null);
-		$this->emptyPresence->method('getRatioRepliesToOthersPosts')->willReturn(0);
+		$this->emptyPresence->method('getRatioRepliesToOthersPosts')->willReturn(null);
 		$this->emptyPresence->method('getResponseData')->willReturn(null);
 	}
 
