@@ -20,8 +20,8 @@
                 <?php
                 /** @var Badge_Abstract $badge */
                 foreach($this->badges as $badge): ?>
-                    <div class="badge-description" data-badge-description="<?= $badge->getName(); ?>">
-                        <?= $badge->getDescription(); ?>
+                    <div class="badge-description" data-badge-description="<?php echo $badge->getName(); ?>">
+                        <?php echo $badge->getDescription(); ?>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -32,7 +32,7 @@
                     /** @var Model_Country $country */
                     foreach($this->smallCountries as $country):
                         $badges = $country->getBadges(); ?>
-                        <li><?= $country->getName(); ?> <span data-badge-score></span></li>
+                        <li><?php echo $country->getName(); ?> <span data-badge-score></span></li>
                     <?php endforeach; ?>
                 </ul>
             </div>
@@ -47,11 +47,11 @@
     $presences = $country->getPresences(); ?>
     <div class="small-24 large-6 columns">
         <div class="badge-small"
-             data-total="<?= round($badges['total']); ?>"
-             data-reach="<?= round($badges['reach']); ?>"
-             data-engagement="<?= round($badges['engagement']); ?>"
-             data-quality="<?= round($badges['quality']); ?>">
-            <h3><?= $country->display_name; ?></h3>
+             data-total="<?php echo round($badges['total']); ?>"
+             data-reach="<?php echo round($badges['reach']); ?>"
+             data-engagement="<?php echo round($badges['engagement']); ?>"
+             data-quality="<?php echo round($badges['quality']); ?>">
+            <h3><?php echo $country->display_name; ?></h3>
             <div class="badge-score bd-btm">
                 <h4><span data-badge-title></span> Score</h4>
                 <div class="score-value" data-badge-score>63%</div>
@@ -59,7 +59,7 @@
             </div>
             <div class="bd-btm">
                 <h4>Presences</h4>
-                <div class="score-value"><?= count($presences);?></div>
+                <div class="score-value"><?php echo count($presences);?></div>
             </div>
             <div class="bd-btm">
                 <h4>Twitter</h4>
@@ -69,7 +69,7 @@
                     foreach($presences as $presence):
                         if($presence->getType() != NewModel_PresenceType::TWITTER) continue; ?>
                         <li>
-                            <span class="<?= $presence->getPresenceSign(); ?>"></span> <?= $presence->getName(); ?>
+                            <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getName(); ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -82,7 +82,7 @@
                     foreach($presences as $presence):
                         if($presence->getType() != NewModel_PresenceType::FACEBOOK) continue; ?>
                         <li>
-                            <span class="<?= $presence->getPresenceSign(); ?> fa-lg fa-fw"></span> <?= $presence->getName(); ?>
+                            <span class="<?php echo $presence->getPresenceSign(); ?> fa-lg fa-fw"></span> <?php echo $presence->getName(); ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -99,7 +99,7 @@
                 <?php
                 /** @var Badge_Abstract $badge */
                 foreach($this->badges as $badge): ?>
-                    <li><a href="#<?= $badge->getName(); ?>" class="button-bc"><?= $badge->getTitle(); ?></a></li>
+                    <li><a href="#<?php echo $badge->getName(); ?>" class="button-bc"><?php echo $badge->getTitle(); ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -117,11 +117,11 @@
                     $badges = $group->getBadges(); ?>
                     <div class="small-24 large-8 columns">
                         <div class="badge-small"
-                             data-total="<?= round($badges['total']); ?>"
-                             data-reach="<?= round($badges['reach']); ?>"
-                             data-engagement="<?= round($badges['engagement']); ?>"
-                             data-quality="<?= round($badges['quality']); ?>">
-                            <h3><?= $group->display_name; ?></h3>
+                             data-total="<?php echo round($badges['total']); ?>"
+                             data-reach="<?php echo round($badges['reach']); ?>"
+                             data-engagement="<?php echo round($badges['engagement']); ?>"
+                             data-quality="<?php echo round($badges['quality']); ?>">
+                            <h3><?php echo $group->display_name; ?></h3>
                             <h4><span data-badge-title></span> Score</h4>
                             <div class="score-value" data-badge-score></div>
                             <div class="score-bar">
@@ -143,7 +143,7 @@
                             </div>
                             <ul class="presence-list">
                                 <?php foreach($group->presences as $presence): ?>
-                                    <li><span class="<?= $presence->getPresenceSign(); ?>"></span> <?= $presence->getHandle(); ?></li>
+                                    <li><span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getHandle(); ?></li>
                                 <?php endforeach; ?>
                             </ul>
                         </div>
@@ -155,7 +155,7 @@
 <?php endif; ?>
 
 <div id="badge-titles"
-     data-total-title="<?= $this->badges['total']->getTitle(); ?>"
-     data-quality-title="<?= $this->badges['quality']->getTitle(); ?>"
-     data-reach-title="<?= $this->badges['reach']->getTitle(); ?>"
-     data-engagement-title="<?= $this->badges['engagement']->getTitle(); ?>"></div>
+     data-total-title="<?php echo $this->badges['total']->getTitle(); ?>"
+     data-quality-title="<?php echo $this->badges['quality']->getTitle(); ?>"
+     data-reach-title="<?php echo $this->badges['reach']->getTitle(); ?>"
+     data-engagement-title="<?php echo $this->badges['engagement']->getTitle(); ?>"></div>
