@@ -16,7 +16,7 @@ class Metric_Relevance extends Metric_Abstract {
     protected function doCalculations(NewModel_Presence $presence, DateTime $start, DateTime $end){
         $data = $presence->getHistoricStreamMeta($start, $end);
 
-        $actual = 0;
+        $actual = null;
 
         if(!empty($data)){
             $totals = array(

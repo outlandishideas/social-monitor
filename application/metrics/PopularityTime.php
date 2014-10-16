@@ -17,7 +17,7 @@ class Metric_PopularityTime extends Metric_Abstract {
     protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $estimate = $presence->getTargetAudienceDate($start, $end);
-        $actualMonths = 0;
+        $actualMonths = null;
         if($estimate){
             $diff = $estimate->diff(new DateTime());
             $actualMonths = $diff->y*12 + $diff->m;

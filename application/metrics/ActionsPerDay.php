@@ -16,7 +16,7 @@ class Metric_ActionsPerDay extends Metric_Abstract {
     protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end){
         $data = $presence->getHistoricStreamMeta($start, $end);
 
-        $actual = 0;
+        $actual = null;
         //if no data, do not try and calculate anything
         if(count($data) > 0){
             $actual = array_reduce($data, function($actions, $row){

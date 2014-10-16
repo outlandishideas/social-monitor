@@ -25,7 +25,7 @@ class Metric_LikesPerPost extends Metric_Abstract {
         }
         $data = $presence->getHistoricStream($start, $end);
 
-        $actual = 0;
+        $actual = null;
         //if no data, do not try and calculate anything
         if(count($data) > 0){
             $actual = array_reduce($data, function($actions, $row){

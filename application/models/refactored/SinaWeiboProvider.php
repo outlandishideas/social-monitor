@@ -159,7 +159,9 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 			':start'	=> $start->format('Y-m-d H:i:s'),
 			':end'	=> $end->format('Y-m-d H:i:s')
 		));
-		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		return count($ret) ? $ret : null;
 	}
 
 	protected function parseStatus($status)
@@ -240,6 +242,10 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 	public function handleData($handle) {
 		//test if user exists
 		$ret = $this->connection->show_user_by_name($handle);
+		if (!is_array($ret)) {
+			//something went really wrong
+			return null;
+		}
 		if (array_key_exists('error_code', $ret)) {
 			switch ($ret['error_code']) {
 				case 20003:

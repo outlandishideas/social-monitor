@@ -58,17 +58,29 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 		Zend_Registry::set('config', $config);
     }
 
+    /**
+     * @group sina_weibo
+     * @group external_dependency
+     */
     public function testCreateNewSinaWeiboPresenceReturnsFalseWhenInvalid()
     {
     	$this->assertFalse(NewModel_PresenceFactory::createNewPresence(NewModel_PresenceType::SINA_WEIBO(), 'cgnetrhuickmger', false, false));
     }
 
+    /**
+     * @group sina_weibo
+     * @group external_dependency
+     */
     public function testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid()
     {
     	$this->assertTrue(NewModel_PresenceFactory::createNewPresence(NewModel_PresenceType::SINA_WEIBO(), 'learnenglish', false, false));
     	$this->assertEquals(1, $this->getConnection()->getRowCount('presences'), "Inserting failed");
     }
 
+    /**
+     * @group sina_weibo
+     * @group external_dependency
+     */
     public function testCreatingNewSinaWeiboPresenceInsertsCorrectValues()
     {
     	NewModel_PresenceFactory::createNewPresence(NewModel_PresenceType::SINA_WEIBO(), 'learnenglish', false, false);
@@ -88,6 +100,8 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 
     /**
      * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+     * @group sina_Weibo
+     * @group external_dependency
      */
     public function testFetchPresenceByHandleHasCorrectHandle()
     {
@@ -96,6 +110,9 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
     	$this->assertEquals('learnenglish', $presence->getHandle());
     }
 
+    /**
+     * @group sina_weibo
+     */
 	public function testFetchPresenceByHandleReturnsNullWhenHandleNotInDb()
 	{
 		$this->assertNull(NewModel_PresenceFactory::getPresenceByHandle('learnenglish', NewModel_PresenceType::SINA_WEIBO()));
@@ -103,6 +120,9 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 * @group sina_weibo
+	 * @group facebook
+	 * @group external_dependency
 	 */
 	public function testFetchPresenceByHandleReturnsCorrectPresenceWhenMultipleExist()
 	{
@@ -115,6 +135,8 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 * @group sina_weibo
+	 * @group external_dependency
 	 */
 	public function testFetchPresenceByIdHasCorrectHandle()
 	{
@@ -130,6 +152,8 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 * @group sina_weibo
+	 * @group external_dependency
 	 */
 	public function testFetchPresencesByType()
 	{
@@ -141,6 +165,9 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 		$this->assertEquals('learnenglish', $presences[1]->getHandle());
 	}
 
+	/**
+	 * @group sina_weibo
+	 */
 	public function testFetchPresencesByTypeReturnsEmptyArrayWhenTypeNotInDb()
 	{
 		$this->assertEmpty(NewModel_PresenceFactory::getPresencesByType(NewModel_PresenceType::SINA_WEIBO()));
@@ -148,6 +175,8 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 * @group sina_weibo
+	 * @group external_dependency
 	 */
 	public function testFetchPresencesById()
 	{
@@ -168,6 +197,8 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 * @group sina_weibo
+	 * @group external_dependency
 	 */
 	public function testFetchPresencesByCampaign()
 	{
@@ -189,6 +220,8 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 * @group sina_weibo
+	 * @group external_dependency
 	 */
 	public function testFetchPresencesByTypeDesc()
 	{
@@ -202,6 +235,8 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 * @group sina_weibo
+	 * @group external_dependency
 	 */
 	public function testFetchPresencesByIdDesc()
 	{
@@ -217,6 +252,8 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 * @group sina_weibo
+	 * @group external_dependency
 	 */
 	public function testFetchPresencesByCampaignDesc()
 	{
@@ -238,6 +275,8 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 * @group sina_weibo
+	 * @group external_dependency
 	 */
 	public function testFetchPresencesByTypePopularity()
 	{
@@ -251,6 +290,8 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 * @group sina_weibo
+	 * @group external_dependency
 	 */
 	public function testFetchPresencesByIdPopularity()
 	{
@@ -266,6 +307,8 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
 
 	/**
 	 * @depends testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid
+	 * @group sina_weibo
+	 * @group external_dependency
 	 */
 	public function testFetchPresencesByCampaignPopularity()
 	{

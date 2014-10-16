@@ -55,19 +55,19 @@ class NewModel_PresenceTest extends PHPUnit_Extensions_Database_TestCase {
         $this->presence = NewModel_PresenceFactory::getPresenceById(1);
     }
 
-    public function test_get_id()
+    public function testGetId()
     {
         $this->assertEquals(1, $this->presence->getId());
     }
 
-    public function test_get_owner()
+    public function testGetOwner()
     {
         $owner = $this->presence->getOwner();
         $this->assertInstanceOf("Model_Country", $owner);
         $this->assertEquals(1, $owner->id);
     }
 
-    public function test_get_owner_if_owner_is_group()
+    public function testGetOwnerIfOwnerIsGroup()
     {
         $presence = NewModel_PresenceFactory::getPresenceById(2);
         $owner = $presence->getOwner();

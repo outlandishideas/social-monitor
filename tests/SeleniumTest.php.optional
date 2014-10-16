@@ -44,6 +44,7 @@ class SeleniumTest extends PHPUnit_Extensions_Selenium2TestCase
 
   /**
   * Method testAllTestTabs
+  * @group selenium
   */
   public function testAllTestTabs()
   {
@@ -120,6 +121,7 @@ class SeleniumTest extends PHPUnit_Extensions_Selenium2TestCase
 
   /**
   * Method test5countries
+  * @group selenium
   */
   protected function XXX5countries()
   {
@@ -195,6 +197,7 @@ class SeleniumTest extends PHPUnit_Extensions_Selenium2TestCase
 
   /**
   * Method testSBUs
+  * @group selenium
   */
   protected function XXXSBUs()
   {
@@ -245,6 +248,7 @@ class SeleniumTest extends PHPUnit_Extensions_Selenium2TestCase
 
   /**
   * Method testPresences
+  * @group selenium
   */
   protected function XXXPresences()
   {
@@ -371,6 +375,7 @@ class SeleniumTest extends PHPUnit_Extensions_Selenium2TestCase
 
   /**
   * Method testDomains
+  * @group selenium
   */
   protected function XXXDomains()
   {
