@@ -69,7 +69,7 @@ abstract class Chart_Badge extends Chart_Compare {
     {
 
         $data = parent::getData($model, $start, $end);
-        $data["type"] = "area-spline";
+        $data["type"] = "spline";
 
         $colors = array(
             'grey' => '#d2d2d2',
