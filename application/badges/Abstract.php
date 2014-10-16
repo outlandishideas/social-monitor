@@ -105,6 +105,26 @@ abstract class Badge_Abstract
 		));
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+		//foreach row (ordered by score of the current badge type) set the ranking
+		$stmt = $this->db->prepare("UPDATE `badge_history` SET `{$name}_rank` = :rank WHERE `presence_id` = :id AND `date` = :date AND `daterange` = :range");
+		$data = static::doRanking($data);
+		foreach($data as $i => $row) {
+			$stmt->execute(array(
+				':rank'		=> $row['rank'],
+				':id'		=> $row['presence_id'],
+				':date'		=> $date->format('Y-m-d'),
+				':range'	=> (string) $range
+			));
+		}
+	}
+
+	/**
+	 * Sort and rank the given data. Assumes a array key 'score' is present
+	 * @param array $data The data to sort and rank
+	 * @return array The sorted and ranked data. An array key 'rank' has been added to each row.
+	 */
+	public static function doRanking($data)
+	{
 		usort($data, function($a, $b) {
 			$aVal = $a['score'];
 			$bVal = $b['score'];
@@ -113,27 +133,20 @@ abstract class Badge_Abstract
 
 			return ($aVal > $bVal ? -1 : 1);
 		});
-
-		//foreach row (ordered by score of the current badge type) set the ranking
-		$stmt = $this->db->prepare("UPDATE `badge_history` SET `{$name}_rank` = :rank WHERE `presence_id` = :id AND `date` = :date AND `daterange` = :range");
 		$lastScore = null;
 		$lastRank = null;
-		foreach($data as $i => $row) {
+		foreach($data as $i => &$row) {
 			if ($row['score'] == $lastScore){
 				$rank = $lastRank;
 			} else {
 				$rank = $i+1;
 			}
 
-			$stmt->execute(array(
-				':rank'	=> $rank,
-				':id'		=> $row['presence_id'],
-				':date'	=> $date->format('Y-m-d'),
-				':range'	=> (string) $range
-			));
+			$row['rank'] = $rank;
 
 			$lastScore = $row['score'];
 			$lastRank = $rank;
 		}
+		return $data;
 	}
 }
