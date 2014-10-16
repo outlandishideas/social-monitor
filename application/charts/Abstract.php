@@ -23,11 +23,11 @@ abstract class Chart_Abstract {
         $this->db = $db;
     }
 
-    public function getChart($presence, DateTime $start, DateTime $end)
+    public function getChart($model, DateTime $start, DateTime $end)
     {
         return array(
             "bindto" => '#new-chart',
-            "data" => $this->getData($presence, $start, $end),
+            "data" => $this->getData($model, $start, $end),
             "axis" => array(
                 "x" => $this->getXAxis(),
                 "y" => $this->getYAxis()
@@ -35,7 +35,7 @@ abstract class Chart_Abstract {
         );
     }
 
-    abstract protected function getData(NewModel_Presence $presence, DateTime $start, DateTime $end);
+    abstract protected function getData($model, DateTime $start, DateTime $end);
 
     /**
      * @return mixed

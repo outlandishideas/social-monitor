@@ -15,10 +15,60 @@ abstract class Chart_Badge extends Chart_Compare {
     protected $xLabel = "Time";
     protected $yLabel;
 
-    protected function getData(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    protected function getCampaignNames($data = null)
+    {
+        $names = array();
+
+        $presenceIds = $this->getPresenceIdsFromData($data);
+
+        $presences = NewModel_PresenceFactory::getPresencesById($presenceIds);
+
+        return array_reduce($presences, function($carry, $presence){
+            /** @var NewModel_Presence $presence */
+            $carry[$presence->getId()] = $presence->getName();
+            return $carry;
+        }, $names);
+    }
+
+    private function getPresenceIdsFromData($data)
+    {
+        return array_reduce($data, function($carry, $row){
+            if(!in_array($row->presence_id, $carry)) $carry[] = $row->presence_id;
+            return $carry;
+        }, array());
+    }
+
+    protected function getCampaignColumns($data = null)
+    {
+        //seed the $columns array
+        $columns = array(
+            $this->getXColumn() => array($this->getXColumn())
+        );
+        foreach($this->getPresenceIdsFromData($data) as $presenceId){
+            $columns[$presenceId] = array($presenceId);
+        }
+
+        $xCol = $this->getXColumn();
+        foreach($this->getDataColumns() as $column){
+            $columns = array_reduce($data, function($carry, $row) use($column, $xCol){
+                $row = (array)$row;
+                //if we haven't already added the date to the date records, do so
+                if(!in_array($row[$xCol], $carry[$xCol])) $carry[$xCol][] = $row[$xCol];
+
+                //our data column appears in this row, add it to the correct presence
+                if(array_key_exists($column, $row)){
+                    $carry[$row['presence_id']][] = $row[$column];
+                }
+                return $carry;
+            }, $columns);
+        }
+        return $columns;
+    }
+
+    protected function getData($model, DateTime $start, DateTime $end)
     {
 
-        $data = parent::getData($presence, $start, $end);
+        $data = parent::getData($model, $start, $end);
         $data["type"] = "area-spline";
 
         $colors = array(

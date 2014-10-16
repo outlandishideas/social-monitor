@@ -3,11 +3,12 @@
 
 abstract class GraphingController extends BaseController {
 
-	protected static function graphMetrics() {
+	protected function graphMetrics() {
 		return array(
-			Model_Presence::METRIC_POPULARITY_RATE => 'Audience Rate',
-			Model_Presence::METRIC_POSTS_PER_DAY => 'Actions Per Day',
-			Model_Presence::METRIC_RESPONSE_TIME => 'Response Time',
+			Chart_Compare::getName() => Chart_Compare::getTitle(),
+			Chart_Reach::getName() => Chart_Reach::getTitle(),
+			Chart_Engagement::getName() => Chart_Engagement::getTitle(),
+			Chart_Quality::getName() => Chart_Quality::getTitle()
 		);
 	}
 
@@ -20,27 +21,26 @@ abstract class GraphingController extends BaseController {
 		);
 	}
 
-	protected function graphs(NewModel_Presence $presence) {
-		$graphs = array();
-		$graphs[] = (object)array(
-			'metric' => Model_Presence::METRIC_POPULARITY_RATE,
-			'yAxisLabel' => ($presence->isForFacebook() ? 'Fans' : 'Followers') . ' gained per day',
-			'title' => 'Gains in Followers / Fans per day'
-		);
-		$graphs[] = (object)array(
-			'metric' => Model_Presence::METRIC_POSTS_PER_DAY,
-			'yAxisLabel' => 'Posts per day',
-			'title' => 'Actions Per Day'
-		);
-		$graphs[] = (object)array(
-			'metric' => Model_Presence::METRIC_RESPONSE_TIME,
-			'yAxisLabel' => 'Response time (hours)',
-			'title' => 'Average Response Time (hours)'
-		);
-		foreach ($graphs as $g) {
-			$g->presence_id = $presence->id;
+	protected function validateChartRequest()
+	{
+		$id = $this->_request->id;
+		if(!$id) {
+			$this->apiError('Missing Id range');
 		}
-		return $graphs;
+
+		$dateRange = $this->getRequestDateRange();
+		if (!$dateRange) {
+			$this->apiError('Missing date range');
+		}
+
+		$chart = $this->_request->chart;
+		if (!$chart) {
+			$this->apiError('Missing chart type');
+		}
+
+		if(!in_array($chart, Chart_Factory::getChartNames())) {
+			$this->apiError('Chart type doesn\'t exist');
+		}
 	}
 
 	public function init() {

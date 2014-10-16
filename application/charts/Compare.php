@@ -49,14 +49,68 @@ class Chart_Compare extends Chart_Abstract {
         return $names;
     }
 
-    protected function getData(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    protected function getCampaignColumns($data = null)
     {
-        $data = $presence->getBadgeHistory($start, $end);
+        //get the number of presences in this data so we can divide by this number later
+        $presenceCount = count($this->getPresenceIdsFromData($data));
+
+        $reducedData = array_reduce($data, function($carry, $row){
+            $row = (array)$row;
+            //seed carry with empty array of columns names => 0
+            if(!array_key_exists($row['date'], $carry)) {
+                $carry[$row['date']] = array('date' => $row['date']);
+                foreach($this->getDataColumns() as $colName){
+                    $carry[$row['date']][$colName] = 0;
+                }
+            }
+            //add the current rows data if colName exists
+            foreach($this->getDataColumns() as $colName){
+                if(array_key_exists($colName, $row) && is_numeric($row[$colName])){
+                    $carry[$row['date']][$colName] += $row[$colName];
+                }
+            }
+            return $carry;
+        }, array());
+
+        foreach($reducedData as &$row){
+            foreach($this->getDataColumns() as $colName){
+                $row[$colName] /= $presenceCount;
+            }
+        }
+
+        return $this->getColumns(array_values($reducedData));
+    }
+
+    protected function getCampaignNames($data = null)
+    {
+        return $this->getNames($data);
+    }
+
+    protected function getData($model, DateTime $start, DateTime $end)
+    {
+        switch(get_class($model)) {
+            case "NewModel_Presence":
+                /** @var NewModel_Presence $model */
+                $data = $model->getBadgeHistory($start, $end);
+                $columns = $this->getColumns($data);
+                $names = $this->getNames($data);
+                break;
+            case "Model_Country":
+            case "Model_Group":
+                /** @var Model_Campaign $model */
+                $data = $model->getBadgeHistory($start, $end);
+                $columns = array_values($this->getCampaignColumns($data));
+                $names = $this->getCampaignNames($data);
+                break;
+            default:
+                return array();
+        }
+
 
         return array(
             "x" => $this->getXColumn(),
-            "columns" => $this->getColumns($data),
-            "names" => $this->getNames($data)
+            "columns" => $columns,
+            "names" => $names
         );
 
     }
@@ -96,6 +150,14 @@ class Chart_Compare extends Chart_Abstract {
             Badge_Engagement::getName(),
             Badge_Reach::getName()
         );
+    }
+
+    private function getPresenceIdsFromData($data)
+    {
+        return array_reduce($data, function($carry, $row){
+            if(!in_array($row->presence_id, $carry)) $carry[] = $row->presence_id;
+            return $carry;
+        }, array());
     }
 
 

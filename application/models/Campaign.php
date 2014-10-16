@@ -225,6 +225,11 @@ class Model_Campaign extends Model_Base {
 		return $this->getAllBadges($this->id);
 	}
 
+	public function getBadgeHistory(DateTime $start, DateTime $end)
+	{
+		return Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), $start, $end, $this->getPresenceIds());
+	}
+
 	public static function getAllBadges($presenceId = null)
 	{
 		if(empty(static::$badges)){

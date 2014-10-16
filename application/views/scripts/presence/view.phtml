@@ -11,43 +11,21 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
 		<?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial)); ?>
 
-
-
 	</div>
 	<div class="small-24 large-12 xlarge-16 columns">
 
-		<div id="pickers" class="bd-btm">
-			<?php echo $this->render('partials/metricpicker.phtml'); ?>
-			<?php echo $this->render('partials/daterange.phtml'); ?>
+		<div class="show-for-medium-up">
+
+			<div id="pickers" class="bd-btm">
+				<?php echo $this->render('partials/metricpicker.phtml'); ?>
+				<?php echo $this->render('partials/daterange.phtml'); ?>
+			</div>
+
+			<div class="chart-description"></div>
+
+			<div id="new-chart" data-controller="presence" data-id="<?php echo $this->presence->getId(); ?>"></div>
+
 		</div>
 
-		<div class="chart-description"></div>
-
-		<div id="new-chart" data-controller="presence" data-id="<?php echo $this->presence->getId(); ?>"></div>
-
-	</div>
-</div>
-
-<div id="statuses" class="statusesDisplay <?php echo $this->presence->type; ?>" data-presence-id="<?php echo $this->presence->id; ?>">
-	<div class="inner">
-		<h3>Statuses</h3>
-		<table>
-			<thead>
-				<tr>
-				<?php if ($this->presence->isForFacebook()) : ?>
-					<th class="user">User</th>
-					<th class="message">Message</th>
-					<th class="links">Links</th>
-					<th class="response">Response</th>
-					<th class="date">Date</th>
-				<?php else : ?>
-					<th class="message">Message</th>
-					<th class="date">Date</th>
-				<?php endif; ?>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
 	</div>
 </div>
