@@ -12,10 +12,10 @@
 <div class="button-bc-bar">
 	<div class="row bk-dark">
 		<div class="small-24 columns">
-			<ul class="inline-list">
-				<li><input type="text" placeholder="Search"/></li>
+			<ul class="button-group">
+				<li><div id="search-table"></div></li>
 				<?php foreach($buttons as $button) : ?>
-					<li><?= $button; ?></li>
+					<li><?php echo $button; ?></li>
 				<?php endforeach; ?>
 			</ul>
 		</div>

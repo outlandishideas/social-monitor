@@ -8,8 +8,8 @@
 
 class Header_DigitalPopulationHealth extends Header_Abstract {
 
-    protected static $name = "presences";
-    protected $label = "Presences";
+    protected static $name = "digital_population_health";
+    protected $label = "Digital Population Health";
     protected $csv = false;
 
     /**

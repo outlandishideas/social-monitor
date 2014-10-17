@@ -1836,6 +1836,12 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	padding: 0.25rem 1rem;
 	color: #fff;
 	transition: background-color 400ms ease-out, border-color 400ms ease-out;
+	line-height: 1.6;
+	margin-bottom: 0;
+}
+
+.button-group > li > .button-bc {
+	border-color: #fff;
 }
 
 .button-bc:hover,
@@ -1864,7 +1870,7 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	float: none;
 }
 
-.button-bc-bar .inline-list input {
+.button-bc-bar .button-group input {
 	margin: 0;
 	min-width: 20rem;
 	border: 1px solid #fff;
@@ -1895,6 +1901,7 @@ table thead {
 table thead tr th,
 table tbody tr td {
 	color: #fff;
+	font-size: 1rem;
 }
 
 table tbody tr td {
@@ -1903,7 +1910,8 @@ table tbody tr td {
 
 table tbody tr td:nth-child(0n+2),
 table#all-countries tbody tr td:first-child,
-table tbody tr td:last-child {
+table tbody tr td:last-child,
+table tbody tr td.left-align {
 	text-align: left;
 }
 
@@ -1930,6 +1938,17 @@ table td a,
 table td a:link,
 table td a:visited,
 table td a:hover {
+	color: #fff;
+}
+
+table td ul {
+	margin-left: 0;
+	list-style: none;
+	color: #fff;
+}
+
+table td ul li a,
+table td ul li a:hover {
 	color: #fff;
 }
 

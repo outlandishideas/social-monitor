@@ -121,6 +121,8 @@ app.datatables = {
 				bInfo: false,
 				aoColumns: app.datatables.generateColumns($table)
 			});
+
+			$('div.dataTables_filter').appendTo($('#search-table'));
 		},
 		'#all-presences': function($table) {
 			$table.dataTable({
@@ -134,6 +136,8 @@ app.datatables = {
 				bInfo: false,
 				aoColumns: app.datatables.generateColumns($table)
 			});
+
+			$('div.dataTables_filter').appendTo($('#presence-search'));
 		},
 		'table#domains': function($table) {
 			var args = {

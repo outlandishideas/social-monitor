@@ -18,7 +18,7 @@ class Header_Name extends Header_Abstract {
      */
     public function getTableCellValue($model)
     {
-        return $model->name;
+        return $model->display_name;
     }
 
 

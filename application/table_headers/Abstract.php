@@ -26,7 +26,7 @@ abstract class Header_Abstract {
             "data-sort" => $this->getSort()
         );
         if($this->getDescription() !== null) $properties['title'] = $this->getDescription();
-        if($this->getWidth() !== null) $properties['data-widht'] =  $this->getWidth();
+        if($this->getWidth() !== null) $properties['data-width'] =  $this->getWidth();
 
         $html = "<th ";
         foreach($properties as $property => $value){
