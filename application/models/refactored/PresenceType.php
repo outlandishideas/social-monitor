@@ -127,4 +127,52 @@ class NewModel_PresenceType extends NewModel_Enum
 				break;
 		}
 	}
+
+	public function isMetricApplicable($metricName)
+	{
+		return in_array($metricName, $this->getApplicableMetrics());
+	}
+
+	public function getApplicableMetrics()
+	{
+		switch ($this->value) {
+			case self::SINA_WEIBO:
+				return array(
+					Metric_ActionsPerDay::getName(),
+					Metric_Branding::getName(),
+					Metric_Popularity::getName(),
+					Metric_PopularityTime::getName(),
+					Metric_Relevance::getName(),
+					Metric_SignOff::getName()
+				);
+				break;
+			case self::FACEBOOK:
+				return array(
+					Metric_ActionsPerDay::getName(),
+					Metric_Branding::getName(),
+					Metric_Popularity::getName(),
+					Metric_PopularityTime::getName(),
+					Metric_Relevance::getName(),
+					Metric_SignOff::getName(),
+					Metric_FBEngagement::getName(),
+					Metric_LikesPerPost::getName(),
+					Metric_ResponseRatio::getName(),
+					Metric_ResponseTime::getName()
+				);
+				break;
+			case self::TWITTER:
+				return array(
+					Metric_ActionsPerDay::getName(),
+					Metric_Branding::getName(),
+					Metric_Popularity::getName(),
+					Metric_PopularityTime::getName(),
+					Metric_Relevance::getName(),
+					Metric_SignOff::getName(),
+					Metric_ResponseRatio::getName(),
+					Metric_ResponseTime::getName(),
+					Metric_Klout::getName()
+				);
+				break;
+		}
+	}
 }
