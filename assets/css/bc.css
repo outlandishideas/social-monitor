@@ -117,38 +117,6 @@ fieldset {
 	margin: 0;
 }
 
-fieldset ol, fieldset ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-fieldset ul li {
-	clear: left;
-	padding: 2px 0 12px 0;
-}
-
-
-fieldset ul li:last-child {
-	/*padding-bottom: 0px;*/
-}
-
-fieldset ul li label:not(.radio) {
-	font-weight: bold;
-}
-
-fieldset label:not(.radio) {
-	padding: 0;
-	display: block;
-	float: left;
-	width: 8.8em;
-	margin-right: 0.5em;
-}
-
-fieldset input, fieldset select, fieldset textarea {
-	margin: 0;
-}
-
 .site-title-link {
 	float: left;
 }
@@ -1836,6 +1804,12 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	padding: 0.25rem 1rem;
 	color: #fff;
 	transition: background-color 400ms ease-out, border-color 400ms ease-out;
+	line-height: 1.6;
+	margin-bottom: 0;
+}
+
+.button-group > li > .button-bc {
+	border-color: #fff;
 }
 
 .button-bc:hover,
@@ -1864,7 +1838,14 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	float: none;
 }
 
-.button-bc-bar .inline-list input {
+.button-bc-bar .button-group input,
+form input[type="text"],
+form select,
+form select:disabled,
+form select:focus,
+form input[type="text"]:focus,
+form input[type="password"],
+form input[type="password"]:focus {
 	margin: 0;
 	min-width: 20rem;
 	border: 1px solid #fff;
@@ -1875,6 +1856,23 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	height: auto;
 	line-height: 1.6;
 	color: #fff;
+}
+
+form input[type="text"],
+form select,
+form select:disabled,
+form select:focus,
+form input[type="text"]:focus,
+form input[type="password"],
+form input[type="password"]:focus {
+	margin-bottom: 1rem;
+}
+
+form select:focus,
+form input[type="text"]:focus,
+form input[type="password"]:focus {
+	border-color: #0071bc;
+	transition: border-color 200ms ease-in, box-shadow 200ms ease-in;
 }
 
 /* tables */
@@ -1895,6 +1893,7 @@ table thead {
 table thead tr th,
 table tbody tr td {
 	color: #fff;
+	font-size: 1rem;
 }
 
 table tbody tr td {
@@ -1903,7 +1902,8 @@ table tbody tr td {
 
 table tbody tr td:nth-child(0n+2),
 table#all-countries tbody tr td:first-child,
-table tbody tr td:last-child {
+table tbody tr td:last-child,
+table tbody tr td.left-align {
 	text-align: left;
 }
 
@@ -1931,5 +1931,67 @@ table td a:link,
 table td a:visited,
 table td a:hover {
 	color: #fff;
+}
+
+table td ul {
+	margin-left: 0;
+	list-style: none;
+	color: #fff;
+}
+
+table td ul li a,
+table td ul li a:hover {
+	color: #fff;
+}
+
+.small-country-list {
+	margin-top: 2rem;
+	border-top: 1px solid #fff;
+}
+
+.small-country-list h4 {
+	margin-bottom: 1rem;
+	
+}
+
+.country-list {
+	list-style: none;
+	color: #fff;
+	margin-left: 0;
+}
+
+.country-list li {
+	border-bottom: 1px solid #fff;
+	clear: both;
+	margin-top: .5rem;
+	position: relative;
+}
+
+.country-list li a {
+	color: #fff;
+}
+
+.country-list li span {
+	font-size: 1.5rem;
+	position: absolute;
+	right: 0;
+	top: -8px;
+	vertical-align: baseline;
+}
+
+/* form styles */
+
+form select {
+	margin-bottom: 1rem;
+}
+
+form label {
+	font-size: 1rem;
+	color: #fff;
+	margin: 0.5rem 0;
+}
+
+form input {
+
 }
 

@@ -27,14 +27,31 @@
                         case "options":
                             $options = $header->getTableCellValue($row);
                             $links = $this->view->gatekeeper()->filterAll($options);
-                            echo "<td>" . implode("<br/>", $links) . "</td>";
+                            echo "<td>";
+                            if(count($links) > 0) {
+                                echo "<ul>";
+                                foreach ($links as $link) {
+                                    echo "<li>{$link}</li>";
+                                }
+                                echo "</ul>";
+                            }
+                            echo "</td>";
                             break;
                         case "presences":
-//                            $options = $header->getTableCellValue($row);
-//                            $links = $this->view->gatekeeper()->filterAll($options);
-                            echo "<td></td>";
+                            $options = $header->getTableCellValue($row);
+                            $links = $this->view->gatekeeper()->filterAll($options);
+                            echo "<td class='left-align'>";
+                            if(count($links) > 0) {
+                                echo "<ul>";
+                                foreach ($links as $link) {
+                                    echo "<li>{$link}</li>";
+                                }
+                                echo "</ul>";
+                            }
+                            echo "</td>";
                             break;
                         case "handle":
+                        case "name":
                             $url = $this->view->gatekeeper()->filter('%url%', array("action" => "view", "id" => $row->id));
                             echo "<td>";
                             echo $url ? "<a href='{$url}'>" : "";

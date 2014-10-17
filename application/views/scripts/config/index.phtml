@@ -1,48 +1,70 @@
-<form method="post" action="<?php echo $this->url(); ?>" enctype="multipart/form-data" class="uniForm" id="settings">
+<h2 class="page-title">Settings</h2>
+
+<form method="post" action="<?php echo $this->url(); ?>" enctype="multipart/form-data" id="settings">
     <?php foreach ($this->values as $section) : ?>
-		<fieldset class="inlineLabels">
+		<fieldset>
             <h2><?php echo $section->title; ?></h2>
-            <div class="config-description"><?php echo $section->description; ?></div>
+            <div class="row">
+                <div class="columns small-24 medium-24 large-16">
+                    <?php echo $section->description; ?>
+                </div>
+            </div>
             <?php foreach ($section->kpis as $kpi) : ?>
 
                 <h3><?php echo $kpi->title; ?></h3>
                 <p><?php echo $kpi->description; ?></p>
                 <?php foreach ($kpi->values as $args) : ?>
 
-                    <div class="ctrlHolder">
-                        <label for="<?php echo $args->key; ?>">
-                            <?php echo $args->label; ?>
-                        </label>
-                        <input name="<?php echo $args->key; ?>" value="<?php echo htmlspecialchars($args->value); ?>" class="textInput <?php if ($args->error) { echo 'error'; } ?>"
-                               type="text" id="<?php echo $args->key; ?>">
-                        <?php if ($args->hint) : ?>
-                        <p class="formHint"><?php echo $args->hint; ?></p>
-                        <?php endif; ?>
-                        <?php if ($args->error) : ?>
-                        <p class="formError"><?php echo $args->error; ?></p>
-                        <?php endif; ?>
+                    <div class="row">
+                        <div class="small-24 medium-8 large-8 columns">
+                            <label for="<?php echo $args->key; ?>">
+                                <?php echo $args->label; ?>
+                            </label>
+                        </div>
+                        <div class="small-24 medium-12 large-8 end columns">
+                            <input name="<?php echo $args->key; ?>" value="<?php echo htmlspecialchars($args->value); ?>" class="textInput <?php if ($args->error) { echo 'error'; } ?>"
+                                   type="text" id="<?php echo $args->key; ?>">
+                            <?php if ($args->hint) : ?>
+                                <p class="formHint"><?php echo $args->hint; ?></p>
+                            <?php endif; ?>
+                            <?php if ($args->error) : ?>
+                                <p class="formError"><?php echo $args->error; ?></p>
+                            <?php endif; ?>
+                        </div>
                     </div>
 
                 <?php endforeach; ?>
             <?php endforeach; ?>
 		</fieldset>
     <?php endforeach; ?>
-    <fieldset class="inlineLabels">
+    <fieldset>
         <h2>Upload KPI File</h2>
-        <div class="config-description">Upload the KPI file that can be downloaded from the front page</div>
-        <div class="ctrlHolder">
-            <label  for="uploadedfile">
-                Choose a file to upload:
-            </label>
-            <input name="uploadedfile" id="uploadedfile" type="file" />
+        <p>Upload the KPI file that can be downloaded from the front page</p>
+        <div class="row">
+            <div class="small-24 medium-8 large-8 columns">
+                <label  for="uploadedfile">
+                    Choose a file to upload:
+                </label>
+            </div>
+            <div class="small-24 medium-12 large-8 end columns">
+                <input name="uploadedfile" id="uploadedfile" type="file" />
+            </div>
         </div>
     </fieldset>
 
-	<div class="buttonHolder">
-        <?php $buttons = $this->gatekeeper()->filterAll(array(
-            '<a class="button" href="%url%">Cancel</a>' => array('controller'=>'index', 'action'=>'index')
-        ));
-        foreach($buttons as $button) { echo $button; } ?>
-		<input type="submit" value="Save" class="primaryAction">
-	</div>
+    <div class="button-bc-bar">
+        <div class="row bk-dark">
+            <div class="small-24 columns">
+                <ul class="button-group">
+                    <?php $buttons = $this->gatekeeper()->filterAll(array(
+                        '<a class="button-bc" href="%url%">Cancel</a>' => array('controller'=>'index', 'action'=>'index')
+                    ));
+                    foreach($buttons as $button): ?>
+                    <li><?php echo $button; ?></li>
+                    <li><button type="submit" class="button-bc">Save</li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+    </div>
 </form>

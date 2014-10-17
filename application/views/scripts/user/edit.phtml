@@ -1,52 +1,86 @@
-<form method="post" action="<?php echo $this->url(array('controller'=>'user')); ?>" class="uniForm">
+<h2 class="page-title">Edit User</h2>
+<p>On this page you can edit your user information, such as updating your email address or changing your password.</p>
 
-	<fieldset class="inlineLabels">
-		<legend>User Details</legend>
+<form method="post" action="<?php echo $this->url(array('controller'=>'user')); ?>">
 
-		<div class="ctrlHolder">
-			<label for="name" class="requiredField">
-				User name<span class="asteriskField">*</span>
-			</label>		
-			<input id="name" name="name" type="text" class="textInput" value="<?php echo $this->editingUser->safeName; ?>" />
+	<div class="row">
+		<div class="small-24 columns">
+			<fieldset>
+				<h2>User Details</h2>
+				<div class="row">
+					<div class="small-24 medium-8 large-4 columns">
+						<label for="name" class="requiredField">
+							User name<span class="asteriskField">*</span>
+						</label>
+					</div>
+					<div class="small-24 medium-12 large-8 end columns">
+						<input id="name" name="name" type="text" class="textInput" value="<?php echo $this->editingUser->safeName; ?>" />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="small-24 medium-8 large-4 columns">
+						<label for="email" class="requiredField">
+							Email address<span class="asteriskField">*</span>
+						</label>
+					</div>
+					<div class="small-24 medium-12 large-8 end columns">
+						<input id="email" name="email" type="text" class="textInput" value="<?php echo htmlspecialchars($this->editingUser->email); ?>" />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="small-24 medium-8 large-4 columns">
+						<label for="user_level" class="requiredField">
+							User Level<span class="asteriskField">*</span>
+						</label>
+					</div>
+					<div class="small-24 medium-12 large-8 end columns">
+						<select id="user_level" name="user_level" class="selectInput" <?php if (!$this->canChangeLevel) echo 'disabled'; ?>>
+							<?php foreach ($this->userLevels as $value=>$label) : ?>
+								<option value="<?php echo $value; ?>" <?php if ($value == $this->editingUser->user_level) echo 'selected'; ?>><?php echo $label; ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="small-24 medium-8 large-4 columns">
+						<label for="password" class="requiredField">
+							Password<span class="asteriskField">*</span>
+						</label>
+					</div>
+					<div class="small-24 medium-12 large-8 end columns">
+						<input id="password" name="password" type="password" class="textInput" />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="small-24 medium-8 large-4 columns">
+						<label for="password_confirm" class="requiredField">
+							Password (again)<span class="asteriskField">*</span>
+						</label>
+					</div>
+					<div class="small-24 medium-12 large-8 end columns">
+						<input id="password_confirm" name="password_confirm" type="password" class="textInput" />
+					</div>
+				</div>
+
+
+			</fieldset>
 		</div>
+	</div>
 
-		<div class="ctrlHolder">
-			<label for="email" class="requiredField">
-				Email address<span class="asteriskField">*</span>
-			</label>		
-			<input id="email" name="email" type="text" class="textInput" value="<?php echo htmlspecialchars($this->editingUser->email); ?>" />
+	<div class="button-bc-bar">
+		<div class="row bk-dark">
+			<div class="small-24 columns">
+				<ul class="button-group">
+					<li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', $this->gatekeeper()->fallbackUrlArgs(array('controller'=>'user', 'action'=>'index')), null, true); ?></li>
+					<li><button type="submit" class="button-bc">Save</li>
+				</ul>
+			</div>
 		</div>
-
-		<div class="ctrlHolder">
-			<label for="user_level" class="requiredField">
-				User Level<span class="asteriskField">*</span>
-			</label>		
-			<select id="user_level" name="user_level" class="selectInput" <?php if (!$this->canChangeLevel) echo 'disabled'; ?>>
-				<?php foreach ($this->userLevels as $value=>$label) : ?>
-				<option value="<?php echo $value; ?>" <?php if ($value == $this->editingUser->user_level) echo 'selected'; ?>><?php echo $label; ?></option>
-				<?php endforeach; ?>
-			</select>
-		</div>
-
-		<div class="ctrlHolder">
-			<label for="password" class="requiredField">
-				Password<span class="asteriskField">*</span>
-			</label>		
-			<input id="password" name="password" type="password" class="textInput" />
-		</div>
-
-		<div class="ctrlHolder">
-			<label for="password_confirm" class="requiredField">
-				Password (again)<span class="asteriskField">*</span>
-			</label>		
-			<input id="password_confirm" name="password_confirm" type="password" class="textInput" />
-		</div>
-
-	</fieldset>
-	
-	<div class="buttonHolder">
-		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', $this->gatekeeper()->fallbackUrlArgs(array('controller'=>'user', 'action'=>'index')), null, true); ?>
-		<input type="submit" value="Save" class="primaryAction">
 	</div>
 
 </form>
+

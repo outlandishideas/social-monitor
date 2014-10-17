@@ -229,7 +229,8 @@ class Model_Campaign extends Model_Base {
 
 	public function getBadges()
 	{
-		return $this->getAllBadges($this->id);
+		$class = get_class();
+		return $class::getAllBadges($this->id);
 
 	}
 

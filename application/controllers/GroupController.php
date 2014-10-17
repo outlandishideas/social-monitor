@@ -14,11 +14,21 @@ class GroupController extends CampaignController {
 	 * @user-level user
 	 */
 	public function indexAction() {
-        $this->view->title = 'SBUs';
+
+        $headers = array();
+        foreach(array(
+                    Header_Name::getName(),
+                    Header_TotalRank::getName(),
+                    Header_TotalScore::getName(),
+                    Header_TargetAudience::getName(),
+                    Header_Presences::getName(),
+                    Header_Options::getName()
+                ) as $headerName){
+            $headers[] = Header_Factory::getHeader($headerName);
+        }
+
 		$this->view->groups = Model_Group::fetchAll();
-        $this->view->tableHeaders = static::generateTableHeaders();
-		$this->view->tableMetrics = self::tableMetrics();
-        $this->view->badgeData = Model_Group::badgesData();
+        $this->view->tableHeaders = $headers;
 	}
 
 	/**

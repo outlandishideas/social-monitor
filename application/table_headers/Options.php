@@ -12,28 +12,29 @@ class Header_Options extends Header_Abstract {
     protected $label = "Options";
     protected $sort = null;
     protected $csv = false;
+    protected $width = "350px";
 
     public function getTableCellValue($model)
     {
         switch(get_class($model)){
             case "NewModel_Presence":
                 $options = array(
-                    '<a href="%url%"><span class="fa fa-eye fa-fw"></span> View Presence</a>' => array('action'=>'view', 'id'=>$model->id),
-                    '<a href="%url%"><span class="fa fa-wrench fa-fw"></span> Edit Presence</a>' => array('action'=>'edit', 'id'=>$model->id)
+                    '<a href="%url%">View Presence</a>' => array('action'=>'view', 'id'=>$model->id),
+                    '<a href="%url%">Edit Presence</a>' => array('action'=>'edit', 'id'=>$model->id)
                 );
                 break;
             case "Model_Country":
                 $options = array(
-                    '<a href="%url%"><span class="fa fa-eye fa-fw"></span> View Country</a>' => array('action'=>'view', 'id'=>$model->id),
-                    '<a href="%url%"><span class="fa fa-wrench fa-fw"></span> Edit Country</a>' => array('action'=>'edit', 'id'=>$model->id),
-                    '<a href="%url%"><span class="fa fa-sliders fa-fw"></span> Presences</a>' => array('action'=>'manage', 'id'=>$model->id)
+                    '<a href="%url%">View Country</a>' => array('action'=>'view', 'id'=>$model->id),
+                    '<a href="%url%">Edit Country</a>' => array('action'=>'edit', 'id'=>$model->id),
+                    '<a href="%url%">Presences</a>' => array('action'=>'manage', 'id'=>$model->id)
                 );
                 break;
             case "Model_Group":
                 $options = array(
-                    '<a href="%url%"><span class="fa fa-eye fa-fw"></span> View SBU</a>' => array('action'=>'view', 'id'=>$model->id),
-                    '<a href="%url%"><span class="fa fa-wrench fa-fw"></span> Edit SBU</a>' => array('action'=>'edit', 'id'=>$model->id),
-                    '<a href="%url%"><span class="fa fa-sliders fa-fw"></span> Presences</a>' => array('action'=>'manage', 'id'=>$model->id)
+                    '<a href="%url%">View SBU</a>' => array('action'=>'view', 'id'=>$model->id),
+                    '<a href="%url%">Edit SBU</a>' => array('action'=>'edit', 'id'=>$model->id),
+                    '<a href="%url%">Presences</a>' => array('action'=>'manage', 'id'=>$model->id)
                 );
                 break;
             default:

@@ -7,6 +7,13 @@ var app = app || {}
 app.home = {
     setup: function(){
 
+        $('.small-country-list')
+            .on('click', 'li a', function(event){
+                event.preventDefault();
+                var id = $(this).parent('li').data('id');
+                app.geochart.loadCampaignStats(id);
+            });
+
         $('.badge-buttons')
             .on('click', 'li a', function(event){
                 event.preventDefault();

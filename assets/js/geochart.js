@@ -68,7 +68,7 @@ app.geochart = {
 				if ($country.length > 0) {
 					var id = $country.data('id');
                     var model = $country.data('model');
-					app.geochart.loadCampaignStats(id, model);
+					app.geochart.loadCampaignStats(id);
 				} else {
                     if(badgeType == 'total'){
                         $('#' + badgeType + '-desc').removeClass('hide');
@@ -104,7 +104,7 @@ app.geochart = {
 
 			$dom.on('click', function(e){
 				e.preventDefault();
-				app.geochart.loadCampaignStats($(this).data('id'), modelType);
+				app.geochart.loadCampaignStats($(this).data('id'));
 			});
 
 			wrapper.push({
@@ -185,16 +185,15 @@ app.geochart = {
 		if (selection.length > 0) {
 			var id = data.getValue(selection[0].row, 3);
             if(id != -1){
-                app.geochart.loadCampaignStats(id, 'country');
+                app.geochart.loadCampaignStats(id);
             }
         }
 	},
 	/**
 	 * Fetches the country summary over ajax, and appends it to the map.
 	 * @param id
-	 * @param type country, group or region
 	 */
-	loadCampaignStats: function(id, type) {
+	loadCampaignStats: function(id) {
 		var $countryStats = $('#country-stats');
 		$countryStats.load('index/country-stats/id/' + id, function(event){
 			app.home.update();
