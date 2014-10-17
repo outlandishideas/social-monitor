@@ -50,14 +50,14 @@ app.home = {
         app.home.update()
     },
     currentBadge: function(){
-        return window.location.hash.replace("#", "");
-    },
-    update: function(){
-        var badge = app.home.currentBadge();
+        var badge = window.location.hash.replace("#", "");
         if(!badge){
             badge = "total";
         }
-        app.state.homeBadge = badge;
+        return badge;
+    },
+    update: function(){
+        var badge = app.home.currentBadge();
 
         //activate badge buttons
         $('.badge-buttons')
