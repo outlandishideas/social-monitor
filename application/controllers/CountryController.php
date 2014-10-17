@@ -30,11 +30,25 @@ class CountryController extends CampaignController {
 		foreach ($countries as $country) {
 			$country->getPresences($mapping, $presences);
 		}
-        $this->view->title = 'Countries';
-        $this->view->tableHeaders = static::generateTableHeaders();
-		$this->view->tableMetrics = self::tableMetrics();
+
+
+		$headers = array();
+		foreach(array(
+					Header_Name::getName(),
+					Header_Country::getName(),
+					Header_TotalRank::getName(),
+					Header_TotalScore::getName(),
+					Header_TargetAudience::getName(),
+					Header_DigitalPopulation::getName(),
+					Header_DigitalPopulationHealth::getName(),
+					Header_Presences::getName(),
+					Header_Options::getName()
+				) as $headerName){
+			$headers[] = Header_Factory::getHeader($headerName);
+		}
+
+        $this->view->tableHeaders = $headers;
 		$this->view->countries = $countries;
-        $this->view->badgeData = Model_Country::badgesData();
 	}
 
 	/**

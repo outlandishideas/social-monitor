@@ -1,100 +1,30 @@
 <?php
     $buttons = $this->gatekeeper()->filterAll(array(
-        '<a class="button add" href="%url%"><span class="fa fa-plus fa-fw fa-lg"></span> Add new</a>' => array('action'=>'new'),
-        '<a class="button" href="%url%"><span class="fa fa-edit fa-fw fa-lg"></span> Edit All</a>' => array('action'=>'edit-all'),
-            '<a class="button download" href="%url%"><span class="fa fa-download fa-fw fa-lg"></span> Download CSV</a>' => array('action' => 'download')
+        '<a class="button-bc" href="%url%">Add new</a>' => array('action'=>'new'),
+        '<a class="button-bc" href="%url%">Edit All</a>' => array('action'=>'edit-all'),
+            '<a class="button-bc" href="%url%">Download CSV</a>' => array('action' => 'download')
     ));
 ?>
 
-<div class="row">
-	<div class="large-12 columns">
-		<div id="table-filter"></div>
-	</div>
-	<div class="large-12 columns">
-		<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
+
+<h2 class="page-title">Countries</h2>
+
+<div class="button-bc-bar">
+	<div class="row bk-dark">
+		<div class="small-24 columns">
+			<ul class="inline-list">
+				<li><input type="text" placeholder="Search"/></li>
+				<?php foreach($buttons as $button) : ?>
+					<li><?= $button; ?></li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
 	</div>
 </div>
 
-
-<table class="text dtable standard" id="all-countries">
-	<thead>
-		<tr><?php
-            foreach($this->tableHeaders as $headers): ?>
-                <th <?php
-                if(isset($headers->name)) echo "data-name='$headers->name'";
-                if(isset($headers->desc)) echo "title='$headers->desc'";
-                if(isset($headers->sort)) echo "data-sort='$headers->sort'";
-                if(isset($headers->width)) echo "data-width='$headers->width'"; ?> ><?php
-                if(isset($headers->title)) echo $headers->title; ?>
-                </th><?php
-            endforeach; ?>
-		</tr>
-	</thead>
-	<tbody>
-		<?php /** @var $country Model_Country */ ?>
-		<?php foreach ($this->countries as $country) : ?>
-		<tr>
-			<?php $presences = $country->getPresences(); ?>
-			<td>
-				<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'id'=>$country->id)); if ($url) : ?>
-				<a href="<?php echo $url; ?>"><?php echo $country->display_name; ?></a>
-				<?php else : ?>
-				<?php echo $country->display_name; ?>
-				<?php endif; ?>
-			</td>
-			<td><?php echo $country->getName() . ' (' . $country->country . ')'; ?></td>
-            <td><?php echo $this->badgeData[$country->id]->total_rank; ?></td>
-            <td><?php echo round($this->badgeData[$country->id]->total, 1); ?></td>
-            <td><?php echo number_format($country->getDigitalPopulation()); ?></td>
-            <td>
-                <?php $value = $country->getDigitalPopulationHealth(); $key = 'digital_population'; ?>
-                <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
-                <?php echo $this->trafficLight()->label($value, $key); ?>
-            </td>
-			<td><?php echo number_format($country->audience); ?></td>
-			<?php if ($presences) : ?>
-			<?php $kpiData = $country->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
-				<td>
-                    <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
-					<?php echo $this->trafficLight()->label($value, $key); ?>
-				</td>
-			<?php endforeach; ?>
-			<td>
-                <ul class="entity-list">
-                <?php foreach($presences as $presence) : ?>
-                    <li>
-                        <?php echo $this->partial('partials/presence_inline.phtml',  array('presence' => $presence)); ?>
-                    </li>
-                <?php endforeach; ?>
-                </ul>
-            </td>
-			<?php else : ?>
-			<?php foreach ($this->tableMetrics as $key=>$label) : ?>
-			<td>-</td>
-			<?php endforeach; ?>
-			<td>-</td>
-			<?php endif; ?>
-			<td>
-				<?php
-					$actions = $this->gatekeeper()->filterAll(array(
-						'- <a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$country->id),
-						'- <a href="%url%">Presences</a>' => array('action'=>'manage', 'id'=>$country->id),
-						'- <a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$country->id)
-					));
-					echo implode('<br />', $actions);
-				?>
-			</td>
-		</tr>
-		<?php endforeach; ?>
-	</tbody>
-</table><?php
-
-$buttons = $this->gatekeeper()->filterAll(array(
-    '<a class="button download" href="%url%"><span class="fa fa-download fa-fw fa-lg"></span> Download CSV</a>' => array('action' => 'download'),
-));
-
-if ($buttons) {
-	echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons));
-} ?>
-
-
+<?php echo $this->partial("partials/index-table.phtml", array(
+	"tableHeaders" => $this->tableHeaders,
+	"tableId" => "all-countries",
+	"rows" => $this->countries,
+	"view" => $this
+)); ?>

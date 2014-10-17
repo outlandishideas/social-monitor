@@ -1,92 +1,29 @@
 <?php
 
-$buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button add" href="%url%"><span class="icon-plus"></span> Add new</a>' => array('action' => 'new'),
-    '<a class="button download" href="%url%"><span class="icon-download"></span> Download CSV</a>' => array('action' => 'download'),
-    '<a class="button compare" data-href="%url%" href="%url%"><span class="icon-eye-open"></span>  Compare</a><ul class="compare list empty"></ul>' => array('action' => 'compare', 'id'=>'')
-));?>
+?>
 
-<?php if ($buttons) : ?>
-    <p>
-        <?php echo implode('', $buttons); ?>
-    </p>
-<?php endif; ?>
+<h2 class="page-title">Presences</h2>
 
-<table class="text dtable" id="all-presences">
-	<thead>
-    <tr><?php
-        foreach($this->tableHeaders as $headers): ?>
-            <th <?php
-                if(isset($headers->name)) echo "data-name='$headers->name'";
-                if(isset($headers->desc)) echo "title='$headers->desc'";
-                if(isset($headers->sort)) echo "data-sort='$headers->sort'";
-                if(isset($headers->width)) echo "data-width='$headers->width'"; ?> ><?php
-                    if(isset($headers->title)) echo $headers->title; ?>
-            </th><?php
-        endforeach; ?>
-		</tr>
-	</thead>
-	<tbody>
-		<?php /** @var $presence Model_Presence */ ?>
-		<?php foreach ($this->presences as $presence) : ?>
-		<tr>
-            <td><input type="checkbox" id="presence-<?php echo $presence->id; ?>" class="compare-checkbox" data-name="<?php echo $presence->handle; ?>" name="presences" value="<?php echo $presence->id; ?>" ></td>
-			<td>
-                <?php echo $this->partial('partials/presence_inline.phtml',  array('presence' => $presence)); ?>
-                <?php if (!$presence->uid) : ?>
-                [not found]
-                <?php endif; ?>
-			</td>
-            <td>
-                <span class="<?php echo $presence->sign_off ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
-                      data-value="<?php echo $presence->sign_off ? 1 : 0 ;?>"></span>
-            </td>
-            <td>
-                <span
-                    class="<?php echo $presence->branding ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
-                    data-value="<?php echo $presence->branding ? 1 : 0 ;?>"></span>
-            </td>
-            <?php $currentBadge = (array_key_exists($presence->id, $this->badgeData)) ? $this->badgeData[$presence->id] : null ; ?>
-            <td><?php if(is_object($currentBadge)){echo (int)$currentBadge->total_rank;} else{echo 'N/A';}?></td>
-            <td><?php if(is_object($currentBadge)){ echo (float)round($currentBadge->total, 1) ;} else {echo 'N/A';}?></td>
-			<td><?php echo number_format($presence->popularity) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
-			<td><?php echo number_format($presence->getTargetAudience()) . ' ' . ($presence->isForFacebook() ? 'fans' : 'followers'); ?></td>
-			<?php
-			$kpiData = $presence->getKpiData();
-			foreach ($this->tableMetrics as $key=>$label) :
-                if(array_key_exists($key, $kpiData)){
-                    $value = $kpiData[$key];
-                } else {
-                    $value = "n/a";
-                }
-			?>
-
-                <td>
-                    <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
-                    <?php echo $this->trafficLight()->label($value, $key); ?>
-                </td>
-			<?php endforeach; ?>
-			<td>
-				<?php
-				$links = $this->gatekeeper()->filterAll(array(
-					'- <a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$presence->id),
-					'- <a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$presence->id)
-				));
-				echo implode('<br />', $links);
-				?>
-			</td>
-		</tr>
-		<?php endforeach; ?>
-	</tbody>
-</table><?php
-
-$buttons = $this->gatekeeper()->filterAll(array(
-    '<a class="button download" href="%url%"><span class="icon-download"></span> Download CSV</a>' => array('action' => 'download'),
-));
+<div class="button-bc-bar">
+    <div class="row bk-dark">
+        <div class="small-24 large-centered columns">
+            <ul class="inline-list">
+                <li><input type="text" placeholder="Search"/></li>
+                <li><a class="button-bc" href="#">Add New</a></li>
+                <li><a class="button-bc" href="#">Download CSV</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 
-if ($buttons) : ?>
-    <p><?php
-        echo implode('', $buttons); ?>
-    </p><?php
-endif; ?>
+<?php echo $this->partial("partials/index-table.phtml", array(
+    "tableHeaders" => $this->tableHeaders,
+    "tableId" => "all-presences",
+    "rows" => $this->presences,
+    "view" => $this
+)); ?>
+
+
+
+

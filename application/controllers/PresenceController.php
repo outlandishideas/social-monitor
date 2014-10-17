@@ -15,12 +15,23 @@ class PresenceController extends GraphingController
 		NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
 		$presences = NewModel_PresenceFactory::getPresences();
 
+		$headers = array();
+		foreach(array(
+					Header_Compare::getName(),
+					Header_Handle::getName(),
+					Header_SignOff::getName(),
+					Header_Branding::getName(),
+					Header_TotalRank::getName(),
+					Header_TotalScore::getName(),
+					Header_CurrentAudience::getName(),
+					Header_TargetAudience::getName(),
+					Header_Options::getName()
+				) as $headerName){
+			$headers[] = Header_Factory::getHeader($headerName);
+		}
         $this->view->title = 'Presences';
-        $this->view->titleIcon = Model_Presence::ICON_TYPE;
         $this->view->presences = $presences;
-        $this->view->tableHeaders = self::generateTableHeaders();
-		$this->view->tableMetrics = self::tableMetrics();
-        $this->view->badgeData = Model_Badge::badgesData(true);
+        $this->view->tableHeaders = $headers;
 	}
 
 	/**

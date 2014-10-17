@@ -20,7 +20,8 @@ $.extend(app, {
         barDate: [],
         badges: [],
         groupCharts: [],
-        smallMapsCharts: []
+        smallMapsCharts: [],
+		homeBadge: null
 	},
 	templates: {
 		legendLabel: '<div class="dataset <%=className%>" data-line-id="<%=line_id%>">\
@@ -107,6 +108,10 @@ app.init = {
 
 		'form.uniForm': function ($item) {
 			$item.uniform();
+		},
+
+		'#badge-titles': function ($item) {
+			app.home.setup()
 		},
 
         '.button.compare': function ($button) {

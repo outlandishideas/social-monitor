@@ -262,36 +262,6 @@ h3 {
     text-shadow: -2px -2px rgba(0,0,0,0.2);
 }
 
-span.icon-ok-sign {
-    color: #84af5b;
-}
-
-span.icon-remove-sign {
-    color: #D06959;
-}
-
-#main-header .page-title.with-image img {
-	margin-top: 20px;
-	margin-right: 10px;
-	width: 50px;
-	height: 50px;
-	border: 3px solid #ccc;
-	float: left;
-}
-
-#main-header .page-title.with-subtitle h1 {
-    line-height: 40px;
-    height: 40px;
-}
-#main-header .page-title.with-image h1 {
-    margin-left: 60px;
-}
-
-#main-header .page-title.with-subtitle h2 {
-    margin: 0;
-    margin-left: 60px;
-}
-
 #title-info {
     width: 50%;
     background-color: #e2e2e2;
@@ -506,21 +476,6 @@ table.text {
 
 table.dataTable {
 	margin-top: 0;
-}
-
-table.text th {
-	background: #F5F5F5;
-	font-weight: bold;
-	text-align: left;
-	border-bottom: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-	padding: 10px 8px;
-	vertical-align: middle;
-}
-
-table.text td {
-	padding: 10px 8px;
-    vertical-align: top;
 }
 
 table th.options,
@@ -919,8 +874,6 @@ form.management #assigned {
 #map {
     width: auto;
     position: relative;
-    margin-left: 345px;
-    max-width: 940px;
 }
 
 #map-container {
@@ -1588,28 +1541,46 @@ body {
 }
 
 .bd-btm {
-	border-bottom: 1px solid #44656f;
+	border-bottom: 1px solid #fff;
 }
 
 h2 {
 	font-family: 'Open Sans', sans-serif;
-	color: #fff;
-	color: rgba(255,255,255, 0.5);
-	font-size: 1.2rem;
-	text-transform: uppercase;
-	font-weight: 300;
+	color: #0071bc;
+	font-size: 1.5rem;
+	font-weight: 400;
 	margin: 0;
+	margin-bottom: 1rem;
 	padding: 0.25rem 0;
+	border-bottom: 1px solid #0071bc;
+}
+
+h2.page-title {
+	color: #fff;
+	border-color: #fff;
+	margin-bottom: 2rem;
 }
 
 h3 {
 	font-family: 'Open Sans', sans-serif;
 	color: #fff;
-	color: rgba(255,255,255, 0.5);
-	font-size: 1.1rem;
+	font-size: 1.5rem;
 	font-weight: 300;
 	margin: 0;
 	padding: 0.25rem 0;
+	border-bottom: 1px solid #fff;
+	text-transform: uppercase;
+}
+
+h4 {
+	font-family: 'Open Sans', sans-serif;
+	color: #fff;
+	color: rgba(255,255,255,0.8);
+	font-size: 1rem;
+	font-weight: 300;
+	margin: 0;
+	padding: 0.25rem 0;
+	text-transform: uppercase;
 }
 
 /* Badge CSS */
@@ -1649,17 +1620,14 @@ h3 {
 }
 
 .badge-small .score-value {
-	font-size: 1.1rem;
-	line-height: 1.4;
-	position: absolute;
-	right: 0;
-	top: 5px;
+	font-size: 2rem;
+	margin-bottom: 0.5rem;
 }
 
 .badge-small .score-bar {
 	height: 0.25rem;
 	background: #000;
-	margin-bottom: 0.5rem;
+	margin-bottom: 0.75rem;
 }
 
 .badge-small .score-bar div {
@@ -1685,6 +1653,12 @@ h3 {
 	padding: 0.8rem 0;
 	font-size: 0.8rem;
 	text-overflow: ellipsis
+}
+
+.badge-presences {
+	list-style: none;
+	margin-left: 0;
+	color: #fff;
 }
 
 /* New Pickers */
@@ -1828,3 +1802,104 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 .fa.fa-weibo {
 	color: #e6162d;
 }
+
+/* bc buttons */
+
+.button-bc {
+	display: block;
+	background-color: transparent;
+	border: 1px solid #fff;
+	padding: 0.25rem 1rem;
+	color: #fff;
+	transition: background-color 400ms ease-out, border-color 400ms ease-out;
+}
+
+.button-bc:hover,
+.button-bc.active {
+	color: #fff;
+	background-color: #0071bc;
+	border-color: #0071bc;
+}
+
+.button-bc-bar {
+	margin: 2rem 0;
+}
+
+.button-bc-bar .row {
+	background-color: #000;
+	background-color: rgba(0,0,0,0.5);
+}
+
+.button-bc-bar .inline-list {
+	margin: 1rem 0;
+}
+
+.button-bc-bar .inline-list input {
+	margin: 0;
+	min-width: 20rem;
+	border: 1px solid #fff;
+	padding: 0.25rem 1rem;
+	background-color: #000;
+	background-color: rgba(0,0,0,0.5);
+	font-size: 1rem;
+	height: auto;
+	line-height: 1.6;
+	color: #fff;
+}
+
+/* tables */
+
+table,
+table thead,
+table body,
+table tr td,
+table tr th {
+	background-color: transparent;
+	border-color: transparent;
+}
+
+table thead {
+	border-bottom: 1px solid #fff;
+}
+
+table thead tr th,
+table tbody tr td {
+	color: #fff;
+}
+
+table tbody tr td {
+	text-align: center;
+}
+
+table tbody tr td:nth-child(0n+2),
+table#all-countries tbody tr td:first-child,
+table tbody tr td:last-child {
+	text-align: left;
+}
+
+table tr.even,
+table tr.alt,
+table tr:nth-of-type(even) {
+	background: #000;
+	background: rgba(255,255,255,0.1);
+}
+
+table .fa-circle {
+	color: #D06959;
+}
+
+table .fa-circle.value-ok {
+	color: #FFFF50;
+}
+
+table .fa-circle.value-good {
+	color: #84af5b;
+}
+
+table td a,
+table td a:link,
+table td a:visited,
+table td a:hover {
+	color: #fff;
+}
+

@@ -4,6 +4,7 @@ abstract class Badge_Abstract
 {
 	protected static $name = '';
 	protected static $title = '';
+	protected static $description;
 	protected $db;
 
 	protected $metrics = array();
@@ -51,6 +52,11 @@ abstract class Badge_Abstract
 	public static function getTitle()
 	{
 		return static::$title;
+	}
+
+	public static function getDescription()
+	{
+		return static::$description;
 	}
 
 	public function getMetrics()
@@ -148,5 +154,27 @@ abstract class Badge_Abstract
 			$lastRank = $rank;
 		}
 		return $data;
+	}
+
+	public static function colorize($score)
+	{
+		$colors = array(
+			'grey' => '#d2d2d2',
+			'red' => '#D06959',
+			'green' => '#84af5b',
+			'orange' => '#F1DC63',
+			'yellow' => '#FFFF50'
+		);
+
+		$badges = array(
+			'range' => array(0, 1, 20, 50, 80, 100),
+			'colors' => array($colors['grey'], $colors['red'], $colors['red'], $colors['yellow'], $colors['green'], $colors['green'])
+		);
+
+		$color = $badges['colors'][0];
+		foreach($badges['range'] as $i => $range){
+			if($score >= $range) $color = $badges['colors'][$i];
+		}
+		return $color;
 	}
 }
