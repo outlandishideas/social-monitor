@@ -31,7 +31,7 @@ abstract class Badge_Abstract
 		$start = $range->getBegin($date);
 		foreach ($this->getMetricsWeighting() as $metric => $weight) {
 			$score = Metric_Factory::getMetric($metric)->getScore($presence, $start, $date);
-			if (is_null($score)) continue;
+			if (is_null($score)) return null;
 			$totalScore += ($score * $weight);
 			$totalWeight += $weight;
 		}
