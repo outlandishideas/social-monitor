@@ -54,17 +54,19 @@ class Chart_Compare extends Chart_Abstract {
         //get the number of presences in this data so we can divide by this number later
         $presenceCount = count($this->getPresenceIdsFromData($data));
 
-        $reducedData = array_reduce($data, function($carry, $row){
+        $dataColumns = $this->getDataColumns();
+
+        $reducedData = array_reduce($data, function($carry, $row) use ($dataColumns) {
             $row = (array)$row;
             //seed carry with empty array of columns names => 0
             if(!array_key_exists($row['date'], $carry)) {
                 $carry[$row['date']] = array('date' => $row['date']);
-                foreach($this->getDataColumns() as $colName){
+                foreach($dataColumns as $colName){
                     $carry[$row['date']][$colName] = 0;
                 }
             }
             //add the current rows data if colName exists
-            foreach($this->getDataColumns() as $colName){
+            foreach($dataColumns as $colName){
                 if(array_key_exists($colName, $row) && is_numeric($row[$colName])){
                     $carry[$row['date']][$colName] += $row[$colName];
                 }
@@ -73,7 +75,7 @@ class Chart_Compare extends Chart_Abstract {
         }, array());
 
         foreach($reducedData as &$row){
-            foreach($this->getDataColumns() as $colName){
+            foreach($dataColumns as $colName){
                 $row[$colName] /= $presenceCount;
             }
         }
