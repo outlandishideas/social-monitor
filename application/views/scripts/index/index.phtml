@@ -109,15 +109,17 @@
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
-                            <?php foreach(NewModel_PresenceType::toArray() as $typeName => $name):
-                                /** @var NewModel_PresenceType $type */
-                                $type = NewModel_PresenceType::$typeName(); ?>
-                                <ul class="badge-presences hide-for-small-down" data-<?php echo $type; ?>-presences>
-                                    <?php foreach($group->getPresencesByType($type) as $presence): ?>
-                                        <li><span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getHandle(); ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php endforeach; ?>
+                            <div class="hide-for-small-down">
+                                <?php foreach(NewModel_PresenceType::toArray() as $typeName => $name):
+                                    /** @var NewModel_PresenceType $type */
+                                    $type = NewModel_PresenceType::$typeName(); ?>
+                                    <ul class="badge-presences" data-<?php echo $type; ?>-presences>
+                                        <?php foreach($group->getPresencesByType($type) as $presence): ?>
+                                            <li><span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getHandle(); ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>

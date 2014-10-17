@@ -26,7 +26,19 @@ app.home = {
                 $this.parents('.badge-small')
                     .find('.badge-presences').hide()
                     .filter('[data-'+type+'-presences]').show();
-            });
+            })
+            .end().find('.badge-presences').hide();
+
+        var $badgeDescriptions = $('.badge-description');
+        var height = 0;
+        var $div = null;
+        for (var $i = 0; $i < $badgeDescriptions.length; $i++) {
+            $div = $($badgeDescriptions[$i]);
+            if(height < $div.height()){
+                height = $div.height();
+            }
+        }
+        $badgeDescriptions.css('height', height);
 
         app.home.update()
     },
@@ -67,9 +79,5 @@ app.home = {
             }
 
         });
-
-
-        //$('[data-badge-score]').text(badgeScore + '%');
-        //$('[data-badge-bar]').text(badgeScore + '%');
     }
 }

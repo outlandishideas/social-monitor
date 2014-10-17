@@ -1670,13 +1670,17 @@ h4 {
 }
 
 .badge-presences-buttons li a.active h4,
-.badge-presences-buttons li a.hover h4 {
+.badge-presences-buttons li a:hover h4 {
 	color: #0071bc;
 }
 
 .badge-presences-buttons li a.active .score-value,
-.badge-presences-buttons li a.hover .score-value {
+.badge-presences-buttons li a:hover .score-value {
 	color: #fff;
+}
+
+.badge-descriptions {
+	padding-bottom: 1rem;
 }
 
 
