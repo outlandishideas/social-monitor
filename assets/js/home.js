@@ -15,6 +15,19 @@ app.home = {
                 app.geochart.refreshMap();
             });
 
+        $('.badge-presences-buttons')
+            .on('click', 'li a', function(event){
+                event.preventDefault();
+                var $this = $(this);
+                var type = $(this).attr('href').replace('#','');
+                $this.parents('.badge-presences-buttons')
+                    .find('li a').removeClass('active')
+                    .filter('[href="#' +type+ '"]').addClass('active');
+                $this.parents('.badge-small')
+                    .find('.badge-presences').hide()
+                    .filter('[data-'+type+'-presences]').show();
+            });
+
         app.home.update()
     },
     currentBadge: function(){

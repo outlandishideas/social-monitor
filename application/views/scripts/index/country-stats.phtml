@@ -1,0 +1,44 @@
+<?php
+/** @var Model_Country $this->country */
+$badges = $this->country->getBadges();
+$presences = $this->country->getPresences(); ?>
+<div class="badge-small"
+     data-total="<?php echo round($badges['total']); ?>"
+     data-reach="<?php echo round($badges['reach']); ?>"
+     data-engagement="<?php echo round($badges['engagement']); ?>"
+     data-quality="<?php echo round($badges['quality']); ?>"
+     data-total-color="<?php echo $badges['total_color']; ?>"
+     data-reach-color="<?php echo $badges['reach_color']; ?>"
+     data-engagement-color="<?php echo $badges['engagement_color']; ?>"
+     data-quality-color="<?php echo $badges['quality_color']; ?>">
+    <h3><?php echo $this->country->display_name; ?></h3>
+    <div class="badge-score bd-btm">
+        <h4><span data-badge-title></span> Score</h4>
+        <div class="score-value" data-badge-score></div>
+        <div class="score-bar"><div data-badge-bar></div></div>
+    </div>
+    <div class="bd-btm">
+        <h4>Presences</h4>
+        <div class="score-value"><?php echo count($presences);?></div>
+    </div>
+    <?php foreach(NewModel_PresenceType::toArray() as $name => $typeName) :
+        /** @var NewModel_PresenceType $type */
+        $type = NewModel_PresenceType::$name();
+        $typePresences = $this->country->getPresencesByType($type);
+        if(count($typePresences) > 0) : ?>
+            <div class="bd-btm">
+                <h4><?php echo $type->getTitle(); ?></h4>
+                <ul class="badge-presences">
+                    <?php
+                    /** @var NewModel_Presence $presence */
+                    foreach($presences as $presence):
+                        if($presence->getType() != $type) continue; ?>
+                        <li>
+                            <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getName(); ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif;
+    endforeach; ?>
+</div>
