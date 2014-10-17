@@ -150,7 +150,7 @@ abstract class Badge_Factory
 		foreach ($data as $row) {
 			foreach (self::getBadgeNames() as $badgeType) {
 				if ($badgeType != Badge_Total::getName()) {
-					$row->$badgeType = intval($row->$badgeType);
+					//$row->$badgeType = intval($row->$badgeType);
 					$rank = $badgeType . '_rank';
 					$row->$rank = intval($row->$rank);
 				}
