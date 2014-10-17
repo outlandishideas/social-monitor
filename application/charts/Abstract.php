@@ -28,9 +28,9 @@ abstract class Chart_Abstract {
         return array(
             "bindto" => '#new-chart',
             //this doesn't seem to work
-            "line" => array(
-                "connect_null" => true
-            ),
+            "line_connect_null" => true,
+            "line.connect_null" => true,
+            "line_connectNull" => true,
             "data" => $this->getData($model, $start, $end),
             "axis" => array(
                 "x" => $this->getXAxis(),
