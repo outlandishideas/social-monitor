@@ -21,7 +21,6 @@ $.extend(app, {
         badges: [],
         groupCharts: [],
         smallMapsCharts: [],
-		homeBadge: null
 	},
 	templates: {
 		legendLabel: '<div class="dataset <%=className%>" data-line-id="<%=line_id%>">\
