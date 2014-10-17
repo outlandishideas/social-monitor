@@ -34,7 +34,8 @@
                             /** @var Model_Country $country */
                             foreach($this->smallCountries as $country):
                                 $badges = $country->getBadges(); ?>
-                                <li data-total="<?php echo round($badges['total']); ?>"
+                                <li data-id="<?php echo $country->id; ?>"
+                                    data-total="<?php echo round($badges['total']); ?>"
                                     data-reach="<?php echo round($badges['reach']); ?>"
                                     data-engagement="<?php echo round($badges['engagement']); ?>"
                                     data-quality="<?php echo round($badges['quality']); ?>"
@@ -42,7 +43,7 @@
                                     data-reach-color="<?php echo $badges['reach_color']; ?>"
                                     data-engagement-color="<?php echo $badges['engagement_color']; ?>"
                                     data-quality-color="<?php echo $badges['quality_color']; ?>">
-                                    <?php echo $country->getName(); ?> <span data-badge-score></span>
+                                    <a href="#"><?php echo $country->getName(); ?> <span data-badge-score></span></a>
                                 </li>
                             <?php endforeach; ?>
                         </ul>

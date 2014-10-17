@@ -1956,6 +1956,10 @@ table td a:hover {
 	position: relative;
 }
 
+.country-list li a {
+	color: #fff;
+}
+
 .country-list li span {
 	font-size: 1.5rem;
 	position: absolute;
