@@ -45,7 +45,9 @@ app.newCharts = {
 
         app.api.get(url, params)
             .done(function(response) {
-                app.state.chart = c3.generate(response.data)
+                data = response.data;
+                console.log(data);
+                app.state.chart = c3.generate(data)
             })
             .always(function() {
                 //$('.chart-container').hideLoader();
