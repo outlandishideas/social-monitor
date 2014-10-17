@@ -27,6 +27,7 @@ abstract class Chart_Abstract {
     {
         return array(
             "bindto" => '#new-chart',
+            "connect_null" => true,
             "data" => $this->getData($model, $start, $end),
             "axis" => array(
                 "x" => $this->getXAxis(),
