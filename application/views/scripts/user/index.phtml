@@ -1,6 +1,24 @@
-<?php echo $this->gatekeeper()->filter('<p><a class="button add" href="%url%">Add new</a></p>', array('controller'=>'user', 'action'=>'new'), null, true); ?>
+<?php $button = $this->gatekeeper()->filter('<a class="button-bc" href="%url%">Add new</a>', array('controller'=>'user', 'action'=>'new'), null, true); ?>
+
+<h2 class="page-title">Users</h2>
+
+<?php if($button): ?>
+
+	<div class="button-bc-bar">
+		<div class="row bk-dark">
+			<div class="small-24 columns">
+				<ul class="button-group">
+					<li><?php echo $button; ?></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+<?php endif; ?>
+
 
 <table class="users text">
+	<thead>
 	<tr>
 		<th class="name">Name</th>
 		<th class="email">Email Address</th>
@@ -9,13 +27,15 @@
 		<th class="last-sign-in">Last Sign In</th>
 		<th></th>
 	</tr>
+	</thead>
+	<tbody>
 <?php foreach ($this->users as $user) : ?>
 	<?php
 		/** @var Model_User $user */
 		$userLevel = array_key_exists($user->user_level, $this->userLevels) ? $this->userLevels[$user->user_level] : 'Unknown (' . $user->user_level . ')';
 	?>
 	<tr <?php if ($user->id == $this->user->id) echo 'class="current-user"'; ?>>
-		<td class="name"><?php echo $user->safeName; ?></td>
+		<td class="name left-align"><?php echo $user->safeName; ?></td>
 		<td class="email"><?php echo $user->email; ?></td>
 		<td class="user-level"><?php echo $userLevel; ?></td>
 		<td class="access">
@@ -50,18 +70,23 @@
 			<?php
 				$links = array();
 				if ($this->user->id == $user->id) {
-					$links['- <a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit-self');
+					$links['<a href="%url%"Edit</a>'] = array('controller'=>'user', 'action'=>'edit-self');
 				} else {
-					$links['- <a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit', 'id'=>$user->id);
+					$links['<a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit', 'id'=>$user->id);
 					if (!$user->isManager) {
-						$links['- <a href="%url%">Access Rights</a>'] = array('controller'=>'user', 'action'=>'manage', 'id'=>$user->id);
+						$links['<a href="%url%">Access Rights</a>'] = array('controller'=>'user', 'action'=>'manage', 'id'=>$user->id);
 					}
-					$links['- <a href="%url%" class="autoConfirm">Delete</a>'] = array('controller'=>'user', 'action'=>'delete', 'id'=>$user->id);
+					$links['<a href="%url%" class="autoConfirm">Delete</a>'] = array('controller'=>'user', 'action'=>'delete', 'id'=>$user->id);
 				}
 				$links = $this->gatekeeper()->filterAll($links);
-				echo implode('<br />', $links);
 			?>
+			<ul>
+				<?php foreach($links as $link): ?>
+					<li><?php echo $link; ?></li>
+				<?php endforeach; ?>
+			</ul>
 		</td>
 	</tr>
 <?php endforeach; ?>
+	</tbody>
 </table>

@@ -117,38 +117,6 @@ fieldset {
 	margin: 0;
 }
 
-fieldset ol, fieldset ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-fieldset ul li {
-	clear: left;
-	padding: 2px 0 12px 0;
-}
-
-
-fieldset ul li:last-child {
-	/*padding-bottom: 0px;*/
-}
-
-fieldset ul li label:not(.radio) {
-	font-weight: bold;
-}
-
-fieldset label:not(.radio) {
-	padding: 0;
-	display: block;
-	float: left;
-	width: 8.8em;
-	margin-right: 0.5em;
-}
-
-fieldset input, fieldset select, fieldset textarea {
-	margin: 0;
-}
-
 .site-title-link {
 	float: left;
 }
@@ -1870,7 +1838,14 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	float: none;
 }
 
-.button-bc-bar .button-group input {
+.button-bc-bar .button-group input,
+form input[type="text"],
+form select,
+form select:disabled,
+form select:focus,
+form input[type="text"]:focus,
+form input[type="password"],
+form input[type="password"]:focus {
 	margin: 0;
 	min-width: 20rem;
 	border: 1px solid #fff;
@@ -1881,6 +1856,23 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	height: auto;
 	line-height: 1.6;
 	color: #fff;
+}
+
+form input[type="text"],
+form select,
+form select:disabled,
+form select:focus,
+form input[type="text"]:focus,
+form input[type="password"],
+form input[type="password"]:focus {
+	margin-bottom: 1rem;
+}
+
+form select:focus,
+form input[type="text"]:focus,
+form input[type="password"]:focus {
+	border-color: #0071bc;
+	transition: border-color 200ms ease-in, box-shadow 200ms ease-in;
 }
 
 /* tables */
@@ -1985,5 +1977,21 @@ table td ul li a:hover {
 	right: 0;
 	top: -8px;
 	vertical-align: baseline;
+}
+
+/* form styles */
+
+form select {
+	margin-bottom: 1rem;
+}
+
+form label {
+	font-size: 1rem;
+	color: #fff;
+	margin: 0.5rem 0;
+}
+
+form input {
+
 }
 
