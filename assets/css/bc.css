@@ -1933,3 +1933,34 @@ table td a:hover {
 	color: #fff;
 }
 
+.small-country-list {
+	margin-top: 2rem;
+	border-top: 1px solid #fff;
+}
+
+.small-country-list h4 {
+	margin-bottom: 1rem;
+	
+}
+
+.country-list {
+	list-style: none;
+	color: #fff;
+	margin-left: 0;
+}
+
+.country-list li {
+	border-bottom: 1px solid #fff;
+	clear: both;
+	margin-top: .5rem;
+	position: relative;
+}
+
+.country-list li span {
+	font-size: 1.5rem;
+	position: absolute;
+	right: 0;
+	top: -8px;
+	vertical-align: baseline;
+}
+

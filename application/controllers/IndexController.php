@@ -25,6 +25,12 @@ class IndexController extends GraphingController
 
 		list($mapData, $smallMapData, $groupData) = $this->getCacheableData($dayRange, true);
 
+		$smallCountries = array();
+		foreach(Model_Country::smallCountryCodes() as $code => $country) {
+			$smallCountry = Model_Country::fetchByCountryCode($code);
+			if($smallCountry) $smallCountries[] = $smallCountry;
+		}
+
 		$this->view->mapData = $mapData;
         $this->view->smallMapData = $smallMapData;
 		$this->view->groupData = $groupData;
@@ -34,7 +40,7 @@ class IndexController extends GraphingController
 		$this->view->dayRange = $dayRange;
         $this->view->badgeDescriptions = Model_Badge::$BADGE_DESCRIPTIONS;
 		$this->view->badges = Badge_Factory::getBadges();
-		$this->view->smallCountries = array();
+		$this->view->smallCountries = $smallCountries;
 		$this->view->groups = Model_Group::fetchAll();
 	}
 

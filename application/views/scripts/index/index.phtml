@@ -26,15 +26,28 @@
                 <?php endforeach; ?>
             </div>
             <div class="small-24 columns">
-                <h4>Small Countries</h4>
-                <ul>
-                    <?php
-                    /** @var Model_Country $country */
-                    foreach($this->smallCountries as $country):
-                        $badges = $country->getBadges(); ?>
-                        <li><?php echo $country->getName(); ?> <span data-badge-score></span></li>
-                    <?php endforeach; ?>
-                </ul>
+                <?php if(count($this->smallCountries) > 0) : ?>
+                    <div class="small-country-list">
+                        <h4>Small Countries</h4>
+                        <ul class="country-list">
+                            <?php
+                            /** @var Model_Country $country */
+                            foreach($this->smallCountries as $country):
+                                $badges = $country->getBadges(); ?>
+                                <li data-total="<?php echo round($badges['total']); ?>"
+                                    data-reach="<?php echo round($badges['reach']); ?>"
+                                    data-engagement="<?php echo round($badges['engagement']); ?>"
+                                    data-quality="<?php echo round($badges['quality']); ?>"
+                                    data-total-color="<?php echo $badges['total_color']; ?>"
+                                    data-reach-color="<?php echo $badges['reach_color']; ?>"
+                                    data-engagement-color="<?php echo $badges['engagement_color']; ?>"
+                                    data-quality-color="<?php echo $badges['quality_color']; ?>">
+                                    <?php echo $country->getName(); ?> <span data-badge-score></span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
