@@ -6,7 +6,7 @@
  * Time: 15:37
  */
 
-class Header_QualityScore extends Header_Badges {
+class Header_QualityScore extends Header_BadgeScores {
 
     protected static $name = "quality-score";
     protected $label = "Quality Score";

@@ -10,6 +10,7 @@ class Header_DigitalPopulationHealth extends Header_Abstract {
 
     protected static $name = "digital_population_health";
     protected $label = "Digital Population Health";
+    protected $sort = "data-value-numeric";
     protected $csv = false;
 
     /**
@@ -19,6 +20,11 @@ class Header_DigitalPopulationHealth extends Header_Abstract {
     public function getTableCellValue($model)
     {
         $value = $model->getDigitalPopulationHealth();
-        return is_numeric($value) ? number_format(round($value)) : "N/A";
+        $value = is_numeric($value) ? round($value, 2) : "N/A";
+
+        if(!is_numeric($value)) return "<span data-value='-1'>{$value}</span>";
+
+        $color = Util_Color::getDigitalPopulationHealthColor($value);
+        return "<span style='color:{$color};' data-value='{$value}'>{$value}%<span>";
     }
 }

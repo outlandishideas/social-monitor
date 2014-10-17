@@ -45,7 +45,7 @@ class Model_Country extends Model_Campaign {
         }
         else
         {
-            return 0;
+            return null;
         }
 
     }
@@ -62,7 +62,7 @@ class Model_Country extends Model_Campaign {
         }
         else
         {
-            return 0;
+            return null;
         }
     }
 

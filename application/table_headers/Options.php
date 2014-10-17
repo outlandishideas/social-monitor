@@ -12,7 +12,7 @@ class Header_Options extends Header_Abstract {
     protected $label = "Options";
     protected $sort = null;
     protected $csv = false;
-    protected $width = "350px";
+    protected $width = "150px";
 
     public function getTableCellValue($model)
     {

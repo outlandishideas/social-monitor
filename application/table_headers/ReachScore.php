@@ -6,7 +6,7 @@
  * Time: 15:37
  */
 
-class Header_ReachScore extends Header_Badges {
+class Header_ReachScore extends Header_BadgeScores {
 
     protected static $name = "reach-score";
     protected $label = "Reach Score";

@@ -6,7 +6,7 @@
  * Time: 15:37
  */
 
-class Header_EngagementScore extends Header_Badges {
+class Header_EngagementScore extends Header_BadgeScores {
 
     protected static $name = "engagement-score";
     protected $label = "Engagement Score";

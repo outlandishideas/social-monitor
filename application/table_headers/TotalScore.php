@@ -6,7 +6,7 @@
  * Time: 15:37
  */
 
-class Header_TotalScore extends Header_Badges {
+class Header_TotalScore extends Header_BadgeScores {
 
     protected static $name = "total-score";
     protected $label = "Overall Score";

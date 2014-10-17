@@ -27,6 +27,7 @@ abstract class Chart_Abstract {
     {
         return array(
             "bindto" => '#new-chart',
+            //this doesn't seem to work
             "line" => array(
                 "connect_null" => true
             ),

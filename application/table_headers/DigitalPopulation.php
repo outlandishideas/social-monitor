@@ -10,6 +10,7 @@ class Header_DigitalPopulation extends Header_Abstract {
 
     protected static $name = "digital-population";
     protected $label = "Digital Population";
+    protected $sort = "data-value-numeric";
 
     /**
      * @param Model_Country $model
@@ -18,7 +19,12 @@ class Header_DigitalPopulation extends Header_Abstract {
     public function getTableCellValue($model)
     {
         $value = $model->getDigitalPopulation();
-        return is_numeric($value) ? number_format(round($value)) : "N/A";
+        $value = is_numeric($value) ? $value : "N/A";
+
+        if(!is_numeric($value)) return "<span data-value='-1'>{$value}</span>";
+
+        $number = number_format(round($value));
+        return "<span data-value='{$value}'>{$number}%<span>";
     }
 
 
