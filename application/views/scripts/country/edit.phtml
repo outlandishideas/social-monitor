@@ -1,64 +1,106 @@
+
+<h2 class="page-title">Edit Country</h2>
+
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button" href="%url%"><span class="icon-eye-open icon-large"></span> View Country</a>' => array('controller'=>'country', 'action'=>'view', 'id'=>$this->editingCountry->id),
-	'<a class="button" href="%url%"><span class="icon-large icon-tasks"></span> Manage Presences</a>' => array('controller'=>'country', 'action'=>'manage', 'id'=>$this->editingCountry->id),
-    '<a href="%url%" class="button remove"><span class="icon-remove icon-large"></span> Delete</a>' => array('controller'=>'country', 'action'=>'delete', 'id'=>$this->editingCountry->id)
+	'<a class="button-bc" href="%url%">View Country</a>' => array('controller'=>'country', 'action'=>'view', 'id'=>$this->editingCountry->id),
+	'<a class="button-bc" href="%url%">Manage Presences</a>' => array('controller'=>'country', 'action'=>'manage', 'id'=>$this->editingCountry->id),
+    '<a href="%url%" class="button-bc">Delete</a>' => array('controller'=>'country', 'action'=>'delete', 'id'=>$this->editingCountry->id)
 ));
-if ($buttons && $this->showButtons) :
-?>
-<p>
-	<?php echo implode('', $buttons); ?>
-</p>
+if ($buttons && $this->showButtons) : ?>
+	<div class="button-bc-bar">
+		<div class="row bk-dark">
+			<div class="small-24 columns">
+				<ul class="button-group">
+				<?php foreach($buttons as $button) : ?>
+					<li><?php echo $button; ?></li>
+				<?php endforeach; ?>
+				</ul>
+			</div>
+		</div>
+	</div>
 <?php endif; ?>
 
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-country">
+<form method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-country">
 
-	<fieldset class="inlineLabels">
-		<legend>Country details</legend>
-		<div class="ctrlHolder">
+	<h2>Country details</h2>
+
+	<div class="row">
+		<div class="small-24 medium-8 large-4 columns">
 			<label for="country" class="requiredField">
 				Country<span class="asteriskField">*</span>
 			</label>
+		</div>
+		<div class="small-24 medium-12 large-8 end columns">
 			<select name="country" id="country" class="selectInput">
 				<option value="">--Select--</option>
 				<?php foreach ($this->countryCodes as $code => $name) : ?>
-				<option value="<?php echo $code; ?>" <?php if ($this->editingCountry->country == $code) echo 'selected'; ?>><?php echo $name; ?></option>
+					<option value="<?php echo $code; ?>" <?php if ($this->editingCountry->country == $code) echo 'selected'; ?>><?php echo $name; ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>
-		<div class="ctrlHolder">
+
+	</div>
+
+	<div class="row">
+		<div class="small-24 medium-8 large-4 columns">
 			<label for="display_name" class="requiredField">
 				Display name<span class="asteriskField">*</span>
 			</label>
-			<input name="display_name" value="<?php echo htmlspecialchars($this->editingCountry->display_name); ?>" class="textInput"
-			       type="text" id="display_name">
 		</div>
-		<div class="ctrlHolder">
+		<div class="small-24 medium-12 large-8 end columns">
+			<input name="display_name" value="<?php echo htmlspecialchars($this->editingCountry->display_name); ?>" class="textInput"
+				   type="text" id="display_name">
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="small-24 medium-8 large-4 columns">
 			<label for="audience">
 				Available audience size
 			</label>
-			<input name="audience" value="<?php echo htmlspecialchars($this->editingCountry->audience); ?>" class="textInput"
-			       type="text" id="audience">
 		</div>
-        <div class="ctrlHolder">
-            <label for="population">
-                Country population
-            </label>
-            <input name="population" value="<?php echo htmlspecialchars($this->editingCountry->population); ?>" class="textInput"
-                   type="text" id="population">
-        </div>
-        <div class="ctrlHolder">
-            <label for="facebook_pop">
-                Internet Penetration
-            </label>
-            <input name="penetration" value="<?php echo htmlspecialchars($this->editingCountry->penetration); ?>" class="textInput"
-                   type="text" id="penetration"> %
-        </div>
-	</fieldset>
+		<div class="small-24 medium-12 large-8 end columns">
+			<input name="audience" value="<?php echo htmlspecialchars($this->editingCountry->audience); ?>" class="textInput"
+				   type="text" id="audience">
+		</div>
+	</div>
 
-	<div class="buttonHolder">
-		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'country', 'action'=>'index'), null, true); ?>
-		<input type="submit" value="Save" class="primaryAction">
+	<div class="row">
+		<div class="small-24 medium-8 large-4 columns">
+			<label for="population">
+				Country population
+			</label>
+		</div>
+		<div class="small-24 medium-12 large-8 end columns">
+			<input name="population" value="<?php echo htmlspecialchars($this->editingCountry->population); ?>" class="textInput"
+				   type="text" id="population">
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="small-24 medium-8 large-4 columns">
+			<label for="facebook_pop">
+				Internet Penetration
+			</label>
+		</div>
+		<div class="small-24 medium-12 large-8 end columns">
+			<input name="penetration" value="<?php echo htmlspecialchars($this->editingCountry->penetration); ?>" class="textInput"
+				   type="text" id="penetration"> %
+		</div>
+	</div>
+
+</fieldset>
+
+	<div class="button-bc-bar">
+		<div class="row bk-dark">
+			<div class="small-24 columns">
+				<ul class="button-group">
+					<li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'country', 'action'=>'index'), null, true); ?></li>
+					<li><button type="submit" class="button-bc">Save</li>
+				</ul>
+			</div>
+		</div>
 	</div>
 </form>
 

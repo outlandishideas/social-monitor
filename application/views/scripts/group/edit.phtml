@@ -1,34 +1,55 @@
+<h2 class="page-title">Edit SBU</h2>
+
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button" href="%url%"><span class="icon-eye-open icon-large"></span> View Group</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$this->editingGroup->id),
-	'<a class="button" href="%url%"><span class="icon-tasks icon-large"></span> Manage Presences</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$this->editingGroup->id),
-    '<a href="%url%" class="button remove"><span class="icon-remove icon-large"></span> Delete</a>' => array('controller'=>'group', 'action'=>'delete', 'id'=>$this->editingGroup->id)
+	'<a class="button-bc" href="%url%"><span class="icon-eye-open icon-large"></span> View Group</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$this->editingGroup->id),
+	'<a class="button-bc" href="%url%"><span class="icon-tasks icon-large"></span> Manage Presences</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$this->editingGroup->id),
+    '<a href="%url%" class="button-bc"><span class="icon-remove icon-large"></span> Delete</a>' => array('controller'=>'group', 'action'=>'delete', 'id'=>$this->editingGroup->id)
 ));
-if ($buttons && $this->showButtons) :
-?>
-<p>
-	<?php echo implode('', $buttons); ?>
-</p>
+if ($buttons && $this->showButtons) : ?>
+    <div class="button-bc-bar">
+        <div class="row bk-dark">
+            <div class="small-24 columns">
+                <ul class="button-group">
+                    <?php foreach($buttons as $button) : ?>
+                        <li><?php echo $button; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+    </div>
 <?php endif; ?>
 
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-group">
+<form method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-group">
 
 	<fieldset class="inlineLabels">
-		<legend>SBU details</legend>
-        <div class="ctrlHolder">
-            <label for="display_name" class="requiredField">
-                Display name<span class="asteriskField">*</span>
-            </label>
-            <input name="display_name" value="<?php echo htmlspecialchars($this->editingGroup->display_name); ?>" class="textInput"
-                   type="text" id="display_name">
+		<h2>SBU details</h2>
+
+
+        <div class="row">
+            <div class="small-24 medium-8 large-4 columns">
+                <label for="display_name" class="requiredField">
+                    Display name<span class="asteriskField">*</span>
+                </label>
+            </div>
+            <div class="small-24 medium-12 large-8 end columns">
+                <input name="display_name" value="<?php echo htmlspecialchars($this->editingGroup->display_name); ?>" class="textInput"
+                       type="text" id="display_name">
+            </div>
         </div>
-        <div class="ctrlHolder">
-            <label for="audience">
-                Available audience size
-            </label>
-            <input name="audience" value="<?php echo htmlspecialchars($this->editingGroup->audience); ?>" class="textInput"
-                   type="text" id="audience">
+
+        <div class="row">
+            <div class="small-24 medium-8 large-4 columns">
+                <label for="audience">
+                    Available audience size
+                </label>
+            </div>
+            <div class="small-24 medium-12 large-8 end columns">
+                <input name="audience" value="<?php echo htmlspecialchars($this->editingGroup->audience); ?>" class="textInput"
+                       type="text" id="audience">
+            </div>
         </div>
+
 	</fieldset>
 
     <?php if(!empty($this->presences)) : ?>
@@ -49,9 +70,15 @@ if ($buttons && $this->showButtons) :
 
     <input name="is_country" value="0" type="hidden" id="is_country">
 
-	<div class="buttonHolder">
-		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?>
-		<input type="submit" value="Save" class="primaryAction">
-	</div>
+    <div class="button-bc-bar">
+        <div class="row bk-dark">
+            <div class="small-24 columns">
+                <ul class="button-group">
+                    <li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?></li>
+                    <li><button type="submit" class="button-bc">Save</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </form>
 
