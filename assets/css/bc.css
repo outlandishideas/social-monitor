@@ -1661,6 +1661,30 @@ h4 {
 	color: #fff;
 }
 
+.badge-presences-buttons {
+	margin-bottom: 1rem;
+}
+
+.badge-presences-buttons [class*="block-grid-"] > li {
+	padding: 0.5rem 0.625rem;
+}
+
+.badge-presences-buttons li a.active h4,
+.badge-presences-buttons li a:hover h4 {
+	color: #0071bc;
+}
+
+.badge-presences-buttons li a.active .score-value,
+.badge-presences-buttons li a:hover .score-value {
+	color: #fff;
+}
+
+.badge-descriptions {
+	padding-bottom: 1rem;
+}
+
+
+
 /* New Pickers */
 
 
@@ -1830,8 +1854,14 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	background-color: rgba(0,0,0,0.5);
 }
 
-.button-bc-bar .inline-list {
+.button-bc-bar .button-group {
 	margin: 1rem 0;
+	text-align: center;
+}
+
+.button-bc-bar .button-group > li {
+	margin: 0 0.5rem;
+	float: none;
 }
 
 .button-bc-bar .inline-list input {

@@ -1,6 +1,6 @@
 <h2 class="page-title">Social Media Monitor</h2>
 
-<div class="row">
+<div class="row hide-for-small-down">
     <div class="small-24 medium-8 columns">
         <p>Choose from either Overall, Reach, Engagement or Quality to see the health of each country and SBU.</p>
     </div>
@@ -14,9 +14,9 @@
 
 <h2 data-badge-title></h2>
 <div class="row">
-    <div class="small-24 large-5 columns">
+    <div class="small-24 large-5 columns hide-for-small-down">
         <div class="row">
-            <div class="small-12 large-24 columns">
+            <div class="small-24 columns">
                 <?php
                 /** @var Badge_Abstract $badge */
                 foreach($this->badges as $badge): ?>
@@ -25,7 +25,7 @@
                     </div>
                 <?php endforeach; ?>
             </div>
-            <div class="small-12 large-24 columns">
+            <div class="small-24 columns">
                 <h4>Small Countries</h4>
                 <ul>
                     <?php
@@ -40,60 +40,16 @@
     </div>
     <div class="small-24 large-14 columns">
         <div id="map"><div id="geo-map"></div></div>
-    </div><?php
-    /** @var Model_Country $country */
-    $country = $this->countries[0];
-    $badges = $country->getBadges();
-    $presences = $country->getPresences(); ?>
+    </div>
     <div class="small-24 large-5 columns">
-        <div class="badge-small"
-             data-total="<?php echo round($badges['total']); ?>"
-             data-reach="<?php echo round($badges['reach']); ?>"
-             data-engagement="<?php echo round($badges['engagement']); ?>"
-             data-quality="<?php echo round($badges['quality']); ?>"
-             data-total-color="<?php echo $badges['total_color']; ?>"
-             data-reach-color="<?php echo $badges['reach_color']; ?>"
-             data-engagement-color="<?php echo $badges['engagement_color']; ?>"
-             data-quality-color="<?php echo $badges['quality_color']; ?>">
-            <h3><?php echo $country->display_name; ?></h3>
-            <div class="badge-score bd-btm">
-                <h4><span data-badge-title></span> Score</h4>
-                <div class="score-value" data-badge-score>63%</div>
-                <div class="score-bar"><div data-badge-bar></div></div>
-            </div>
-            <div class="bd-btm">
-                <h4>Presences</h4>
-                <div class="score-value"><?php echo count($presences);?></div>
-            </div>
-            <?php foreach(NewModel_PresenceType::toArray() as $name => $typeName) :
-                /** @var NewModel_PresenceType $type */
-                $type = NewModel_PresenceType::$name();
-                $typePresences = $country->getPresencesByType($type);
-                if(count($typePresences) > 0) : ?>
-                    <div class="bd-btm">
-                        <h4><?php echo $type->getTitle(); ?></h4>
-                        <ul class="badge-presences">
-                            <?php
-                            /** @var NewModel_Presence $presence */
-                            foreach($presences as $presence):
-                                if($presence->getType() != $type) continue; ?>
-                                <li>
-                                    <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getName(); ?>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                <?php endif;
-            endforeach; ?>
-        </div>
-
+        <div id="country-stats"></div>
     </div>
 </div>
 
 <div class="button-bc-bar">
     <div class="row">
         <div class="small-24 columns">
-            <ul class="inline-list badge-buttons">
+            <ul class="button-group stack-for-small badge-buttons">
                 <?php
                 /** @var Badge_Abstract $badge */
                 foreach($this->badges as $badge): ?>
@@ -112,42 +68,58 @@
                 <?php
                 /** @var Model_Group $group */
                 foreach($this->groups as $group):
-                    $badges = $group->getBadges(); ?>
+                    $badges = $group->getBadges();
+                    $presences = $group->getPresences(); ?>
                     <div class="small-24 large-8 columns">
                         <div class="badge-small"
                              data-total="<?php echo round($badges['total']); ?>"
                              data-reach="<?php echo round($badges['reach']); ?>"
                              data-engagement="<?php echo round($badges['engagement']); ?>"
                              data-quality="<?php echo round($badges['quality']); ?>"
-                             data-total-color="<?php echo round($badges['total_color']); ?>"
-                             data-reach-color="<?php echo round($badges['reach_color']); ?>"
-                             data-engagement-color="<?php echo round($badges['engagement_color']); ?>"
-                             data-quality-color="<?php echo round($badges['quality_color']); ?>">
+                             data-total-color="<?php echo $badges['total_color']; ?>"
+                             data-reach-color="<?php echo $badges['reach_color']; ?>"
+                             data-engagement-color="<?php echo $badges['engagement_color']; ?>"
+                             data-quality-color="<?php echo $badges['quality_color']; ?>">
                             <h3><?php echo $group->display_name; ?></h3>
-                            <h4><span data-badge-title></span> Score</h4>
-                            <div class="score-value" data-badge-score></div>
-                            <div class="score-bar">
-                                <div data-badge-bar></div>
-                            </div>
-                            <div class="row">
-                                <div class="small-24 large-8 columns">
-                                    <h4>Presences</h4>
-                                    <div class="score-value">26</div>
-                                </div>
-                                <div class="small-24 large-8 columns">
-                                    <h4>Twitter</h4>
-                                    <div class="score-value">13</div>
-                                </div>
-                                <div class="small-24 large-8 columns">
-                                    <h4>Facebook</h4>
-                                    <div class="score-value">13</div>
+                            <div class="badge-score bd-btm">
+                                <h4><span data-badge-title></span> Score</h4>
+                                <div class="score-value" data-badge-score></div>
+                                <div class="score-bar">
+                                    <div data-badge-bar></div>
                                 </div>
                             </div>
-                            <ul class="presence-list">
-                                <?php foreach($group->presences as $presence): ?>
-                                    <li><span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getHandle(); ?></li>
+                            <div class="bd-btm badge-presences-buttons">
+                                <ul class="small-block-grid-3">
+                                    <li>
+                                        <h4>Presences</h4>
+                                        <div class="score-value"><?php echo count($presences) ?></div>
+                                    </li>
+                                    <?php
+                                    foreach(NewModel_PresenceType::toArray() as $typeName => $name):
+                                        /** @var NewModel_PresenceType $type */
+                                        $type = NewModel_PresenceType::$typeName();
+                                        $count = count($group->getPresencesByType($type));
+                                        if($count < 1) continue; ?>
+                                        <li>
+                                            <a href="#<?php echo $type; ?>">
+                                                <h4><?php echo $type->getTitle(); ?></h4>
+                                                <div class="score-value"><?php echo $count; ?></div>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                            <div class="hide-for-small-down">
+                                <?php foreach(NewModel_PresenceType::toArray() as $typeName => $name):
+                                    /** @var NewModel_PresenceType $type */
+                                    $type = NewModel_PresenceType::$typeName(); ?>
+                                    <ul class="badge-presences" data-<?php echo $type; ?>-presences>
+                                        <?php foreach($group->getPresencesByType($type) as $presence): ?>
+                                            <li><span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getHandle(); ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
                                 <?php endforeach; ?>
-                            </ul>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>

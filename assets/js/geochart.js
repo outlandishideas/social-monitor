@@ -195,19 +195,11 @@ app.geochart = {
 	 * @param type country, group or region
 	 */
 	loadCampaignStats: function(id, type) {
-		var $mapSidebar = $('#map-sidebar');
-		var $loading = $mapSidebar.find('.loading');
-		$loading.show();
-		$.get('index/campaign-stats/', {id: id, model: type, metric: app.home.currentBadge()})
-			.done(function(data) {
-				var $campaign = $(data);
-				$campaign.data('id', id);
-                $mapSidebar.find('.country').empty().append($campaign).show();
-			})
-			.always(function() {
-				$loading.hide();
-				$mapSidebar.find('.desc-box').addClass('hide');
-			});
+		var $countryStats = $('#country-stats');
+		$countryStats.load('index/country-stats/id/' + id, function(event){
+			app.home.update();
+		});
+
 	},
 	/**
 	 * Creates the data structure used by the geochart.

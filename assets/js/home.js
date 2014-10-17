@@ -15,6 +15,31 @@ app.home = {
                 app.geochart.refreshMap();
             });
 
+        $('.badge-presences-buttons')
+            .on('click', 'li a', function(event){
+                event.preventDefault();
+                var $this = $(this);
+                var type = $(this).attr('href').replace('#','');
+                $this.parents('.badge-presences-buttons')
+                    .find('li a').removeClass('active')
+                    .filter('[href="#' +type+ '"]').addClass('active');
+                $this.parents('.badge-small')
+                    .find('.badge-presences').hide()
+                    .filter('[data-'+type+'-presences]').show();
+            })
+            .end().find('.badge-presences').hide();
+
+        var $badgeDescriptions = $('.badge-description');
+        var height = 0;
+        var $div = null;
+        for (var $i = 0; $i < $badgeDescriptions.length; $i++) {
+            $div = $($badgeDescriptions[$i]);
+            if(height < $div.height()){
+                height = $div.height();
+            }
+        }
+        $badgeDescriptions.css('height', height);
+
         app.home.update()
     },
     currentBadge: function(){
@@ -54,9 +79,5 @@ app.home = {
             }
 
         });
-
-
-        //$('[data-badge-score]').text(badgeScore + '%');
-        //$('[data-badge-bar]').text(badgeScore + '%');
     }
 }
