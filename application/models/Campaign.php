@@ -97,6 +97,13 @@ class Model_Campaign extends Model_Base {
 		return $this->presences;
 	}
 
+	public function getPresencesByType(NewModel_PresenceType $type){
+		$presences = $this->getPresences();
+		return array_filter($presences, function(NewModel_Presence $a) use ($type) {
+			return $a->getType() == $type;
+		});
+	}
+
 	function assignPresences($ids) {
 		$this->_db->prepare('DELETE FROM campaign_presences WHERE campaign_id = :cid')->execute(array(':cid'=>$this->id));
 		if ($ids) {
@@ -223,6 +230,7 @@ class Model_Campaign extends Model_Base {
 	public function getBadges()
 	{
 		return $this->getAllBadges($this->id);
+
 	}
 
 	public function getBadgeHistory(DateTime $start, DateTime $end)
@@ -276,6 +284,8 @@ class Model_Campaign extends Model_Base {
 			}
 
 			foreach($badgeNames as $name){
+
+
 				uasort($sortedData, function($a, $b) use ($name) {
 					if($a[$name] == $b[$name]) return 0;
 					return $a[$name] > $b[$name] ? -1 : 1;
@@ -284,6 +294,13 @@ class Model_Campaign extends Model_Base {
 				$lastRank = null;
 				$i = 0;
 				foreach($sortedData as &$row) {
+
+					//colorize
+					if (array_key_exists($name, $row)){
+						$row[$name . '_color'] = Badge_Abstract::colorize($row[$name]);
+					}
+
+					//rank
 					if ($row[$name] == $lastScore){
 						$rank = $lastRank;
 					} else {

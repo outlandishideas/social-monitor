@@ -12,12 +12,16 @@ app.home = {
                 event.preventDefault();
                 window.location.hash = $(this).attr('href');
                 app.home.update();
+                app.geochart.refreshMap();
             });
 
         app.home.update()
     },
+    currentBadge: function(){
+        return window.location.hash.replace("#", "");
+    },
     update: function(){
-        var badge = window.location.hash.replace("#", "");
+        var badge = app.home.currentBadge();
         if(!badge){
             badge = "total";
         }
@@ -39,8 +43,15 @@ app.home = {
         $('[data-' + badge + ']').each(function(){
             var $this = $(this);
             var score = $this.data(badge);
-            $this.find('[data-badge-score]').text(score + '%');
-            $this.find('[data-badge-bar]').css('width', score + '%').css('background-color', '#fff');
+            var color = $this.data(badge + '-color');
+            var $score = $this.find('[data-badge-score]');
+            var $bar = $this.find('[data-badge-bar]');
+            $score.text(score + '%').css('color', '#d2d2d2');
+            $bar.css('width', score + '%').css('background-color', '#d2d2d2');
+            if(color) {
+                $score.css('color', color);
+                $bar.css('background-color', color);
+            }
 
         });
 

@@ -14,7 +14,7 @@
 
 <h2 data-badge-title></h2>
 <div class="row">
-    <div class="small-24 large-6 columns">
+    <div class="small-24 large-5 columns">
         <div class="row">
             <div class="small-12 large-24 columns">
                 <?php
@@ -38,19 +38,23 @@
             </div>
         </div>
     </div>
-    <div class="small-24 large-12 columns">
-<!--        <div id="map"></div>-->
+    <div class="small-24 large-14 columns">
+        <div id="map"><div id="geo-map"></div></div>
     </div><?php
     /** @var Model_Country $country */
     $country = $this->countries[0];
     $badges = $country->getBadges();
     $presences = $country->getPresences(); ?>
-    <div class="small-24 large-6 columns">
+    <div class="small-24 large-5 columns">
         <div class="badge-small"
              data-total="<?php echo round($badges['total']); ?>"
              data-reach="<?php echo round($badges['reach']); ?>"
              data-engagement="<?php echo round($badges['engagement']); ?>"
-             data-quality="<?php echo round($badges['quality']); ?>">
+             data-quality="<?php echo round($badges['quality']); ?>"
+             data-total-color="<?php echo $badges['total_color']; ?>"
+             data-reach-color="<?php echo $badges['reach_color']; ?>"
+             data-engagement-color="<?php echo $badges['engagement_color']; ?>"
+             data-quality-color="<?php echo $badges['quality_color']; ?>">
             <h3><?php echo $country->display_name; ?></h3>
             <div class="badge-score bd-btm">
                 <h4><span data-badge-title></span> Score</h4>
@@ -61,32 +65,26 @@
                 <h4>Presences</h4>
                 <div class="score-value"><?php echo count($presences);?></div>
             </div>
-            <div class="bd-btm">
-                <h4>Twitter</h4>
-                <ul class="badge-presences">
-                    <?php
-                    /** @var NewModel_Presence $presence */
-                    foreach($presences as $presence):
-                        if($presence->getType() != NewModel_PresenceType::TWITTER) continue; ?>
-                        <li>
-                            <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getName(); ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-            <div>
-                <h4>Facebook</h4>
-                <ul class="badge-presences">
-                    <?php
-                    /** @var NewModel_Presence $presence */
-                    foreach($presences as $presence):
-                        if($presence->getType() != NewModel_PresenceType::FACEBOOK) continue; ?>
-                        <li>
-                            <span class="<?php echo $presence->getPresenceSign(); ?> fa-lg fa-fw"></span> <?php echo $presence->getName(); ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
+            <?php foreach(NewModel_PresenceType::toArray() as $name => $typeName) :
+                /** @var NewModel_PresenceType $type */
+                $type = NewModel_PresenceType::$name();
+                $typePresences = $country->getPresencesByType($type);
+                if(count($typePresences) > 0) : ?>
+                    <div class="bd-btm">
+                        <h4><?php echo $type->getTitle(); ?></h4>
+                        <ul class="badge-presences">
+                            <?php
+                            /** @var NewModel_Presence $presence */
+                            foreach($presences as $presence):
+                                if($presence->getType() != $type) continue; ?>
+                                <li>
+                                    <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getName(); ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif;
+            endforeach; ?>
         </div>
 
     </div>
@@ -120,7 +118,11 @@
                              data-total="<?php echo round($badges['total']); ?>"
                              data-reach="<?php echo round($badges['reach']); ?>"
                              data-engagement="<?php echo round($badges['engagement']); ?>"
-                             data-quality="<?php echo round($badges['quality']); ?>">
+                             data-quality="<?php echo round($badges['quality']); ?>"
+                             data-total-color="<?php echo round($badges['total_color']); ?>"
+                             data-reach-color="<?php echo round($badges['reach_color']); ?>"
+                             data-engagement-color="<?php echo round($badges['engagement_color']); ?>"
+                             data-quality-color="<?php echo round($badges['quality_color']); ?>">
                             <h3><?php echo $group->display_name; ?></h3>
                             <h4><span data-badge-title></span> Score</h4>
                             <div class="score-value" data-badge-score></div>
@@ -159,3 +161,10 @@
      data-quality-title="<?php echo $this->badges['quality']->getTitle(); ?>"
      data-reach-title="<?php echo $this->badges['reach']->getTitle(); ?>"
      data-engagement-title="<?php echo $this->badges['engagement']->getTitle(); ?>"></div>
+
+<script type='text/javascript' src='https://www.google.com/jsapi'></script>
+<script type='text/javascript'>
+    var mapData = <?php echo json_encode($this->mapData); ?>;
+    var smallMapData = <?php echo json_encode($this->smallMapData); ?>;
+    var groupData = <?php echo json_encode($this->groupData); ?>;
+</script>

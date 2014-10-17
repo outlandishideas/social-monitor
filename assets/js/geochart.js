@@ -31,7 +31,9 @@ app.geochart = {
 			app.geochart.map = new google.visualization.GeoChart(document.getElementById('geo-map'));
 			app.geochart.map.options = {
                 datalessRegionColor: '#D5D5D5',
-                colorAxis: {}
+                colorAxis: {},
+				keepAspectRatio: true,
+				backgroundColor: "transparent"
             };
 			google.visualization.events.addListener(app.geochart.map, 'select', app.geochart.mapClickHandler);
 
@@ -115,7 +117,7 @@ app.geochart = {
 	},
 	refreshCampaigns: function(campaigns) {
 		var day = app.geochart.currentDay();
-		var metric = app.geochart.currentMetric();
+		var metric = app.home.currentBadge();
 
 		for(var i in campaigns){
 			var g = campaigns[i];
@@ -130,9 +132,6 @@ app.geochart = {
 				.find('.score').empty().append(score);
 		}
 	},
-	currentMetric:function () {
-		return $('#map-tabs').find('li.active').data('val');
-	},
 	currentDay:function () {
 		var day = $('#slider').data('val');
 		if(typeof day == 'undefined'){
@@ -145,7 +144,7 @@ app.geochart = {
 	 * Changes the view of the data used by the geochart
 	 */
 	refreshMap:function () {
-		var metric = app.geochart.metrics[app.geochart.currentMetric()];
+		var metric = app.geochart.metrics[app.home.currentBadge()];
 		var day = app.geochart.currentDay();
 		app.geochart.map.options.colorAxis.values = metric.range;
 		app.geochart.map.options.colorAxis.colors = metric.colors;
@@ -199,7 +198,7 @@ app.geochart = {
 		var $mapSidebar = $('#map-sidebar');
 		var $loading = $mapSidebar.find('.loading');
 		$loading.show();
-		$.get('index/campaign-stats/', {id: id, model: type, metric: app.geochart.currentMetric()})
+		$.get('index/campaign-stats/', {id: id, model: type, metric: app.home.currentBadge()})
 			.done(function(data) {
 				var $campaign = $(data);
 				$campaign.data('id', id);
