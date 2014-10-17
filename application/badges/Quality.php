@@ -4,12 +4,15 @@ class Badge_Quality extends Badge_Abstract
 {
 	protected static $name = 'quality';
 	protected static $title = 'Quality';
-	protected static $description = '<p>The overall score KPI provides an overall score for how well a social media presence, country or SBU is doing in the other three KPIs. The score combines the total score of the following three KPIs:</p>
-                <ul>
-                    <li>Reach KPI</li>
-                    <li>Engagement KPI</li>
-                    <li>Quality KPI</li>
-                </ul>';
+	protected static $description = '<p>The Quality Badge provides an overall score for the quality of the posts produced by the presence or presences in a Country or SBU. This score combines the following metrics:</p>
+						<ul>
+							<li>The average number of posts / tweets per day.</li>
+							<li>The average number of links per day.</li>
+							<li>The average number of likes / retweets per post / tweet.</li>
+							<li>The Sign Off status of presence.</li>
+							<li>The Branding status of the presence.</li>
+							<li>The number of relevant posts made each day.</li>
+						</ul>';
 	
 	protected $metrics = array(
 		"Metric_SignOff",

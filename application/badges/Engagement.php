@@ -4,12 +4,13 @@ class Badge_Engagement extends Badge_Abstract
 {
 	protected static $name = 'engagement';
 	protected static $title = 'Engagement';
-	protected static $description = '<p>The overall score KPI provides an overall score for how well a social media presence, country or SBU is doing in the other three KPIs. The score combines the total score of the following three KPIs:</p>
-                <ul>
-                    <li>Reach KPI</li>
-                    <li>Engagement KPI</li>
-                    <li>Quality KPI</li>
-                </ul>';
+	protected static $description = '<p>The Engagement Badge provides an overall score for how well the presence, country or SBU engages with its audience. This score combines the following metrics:</p>
+						<ul>
+							<li>The ratio of replies by the presence owner to the number of posts / tweets by others.</li>
+							<li>The average time it takes to reply to a post / tweet.</li>
+							<li>The Klout Score for this presence (Twitter Only).</li>
+							<li>The Facebook Engagement score for this presence (Facebook Only).</li>
+						</ul>';
 
 	protected $metrics = array(
 		"Metric_Klout",
