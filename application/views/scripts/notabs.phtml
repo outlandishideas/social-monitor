@@ -4,7 +4,8 @@
 	<meta charset="utf-8">
 	<title>British Council :: <?php echo strip_tags($this->title); ?></title>
 	<link rel="stylesheet" href="<?php echo $this->baseUrl('assets//fonts/proxima-nova-fontfacekit/stylesheet.css'); ?>">
-	<link href="<?php echo $this->cacheBust('assets/css/normalize.css'); ?>" rel="stylesheet" type="text/css">
+	<link href="<?php echo $this->cacheBust('assets/lib/foundation/css/normalize.css'); ?>" rel="stylesheet" type="text/css">
+	<link href="<?php echo $this->cacheBust('assets/lib/foundation/css/foundation.css'); ?>" rel="stylesheet" type="text/css">
 	<link href="<?php echo $this->cacheBust('assets/lib/jquery/smoothness/jquery-ui-1.8.17.custom.css'); ?>" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $this->cacheBust('assets/css/uni-form.css'); ?>" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $this->cacheBust('assets/css/bc.uni-form.css'); ?>" rel="stylesheet" type="text/css" />
@@ -12,10 +13,15 @@
 </head>
 <body class="<?php echo $this->bodyClass; ?>">
 
-<div id="loginWrapper">
-<?php echo $this->FlashMessages(); ?>
-<?php echo $this->layout()->content; ?>
+<div class="row">
+    <div class="small-24 medium-16 large-8 medium-centered columns">
+        <div id="loginWrapper">
+            <?php echo $this->FlashMessages(); ?>
+            <?php echo $this->layout()->content; ?>
+        </div>
+    </div>
 </div>
+
 
 </body>
 </html>

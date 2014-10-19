@@ -43,11 +43,7 @@ abbr {
 }
 
 #loginWrapper {
-	margin: 100px auto 0;
-	width: 325px;
-	background: #eee;
-	padding: 20px;
-	border: 10px solid #fff;
+	margin-top: 100px;
     position: relative;
 }
 

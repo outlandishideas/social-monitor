@@ -1,24 +1,29 @@
 <div class="login-title">
     <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>" class="site-title-link"><div class="site-title"><span>British Council Social Media Monitor</span></div></a>
 </div>
-<h1>Login</h1>
+<h2 class="page-title">Login</h2>
 <form method="post" action="<?php echo $this->url(array('controller'=>'user', 'action'=>'login')); ?>">
 	<input type="hidden" name="redirect_to" value="<?php echo $this->redirect_to; ?>" />
 	<fieldset>
-		<ul>
-			<li>
-				<label for="username">Name/Email</label>
-				<input id="username" name="username" type="text" size="26">
-			</li>
-			<li>
-				<label for="password">Password</label>
-				<input id="password" name="password" type="password" size="26">
-			</li>
-			<li class="button-right">
-				<a href="<?php echo $this->url(array('controller'=>'user', 'action'=>'forgotten'), null, true); ?>">Forgot password?</a>
-				<input type="submit" value="Log in" class="button add" />
-			</li>
-		</ul>
+		<div>
+            <label for="username">Name/Email</label>
+            <input id="username" name="username" type="text" size="26">
+		</div>
+        <div>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" size="26">
+        </div>
 	</fieldset>
+
+    <div class="button-bc-bar">
+        <div class="row bk-dark">
+            <div class="small-24 columns">
+                <ul class="button-group">
+                    <li><a href="<?php echo $this->url(array('controller'=>'user', 'action'=>'forgotten'), null, true); ?>" class="button-bc">Forgot password?</a></li>
+                    <li><button type="submit" class="button-bc">Log in</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </form>
 

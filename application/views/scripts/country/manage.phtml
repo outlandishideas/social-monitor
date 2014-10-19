@@ -1,4 +1,19 @@
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm management" novalidate id="manage-country">
+<h2 class="page-title">Manage Presences</h2>
+
+<form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-country">
+
+    <div class="button-bc-bar">
+        <div class="row bk-dark">
+            <div class="small-24 columns">
+                <ul class="button-group">
+                    <li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'country', 'action'=>'index'), null, true); ?></li>
+                    <li><button type="submit" class="button-bc">Save</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h2>Presences</h2>
 
 	<?php
 	echo $this->partial('partials/assign-presences.phtml', array(
@@ -7,9 +22,15 @@
 		));
 	?>
 
-	<div class="buttonHolder">
-		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'country', 'action'=>'index'), null, true); ?>
-		<input type="submit" value="Save" class="primaryAction">
-	</div>
+    <div class="button-bc-bar">
+        <div class="row bk-dark">
+            <div class="small-24 columns">
+                <ul class="button-group">
+                    <li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'country', 'action'=>'index'), null, true); ?></li>
+                    <li><button type="submit" class="button-bc">Save</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </form>
 

@@ -1,4 +1,19 @@
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-all-groups">
+<h2 class="page-title">Edit All SBUs</h2>
+
+<form method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-all-groups">
+
+    <div class="button-bc-bar">
+        <div class="row bk-dark">
+            <div class="small-24 columns">
+                <ul class="button-group">
+                    <li><?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?></li>
+                    <li><button type="submit" class="button-bc">Save</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h2>SBU Details</h2>
 
     <table class="text dtable standard" id="all-groups">
         <thead>
@@ -24,9 +39,15 @@
         </tbody>
     </table>
 
-	<div class="buttonHolder">
-		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?>
-		<input type="submit" value="Save" class="primaryAction">
-	</div>
+    <div class="button-bc-bar">
+        <div class="row bk-dark">
+            <div class="small-24 columns">
+                <ul class="button-group">
+                    <li><?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?></li>
+                    <li><button type="submit" class="button-bc">Save</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </form>
 
