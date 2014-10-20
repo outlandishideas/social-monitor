@@ -31,13 +31,14 @@ abstract class Badge_Abstract
 		$totalScore = 0;
 		$start = $range->getBegin($date);
 		foreach ($this->getMetricsWeighting() as $metric => $weight) {
-			if (!$presence->getType()->isMetricApplicable($metric)) continue;
+			if (!$presence->getType()->isMetricApplicable($metric)) continue; //only use metrics that are applicable to this presence
 			$score = Metric_Factory::getMetric($metric)->getScore($presence, $start, $date);
 			if (is_null($score)) return null;
 			$totalScore += ($score * $weight);
 			$totalWeight += $weight;
 		}
-		$result = $totalWeight > 0 ? round($totalScore/$totalWeight) : 0; //prevent division by 0 in case of no available scores
+		if ($totalWeight == 0) return null; //apparently we have no metrics to calculate a result with
+		$result = round($totalScore/$totalWeight);
 		$result = max(0, min(100, $result));
 
 		$presence->saveBadgeResult($result, $date, $range, static::getName());
