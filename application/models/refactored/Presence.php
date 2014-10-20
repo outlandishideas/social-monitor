@@ -280,7 +280,7 @@ class NewModel_Presence
 					$b = $meanY - $a*$meanX;
 
 					if ($a > 0) {
-						$daysNeeded = ($target - $b)/$a;
+						$daysNeeded = ceil(($target - $b)/$a);
 
 						//we've been having some difficulties with DateTime and
 						//large numbers. Try to run a DateTime construct to see if it works
