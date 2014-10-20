@@ -368,7 +368,7 @@ class PresenceController extends GraphingController
 		$presences = NewModel_PresenceFactory::getPresences();
 		$endDate = new DateTime();
 		$startDate = new DateTime();
-		$startDate->sub(DateInterval::createFromDateString('1 month'));
+		$startDate->sub(DateInterval::createFromDateString('30 days'));
 		$stmt = self::db()->prepare('REPLACE INTO kpi_cache (presence_id, metric, start_date, end_date, value) VALUES (:pid, :metric, :start, :end, :value)');
 		$args = array(
 			':start'=>$startDate->format('Y-m-d'),
