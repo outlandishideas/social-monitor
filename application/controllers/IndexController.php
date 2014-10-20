@@ -11,13 +11,17 @@ class IndexController extends GraphingController
 		$old = clone $now;
 		$old->modify("-$dayRange days");
 
-		$allBadgeTypes = Model_Badge::$ALL_BADGE_TYPES;
+		//$allBadgeTypes = Model_Badge::$ALL_BADGE_TYPES;
+		$allBadgeTypes = Badge_Factory::getClassNames();
 		/** @var Zend_View_Helper_TrafficLight $trafficLight */
 		$trafficLight = $this->view->trafficLight();
 
 		$metrics = array();
+		$descriptions = array();
 		foreach ($allBadgeTypes as $type) {
-			$metrics[$type] = Model_Badge::badgeTitle($type);
+			//$metrics[$type] = Model_Badge::badgeTitle($type);
+			$metrics[$type] = $type::getTitle();
+			$descriptions[$type::getName()] = $type::getDescription();
 		}
 		$this->view->title = 'British Council Social Media Monitor';
 		$this->view->titleIcon = 'icon-home';
@@ -38,7 +42,7 @@ class IndexController extends GraphingController
 		$this->view->dateRangeString = $old->format('d M Y') . ' - ' . $now->format('d M Y');
 		$this->view->currentDate = $now->format('Y-m-d');
 		$this->view->dayRange = $dayRange;
-        $this->view->badgeDescriptions = Model_Badge::$BADGE_DESCRIPTIONS;
+        $this->view->badgeDescriptions = $descriptions;
 		$this->view->badges = Badge_Factory::getBadges();
 		$this->view->smallCountries = $smallCountries;
 		$this->view->groups = Model_Group::fetchAll();

@@ -129,7 +129,7 @@ class Model_Campaign extends Model_Base {
 		// some KPIs need to be based on a date range. Use the last month's worth(?)
 		$endDate = new DateTime();
 		$startDate = new DateTime();
-		$startDate->sub(DateInterval::createFromDateString('1 month'));
+		$startDate->sub(DateInterval::createFromDateString('30 days'));
 
 		foreach ($this->getPresences() as $presence) {
 			$row = array('name'=>$presence->name, 'id'=>$presence->id);
@@ -186,7 +186,7 @@ class Model_Campaign extends Model_Base {
 
 		$end = new DateTime();
 		$start = clone $end;
-		$start->modify("-1 month");
+		$start->modify("-30 days");
 
 		$badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
 

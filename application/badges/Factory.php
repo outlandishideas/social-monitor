@@ -181,16 +181,19 @@ abstract class Badge_Factory
 		}
 
 		if(!empty($presenceIds)){
-			$data = array_filter($data, function($a) use($presenceIds) {
+			$data = array_filter($data, function($a) use ($presenceIds) {
 				if(in_array($a->presence_id, $presenceIds)){
 					return true;
 				}
 				return false;
 			});
 		}
+		if (!is_array($data)) {
+			$data = array();
+		}
 		if($asArray){
 			$data = array_map(function($a){
-				return (array)$a;
+				return (array) $a;
 			}, $data);
 		}
 
