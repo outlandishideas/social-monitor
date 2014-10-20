@@ -266,7 +266,7 @@ class NewModel_Presence
 					$meanX = $meanY = $sumXY = $sumXX = 0;
 
 					foreach ($data as $row) {
-						$rowDate = strtotime($row['datetime']);
+						$rowDate = $start->diff(new DateTime($row['datetime']))->days; //use days instead of timestamps to prevent overflowing
 						$meanX += $rowDate;
 						$meanY += $row['value'];
 						$sumXY += $rowDate*$row['value'];
@@ -280,18 +280,16 @@ class NewModel_Presence
 					$b = $meanY - $a*$meanX;
 
 					if ($a > 0) {
-						$timestamp = ($target - $b)/$a;
-						if ($timestamp < PHP_INT_MAX) {
+						$daysNeeded = ($target - $b)/$a;
 
-							//we've been having some difficulties with DateTime and
-							//large numbers. Try to run a DateTime construct to see if it works
-							//if not nullify $date so that we can create a DateTime from PHP_INI_MAX
-							try {
-								$date = new DateTime($timestamp);
-							} catch (Exception $e) {
-								$date = null;
-							}
-
+						//we've been having some difficulties with DateTime and
+						//large numbers. Try to run a DateTime construct to see if it works
+						//if not nullify $date so that we can create a DateTime from PHP_INI_MAX
+						try {
+							$date = clone $start;
+							$date->modify("+ $daysNeeded days");
+						} catch (Exception $e) {
+							$date = null;
 						}
 					}
 				}

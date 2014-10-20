@@ -21,6 +21,9 @@ class FetchController extends BaseController
 		//updating presence info
 		$index = 0;
 		foreach($presences as $presence) {
+			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
+			self::db()->closeConnection();
+			self::db()->getConnection();
 			$index++;
 			$now = time();
 			$lastUpdated = strtotime($presence->getLastUpdated());
@@ -39,6 +42,9 @@ class FetchController extends BaseController
 		usort($presences, function($a, $b) { return strcmp($a->getLastFetched() ?: '000000', $b->getLastFetched() ?: '000000'); });
 		$index = 0;
 		foreach($presences as $presence) {
+			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
+			self::db()->closeConnection();
+			self::db()->getConnection();
 			$index++;
 			$this->log('Fetching statuses (' . $index . '/' . $presenceCount . '): ' . $presence->handle);
 			try {
@@ -69,6 +75,9 @@ class FetchController extends BaseController
 		usort($presences, function($a, $b) { return strcmp($a->last_updated ?: '000000', $b->last_updated ?: '000000'); });
 		$index = 0;
 		foreach ($presences as $p) {
+			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
+			self::db()->closeConnection();
+			self::db()->getConnection();
 			$index++;
 			$now = time();
 			$lastUpdated = strtotime($p->last_updated);
@@ -120,6 +129,9 @@ class FetchController extends BaseController
 		usort($presences, function($a, $b) { return strcmp($a->last_fetched ?: '000000', $b->last_fetched ?: '000000'); });
 		$index = 0;
 		foreach ($presences as $p) {
+			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
+			self::db()->closeConnection();
+			self::db()->getConnection();
 			$index++;
 			$this->log('Fetching ' . ($p->isForTwitter() ? 'tweets' : 'posts') . ' (' . $index . '/' . $presenceCount . '): ' . $p->handle);
 			try {

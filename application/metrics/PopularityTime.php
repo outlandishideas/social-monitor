@@ -23,7 +23,6 @@ class Metric_PopularityTime extends Metric_Abstract {
             $now->setTime(0,0,0);
             $diff = $estimate->diff($now);
             $actualMonths = $diff->y*12 + $diff->m;
-            //var_dump($diff);
         }
         return $actualMonths;
     }
