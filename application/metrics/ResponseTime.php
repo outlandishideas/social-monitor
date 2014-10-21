@@ -29,7 +29,8 @@ class Metric_ResponseTime extends Metric_Abstract {
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $data = $presence->getResponseData($start, $end);
-        if (!$data) return null;
+        if (is_null($data)) return null;
+        if (!$data || empty($data)) return 0;
         $target = BaseController::getOption('response_time_bad');
 
         $total = 0;
