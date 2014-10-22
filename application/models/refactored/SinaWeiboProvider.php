@@ -167,7 +167,8 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 	protected function parseStatus($status)
 	{
 		$statusExists = $this->db->prepare("SELECT EXISTS(SELECT 1 FROM {$this->tableName} WHERE `remote_id` = ?)");
-		if($statusExists->execute(array($status['idstr'])) == 0){
+		$statusExists->execute(array($status['idstr']));
+		if($statusExists->fetchColumn() == 0){
 			$id = $this->saveStatus($status);
 			$status['local_id'] = $id;
 			$this->findAndSaveLinks($status);
