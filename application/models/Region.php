@@ -29,4 +29,17 @@ class Model_Region extends Model_Campaign {
             )
         );
     }
+
+    public function getCountries()
+    {
+        $ret = array();
+        $sql = "SELECT `id` FROM `campaigns` WHERE `parent` = ?";
+        $db = Zend_Registry::get('db')->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute(array($this->getId()));
+        foreach ($stmt->fetchColumn() as $countryId) {
+            $ret[$countryId] = Model_Country::fetchById($countryId);
+        }
+        return $ret;
+    }
 }

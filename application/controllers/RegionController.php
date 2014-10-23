@@ -1,10 +1,12 @@
 <?php
 
-class RegionController extends CampaignController {
+class RegionController extends CampaignController
+{
 
     protected static $publicActions = array();
 
-	public function init() {
+	public function init()
+    {
 		parent::init();
 		$this->view->titleIcon = Model_Region::ICON_TYPE;
 	}
@@ -13,7 +15,8 @@ class RegionController extends CampaignController {
 	 * Lists all regions
 	 * @user-level user
 	 */
-	public function indexAction() {
+	public function indexAction()
+    {
         $this->view->title = 'Regions';
 		$this->view->regions = Model_Region::fetchAll();
         $this->view->tableHeaders = self::generateTableHeaders();
@@ -200,7 +203,8 @@ class RegionController extends CampaignController {
 	 * Manages the presences that belong to a region
 	 * @user-level manager
 	 */
-	public function manageAction() {
+	public function manageAction()
+    {
         /** @var Model_Region $region */
         $region = Model_Region::fetchById($this->_request->id);
         $this->validateData($region);
@@ -228,7 +232,8 @@ class RegionController extends CampaignController {
 	 * Deletes a region
 	 * @user-level manager
 	 */
-	public function deleteAction() {
+	public function deleteAction()
+    {
 		$region = Model_Region::fetchById($this->_request->id);
 		$this->validateData($region);
 
@@ -242,7 +247,8 @@ class RegionController extends CampaignController {
     /**
      * Gets all of the graph data for the requested presence
      */
-    public function badgeDataAction() {
+    public function badgeDataAction()
+    {
         Zend_Session::writeClose(); // release session on long running actions
 
 	    /** @var Model_Region $region */
@@ -258,4 +264,22 @@ class RegionController extends CampaignController {
 		parent::downloadAsCsv('region_index', Model_Region::badgesData(), Model_Region::fetchAll(), self::tableIndexHeaders());
 	}
 
+
+    public static function tableIndexHeaders()
+    {
+        $return = array(
+            'name' => true,
+            'total-rank' => true,
+            'total-score' => true,
+            'target-audience' => true
+        );
+
+        foreach(self::tableMetrics() as $name => $title){
+            $return[$name] = true;
+        }
+        $return['countries'] = true;
+        $return['options'] = false;
+
+        return $return;
+    }
 }

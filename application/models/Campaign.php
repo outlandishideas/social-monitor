@@ -327,8 +327,8 @@ class Model_Campaign extends Model_Base {
 	}
 
     public static function badgesData(){
-        $badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
-        $keyedData = Model_Badge::badgesData(true);
+        $badgeTypes = Badge_Factory::getBadgeNames();
+        $keyedData = Badge_Factory::badgesData(true);
 
         // get all of the campaign-presence relationships for this type (country or group)
 	    /** @var PDO $db */

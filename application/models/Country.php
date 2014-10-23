@@ -33,6 +33,11 @@ class Model_Country extends Model_Campaign {
 		}
 	}
 
+	public static function getCountryCode()
+	{
+		return strtoupper($this->country);
+	}
+
     /**
      * calculates the digital population from the country population and internet penetration in that country (penetration presented as a percentage)
      * @return int

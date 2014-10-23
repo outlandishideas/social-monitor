@@ -324,7 +324,7 @@ class Model_Badge {
 	}
 
 	public static function assignRanks($presenceData, $badgeType) {
-		trigger_error("Deprecated function. Moved to new Badge classes.");
+		//trigger_error("Deprecated function. Moved to new Badge classes.");
 		//sorts the data by the current badge score (descending)
 		usort($presenceData, function($a, $b) use ($badgeType){
 			$aVal = $a->$badgeType;

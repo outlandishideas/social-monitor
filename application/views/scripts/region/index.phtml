@@ -53,9 +53,10 @@ $buttons = $this->gatekeeper()->filterAll(array(
                 <?php endforeach; ?>
                 <td>
                     <ul class="entity-list">
-                        <?php foreach($presences as $presence) : ?>
+                        <?php if (!$region instanceof Model_Region) var_dump($region); ?>
+                        <?php foreach($region->getCountries() as $country) : ?>
                             <li>
-                                <?php echo $this->partial('partials/presence_inline.phtml',  array('presence' => $presence)); ?>
+                                <?php echo $this->partial('partials/country_inline.phtml',  array('country' => $country)); ?>
                             </li>
                         <?php endforeach; ?>
                     </ul>

@@ -26,3 +26,5 @@ ALTER TABLE  `status_links` CHANGE  `type`  `type` VARCHAR( 20 ) CHARACTER SET u
 ALTER TABLE  `badge_history` CHANGE  `reach`  `reach` INT( 11 ) NULL DEFAULT NULL ,
 CHANGE  `engagement`  `engagement` INT( 11 ) NULL DEFAULT NULL ,
 CHANGE  `quality`  `quality` INT( 11 ) NULL DEFAULT NULL ;
+
+ALTER TABLE  `campaigns` ADD  `parent` INT NOT NULL ;

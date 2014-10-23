@@ -32,7 +32,8 @@ abstract class Header_Factory
 			Header_TargetAudience::getName() => 'Header_TargetAudience',
 			Header_CurrentAudience::getName() => 'Header_CurrentAudience',
 			Header_Name::getName() => 'Header_Name',
-			Header_Country::getName() => 'Header_Country'
+			Header_Country::getName() => 'Header_Country',
+			Header_Countries::getName() => 'Header_Countries'
 		);
 	}
 

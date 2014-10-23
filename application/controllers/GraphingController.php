@@ -158,6 +158,9 @@ abstract class GraphingController extends BaseController {
             case 'country':
 				$header->title = 'Country';
                 break;
+            case 'countries':
+				$header->title = 'Countries';
+                break;
             case 'total-rank':
 				$header->sort = 'numeric';
 				$header->title = 'Overall Rank';
