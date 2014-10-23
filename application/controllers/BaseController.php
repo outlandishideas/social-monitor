@@ -356,7 +356,7 @@ class BaseController extends Zend_Controller_Action
     }
 
     /**
-     * @return PDO
+     * @return Zend_Db_Adapter_Pdo_Abstract
      */
     public static function db()
     {
