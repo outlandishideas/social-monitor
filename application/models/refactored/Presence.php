@@ -481,7 +481,7 @@ class NewModel_Presence
 			//if the presence was updated, update presence_history
 			$stmt = $this->db->prepare("INSERT INTO `presence_history` (`presence_id`, `datetime`, `type`, `value`) VALUES (:id, :datetime, :type, :value)");
 			foreach($data as $type => $value){
-				if(in_array($type, $this->presenceHistoryColumns) && $value){
+				if(in_array($type, $this->presenceHistoryColumns) && !is_null($value)) {
 					$stmt->execute(array(
 						':id' => $this->getId(),
 						':datetime' => $date,

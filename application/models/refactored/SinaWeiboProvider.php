@@ -265,7 +265,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 			"image_url" => $ret['profile_image_url'], //image_url
 			"name" => $ret['name'], //name
 			"page_url" => self::BASEURL.$ret['profile_url'], //page_url
-			"followers" => $ret['followers_count'],  //popularity
+			"popularity" => $ret['followers_count'],  //popularity
 			"klout_id" => null,  //klout_id
 			"klout_score" => null,  //klout_score
 			"facebook_engagement" => null,  //facebook_engagement
