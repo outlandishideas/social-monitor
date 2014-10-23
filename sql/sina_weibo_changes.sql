@@ -28,3 +28,5 @@ CHANGE  `engagement`  `engagement` INT( 11 ) NULL DEFAULT NULL ,
 CHANGE  `quality`  `quality` INT( 11 ) NULL DEFAULT NULL ;
 
 ALTER TABLE  `campaigns` ADD  `parent` INT NOT NULL ;
+
+ALTER TABLE  `campaigns` CHANGE  `is_country`  `campaign_type` TINYINT( 1 ) NOT NULL DEFAULT  '1';
