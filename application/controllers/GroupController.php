@@ -122,7 +122,7 @@ class GroupController extends CampaignController {
 
             if ($errorMessages) {
                 foreach ($errorMessages as $message) {
-                    $this->_helper->FlashMessenger(array('error' => $message));
+                    $this->flashMessage($message, 'error');
                 }
             } else {
                 try {
@@ -131,13 +131,13 @@ class GroupController extends CampaignController {
                     if($this->_request->p){
                         $editingGroup->assignPresences($this->_request->p);
                     }
-                    $this->_helper->FlashMessenger(array('info' => 'SBU saved'));
+                    $this->flashMessage('SBU saved');
                     $this->_helper->redirector->gotoSimple('index');
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->_helper->FlashMessenger(array('error' => 'Display name already taken'));
+                        $this->flashMessage('Display name already taken', 'error');
                     } else {
-                        $this->_helper->FlashMessenger(array('error' => $ex->getMessage()));
+                        $this->flashMessage($ex->getMessage(), 'error');
                     }
                 }
             }
@@ -193,7 +193,7 @@ class GroupController extends CampaignController {
 
             if ($errorMessages) {
                 foreach ($errorMessages as $message) {
-                    $this->_helper->FlashMessenger(array('error' => $message));
+                    $this->flashMessage($message, 'error');
                 }
             } else {
                 try {
@@ -201,14 +201,14 @@ class GroupController extends CampaignController {
                         $group->save();
                     }
 
-                    $this->_helper->FlashMessenger(array('info' => count($editedGroups) . ' SBUs saved'));
+                    $this->flashMessage(count($editedGroups) . ' SBUs saved');
                     $this->_helper->redirector->gotoSimple('index');
 
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->_helper->FlashMessenger(array('error' => 'Display name already taken'));
+                        $this->flashMessage('Display name already taken', 'error');
                     } else {
-                        $this->_helper->FlashMessenger(array('error' => $ex->getMessage()));
+                        $this->flashMessage($ex->getMessage(), 'error');
                     }
                 }
             }
@@ -235,7 +235,7 @@ class GroupController extends CampaignController {
                 }
             }
             $group->assignPresences($presenceIds);
-            $this->_helper->FlashMessenger(array('info' => 'SBU presences updated'));
+            $this->flashMessage('SBU presences updated');
             $this->_helper->redirector->gotoSimple('index');
         }
 
@@ -255,7 +255,7 @@ class GroupController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 			$group->delete();
-			$this->_helper->FlashMessenger(array('info' => 'SBU deleted'));
+            $this->flashMessage('SBU deleted');
 		}
 		$this->_helper->redirector->gotoSimple('index');
 	}

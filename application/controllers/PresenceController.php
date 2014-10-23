@@ -148,7 +148,7 @@ class PresenceController extends GraphingController
 						$presence->last_updated = gmdate('Y-m-d H:i:s');
 						$presence->save();
 
-						$this->_helper->FlashMessenger(array('info' => 'Presence saved'));
+                        $this->flashMessage('Presence saved');
 						$this->_helper->redirector->gotoSimple('index');
 					} catch (Exception $ex) {
 						if (strpos($ex->getMessage(), '23000') !== false) {
@@ -163,7 +163,7 @@ class PresenceController extends GraphingController
 
 			if ($errorMessages) {
 				foreach ($errorMessages as $message) {
-					$this->_helper->FlashMessenger(array('error'=>$message));
+                    $this->flashMessage($message, 'error');
 				}
 			} else {
 				$this->_helper->redirector->gotoSimple('index');
@@ -190,7 +190,7 @@ class PresenceController extends GraphingController
 
 		if ($this->_request->isPost()) {
 			$presence->delete();
-			$this->_helper->FlashMessenger(array('info' => 'Presence deleted'));
+            $this->flashMessage('Presence deleted');
 		}
 		$this->_helper->redirector->gotoSimple('index');
 	}

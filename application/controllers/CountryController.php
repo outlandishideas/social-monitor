@@ -114,19 +114,19 @@ class CountryController extends CampaignController {
 
 			if ($errorMessages) {
 				foreach ($errorMessages as $message) {
-					$this->_helper->FlashMessenger(array('error' => $message));
+                    $this->flashMessage($message, 'error');
 				}
 			} else {
 				try {
 					$editingCountry->save();
 
-					$this->_helper->FlashMessenger(array('info' => 'Country saved'));
+                    $this->flashMessage('Country saved');
 					$this->_helper->redirector->gotoSimple('index');
 				} catch (Exception $ex) {
 					if (strpos($ex->getMessage(), '23000') !== false) {
-						$this->_helper->FlashMessenger(array('error' => 'Display name already taken'));
+                        $this->flashMessage('Display name already taken', 'error');
 					} else {
-						$this->_helper->FlashMessenger(array('error' => $ex->getMessage()));
+                        $this->flashMessage($ex->getMessage(), 'error');
 					}
 				}
 			}
@@ -223,7 +223,7 @@ class CountryController extends CampaignController {
 
             if ($errorMessages) {
                 foreach ($errorMessages as $message) {
-                    $this->_helper->FlashMessenger(array('error' => $message));
+                    $this->flashMessage($message, 'error');
                 }
             } else {
                 try {
@@ -231,14 +231,14 @@ class CountryController extends CampaignController {
                         $country->save();
                     }
 
-                    $this->_helper->FlashMessenger(array('info' => count($editedCountries) . ' Countries saved'));
+                    $this->flashMessage(count($editedCountries) . ' Countries saved');
                     $this->_helper->redirector->gotoSimple('index');
 
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->_helper->FlashMessenger(array('error' => 'Display name already taken'));
+                        $this->flashMessage('Display name already taken', 'error');
                     } else {
-                        $this->_helper->FlashMessenger(array('error' => $ex->getMessage()));
+                        $this->flashMessage($ex->getMessage(), 'error');
                     }
                 }
             }
@@ -265,7 +265,7 @@ class CountryController extends CampaignController {
 				}
 			}
 			$country->assignPresences($presenceIds);
-			$this->_helper->FlashMessenger(array('info' => 'Country presences updated'));
+            $this->flashMessage('Country presences updated');
 			$this->_helper->redirector->gotoSimple('index');
 		}
 
@@ -285,7 +285,7 @@ class CountryController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 			$country->delete();
-			$this->_helper->FlashMessenger(array('info' => 'Country deleted'));
+            $this->flashMessage('Country deleted');
 		}
 		$this->_helper->redirector->gotoSimple('index');
 	}

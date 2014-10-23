@@ -46,7 +46,7 @@ class UserController extends BaseController
 				$this->redirect($this->_request->redirect_to);
 			} else {
 				$this->view->redirect_to = $this->_request->redirect_to;
-				$this->_helper->FlashMessenger(array('error' => 'Incorrect username/password'));
+                $this->flashMessage('Incorrect username/password', 'error');
 			}
 		} else {
 			$this->view->redirect_to = $this->_request->getPathInfo();
@@ -66,7 +66,7 @@ class UserController extends BaseController
 
 		if ($this->_request->isPost()) {
 			if (!$this->_request->username) {
-				$this->_helper->FlashMessenger(array('error' => 'Please enter a username or email address'));
+                $this->flashMessage('Please enter a username or email address', 'error');
 			} else {
 				$user = Model_User::fetchBy('name', $this->_request->username);
 				if (!$user) {
@@ -74,7 +74,7 @@ class UserController extends BaseController
 				}
 
 				if (!$user) {
-					$this->_helper->FlashMessenger(array('error' => 'User not found'));
+                    $this->flashMessage('User not found', 'error');
 				} else {
 					$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 					$user->reset_key = substr( str_shuffle( $chars ), 0, 16);
@@ -94,9 +94,9 @@ class UserController extends BaseController
 							$user->email,
 							'Password reset'
 						);
-						$this->_helper->FlashMessenger(array('info' => 'You should receive an email shortly with a password reset link'));
+                        $this->flashMessage('You should receive an email shortly with a password reset link');
 					} catch (Exception $ex) {
-						$this->_helper->FlashMessenger(array('error' => 'Failed to send reset email.<br />Please ask an admin user to reset your password'));
+                        $this->flashMessage('Failed to send reset email.<br />Please ask an admin user to reset your password', 'error');
 					}
 				}
 			}
@@ -122,11 +122,11 @@ class UserController extends BaseController
 			$this->view->editingUser = $user;
 			if ($this->_request->isPost()) {
 				if (!$this->_request->password || !$this->_request->password_confirm) {
-					$this->_helper->FlashMessenger(array('error' => 'Both passwords are required'));
+                    $this->flashMessage('Both passwords are required', 'error');
 				} else if ($this->_request->password != $this->_request->password_confirm) {
-					$this->_helper->FlashMessenger(array('error' => 'Passwords do not match'));
+                    $this->flashMessage('Passwords do not match', 'error');
 				} else if (strlen($this->_request->password) < 4) {
-					$this->_helper->FlashMessenger(array('error' => 'Password must be at least 4 characters'));
+                    $this->flashMessage('Password must be at least 4 characters', 'error');
 				} else {
 					$user->fromArray(array('password'=>$this->_request->password));
 					$user->reset_key = null;
@@ -138,12 +138,12 @@ class UserController extends BaseController
 					$authAdapter->authPassword = $this->_request->password;
 					$this->auth->authenticate($authAdapter);
 
-					$this->_helper->FlashMessenger(array('info' => 'Password changed successfully'));
+                    $this->flashMessage('Password changed successfully');
 					$this->_helper->redirector->gotoSimple('index', 'index');
 				}
 			}
 		} else {
-			$this->_helper->FlashMessenger(array('error' => 'Incorrect user/key combination for password reset'));
+            $this->flashMessage('Incorrect user/key combination for password reset', 'error');
 			$this->_helper->redirector->gotoSimple('index', 'index');
 		}
 		$this->view->title = 'Reset password';
@@ -156,7 +156,7 @@ class UserController extends BaseController
 	public function logoutAction()
 	{
 		$this->auth->clearIdentity();
-		$this->_helper->FlashMessenger(array('info' => 'Logged out'));
+        $this->flashMessage('Logged out');
 		$this->_helper->redirector->gotoSimple('index', 'index');
 	}
 
@@ -240,12 +240,12 @@ class UserController extends BaseController
 
 			if ($errorMessages) {
 				foreach ($errorMessages as $message) {
-					$this->_helper->FlashMessenger(array('error' => $message));
+                    $this->flashMessage($message, 'error');
 				}
 			} else {
 				try {
 					$editingUser->save();
-					$this->_helper->FlashMessenger(array('info' => 'User saved'));
+                    $this->flashMessage('User saved');
 					$this->_helper->redirector->gotoSimple('index');
 				} catch (Exception $ex) {
 					if (strpos($ex->getMessage(), '23000') !== false) {
@@ -254,9 +254,9 @@ class UserController extends BaseController
 						} else {
 							$message = 'User name already taken';
 						}
-						$this->_helper->FlashMessenger(array('error' => $message));
+                        $this->flashMessage($message, 'error');
 					} else {
-						$this->_helper->FlashMessenger(array('error' => $ex->getMessage()));
+                        $this->flashMessage($ex->getMessage(), 'error');
 					}
 				}
 			}
@@ -280,7 +280,7 @@ class UserController extends BaseController
 
 		if ($this->_request->isPost()) {
 			$user->delete();
-			$this->_helper->FlashMessenger(array('info' => 'User deleted'));
+            $this->flashMessage('User deleted');
 		}
 		$this->_helper->redirector->gotoSimple('index');
 	}
@@ -296,7 +296,7 @@ class UserController extends BaseController
 
 		if ($this->_request->isPost()) {
 			$user->assignAccess($this->_request->assigned);
-			$this->_helper->FlashMessenger(array('info' => 'User permissions saved'));
+            $this->flashMessage('User permissions saved');
 			$this->_helper->redirector->gotoSimple('index');
 		}
 

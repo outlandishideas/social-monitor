@@ -103,7 +103,7 @@ class RegionController extends CampaignController
 
             if ($errorMessages) {
                 foreach ($errorMessages as $message) {
-                    $this->_helper->FlashMessenger(array('error' => $message));
+                    $this->flashMessage($message, 'error');
                 }
             } else {
                 try {
@@ -112,13 +112,13 @@ class RegionController extends CampaignController
                     if($this->_request->p){
                         $editingRegion->assignPresences($this->_request->p);
                     }
-                    $this->_helper->FlashMessenger(array('info' => 'Region saved'));
+                    $this->flashMessage('Region saved');
                     $this->_helper->redirector->gotoSimple('index');
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->_helper->FlashMessenger(array('error' => 'Display name already taken'));
+                        $this->flashMessage('Display name already taken', 'error');
                     } else {
-                        $this->_helper->FlashMessenger(array('error' => $ex->getMessage()));
+                        $this->flashMessage($ex->getMessage(), 'error');
                     }
                 }
             }
@@ -174,7 +174,7 @@ class RegionController extends CampaignController
 
             if ($errorMessages) {
                 foreach ($errorMessages as $message) {
-                    $this->_helper->FlashMessenger(array('error' => $message));
+                    $this->flashMessage($message, 'error');
                 }
             } else {
                 try {
@@ -182,14 +182,14 @@ class RegionController extends CampaignController
                         $region->save();
                     }
 
-                    $this->_helper->FlashMessenger(array('info' => count($editedRegions) . ' SBUs saved'));
+                    $this->flashMessage(count($editedRegions) . ' Regions saved');
                     $this->_helper->redirector->gotoSimple('index');
 
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->_helper->FlashMessenger(array('error' => 'Display name already taken'));
+                        $this->flashMessage('Display name already taken', 'error');
                     } else {
-                        $this->_helper->FlashMessenger(array('error' => $ex->getMessage()));
+                        $this->flashMessage($ex->getMessage(), 'error');
                     }
                 }
             }
@@ -217,7 +217,7 @@ class RegionController extends CampaignController
                 }
             }
             $region->assignPresences($presenceIds);
-            $this->_helper->FlashMessenger(array('info' => 'SBU presences updated'));
+            $this->flashMessage('Region presences updated');
             $this->_helper->redirector->gotoSimple('index');
         }
 
@@ -239,7 +239,7 @@ class RegionController extends CampaignController
 
 		if ($this->_request->isPost()) {
 			$region->delete();
-			$this->_helper->FlashMessenger(array('info' => 'SBU deleted'));
+            $this->flashMessage('Region saved');
 		}
 		$this->_helper->redirector->gotoSimple('index');
 	}

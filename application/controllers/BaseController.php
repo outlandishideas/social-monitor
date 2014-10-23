@@ -77,7 +77,7 @@ class BaseController extends Zend_Controller_Action
 			    } else {
 				    $message .= 'Please log in to clear the lock.';
 			    }
-			    $this->_helper->FlashMessenger(array('inaction' => $message));
+			    $this->flashMessage($message, 'inaction');
 		    }
 	    }
 
@@ -180,7 +180,7 @@ class BaseController extends Zend_Controller_Action
             if ($this->_request->isXmlHttpRequest()) {
                 $this->apiError($message);
             } else {
-                $this->_helper->FlashMessenger(array('error' => $message));
+                $this->flashMessage($message, 'error');
                 $urlArgs = $this->view->gatekeeper()->fallbackUrlArgs(array('action' => 'index'));
                 $this->_helper->redirector->gotoRoute($urlArgs, null, true);
             }
@@ -206,7 +206,7 @@ class BaseController extends Zend_Controller_Action
         if (!$type) {
             $type = $this->_request->getControllerName();
         }
-        $this->_helper->FlashMessenger(array('error' => $type . ' not found'));
+        $this->flashMessage($type . ' not found', 'error');
         $this->_helper->redirector->gotoSimple('');
     }
 
@@ -495,5 +495,8 @@ class BaseController extends Zend_Controller_Action
         return false;
     }
 
+    protected function flashMessage($message, $type = 'info') {
+        $this->_helper->FlashMessenger(array($type => $message));
+    }
 
 }

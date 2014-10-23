@@ -202,10 +202,10 @@ class ConfigController extends BaseController {
             if (!$adapter->receive()) {
                 $messages = $adapter->getMessages();
                 foreach($messages as $message){
-                    $this->_helper->FlashMessenger(array('error' => $message));
+                    $this->flashMessage($message, 'error');
                 }
             } else {
-                $this->_helper->FlashMessenger(array('info' => 'File Successfully uploaded'));
+                $this->flashMessage('File Successfully uploaded');
             }
 
 			if ($valid) {
@@ -216,10 +216,10 @@ class ConfigController extends BaseController {
                         }
                     }
                 }
-				$this->_helper->FlashMessenger(array('info' => 'Settings saved'));
+                $this->flashMessage('Settings saved');
 				$this->_helper->redirector->gotoSimple('');
 			} else {
-				$this->_helper->FlashMessenger(array('error' => 'Invalid values. Please check before saving'));
+                $this->flashMessage('Invalid values. Please check before saving', 'error');
 			}
 		}
 		$this->view->values = $values;
