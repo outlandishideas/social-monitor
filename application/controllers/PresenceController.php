@@ -93,10 +93,7 @@ class PresenceController extends GraphingController
 	public function editAction()
 	{
 		if ($this->_request->getActionName() == 'edit') {
-			$presence = Model_Presence::fetchById($this->_request->getParam('id'));
-			if($this->_request->getParam('type') == NewModel_PresenceType::SINA_WEIBO){
-				$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
-			}
+            $presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
             $this->view->showButtons = true;
 		} else {
 			$presence = new Model_Presence();
@@ -171,7 +168,7 @@ class PresenceController extends GraphingController
 		}
 
         $this->view->editType = false;
-		$this->view->types = NewModel_PresenceType::toArray();
+		$this->view->types = NewModel_PresenceType::enumValues();
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->groups = Model_Group::fetchAll();
 		$this->view->presence = $presence;

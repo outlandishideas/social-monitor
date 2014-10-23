@@ -15,6 +15,7 @@ class NewModel_Presence
 	//these should be public to mimic existing Presence Class
 	public $id;
 	public $handle;
+    /** @var NewModel_PresenceType */
 	public $type;
 	public $label;
 	public $uid;
@@ -30,7 +31,18 @@ class NewModel_Presence
 	public $last_updated;
 	public $last_fetched;
 
-	public function __construct(PDO $db, array $internals, NewModel_iProvider $provider, array $metrics = array(), array $badges = array())
+    /**
+     * Creates a new presence
+     * Provider, metrics and badges are passed in so that they can be mocked out for testing
+     * todo: only pass in a (mockable) type instead?
+     * @param PDO $db
+     * @param array $internals
+     * @param NewModel_iProvider $provider
+     * @param array $metrics
+     * @param array $badges
+     * @throws InvalidArgumentException
+     */
+    public function __construct(PDO $db, array $internals, NewModel_iProvider $provider, array $metrics = array(), array $badges = array())
 	{
 		$this->db = $db;
 		$this->provider = $provider;
@@ -101,12 +113,7 @@ class NewModel_Presence
 
 	public function setType($typeName)
 	{
-		$types = array_flip(NewModel_PresenceType::toArray());
-		if(array_key_exists($typeName, $types)){
-			$type = $types[$typeName];
-			$this->type = NewModel_PresenceType::$type();
-		}
-
+        $this->type = NewModel_PresenceType::get($typeName);
 	}
 
 	public function getName()

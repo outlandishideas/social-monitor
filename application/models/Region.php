@@ -32,16 +32,7 @@ class Model_Region extends Model_Campaign {
 
     public function getCountries()
     {
-        $ret = array();
-        $sql = "SELECT `id` FROM `campaigns` WHERE `parent` = ".$this->id;
-        $db = Zend_Registry::get('db')->getConnection();
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
-        $ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
-        foreach ($ids as $countryId) {
-            $ret[$countryId] = Model_Country::fetchById($countryId);
-        }
-        return $ret;
+        return Model_Country::fetchAll('parent = ?', array($this->id));
     }
 
     function getPresenceIds($mapping = null) {

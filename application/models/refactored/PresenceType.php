@@ -6,6 +6,10 @@ class NewModel_PresenceType extends NewModel_Enum
 	const FACEBOOK 	= 'facebook';
 	const SINA_WEIBO 	= 'sina_weibo';
 
+    public static function TWITTER() { return self::get(self::TWITTER); }
+    public static function FACEBOOK() { return self::get(self::FACEBOOK); }
+    public static function SINA_WEIBO() { return self::get(self::SINA_WEIBO); }
+
 	public function getProvider(PDO $db) {
 		switch ($this->value) {
 			case self::SINA_WEIBO:
@@ -27,13 +31,10 @@ class NewModel_PresenceType extends NewModel_Enum
 		switch ($this->value) {
 			case self::SINA_WEIBO:
 				return "fa fa-weibo";
-				break;
 			case self::FACEBOOK:
 				return "fa fa-facebook";
-				break;
 			case self::TWITTER:
 				return "fa fa-twitter";
-				break;
 			default:
 				throw new \LogicException("Not implemented yet.");
 		}
@@ -44,13 +45,10 @@ class NewModel_PresenceType extends NewModel_Enum
 		switch ($this->value) {
 			case self::SINA_WEIBO:
 				return "Sina Weibo";
-				break;
 			case self::FACEBOOK:
 				return "Facebook";
-				break;
 			case self::TWITTER:
 				return "Twitter";
-				break;
 			default:
 				throw new \LogicException("Not implemented yet.");
 		}

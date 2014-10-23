@@ -3,6 +3,7 @@
 abstract class NewModel_PresenceFactory
 {
 
+    /** @var PDO */
 	protected static $db;
 
 	protected static $defaultQueryOptions = array(
@@ -23,15 +24,7 @@ abstract class NewModel_PresenceFactory
 			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
 		}
 
-		$stmt = self::$db->prepare($sql);
-		$stmt->execute();
-		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-		if ($results == false) return array();
-
-		$presences = array_map('self::instantiatePresence', $results);
-
-		return array_filter($presences);
+        return self::fetchPresences($sql);
 	}
 
     /**
@@ -40,20 +33,14 @@ abstract class NewModel_PresenceFactory
      */
     public static function getPresenceById($id)
 	{
-		$stmt = static::$db->prepare("SELECT * FROM `presences` WHERE `id` = :id");
-		$stmt->execute(array(':id' => $id));
-		$internals = $stmt->fetch(PDO::FETCH_ASSOC);
-
-		return self::instantiatePresence($internals);
+        $presences = self::fetchPresences("SELECT * FROM `presences` WHERE `id` = :id", array(':id'=>$id));
+        return $presences ? $presences[0] : null;
 	}
 
 	public static function getPresenceByHandle($handle, NewModel_PresenceType $type)
 	{
-		$stmt = static::$db->prepare("SELECT * FROM `presences` WHERE `handle` = :handle AND `type` = :t");
-		$stmt->execute(array(':handle' => $handle, ':t' => $type));
-		$internals = $stmt->fetch(PDO::FETCH_ASSOC);
-
-		return self::instantiatePresence($internals);
+        $presences = self::fetchPresences("SELECT * FROM `presences` WHERE `handle` = :handle AND `type` = :t", array(':handle' => $handle, ':t' => $type));
+        return $presences ? $presences[0] : null;
 	}
 
 	public static function getPresencesByType(NewModel_PresenceType $type, array $queryOptions = array())
@@ -67,15 +54,7 @@ abstract class NewModel_PresenceFactory
 			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
 		}
 
-		$stmt = static::$db->prepare($sql);
-		$stmt->execute(array(':type' => $type));
-		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-		if($results == false) return array();
-
-		$presences = array_map('self::instantiatePresence', $results);
-
-		return $presences;
+        return self::fetchPresences($sql, array(':type'=>$type));
 	}
 
 	public static function getPresencesById(array $ids, array $queryOptions = array())
@@ -90,15 +69,7 @@ abstract class NewModel_PresenceFactory
 			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
 		}
 
-		$stmt = static::$db->prepare($sql);
-		$stmt->execute($ids);
-		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-		if($results == false) return array();
-
-		$presences = array_map('self::instantiatePresence', $results);
-
-		return array_filter($presences);
+        return self::fetchPresences($sql, $ids);
 	}
 
 	public static function getPresencesByCampaign($campaign, array $queryOptions = array())
@@ -112,15 +83,7 @@ abstract class NewModel_PresenceFactory
 			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
 		}
 
-		$stmt = static::$db->prepare($sql);
-		$stmt->execute(array(":cid" => $campaign));
-		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-		if($results == false) return array();
-
-		$presences = array_map('self::instantiatePresence', $results);
-
-		return array_filter($presences);
+        return self::fetchPresences($sql, array(":cid" => $campaign));
 	}
 
 	public static function createNewPresence(NewModel_PresenceType $type, $handle, $signed_off, $branding)
@@ -151,11 +114,24 @@ abstract class NewModel_PresenceFactory
 		static::$db = $db;
 	}
 
+    protected static function fetchPresences($sql, $args = array()) {
+        $stmt = self::$db->prepare($sql);
+        $stmt->execute($args);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$results) {
+            return array();
+        }
+
+        $presences = array_map('self::instantiatePresence', $results);
+
+        return array_filter($presences);
+    }
 
 	protected static function instantiatePresence($internals)
 	{
-		if($internals != false) {
-			$type = new NewModel_PresenceType($internals['type']);
+		if($internals) {
+			$type = NewModel_PresenceType::get($internals['type']);
 			$provider = $type->getProvider(static::$db);
 			$metrics = $type->getMetrics();
 			$badges = $type->getBadges();

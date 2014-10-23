@@ -21,9 +21,8 @@ $presences = $this->country->getPresences(); ?>
         <h4>Presences</h4>
         <div class="score-value"><?php echo count($presences);?></div>
     </div>
-    <?php foreach(NewModel_PresenceType::toArray() as $name => $typeName) :
+    <?php foreach(NewModel_PresenceType::enumValues() as $type) :
         /** @var NewModel_PresenceType $type */
-        $type = NewModel_PresenceType::$name();
         $typePresences = $this->country->getPresencesByType($type);
         if(count($typePresences) > 0) : ?>
             <div class="bd-btm">

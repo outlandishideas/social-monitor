@@ -5,6 +5,9 @@ class Badge_Period extends NewModel_Enum
 	const MONTH = 'month';
 	const WEEK  = 'week';
 
+    public static function MONTH() { return self::get(self::MONTH); }
+    public static function WEEK() { return self::get(self::WEEK); }
+
 	public function getBegin(\DateTime $date)
 	{
 		switch ($this->value) {
