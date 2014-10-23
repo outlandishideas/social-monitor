@@ -27,6 +27,8 @@ class Model_Campaign extends Model_Base {
 		foreach ($data as $row) {
 			if($row['is_country'] == 1){
 				$objects[] = new Model_Country($row, true);
+			} elseif ($row['is_country'] == 2) {
+				$objects[] = new Model_Region($row, true);
 			} else {
 				$objects[] = new Model_Group($row, true);
 			}

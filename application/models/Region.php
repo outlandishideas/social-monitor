@@ -33,11 +33,12 @@ class Model_Region extends Model_Campaign {
     public function getCountries()
     {
         $ret = array();
-        $sql = "SELECT `id` FROM `campaigns` WHERE `parent` = ?";
+        $sql = "SELECT `id` FROM `campaigns` WHERE `parent` = ".$this->id;
         $db = Zend_Registry::get('db')->getConnection();
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($this->getId()));
-        foreach ($stmt->fetchColumn() as $countryId) {
+        $stmt->execute();
+        $ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        foreach ($ids as $countryId) {
             $ret[$countryId] = Model_Country::fetchById($countryId);
         }
         return $ret;
