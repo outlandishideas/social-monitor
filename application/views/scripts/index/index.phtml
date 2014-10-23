@@ -109,9 +109,8 @@
                                         <div class="score-value"><?php echo count($presences) ?></div>
                                     </li>
                                     <?php
-                                    foreach(NewModel_PresenceType::toArray() as $typeName => $name):
+                                    foreach(NewModel_PresenceType::enumValues() as $type):
                                         /** @var NewModel_PresenceType $type */
-                                        $type = NewModel_PresenceType::$typeName();
                                         $count = count($group->getPresencesByType($type));
                                         if($count < 1) continue; ?>
                                         <li>
@@ -124,9 +123,8 @@
                                 </ul>
                             </div>
                             <div class="hide-for-small-down">
-                                <?php foreach(NewModel_PresenceType::toArray() as $typeName => $name):
-                                    /** @var NewModel_PresenceType $type */
-                                    $type = NewModel_PresenceType::$typeName(); ?>
+                                <?php foreach(NewModel_PresenceType::enumValues() as $type):
+                                    /** @var NewModel_PresenceType $type */ ?>
                                     <ul class="badge-presences" data-<?php echo $type; ?>-presences>
                                         <?php foreach($group->getPresencesByType($type) as $presence): ?>
                                             <li><span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getHandle(); ?></li>

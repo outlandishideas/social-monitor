@@ -26,13 +26,19 @@ abstract class NewModel_Enum
     private static $constantsCache = array();
 
     /**
+     * Store for enum objects
+     * @var array
+     */
+    private static $enumCache = array();
+
+    /**
      * Creates a new value of some type
      * @param mixed $value
      * @throws \UnexpectedValueException if incompatible type is given.
      */
-    public function __construct($value)
+    protected function __construct($value)
     {
-        $possibleValues = self::toArray();
+        $possibleValues = self::enumMap();
         if (! in_array($value, $possibleValues)) {
             throw new \UnexpectedValueException("Value '$value' is not part of the enum " . get_called_class());
         }
@@ -59,7 +65,7 @@ abstract class NewModel_Enum
      * Returns all possible values as an array
      * @return array Constant name in key, constant value in value
      */
-    public static function toArray()
+    public static function enumMap()
     {
         $calledClass = get_called_class();
         if(!array_key_exists($calledClass, self::$constantsCache)) {
@@ -69,8 +75,33 @@ abstract class NewModel_Enum
         return self::$constantsCache[$calledClass];
     }
 
+    public static function enumValues()
+    {
+        $values = array();
+        foreach (static::enumMap() as $type) {
+            $values[] = static::get($type);
+        }
+        return $values;
+    }
+
+    /**
+     * Ensures that each enum is only created once
+     * @param $name
+     * @return mixed
+     */
+    public static function get($name) {
+        $class = get_called_class();
+        $key = $class . '_' . $name;
+        if (!isset(self::$enumCache[$key])) {
+            $enum = new static($name);
+            self::$enumCache[$key] = $enum;
+        }
+        return self::$enumCache[$key];
+    }
+
     /**
      * Returns a value when called statically like so: MyEnum::SOME_VALUE() given SOME_VALUE is a class constant
+     * @deprecated
      * @param string $name
      * @param array  $arguments
      * @return static
@@ -79,7 +110,7 @@ abstract class NewModel_Enum
     public static function __callStatic($name, $arguments)
     {
         if (defined("static::$name")) {
-            return new static(constant("static::$name"));
+            return self::get(constant("static::$name"));
         }
         throw new \BadMethodCallException("No static method or enum constant '$name' in class " . get_called_class());
     }
