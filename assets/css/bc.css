@@ -343,7 +343,7 @@ h3 {
     height: inherit;
 }
 
-#nav ul {	
+#nav ul {
 	list-style: none;
 	margin: 0;
 }
@@ -1947,7 +1947,7 @@ table td ul li a:hover {
 
 .small-country-list h4 {
 	margin-bottom: 1rem;
-	
+
 }
 
 .country-list {
@@ -1991,3 +1991,10 @@ form input {
 
 }
 
+.flag img {
+	height: 22px;
+}
+
+td.countries {
+	text-align: left;
+}
