@@ -4,7 +4,7 @@ class Model_Country extends Model_Campaign {
 
 	const ICON_TYPE = 'icon-globe';
 
-	public static $countryFilter = '1';
+	public static $campaignType = '1';
 
 	public function fromArray($data) {
 		if (array_key_exists('audience', $data)) {
@@ -33,7 +33,7 @@ class Model_Country extends Model_Campaign {
 		}
 	}
 
-	public static function getCountryCode()
+	public function getCountryCode()
 	{
 		return strtoupper($this->country);
 	}

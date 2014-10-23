@@ -146,7 +146,7 @@ class NewModel_Presence
 	public function getKloutId()
 	{
 		if(!$this->klout_id){
-			$kloutId = $this->provider->getKloutId();
+			$kloutId = $this->provider->getKloutId($this->getId());
 			if($kloutId){
 				$stmt = $this->db->prepare("UPDATE `presence` SET `klout_id` WHERE `id` = :id");
 				try {

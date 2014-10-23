@@ -5,15 +5,16 @@ class Model_Campaign extends Model_Base {
 	protected static $sortColumn = 'display_name';
 	protected static $badges = array();
 
-	// use this to filter campaigns table by is_country column
-	public static $countryFilter = null;
+	// use this to filter campaigns table by campaign_type column
+	protected static $campaignType = null;
 
 	protected function fetch($clause = null, $args = array()) {
-		if( static::$countryFilter !== null) {
+        $type = self::campaignType();
+		if($type !== null) {
 			if ($clause) {
 				$clause .= ' AND ';
 			}
-			$clause .= ' is_country = ' . static::$countryFilter;
+			$clause .= ' campaign_type = ' . $type;
 		}
 		return parent::fetch($clause, $args);
 	}
@@ -24,14 +25,14 @@ class Model_Campaign extends Model_Base {
 	 */
 	public static function objectify($data) {
 		$objects = array();
+        $campaignClasses = Model_Campaign::campaignClasses();
 		foreach ($data as $row) {
-			if($row['is_country'] == 1){
-				$objects[] = new Model_Country($row, true);
-			} elseif ($row['is_country'] == 2) {
-				$objects[] = new Model_Region($row, true);
-			} else {
-				$objects[] = new Model_Group($row, true);
-			}
+            foreach ($campaignClasses as $campaignClass) {
+                if ($row['campaign_type'] == $campaignClass::campaignType()) {
+                    $objects[] = new $campaignClass($row, true);
+                    break;
+                }
+            }
 		}
 		return $objects;
 	}
@@ -44,7 +45,7 @@ class Model_Campaign extends Model_Base {
 		if ($clause) {
 			$clause .= ' AND ';
 		}
-		$clause .= ' is_country = ' . static::$countryFilter;
+		$clause .= ' campaign_type = ' . self::campaignType();
 		return parent::count($clause, $args);
 	}
 
@@ -340,8 +341,8 @@ class Model_Campaign extends Model_Base {
             FROM campaigns AS c
             LEFT OUTER JOIN campaign_presences AS cp
                 ON cp.campaign_id = c.id
-            WHERE c.is_country = :is_country');
-	    $args = array(':is_country'=>static::$countryFilter);
+            WHERE c.campaign_type = :campaign_type');
+	    $args = array(':campaign_type'=>self::campaignType());
         $stmt->execute($args);
         $mapping = $stmt->fetchAll(PDO::FETCH_OBJ);
 
@@ -499,4 +500,15 @@ class Model_Campaign extends Model_Base {
 		return array_values($campaigns);
 	}
 
+    static function campaignType() {
+        return static::$campaignType;
+    }
+
+    /**
+     * Gets all of the valid subclasses of campaign, in priority order
+     * @return self[]
+     */
+    static function campaignClasses() {
+        return array('Model_Country', 'Model_Group', 'Model_Region');
+    }
 }

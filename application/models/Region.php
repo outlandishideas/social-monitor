@@ -4,7 +4,7 @@ class Model_Region extends Model_Campaign {
 
     const ICON_TYPE = 'icon-compass';
 
-	public static $countryFilter = '2';
+	public static $campaignType = '2';
 
     public function fromArray($data) {
         if (array_key_exists('presences', $data)) {

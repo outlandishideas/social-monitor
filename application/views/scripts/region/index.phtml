@@ -30,7 +30,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
 		</tr>
 	</thead>
 	<tbody>
-		<?php /** @var region Model_Region */ ?>
+		<?php /** @var $region Model_Region */ ?>
 		<?php foreach ($this->regions as $region) : ?>
 		<tr>
 			<?php $presences = $region->getPresences(); ?>

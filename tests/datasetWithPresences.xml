@@ -4,6 +4,6 @@
 	<presences id="2" type="sina_weibo" handle="invalid" uid="12345" image_url="http://" name="Invalid" page_url="http://" popularity="2000" sign_off="1" branding="1" klout_id="NULL" klout_score="NULL" facebook_engagement="NULL" last_fetched="2014-10-06 20:08:00" last_updated="2014-10-06 20:08:00"/>
 	<campaign_presences campaign_id="1" presence_id="1" />
 	<campaign_presences campaign_id="2" presence_id="2" />
-	<campaigns id="1" display_name="Test Country" is_country="1" country="GB" audience="10000" status="0" population="1000000" penetration="60"/>
-	<campaigns id="2" display_name="Test Group" is_country="0" country="NULL" audience="10000" status="0" population="NULL" penetration="NULL"/>
+	<campaigns id="1" display_name="Test Country" campaign_type="1" country="GB" audience="10000" status="0" population="1000000" penetration="60"/>
+	<campaigns id="2" display_name="Test Group" campaign_type="0" country="NULL" audience="10000" status="0" population="NULL" penetration="NULL"/>
 </dataset>

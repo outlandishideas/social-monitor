@@ -72,13 +72,10 @@ class NewModel_PresenceType extends NewModel_Enum
 				return array(
 					Badge_Factory::getBadge(Badge_Reach::getName())
 				);
-				break;
 			case self::FACEBOOK:
 				return array();
-				break;
 			case self::TWITTER:
 				return array();
-				break;
 			default:
 				throw new \LogicException("Not implemented yet.");
 		}
@@ -89,13 +86,12 @@ class NewModel_PresenceType extends NewModel_Enum
 		switch ($this->value) {
 			case self::SINA_WEIBO:
 				return BaseController::getOption('sina_weibo_relevance_percentage');
-				break;
 			case self::FACEBOOK:
 				return BaseController::getOption('facebook_relevance_percentage');
-				break;
 			case self::TWITTER:
 				return BaseController::getOption('twitter_relevance_percentage');
-				break;
+            default:
+                throw new \LogicException("Not implemented yet.");
 		}
 	}
 
@@ -116,7 +112,6 @@ class NewModel_PresenceType extends NewModel_Enum
 					Metric_Relevance::getName(),
 					Metric_SignOff::getName()
 				);
-				break;
 			case self::FACEBOOK:
 				return array(
 					Metric_ActionsPerDay::getName(),
@@ -130,7 +125,6 @@ class NewModel_PresenceType extends NewModel_Enum
 					Metric_ResponseRatio::getName(),
 					Metric_ResponseTime::getName()
 				);
-				break;
 			case self::TWITTER:
 				return array(
 					Metric_ActionsPerDay::getName(),
@@ -143,7 +137,8 @@ class NewModel_PresenceType extends NewModel_Enum
 					Metric_ResponseTime::getName(),
 					Metric_Klout::getName()
 				);
-				break;
+            default:
+                throw new \LogicException("Not implemented yet.");
 		}
 	}
 }

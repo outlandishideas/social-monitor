@@ -80,7 +80,7 @@ class Model_Presence extends Model_Base {
 			$mapping[$row->campaign_id][] = $row->presence_id;
 		}
 		/** @var Model_Presence[] $presences */
-		$campaignTypes = array('Model_Country', 'Model_Group', 'Model_Region');
+        $campaignTypes = Model_Campaign::campaignClasses();
 		$campaigns = array();
 		foreach ($campaignTypes as $type) {
 			$current = array();
@@ -91,7 +91,7 @@ class Model_Presence extends Model_Base {
 					}
 				}
 			}
-			$campaigns[$type::$countryFilter] = $current;
+			$campaigns[$type::campaignType()] = $current;
 		}
 		foreach ($presences as $p) {
 			$p->getOwner($campaigns);
@@ -133,11 +133,11 @@ class Model_Presence extends Model_Base {
 		if (!property_exists($this, 'owner')) {
 	        $this->owner = null;
 			// prioritise country over group and region
-			$campaignTypes = array('Model_Country', 'Model_Group', 'Model_Region');
+			$campaignTypes = Model_Campaign::campaignClasses();
 			if ($allCampaigns) {
 				foreach($campaignTypes as $campaignType) {
-					if (isset($allCampaigns[$campaignType::$countryFilter][$this->id])) {
-						$this->owner = $allCampaigns[$campaignType::$countryFilter][$this->id];
+					if (isset($allCampaigns[$campaignType::campaignType()][$this->id])) {
+						$this->owner = $allCampaigns[$campaignType::campaignType()][$this->id];
 						break;
 					}
 				}

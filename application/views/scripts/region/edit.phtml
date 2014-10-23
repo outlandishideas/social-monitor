@@ -47,7 +47,7 @@ if ($buttons && $this->showButtons) :
     </fieldset>
     <?php endif; ?>
 
-    <input name="is_country" value="2" type="hidden" id="is_country">
+    <input name="campaign_type" value="<?php echo Model_Region::$campaignType; ?>" type="hidden" id="campaign_type">
 
 	<div class="buttonHolder">
 		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true); ?>

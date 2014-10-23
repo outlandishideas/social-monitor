@@ -68,7 +68,7 @@ if ($buttons && $this->showButtons) : ?>
     </fieldset>
     <?php endif; ?>
 
-    <input name="is_country" value="0" type="hidden" id="is_country">
+    <input name="campaign_type" value="<?php echo Model_Group::$campaignType; ?>" type="hidden" id="campaign_type">
 
     <div class="button-bc-bar">
         <div class="row bk-dark">
