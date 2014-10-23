@@ -23,6 +23,7 @@ class Metric_Klout extends Metric_Abstract {
         $target = BaseController::getOption('klout_target');
         $actual = round($presence->getKloutScore());
         $score = ($actual < $target) ? 0 : 100 ;
+        return $score;
     }
 
 }

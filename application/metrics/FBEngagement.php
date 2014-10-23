@@ -35,6 +35,7 @@ class Metric_FBEngagement extends Metric_Abstract {
         $target = BaseController::getOption('fb_engagement_target');
         $actual = $total/$count;
         $score = ($actual < $target) ? 0 : 100 ;
+        return $score;
     }
 
 }
