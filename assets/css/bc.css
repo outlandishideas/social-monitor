@@ -1991,6 +1991,11 @@ form input {
 
 }
 
+.flag {
+	position: relative;
+	top: -2px;
+}
+
 .flag img {
 	height: 22px;
 }
@@ -2015,4 +2020,32 @@ td.countries a {
 	border-radius: 5px;
 	border-bottom-right-radius: 5px;
 	border-top-right-radius: 5px;
+}
+
+.inlineLabels #assigned {
+	display: block;
+}
+
+.inlineLabels #assigned li {
+	float: left;
+	margin-right: 10px;
+}
+
+.inlineLabels #assigned li a {
+	background-color: #0f70a3;
+	height: 30px;
+	line-height: 27px;
+	-moz-transition: background-color .7s;
+	-webkit-transition: background-color .7s;
+	transition: background-color .7s;
+}
+
+.inlineLabels #assigned li:hover a {
+	background-color: #2ba6cb;
+}
+
+.inlineLabels #assigned li a.last {
+	margin-left: -1px;
+	top: 1px;
+	position: relative;
 }

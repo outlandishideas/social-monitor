@@ -1,0 +1,36 @@
+<fieldset class="inlineLabels">
+	<legend><?php echo $this->owner->display_name; ?></legend>
+	<div class="ctrlHolder">
+		<label for="countries">
+			Available countries
+		</label>
+		<button type="button" class="button add-item">Add</button>
+		<select id="countries" class="selectInput">
+			<option value="">-- Select --</option>
+			<?php foreach ($this->allCountries as $c) : ?>
+				<option value="<?php echo $c->id; ?>"
+						data-url="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$c->id)); ?>"
+						data-label="<?php echo $c->getName(); ?>"
+						style="background-image: url(<?php echo $this->baseUrl('/'); ?>assets/img/flags/<?php echo($c->getCountryCode()); ?>.png);"
+				>
+					<?php echo $c->getName(); ?>
+				</option>
+			<?php endforeach; ?>
+		</select>
+	</div>
+	<div class="ctrlHolder">
+		<label>
+			Currently assigned countries
+		</label>
+		<ul id="assigned">
+			<?php
+			foreach ($this->owner->getCountries() as $country) {
+				echo $this->partial('partials/country_box.phtml', array('country'=>$country, 'varname'=>'assigned[]'));
+			}
+			?>
+			<li class="none-found">
+				No presences assigned
+			</li>
+		</ul>
+	</div>
+</fieldset>

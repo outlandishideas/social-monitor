@@ -1,10 +1,9 @@
 <form method="post" action="<?php echo $this->url(); ?>" class="uniForm management" novalidate id="manage-region">
 
 	<?php
-	echo $this->partial('partials/assign-presences.phtml', array(
+	echo $this->partial('partials/assign-countries.phtml', array(
 			'owner'=>$this->region,
-			'twitterPresences'=>$this->twitterPresences,
-			'facebookPresences'=>$this->facebookPresences
+			'allCountries'=>$this->allCountries
 		));
 	?>
 

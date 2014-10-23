@@ -214,13 +214,11 @@ class RegionController extends CampaignController
         $this->validateData($region);
 
         if ($this->_request->isPost()) {
-            $presenceIds = array();
-            foreach ($this->_request->getParam('assigned') as $ids) {
-                foreach ($ids as $id) {
-                    $presenceIds[] = $id;
-                }
+            $countryIds = array();
+            foreach ($this->_request->getParam('assigned') as $id) {
+                $countryIds[] = $id;
             }
-            $region->assignPresences($presenceIds);
+            $region->assignCountries($countryIds);
             $this->flashMessage('Region presences updated');
             $this->_helper->redirector->gotoSimple('index');
         }
@@ -228,8 +226,7 @@ class RegionController extends CampaignController
         $this->view->title = 'Manage Region Presences';
         $this->view->titleIcon = 'icon-tasks';
         $this->view->region = $region;
-        $this->view->twitterPresences = Model_Presence::fetchAllTwitter();
-        $this->view->facebookPresences = Model_Presence::fetchAllFacebook();
+        $this->view->allCountries = Model_Country::fetchAll();
 	}
 
 	/**
