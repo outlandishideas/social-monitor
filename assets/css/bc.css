@@ -1998,3 +1998,11 @@ form input {
 td.countries {
 	text-align: left;
 }
+
+td.countries a {
+	cursor: pointer;
+}
+
+.entity-list-toggle {
+	cursor: pointer;
+}

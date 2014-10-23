@@ -33,7 +33,10 @@ $buttons = $this->gatekeeper()->filterAll(array(
 		<?php /** @var $region Model_Region */ ?>
 		<?php foreach ($this->regions as $region) : ?>
 		<tr>
-			<?php $presences = $region->getPresences(); ?>
+			<?php
+                $presences = $region->getPresences();
+                $countries = $region->getCountries();
+            ?>
 			<td>
 				<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'id'=>$region->id)); if ($url) : ?>
 					<a href="<?php echo $url; ?>"><?php echo $region->display_name; ?></a>
@@ -56,8 +59,9 @@ $buttons = $this->gatekeeper()->filterAll(array(
                         </td>
                 <?php endforeach; ?>
                 <td class="countries">
+                    <span class="entity-list-toggle"><?php echo(count($countries)); ?> countries</span>
                     <ul class="entity-list">
-                        <?php foreach($region->getCountries() as $country) : ?>
+                        <?php foreach($countries as $country) : ?>
                             <li>
                                 <?php echo $this->partial('partials/country_inline.phtml',  array('country' => $country)); ?>
                             </li>

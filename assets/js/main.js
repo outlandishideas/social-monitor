@@ -339,6 +339,19 @@ app.init = {
 				}
 			});
 
+		},
+
+		'.entity-list-toggle': function($toggle) {
+			$toggle.on('click', function(e) {
+				e.preventDefault();
+				$list = $(this).next();
+				if (parseInt($list.css('height')) > 0) {
+					$list.css('height', 0);
+				} else {
+					$list.css('height', 'auto');
+				}
+			});
+			$toggle.next().css('height', 0);
 		}
 	}
 };
@@ -354,7 +367,7 @@ app.apiStatus = {
 	show: function () {
 		$('#status-overlay').remove();
 		clearTimeout(app.state.apiOverlayTimer);
-	
+
 		var $span = $(this);
 		var data = $span.data();
 		data.url = app.utils.baseUrl() + data.type+'/deauth?return_url='+location;
