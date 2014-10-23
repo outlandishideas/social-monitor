@@ -40,7 +40,7 @@ class PresenceController extends GraphingController
 	public function viewAction()
 	{
 		/** @var Model_Presence $presence */
-		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
+		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		$this->validateData($presence);
 
 		$this->view->badgePartial = $this->badgeDetails($presence->getBadges());
@@ -55,7 +55,7 @@ class PresenceController extends GraphingController
 	public function compareAction()
     {
         $compareData = array();
-        foreach(explode(',',$this->_request->id) as $id){
+        foreach(explode(',',$this->_request->getParam('id')) as $id){
 	        /** @var Model_Presence $presence */
             $presence = NewModel_PresenceFactory::getPresenceById($id);
             $this->validateData($presence);
@@ -92,10 +92,10 @@ class PresenceController extends GraphingController
 	 */
 	public function editAction()
 	{
-		if ($this->_request->action == 'edit') {
-			$presence = Model_Presence::fetchById($this->_request->id);
-			if($this->_request->type == NewModel_PresenceType::SINA_WEIBO){
-				$presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
+		if ($this->_request->getActionName() == 'edit') {
+			$presence = Model_Presence::fetchById($this->_request->getParam('id'));
+			if($this->_request->getParam('type') == NewModel_PresenceType::SINA_WEIBO){
+				$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 			}
             $this->view->showButtons = true;
 		} else {
@@ -108,21 +108,21 @@ class PresenceController extends GraphingController
 		if ($this->_request->isPost()) {
 
 			$errorMessages = array();
-			if (empty($this->_request->type)) {
+			if (!$this->_request->getParam('type')) {
 				$errorMessages[] = 'Please choose a type';
 			}
-			if (empty($this->_request->handle)) {
+			if (!$this->_request->getParam('handle')) {
 				$errorMessages[] = 'Please enter a handle';
 			}
 
-			$typeName = $this->_request->type;
+			$typeName = $this->_request->getParam('type');
 			if($typeName == "SINA_WEIBO"){
 
 				$type = NewModel_PresenceType::SINA_WEIBO();
 				if($presence instanceof Model_Presence){
-					$handle = $this->_request->handle;
-					$signOff = $this->_request->sign_off;
-					$branding = $this->_request->branding;
+					$handle = $this->_request->getParam('handle');
+					$signOff = $this->_request->getParam('sign_off');
+					$branding = $this->_request->getParam('branding');
 
 					NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
 
@@ -185,7 +185,7 @@ class PresenceController extends GraphingController
 	 */
 	public function deleteAction()
 	{
-		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
+		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		$this->validateData($presence, 'page');
 
 		if ($this->_request->isPost()) {
@@ -202,7 +202,7 @@ class PresenceController extends GraphingController
         Zend_Session::writeClose(); // release session on long running actions
 
 	    /** @var Model_Presence $presence */
-        $presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
+        $presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 
         $response = $presence->badges();
 
@@ -218,7 +218,7 @@ class PresenceController extends GraphingController
 		$this->validateChartRequest();
 
 		/** @var $presence NewModel_Presence */
-		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
+		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		if(!$presence) {
 			$this->apiError('Presence could not be found');
 		}
@@ -227,7 +227,7 @@ class PresenceController extends GraphingController
 		$start = $dateRange[0];
 		$end = $dateRange[1];
 
-		$chartObject = Chart_Factory::getChart($this->_request->chart);
+		$chartObject = Chart_Factory::getChart($this->_request->getParam('chart'));
 
 		$this->apiSuccess($chartObject->getChart($presence, $start, $end));
 	}
@@ -236,7 +236,7 @@ class PresenceController extends GraphingController
 	 * AJAX function for toggling whether a facebook status needs a response
 	 */
 	public function toggleResponseNeededAction() {
-		$id = $this->_request->id;
+		$id = $this->_request->getParam('id');
 		if (!$id) {
 			$this->apiError('Missing ID');
 		}
@@ -258,7 +258,7 @@ class PresenceController extends GraphingController
 		}
 
 		/** @var $presence Model_Presence */
-		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->id);
+		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		if (!$presence) {
 			$this->apiError('Presence not found');
 		}
@@ -277,7 +277,7 @@ class PresenceController extends GraphingController
 		if ($presence->isForTwitter()) {
 			foreach ($data->statuses as $tweet) {
 				$tableData[] = array(
-					'message'=> $this->_request->format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
+					'message'=> $this->_request->getParam('format') == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
 					'date'=>Model_Base::localeDate($tweet->created_time),
 					'twitter_url'=>Model_TwitterTweet::getTwitterUrl($presence->handle, $tweet->tweet_id)
 				);
@@ -333,11 +333,11 @@ class PresenceController extends GraphingController
 		$count = count($data->statuses);
 
 		//return CSV or JSON?
-		if ($this->_request->format == 'csv') {
+		if ($this->_request->getParam('format') == 'csv') {
 			$this->returnCsv($tableData, $presence->type.'s.csv');
 		} else {
 			$apiResult = array(
-				'sEcho' => $this->_request->sEcho,
+				'sEcho' => $this->_request->getParam('sEcho'),
 				'iTotalRecords' => $count,
 				'iTotalDisplayRecords' => $data->total,
 				'aaData' => $tableData

@@ -294,10 +294,8 @@ class BaseController extends Zend_Controller_Action
 
     protected function getRequestDateRange()
     {
-        if (empty($this->_request->dateRange)) {
-            $dateRange = null;
-        } else {
-            $dateRange = $this->_request->dateRange;
+        $dateRange = $this->_request->getParam('dateRange');
+        if ($dateRange) {
             if (!is_array($dateRange)) {
                 $dateRange = explode(',', $dateRange);
             }
@@ -321,41 +319,28 @@ class BaseController extends Zend_Controller_Action
     protected function getRequestOrdering()
     {
         $ordering = array();
-        for ($i = 0; $i < $this->_request->iSortingCols; $i++) {
-            $propIndex = $this->_request->{"iSortCol_$i"};
-            $propName = $this->_request->{"mDataProp_$propIndex"};
-            $ordering[$propName] = $this->_request->{"sSortDir_$i"};
+        $cols = $this->_request->getParam('iSortingCols');
+        for ($i = 0; $i < $cols; $i++) {
+            $propIndex = $this->_request->getParam("iSortCol_$i");
+            $propName = $this->_request->getParam("mDataProp_$propIndex");
+            $ordering[$propName] = $this->_request->getParam("sSortDir_$i");
         }
         return $ordering;
     }
 
     protected function getRequestSearchQuery()
     {
-        return $this->_request->sSearch;
+        return $this->_request->getParam('sSearch');
     }
 
     protected function getRequestLimit()
     {
-        return $this->_request->iDisplayLength ? $this->_request->iDisplayLength : -1;
+        return $this->_request->getParam('iDisplayLength', -1);
     }
 
     protected function getRequestOffset()
     {
-        return $this->_request->iDisplayStart ? $this->_request->iDisplayStart : -1;
-    }
-
-    protected function getRequestTopics()
-    {
-        if ($this->_request->topics) {
-            return explode(',', $this->_request->topics);
-        } else {
-            return array();
-        }
-    }
-
-    public static function makeLineId($className, $modelId, $filterType = '', $filterValue = '')
-    {
-        return implode(':', array(substr($className, 6), $modelId, $filterType, $filterValue));
+        return $this->_request->getParam('iDisplayStart', -1);
     }
 
     public static function parseLineId($lineId)

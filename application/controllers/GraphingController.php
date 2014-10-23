@@ -23,7 +23,7 @@ abstract class GraphingController extends BaseController {
 
 	protected function validateChartRequest()
 	{
-		$id = $this->_request->id;
+		$id = $this->_request->getParam('id');
 		if(!$id) {
 			$this->apiError('Missing Id range');
 		}
@@ -33,7 +33,7 @@ abstract class GraphingController extends BaseController {
 			$this->apiError('Missing date range');
 		}
 
-		$chart = $this->_request->chart;
+		$chart = $this->_request->getParam('chart');
 		if (!$chart) {
 			$this->apiError('Missing chart type');
 		}

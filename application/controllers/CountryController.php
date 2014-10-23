@@ -58,7 +58,7 @@ class CountryController extends CampaignController {
 	public function viewAction()
 	{
 		/** @var Model_Country $country */
-		$country = Model_Country::fetchById($this->_request->id);
+		$country = Model_Country::fetchById($this->_request->getParam('id'));
 		$this->validateData($country);
 
 		$this->view->badgePartial = $this->badgeDetails($country->getBadges());
@@ -85,8 +85,8 @@ class CountryController extends CampaignController {
 	 */
 	public function editAction()
 	{
-		if ($this->_request->action == 'edit') {
-			$editingCountry = Model_Country::fetchById($this->_request->id);
+		if ($this->_request->getActionName() == 'edit') {
+			$editingCountry = Model_Country::fetchById($this->_request->getParam('id'));
             $this->view->showButtons = true;
 		} else {
 			$editingCountry = new Model_Country();
@@ -102,10 +102,10 @@ class CountryController extends CampaignController {
 			$editingCountry->fromArray($this->_request->getParams());
 
 			$errorMessages = array();
-			if (!$this->_request->display_name) {
+			if (!$this->_request->getParam('display_name')) {
 				$errorMessages[] = 'Please enter a display name';
 			}
-			if (!$this->_request->country) {
+			if (!$this->_request->getParam('country')) {
 				$errorMessages[] = 'Please select a country';
 			}
 
@@ -254,12 +254,12 @@ class CountryController extends CampaignController {
 	 */
 	public function manageAction() {
 		/** @var Model_Country $country */
-		$country = Model_Country::fetchById($this->_request->id);
+		$country = Model_Country::fetchById($this->_request->getParam('id'));
 		$this->validateData($country);
 
 		if ($this->_request->isPost()) {
 			$presenceIds = array();
-			foreach ($this->_request->assigned as $ids) {
+			foreach ($this->_request->getParam('assigned') as $ids) {
 				foreach ($ids as $id) {
 					$presenceIds[] = $id;
 				}
@@ -280,7 +280,7 @@ class CountryController extends CampaignController {
 	 * @user-level manager
 	 */
 	public function deleteAction() {
-		$country = Model_Country::fetchById($this->_request->id);
+		$country = Model_Country::fetchById($this->_request->getParam('id'));
 		$this->validateData($country);
 
 		if ($this->_request->isPost()) {
@@ -297,7 +297,7 @@ class CountryController extends CampaignController {
         Zend_Session::writeClose(); // release session on long running actions
 
 	    /** @var Model_Country $country */
-        $country = Model_Country::fetchById($this->_request->id);
+        $country = Model_Country::fetchById($this->_request->getParam('id'));
 
         $response = $country->badges();
 
@@ -314,7 +314,7 @@ class CountryController extends CampaignController {
 		$this->validateChartRequest();
 
 		/** @var $presence NewModel_Presence */
-		$presence = Model_Country::fetchById($this->_request->id);
+		$presence = Model_Country::fetchById($this->_request->getParam('id'));
 		if(!$presence) {
 			$this->apiError('Country could not be found');
 		}
@@ -323,7 +323,7 @@ class CountryController extends CampaignController {
 		$start = $dateRange[0];
 		$end = $dateRange[1];
 
-		$chartObject = Chart_Factory::getChart($this->_request->chart);
+		$chartObject = Chart_Factory::getChart($this->_request->getParam('chart'));
 
 		$this->apiSuccess($chartObject->getChart($presence, $start, $end));
 	}
