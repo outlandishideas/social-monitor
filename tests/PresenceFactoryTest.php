@@ -64,7 +64,7 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
      */
     public function testCreateNewSinaWeiboPresenceReturnsFalseWhenInvalid()
     {
-    	$this->assertFalse(NewModel_PresenceFactory::createNewPresence(NewModel_PresenceType::SINA_WEIBO(), 'cgnetrhuickmger', false, false));
+    	$this->assertNull(NewModel_PresenceFactory::createNewPresence(NewModel_PresenceType::SINA_WEIBO(), 'cgnetrhuickmger', false, false));
     }
 
     /**
@@ -73,7 +73,7 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
      */
     public function testCreateNewSinaWeiboPresenceGetsAddedToDBWhenValid()
     {
-    	$this->assertTrue(NewModel_PresenceFactory::createNewPresence(NewModel_PresenceType::SINA_WEIBO(), 'learnenglish', false, false));
+    	$this->assertNotNull(NewModel_PresenceFactory::createNewPresence(NewModel_PresenceType::SINA_WEIBO(), 'learnenglish', false, false));
     	$this->assertEquals(1, $this->getConnection()->getRowCount('presences'), "Inserting failed");
     }
 
@@ -83,19 +83,19 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
      */
     public function testCreatingNewSinaWeiboPresenceInsertsCorrectValues()
     {
-    	NewModel_PresenceFactory::createNewPresence(NewModel_PresenceType::SINA_WEIBO(), 'learnenglish', false, false);
+    	$presence = NewModel_PresenceFactory::createNewPresence(NewModel_PresenceType::SINA_WEIBO(), 'learnenglish', false, false);
     	$provider = new NewModel_SinaWeiboProvider(self::$pdo);
-    	$data = array_values($provider->handleData('learnenglish'));
+        $provider->updateMetadata($presence);
     	$dbdata = self::$pdo->query("SELECT * FROM `presences` WHERE `handle` = 'learnenglish'");
     	$dbdata = $dbdata->fetch(PDO::FETCH_ASSOC);
 
-    	$this->assertEquals($data[0], $dbdata['type']);
-    	$this->assertEquals($data[1], $dbdata['handle']);
-    	$this->assertEquals($data[2], $dbdata['uid']);
-    	$this->assertEquals($data[3], $dbdata['image_url']);
-    	$this->assertEquals($data[4], $dbdata['name']);
-    	$this->assertEquals($data[5], $dbdata['page_url']);
-    	$this->assertEquals($data[6], $dbdata['popularity']);
+    	$this->assertEquals($presence->type->getValue(), $dbdata['type']);
+    	$this->assertEquals($presence->handle, $dbdata['handle']);
+    	$this->assertEquals($presence->uid, $dbdata['uid']);
+    	$this->assertEquals($presence->image_url, $dbdata['image_url']);
+    	$this->assertEquals($presence->name, $dbdata['name']);
+    	$this->assertEquals($presence->page_url, $dbdata['page_url']);
+    	$this->assertEquals($presence->popularity, $dbdata['popularity']);
     }
 
     /**

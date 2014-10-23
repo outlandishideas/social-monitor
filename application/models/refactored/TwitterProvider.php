@@ -16,7 +16,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 		$this->type = NewModel_PresenceType::TWITTER();
 	}
 
-	public function fetchData(NewModel_Presence $presence)
+	public function fetchStatusData(NewModel_Presence $presence)
 	{
 		if (!$presence->uid) {
 			throw new Exception('Presence not initialised/found');
@@ -134,26 +134,13 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 
 	public function update(NewModel_Presence $presence)
 	{
-		$data = parent::updateNew($presence->getHandle());
-		if($data){
-			$kloutId = $presence->getKloutId();
-			if($kloutId){
-				$data['klout_id'] = $kloutId;
-				$data['klout_score'] = $this->getKloutScore($kloutId);
-			}
-		}
-		return $data;
-	}
-
-	public function updateNew($handle)
-	{
-		$data = parent::updateNew($handle);
-		$kloutId = $this->getKloutId($data['uid']);
-		if($kloutId){
-			$data['klout_id'] = $kloutId;
-			$data['klout_score'] = $this->getKloutScore($kloutId);
-		}
-		return $data;
+        parent::update($presence);
+        $kloutId = $presence->getKloutId();
+        if(!$kloutId){
+            $kloutId = $this->getKloutId($presence->getUID());
+            $presence->klout_id = $kloutId;
+        }
+        $presence->klout_score = $this->getKloutScore($kloutId);
 	}
 
 	protected function getKloutApi()
@@ -176,7 +163,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 	{
 		$apiKey = $this->getKloutApi();
 		if($apiKey){
-			$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $this->uid . '?key=' . $apiKey);
+			$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $uid . '?key=' . $apiKey);
 			return $json->id;
 		}
 		return null;
@@ -191,7 +178,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 		$apiKey = $this->getKloutApi();
 		if($apiKey){
 			try {
-				$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'user.json/' . $this->klout_id . '?key=' . $apiKey);
+				$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'user.json/' . $kloutId . '?key=' . $apiKey);
 				return $json->score->score;
 			} catch (RuntimeException $ex) {
 				if ($ex->getCode() == 404) {
@@ -202,28 +189,15 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 		return null;
 	}
 
-	public function handleData($handle) {#
+	public function updateMetadata(NewModel_Presence $presence) {
 
-		try {
-			$data = Util_Twitter::userInfo($handle);
-		} catch (Exception_TwitterNotFound $e) {
-			return null;
-//			throw new Exception_TwitterNotFound('Twitter user not found: ' . $this->handle, $e->getCode(), $e->getPath(), $e->getErrors());
-		}
+        $data = Util_Twitter::userInfo($presence->handle);
 
-		//test if user exists
-		return array(
-			"type" => NewModel_PresenceType::TWITTER, //type
-			"handle" => $handle, //handle
-			"uid" => $data->id_str, //uid
-			"image_url" => $data->profile_image_url, //image_url
-			"name" => $data->name, //name
-			"page_url" => 'http://www.twitter.com/' . $data->screen_name, //page_url
-			"followers" => $data->followers_count,  //popularity
-			"klout_id" => null,  //klout_id
-			"klout_score" => null,  //klout_score
-			"facebook_engagement" => null,  //facebook_engagement
-			"last_updated" => gmdate('Y-m-d H:i:s') //last_updated
-		);
+        $presence->type = NewModel_PresenceType::TWITTER();
+        $presence->uid = $data->id_str;
+        $presence->image_url = $data->profile_image_url;
+        $presence->name = $data->name;
+        $presence->page_url = 'http://www.twitter.com/' . $data->screen_name;
+        $presence->popularity = $data->followers_count;
 	}
 }

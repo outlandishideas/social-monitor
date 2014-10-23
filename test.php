@@ -21,7 +21,7 @@ $resourceLoader->addResourceType('badge', 'badges/', 'Badge');
 
 // $provider = new NewModel_SinaWeiboProvider($pdo);
 
-// //$provider->fetchData($presence);
+// //$provider->fetchStatusData($presence);
 
 // $data = $provider->getHistoricStream($presence, new DateTime('@'.strtotime('-1 month')), new DateTime('@'.time()));
 // var_dump($data);

@@ -2,6 +2,8 @@
 
 abstract class NewModel_PresenceFactory
 {
+    const TABLE_PRESENCES = 'presences';
+    const TABLE_CAMPAIGN_PRESENCES = 'campaign_presences';
 
     /** @var PDO */
 	protected static $db;
@@ -16,7 +18,7 @@ abstract class NewModel_PresenceFactory
 	public static function getPresences(array $queryOptions = array())
 	{
 		$queryOptions = array_merge(self::$defaultQueryOptions, $queryOptions);
-		$sql = "SELECT * FROM `presences` AS `p`";
+		$sql = "SELECT * FROM `" . self::TABLE_PRESENCES . "` AS `p`";
 		if (strlen($queryOptions['orderColumn'])) {
 			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
 		}
@@ -33,20 +35,20 @@ abstract class NewModel_PresenceFactory
      */
     public static function getPresenceById($id)
 	{
-        $presences = self::fetchPresences("SELECT * FROM `presences` WHERE `id` = :id", array(':id'=>$id));
+        $presences = self::fetchPresences("SELECT * FROM `" . self::TABLE_PRESENCES . "` WHERE `id` = :id", array(':id'=>$id));
         return $presences ? $presences[0] : null;
 	}
 
 	public static function getPresenceByHandle($handle, NewModel_PresenceType $type)
 	{
-        $presences = self::fetchPresences("SELECT * FROM `presences` WHERE `handle` = :handle AND `type` = :t", array(':handle' => $handle, ':t' => $type));
+        $presences = self::fetchPresences("SELECT * FROM `" . self::TABLE_PRESENCES . "` WHERE `handle` = :handle AND `type` = :t", array(':handle' => $handle, ':t' => $type));
         return $presences ? $presences[0] : null;
 	}
 
-	public static function getPresencesByType(NewModel_PresenceType $type, array $queryOptions = array())
+    public static function getPresencesByType(NewModel_PresenceType $type, array $queryOptions = array())
 	{
 		$queryOptions = array_merge(static::$defaultQueryOptions, $queryOptions);
-		$sql = "SELECT * FROM `presences` AS `p` WHERE `type` = :type";
+		$sql = "SELECT * FROM `" . self::TABLE_PRESENCES . "` AS `p` WHERE `type` = :type";
 		if (strlen($queryOptions['orderColumn'])) {
 			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
 		}
@@ -61,7 +63,7 @@ abstract class NewModel_PresenceFactory
 	{
 		$queryOptions = array_merge(static::$defaultQueryOptions, $queryOptions);
 		$inQuery = implode(',', array_fill(0, count($ids), '?'));
-		$sql = "SELECT * FROM `presences` AS `p` WHERE `id` IN ({$inQuery})";
+		$sql = "SELECT * FROM `" . self::TABLE_PRESENCES . "` AS `p` WHERE `id` IN ({$inQuery})";
 		if (strlen($queryOptions['orderColumn'])) {
 			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
 		}
@@ -75,7 +77,7 @@ abstract class NewModel_PresenceFactory
 	public static function getPresencesByCampaign($campaign, array $queryOptions = array())
 	{
 		$queryOptions = array_merge(static::$defaultQueryOptions, $queryOptions);
-		$sql = "SELECT `p`.* FROM `campaign_presences` AS `cp` LEFT JOIN `presences` AS `p` ON (`cp`.`presence_id` = `p`.`id`) WHERE `cp`.`campaign_id` = :cid";
+		$sql = "SELECT `p`.* FROM `" . self::TABLE_CAMPAIGN_PRESENCES . "` AS `cp` LEFT JOIN `" . self::TABLE_PRESENCES . "` AS `p` ON (`cp`.`presence_id` = `p`.`id`) WHERE `cp`.`campaign_id` = :cid";
 		if (strlen($queryOptions['orderColumn'])) {
 			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
 		}
@@ -88,25 +90,26 @@ abstract class NewModel_PresenceFactory
 
 	public static function createNewPresence(NewModel_PresenceType $type, $handle, $signed_off, $branding)
 	{
-		$signed_off = !!$signed_off;
-		$branding = !!$branding;
+        // create a new presence
+        $stmt = static::$db->prepare("
+				INSERT INTO `" . self::TABLE_PRESENCES . "`
+				(`type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `sign_off`, `branding`)
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute(array($type->getValue(), $handle, '', '', '', '', '', 0, 0));
+        $presence = NewModel_PresenceFactory::getPresenceByHandle($handle, $type);
 
-		$provider = $type->getProvider(static::$db);
+        try {
+            $presence->update();
+            $presence->sign_off = !!$signed_off;
+            $presence->branding = !!$branding;
+            $presence->save();
+        } catch (Exception $ex) {
+            $stmt = self::$db->prepare('DELETE FROM ' . self::TABLE_PRESENCES . ' WHERE ID = ?');
+            $stmt->execute(array($presence->id));
+            throw $ex;
+        }
 
-		$args = $provider->updateNew($handle);
-
-		if (!$args) {
-			return false;
-		} else {
-			//insert presence
-			$stmt = static::$db->prepare("
-				INSERT INTO `presences`
-				(`type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `klout_id`, `klout_score`, `facebook_engagement`, `last_updated`, `sign_off`, `branding`)
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			$args[] = $signed_off ? 1 : 0;
-			$args[] = $branding ? 1 : 0;
-			return $stmt->execute(array_values($args));
-		}
+        return $presence;
 	}
 
 	public static function setDatabase(PDO $db)
@@ -114,6 +117,11 @@ abstract class NewModel_PresenceFactory
 		static::$db = $db;
 	}
 
+    /**
+     * @param $sql
+     * @param array $args
+     * @return NewModel_Presence[]
+     */
     protected static function fetchPresences($sql, $args = array()) {
         $stmt = self::$db->prepare($sql);
         $stmt->execute($args);

@@ -13,10 +13,9 @@ abstract class NewModel_iProvider
 	/**
 	 * Fetch data for a certain handle (twitter handle, facebook name, sina weibo name etc)
 	 * @param NewModel_Presence $presence  The handle to fetch data for
-	 * @return array         The normalized data
 	 * @uses findAndSaveLinks
 	 */
-	abstract public function fetchData(NewModel_Presence $presence);
+	abstract public function fetchStatusData(NewModel_Presence $presence);
 
 	/**
 	 * Get all posts/tweets/streamdata for a specific presence between 2 dates
@@ -70,29 +69,13 @@ abstract class NewModel_iProvider
 	abstract protected function findAndSaveLinks($streamdatum);
 
 	/**
-	 * returns the data from handleData() without type and uid, which should not be updated
+	 * Updates the presence
 	 *
 	 * @param NewModel_Presence $presence
-	 * @return array|null Return null when handle is invalid, otherwise an array with the following data in order: `image_url`, `name`, `page_url`, `popularity`, `klout_id`, `klout_score`, `facebook_engagement`, `last_updated`
 	 */
 	public function update(NewModel_Presence $presence) {
-		$data = $this->handleData($presence->getHandle());
-		if($data){
-			unset($data['type']);
-			unset($data['handle']);
-			unset($data['uid']);
-		}
-		return $data;
-	}
-
-	/**
-	 * returns the data from handleData() without type and uid, which should not be updated
-	 *
-	 * @param mixed $handle
-	 * @return array|null Return null when handle is invalid, otherwise an array with the following data in order: `type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `klout_id`, `klout_score`, `facebook_engagement`, `last_updated`
-	 */
-	public function updateNew($handle) {
-		return $this->handleData($handle);
+		$this->updateMetadata($presence);
+        $presence->last_updated = gmdate('Y-m-d H:i:s');
 	}
 
 	public function getKloutId($uid) {
@@ -102,10 +85,10 @@ abstract class NewModel_iProvider
 	/**
 	 * gets the data for a handle. Returns null if handle cannot be got or throws Logic Exception if we don't know what went wrong
 	 *
-	 * @param mixed $handle  The handle to test
+	 * @param mixed $presence The presence to update
 	 * @return array|null Return null when handle is invalid, otherwise an array with the following data in order: `type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `klout_id`, `klout_score`, `facebook_engagement`, `last_updated`
 	 */
-	abstract public function handleData($handle);
+	abstract public function updateMetadata(NewModel_Presence $presence);
 
 	public function getTableName()
 	{

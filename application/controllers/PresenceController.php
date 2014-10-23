@@ -92,11 +92,19 @@ class PresenceController extends GraphingController
 	 */
 	public function editAction()
 	{
+        NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
+
 		if ($this->_request->getActionName() == 'edit') {
             $presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
             $this->view->showButtons = true;
 		} else {
-			$presence = new Model_Presence();
+			$presence = (object)array(
+                'id' => null,
+                'type' => null,
+                'handle' => null,
+                'sign_off' => null,
+                'branding' => null
+            );
             $this->view->showButtons = false;
 		}
 
@@ -105,58 +113,46 @@ class PresenceController extends GraphingController
 		if ($this->_request->isPost()) {
 
 			$errorMessages = array();
-			if (!$this->_request->getParam('type')) {
+            $type = $this->_request->getParam('type');
+            $handle = $this->_request->getParam('handle');
+            $signOff = $this->_request->getParam('sign_off');
+            $branding = $this->_request->getParam('branding');
+			if (!$type) {
 				$errorMessages[] = 'Please choose a type';
 			}
-			if (!$this->_request->getParam('handle')) {
+			if (!$handle) {
 				$errorMessages[] = 'Please enter a handle';
 			}
 
-			$typeName = $this->_request->getParam('type');
-			if($typeName == "SINA_WEIBO"){
+            if (!$presence->id) {
+                // can't change the type if editing
+                $presence->type = $type;
+            }
+            $presence->handle = $handle;
+            $presence->sign_off = $signOff;
+            $presence->branding = $branding;
 
-				$type = NewModel_PresenceType::SINA_WEIBO();
-				if($presence instanceof Model_Presence){
-					$handle = $this->_request->getParam('handle');
-					$signOff = $this->_request->getParam('sign_off');
-					$branding = $this->_request->getParam('branding');
+            if (!$errorMessages) {
+                try {
+                    if (!$presence->id) {
+                        $type = NewModel_PresenceType::get($type);
+                        $presence = NewModel_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
+                    } else {
+                        $presence->update();
+                        $presence->save();
+                    }
 
-					NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
-
-					try {
-						NewModel_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
-					} catch (Exception $ex) {
-						if (strpos($ex->getMessage(), '23000') !== false) {
-							$errorMessages[] = 'Presence already exists';
-						} else {
-							$errorMessages[] = $ex->getMessage();
-						}
-					}
-					$presence = NewModel_PresenceFactory::getPresenceByHandle($handle, $type);
-				}
-
-			} else {
-
-				$presence->fromArray($this->_request->getParams());
-
-				if (!$errorMessages) {
-					try {
-						$presence->updateInfo();
-						$presence->last_updated = gmdate('Y-m-d H:i:s');
-						$presence->save();
-
-                        $this->flashMessage('Presence saved');
-						$this->_helper->redirector->gotoSimple('index');
-					} catch (Exception $ex) {
-						if (strpos($ex->getMessage(), '23000') !== false) {
-							$errorMessages[] = 'Presence already exists';
-						} else {
-							$errorMessages[] = $ex->getMessage();
-						}
-					}
-				}
-
-			}
+                    $this->flashMessage('Presence saved');
+                    $this->_helper->redirector->gotoSimple('index');
+                    exit;
+                } catch (Exception $ex) {
+                    if (strpos($ex->getMessage(), '23000') !== false) {
+                        $errorMessages[] = 'Presence already exists';
+                    } else {
+                        $errorMessages[] = $ex->getMessage();
+                    }
+                }
+            }
 
 			if ($errorMessages) {
 				foreach ($errorMessages as $message) {

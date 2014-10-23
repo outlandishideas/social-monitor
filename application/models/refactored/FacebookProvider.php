@@ -13,14 +13,14 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 		$this->type = NewModel_PresenceType::FACEBOOK();
 	}
 
-	public function fetchData(NewModel_Presence $presence)
+	public function fetchStatusData(NewModel_Presence $presence)
 	{
 		if (!$presence->getUID()) {
 			throw new Exception('Presence not initialised/found');
 		}
 
 
-		$stmt = $this->_db->prepare("SELECT created_time FROM {$this->tableName} WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
+		$stmt = $this->db->prepare("SELECT created_time FROM {$this->tableName} WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
 		$stmt->execute(array(':id' => $presence->getId()));
 		$since = $stmt->fetchColumn();
 		if ($since) {
@@ -176,11 +176,8 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 
 	public function update(NewModel_Presence $presence)
 	{
-		$data = parent::updateNew($presence->getHandle());
-		if($data){
-			$data['facebook_engagement'] = $this->calculateFacebookEngagement($presence);
-		}
-		return $data;
+		parent::update($presence);
+        $presence->facebook_engagement = $this->calculateFacebookEngagement($presence);
 	}
 
 	protected function calculateFacebookEngagement(NewModel_Presence $presence)
@@ -238,7 +235,7 @@ class NewModel_FacebookProvider extends NewModel_iProvider
             AND ph.created_time <= :end_time
             GROUP BY ph.created_time";
 
-		$stmt = $this->_db->prepare($sql);
+		$stmt = $this->db->prepare($sql);
 		$stmt->execute($args);
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
@@ -254,27 +251,15 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 		}
 	}
 
-	public function handleData($handle) {
+	public function updateMetadata(NewModel_Presence $presence) {
 
-		try {
-			$data = Util_Facebook::pageInfo($handle);
-		} catch (Exception_FacebookNotFound $e) {
-			return null;
-//			throw new Exception_FacebookNotFound('Facebook page not found: ' . $this->handle, $e->getCode(), $e->getFql(), $e->getErrors());
-		}
+        $data = Util_Facebook::pageInfo($presence->handle);
 
-		return array(
-			"type" => NewModel_PresenceType::FACEBOOK, //type
-			"handle" => $handle, //handle
-			"uid" => $data['page_id'], //uid
-			"image_url" => $data['pic_square'], //image_url
-			"name" => $data['name'], //name
-			"page_url" => $data['page_url'], //page_url
-			"followers" => $data['fan_count'],  //popularity
-			"klout_id" => null,  //klout_id
-			"klout_score" => null,  //klout_score
-			"facebook_engagement" => null,  //facebook_engagement
-			"last_updated" => gmdate('Y-m-d H:i:s') //last_updated
-		);
+        $presence->type = NewModel_PresenceType::FACEBOOK();
+        $presence->uid = $data['page_id'];
+        $presence->image_url = $data['pic_square'];
+        $presence->name = $data['name'];
+        $presence->page_url = $data['page_url'];
+        $presence->popularity = $data['fan_count'];
 	}
 }

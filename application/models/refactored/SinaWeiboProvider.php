@@ -20,28 +20,33 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		$this->type = NewModel_PresenceType::SINA_WEIBO();
 	}
 
-	public function fetchData(NewModel_Presence $presence)
+	public function fetchStatusData(NewModel_Presence $presence)
 	{
 		$stmt = $this->db->prepare("SELECT MAX(`remote_id`) AS `since_id` FROM `{$this->tableName}` WHERE `presence_id` = ".$presence->getId());
 		$stmt->execute();
 		$data = $stmt->fetch(PDO::FETCH_ASSOC);
 		$since_id = $data['since_id'];
-		$ret = array();
+		$popularity = null;
 		$page = 0;
 		do {
 			$page++;
 			$data = $this->connection->friends_timeline($page, 200, $since_id);
-			foreach ($data['statuses'] as $s) {
-				if ($s['user']['profile_url'] != $presence->getHandle()) continue;
+            $statuses = isset($data['statuses']) ? $data['statuses'] : array();
+			foreach ($statuses as $s) {
+                if (!$s['user'] || $s['user']['profile_url'] != $presence->getHandle()) {
+                    continue;
+                }
 				$s['presence_id'] = $presence->getId();
 				$s['posted_by_presence'] = 1;
 				$this->parseStatus($s);
-				if ($s['user']) {
-					$ret['popularity'] = $s['user']['followers_count'];
-				}
+                if (!$popularity) {
+                    $popularity = $s['user']['followers_count'];
+                }
 			}
-		} while (count($data['statuses']));
-		return $ret;
+		} while (count($statuses));
+        if ($popularity) {
+            $presence->popularity = $popularity;
+        }
 	}
 
 	public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
@@ -240,36 +245,27 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		}
 	}
 
-	public function handleData($handle) {
+	public function updateMetadata(NewModel_Presence $presence) {
 		//test if user exists
-		$ret = $this->connection->show_user_by_name($handle);
+		$ret = $this->connection->show_user_by_name($presence->handle);
 		if (!is_array($ret)) {
 			//something went really wrong
-			return null;
+			throw new RuntimeException('No data received');
 		}
 		if (array_key_exists('error_code', $ret)) {
 			switch ($ret['error_code']) {
 				case 20003:
-					return null;
-					break;
+                    throw new Exception('User does not exist');
 				default:
 					throw new LogicException("Unknown error code {$ret['error_code']} encountered.");
-					break;
 			}
 		}
 
-		return array(
-			"type" => NewModel_PresenceType::SINA_WEIBO, //type
-			"handle" => $handle, //handle
-			"uid" => $ret['idstr'], //uid
-			"image_url" => $ret['profile_image_url'], //image_url
-			"name" => $ret['name'], //name
-			"page_url" => self::BASEURL.$ret['profile_url'], //page_url
-			"followers" => $ret['followers_count'],  //popularity
-			"klout_id" => null,  //klout_id
-			"klout_score" => null,  //klout_score
-			"facebook_engagement" => null,  //facebook_engagement
-			"last_updated" => gmdate('Y-m-d H:i:s') //last_updated
-		);
+        $presence->type = NewModel_PresenceType::SINA_WEIBO();
+		$presence->uid = $ret['idstr'];
+		$presence->image_url = $ret['profile_image_url'];
+		$presence->name = $ret['name'];
+		$presence->page_url = self::BASEURL.$ret['profile_url'];
+		$presence->popularity = $ret['followers_count'];
 	}
 }

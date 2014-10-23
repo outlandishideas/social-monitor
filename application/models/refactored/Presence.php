@@ -17,6 +17,7 @@ class NewModel_Presence
 	public $handle;
     /** @var NewModel_PresenceType */
 	public $type;
+	public $name;
 	public $label;
 	public $uid;
 	public $sign_off;
@@ -56,20 +57,20 @@ class NewModel_Presence
 			throw new \InvalidArgumentException('Missing handle for Presence');
 		}
 		$this->id = $internals['id'];
-		$this->handle = $internals['handle'];
-		$this->setType($internals['type']);
-		$this->name = $internals['name'];
-		$this->uid = $internals['uid'];
-		$this->sign_off = $internals['sign_off'];
-		$this->branding = $internals['branding'];
-		$this->popularity = $internals['popularity'];
-		$this->klout_score = $internals['klout_score'];
-		$this->facebook_engagement = $internals['facebook_engagement'];
-		$this->page_url = $internals['page_url'];
-		$this->image_url = $internals['image_url'];
-		$this->last_updated = $internals['last_updated'];
-		$this->last_fetched = $internals['last_fetched'];
-	}
+        $this->handle = $internals['handle'];
+        $this->setType($internals['type']);
+        $this->name = $internals['name'];
+        $this->uid = $internals['uid'];
+        $this->sign_off = $internals['sign_off'];
+        $this->branding = $internals['branding'];
+        $this->popularity = $internals['popularity'];
+        $this->klout_score = $internals['klout_score'];
+        $this->facebook_engagement = $internals['facebook_engagement'];
+        $this->page_url = $internals['page_url'];
+        $this->image_url = $internals['image_url'];
+        $this->last_updated = $internals['last_updated'];
+        $this->last_fetched = $internals['last_fetched'];
+    }
 
 	public function getId()
 	{
@@ -152,19 +153,6 @@ class NewModel_Presence
 
 	public function getKloutId()
 	{
-		if(!$this->klout_id){
-			$kloutId = $this->provider->getKloutId($this->getId());
-			if($kloutId){
-				$stmt = $this->db->prepare("UPDATE `presence` SET `klout_id` WHERE `id` = :id");
-				try {
-					$stmt->execute(array(':id' => $this->getId()));
-				} catch (Exception $e){
-					$this->klout_id = null;
-				}
-			} else {
-				$this->klout_id = null;
-			}
-		}
 		return $this->klout_id;
 	}
 
@@ -432,68 +420,38 @@ class NewModel_Presence
 
 	public function fetch()
 	{
-		$results = $this->provider->fetchData($this);
-
-		$stmt = $this->db->prepare("UPDATE presences SET `last_fetched` = :last_fetched WHERE `id` = :id");
-		$stmt->execute(array(
-			':id'				=> $this->getId(),
-			':last_fetched'	=> gmdate('Y-m-d H:i:s')
-		));
-
-		return $results;
+		$this->provider->fetchStatusData($this);
+        $this->last_fetched = gmdate('Y-m-d H:i:s');
+        $this->save();
 	}
 
-	/**
-	 * method for updating a presence's info
-	 * if successful we also update the presence_history table with the latest info
-	 *
-	 * @return array|null
-	 */
+    /**
+     * method for updating a presence's info
+     * if successful we also update the presence_history table with the latest info
+     *
+     * @return array|null
+     */
 	public function update()
 	{
-		try {
-			$data = $this->provider->update($this);
-		} catch (Exception $e) {
-			return null;
-		}
-		if($data) {
-			$date = gmdate('Y-m-d H:i:s');
-
-			$sql = "UPDATE presences
-						SET `image_url` = ?,
-							`name` = ?,
-							`page_url` = ?,
-							`popularity` = ?,
-							`klout_id` = ?,
-							`klout_score` = ?,
-							`facebook_engagement` = ?,
-							`last_updated` = ?
-						WHERE `id` = ?";
-			$stmt = $this->db->prepare($sql);
-			try {
-				//update presence in presences table
-				$stmt->execute(array_merge(array_values($data), array($this->getId())));
-			} catch(Exception $e) {
-				//if we can't update the presence in the db return null
-				return null;
-			}
-
-			//if the presence was updated, update presence_history
-			$stmt = $this->db->prepare("INSERT INTO `presence_history` (`presence_id`, `datetime`, `type`, `value`) VALUES (:id, :datetime, :type, :value)");
-			foreach($data as $type => $value){
-				if(in_array($type, $this->presenceHistoryColumns) && $value){
-					$stmt->execute(array(
-						':id' => $this->getId(),
-						':datetime' => $date,
-						':type'	=> $type,
-						':value'	=> $value
-					));
-				}
-			}
-
-		}
-		return $data;
+        $this->provider->update($this);
 	}
+
+    public function updateHistory() {
+        $date = gmdate('Y-m-d H:i:s');
+        //if the presence was updated, update presence_history
+        $stmt = $this->db->prepare("INSERT INTO `presence_history` (`presence_id`, `datetime`, `type`, `value`) VALUES (:id, :datetime, :type, :value)");
+        foreach($this->presenceHistoryColumns as $type){
+            $value = $this->$type;
+            if (!is_null($value)) {
+                $stmt->execute(array(
+                        ':id' => $this->getId(),
+                        ':datetime' => $date,
+                        ':type'	=> $type,
+                        ':value' => $value
+                    ));
+            }
+        }
+    }
 
 	public function saveMetric($metric, DateTime $start, DateTime $end, $value){
 		$stmt = $this->db->prepare("
@@ -684,30 +642,36 @@ class NewModel_Presence
 		}
 	}
 
-	/**
-	 * @return array
-	 */
-	public function updateInfo()
-	{
-//		trigger_error("Deprecated function called.", E_USER_NOTICE);
-		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
-			$presence = Model_Presence::fetchById($this->getId());
-			return $presence->updateInfo();
-		}
-		$this->provider->fetchData($this);
-	}
-
-	/**
-	 * @return array
-	 */
 	public function save()
 	{
-//		trigger_error("Deprecated function called.", E_USER_NOTICE);
-		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
-			$presence = Model_Presence::fetchById($this->getId());
-			$presence->last_updated = gmdate('Y-m-d H:i:s');
-			$presence->save();
-		}
+        if (!$this->id) {
+            return;
+        }
+
+        $data = array(
+            'type' => $this->type->getValue(),
+            'handle' => $this->handle,
+            'uid' => $this->uid,
+            'image_url' => $this->image_url,
+            'name' => $this->name,
+            'page_url' => $this->page_url,
+            'popularity' => $this->popularity,
+            'klout_id' => $this->klout_id,
+            'klout_score' => $this->klout_score,
+            'facebook_engagement' => $this->facebook_engagement,
+            'last_updated' => $this->last_updated,
+            'sign_off' => $this->sign_off,
+            'branding' => $this->branding
+        );
+
+        $query = 'UPDATE '.NewModel_PresenceFactory::TABLE_PRESENCES.' '.
+            'SET '.implode('=?, ', array_keys($data)).'=? '.
+            'WHERE id=?';
+        //add id to fill last placeholder
+        $data[] = $this->id;
+
+        $statement = $this->db->prepare($query);
+        $statement->execute(array_values($data));
 	}
 
 
