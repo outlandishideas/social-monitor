@@ -181,6 +181,11 @@ abstract class GraphingController extends BaseController {
 	            $header->title = 'Target Audience';
                 $header->desc = 'Target Audience is the audience that must be reached by this presence or group of presences.';
                 break;
+            case 'percent-target-audience':
+				$header->sort = 'fuzzy-numeric';
+	            $header->title = '% of Target Audience';
+                $header->desc = 'The percentage of the target audience that has so far been reached.';
+                break;
             case 'digital-population':
                 $header->sort = 'fuzzy-numeric';
                 $header->title = 'Digital Population';

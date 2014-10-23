@@ -5,6 +5,14 @@ class RegionController extends CampaignController
 
     protected static $publicActions = array();
 
+    protected static function tableMetrics(){
+        return array(
+            Model_Presence::METRIC_POPULARITY_TIME => 'Time to Target Audience',
+            Model_Presence::METRIC_POSTS_PER_DAY => 'Actions Per Day',
+            Model_Presence::METRIC_RESPONSE_TIME => 'Response Time',
+        );
+    }
+
 	public function init()
     {
 		parent::init();
@@ -93,7 +101,6 @@ class RegionController extends CampaignController
         $this->validateData($editingRegion);
 
         if ($this->_request->isPost()) {
-//			$oldTimeZone = $editingRegion->timezone;
             $editingRegion->fromArray($this->_request->getParams());
 
             $errorMessages = array();
@@ -108,11 +115,6 @@ class RegionController extends CampaignController
             } else {
                 try {
                     $editingRegion->save();
-
-                    $p = $this->_request->getParam('p');
-                    if($p){
-                        $editingRegion->assignPresences($p);
-                    }
                     $this->flashMessage('Region saved');
                     $this->_helper->redirector->gotoSimple('index');
                 } catch (Exception $ex) {
@@ -127,6 +129,7 @@ class RegionController extends CampaignController
 
 
         $this->view->editingRegion = $editingRegion;
+        $this->view->presences = $editingRegion->getPresences();
         $this->view->title = 'Edit Region';
         $this->view->titleIcon = 'icon-edit';
     }
@@ -211,13 +214,11 @@ class RegionController extends CampaignController
         $this->validateData($region);
 
         if ($this->_request->isPost()) {
-            $presenceIds = array();
-            foreach ($this->_request->getParam('assigned') as $ids) {
-                foreach ($ids as $id) {
-                    $presenceIds[] = $id;
-                }
+            $countryIds = array();
+            foreach ($this->_request->getParam('assigned') as $id) {
+                $countryIds[] = $id;
             }
-            $region->assignPresences($presenceIds);
+            $region->assignCountries($countryIds);
             $this->flashMessage('Region presences updated');
             $this->_helper->redirector->gotoSimple('index');
         }
@@ -225,8 +226,7 @@ class RegionController extends CampaignController
         $this->view->title = 'Manage Region Presences';
         $this->view->titleIcon = 'icon-tasks';
         $this->view->region = $region;
-        $this->view->twitterPresences = Model_Presence::fetchAllTwitter();
-        $this->view->facebookPresences = Model_Presence::fetchAllFacebook();
+        $this->view->allCountries = Model_Country::fetchAll();
 	}
 
 	/**
@@ -272,7 +272,8 @@ class RegionController extends CampaignController
             'name' => true,
             'total-rank' => true,
             'total-score' => true,
-            'target-audience' => true
+            'target-audience' => true,
+            'percent-target-audience' => true
         );
 
         foreach(self::tableMetrics() as $name => $title){

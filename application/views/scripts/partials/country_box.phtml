@@ -1,0 +1,10 @@
+<?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>'country', 'action'=>'view', 'id'=>$this->country->id), null, true); ?>
+<li class="link box country split">
+	<input type="hidden" value="<?php echo $this->country->id;?>" name="<?php echo $this->varname; ?>">
+	<a href="<?php echo ($url ?: '#'); ?>" title="<?php echo $this->country->getName(); ?>" class="first" <?php if ($url) echo 'target="_blank"'; ?>>
+		<span class="flag"><img src="<?php echo $this->baseUrl('/'); ?>assets/img/flags/<?php echo($this->country->getCountryCode()); ?>.png" /></span>
+		<?php echo $this->country->getName(); ?>
+	</a><a href="#" class="remove-item last">
+		<span class="icon-remove"></span>
+	</a>
+</li>

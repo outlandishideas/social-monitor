@@ -3,9 +3,10 @@
 }
 .uniForm fieldset legend {
   font-weight: bold;
-  font-size: 100%;
+  font-size: 200%;
   margin: 0;
   padding: 0.5em 0;
+  background-color: transparent;
 }
 .uniForm .ctrlHolder {
   padding: 1em;
@@ -17,6 +18,9 @@
 }
 .uniForm .ctrlHolder.focused {
   background: #fffcdf;
+}
+.uniForm .ctrlHolder.focused label {
+  color: #000;
 }
 .uniForm .inlineLabels .inlineLabels label em,
 .uniForm .inlineLabels .inlineLabels .label em {
