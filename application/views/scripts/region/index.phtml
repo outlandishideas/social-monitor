@@ -44,16 +44,19 @@ $buttons = $this->gatekeeper()->filterAll(array(
             <td><?php echo $this->badgeData[$region->id]->total_rank; ?></td>
             <td><?php echo round($this->badgeData[$region->id]->total, 1); ?></td>
             <td><?php echo number_format($region->audience); ?></td>
-			<?php if ($presences == true) : ?>
-                <?php $kpiData = $region->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
-                    <td>
-                        <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
-                        <?php echo $this->trafficLight()->label($value, $key); ?>
-                    </td>
+			<?php //if ($presences == true) : ?>
+                <?php
+                    $kpiData = $region->getKpiAverages();
+                    foreach ($this->tableMetrics as $key=>$label) :
+                        $value = array_key_exists($key, $kpiData) ? $kpiData[$key] : '-';
+                ?>
+                        <td>
+                            <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
+                            <?php echo $this->trafficLight()->label($value, $key); ?>
+                        </td>
                 <?php endforeach; ?>
                 <td>
                     <ul class="entity-list">
-                        <?php if (!$region instanceof Model_Region) var_dump($region); ?>
                         <?php foreach($region->getCountries() as $country) : ?>
                             <li>
                                 <?php echo $this->partial('partials/country_inline.phtml',  array('country' => $country)); ?>
@@ -61,12 +64,12 @@ $buttons = $this->gatekeeper()->filterAll(array(
                         <?php endforeach; ?>
                     </ul>
                 </td>
-			<?php else : ?>
+			<?php /*else : ?>
 			    <?php foreach ($this->tableMetrics as $key=>$label) : ?>
                     <td>-</td>
                 <?php endforeach; ?>
 			    <td>-</td>
-			<?php endif; ?>
+			<?php endif;*/ ?>
 			<td>
 				<?php
 					$actions = $this->gatekeeper()->filterAll(array(
