@@ -5,6 +5,14 @@ class RegionController extends CampaignController
 
     protected static $publicActions = array();
 
+    protected static function tableMetrics(){
+        return array(
+            Model_Presence::METRIC_POPULARITY_TIME => 'Time to Target Audience',
+            Model_Presence::METRIC_POSTS_PER_DAY => 'Actions Per Day',
+            Model_Presence::METRIC_RESPONSE_TIME => 'Response Time',
+        );
+    }
+
 	public function init()
     {
 		parent::init();
@@ -272,7 +280,8 @@ class RegionController extends CampaignController
             'name' => true,
             'total-rank' => true,
             'total-score' => true,
-            'target-audience' => true
+            'target-audience' => true,
+            'percent-target-audience' => true
         );
 
         foreach(self::tableMetrics() as $name => $title){

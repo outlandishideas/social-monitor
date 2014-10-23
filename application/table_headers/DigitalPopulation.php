@@ -24,7 +24,7 @@ class Header_DigitalPopulation extends Header_Abstract {
         if(!is_numeric($value)) return "<span data-value='-1'>{$value}</span>";
 
         $number = number_format(round($value));
-        return "<span data-value='{$value}'>{$number}%<span>";
+        return "<span data-value='{$value}'>{$number}<span>";
     }
 
 
