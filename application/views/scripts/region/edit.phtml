@@ -1,7 +1,7 @@
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
 	'<a class="button" href="%url%"><span class="icon-eye-open icon-large"></span> View Region</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$this->editingRegion->id),
-	'<a class="button" href="%url%"><span class="icon-tasks icon-large"></span> Manage Presences</a>' => array('controller'=>'region', 'action'=>'manage', 'id'=>$this->editingRegion->id),
+	'<a class="button" href="%url%"><span class="icon-tasks icon-large"></span> Manage Countries</a>' => array('controller'=>'region', 'action'=>'manage', 'id'=>$this->editingRegion->id),
     '<a href="%url%" class="button remove"><span class="icon-remove icon-large"></span> Delete</a>' => array('controller'=>'region', 'action'=>'delete', 'id'=>$this->editingRegion->id)
 ));
 if ($buttons && $this->showButtons) :
@@ -19,16 +19,16 @@ if ($buttons && $this->showButtons) :
             <label for="display_name" class="requiredField">
                 Display name<span class="asteriskField">*</span>
             </label>
-            <input name="display_name" value="<?php echo htmlspecialchars($this->editingRegion->display_name); ?>" class="textInput"
+            <input name="display_name" value="<?php echo htmlspecialchars($this->editingRegion->display_name); ?>"
                    type="text" id="display_name">
         </div>
-        <div class="ctrlHolder">
+        <!--<div class="ctrlHolder">
             <label for="audience">
                 Available audience size
             </label>
             <input name="audience" value="<?php echo htmlspecialchars($this->editingRegion->audience); ?>" class="textInput"
                    type="text" id="audience">
-        </div>
+        </div>-->
 	</fieldset>
 
     <?php if(!empty($this->presences)) : ?>

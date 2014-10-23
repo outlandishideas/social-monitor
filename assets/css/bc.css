@@ -2006,3 +2006,13 @@ td.countries a {
 .entity-list-toggle {
 	cursor: pointer;
 }
+
+#edit-region #added-presences .remove-item {
+	display: none;
+}
+
+#edit-region #added-presences .link.box.split a.first {
+	border-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
+}

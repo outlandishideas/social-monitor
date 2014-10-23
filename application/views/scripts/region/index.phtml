@@ -83,7 +83,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
 				<?php
 					$actions = $this->gatekeeper()->filterAll(array(
 						'- <a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$region->id),
-						'- <a href="%url%">Presences</a>' => array('action'=>'manage', 'id'=>$region->id),
+						'- <a href="%url%">Countries</a>' => array('action'=>'manage', 'id'=>$region->id),
 						'- <a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$region->id)
 					));
 					echo implode('<br />', $actions);

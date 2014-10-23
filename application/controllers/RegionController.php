@@ -101,7 +101,6 @@ class RegionController extends CampaignController
         $this->validateData($editingRegion);
 
         if ($this->_request->isPost()) {
-//			$oldTimeZone = $editingRegion->timezone;
             $editingRegion->fromArray($this->_request->getParams());
 
             $errorMessages = array();
@@ -116,11 +115,6 @@ class RegionController extends CampaignController
             } else {
                 try {
                     $editingRegion->save();
-
-                    $p = $this->_request->getParam('p');
-                    if($p){
-                        $editingRegion->assignPresences($p);
-                    }
                     $this->flashMessage('Region saved');
                     $this->_helper->redirector->gotoSimple('index');
                 } catch (Exception $ex) {
@@ -135,6 +129,7 @@ class RegionController extends CampaignController
 
 
         $this->view->editingRegion = $editingRegion;
+        $this->view->presences = $editingRegion->getPresences();
         $this->view->title = 'Edit Region';
         $this->view->titleIcon = 'icon-edit';
     }
