@@ -34,18 +34,19 @@ class UserController extends BaseController
 
 		if ($this->_request->isPost()) {
 			$authAdapter = new Model_User();
-			$authAdapter->authName = $this->_request->username;
-			$authAdapter->authPassword = $this->_request->password;
+			$authAdapter->authName = $this->_request->getParam('username');
+			$authAdapter->authPassword = $this->_request->getParam('password');
 			$result = $this->auth->authenticate($authAdapter);
-			
+
+            $redirect = $this->_request->getParam('redirect_to');
 			if ($result->isValid())	{
 				$user = Model_User::fetchById($this->auth->getIdentity());
 				$user->last_sign_in = gmdate('Y-m-d H:i:s');
 				$user->save();
 				
-				$this->redirect($this->_request->redirect_to);
+				$this->redirect($redirect);
 			} else {
-				$this->view->redirect_to = $this->_request->redirect_to;
+				$this->view->redirect_to = $redirect;
                 $this->flashMessage('Incorrect username/password', 'error');
 			}
 		} else {
