@@ -8,6 +8,8 @@ class FetchController extends BaseController
 	 * Fetches all tweets/trends/facebook pages etc
 	 */
 	public function indexAction() {
+        $db = self::db();
+
 		$this->setupConsoleOutput();
 		$lockName = $this->acquireLock();
 		set_time_limit($this->config->app->fetch_time_limit);
@@ -22,8 +24,8 @@ class FetchController extends BaseController
 		$index = 0;
 		foreach($presences as $presence) {
 			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
-			self::db()->closeConnection();
-			self::db()->getConnection();
+			$db->closeConnection();
+			$db->getConnection();
 			$index++;
 			$now = time();
 			$lastUpdated = strtotime($presence->getLastUpdated());
@@ -31,6 +33,8 @@ class FetchController extends BaseController
 				$this->log('Updating ' . $presence->type . ' info (' . $index . '/' . $presenceCount . '): ' . $presence->handle);
 				try {
 					$presence->update();
+                    $presence->save();
+                    $presence->updateHistory();
 				} catch (Exception $e) {
 					$this->log("Error updating presence info: " . $e->getMessage());
 				}
@@ -43,8 +47,8 @@ class FetchController extends BaseController
 		$index = 0;
 		foreach($presences as $presence) {
 			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
-			self::db()->closeConnection();
-			self::db()->getConnection();
+			$db->closeConnection();
+			$db->getConnection();
 			$index++;
 			$this->log('Fetching statuses (' . $index . '/' . $presenceCount . '): ' . $presence->handle);
 			try {
