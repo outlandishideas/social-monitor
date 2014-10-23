@@ -50,7 +50,7 @@ class IndexController extends GraphingController
 
 	public function dateRangeAction()
 	{
-		$dateRange = $this->_request->dateRange;
+		$dateRange = $this->_request->getParam('dateRange');
 
 		if (count($dateRange) == 2 && $dateRange[0] && $dateRange[1]) {
 			$_SESSION['dateRange'] = $dateRange;
@@ -112,13 +112,13 @@ class IndexController extends GraphingController
 
 	public function downloadimageAction()
 	{
-		$svg = base64_decode($this->_request->svg);
+		$svg = base64_decode($this->_request->getParam('svg'));
 
 		$basepath = tempnam(sys_get_temp_dir(), 'chart_');
 		$svgpath = $basepath . '.svg';
 		file_put_contents($svgpath, $svg);
 
-		switch ($this->_request->type) {
+		switch ($this->_request->getParam('type')) {
 			case 'png' :
 				$pngpath = $basepath . '.png';
 				$output = '';
@@ -256,9 +256,9 @@ class IndexController extends GraphingController
 		$this->_helper->layout()->disableLayout();
 		$this->_helper->viewRenderer->setNoRender(true);
 
-		$fileName = $this->_request->fileName;
+		$fileName = $this->_request->getParam('fileName');
 		$fileType = pathinfo($fileName, PATHINFO_EXTENSION);
-		$niceName = $this->_request->nicename . '.' . $fileType;
+		$niceName = $this->_request->getParam('nicename') . '.' . $fileType;
 
 		// simple validation;
 		if (strpos($fileName, '..') > -1) exit;

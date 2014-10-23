@@ -38,7 +38,7 @@ class GroupController extends CampaignController {
 	public function viewAction()
 	{
 		/** @var Model_Group $group */
-		$group = Model_Group::fetchById($this->_request->id);
+		$group = Model_Group::fetchById($this->_request->getParam('id'));
 		$this->validateData($group);
 
         $this->view->badgePartial = $this->badgeDetails($group->getBadges());
@@ -57,7 +57,7 @@ class GroupController extends CampaignController {
         $this->validateChartRequest();
 
         /** @var $group NewModel_Presence */
-        $group = Model_Group::fetchById($this->_request->id);
+        $group = Model_Group::fetchById($this->_request->getParam('id'));
         if(!$group) {
             $this->apiError('Group could not be found');
         }
@@ -66,7 +66,7 @@ class GroupController extends CampaignController {
         $start = $dateRange[0];
         $end = $dateRange[1];
 
-        $chartObject = Chart_Factory::getChart($this->_request->chart);
+        $chartObject = Chart_Factory::getChart($this->_request->getParam('chart'));
 
         $this->apiSuccess($chartObject->getChart($group, $start, $end));
     }
@@ -83,7 +83,7 @@ class GroupController extends CampaignController {
 	    $this->view->titleIcon = 'icon-plus-sign';
 
         $presences = array();
-        $presenceIds = $this->_request->presences;
+        $presenceIds = $this->_request->getParam('presences');
         if($presenceIds){
 	        $presenceIds = explode(',',html_entity_decode($presenceIds));
             foreach($presenceIds as $id){
@@ -101,8 +101,8 @@ class GroupController extends CampaignController {
      */
     public function editAction()
     {
-        if ($this->_request->action == 'edit') {
-            $editingGroup = Model_Group::fetchById($this->_request->id);
+        if ($this->_request->getActionName() == 'edit') {
+            $editingGroup = Model_Group::fetchById($this->_request->getParam('id'));
             $this->view->showButtons = true;
         } else {
             $editingGroup = new Model_Group();
@@ -116,7 +116,7 @@ class GroupController extends CampaignController {
             $editingGroup->fromArray($this->_request->getParams());
 
             $errorMessages = array();
-            if (!$this->_request->display_name) {
+            if (!$this->_request->getParam('display_name')) {
                 $errorMessages[] = 'Please enter a display name';
             }
 
@@ -128,8 +128,9 @@ class GroupController extends CampaignController {
                 try {
                     $editingGroup->save();
 
-                    if($this->_request->p){
-                        $editingGroup->assignPresences($this->_request->p);
+                    $p = $this->_request->getParam('p');
+                    if($p){
+                        $editingGroup->assignPresences($p);
                     }
                     $this->flashMessage('SBU saved');
                     $this->_helper->redirector->gotoSimple('index');
@@ -224,12 +225,12 @@ class GroupController extends CampaignController {
 	 */
 	public function manageAction() {
         /** @var Model_Group $group */
-        $group = Model_Group::fetchById($this->_request->id);
+        $group = Model_Group::fetchById($this->_request->getParam('id'));
         $this->validateData($group);
 
         if ($this->_request->isPost()) {
             $presenceIds = array();
-            foreach ($this->_request->assigned as $ids) {
+            foreach ($this->_request->getParam('assigned') as $ids) {
                 foreach ($ids as $id) {
                     $presenceIds[] = $id;
                 }
@@ -250,7 +251,7 @@ class GroupController extends CampaignController {
 	 * @user-level manager
 	 */
 	public function deleteAction() {
-		$group = Model_Group::fetchById($this->_request->id);
+		$group = Model_Group::fetchById($this->_request->getParam('id'));
 		$this->validateData($group);
 
 		if ($this->_request->isPost()) {
@@ -267,7 +268,7 @@ class GroupController extends CampaignController {
         Zend_Session::writeClose(); // release session on long running actions
 
 	    /** @var Model_Group $group */
-        $group = Model_Group::fetchById($this->_request->id);
+        $group = Model_Group::fetchById($this->_request->getParam('id'));
 
         $response = $group->badges();
 

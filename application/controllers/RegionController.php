@@ -31,7 +31,7 @@ class RegionController extends CampaignController
 	public function viewAction()
 	{
 		/** @var Model_Region $region */
-		$region = Model_Region::fetchById($this->_request->id);
+		$region = Model_Region::fetchById($this->_request->getParam('id'));
 		$this->validateData($region);
 
         $compareData = array();
@@ -64,7 +64,7 @@ class RegionController extends CampaignController
 	    $this->view->titleIcon = 'icon-plus-sign';
 
         $presences = array();
-        $presenceIds = $this->_request->presences;
+        $presenceIds = $this->_request->getParam('presences');
         if($presenceIds){
 	        $presenceIds = explode(',',html_entity_decode($presenceIds));
             foreach($presenceIds as $id){
@@ -82,8 +82,8 @@ class RegionController extends CampaignController
      */
     public function editAction()
     {
-        if ($this->_request->action == 'edit') {
-            $editingRegion = Model_Region::fetchById($this->_request->id);
+        if ($this->_request->getActionName() == 'edit') {
+            $editingRegion = Model_Region::fetchById($this->_request->getParam('id'));
             $this->view->showButtons = true;
         } else {
             $editingRegion = new Model_Region();
@@ -97,7 +97,7 @@ class RegionController extends CampaignController
             $editingRegion->fromArray($this->_request->getParams());
 
             $errorMessages = array();
-            if (!$this->_request->display_name) {
+            if (!$this->_request->getParam('display_name')) {
                 $errorMessages[] = 'Please enter a display name';
             }
 
@@ -109,8 +109,9 @@ class RegionController extends CampaignController
                 try {
                     $editingRegion->save();
 
-                    if($this->_request->p){
-                        $editingRegion->assignPresences($this->_request->p);
+                    $p = $this->_request->getParam('p');
+                    if($p){
+                        $editingRegion->assignPresences($p);
                     }
                     $this->flashMessage('Region saved');
                     $this->_helper->redirector->gotoSimple('index');
@@ -206,12 +207,12 @@ class RegionController extends CampaignController
 	public function manageAction()
     {
         /** @var Model_Region $region */
-        $region = Model_Region::fetchById($this->_request->id);
+        $region = Model_Region::fetchById($this->_request->getParam('id'));
         $this->validateData($region);
 
         if ($this->_request->isPost()) {
             $presenceIds = array();
-            foreach ($this->_request->assigned as $ids) {
+            foreach ($this->_request->getParam('assigned') as $ids) {
                 foreach ($ids as $id) {
                     $presenceIds[] = $id;
                 }
@@ -234,7 +235,7 @@ class RegionController extends CampaignController
 	 */
 	public function deleteAction()
     {
-		$region = Model_Region::fetchById($this->_request->id);
+		$region = Model_Region::fetchById($this->_request->getParam('id'));
 		$this->validateData($region);
 
 		if ($this->_request->isPost()) {
@@ -252,7 +253,7 @@ class RegionController extends CampaignController
         Zend_Session::writeClose(); // release session on long running actions
 
 	    /** @var Model_Region $region */
-        $region = Model_Region::fetchById($this->_request->id);
+        $region = Model_Region::fetchById($this->_request->getParam('id'));
 
         $response = $region->badges();
 

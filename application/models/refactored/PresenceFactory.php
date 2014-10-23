@@ -34,7 +34,11 @@ abstract class NewModel_PresenceFactory
 		return array_filter($presences);
 	}
 
-	public static function getPresenceById($id)
+    /**
+     * @param $id
+     * @return NewModel_Presence|null
+     */
+    public static function getPresenceById($id)
 	{
 		$stmt = static::$db->prepare("SELECT * FROM `presences` WHERE `id` = :id");
 		$stmt->execute(array(':id' => $id));

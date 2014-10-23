@@ -66,12 +66,13 @@ class UserController extends BaseController
 		}
 
 		if ($this->_request->isPost()) {
-			if (!$this->_request->username) {
+            $username = $this->_request->getParam('username');
+			if (!$username) {
                 $this->flashMessage('Please enter a username or email address', 'error');
 			} else {
-				$user = Model_User::fetchBy('name', $this->_request->username);
+				$user = Model_User::fetchBy('name', $username);
 				if (!$user) {
-					$user = Model_User::fetchBy('email', $this->_request->username);
+					$user = Model_User::fetchBy('email', $username);
 				}
 
 				if (!$user) {
@@ -110,8 +111,8 @@ class UserController extends BaseController
 	 * If the correct email/reset_key combination is provided, allows a user to reset their password
 	 */
 	public function resetPasswordAction() {
-		if ($this->_request->name && $this->_request->reset_key) {
-			$user = Model_User::fetchAll('name=? AND reset_key=?', array($this->_request->name, $this->_request->reset_key));
+		if ($this->_request->getParam('name') && $this->_request->getParam('reset_key')) {
+			$user = Model_User::fetchAll('name=? AND reset_key=?', array($this->_request->getParam('name'), $this->_request->getParam('reset_key')));
 			if ($user) {
 				$user = $user[0];
 			}
@@ -122,21 +123,23 @@ class UserController extends BaseController
 		if ($user) {
 			$this->view->editingUser = $user;
 			if ($this->_request->isPost()) {
-				if (!$this->_request->password || !$this->_request->password_confirm) {
+                $password = $this->_request->getParam('password');
+                $password2 = $this->_request->getParam('password_confirm');
+				if (!$password || !$password2) {
                     $this->flashMessage('Both passwords are required', 'error');
-				} else if ($this->_request->password != $this->_request->password_confirm) {
+				} else if ($password != $password2) {
                     $this->flashMessage('Passwords do not match', 'error');
-				} else if (strlen($this->_request->password) < 4) {
+				} else if (strlen($password) < 4) {
                     $this->flashMessage('Password must be at least 4 characters', 'error');
 				} else {
-					$user->fromArray(array('password'=>$this->_request->password));
+					$user->fromArray(array('password'=>$password));
 					$user->reset_key = null;
 					$user->last_sign_in = gmdate('Y-m-d H:i:s');
 					$user->save();
 
 					$authAdapter = new Model_User();
 					$authAdapter->authName = $user->name;
-					$authAdapter->authPassword = $this->_request->password;
+					$authAdapter->authPassword = $password;
 					$this->auth->authenticate($authAdapter);
 
                     $this->flashMessage('Password changed successfully');
@@ -192,7 +195,7 @@ class UserController extends BaseController
 	 */
 	public function editAction()
 	{
-		switch ($this->_request->action) {
+		switch ($this->_request->getActionName()) {
 			case 'new':
 				$editingUser = new Model_User(array());
 				break;
@@ -201,7 +204,7 @@ class UserController extends BaseController
 				break;
 			case 'edit':
 			default:
-				$editingUser = Model_User::fetchById($this->_request->id);
+				$editingUser = Model_User::fetchById($this->_request->getParam('id'));
 				break;
 		}
 
@@ -219,22 +222,24 @@ class UserController extends BaseController
 			$editingUser->fromArray($params);
 
 			$errorMessages = array();
-			if (!$this->_request->name) {
+			if (!$this->_request->getParam('name')) {
 				$errorMessages[] = 'Please enter a user name';
 			}
-			if (!$this->_request->email) {
+			if (!$this->_request->getParam('email')) {
 				$errorMessages[] = 'Please enter an email address';
-			} else if (preg_match('/.*@.*/', $this->_request->email) === 0) {
+			} else if (preg_match('/.*@.*/', $this->_request->getParam('email')) === 0) {
 				$errorMessages[] = 'Please enter a valid email address';
 			}
 
 			if (!$errorMessages) {
+                $password = $this->_request->getParam('password');
+                $password2 = $this->_request->getParam('password_confirm');
 				// don't require a new password for existing users
-				if (!$editingUser->id && (!$this->_request->password || !$this->_request->password_confirm)) {
+				if (!$editingUser->id && (!$password || !$password2)) {
 					$errorMessages[] = 'Please enter the password in both boxes';
-				} else if ($this->_request->password != $this->_request->password_confirm) {
+				} else if ($password != $password2) {
 					$errorMessages[] = 'Passwords do not match';
-				} else if ($this->_request->password && strlen($this->_request->password) < 4) {
+				} else if ($password && strlen($password) < 4) {
 					$errorMessages[] = 'Password must be at least 4 characters';
 				}
 			}
@@ -275,7 +280,7 @@ class UserController extends BaseController
 	 */
 	public function deleteAction()
 	{
-		$user = Model_User::fetchById($this->_request->id);
+		$user = Model_User::fetchById($this->_request->getParam('id'));
 
 		$this->validateData($user);
 
@@ -292,11 +297,11 @@ class UserController extends BaseController
 	 */
 	public function manageAction() {
 		/** @var Model_User $user */
-		$user = Model_User::fetchById($this->_request->id);
+		$user = Model_User::fetchById($this->_request->getParam('id'));
 		$this->validateData($user);
 
 		if ($this->_request->isPost()) {
-			$user->assignAccess($this->_request->assigned);
+			$user->assignAccess($this->_request->getParam('assigned'));
             $this->flashMessage('User permissions saved');
 			$this->_helper->redirector->gotoSimple('index');
 		}

@@ -17,7 +17,7 @@ class DomainController extends BaseController {
 			if (!$this->view->user->isManager) {
                 $this->flashMessage('You do not have sufficient access to change this data', 'error');
 			} else {
-				$bc = $this->_request->is_bc;
+				$bc = $this->_request->getParam('is_bc');
 				$db = self::db();
 				$db->exec('UPDATE domains SET is_bc = 0');
 				if ($bc) {
@@ -90,11 +90,11 @@ class DomainController extends BaseController {
 		$count = count($tableData);
 
 		//return CSV or JSON?
-		if ($this->_request->format == 'csv') {
+		if ($this->_request->getParam('format') == 'csv') {
 			$this->returnCsv($tableData, 'domains.csv');
 		} else {
 			$apiResult = array(
-				'sEcho' => $this->_request->sEcho,
+				'sEcho' => $this->_request->getParam('sEcho'),
 				'iTotalRecords' => $count,
 				'iTotalDisplayRecords' => $totalCount,
 				'aaData' => $tableData
@@ -111,7 +111,7 @@ class DomainController extends BaseController {
 
 
 		/** @var Model_Domain $domain */
-		$domain = Model_Domain::fetchById($this->_request->id);
+		$domain = Model_Domain::fetchById($this->_request->getParam('id'));
 		$this->validateData($domain);
 
 		$twitterLookup = $this->db()->prepare('SELECT * FROM twitter_tweets WHERE id = :id');
