@@ -33,7 +33,7 @@ class Model_Country extends Model_Campaign {
 		}
 	}
 
-	public static function getCountryCode()
+	public function getCountryCode()
 	{
 		return strtoupper($this->country);
 	}

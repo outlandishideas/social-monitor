@@ -55,7 +55,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
                             <?php echo $this->trafficLight()->label($value, $key); ?>
                         </td>
                 <?php endforeach; ?>
-                <td>
+                <td class="countries">
                     <ul class="entity-list">
                         <?php foreach($region->getCountries() as $country) : ?>
                             <li>
