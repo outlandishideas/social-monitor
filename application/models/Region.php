@@ -36,8 +36,8 @@ class Model_Region extends Model_Campaign {
         $sql = "SELECT `id` FROM `campaigns` WHERE `parent` = ?";
         $db = Zend_Registry::get('db')->getConnection();
         $stmt = $db->prepare($sql);
-        $stmt->execute(array($this->getId()));
-        foreach ($stmt->fetchColumn() as $countryId) {
+        $stmt->execute(array($this->id));
+        while ($countryId = $stmt->fetchColumn()) {
             $ret[$countryId] = Model_Country::fetchById($countryId);
         }
         return $ret;
