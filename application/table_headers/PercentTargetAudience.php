@@ -9,8 +9,13 @@
 class Header_PercentTargetAudience extends Header_Abstract {
 
     protected static $name = "percent-target-audience";
-    protected $label = "Percentage of Target Audience";
-    protected $sort = "fuzzy-numeric";
+
+    function __construct()
+    {
+        $this->label = "Percentage of Target Audience";
+        $this->sort = "fuzzy-numeric";
+    }
+
 
     public function getTableCellValue($model)
     {

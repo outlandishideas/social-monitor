@@ -1,70 +1,71 @@
-
-<div class="section-title"><h2><span class="icon-bar-chart icon-large"></span> Scores for the last 30 days:</h2></div>
-
-<table class="text">
-
-    <tr>
-        <th>Handle</th>
-        <th>Sign Off</th>
-        <th>Branding Compliance</th>
-        <?php foreach ($this->tableMetrics as $key=>$label) : ?>
-            <th><?php echo $label; ?></th>
-        <?php endforeach; ?>
-    </tr>
-
-    <?php foreach($this->compareData as $data) : /** @var Model_Presence $presence */ $presence = $data->presence; ?>
-        <tr>
-            <td>
-                <?php echo $this->partial('partials/presence_inline.phtml', array('presence'=>$data->presence)); ?>
-            </td>
-            <td>
-                    <span class="<?php echo $presence->sign_off ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
-                          data-value="<?php echo $presence->sign_off ? 1 : 0 ;?>"></span>
-            </td>
-            <td>
-                    <span
-                        class="<?php echo $presence->branding ? 'icon-ok-sign': 'icon-remove-sign';?> icon-large"
-                        data-value="<?php echo $presence->branding ? 1 : 0 ;?>"></span>
-            </td>
-            <?php
-            $kpiData = $presence->getKpiData();
-            foreach ($this->tableMetrics as $key=>$label) :
-                $value = array_key_exists($key, $kpiData) ? $kpiData[$key] : "n/a"; ?>
-                <td>
-                    <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
-                    <?php echo $this->trafficLight()->label($value, $key); ?>
-                </td>
-            <?php endforeach; ?>
-        </tr>
-    <?php endforeach; ?>
-
-    <?php
-    // add row for country average
-    if (count($this->compareData) > 1) :
-        $totalPop = 0;
-        $totalTarget = 0;
-        foreach ($this->compareData as $data) {
-            /** @var Model_Presence $p */
-            $p = $data->presence;
-            $totalPop += $p->popularity;
-            $totalTarget += $p->getTargetAudience();
-        }
-        $avPop = round(100*$totalPop/count($this->compareData))/100;
-        $avTarget = round(100*$totalTarget/count($this->compareData))/100;
-        ?>
-
-        <tr class="average">
-            <td>Country Average</td>
-            <td></td>
-            <td></td>
-            <?php $kpiData = $this->country->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
-                <td>
-                    <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
-                    <?php echo $this->trafficLight()->label($value, $key); ?>
-                </td>
-            <?php endforeach; ?>
-            <td></td>
-        </tr>
-    <?php endif; ?>
-
-</table>
+<?php // this template is unused. Can it be removed? ?>
+<!---->
+<!--<div class="section-title"><h2><span class="icon-bar-chart icon-large"></span> Scores for the last 30 days:</h2></div>-->
+<!---->
+<!--<table class="text">-->
+<!---->
+<!--    <tr>-->
+<!--        <th>Handle</th>-->
+<!--        <th>Sign Off</th>-->
+<!--        <th>Branding Compliance</th>-->
+<!--        --><?php //foreach ($this->tableMetrics as $key=>$label) : ?>
+<!--            <th>--><?php //echo $label; ?><!--</th>-->
+<!--        --><?php //endforeach; ?>
+<!--    </tr>-->
+<!---->
+<!--    --><?php //foreach($this->compareData as $data) : /** @var Model_Presence $presence */ $presence = $data->presence; ?>
+<!--        <tr>-->
+<!--            <td>-->
+<!--                --><?php //echo $this->partial('partials/presence_inline.phtml', array('presence'=>$data->presence)); ?>
+<!--            </td>-->
+<!--            <td>-->
+<!--                    <span class="--><?php //echo $presence->sign_off ? 'icon-ok-sign': 'icon-remove-sign';?><!-- icon-large"-->
+<!--                          data-value="--><?php //echo $presence->sign_off ? 1 : 0 ;?><!--"></span>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--                    <span-->
+<!--                        class="--><?php //echo $presence->branding ? 'icon-ok-sign': 'icon-remove-sign';?><!-- icon-large"-->
+<!--                        data-value="--><?php //echo $presence->branding ? 1 : 0 ;?><!--"></span>-->
+<!--            </td>-->
+<!--            --><?php
+//            $kpiData = $presence->getKpiData();
+//            foreach ($this->tableMetrics as $key=>$label) :
+//                $value = array_key_exists($key, $kpiData) ? $kpiData[$key] : "n/a"; ?>
+<!--                <td>-->
+<!--                    <span class="icon-circle icon-large pull-left" data-value="--><?php //echo $value; ?><!--" style="color:--><?php //echo $this->trafficLight()->color($value, $key); ?><!--;"></span>-->
+<!--                    --><?php //echo $this->trafficLight()->label($value, $key); ?>
+<!--                </td>-->
+<!--            --><?php //endforeach; ?>
+<!--        </tr>-->
+<!--    --><?php //endforeach; ?>
+<!---->
+<!--    --><?php
+//    // add row for country average
+//    if (count($this->compareData) > 1) :
+//        $totalPop = 0;
+//        $totalTarget = 0;
+//        foreach ($this->compareData as $data) {
+//            /** @var Model_Presence $p */
+//            $p = $data->presence;
+//            $totalPop += $p->popularity;
+//            $totalTarget += $p->getTargetAudience();
+//        }
+//        $avPop = round(100*$totalPop/count($this->compareData))/100;
+//        $avTarget = round(100*$totalTarget/count($this->compareData))/100;
+//        ?>
+<!---->
+<!--        <tr class="average">-->
+<!--            <td>Country Average</td>-->
+<!--            <td></td>-->
+<!--            <td></td>-->
+<!--            --><?php //$kpiData = $this->country->getKpiAverages(); foreach ($this->tableMetrics as $key=>$label) : $value = $kpiData[$key]; ?>
+<!--                <td>-->
+<!--                    <span class="icon-circle icon-large pull-left" data-value="--><?php //echo $value; ?><!--" style="color:--><?php //echo $this->trafficLight()->color($value, $key); ?><!--;"></span>-->
+<!--                    --><?php //echo $this->trafficLight()->label($value, $key); ?>
+<!--                </td>-->
+<!--            --><?php //endforeach; ?>
+<!--            <td></td>-->
+<!--        </tr>-->
+<!--    --><?php //endif; ?>
+<!---->
+<!--</table>-->

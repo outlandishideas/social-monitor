@@ -1,18 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 16/10/2014
- * Time: 15:37
- */
 
 class Header_Options extends Header_Abstract {
 
     protected static $name = "options";
-    protected $label = "Options";
-    protected $sort = null;
-    protected $csv = false;
-    protected $width = "150px";
+
+    function __construct()
+    {
+        $this->label = "Options";
+        $this->sort = null;
+        $this->csv = false;
+        $this->width = "150px";
+    }
 
     public function getTableCellValue($model)
     {

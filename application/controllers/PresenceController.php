@@ -15,20 +15,17 @@ class PresenceController extends GraphingController
 		NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
 		$presences = NewModel_PresenceFactory::getPresences();
 
-		$headers = array();
-		foreach(array(
-					Header_Compare::getName(),
-					Header_Handle::getName(),
-					Header_SignOff::getName(),
-					Header_Branding::getName(),
-					Header_TotalRank::getName(),
-					Header_TotalScore::getName(),
-					Header_CurrentAudience::getName(),
-					Header_TargetAudience::getName(),
-					Header_Options::getName()
-				) as $headerName){
-			$headers[] = Header_Factory::getHeader($headerName);
-		}
+		$headers = array(
+            Header_Compare::getInstance(),
+            Header_Handle::getInstance(),
+            Header_SignOff::getInstance(),
+            Header_Branding::getInstance(),
+            Header_TotalRank::getInstance(),
+            Header_TotalScore::getInstance(),
+            Header_CurrentAudience::getInstance(),
+            Header_TargetAudience::getInstance(),
+            Header_Options::getInstance()
+        );
         $this->view->title = 'Presences';
         $this->view->presences = $presences;
         $this->view->tableHeaders = $headers;
@@ -389,56 +386,85 @@ class PresenceController extends GraphingController
 
         $data = array();
 
+        /** @var Header_Abstract[] $tableIndexHeaders */
+        $tableIndexHeaders = array(
+            Header_Compare::getInstance(),
+            Header_Handle::getInstance(),
+            Header_SignOff::getInstance(),
+            Header_Branding::getInstance(),
+            Header_TotalRank::getInstance(),
+            Header_TotalScore::getInstance(),
+            Header_CurrentAudience::getInstance(),
+            Header_TargetAudience::getInstance()
+        );
+
+        /** @var Header_Abstract[] $columns */
 	    $columns = array();
         $headers = array();
-        foreach(self::tableIndexHeaders() as $key=>$csv){
-	        if ($csv) {
-		        $column = self::tableHeader($key, $csv);
-		        $columns[] = $column;
-                $headers[] = $column->title;
+        foreach ($tableIndexHeaders as $column) {
+            if ($column->getCsv()) {
+                $columns[] = $column;
+                $headers[] = $column->getLabel();
             }
         }
 
         $data[] = $headers;
 
-        $badgeData = Model_Badge::badgesData(true);
-        $presences = Model_Presence::fetchAll();
+        $badgeData = Badge_Factory::badgesData(true);
+
+        NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
+        $presences = NewModel_PresenceFactory::getPresences();
 
         foreach($presences as $presence){
             $row = array();
-            $currentBadge = $badgeData[$presence->id];
-            $kpiData = $presence->getKpiData();
-            foreach($columns as $column){
+//            $currentBadge = $badgeData[$presence->id];
+//            $kpiData = $presence->getKpiData();
+            foreach($columns as $column) {
                 $output = null;
-                switch($column->name){
-                    case('handle'):
-                        $output = $presence->handle;
+                switch ($column->getRequiredType()) {
+                    case 'presence':
+                        $output = $column->getValue($presence);
                         break;
-                    case('sign-off'):
-                        $output = $presence->sign_off;
-                        break;
-                    case('branding'):
-                        $output = $presence->branding;
-                        break;
-                    case('total-rank'):
-                        $output = (int)$currentBadge->total_rank;
-                        break;
-                    case('total-score'):
-                        $output = (float)round($currentBadge->total);
-                        break;
-                    case('current-audience'):
-                        $output = number_format($presence->popularity);
-                        break;
-                    case('target-audience'):
-                        $output = number_format($presence->getTargetAudience());
-                        break;
-                    default:
-                        if( array_key_exists($column->name, $kpiData) ){
-                            $output = $kpiData[$column->name];
-                        }
+//                    case 'kpi':
+//                        $output = $column->getValue($kpiData);
+//                        break;
+//                    case 'badge':
+//                        $output = $column->getValue($currentBadge);
+//                        break;
                 }
                 $row[] = $output;
             }
+//            foreach($columns as $column){
+//                $output = null;
+//                switch($column->name){
+//                    case Header_Handle::getName():
+//                        $output = $presence->getHandle();
+//                        break;
+//                    case Header_SignOff::getName():
+//                        $output = $presence->getSignOff();
+//                        break;
+//                    case Header_Branding::getName():
+//                        $output = $presence->getBranding();
+//                        break;
+//                    case Header_TotalRank::getName():
+//                        $output = (int)$currentBadge->total_rank;
+//                        break;
+//                    case Header_TotalScore::getName():
+//                        $output = (float)round($currentBadge->total);
+//                        break;
+//                    case Header_CurrentAudience::getName():
+//                        $output = number_format($presence->getPopularity());
+//                        break;
+//                    case Header_TargetAudience::getName():
+//                        $output = number_format($presence->getTargetAudience());
+//                        break;
+//                    default:
+//                        if( array_key_exists($column->name, $kpiData) ){
+//                            $output = $kpiData[$column->name];
+//                        }
+//                }
+//                $row[] = $output;
+//            }
 
             $data[] = $row;
 

@@ -9,10 +9,15 @@
 class Header_Presences extends Header_Abstract {
 
     protected static $name = "presences";
-    protected $label = "Presences";
-    protected $description = 'The Digital Population is based on internet penetration in the country.';
-    protected $sort = 'fuzzy-numeric';
-    protected $csv = true;
+
+    function __construct()
+    {
+        $this->label = "Presences";
+        $this->description = 'The Digital Population is based on internet penetration in the country.';
+        $this->sort = 'fuzzy-numeric';
+        $this->csv = true;
+    }
+
 
     /**
      * @param Model_Campaign $model

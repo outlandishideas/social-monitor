@@ -1,25 +1,37 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 16/10/2014
- * Time: 15:37
- */
 
 abstract class Header_BadgeScores extends Header_Abstract {
 
-    protected $sort = "data-value-numeric";
+    function __construct()
+    {
+        $this->sort = "data-value-numeric";
+        $this->requiredType = 'presence';
+    }
+
 
     public function getTableCellValue($model)
     {
-        /** @var NewModel_Presence $model */
-        $badges = $model->getBadges();
-        $value = is_array($badges) && array_key_exists($this->getBadge(), $badges) ? round($badges[$this->getBadge()]) : "N/A";
+        $value = $this->getValue($model);
 
-        if(!is_numeric($value)) return "<span data-value='-1'>{$value}</span>";
+        if(!is_numeric($value)) {
+            return "<span data-value='-1'>{$value}</span>";
+        }
 
         $color = Badge_Abstract::colorize($value);
         return "<span style='color:{$color};' data-value='{$value}'>{$value}<span>";
     }
+
+    abstract function getBadge();
+
+    /**
+     * @param NewModel_Presence $model
+     * @return float|null|string
+     */
+    function getValue($model = null)
+    {
+        $badges = $model->getBadges();
+        return is_array($badges) && array_key_exists($this->getBadge(), $badges) ? round($badges[$this->getBadge()]) : "N/A";
+    }
+
 
 }

@@ -1,17 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 16/10/2014
- * Time: 15:37
- */
 
 class Header_DigitalPopulationHealth extends Header_Abstract {
 
     protected static $name = "digital_population_health";
-    protected $label = "Digital Population Health";
-    protected $sort = "data-value-numeric";
-    protected $csv = false;
+
+    function __construct()
+    {
+        $this->label = "Digital Population Health";
+        $this->sort = "data-value-numeric";
+        $this->csv = false;
+    }
+
 
     /**
      * @param Model_Country $model

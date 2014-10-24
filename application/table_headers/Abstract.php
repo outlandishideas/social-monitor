@@ -9,11 +9,13 @@
 abstract class Header_Abstract {
 
     protected static $name;
+
     protected $label;
     protected $width;
     protected $description;
     protected $sort = "auto";
     protected $csv = true;
+    protected $requiredType = 'none';
 
     /**
      * produces the <th> element for the header row of a table
@@ -79,11 +81,28 @@ abstract class Header_Abstract {
     }
 
     /**
-     * @return mixed
+     * @return boolean
      */
     public function getCsv()
     {
         return $this->csv;
     }
 
+    /**
+     * @return string
+     */
+    public function getRequiredType()
+    {
+        return $this->requiredType;
+    }
+
+    function getValue($model = null)
+    {
+        return $model;
+    }
+
+    public static function getInstance()
+    {
+        return Header_Factory::getHeader(self::getName());
+    }
 }

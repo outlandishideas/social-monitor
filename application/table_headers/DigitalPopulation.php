@@ -1,16 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 16/10/2014
- * Time: 15:37
- */
 
 class Header_DigitalPopulation extends Header_Abstract {
 
     protected static $name = "digital-population";
-    protected $label = "Digital Population";
-    protected $sort = "data-value-numeric";
+
+    function __construct()
+    {
+        $this->label = "Digital Population";
+        $this->sort = "data-value-numeric";
+    }
+
 
     /**
      * @param Model_Country $model
@@ -18,13 +17,25 @@ class Header_DigitalPopulation extends Header_Abstract {
      */
     public function getTableCellValue($model)
     {
-        $value = $model->getDigitalPopulation();
-        $value = is_numeric($value) ? $value : "N/A";
+        $value = $this->getValue($model);
 
-        if(!is_numeric($value)) return "<span data-value='-1'>{$value}</span>";
+        if(!is_numeric($value)) {
+            return "<span data-value='-1'>{$value}</span>";
+        }
 
         $number = number_format(round($value));
         return "<span data-value='{$value}'>{$number}<span>";
+    }
+
+    /**
+     * @param Model_Country $model
+     * @return mixed
+     */
+    function getValue($model = null)
+    {
+        $value = $model->getDigitalPopulation();
+        $value = is_numeric($value) ? $value : "N/A";
+        return $value;
     }
 
 

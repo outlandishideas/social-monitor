@@ -56,9 +56,10 @@ abstract class Header_Factory
 	public static function getHeaders()
 	{
 		$badges = array();
-		foreach(self::getBadgeNames() as $name){
-			$badges[$name] = self::getBadge($name);
+		foreach(self::getHeaderNames() as $name){
+			$badges[$name] = self::getHeader($name);
 		}
 		return $badges;
 	}
+
 }

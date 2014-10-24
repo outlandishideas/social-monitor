@@ -1,17 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 16/10/2014
- * Time: 15:37
- */
 
 class Header_TotalScore extends Header_BadgeScores {
 
     protected static $name = "total-score";
-    protected $label = "Overall Score";
-    protected $description = "Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality.";
-    protected $csv = true;
+
+    function __construct()
+    {
+        parent::__construct();
+        $this->label = "Overall Score";
+        $this->description = "Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality.";
+        $this->csv = true;
+    }
 
     /**
      * @return mixed
