@@ -24,10 +24,11 @@ class Metric_Popularity extends Metric_Abstract {
         $current = $presence->getPopularity();
         $target = $presence->getTargetAudience();
 
-        if ($target == 0) return null;
+        if ($target == 0) {
+            return null;
+        }
 
-        $score = round($current / $target * 100);
-        $score = max(0, min(100, $score));
-        return $score;
+        $score = round(100 * $current / $target);
+        return self::boundScore($score);
     }
 }

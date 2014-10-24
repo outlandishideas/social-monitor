@@ -20,18 +20,28 @@ class Badge_Total extends Badge_Abstract
 			$range = Badge_Period::MONTH();
 		}
 
-		$badges = array(
-			new Badge_Reach($this->db),
-			new Badge_Engagement($this->db),
-			new Badge_Quality($this->db)
+		$badgeNames = array(
+			Badge_Reach::getName(),
+            Badge_Engagement::getName(),
+            Badge_Quality::getName()
 		);
 
 		$total = 0;
-		foreach ($badges as $b) {
-			$total += $b->calculate($presence, $date, $range);
+        $count = 0;
+        $scores = $presence->getBadgeScores($date, $range);
+		foreach ($badgeNames as $b) {
+            $badgeScore = $scores[$b];
+            if (!is_null($badgeScore)) {
+    			$total += $badgeScore;
+                $count++;
+            }
 		}
 
-		$result = round($total/count($badges));
+        if ($count == 0) {
+            return null;
+        }
+
+		$result = round($total/$count);
 		$result = max(0, min(100, $result));
 
 		return $result;

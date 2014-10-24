@@ -6,6 +6,12 @@ class Metric_ResponseRatio extends Metric_Abstract {
     protected static $title = "Conversation";
     protected static $icon = "fa fa-reply";
 
+    function __construct()
+    {
+        $this->target = BaseController::getOption('replies_to_number_posts_best');
+    }
+
+
     /**
      * Counts the months between now and estimated date of reaching target audience
      * calculates score based on
@@ -22,11 +28,9 @@ class Metric_ResponseRatio extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $target = BaseController::getOption('replies_to_number_posts_best');
         $current = $presence->getRatioRepliesToOthersPosts($start, $end);
 
-        $score = round($current / $target * 100);
-        $score = max(0, min(100, $score));
-        return $score;
+        $score = round($current / $this->target * 100);
+        return self::boundScore($score);
     }
 }

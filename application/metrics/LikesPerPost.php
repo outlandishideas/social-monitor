@@ -6,6 +6,11 @@ class Metric_LikesPerPost extends Metric_Abstract {
     protected static $title = "Applause";
     protected static $icon = "fa fa-thumbs-o-up";
 
+    function __construct()
+    {
+        $this->target = floatval(BaseController::getOption('likes_per_post_best'));
+    }
+
     /**
      * Returns score depending on number of actions per day against target
      * @param NewModel_Presence $presence
@@ -39,21 +44,20 @@ class Metric_LikesPerPost extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
+        if ($this->target == 0) {
+            return null;
+        }
         switch ((string) $presence->getType()) {
             case NewModel_PresenceType::FACEBOOK:
                 //do nothing and continue to calculations
                 break;
             default:
                 return null; //Likes only are available for facebook
-                break;
         }
         $data = $presence->getKpiData($start, $end);
         $current = array_key_exists(self::getName(), $data) ? $data[self::getName()] : 0;
-        $target = BaseController::getOption('likes_per_post_best');
-        if ($target == 0) return null;
-        $score = round($current/$target * 100);
-        $score = max(0, min(100, $score)); //clamp score to the 0-100 range
-        return $score;
+        $score = round($current/$this->target * 100);
+        return self::boundScore($score);
     }
 
 }

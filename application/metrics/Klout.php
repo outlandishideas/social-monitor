@@ -6,6 +6,11 @@ class Metric_Klout extends Metric_Abstract {
     protected static $title = "Klout Score";
     protected static $icon = "fa fa-hand-o-right";
 
+    function __construct()
+    {
+        $this->target = floatval(BaseController::getOption('klout_target'));
+    }
+
     /**
      * Returns 100 if presence has been signed off, else returns 0
      * @param NewModel_Presence $presence
@@ -20,9 +25,8 @@ class Metric_Klout extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $target = BaseController::getOption('klout_target');
         $actual = round($presence->getKloutScore());
-        $score = ($actual < $target) ? 0 : 100 ;
+        $score = ($actual < $this->target) ? 0 : 100 ;
         return $score;
     }
 

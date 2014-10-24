@@ -6,6 +6,11 @@ class Metric_ActionsPerDay extends Metric_Abstract {
     protected static $title = "Actions Per Day";
     protected static $icon = "fa fa-tachometer";
 
+    function __construct()
+    {
+        $this->target = floatval(BaseController::getOption('updates_per_day'));
+    }
+
     /**
      * Returns score depending on number of actions per day against target
      * @param NewModel_Presence $presence
@@ -30,13 +35,13 @@ class Metric_ActionsPerDay extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
+        if ($this->target == 0) {
+            return null;
+        }
         $data = $presence->getKpiData($start, $end);
         $current = $data[self::getName()];
-        $target = BaseController::getOption('updates_per_day');
-        if ($target == 0) return null;
-        $score = round($current/$target * 100);
-        $score = max(0, min(100, $score)); //clamp score to the 0-100 range
-        return $score;
+        $score = round($current/$this->target * 100);
+        return self::boundScore($score);
     }
 
 }

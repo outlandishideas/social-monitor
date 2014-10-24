@@ -31,13 +31,21 @@ abstract class Badge_Abstract
 		$totalScore = 0;
 		$start = $range->getBegin($date);
 		foreach ($this->getMetricsWeighting() as $metric => $weight) {
-			if (!$presence->getType()->isMetricApplicable($metric)) continue; //only use metrics that are applicable to this presence
-			$score = Metric_Factory::getMetric($metric)->getScore($presence, $start, $date);
-			if (is_null($score)) return null;
+            $metric = $presence->getType()->getMetric($metric);
+			if (!$metric) {
+                continue; //only use metrics that are applicable to this presence
+            }
+			$score = $metric->getScore($presence, $start, $date);
+            // if we are missing a single metric score, we cannot calculate the badge score
+			if (is_null($score)) {
+                return null;
+            }
 			$totalScore += ($score * $weight);
 			$totalWeight += $weight;
 		}
-		if ($totalWeight == 0) return null; //apparently we have no metrics to calculate a result with
+		if ($totalWeight == 0) {
+            return null; //apparently we have no metrics to calculate a result with
+        }
 		$result = round($totalScore/$totalWeight);
 		$result = max(0, min(100, $result));
 
@@ -71,14 +79,14 @@ abstract class Badge_Abstract
 		if (count($this->metricsWeighting) == 0) {
 			$metrics = array();
 			foreach($this->getMetrics() as $metric){
-				$metrics[$metric::getName()] = 1;
-			}
-			foreach ($metrics as $name => $weight) {
-				//get weight from database, if it exists
-				$weighting = BaseController::getOption($name . '_weighting');
-				if ($weighting > 0) {
-					$metrics[$name] = $weighting;
-				}
+                /** @var Metric_Abstract $metric */
+                $metricName = $metric::getName();
+                //get weight from database, if it exists
+                $weight = floatval(BaseController::getOption($metricName . '_weighting'));
+                if (!$weight || $weight < 0) {
+                    $weight = 1;
+                }
+				$metrics[$metricName] = $weight;
 			}
 			$this->metricsWeighting = $metrics;
 		}
@@ -91,7 +99,9 @@ abstract class Badge_Abstract
 			$date = new \DateTime();
 			$date->modify('-1 day'); //badges always work on yesterday as the most recent day
 		}
-		if (is_null($range)) $range = Badge_Period::MONTH();
+		if (is_null($range)) {
+            $range = Badge_Period::MONTH();
+        }
 
 		$name = static::getName();
 
@@ -106,22 +116,23 @@ abstract class Badge_Abstract
 				AND `daterange` = :range
 		";
 
+        $range = (string)$range;
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute(array(
 			':date'	=> $date->format('Y-m-d'),
-			':range'	=> (string) $range
+			':range'	=> $range
 		));
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		//foreach row (ordered by score of the current badge type) set the ranking
 		$stmt = $this->db->prepare("UPDATE `badge_history` SET `{$name}_rank` = :rank WHERE `presence_id` = :id AND `date` = :date AND `daterange` = :range");
 		$data = static::doRanking($data);
-		foreach($data as $i => $row) {
+		foreach($data as $row) {
 			$stmt->execute(array(
 				':rank'		=> $row['rank'],
 				':id'		=> $row['presence_id'],
 				':date'		=> $date->format('Y-m-d'),
-				':range'	=> (string) $range
+				':range'	=> $range
 			));
 		}
 	}

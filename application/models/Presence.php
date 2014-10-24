@@ -1331,6 +1331,7 @@ class Model_Presence extends Model_Base {
 	}
 
 	public function getResponseData($startDate, $endDate) {
+        //todo: move this to new model
 		$responseData = array();
         $tableName = $this->statusTable();
         if ($this->isForFacebook()) {

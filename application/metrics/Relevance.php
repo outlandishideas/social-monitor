@@ -6,6 +6,14 @@ class Metric_Relevance extends Metric_Abstract {
     protected static $title = "Relevance";
     protected static $icon = "fa fa-tags";
 
+    protected $updatesPerDay;
+
+    function __construct()
+    {
+        $this->updatesPerDay = floatval(BaseController::getOption('updates_per_day'));
+    }
+
+
     /**
      * Returns score depending on number of relevant links per day against target
      * @param NewModel_Presence $presence
@@ -45,7 +53,9 @@ class Metric_Relevance extends Metric_Abstract {
 
         $data = $presence->getHistoricStreamMeta($start, $end);
 
-        if (empty($data)) return null;
+        if (empty($data)) {
+            return null;
+        }
 
         $totals = array(
             'total' => 0,
@@ -53,14 +63,15 @@ class Metric_Relevance extends Metric_Abstract {
             'bc_links'  => 0
         );
 
-        $totals = array_reduce($data, function($totals, $row) {
+        foreach ($data as $row) {
             $totals['total'] += $row['number_of_actions'];
             $totals['links'] += $row['number_of_links'];
             $totals['bc_links'] += $row['number_of_bc_links'];
-            return $totals;
-        }, $totals);
+        }
 
-        if ($totals['total'] < BaseController::getOption('updates_per_day')) return 0;
+        if ($totals['total'] < $this->updatesPerDay) {
+            return 0;
+        }
 
         $targetPercent = $presence->getType()->getRelevancePercentage()/100;
         $target = $totals['total'] * $targetPercent;
@@ -68,7 +79,7 @@ class Metric_Relevance extends Metric_Abstract {
         if($target > 0){
             $current = $totals['bc_links'];
             $score = round($current/$target * 100);
-            $score = max(0, min(100, $score));
+            $score = self::boundScore($score);
         }
 
         return $score;

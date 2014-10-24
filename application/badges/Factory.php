@@ -60,7 +60,9 @@ abstract class Badge_Factory
 		$presenceIds = array()
 	) {
 		$data = static::getAllCurrentData($daterange, $startDate, $endDate, $presenceIds);
-		if (is_null($data)) $data = array();
+		if (is_null($data)) {
+            $data = array();
+        }
 		$sorted = array();
 		foreach ($data as $row) {
 			if (!array_key_exists($row->date, $sorted)) {
@@ -76,40 +78,38 @@ abstract class Badge_Factory
 		}
 
 		$currentDate = clone $startDate;
+
+        // get all badges, except for total (the total score is not saved)
         $badges = static::getBadges();
-        $totalBadge = static::getBadge(Badge_Total::getName());
+        unset($badges[Badge_Total::getName()]);
+
 		while ($currentDate <= $endDate) {
-			if (!array_key_exists($currentDate->format('Y-m-d'), $sorted)) {
-				foreach ($presences as $p) {
-					foreach ($badges as $b) {
-						if ($b->getName() != Badge_Total::getName()) {
-    						$b->calculate($p, $currentDate, $daterange);
+            $formattedDate = $currentDate->format('Y-m-d');
+			if (array_key_exists($formattedDate, $sorted)) {
+                $badgeScores = $sorted[$formattedDate];
+            } else {
+                $badgeScores = array();
+            }
+            // only calculate the scores for missing presences, and only calculate ranks if something new has been calculated
+            $missingCount = 0;
+            $successCount = 0;
+            foreach ($presences as $p) {
+                $missing = !array_key_exists($p->getId(), $badgeScores);
+                $existing = $missing ? array() : (array)$badgeScores[$p->getId()];
+                foreach ($badges as $b) {
+                    if ($missing || is_null($existing[$b->getName()])) {
+                        $missingCount++;
+                        if (!is_null($b->calculate($p, $currentDate, $daterange))) {
+                            $successCount++;
                         }
-					}
-					$totalBadge->calculate($p, $currentDate, $daterange);
-				}
-				foreach ($badges as $b) {
-					$b->assignRanks($currentDate, $daterange);
-				}
-			} else {
-				$doRanking = false;
-				foreach ($presences as $p) {
-					if (!array_key_exists($p->getId(), $sorted[$currentDate->format('Y-m-d')])) {
-						foreach ($badges as $b) {
-							if ($b->getName() != Badge_Total::getName()) {
-    							$b->calculate($p, $currentDate, $daterange);
-                            }
-						}
-						$totalBadge->calculate($p, $currentDate, $daterange);
-						$doRanking = true;
-					}
-				}
-				if ($doRanking) {
-					foreach ($badges as $b) {
-						$b->assignRanks($currentDate, $daterange);
-					}
-				}
-			}
+                    }
+                }
+            }
+            if ($successCount > 0) {
+                foreach ($badges as $b) {
+                    $b->assignRanks($currentDate, $daterange);
+                }
+            }
 			$currentDate->modify('+1 day');
 		}
 	}
@@ -154,13 +154,15 @@ abstract class Badge_Factory
 		if (!$data) {
 			return null;
 		}
+        // convert rank strings to ints
+        $badgeNames = self::getBadgeNames();
+        $rankNames = array_filter(array_map(
+                function($type) {
+                    return $type == Badge_Total::getName() ? null : $type . '_rank';
+                }, $badgeNames));
 		foreach ($data as $row) {
-			foreach (self::getBadgeNames() as $badgeType) {
-				if ($badgeType != Badge_Total::getName()) {
-					//$row->$badgeType = intval($row->$badgeType);
-					$rank = $badgeType . '_rank';
-					$row->$rank = intval($row->$rank);
-				}
+			foreach ($rankNames as $rank) {
+                $row->$rank = intval($row->$rank);
 			}
 		}
 		return $data;
@@ -168,7 +170,9 @@ abstract class Badge_Factory
 
 	public static function badgesData($asArray = false, $presenceIds = array())
 	{
-		if(!is_array($presenceIds)) $presenceIds = array($presenceIds);
+		if(!is_array($presenceIds)) {
+            $presenceIds = array($presenceIds);
+        }
 		$key = 'presence_badges';
 		$data = BaseController::getObjectCache($key);
 		if (!$data || count((array)$data) < 1) {
@@ -189,10 +193,7 @@ abstract class Badge_Factory
 
 		if(!empty($presenceIds)){
 			$data = array_filter($data, function($a) use ($presenceIds) {
-				if(in_array($a->presence_id, $presenceIds)){
-					return true;
-				}
-				return false;
+				return in_array($a->presence_id, $presenceIds);
 			});
 		}
 		if (!is_array($data)) {
@@ -212,7 +213,10 @@ abstract class Badge_Factory
 		self::$db = $db;
 	}
 
-	protected static function getDb()
+    /**
+     * @return PDO
+     */
+    protected static function getDb()
 	{
 		if (is_null(self::$db)) {
 			self::$db = $db = Zend_Registry::get('db')->getConnection();

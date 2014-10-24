@@ -6,6 +6,8 @@ abstract class Metric_Abstract {
     protected static $title;
     protected static $icon;
 
+    protected $target = 0;
+
     /**
      * Calculate a given metric for the passed presence within the $start and $end
      * @param NewModel_Presence $presence
@@ -52,4 +54,7 @@ abstract class Metric_Abstract {
         return static::$icon;
     }
 
+    protected static function boundScore($score, $min = 0, $max = 100) {
+        return max($min, min($max, $score));
+    }
 }

@@ -232,8 +232,8 @@ class Model_Campaign extends Model_Base {
 
 	public function getBadges()
 	{
-		$class = get_class();
-		return $class::getAllBadges($this->id);
+        //todo
+		return static::getAllBadges($this->id);
 
 	}
 

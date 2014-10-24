@@ -27,6 +27,10 @@ abstract class Metric_Factory {
         return $names[$name];
     }
 
+    /**
+     * @param $name
+     * @return Metric_Abstract
+     */
     public static function getMetric($name)
     {
         if(!array_key_exists($name, self::$metrics)){

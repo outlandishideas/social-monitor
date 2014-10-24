@@ -6,6 +6,11 @@ class Metric_ResponseTime extends Metric_Abstract {
     protected static $title = "Responsiveness";
     protected static $icon = "fa fa-clock-o";
 
+    function __construct()
+    {
+        $this->target = floatval(BaseController::getOption('response_time_bad'));
+    }
+
     /**
      * Counts the months between now and estimated date of reaching target audience
      * calculates score based on
@@ -29,9 +34,12 @@ class Metric_ResponseTime extends Metric_Abstract {
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $data = $presence->getResponseData($start, $end);
-        if (is_null($data)) return null;
-        if (!$data || empty($data)) return 0;
-        $target = BaseController::getOption('response_time_bad');
+        if (is_null($data)) {
+            return null;
+        }
+        if (empty($data)) {
+            return 0;
+        }
 
         $total = 0;
         foreach ($data as $d) {
@@ -40,8 +48,7 @@ class Metric_ResponseTime extends Metric_Abstract {
 
         $current = $total/count($data);
 
-        $score = round($target / $current * 100);
-        $score = max(0, min(100, $score));
-        return $score;
+        $score = round($this->target / $current * 100);
+        return self::boundScore($score);
     }
 }
