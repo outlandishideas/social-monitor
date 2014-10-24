@@ -508,8 +508,11 @@ class NewModel_Presence
 
 	public function getBadges()
 	{
-		$badges = static::getAllBadges($this->getId());
-		return $badges;
+		$badges = static::getAllBadges();
+        if (isset($badges[$this->getId()])) {
+            return $badges[$this->getId()];
+        }
+        return null;
 	}
 
 	public function getBadgeHistory(DateTime $start, DateTime $end)
@@ -517,7 +520,7 @@ class NewModel_Presence
 		return Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), $start, $end, array($this->getId()));
 	}
 
-	public static function getAllBadges($presenceId = null)
+	public static function getAllBadges()
 	{
 		if(empty(static::$badges)){
 			$data =  Badge_Factory::badgesData(true);
@@ -542,12 +545,6 @@ class NewModel_Presence
 			Badge_Abstract::doRanking($keyedData, $name, $name . '_rank');
 
 			static::$badges = $keyedData;
-		}
-		if($presenceId){
-			foreach(static::$badges as $badge){
-				if($badge['presence_id'] == $presenceId) return $badge;
-			}
-			return null;
 		}
 		return static::$badges;
 	}
