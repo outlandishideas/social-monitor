@@ -1,16 +1,25 @@
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
-    '<a class="button add" href="%url%"><span class="icon-plus icon-large"></span> Add new</a>' => array('action'=>'new'),
-    '<a class="button" href="%url%"><span class="icon-edit icon-large"></span> Edit All</a>' => array('action'=>'edit-all'),
-    '<a class="button download" href="%url%"><span class="icon-download"></span> Download CSV</a>' => array('action' => 'download')
+    '<a class="button-bc" href="%url%">Add new</a>' => array('action'=>'new'),
+    '<a class="button-bc" href="%url%">Edit All</a>' => array('action'=>'edit-all'),
+    '<a class="button-bc" href="%url%">Download CSV</a>' => array('action' => 'download')
 ));
 ?>
 
-<?php if ($buttons) : ?>
-    <p>
-        <?php echo implode('', $buttons); ?>
-    </p>
-<?php endif; ?>
+<h2 class="page-title">Regions</h2>
+
+<div class="button-bc-bar">
+    <div class="row bk-dark">
+        <div class="small-24 columns">
+            <ul class="button-group">
+                <li><div id="search-table"></div></li>
+                <?php foreach($buttons as $button) : ?>
+                    <li><?php echo $button; ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <?php if (!$this->regions) : ?>
 <h3>No regions found</h3>
@@ -92,17 +101,5 @@ $buttons = $this->gatekeeper()->filterAll(array(
 		</tr>
 		<?php endforeach; ?>
 	</tbody>
-</table><?php
-
-    $buttons = $this->gatekeeper()->filterAll(array(
-        '<a class="button download" href="%url%"><span class="icon-download"></span> Download CSV</a>' => array('action' => 'download'),
-    ));
-
-
-    if ($buttons) : ?>
-        <p><?php
-        echo implode('', $buttons); ?>
-        </p><?php
-    endif;
-
-endif; ?>
+</table>
+<?php endif; ?>
