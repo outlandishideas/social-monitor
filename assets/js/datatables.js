@@ -112,7 +112,7 @@ app.datatables = {
 		return columns;
 	},
 	selectors: {
-		'.dtable.standard': function($table) {
+		'.dtable.standard, #all-sbos, #all-countries, #all-regions': function($table) {
 			$table.dataTable({
 				bScrollInfinite: true,
 				iDisplayLength: 1000,
