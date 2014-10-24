@@ -55,9 +55,20 @@ $.extend(app, {
 		message: '<li class="<%=type%>"><%=msg%></li>',
 		linkBox:
 			'<li class="link box <%=type%> split">\
-				<input type="hidden" value="<%=id%>" name="assigned[<%=type%>][]" />\
+				<input type="hidden" value="<%=id%>" name="<%=name%>" />\
 				<a href="<%=url%>" title="<%=hover%>" class="first" target="_blank">\
 					<span class="<%=icon%> icon-large"></span>\
+					<%=label%>\
+				</a>' + // don't put whitespace between the links
+				'<a href="#" class="remove-item last">\
+					<span class="icon-remove"></span>\
+				</a>\
+			</li>',
+		countryBox:
+			'<li class="link box country split">\
+				<input type="hidden" value="<%=id%>" name="<%=name%>" />\
+				<a href="<%=url%>" class="first" target="_blank">\
+					<span class="flag"><img src="<%=flag%>" /></span>\
 					<%=label%>\
 				</a>' + // don't put whitespace between the links
 				'<a href="#" class="remove-item last">\
@@ -252,8 +263,9 @@ app.init = {
 		'form.management': function($form) {
 			var canAdd = function(id, type) {
 				var currentValues = $form.serializeArray();
+				var name = (type ? 'assigned['+type+'][]' : 'assigned[]');
 				for (var i=0; i<currentValues.length; i++) {
-					if (currentValues[i].name == 'assigned[' + type + '][]' && currentValues[i].value == id) {
+					if (currentValues[i].name == name && currentValues[i].value == id) {
 						return false;
 					}
 				}
@@ -290,10 +302,10 @@ app.init = {
 					if (id != '' && canAdd(id, type)) {
 						var args = $selected.data();
 						args.id = id;
-						args.type = type;
+						args.name = (type ? 'assigned['+type+'][]' : 'assigned[]');
 						args.icon = $select.data('icon');
-						$(_.template(app.templates.linkBox, args))
-							.appendTo($('#assigned'));
+						var template = (type ? app.templates.linkBox : app.templates.countryBox);
+						$(_.template(template, args)).appendTo($('#assigned'));
 						updateNoneFound();
 						updateAddButtons();
 					}

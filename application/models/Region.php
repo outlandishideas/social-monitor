@@ -157,8 +157,8 @@ class Model_Region extends Model_Campaign {
             if (array_key_exists($row->presence_id, $keyedData)) {
                 $campaign->count++;
                 foreach ($badgeTypes as $badgeType) {
-                    if ($badgeType != Model_Badge::BADGE_TYPE_TOTAL) {
-                        $campaign->$badgeType += $keyedData[$row->presence_id]->$badgeType;
+                    if ($badgeType != Badge_Total::getName()) {
+                        $campaign->$badgeType += $keyedData[$row->presence_id][$badgeType];
                     }
                 }
             }
@@ -179,5 +179,14 @@ class Model_Region extends Model_Campaign {
             Model_Badge::assignRanks($allCampaigns, $badgeType);
         }
         return $allCampaigns;
+    }
+
+    public function assignCountries($countryIds)
+    {
+        $db = Zend_Registry::get('db')->getConnection();
+        $stmt = $db->prepare("UPDATE campaigns SET parent = :id WHERE id = :cid");
+        foreach($countryIds as $cid) {
+            $stmt->execute(array(':id' => $this->id, ':cid' => $cid));
+        }
     }
 }
