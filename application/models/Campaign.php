@@ -254,9 +254,7 @@ class Model_Campaign extends Model_Base {
             };
 
 			$data =  Badge_Factory::badgesData(true);
-
 			$badgeNames = Badge_Factory::getBadgeNames();
-
 
 			$sortedData = array();
             foreach ($data as $row) {
@@ -292,30 +290,12 @@ class Model_Campaign extends Model_Base {
 			}
 
 			foreach($badgeNames as $name){
-				uasort($sortedData, function($a, $b) use ($name) {
-					if($a[$name] == $b[$name]) return 0;
-					return $a[$name] > $b[$name] ? -1 : 1;
-				});
-				$lastScore = null;
-				$lastRank = null;
-				$i = 0;
+                Badge_Abstract::doRanking($sortedData, $name, $name . '_rank');
+				//colorize
 				foreach($sortedData as &$row) {
-
-					//colorize
 					if (array_key_exists($name, $row)){
 						$row[$name . '_color'] = Badge_Abstract::colorize($row[$name]);
 					}
-
-					//rank
-					if ($row[$name] == $lastScore){
-						$rank = $lastRank;
-					} else {
-						$rank = $i+1;
-					}
-					$row[$name."_rank"] = $rank;
-					$lastScore = $row[$name];
-					$lastRank = $rank;
-					$i++;
 				}
 			}
 			static::$badges = $sortedData;

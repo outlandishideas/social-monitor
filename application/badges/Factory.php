@@ -168,7 +168,13 @@ abstract class Badge_Factory
 		return $data;
 	}
 
-	public static function badgesData($asArray = false, $presenceIds = array())
+    /**
+     * Gets the most recent badge data for all presences (or the given ones, if defined
+     * @param bool $asArray
+     * @param array $presenceIds
+     * @return array|bool|mixed|null
+     */
+    public static function badgesData($asArray = false, $presenceIds = array())
 	{
 		if(!is_array($presenceIds)) {
             $presenceIds = array($presenceIds);

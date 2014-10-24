@@ -140,16 +140,18 @@ abstract class Badge_Abstract
 		}
 	}
 
-	/**
-	 * Sort and rank the given data. Assumes a array key 'score' is present
-	 * @param array $data The data to sort and rank
-	 * @return array The sorted and ranked data. An array key 'rank' has been added to each row.
-	 */
-	public static function doRanking($data)
+    /**
+     * Sort and rank the given data. Assumes a array key 'score' is present
+     * @param array $data The data to sort and rank
+     * @param string $scoreKey
+     * @param string $rankKey
+     * @return array The sorted and ranked data. An array key 'rank' has been added to each row.
+     */
+	public static function doRanking(&$data, $scoreKey = 'score', $rankKey = 'rank')
 	{
-		usort($data, function($a, $b) {
-			$aVal = $a['score'];
-			$bVal = $b['score'];
+		uasort($data, function($a, $b) use ($scoreKey) {
+			$aVal = $a[$scoreKey];
+			$bVal = $b[$scoreKey];
 
 			if ($aVal == $bVal) return 0;
 
@@ -157,17 +159,19 @@ abstract class Badge_Abstract
 		});
 		$lastScore = null;
 		$lastRank = null;
-		foreach($data as $i => &$row) {
-			if ($row['score'] == $lastScore){
+        $i = 0;
+		foreach($data as &$row) {
+			if ($row[$scoreKey] == $lastScore){
 				$rank = $lastRank;
 			} else {
 				$rank = $i+1;
 			}
 
-			$row['rank'] = $rank;
+			$row[$rankKey] = $rank;
 
-			$lastScore = $row['score'];
+			$lastScore = $row[$scoreKey];
 			$lastRank = $rank;
+            $i++;
 		}
 		return $data;
 	}
@@ -189,7 +193,9 @@ abstract class Badge_Abstract
 
 		$color = $badges['colors'][0];
 		foreach($badges['range'] as $i => $range){
-			if($score >= $range) $color = $badges['colors'][$i];
+			if($score >= $range) {
+                $color = $badges['colors'][$i];
+            }
 		}
 		return $color;
 	}

@@ -523,38 +523,25 @@ class NewModel_Presence
 			$data =  Badge_Factory::badgesData(true);
 			$badgeNames = Badge_Factory::getBadgeNames();
 
-			foreach($data as &$presenceData){
+            $keyedData = array();
+			foreach($data as $presenceData){
 				$presenceData[Badge_Total::getName()] = 0;
 				foreach($badgeNames as $name){
-					if($name == Badge_Total::getName()) continue;
-					//add average to total score
-					$presenceData[Badge_Total::getName()] += $presenceData[$name];
+					if($name != Badge_Total::getName()) {
+                        //add average to total score
+                        $presenceData[Badge_Total::getName()] += $presenceData[$name];
+                    }
 				}
 				//divide the total score by the number of badges (-1 for the totalbadge)
 				$presenceData[Badge_Total::getName()] /= count($badgeNames) - 1;
 				$presenceData['denominator'] = count($data);
+                $keyedData[$presenceData['presence_id']] = $presenceData;
 			}
 
-			$name = Badge_Total::getName();
-			uasort($data, function($a, $b) use ($name) {
-				if($a[$name] == $b[$name]) return 0;
-				return $a[$name] > $b[$name] ? -1 : 1;
-			});
-			$lastScore = null;
-			$lastRank = null;
-			$i = 0;
-			foreach($data as &$row) {
-				if ($row[$name] == $lastScore){
-					$rank = $lastRank;
-				} else {
-					$rank = $i+1;
-				}
-				$row[$name."_rank"] = $rank;
-				$lastScore = $row[$name];
-				$lastRank = $rank;
-				$i++;
-			}
-			static::$badges = $data;
+            $name = Badge_Total::getName();
+			Badge_Abstract::doRanking($keyedData, $name, $name . '_rank');
+
+			static::$badges = $keyedData;
 		}
 		if($presenceId){
 			foreach(static::$badges as $badge){
