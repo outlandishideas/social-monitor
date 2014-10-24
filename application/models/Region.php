@@ -171,8 +171,6 @@ class Model_Region extends Model_Campaign {
             }
         }
 
-        var_dump($keyedData);exit;
-
         // calculate the total scores for each campaign, and calculate ranks for all badge types
         foreach ($allCampaigns as $campaign) {
             Model_Badge::calculateTotalScore($campaign);
