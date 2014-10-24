@@ -158,7 +158,7 @@ class Model_Region extends Model_Campaign {
                 $campaign->count++;
                 foreach ($badgeTypes as $badgeType) {
                     if ($badgeType != Badge_Total::getName()) {
-                        $campaign->$badgeType += $keyedData[$row->presence_id]->$badgeType;
+                        $campaign->$badgeType += $keyedData[$row->presence_id][$badgeType];
                     }
                 }
             }
