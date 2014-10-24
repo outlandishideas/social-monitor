@@ -187,12 +187,12 @@ class NewModel_Presence
 	 */
 	public function isForTwitter()
 	{
-		return $this->getType() == NewModel_PresenceType::TWITTER();
+		return $this->getType()->getValue() == NewModel_PresenceType::TWITTER;
 	}
 
 	public function isForFacebook()
 	{
-		return $this->getType() == NewModel_PresenceType::FACEBOOK();
+		return $this->getType()->getValue() == NewModel_PresenceType::FACEBOOK;
 	}
 
 	public function getOwner()
@@ -384,7 +384,7 @@ class NewModel_Presence
 	{
 		$kpis = array();
 		$stmt = $this->db->prepare(
-			"SELECT * FROM `kpi_cache`
+			"SELECT metric, value FROM `kpi_cache`
 				WHERE `presence_id` = :pid
 				AND `start_date` = :start
 				AND `end_date` = :end");
@@ -393,10 +393,7 @@ class NewModel_Presence
 			':start' => $start->format("Y-m-d"),
 			':end' => $end->format("Y-m-d")
 		));
-		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		foreach($results as $row){
-			$kpis[$row['metric']] = $row['value'];
-		}
+		$kpis = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 		return $kpis;
 	}
 
@@ -490,6 +487,24 @@ class NewModel_Presence
 			$stmt->execute(array(':result' => $result, ':id' => $id));
 		}
 	}
+
+    public function getBadgeScores(DateTime $date, Badge_Period $range) {
+        if (!$date || !$range) {
+            throw new LogicException('date cannot be null');
+        }
+        $args = array(
+            'id' => $this->getId(),
+            'date' => $date->format('Y-m-d'),
+            'range' => (string)$range
+        );
+        $stmt = $this->db->prepare("SELECT * FROM `badge_history` WHERE `presence_id` = :id AND `date` = :date AND `daterange` = :range");
+        $stmt->execute($args);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($results) {
+            return $results[0];
+        }
+        return null;
+    }
 
 	public function getBadges()
 	{

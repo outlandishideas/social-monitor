@@ -6,6 +6,11 @@ class Metric_PopularityTime extends Metric_Abstract {
     protected static $title = "Popularity Trend";
     protected static $icon = "fa fa-line-chart";
 
+    function __construct()
+    {
+        $this->target = floatval(BaseController::getOption('achieve_audience_good'));
+    }
+
     /**
      * Counts the months between now and estimated date of reaching target audience
      * calculates score based on
@@ -31,14 +36,16 @@ class Metric_PopularityTime extends Metric_Abstract {
     {
         $score = null;
 
-        $data = $presence->getKpiData($start, $end);
-        $current = $data[self::getName()];
+        if ($this->target > 0) {
+            $data = $presence->getKpiData($start, $end);
+            $current = $data[self::getName()];
 
-        if($current > 0){
-            $target = BaseController::getOption('achieve_audience_good');
-            if ($target > 0) {
-                $score = round($target / $current * 100);
-                $score = max(0, min(100, $score));
+            if($current > 0){
+                $score = round($this->target / $current * 100);
+                $score = self::boundScore($score);
+            } else if ($current === 0 || $current === '0') {
+                // target is already reached
+                $score = 100;
             }
         }
 
