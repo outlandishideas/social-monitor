@@ -252,14 +252,21 @@ abstract class GraphingController extends BaseController {
         return $return;
     }
 
-	public function badgeInformation($badgeData, $badge)
+    /**
+     * @param $badgeData
+     * @param Badge_Abstract $badge
+     * @return array
+     */
+    public function badgeInformation($badgeData, $badge)
 	{
 		$score = round($badgeData[$badge->getName()]);
 
 		$colors = $this->view->geochartMetrics[$badge->getName()];
 		$color = $colors->colors[0];
 		foreach($colors->range as $i => $value){
-			if($score >= $value) $color = $colors->colors[$i];
+			if($score >= $value) {
+                $color = $colors->colors[$i];
+            }
 		}
 
 		$badgeArr = array();
@@ -287,20 +294,21 @@ abstract class GraphingController extends BaseController {
 
 	public function badgeDetails($badgeData)
 	{
-		$badgeArr = array();
 		$badges = Badge_Factory::getBadges();
 
-		//get total and handle it separately
-		$total = $badges[Badge_Total::getName()];
+		$badgeArr = array(
+            'main' => null,
+            'small' => array()
+        );
 
-		$badgeArr['main'] = $this->badgeInformation($badgeData, $total);
-
-		$small = array();
 		foreach($badges as $badge){
-			if($badge instanceof Badge_Total) continue;
-			$small[] = $this->badgeInformation($badgeData, $badge);
+            $currentBadgeData = $this->badgeInformation($badgeData, $badge);
+            if ($badge instanceof Badge_Total) {
+                $badgeArr['main'] = $currentBadgeData;
+            } else {
+                $badgeArr['small'][] = $currentBadgeData;
+            }
 		}
-		$badgeArr['small'] = $small;
 
 		return $badgeArr;
 	}

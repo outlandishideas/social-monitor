@@ -47,12 +47,8 @@ class Metric_LikesPerPost extends Metric_Abstract {
         if ($this->target == 0) {
             return null;
         }
-        switch ((string) $presence->getType()) {
-            case NewModel_PresenceType::FACEBOOK:
-                //do nothing and continue to calculations
-                break;
-            default:
-                return null; //Likes only are available for facebook
+        if (!$presence->isForFacebook()) {
+            return null;
         }
         $data = $presence->getKpiData($start, $end);
         $current = array_key_exists(self::getName(), $data) ? $data[self::getName()] : 0;
