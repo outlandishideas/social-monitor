@@ -219,11 +219,11 @@ class RegionController extends CampaignController
                 $countryIds[] = $id;
             }
             $region->assignCountries($countryIds);
-            $this->flashMessage('Region presences updated');
+            $this->flashMessage('Region countries updated');
             $this->_helper->redirector->gotoSimple('index');
         }
 
-        $this->view->title = 'Manage Region Presences';
+        $this->view->title = 'Manage Region Countries';
         $this->view->titleIcon = 'icon-tasks';
         $this->view->region = $region;
         $this->view->allCountries = Model_Country::fetchAll();
