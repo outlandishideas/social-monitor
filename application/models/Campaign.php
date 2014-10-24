@@ -8,6 +8,21 @@ class Model_Campaign extends Model_Base {
 	// use this to filter campaigns table by campaign_type column
 	protected static $campaignType = null;
 
+    /**
+     * @param $presenceId
+     * @return Model_Campaign|null
+     */
+    public static function fetchOwner($presenceId) {
+        $stmt = self::$db->prepare('SELECT campaign_id FROM campaign_presences WHERE presence_id = :pid');
+        $stmt->execute(array(':pid'=>$presenceId));
+        $campaignId = $stmt->fetchColumn(0);
+        if($campaignId === false) {
+            return null;
+        } else {
+            return Model_Campaign::fetchById($campaignId);
+        }
+    }
+
 	protected function fetch($clause = null, $args = array()) {
         $type = self::campaignType();
 		if($type !== null) {

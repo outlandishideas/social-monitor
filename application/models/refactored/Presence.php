@@ -174,17 +174,11 @@ class NewModel_Presence
 		return $this->facebook_engagement;
 	}
 
-	/**
-	 * @return mixed
-	 */
 	public function getPresenceSign()
 	{
 		return $this->getType()->getSign();
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isForTwitter()
 	{
 		return $this->getType()->getValue() == NewModel_PresenceType::TWITTER;
@@ -195,30 +189,42 @@ class NewModel_Presence
 		return $this->getType()->getValue() == NewModel_PresenceType::FACEBOOK;
 	}
 
-	public function getOwner()
+	public function isForSinaWeibo()
+	{
+		return $this->getType()->getValue() == NewModel_PresenceType::SINA_WEIBO;
+	}
+
+    /**
+     * @return Model_Campaign|null
+     */
+    public function getOwner()
 	{
 		if(!$this->owner){
-			$stmt = $this->db->prepare('SELECT campaign_id FROM campaign_presences WHERE presence_id = :pid');
-			$stmt->execute(array(':pid'=>$this->getId()));
-			$campaignId = $stmt->fetchColumn(0);
-			if($campaignId === false) return null;
-			Model_Base::setDb($this->db);
-			$this->owner = Model_Campaign::fetchById($campaignId);
+            Model_Base::setDb($this->db);
+            $this->owner = Model_Campaign::fetchOwner($this->getId());
 		}
 		return $this->owner;
 	}
 
 	public function getTargetAudience()
 	{
-		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
-			$presence = Model_Presence::fetchById($this->getId());
-			return $presence->getTargetAudience();
-		}
 		$target = null;
 		$owner = $this->getOwner();
 		if($owner){
 			$target = $owner->getTargetAudience();
-			$target *= BaseController::getOption($this->isForFacebook() ? 'fb_min' : 'tw_min');
+            $percent = 0;
+            switch ($this->getType()->getValue()) {
+                case NewModel_PresenceType::SINA_WEIBO:
+                    $percent = BaseController::getOption('sw_min');
+                    break;
+                case NewModel_PresenceType::FACEBOOK:
+                    $percent = BaseController::getOption('fb_min');
+                    break;
+                case NewModel_PresenceType::TWITTER:
+                    $percent = BaseController::getOption('tw_min');
+                    break;
+            }
+			$target *= $percent;
 			$target /= 100;
 		}
 		return $target;

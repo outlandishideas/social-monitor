@@ -26,6 +26,9 @@ class ConfigController extends BaseController {
 
                             'tw_min'=>array('label'=>'Twitter Minimum Audience (% of total)'),
                             'tw_opt'=>array('label'=>'Twitter Optimum Audience (% of total)'),
+
+                            'sw_min'=>array('label'=>'Sina Weibo Minimum Audience (% of total)'),
+                            'sw_opt'=>array('label'=>'Sina Weibo Optimum Audience (% of total)'),
                         )
                     ),
                     (object)array(
