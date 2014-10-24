@@ -28,7 +28,11 @@ abstract class Badge_Factory
 		return array_keys($classNames);
 	}
 
-	public static function getBadge($name)
+    /**
+     * @param $name
+     * @return Badge_Abstract
+     */
+    public static function getBadge($name)
 	{
 		if (!array_key_exists($name, self::$badges)) {
 			$className = static::getClassName($name);
@@ -37,7 +41,10 @@ abstract class Badge_Factory
 		return self::$badges[$name];
 	}
 
-	public static function getBadges()
+    /**
+     * @return Badge_Abstract[]
+     */
+    public static function getBadges()
 	{
 		$badges = array();
 		foreach(self::getBadgeNames() as $name){
@@ -69,36 +76,36 @@ abstract class Badge_Factory
 		}
 
 		$currentDate = clone $startDate;
+        $badges = static::getBadges();
+        $totalBadge = static::getBadge(Badge_Total::getName());
 		while ($currentDate <= $endDate) {
 			if (!array_key_exists($currentDate->format('Y-m-d'), $sorted)) {
 				foreach ($presences as $p) {
-					foreach (static::getBadges() as $b) {
-						if ($b->getName() == Badge_Total::getName()) {
-							continue;
-						}
-						$b->calculate($p, $currentDate, $daterange);
+					foreach ($badges as $b) {
+						if ($b->getName() != Badge_Total::getName()) {
+    						$b->calculate($p, $currentDate, $daterange);
+                        }
 					}
-					static::getBadge(Badge_Total::getName())->calculate($p, $currentDate, $daterange);
+					$totalBadge->calculate($p, $currentDate, $daterange);
 				}
-				foreach (static::getBadges() as $b) {
+				foreach ($badges as $b) {
 					$b->assignRanks($currentDate, $daterange);
 				}
 			} else {
 				$doRanking = false;
 				foreach ($presences as $p) {
 					if (!array_key_exists($p->getId(), $sorted[$currentDate->format('Y-m-d')])) {
-						foreach (static::getBadges() as $b) {
-							if ($b->getName() == Badge_Total::getName()) {
-								continue;
-							}
-							$b->calculate($p, $currentDate, $daterange);
+						foreach ($badges as $b) {
+							if ($b->getName() != Badge_Total::getName()) {
+    							$b->calculate($p, $currentDate, $daterange);
+                            }
 						}
-						static::getBadge(Badge_Total::getName())->calculate($p, $currentDate, $daterange);
+						$totalBadge->calculate($p, $currentDate, $daterange);
 						$doRanking = true;
 					}
 				}
 				if ($doRanking) {
-					foreach (static::getBadges() as $b) {
+					foreach ($badges as $b) {
 						$b->assignRanks($currentDate, $daterange);
 					}
 				}

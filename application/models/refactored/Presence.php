@@ -271,10 +271,12 @@ class NewModel_Presence
 					$meanX /= $count;
 					$meanY /= $count;
 
-					$a = ($sumXY - $count*$meanX*$meanY)/($sumXX - $count*$meanX*$meanX);
-					$b = $meanY - $a*$meanX;
+                    $denominator = ($sumXX - $count*$meanX*$meanX);
+                    $numerator = ($sumXY - $count*$meanX*$meanY);
 
-					if ($a > 0) {
+					if ($denominator != 0 && $numerator/$denominator > 0) {
+                        $a = $numerator/$denominator;
+                        $b = $meanY - $a*$meanX;
 						$daysNeeded = ceil(($target - $b)/$a);
 
 						//we've been having some difficulties with DateTime and
