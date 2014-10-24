@@ -32,33 +32,20 @@ class RegionController extends CampaignController
         $this->view->badgeData = Model_Region::badgesData();
 	}
 
-	/**
-	 * Views a specific region
-	 * @user-level user
-	 */
-	public function viewAction()
-	{
-		/** @var Model_Region $region */
-		$region = Model_Region::fetchById($this->_request->getParam('id'));
-		$this->validateData($region);
+    /**
+     * Views a specific country
+     * @user-level user
+     */
+    public function viewAction()
+    {
+        /** @var Model_Country $country */
+        $region = Model_Region::fetchById($this->_request->getParam('id'));
+        $this->validateData($region);
 
-        $compareData = array();
-        foreach($region->presences as $presence){
-            $compareData[$presence->id] = (object)array(
-                'presence'=>$presence,
-                'graphs'=>$this->graphs($presence)
-            );
-        }
-
-		$this->view->metricOptions = self::graphMetrics();
-		$this->view->tableMetrics = self::tableMetrics();
-        $this->view->compareData = $compareData;
-		$this->view->title = $region->display_name;
-		$this->view->titleIcon = 'icon-th-list';
-		$this->view->titleInfo = $region->regionInfo();
+        $this->view->badgePartial = $this->badgeDetails($region->getBadges());
+        $this->view->metricOptions = self::graphMetrics();
         $this->view->region = $region;
-        $this->view->badges = Model_Badge::$ALL_BADGE_TYPES;
-	}
+    }
 
 	/**
 	 * Creates a new SBU
@@ -283,5 +270,28 @@ class RegionController extends CampaignController
         $return['options'] = false;
 
         return $return;
+    }
+
+    /**
+     * Gets all of the graph data for the requested region
+     */
+    public function graphDataAction() {
+        Zend_Session::writeClose(); //release session on long running actions
+
+        $this->validateChartRequest();
+
+        /** @var $region Model_Region */
+        $region = Model_Region::fetchById($this->_request->getParam('id'));
+        if(!$region) {
+            $this->apiError('Region could not be found');
+        }
+
+        $dateRange = $this->getRequestDateRange();
+        $start = $dateRange[0];
+        $end = $dateRange[1];
+
+        $chartObject = Chart_Factory::getChart($this->_request->getParam('chart'));
+
+        $this->apiSuccess($chartObject->getChart($region, $start, $end));
     }
 }

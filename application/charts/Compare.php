@@ -38,6 +38,7 @@ class Chart_Compare extends Chart_Abstract {
 
     protected function getNames($data = null)
     {
+        if (!is_array($data)) return array();
         $names = array();
         foreach(array_keys((array)$data[0]) as $column){
             if(in_array($column, $this->getDataColumns())){
@@ -51,6 +52,7 @@ class Chart_Compare extends Chart_Abstract {
 
     protected function getCampaignColumns($data = null)
     {
+        if (!is_array($data)) return array();
         //get the number of presences in this data so we can divide by this number later
         $presenceCount = count($this->getPresenceIdsFromData($data));
 
@@ -99,6 +101,7 @@ class Chart_Compare extends Chart_Abstract {
                 break;
             case "Model_Country":
             case "Model_Group":
+            case "Model_Region":
                 /** @var Model_Campaign $model */
                 $data = $model->getBadgeHistory($start, $end);
                 $columns = array_values($this->getCampaignColumns($data));
@@ -156,6 +159,7 @@ class Chart_Compare extends Chart_Abstract {
 
     private function getPresenceIdsFromData($data)
     {
+        if (!is_array($data)) return array();
         return array_reduce($data, function($carry, $row){
             if(!in_array($row->presence_id, $carry)) $carry[] = $row->presence_id;
             return $carry;
