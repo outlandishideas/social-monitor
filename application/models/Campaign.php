@@ -232,9 +232,12 @@ class Model_Campaign extends Model_Base {
 
 	public function getBadges()
 	{
-        //todo
-		return static::getAllBadges($this->id);
-
+        $allBadges = self::getAllBadges();
+        if(array_key_exists($this->id, $allBadges)){
+            return $allBadges[$this->id];
+        } else {
+            return null;
+        }
 	}
 
 	public function getBadgeHistory(DateTime $start, DateTime $end)
@@ -242,54 +245,53 @@ class Model_Campaign extends Model_Base {
 		return Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), $start, $end, $this->getPresenceIds());
 	}
 
-	public static function getAllBadges($presenceId = null)
+	public static function getAllBadges()
 	{
 		if(empty(static::$badges)){
-			$campaignIds = array_reduce(static::fetchAll(), function($carry, $campaign){
-				$carry[] = $campaign->id;
-				return $carry;
-			}, array());
+			$campaignIds = array();
+            foreach (static::fetchAll() as $campaign) {
+                $campaignIds[] = $campaign->id;
+            };
 
 			$data =  Badge_Factory::badgesData(true);
 
 			$badgeNames = Badge_Factory::getBadgeNames();
 
 
-			$sortedData = array_reduce($data, function($carry, $row) use ($campaignIds, $badgeNames) {
+			$sortedData = array();
+            foreach ($data as $row) {
 				$campaignId = $row['campaign_id'];
 				if(in_array($campaignId, $campaignIds)) {
-					if(!array_key_exists($campaignId, $carry)){
-						$carry[$campaignId] = array('presences' => 0, 'denominator' => count($campaignIds));
+					if(!array_key_exists($campaignId, $sortedData)){
+                        $sortedData[$campaignId] = array('presences' => 0, 'denominator' => count($campaignIds));
 						foreach($badgeNames as $name){
-							$carry[$campaignId][$name] = 0;
+                            $sortedData[$campaignId][$name] = 0;
 						}
 					}
 					foreach($badgeNames as $name){
-						if($name == Badge_Total::getName()) continue;
-						$carry[$campaignId][$name] += $row[$name];
+						if($name != Badge_Total::getName()) {
+                            $sortedData[$campaignId][$name] += $row[$name];
+                        }
 					}
-					$carry[$campaignId]['presences'] += 1;
-				}
-				return $carry;
-
-			}, array());
+                    $sortedData[$campaignId]['presences']++;
+                }
+			}
 
 			foreach($sortedData as &$campaignData){
 				foreach($badgeNames as $name){
-					if($name == Badge_Total::getName()) continue;
-					//get average for kpi scores by dividing by number of presences
-					$campaignData[$name] /= $campaignData['presences'];
-					//add average to total score
-					$campaignData[Badge_Total::getName()] += $campaignData[$name];
+					if($name != Badge_Total::getName()) {
+                        //get average for kpi scores by dividing by number of presences
+                        $campaignData[$name] /= $campaignData['presences'];
+                        //add average to total score
+                        $campaignData[Badge_Total::getName()] += $campaignData[$name];
+                    }
 				}
-				//divide the total score by the number of badges (-1 for the totalbadge)
+				//divide the total score by the number of badges (-1 for the total badge)
 				$campaignData[Badge_Total::getName()] /= count($badgeNames) - 1;
 				unset($campaignData['presences']);
 			}
 
 			foreach($badgeNames as $name){
-
-
 				uasort($sortedData, function($a, $b) use ($name) {
 					if($a[$name] == $b[$name]) return 0;
 					return $a[$name] > $b[$name] ? -1 : 1;
@@ -318,15 +320,8 @@ class Model_Campaign extends Model_Base {
 			}
 			static::$badges = $sortedData;
 		}
-		if($presenceId){
-			if(array_key_exists($presenceId, static::$badges)){
-				return static::$badges[$presenceId];
-			} else {
-				return null;
-			}
-		}
-		return static::$badges;
 
+		return static::$badges;
 	}
 
     public static function badgesData(){

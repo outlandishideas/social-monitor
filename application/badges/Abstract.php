@@ -69,7 +69,10 @@ abstract class Badge_Abstract
 		return static::$description;
 	}
 
-	public function getMetrics()
+    /**
+     * @return Metric_Abstract[]
+     */
+    public function getMetrics()
 	{
 		return $this->metrics;
 	}
