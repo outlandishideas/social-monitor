@@ -325,7 +325,7 @@ app.datatables = {
 	generateLanguage: function(type) {
 		return {
 			sSearch:'Search ' + type + 's:',
-			sEmptyTable:'No ' + type + 's found for this presence',
+			sEmptyTable:'No ' + type + 's found',
 			sZeroRecords:'No matching ' + type + 's',
 			sInfo:'Showing ' + type + 's: _START_ to _END_',
 			sInfoEmpty:'No ' + type + 's to show',
