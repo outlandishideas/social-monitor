@@ -9,9 +9,9 @@ app.newCharts = {
     setup: function() {
         $(document)
             .on('dateRangeUpdated', app.newCharts.loadData)
-        var $metricPicker = $('#metric-picker');
-        if ($metricPicker.length > 0) {
-            $metricPicker.on('change', app.newCharts.refreshCharts);
+        var $chartPicker = $('#chart-picker');
+        if ($chartPicker.length > 0) {
+            $chartPicker.on('change', app.newCharts.refreshCharts);
         }
 
         app.newCharts.loadData();
@@ -24,7 +24,7 @@ app.newCharts = {
     },
 
     currentMetric:function () {
-        return $('#metric-picker').val();
+        return $('#chart-picker').val();
     },
 
     loadData: function() {

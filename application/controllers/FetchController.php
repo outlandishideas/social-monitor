@@ -132,6 +132,7 @@ class FetchController extends BaseController
 
 		usort($presences, function($a, $b) { return strcmp($a->last_fetched ?: '000000', $b->last_fetched ?: '000000'); });
 		$index = 0;
+        /** @var $presences Model_Presence[] */
 		foreach ($presences as $p) {
 			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
 			self::db()->closeConnection();

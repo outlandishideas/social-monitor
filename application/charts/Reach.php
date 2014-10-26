@@ -1,25 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 14/10/2014
- * Time: 12:56
- */
 
 class Chart_Reach extends Chart_Badge {
 
     protected static $title = "KPI: Reach";
-    protected static $description;
     protected static $name = "reach";
 
-    protected $yLabel = "Reach Score";
-
-    public function getDataColumns()
+    public function __construct(PDO $db = null)
     {
-        return array(
+        parent::__construct($db);
+        $this->yLabel = "Reach Score";
+        $this->dataColumns = array(
             Badge_Reach::getName()
         );
     }
-
-
 }

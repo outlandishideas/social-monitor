@@ -38,7 +38,6 @@ class IndexController extends GraphingController
 		$this->view->mapData = $mapData;
         $this->view->smallMapData = $smallMapData;
 		$this->view->groupData = $groupData;
-		$this->view->metricOptions = $metrics;
 		$this->view->dateRangeString = $old->format('d M Y') . ' - ' . $now->format('d M Y');
 		$this->view->currentDate = $now->format('Y-m-d');
 		$this->view->dayRange = $dayRange;

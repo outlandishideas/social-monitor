@@ -1,84 +1,85 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 14/10/2014
- * Time: 12:56
- */
 
 class Chart_Compare extends Chart_Abstract {
 
     protected static $title = "Compare: KPIs";
-    protected static $description;
     protected static $name = "compare";
 
-    protected $xLabel = "Time";
-    protected $yLabel = "KPI Score";
+    protected $dataColumns;
+
+    public function __construct(PDO $db = null)
+    {
+        parent::__construct($db);
+        $this->xLabel = "Time";
+        $this->yLabel = "KPI Score";
+        $this->dataColumns = array(
+            Badge_Quality::getName(),
+            Badge_Engagement::getName(),
+            Badge_Reach::getName()
+        );
+    }
 
     protected function getColumns($data = null)
     {
         $columns = array();
         $wantedColumns = array_merge($this->getDataColumns(), array($this->getXColumn()));
 
-        foreach(array_keys((array)$data[0]) as $column){
-
-            if(!in_array($column, $wantedColumns)) continue;
-
-            $columns[] = array_reduce($data, function($carry, $row) use($column){
-                $row = (array)$row;
-                if(array_key_exists($column, $row)){
-                    $carry[] = $row[$column];
-                }
-                return $carry;
-            }, array($column));
-
+        foreach ($wantedColumns as $column) {
+            $dataRow = array($column);
+            foreach ($data as $row) {
+                $row = (object)$row;
+                $dataRow[] = isset($row->$column) ? $row->$column : null;
+            }
+            $columns[] = $dataRow;
         }
         return $columns;
     }
 
-    protected function getNames($data = null)
+    protected function getNames()
     {
-        if (!is_array($data)) return array();
         $names = array();
-        foreach(array_keys((array)$data[0]) as $column){
-            if(in_array($column, $this->getDataColumns())){
-                /** @var Badge_Abstract $badge */
-                $badge = Badge_Factory::getBadge($column);
-                $names[$column] = $badge->getTitle();
-            }
+        foreach($this->getDataColumns() as $column){
+            /** @var Badge_Abstract $badge */
+            $badge = Badge_Factory::getBadge($column);
+            $names[$column] = $badge->getTitle();
         }
         return $names;
     }
 
     protected function getCampaignColumns($data = null)
     {
-        if (!is_array($data)) return array();
+        if (!is_array($data)) {
+            return array();
+        }
+
         //get the number of presences in this data so we can divide by this number later
         $presenceCount = count($this->getPresenceIdsFromData($data));
 
         $dataColumns = $this->getDataColumns();
 
-        $reducedData = array_reduce($data, function($carry, $row) use ($dataColumns) {
-            $row = (array)$row;
+        $reducedData = array();
+        foreach ($data as $row) {
+            $date = $row->date;
             //seed carry with empty array of columns names => 0
-            if(!array_key_exists($row['date'], $carry)) {
-                $carry[$row['date']] = array('date' => $row['date']);
+            if(!array_key_exists($date, $reducedData)) {
+                $dateObj = new stdClass();
+                $dateObj->date = $date;
                 foreach($dataColumns as $colName){
-                    $carry[$row['date']][$colName] = 0;
+                    $dateObj->$colName = 0;
                 }
+                $reducedData[$date] = $dateObj;
             }
             //add the current rows data if colName exists
             foreach($dataColumns as $colName){
-                if(array_key_exists($colName, $row) && is_numeric($row[$colName])){
-                    $carry[$row['date']][$colName] += $row[$colName];
+                if(isset($row->$colName) && is_numeric($row->$colName)){
+                    $reducedData[$date]->$colName += $row->$colName;
                 }
             }
-            return $carry;
-        }, array());
+        }
 
         foreach($reducedData as &$row){
             foreach($dataColumns as $colName){
-                $row[$colName] /= $presenceCount;
+                $row->$colName /= $presenceCount;
             }
         }
 
@@ -150,20 +151,18 @@ class Chart_Compare extends Chart_Abstract {
 
     public function getDataColumns()
     {
-        return array(
-            Badge_Quality::getName(),
-            Badge_Engagement::getName(),
-            Badge_Reach::getName()
-        );
+        return $this->dataColumns;
     }
 
     private function getPresenceIdsFromData($data)
     {
-        if (!is_array($data)) return array();
-        return array_reduce($data, function($carry, $row){
-            if(!in_array($row->presence_id, $carry)) $carry[] = $row->presence_id;
-            return $carry;
-        }, array());
+        $ids = array();
+        if (is_array($data)) {
+            $ids = array_map(function($a) { return $a->presence_id; }, $data);
+            $ids = array_unique($ids);
+            $ids = array_values($ids);
+        }
+        return $ids;
     }
 
 

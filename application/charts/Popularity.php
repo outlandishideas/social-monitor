@@ -1,19 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 14/10/2014
- * Time: 12:56
- */
 
 class Chart_Popularity extends Chart_Abstract {
 
     protected static $title = "Measure: Popularity";
-    protected static $description;
     protected static $name = "popularity";
 
-    protected $xLabel = "Date";
-    protected $yLabel = "Number of Fans/Followers Gained Per Day";
+    public function __construct(PDO $db = null)
+    {
+        parent::__construct($db);
+        $this->xLabel = "Date";
+        $this->yLabel = "Number of Fans/Followers Gained Per Day";
+    }
 
     protected function getXAxis()
     {
@@ -32,7 +29,7 @@ class Chart_Popularity extends Chart_Abstract {
          );
     }
 
-    protected function getNames($data = null)
+    protected function getNames()
     {
         return array(Metric_Popularity::getName(), Metric_Popularity::getTitle());
     }

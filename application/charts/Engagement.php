@@ -3,17 +3,15 @@
 class Chart_Engagement extends Chart_Badge {
 
     protected static $title = "KPI: Engagement";
-    protected static $description;
     protected static $name = "engagement";
 
-    protected $yLabel = "Reach Score";
-
-    public function getDataColumns()
+    public function __construct(PDO $db = null)
     {
-        return array(
+        parent::__construct($db);
+        $this->yLabel = "Reach Score";
+        $this->dataColumns = array(
             Badge_Engagement::getName()
         );
     }
-
 
 }

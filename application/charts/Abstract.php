@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 14/10/2014
- * Time: 12:56
- */
 
 abstract class Chart_Abstract {
 
@@ -25,13 +19,14 @@ abstract class Chart_Abstract {
 
     public function getChart($model, DateTime $start, DateTime $end)
     {
+        $chartData = $this->getData($model, $start, $end);
         return array(
             "bindto" => '#new-chart',
             //this doesn't seem to work
             "line" => array(
                 "connectNull" => true
             ),
-            "data" => $this->getData($model, $start, $end),
+            "data" => $chartData,
             "axis" => array(
                 "x" => $this->getXAxis(),
                 "y" => $this->getYAxis()
@@ -91,10 +86,9 @@ abstract class Chart_Abstract {
 
     /**
      * Get the public names for each dataset from $data
-     * @param $data
      * @return array // eg. array("internal_name" => "external_name", "internal_name_2" => "external_name_2")
      */
-    abstract protected function getNames($data = null);
+    abstract protected function getNames();
 
     /**
      * Get columns chart from $data
@@ -103,5 +97,8 @@ abstract class Chart_Abstract {
      */
     abstract protected function getColumns($data = null);
 
+    static function getInstance() {
+        return Chart_Factory::getChart(self::getName());
+    }
 
 }

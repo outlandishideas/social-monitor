@@ -1682,14 +1682,14 @@ h4 {
 }
 
 
-#metric-picker {
+#chart-picker {
     min-width: 221px;
 }
 
 #date-picker, #date-slider {
 }
 
-#metric-picker:focus,
+#chart-picker:focus,
 #date-slider:focus,
 #date-picker:focus {
     border-color: #fff;

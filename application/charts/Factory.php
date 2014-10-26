@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 14/10/2014
- * Time: 12:56
- */
 
 abstract class Chart_Factory {
 

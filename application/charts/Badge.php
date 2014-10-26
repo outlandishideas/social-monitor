@@ -1,41 +1,37 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 14/10/2014
- * Time: 12:56
- */
 
 abstract class Chart_Badge extends Chart_Compare {
 
-    protected static $title;
-    protected static $description;
-    protected static $name;
+    public function __construct(PDO $db = null)
+    {
+        parent::__construct($db);
 
-    protected $xLabel = "Time";
-    protected $yLabel;
+        $this->xLabel = "Time";
+    }
 
+    /**
+     * Gets the names of the presences, keyed by id
+     * @param array $data
+     * @return array
+     */
     protected function getCampaignNames($data = null)
     {
-        $names = array();
-
         $presenceIds = $this->getPresenceIdsFromData($data);
 
         $presences = NewModel_PresenceFactory::getPresencesById($presenceIds);
 
-        return array_reduce($presences, function($carry, $presence){
-            /** @var NewModel_Presence $presence */
-            $carry[$presence->getId()] = $presence->getName();
-            return $carry;
-        }, $names);
+        $names = array();
+        foreach ($presences as $p) {
+            $names[$p->getId()] = $p->getName();
+        }
+        return $names;
     }
 
     private function getPresenceIdsFromData($data)
     {
-        return array_reduce($data, function($carry, $row){
-            if(!in_array($row->presence_id, $carry)) $carry[] = $row->presence_id;
-            return $carry;
-        }, array());
+        $ids = array_map(function($row){ return $row->presence_id; }, $data);
+        $ids = array_unique($ids);
+        return array_values($ids);
     }
 
     protected function getCampaignColumns($data = null)
@@ -53,7 +49,9 @@ abstract class Chart_Badge extends Chart_Compare {
             $columns = array_reduce($data, function($carry, $row) use($column, $xCol){
                 $row = (array)$row;
                 //if we haven't already added the date to the date records, do so
-                if(!in_array($row[$xCol], $carry[$xCol])) $carry[$xCol][] = $row[$xCol];
+                if(!in_array($row[$xCol], $carry[$xCol])) {
+                    $carry[$xCol][] = $row[$xCol];
+                }
 
                 //our data column appears in this row, add it to the correct presence
                 if(array_key_exists($column, $row)){
@@ -91,7 +89,9 @@ abstract class Chart_Badge extends Chart_Compare {
             if(in_array($column[0], $this->getDataColumns())){
                 $value = $column[1];
                 foreach($range['range'] as $i => $score){
-                    if($value >= $score) $color = $range['colors'][$i];
+                    if($value >= $score) {
+                        $color = $range['colors'][$i];
+                    }
                 }
                 $colorValues[$column[0]] = $color;
             }

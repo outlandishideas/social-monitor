@@ -1,0 +1,10 @@
+<div id="chart-picker-box" class="picker">
+
+	<label for="chart-picker">Chart:</label>
+	<select id="chart-picker">
+        <?php foreach($this->chartOptions as $chart) : /** @var $chart Chart_Abstract */?>
+            <option value="<?php echo $chart::getName(); ?>"><?php echo $chart::getTitle(); ?></option>
+        <?php endforeach;?>
+	</select>
+
+</div>

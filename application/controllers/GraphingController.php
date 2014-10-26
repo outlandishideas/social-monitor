@@ -3,12 +3,12 @@
 
 abstract class GraphingController extends BaseController {
 
-	protected function graphMetrics() {
+	protected function chartOptions() {
 		return array(
-			Chart_Compare::getName() => Chart_Compare::getTitle(),
-			Chart_Reach::getName() => Chart_Reach::getTitle(),
-			Chart_Engagement::getName() => Chart_Engagement::getTitle(),
-			Chart_Quality::getName() => Chart_Quality::getTitle()
+			Chart_Compare::getInstance(),
+			Chart_Reach::getInstance(),
+			Chart_Engagement::getInstance(),
+			Chart_Quality::getInstance()
 		);
 	}
 
@@ -25,7 +25,7 @@ abstract class GraphingController extends BaseController {
 	{
 		$id = $this->_request->getParam('id');
 		if(!$id) {
-			$this->apiError('Missing Id range');
+			$this->apiError('Missing ID');
 		}
 
 		$dateRange = $this->getRequestDateRange();

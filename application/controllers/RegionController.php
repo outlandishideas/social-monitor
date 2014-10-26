@@ -42,7 +42,7 @@ class RegionController extends CampaignController
         $this->validateData($region);
 
         $this->view->badgePartial = $this->badgeDetails($region->getBadges());
-        $this->view->metricOptions = self::graphMetrics();
+        $this->view->chartOptions = $this->chartOptions();
         $this->view->region = $region;
     }
 

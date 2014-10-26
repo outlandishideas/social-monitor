@@ -29,7 +29,7 @@ class PresenceController extends GraphingController
 		$this->validateData($presence);
 
 		$this->view->badgePartial = $this->badgeDetails($presence->getBadges());
-		$this->view->metricOptions = $this->graphMetrics();
+		$this->view->chartOptions = $this->chartOptions();
 		$this->view->presence = $presence;
 	}
 
@@ -52,7 +52,7 @@ class PresenceController extends GraphingController
 
         $this->view->title = 'Comparing '.count($compareData).' Presences';
         $this->view->titleIcon = 'icon-exchange';
-	    $this->view->metricOptions = self::graphMetrics();
+	    $this->view->chartOptions = $this->chartOptions();
 	    $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
     }

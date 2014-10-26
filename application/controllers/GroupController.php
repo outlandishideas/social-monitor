@@ -31,7 +31,7 @@ class GroupController extends CampaignController {
 
         $this->view->badgePartial = $this->badgeDetails($group->getBadges());
 
-		$this->view->metricOptions = self::graphMetrics();
+		$this->view->chartOptions = self::chartOptions();
 		$this->view->tableMetrics = self::tableMetrics();
         $this->view->group = $group;
 	}
