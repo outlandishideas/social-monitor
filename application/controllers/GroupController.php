@@ -14,21 +14,9 @@ class GroupController extends CampaignController {
 	 * @user-level user
 	 */
 	public function indexAction() {
-
-        $headers = array();
-        foreach(array(
-                    Header_Name::getName(),
-                    Header_TotalRank::getName(),
-                    Header_TotalScore::getName(),
-                    Header_TargetAudience::getName(),
-                    Header_Presences::getName(),
-                    Header_Options::getName()
-                ) as $headerName){
-            $headers[] = Header_Factory::getHeader($headerName);
-        }
-
 		$this->view->groups = Model_Group::fetchAll();
-        $this->view->tableHeaders = $headers;
+        $this->view->tableHeaders = $this->tableIndexHeaders();
+        $this->view->sortCol = Header_Name::getName();
 	}
 
 	/**
@@ -277,7 +265,23 @@ class GroupController extends CampaignController {
     }
 
 	public function downloadAction() {
-		parent::downloadAsCsv('group_index', Model_Group::badgesData(), Model_Group::fetchAll(), self::tableIndexHeaders());
+        $csvData = Util_Csv::generateCsvData(Model_Group::fetchAll(), $this->tableIndexHeaders());
+        Util_Csv::outputCsv($csvData, 'SBUs');
+        exit;
 	}
+
+    protected function tableIndexHeaders()
+    {
+        return array(
+            Header_Name::getInstance(),
+            Header_TotalRank::getInstance(),
+            Header_TotalScore::getInstance(),
+            Header_TargetAudience::getInstance(),
+            Header_Presences::getInstance(),
+            Header_PresenceCount::getInstance(),
+            Header_Options::getInstance()
+        );
+    }
+
 
 }

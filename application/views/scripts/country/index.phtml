@@ -1,11 +1,10 @@
 <?php
-    $buttons = $this->gatekeeper()->filterAll(array(
-        '<a class="button-bc" href="%url%">Add new</a>' => array('action'=>'new'),
-        '<a class="button-bc" href="%url%">Edit All</a>' => array('action'=>'edit-all'),
-            '<a class="button-bc" href="%url%">Download CSV</a>' => array('action' => 'download')
-    ));
+$buttons = $this->gatekeeper()->filterAll(array(
+    '<a class="button-bc" href="%url%">Add new</a>' => array('action'=>'new'),
+    '<a class="button-bc" href="%url%">Edit All</a>' => array('action'=>'edit-all'),
+    '<a class="button-bc" href="%url%">Download CSV</a>' => array('action' => 'download')
+));
 ?>
-
 
 <h2 class="page-title">Countries</h2>
 
@@ -13,7 +12,7 @@
 	<div class="row bk-dark">
 		<div class="small-24 columns">
 			<ul class="button-group">
-				<li><div id="search-table"></div></li>
+                <li id="search-table"><?php // search box will go in here ?></li>
 				<?php foreach($buttons as $button) : ?>
 					<li><?php echo $button; ?></li>
 				<?php endforeach; ?>
@@ -26,5 +25,6 @@
 	"tableHeaders" => $this->tableHeaders,
 	"tableId" => "all-countries",
 	"rows" => $this->countries,
-	"view" => $this
+    'emptyText' => 'No countries found',
+    'sortCol' => $this->sortCol
 )); ?>

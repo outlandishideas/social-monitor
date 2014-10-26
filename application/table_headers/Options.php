@@ -7,9 +7,10 @@ class Header_Options extends Header_Abstract {
     function __construct()
     {
         $this->label = "Options";
-        $this->sort = null;
-        $this->csv = false;
-        $this->width = "150px";
+        $this->sort = self::SORT_TYPE_NONE;
+        $this->display = self::DISPLAY_TYPE_SCREEN;
+        $this->width = "160px";
+        $this->cellClasses[] = 'left-align';
     }
 
     public function getTableCellValue($model)
@@ -17,22 +18,30 @@ class Header_Options extends Header_Abstract {
         switch(get_class($model)){
             case "NewModel_Presence":
                 $options = array(
-                    '<a href="%url%">View Presence</a>' => array('action'=>'view', 'id'=>$model->id),
-                    '<a href="%url%">Edit Presence</a>' => array('action'=>'edit', 'id'=>$model->id)
+                    'View' => array('controller'=>'presence', 'action'=>'view', 'id'=>$model->id),
+                    'Edit' => array('controller'=>'presence', 'action'=>'edit', 'id'=>$model->id),
+                    'Delete' => array('controller'=>'presence', 'action'=>'delete', 'id'=>$model->id)
                 );
                 break;
             case "Model_Country":
                 $options = array(
-                    '<a href="%url%">View Country</a>' => array('action'=>'view', 'id'=>$model->id),
-                    '<a href="%url%">Edit Country</a>' => array('action'=>'edit', 'id'=>$model->id),
-                    '<a href="%url%">Presences</a>' => array('action'=>'manage', 'id'=>$model->id)
+                    'View' => array('controller'=>'country', 'action'=>'view', 'id'=>$model->id),
+                    'Edit' => array('controller'=>'country', 'action'=>'edit', 'id'=>$model->id),
+                    'Presences' => array('controller'=>'country', 'action'=>'manage', 'id'=>$model->id)
                 );
                 break;
             case "Model_Group":
                 $options = array(
-                    '<a href="%url%">View SBU</a>' => array('action'=>'view', 'id'=>$model->id),
-                    '<a href="%url%">Edit SBU</a>' => array('action'=>'edit', 'id'=>$model->id),
-                    '<a href="%url%">Presences</a>' => array('action'=>'manage', 'id'=>$model->id)
+                    'View' => array('controller'=>'group', 'action'=>'view', 'id'=>$model->id),
+                    'Edit' => array('controller'=>'group', 'action'=>'edit', 'id'=>$model->id),
+                    'Presences' => array('controller'=>'group', 'action'=>'manage', 'id'=>$model->id)
+                );
+                break;
+            case 'Model_Region':
+                $options = array(
+                    'Edit' => array('controller'=>'region', 'action'=>'edit', 'id'=>$model->id),
+                    'Countries' => array('controller'=>'region', 'action'=>'manage', 'id'=>$model->id),
+					'Delete' => array('controller'=>'region', 'action'=>'delete', 'id'=>$model->id)
                 );
                 break;
             default:
@@ -40,7 +49,11 @@ class Header_Options extends Header_Abstract {
                 break;
         }
 
-        return $options;
+        $mappedOptions = array();
+        foreach ($options as $key=>$args) {
+            $mappedOptions['<a href="' . Zend_View_Helper_Gatekeeper::PLACEHOLDER_URL . '" class="button-bc button-' . strtolower($key) . '">' . $key . '</a>'] = $args;
+        }
+        return $mappedOptions;
 
     }
 

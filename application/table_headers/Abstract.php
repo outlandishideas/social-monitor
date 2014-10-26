@@ -1,21 +1,36 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 16/10/2014
- * Time: 15:37
- */
 
 abstract class Header_Abstract {
+
+    const MODEL_TYPE_NONE = 'none';
+    const MODEL_TYPE_PRESENCE = 'presence';
+    const MODEL_TYPE_COUNTRY = 'country';
+    const MODEL_TYPE_GROUP = 'group';
+    const MODEL_TYPE_REGION = 'region';
+    const MODEL_TYPE_CAMPAIGN = 'campaign';
+
+    const SORT_TYPE_AUTO = 'auto';
+    const SORT_TYPE_NONE = 'none';
+    const SORT_TYPE_NUMERIC = 'numeric';
+    const SORT_TYPE_NUMERIC_DATA_VALUE = 'data-value-numeric';
+    const SORT_TYPE_NUMERIC_FUZZY = 'fuzzy-numeric';
+    const SORT_TYPE_CHECKBOX = 'checkbox';
+
+    const DISPLAY_TYPE_CSV = 'csv';
+    const DISPLAY_TYPE_SCREEN = 'screen';
+    const DISPLAY_TYPE_BOTH = 'both';
+
+    const NO_VALUE = 'N/A';
 
     protected static $name;
 
     protected $label;
     protected $width;
     protected $description;
-    protected $sort = "auto";
-    protected $csv = true;
-    protected $requiredType = 'none';
+    protected $sort = self::SORT_TYPE_AUTO;
+    protected $display = self::DISPLAY_TYPE_BOTH;
+    protected $allowedTypes = array(self::MODEL_TYPE_NONE);
+    protected $cellClasses = array();
 
     /**
      * produces the <th> element for the header row of a table
@@ -27,8 +42,12 @@ abstract class Header_Abstract {
             "data-name" => $this->getName(),
             "data-sort" => $this->getSort()
         );
-        if($this->getDescription() !== null) $properties['title'] = $this->getDescription();
-        if($this->getWidth() !== null) $properties['data-width'] =  $this->getWidth();
+        if($this->getDescription() !== null) {
+            $properties['title'] = $this->getDescription();
+        }
+        if($this->getWidth() !== null) {
+            $properties['data-width'] =  $this->getWidth();
+        }
 
         $html = "<th ";
         foreach($properties as $property => $value){
@@ -38,7 +57,14 @@ abstract class Header_Abstract {
         return $html;
     }
 
-    abstract public function getTableCellValue($model);
+    /**
+     * Gets the HTML rendering of the value for this column
+     * @param $model
+     * @return mixed
+     */
+    public function getTableCellValue($model) {
+        return $this->getValue($model);
+    }
 
     /**
      * @return mixed
@@ -81,19 +107,40 @@ abstract class Header_Abstract {
     }
 
     /**
-     * @return boolean
+     * @return string
      */
-    public function getCsv()
+    public function getDisplayType()
     {
-        return $this->csv;
+        return $this->display;
+    }
+
+    public function isForCsv() {
+        return $this->display == self::DISPLAY_TYPE_BOTH || $this->display == self::DISPLAY_TYPE_CSV;
+    }
+
+    public function isForScreen() {
+        return $this->display == self::DISPLAY_TYPE_BOTH || $this->display == self::DISPLAY_TYPE_SCREEN;
+    }
+
+    public function isAllowedType($type)
+    {
+        return in_array($type, $this->allowedTypes);
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getRequiredType()
+    public function getAllowedTypes()
     {
-        return $this->requiredType;
+        return $this->allowedTypes;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCellClasses()
+    {
+        return array_merge(array('cell-' . self::getName()), $this->cellClasses);
     }
 
     function getValue($model = null)

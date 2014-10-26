@@ -7,23 +7,18 @@ class Header_TargetAudience extends Header_Abstract {
     function __construct()
     {
         $this->label = "Target Audience";
-        $this->sort = "fuzzy-numeric";
-        $this->requiredType = 'presence';
-    }
-
-    public function getTableCellValue($model)
-    {
-        return $this->getValue($model);
+        $this->sort = self::SORT_TYPE_NUMERIC_FUZZY;
+        $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE, self::MODEL_TYPE_CAMPAIGN);
     }
 
     /**
-     * @param NewModel_Presence $model
+     * @param NewModel_Presence|Model_Campaign $model
      * @return null|string
      */
     function getValue($model = null)
     {
         $target = $model->getTargetAudience();
-        return is_numeric($target) ? number_format(round($target)) : "N/A";
+        return is_numeric($target) ? number_format(round($target)) : self::NO_VALUE;
     }
 
 

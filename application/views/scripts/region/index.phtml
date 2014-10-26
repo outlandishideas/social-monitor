@@ -12,7 +12,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
     <div class="row bk-dark">
         <div class="small-24 columns">
             <ul class="button-group">
-                <li><div id="search-table"></div></li>
+                <li id="search-table"><?php // search box will go in here ?></li>
                 <?php foreach($buttons as $button) : ?>
                     <li><?php echo $button; ?></li>
                 <?php endforeach; ?>
@@ -21,85 +21,10 @@ $buttons = $this->gatekeeper()->filterAll(array(
     </div>
 </div>
 
-<?php if (!$this->regions) : ?>
-<h3>No regions found</h3>
-<?php else : ?>
-<table class="text dtable" id="all-regions">
-	<thead>
-		<tr><?php
-            foreach($this->tableHeaders as $headers): ?>
-                <th <?php
-                if(isset($headers->name)) echo "data-name='$headers->name'";
-                if(isset($headers->desc)) echo "title='$headers->desc'";
-                if(isset($headers->sort)) echo "data-sort='$headers->sort'";
-                if(isset($headers->width)) echo "data-width='$headers->width'"; ?> ><?php
-                if(isset($headers->title)) echo $headers->title; ?>
-                </th><?php
-            endforeach; ?>
-		</tr>
-	</thead>
-	<tbody>
-		<?php /** @var $region Model_Region */ ?>
-		<?php foreach ($this->regions as $region) : ?>
-		<tr>
-			<?php
-                $presences = $region->getPresences();
-                $countries = $region->getCountries();
-            ?>
-			<td>
-				<?php $url = $this->gatekeeper()->filter('%url%', array('action'=>'view', 'id'=>$region->id)); if ($url) : ?>
-					<a href="<?php echo $url; ?>"><?php echo $region->display_name; ?></a>
-				<?php else : ?>
-					<?php echo $region->display_name; ?>
-				<?php endif; ?>
-			</td>
-            <td>
-                <?php echo (array_key_exists($region->id, $this->badgeData) ? $this->badgeData[$region->id]->total_rank : 'N/A'); ?>
-            </td>
-            <td>
-                <?php echo (array_key_exists($region->id, $this->badgeData) ? round($this->badgeData[$region->id]->total, 1) : 'N/A'); ?>
-            </td>
-            <td><?php echo number_format($region->audience); ?></td>
-            <td><?php
-                $perc = $region->getPercentTargetAudience();
-                echo is_null($perc) ? 'N/A' : round($perc, 2).'%';
-            ?></td>
-            <?php
-                $kpiData = $region->getKpiAverages();
-                foreach ($this->tableMetrics as $key=>$label) :
-                    $value = array_key_exists($key, $kpiData) ? $kpiData[$key] : '-';
-            ?>
-                    <td>
-                        <?php if ($value == '-'): ?>
-                            -
-                        <?php else: ?>
-                            <span class="icon-circle icon-large pull-left" data-value="<?php echo $value; ?>" style="color:<?php echo $this->trafficLight()->color($value, $key); ?>;"></span>
-                            <?php echo $this->trafficLight()->label($value, $key); ?>
-                        <?php endif; ?>
-                    </td>
-            <?php endforeach; ?>
-            <td class="countries">
-                <span class="entity-list-toggle"><?php echo(count($countries)); ?> countries</span>
-                <ul class="entity-list">
-                    <?php foreach($countries as $country) : ?>
-                        <li>
-                            <?php echo $this->partial('partials/country_inline.phtml',  array('country' => $country)); ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </td>
-			<td>
-				<?php
-					$actions = $this->gatekeeper()->filterAll(array(
-						'- <a href="%url%">Edit</a>' => array('action'=>'edit', 'id'=>$region->id),
-						'- <a href="%url%">Countries</a>' => array('action'=>'manage', 'id'=>$region->id),
-						'- <a href="%url%" class="autoConfirm">Delete</a>' => array('action'=>'delete', 'id'=>$region->id)
-					));
-					echo implode('<br />', $actions);
-				?>
-			</td>
-		</tr>
-		<?php endforeach; ?>
-	</tbody>
-</table>
-<?php endif; ?>
+<?php echo $this->partial("partials/index-table.phtml", array(
+    "tableHeaders" => $this->tableHeaders,
+    "tableId" => "all-regions",
+    "rows" => $this->regions,
+    'emptyText' => 'No regions found',
+    'sortCol' => $this->sortCol
+)); ?>

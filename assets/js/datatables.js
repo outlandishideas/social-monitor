@@ -93,7 +93,7 @@ app.datatables = {
 			};
 
 			var sortType = $cell.data('sort');
-			if (typeof sortType != 'undefined') {
+			if (typeof sortType != 'undefined' && sortType  != 'none') {
 				column.bSortable = true;
 				if (sortType != 'auto') {
 					column.sType = sortType;
@@ -112,22 +112,21 @@ app.datatables = {
 		return columns;
 	},
 	selectors: {
-		'.dtable.standard, #all-sbos, #all-countries, #all-regions': function($table) {
-			$table.dataTable({
-				bScrollInfinite: true,
-				iDisplayLength: 1000,
-				bScrollCollapse: true,
-				bFilter: true,
-				bInfo: false,
-				aoColumns: app.datatables.generateColumns($table)
-			});
-
-			$('div.dataTables_filter').appendTo($('#search-table'));
-		},
-		'#all-presences': function($table) {
+		'.dtable.standard, #all-sbus, #all-countries, #all-regions, #all-presences': function($table) {
+			var columns = app.datatables.generateColumns($table);
+			var sortCol = 0;
+			var sortColName = $table.data('sortCol');
+			if (sortColName) {
+				for(var i=0; i<columns.length; i++) {
+					if (columns[i].sName == sortColName) {
+						sortCol = i;
+						break;
+					}
+				}
+			}
 			$table.dataTable({
 				aaSorting:[
-					[1, 'asc']
+					[sortCol, 'asc']
 				],
 				bScrollInfinite: true,
 				iDisplayLength: 1000,
@@ -137,7 +136,7 @@ app.datatables = {
 				aoColumns: app.datatables.generateColumns($table)
 			});
 
-			$('div.dataTables_filter').appendTo($('#presence-search'));
+			$('div.dataTables_filter').appendTo($('#search-table'));
 		},
 		'table#domains': function($table) {
 			var args = {
@@ -187,7 +186,7 @@ app.datatables = {
 				.dataTable($.extend({}, app.datatables.serverSideArgs(), args))
 				.fnSetFilteringDelay(250);
 
-			$('div.dataTables_filter').appendTo($('#domain-search'));
+			$('div.dataTables_filter').appendTo($('#search-table'));
 		},
 		'#statuses.facebook': function($div) {
 			var args = {

@@ -30,6 +30,9 @@ class Model_Region extends Model_Campaign {
         );
     }
 
+    /**
+     * @return Model_Country[]
+     */
     public function getCountries()
     {
         return Model_Country::fetchAll('parent = ?', array($this->id));
@@ -105,7 +108,9 @@ class Model_Region extends Model_Campaign {
     public function getPercentTargetAudience()
     {
         $target = $this->getTargetAudience();
-        if ($target == 0) return null;
+        if ($target == 0) {
+            return null;
+        }
         $pop = 0;
         foreach ($this->getPresences() as $p) {
             $pop += $p->getPopularity();
@@ -113,77 +118,30 @@ class Model_Region extends Model_Campaign {
         return ($pop/$target);
     }
 
-    public static function badgesData(){
-        $badgeTypes = Badge_Factory::getBadgeNames();
-        $keyedData = Badge_Factory::badgesData(true);
-
-        // get all of the campaign-presence relationships for this type (country or group)
-        /** @var PDO $db */
-        $db = Zend_Registry::get('db')->getConnection();
-        $stmt = $db->prepare('
+    protected static function mappingSql()
+    {
+        return '
             SELECT
-                c.parent AS campaign_id,
-                cp.presence_id
+              c.parent AS campaign_id,
+              cp.presence_id
             FROM
-                campaigns AS c
-                LEFT OUTER JOIN campaign_presences AS cp ON cp.campaign_id = c.id
+              campaigns AS c
+              LEFT OUTER JOIN campaign_presences AS cp ON cp.campaign_id = c.id
             WHERE
-                c.parent IN (
-                    SELECT
-                        id
-                    FROM
-                        campaigns
-                    WHERE
-                        campaign_type = :campaign_type
-                )
-        ');
-        $args = array(':campaign_type'=>self::campaignType());
-        $stmt->execute($args);
-        $mapping = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-        // calculate averages badge scores for each campaign
-        $allCampaigns = array();
-        $template = array('count'=>0);
-        foreach ($badgeTypes as $badgeType) {
-            $template[$badgeType] = 0;
-        }
-        foreach ($mapping as $row) {
-            if (!isset($allCampaigns[$row->campaign_id])) {
-                $campaign = (object)$template;
-                $allCampaigns[$row->campaign_id] = $campaign;
-            } else {
-                $campaign = $allCampaigns[$row->campaign_id];
-            }
-            if (array_key_exists($row->presence_id, $keyedData)) {
-                $campaign->count++;
-                foreach ($badgeTypes as $badgeType) {
-                    if ($badgeType != Badge_Total::getName()) {
-                        $campaign->$badgeType += $keyedData[$row->presence_id][$badgeType];
-                    }
-                }
-            }
-        }
-        foreach ($allCampaigns as $campaign) {
-            if ($campaign->count > 0) {
-                foreach ($badgeTypes as $badgeType) {
-                    $campaign->$badgeType /= $campaign->count;
-                }
-            }
-        }
-
-        // calculate the total scores for each campaign, and calculate ranks for all badge types
-        foreach ($allCampaigns as $campaign) {
-            Model_Badge::calculateTotalScore($campaign);
-        }
-        foreach ($badgeTypes as $badgeType) {
-            Model_Badge::assignRanks($allCampaigns, $badgeType);
-        }
-        return $allCampaigns;
+              c.parent IN (
+                SELECT
+                  id
+                FROM
+                  campaigns
+                WHERE
+                  campaign_type = :campaign_type
+              )
+        ';
     }
 
     public function assignCountries($countryIds)
     {
-        $db = Zend_Registry::get('db')->getConnection();
+        $db = $this->_db;
         $stmt = $db->prepare("UPDATE campaigns SET parent = :id WHERE id = :cid");
         foreach($countryIds as $cid) {
             $stmt->execute(array(':id' => $this->id, ':cid' => $cid));

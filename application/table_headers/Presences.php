@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 16/10/2014
- * Time: 15:37
- */
 
 class Header_Presences extends Header_Abstract {
 
@@ -13,9 +7,10 @@ class Header_Presences extends Header_Abstract {
     function __construct()
     {
         $this->label = "Presences";
-        $this->description = 'The Digital Population is based on internet penetration in the country.';
-        $this->sort = 'fuzzy-numeric';
-        $this->csv = true;
+        $this->sort = self::SORT_TYPE_NONE;
+        $this->allowedTypes = array(self::MODEL_TYPE_CAMPAIGN);
+        $this->display = self::DISPLAY_TYPE_SCREEN;
+        $this->cellClasses[] = 'left-align';
     }
 
 
@@ -27,7 +22,9 @@ class Header_Presences extends Header_Abstract {
     {
         $presences = array();
         foreach($model->getPresences() as $presence) {
-            $presences["<a href='%url%'><span class='{$presence->getPresenceSign()} fa-lg fa-fw'></span>{$presence->getHandle()}</a>"] = array("controller" => "presence", "action" => "view", "id" => $presence->getId());
+            $template = '<a href="' . Zend_View_Helper_Gatekeeper::PLACEHOLDER_URL . '"><span class="' . $presence->getPresenceSign() . ' fa-lg fa-fw"></span>' . $presence->getHandle() . '</a>';
+            $urlArgs = array("controller" => "presence", "action" => "view", "id" => $presence->getId());
+            $presences[$template] = $urlArgs;
         }
         return $presences;
     }

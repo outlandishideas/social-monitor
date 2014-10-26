@@ -1802,6 +1802,13 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	transition: background-color 400ms ease-out, border-color 400ms ease-out;
 	line-height: 1.6;
 	margin-bottom: 0;
+	text-align: center;
+}
+.button-bc.primary {
+	background-color: #2ba6cb;
+}
+.button-bc.inline {
+	display: inline-block;
 }
 
 .button-group > li > .button-bc {
@@ -1813,6 +1820,14 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	color: #fff;
 	background-color: #0071bc;
 	border-color: #0071bc;
+}
+
+table .cell-options ul {
+	margin: -2px 0 0 0;
+}
+table .cell-options .button-bc {
+	padding: 2px 5px;
+	margin-top: 2px;
 }
 
 .button-bc-bar {
@@ -1834,7 +1849,7 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	float: none;
 }
 
-.button-bc-bar .button-group input,
+#search-table input[type="text"],
 form input[type="text"],
 form select,
 form select:disabled,
@@ -1896,11 +1911,6 @@ table tbody tr td {
 	text-align: center;
 }
 
-table tbody tr td:nth-child(0n+2),
-table#all-countries tbody tr td:first-child,
-table#all-sbos tbody tr td:first-child,
-table#all-regions tbody tr td:first-child,
-table tbody tr td:last-child,
 table tbody tr td.left-align {
 	text-align: left;
 }

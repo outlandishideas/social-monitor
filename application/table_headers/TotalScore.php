@@ -1,6 +1,6 @@
 <?php
 
-class Header_TotalScore extends Header_BadgeScores {
+class Header_TotalScore extends Header_BadgeScore {
 
     protected static $name = "total-score";
 
@@ -9,13 +9,9 @@ class Header_TotalScore extends Header_BadgeScores {
         parent::__construct();
         $this->label = "Overall Score";
         $this->description = "Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality.";
-        $this->csv = true;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getBadge()
+    public function getBadgeName()
     {
         return Badge_Total::getName();
     }

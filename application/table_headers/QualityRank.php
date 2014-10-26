@@ -1,6 +1,6 @@
 <?php
 
-class Header_QualityRank extends Header_Badges {
+class Header_QualityRank extends Header_BadgeRank {
 
     protected static $name = "quality-rank";
 
@@ -9,13 +9,12 @@ class Header_QualityRank extends Header_Badges {
         parent::__construct();
         $this->label = "Quality Rank";
         $this->description = "Quality Rank shows the rank of this presence or group when compared against others.";
-        $this->csv = true;
     }
 
     /**
      * @return mixed
      */
-    public function getBadge()
+    public function getBadgeName()
     {
         return Badge_Quality::getName() . "_rank";
     }

@@ -1,6 +1,6 @@
 <?php
 
-class Header_ReachRank extends Header_Badges {
+class Header_ReachRank extends Header_BadgeRank {
 
     protected static $name = "reach-rank";
 
@@ -9,13 +9,12 @@ class Header_ReachRank extends Header_Badges {
         parent::__construct();
         $this->label = "Reach Rank";
         $this->description = "Reach Rank shows the rank of this presence or group when compared against others.";
-        $this->csv = true;
     }
 
     /**
      * @return mixed
      */
-    public function getBadge()
+    public function getBadgeName()
     {
         return Badge_Reach::getName() . "_rank";
     }

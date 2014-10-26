@@ -2,32 +2,43 @@
 /**
  * Need the following params
  * $tableId = id of the table that is being created
- * $tableHeaders = a list of
+ * $tableHeaders = an array of Header_Abstract subclasses
+ * $rows = an array of rows to show
+ * $emptyText = Text to show when no rows
+ * $sortCol = Name of column to sort on, by default
  */
 
+/** @var Header_Abstract[] $headers */
+$headers = array_filter($this->tableHeaders, function(Header_Abstract $h) {
+        return $h->isForScreen();
+    });
+/** @var Zend_View_Helper_Gatekeeper $gatekeeper */
+$gatekeeper = $this->gatekeeper();
 ?>
 
-<table class="text dtable" id="<?php echo $this->tableId; ?>">
+<?php if (!$this->rows) : ?>
+<h3><?php echo $this->emptyText; ?></h3>
+<?php else : ?>
+<table class="text dtable" id="<?php echo $this->tableId; ?>" data-sort-col="<?php echo $this->sortCol; ?>">
     <thead>
     <tr>
         <?php
-        /** @var Header_Abstract $header */
-        foreach($this->tableHeaders as $header){
+        foreach($headers as $header){
             echo $header->getTableHeaderElement();
-        } ?>
+        }
+        ?>
     </tr>
     </thead>
     <tbody>
         <?php foreach($this->rows as $row) : ?>
             <tr>
-                <?php
-                /** @var Header_Abstract $header */
-                foreach($this->tableHeaders as $header) {
+                <?php foreach($headers as $header) : ?>
+                <td class="<?php echo implode(' ', $header->getCellClasses()); ?>">
+                    <?php
+                    $cellValue = $header->getTableCellValue($row);
                     switch($header->getName()) {
-                        case "options":
-                            $options = $header->getTableCellValue($row);
-                            $links = $this->view->gatekeeper()->filterAll($options);
-                            echo "<td>";
+                        case Header_Options::getName():
+                            $links = $gatekeeper->filterAll($cellValue);
                             if(count($links) > 0) {
                                 echo "<ul>";
                                 foreach ($links as $link) {
@@ -35,38 +46,53 @@
                                 }
                                 echo "</ul>";
                             }
-                            echo "</td>";
                             break;
-                        case "presences":
-                            $options = $header->getTableCellValue($row);
-                            $links = $this->view->gatekeeper()->filterAll($options);
-                            echo "<td class='left-align'>";
-                            if(count($links) > 0) {
-                                echo "<ul>";
-                                foreach ($links as $link) {
-                                    echo "<li>{$link}</li>";
+                        case Header_Presences::getName():
+                        case Header_Countries::getName():
+                            $count = count($cellValue);
+                            if ($header->getName() == Header_Countries::getName()) {
+                                $countText = $count . ($count == 1 ? ' country' : ' countries');
+                            } else {
+                                $countText = $count . ' presence' . ($count == 1 ? '' : 's');
+                            }
+                            echo '<span class="entity-list-toggle">' . $countText . '</span>';
+                            if($count > 0) {
+                                echo '<ul class="entity-list">';
+                                foreach ($cellValue as $template=>$urlArgs) {
+                                    $link = $gatekeeper->filter($template, $urlArgs);
+                                    if ($link) {
+                                        echo "<li>{$link}</li>";
+                                    } else {
+                                        $text = str_replace(
+                                            array('<a href="' . Zend_View_Helper_Gatekeeper::PLACEHOLDER_URL . '"', '</a>'),
+                                            array('<span', '</span>'),
+                                            $template
+                                        );
+                                        echo "<li>{$text}</li>";
+                                    }
                                 }
                                 echo "</ul>";
                             }
-                            echo "</td>";
                             break;
-                        case "handle":
-                        case "name":
-                            $url = $this->view->gatekeeper()->filter('%url%', array("action" => "view", "id" => $row->id));
-                            echo "<td>";
-                            echo $url ? "<a href='{$url}'>" : "";
-                            echo $header->getTableCellValue($row);
-                            echo $url ? "</a>" : "";
-                            echo "</td>";
+                        case Header_Handle::getName():
+                        case Header_Name::getName():
+                            $url = $gatekeeper->filter('%url%', array("action" => "view", "id" => $row->id));
+                            if ($url) {
+                                echo '<a href="' . $url . '">' . $cellValue . '</a>';
+                            } else {
+                                echo $cellValue;
+                            }
                             break;
                         default:
-                            echo "<td>{$header->getTableCellValue($row)}</td>";
+                            echo $cellValue;
                             break;
                     }
-                } ?>
+                    ?>
+                </td>
+                <?php endforeach; ?>
             </tr>
         <?php endforeach; ?>
 
     </tbody>
 </table>
-
+<?php endif; ?>

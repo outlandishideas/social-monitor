@@ -7,7 +7,8 @@ class Header_Name extends Header_Abstract {
     function __construct()
     {
         $this->label = "Name";
-        $this->csv = true;
+        $this->allowedTypes = array(self::MODEL_TYPE_CAMPAIGN);
+        $this->cellClasses[] = 'left-align';
     }
 
 
@@ -15,7 +16,7 @@ class Header_Name extends Header_Abstract {
      * @param Model_Campaign $model
      * @return mixed
      */
-    public function getTableCellValue($model)
+    public function getValue($model = null)
     {
         return $model->display_name;
     }

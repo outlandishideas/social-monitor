@@ -7,24 +7,24 @@ class Header_DigitalPopulation extends Header_Abstract {
     function __construct()
     {
         $this->label = "Digital Population";
-        $this->sort = "data-value-numeric";
+        $this->sort = self::SORT_TYPE_NUMERIC_DATA_VALUE;
+        $this->allowedTypes = array(self::MODEL_TYPE_COUNTRY);
     }
 
 
-    /**
-     * @param Model_Country $model
-     * @return mixed
-     */
     public function getTableCellValue($model)
     {
         $value = $this->getValue($model);
 
-        if(!is_numeric($value)) {
-            return "<span data-value='-1'>{$value}</span>";
+        if($value == self::NO_VALUE) {
+            $dataValue = -1;
+            $text = $value;
+        } else {
+            $text = $value;
+            $dataValue = $value;
         }
 
-        $number = number_format(round($value));
-        return "<span data-value='{$value}'>{$number}<span>";
+        return "<span data-value='{$dataValue}'>{$text}<span>";
     }
 
     /**
@@ -34,8 +34,7 @@ class Header_DigitalPopulation extends Header_Abstract {
     function getValue($model = null)
     {
         $value = $model->getDigitalPopulation();
-        $value = is_numeric($value) ? $value : "N/A";
-        return $value;
+        return is_numeric($value) ? number_format(round($value)) : self::NO_VALUE;
     }
 
 

@@ -77,7 +77,7 @@ class DomainController extends BaseController {
 
 		$tableData = array();
 		foreach ($domains as $domain) {
-			$url = $this->view->gatekeeper()->filter('%url%', array('action'=>'view', 'id'=>$domain->id));
+			$url = $this->view->gatekeeper()->filter(Zend_View_Helper_Gatekeeper::PLACEHOLDER_URL, array('action'=>'view', 'id'=>$domain->id));
 			$tableData[] = array(
 				'id'=>$domain->id,
 				'domain'=>$domain->domain,

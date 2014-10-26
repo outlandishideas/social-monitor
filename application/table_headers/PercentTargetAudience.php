@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 16/10/2014
- * Time: 15:37
- */
 
 class Header_PercentTargetAudience extends Header_Abstract {
 
@@ -13,14 +7,18 @@ class Header_PercentTargetAudience extends Header_Abstract {
     function __construct()
     {
         $this->label = "Percentage of Target Audience";
-        $this->sort = "fuzzy-numeric";
+        $this->sort = self::SORT_TYPE_NUMERIC_FUZZY;
+        $this->allowedTypes = array(self::MODEL_TYPE_REGION);
     }
 
-
-    public function getTableCellValue($model)
+    /**
+     * @param Model_Region $model
+     * @return null|string
+     */
+    function getValue($model = null)
     {
         $target = $model->getPercentTargetAudience();
-        return is_numeric($target) ? round($target, 2).'%' : "N/A";
+        return is_numeric($target) ? round($target, 2).'%' : self::NO_VALUE;
     }
 
 

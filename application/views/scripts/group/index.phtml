@@ -12,7 +12,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
         <div class="row bk-dark">
             <div class="small-24 columns">
                 <ul class="button-group">
-                    <li><div id="search-table"></div></li>
+                    <li id="search-table"><?php // search box will go in here ?></li>
                     <?php foreach($buttons as $button) : ?>
                         <li><?php echo $button; ?></li>
                     <?php endforeach; ?>
@@ -24,7 +24,8 @@ $buttons = $this->gatekeeper()->filterAll(array(
 
 <?php echo $this->partial("partials/index-table.phtml", array(
     "tableHeaders" => $this->tableHeaders,
-    "tableId" => "all-sbos",
+    "tableId" => "all-sbus",
     "rows" => $this->groups,
-    "view" => $this
+    'emptyText' => 'No SBUs found',
+    'sortCol' => $this->sortCol
 )); ?>

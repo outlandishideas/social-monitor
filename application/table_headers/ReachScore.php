@@ -1,6 +1,6 @@
 <?php
 
-class Header_ReachScore extends Header_BadgeScores {
+class Header_ReachScore extends Header_BadgeScore {
 
     protected static $name = "reach-score";
 
@@ -9,13 +9,12 @@ class Header_ReachScore extends Header_BadgeScores {
         parent::__construct();
         $this->label = "Reach Score";
         $this->description = "Reach Score shows the score for the combined measures that measure a presences engagement";
-        $this->csv = true;
     }
 
     /**
      * @return mixed
      */
-    public function getBadge()
+    public function getBadgeName()
     {
         return Badge_Reach::getName();
     }

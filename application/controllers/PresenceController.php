@@ -10,25 +10,13 @@ class PresenceController extends GraphingController
 	 */
 	public function indexAction()
 	{
-//		$presences = Model_Presence::populateOwners(Model_Presence::fetchAll());
-
 		NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
 		$presences = NewModel_PresenceFactory::getPresences();
 
-		$headers = array(
-            Header_Compare::getInstance(),
-            Header_Handle::getInstance(),
-            Header_SignOff::getInstance(),
-            Header_Branding::getInstance(),
-            Header_TotalRank::getInstance(),
-            Header_TotalScore::getInstance(),
-            Header_CurrentAudience::getInstance(),
-            Header_TargetAudience::getInstance(),
-            Header_Options::getInstance()
-        );
         $this->view->title = 'Presences';
         $this->view->presences = $presences;
-        $this->view->tableHeaders = $headers;
+        $this->view->tableHeaders = $this->tableIndexHeaders();
+        $this->view->sortCol = Header_Handle::getName();
 	}
 
 	/**
@@ -36,7 +24,7 @@ class PresenceController extends GraphingController
 	 */
 	public function viewAction()
 	{
-		/** @var Model_Presence $presence */
+		/** @var NewModel_Presence $presence */
 		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		$this->validateData($presence);
 
@@ -378,134 +366,29 @@ class PresenceController extends GraphingController
 	}
 
     public function downloadAction() {
-        /*if (userHasNoPermissions) {
-            $this->view->msg = 'This file cannot be downloaded!';
-            $this->_forward('error', 'download');
-            return FALSE;
-        }*/
+        NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
+        $presences = NewModel_PresenceFactory::getPresences();
 
-        $data = array();
+        $csvData = Util_Csv::generateCsvData($presences, $this->tableIndexHeaders());
 
-        /** @var Header_Abstract[] $tableIndexHeaders */
-        $tableIndexHeaders = array(
-            Header_Compare::getInstance(),
+        Util_Csv::outputCsv($csvData, 'presences');
+	    exit;
+    }
+
+    /**
+     * @return Header_Abstract[]
+     */
+    protected function tableIndexHeaders() {
+        return array(
+//            Header_Compare::getInstance(),//todo: reinstate when compare functionality is restored
             Header_Handle::getInstance(),
             Header_SignOff::getInstance(),
             Header_Branding::getInstance(),
             Header_TotalRank::getInstance(),
             Header_TotalScore::getInstance(),
             Header_CurrentAudience::getInstance(),
-            Header_TargetAudience::getInstance()
+            Header_TargetAudience::getInstance(),
+            Header_Options::getInstance()
         );
-
-        /** @var Header_Abstract[] $columns */
-	    $columns = array();
-        $headers = array();
-        foreach ($tableIndexHeaders as $column) {
-            if ($column->getCsv()) {
-                $columns[] = $column;
-                $headers[] = $column->getLabel();
-            }
-        }
-
-        $data[] = $headers;
-
-        $badgeData = Badge_Factory::badgesData(true);
-
-        NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
-        $presences = NewModel_PresenceFactory::getPresences();
-
-        foreach($presences as $presence){
-            $row = array();
-//            $currentBadge = $badgeData[$presence->id];
-//            $kpiData = $presence->getKpiData();
-            foreach($columns as $column) {
-                $output = null;
-                switch ($column->getRequiredType()) {
-                    case 'presence':
-                        $output = $column->getValue($presence);
-                        break;
-//                    case 'kpi':
-//                        $output = $column->getValue($kpiData);
-//                        break;
-//                    case 'badge':
-//                        $output = $column->getValue($currentBadge);
-//                        break;
-                }
-                $row[] = $output;
-            }
-//            foreach($columns as $column){
-//                $output = null;
-//                switch($column->name){
-//                    case Header_Handle::getName():
-//                        $output = $presence->getHandle();
-//                        break;
-//                    case Header_SignOff::getName():
-//                        $output = $presence->getSignOff();
-//                        break;
-//                    case Header_Branding::getName():
-//                        $output = $presence->getBranding();
-//                        break;
-//                    case Header_TotalRank::getName():
-//                        $output = (int)$currentBadge->total_rank;
-//                        break;
-//                    case Header_TotalScore::getName():
-//                        $output = (float)round($currentBadge->total);
-//                        break;
-//                    case Header_CurrentAudience::getName():
-//                        $output = number_format($presence->getPopularity());
-//                        break;
-//                    case Header_TargetAudience::getName():
-//                        $output = number_format($presence->getTargetAudience());
-//                        break;
-//                    default:
-//                        if( array_key_exists($column->name, $kpiData) ){
-//                            $output = $kpiData[$column->name];
-//                        }
-//                }
-//                $row[] = $output;
-//            }
-
-            $data[] = $row;
-
-        }
-
-	    header("Content-type: text/csv");
-	    header("Content-Disposition: attachment; filename=presence_index.csv");
-	    header("Pragma: no-cache");
-	    header("Expires: 0");
-
-	    self::outputCSV($data);
-	    exit;
-    }
-
-    function outputCSV($data) {
-        $output = fopen("php://output", "w");
-        foreach ($data as $row) {
-            fputcsv($output, $row);
-        }
-        fclose($output);
-    }
-
-    public static function tableIndexHeaders() {
-
-        $return = array(
-            'compare' => false,
-            'handle' => true,
-            'sign-off' => true,
-            'branding' => true,
-            'total-rank' => true,
-            'total-score' => true,
-            'current-audience' => true,
-            'target-audience' => true
-        );
-
-        foreach(self::tableMetrics() as $name => $title){
-            $return[$name] = true;
-        }
-
-        $return['options'] = false;
-
-        return $return;
     }
 }

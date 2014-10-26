@@ -529,26 +529,26 @@ class NewModel_Presence
 	public static function getAllBadges()
 	{
 		if(empty(static::$badges)){
-			$data =  Badge_Factory::badgesData(true);
+			$badgeData = Badge_Factory::badgesData();
 			$badgeNames = Badge_Factory::getBadgeNames();
 
+            $totalBadgeName = Badge_Total::getName();
             $keyedData = array();
-			foreach($data as $presenceData){
-				$presenceData[Badge_Total::getName()] = 0;
+			foreach($badgeData as $presenceData){
+				$presenceData->$totalBadgeName = 0;
 				foreach($badgeNames as $name){
-					if($name != Badge_Total::getName()) {
+					if($name != $totalBadgeName) {
                         //add average to total score
-                        $presenceData[Badge_Total::getName()] += $presenceData[$name];
+                        $presenceData->$totalBadgeName += $presenceData->$name;
                     }
 				}
 				//divide the total score by the number of badges (-1 for the totalbadge)
-				$presenceData[Badge_Total::getName()] /= count($badgeNames) - 1;
-				$presenceData['denominator'] = count($data);
-                $keyedData[$presenceData['presence_id']] = $presenceData;
+				$presenceData->$totalBadgeName /= count($badgeNames) - 1;
+				$presenceData->denominator = count($badgeData);
+                $keyedData[$presenceData->presence_id] = (array)$presenceData;
 			}
 
-            $name = Badge_Total::getName();
-			Badge_Abstract::doRanking($keyedData, $name, $name . '_rank');
+			Badge_Abstract::doRanking($keyedData, $totalBadgeName, $totalBadgeName . '_rank');
 
 			static::$badges = $keyedData;
 		}

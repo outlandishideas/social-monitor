@@ -31,24 +31,9 @@ class CountryController extends CampaignController {
 			$country->getPresences($mapping, $presences);
 		}
 
-
-		$headers = array();
-		foreach(array(
-					Header_Name::getName(),
-					Header_Country::getName(),
-					Header_TotalRank::getName(),
-					Header_TotalScore::getName(),
-					Header_TargetAudience::getName(),
-					Header_DigitalPopulation::getName(),
-					Header_DigitalPopulationHealth::getName(),
-					Header_Presences::getName(),
-					Header_Options::getName()
-				) as $headerName){
-			$headers[] = Header_Factory::getHeader($headerName);
-		}
-
-        $this->view->tableHeaders = $headers;
 		$this->view->countries = $countries;
+        $this->view->tableHeaders = $this->tableIndexHeaders();
+        $this->view->sortCol = Header_Name::getName();
 	}
 
 	/**
@@ -329,33 +314,28 @@ class CountryController extends CampaignController {
 	}
 
 	public function downloadAction() {
-		parent::downloadAsCsv('country_index', Model_Country::badgesData(), Model_Country::fetchAll(), self::tableIndexHeaders());
+        $csvData = Util_Csv::generateCsvData(Model_Country::fetchAll(), $this->tableIndexHeaders());
+        Util_Csv::outputCsv($csvData, 'countries');
+        exit;
 	}
 
     /**
-     * function to generate tableIndexHeaders for tbe campaign index pages
-     * refer to tableHeader() in GraphingController
-     * @return array
+     * @return Header_Abstract[]
      */
-    public static function tableIndexHeaders() {
+    protected function tableIndexHeaders() {
 
-        $return = array(
-            'name' => true,
-            'country' => true,
-            'total-rank' => true,
-            'total-score' => true,
-            'digital-population' => true,
-            'digital-population-health' => true,
-            'target-audience' => true
+        return array(
+            Header_Name::getInstance(),
+            Header_Country::getInstance(),
+            Header_TotalRank::getInstance(),
+            Header_TotalScore::getInstance(),
+            Header_TargetAudience::getInstance(),
+            Header_DigitalPopulation::getInstance(),
+            Header_DigitalPopulationHealth::getInstance(),
+            Header_Presences::getInstance(),
+            Header_PresenceCount::getInstance(),
+            Header_Options::getInstance()
         );
-
-        foreach(self::tableMetrics() as $name => $title){
-            $return[$name] = true;
-        }
-        $return['presences'] = true;
-        $return['options'] = false;
-
-        return $return;
     }
 
 }

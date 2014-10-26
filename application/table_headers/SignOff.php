@@ -8,14 +8,14 @@ class Header_SignOff extends Header_Abstract {
     {
         $this->label = 'Sign Off';
         $this->description = 'Sign Off shows whether a presence has been signed off by the Head of Digital.';
-        $this->sort = "data-value-numeric";
-        $this->requiredType = 'presence';
+        $this->sort = self::SORT_TYPE_NUMERIC_DATA_VALUE;
+        $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE);
     }
 
     public function getTableCellValue($model)
     {
         $value = $this->getValue($model);
-        $class =$value==1 ? "value-good" : "value-bad";
+        $class = $value==1 ? "value-good" : "value-bad";
         return "<span class='fa fa-lg fa-circle {$class}' data-value='{$value}'></span>";
     }
 

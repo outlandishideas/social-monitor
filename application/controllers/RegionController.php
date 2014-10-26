@@ -27,9 +27,8 @@ class RegionController extends CampaignController
     {
         $this->view->title = 'Regions';
 		$this->view->regions = Model_Region::fetchAll();
-        $this->view->tableHeaders = self::generateTableHeaders();
-		$this->view->tableMetrics = self::tableMetrics();
-        $this->view->badgeData = Model_Region::badgesData();
+        $this->view->tableHeaders = $this->tableIndexHeaders();
+        $this->view->sortCol = Header_Name::getName();
 	}
 
     /**
@@ -249,27 +248,25 @@ class RegionController extends CampaignController
     }
 
 	public function downloadAction() {
-		parent::downloadAsCsv('region_index', Model_Region::badgesData(), Model_Region::fetchAll(), self::tableIndexHeaders());
+        $csvData = Util_Csv::generateCsvData(Model_Region::fetchAll(), $this->tableIndexHeaders());
+        Util_Csv::outputCsv($csvData, 'regions');
+        exit;
 	}
 
 
-    public static function tableIndexHeaders()
+    protected function tableIndexHeaders()
     {
-        $return = array(
-            'name' => true,
-            'total-rank' => true,
-            'total-score' => true,
-            'target-audience' => true,
-            'percent-target-audience' => true
+        return array(
+            Header_Name::getInstance(),
+            Header_TotalRank::getInstance(),
+            Header_TotalScore::getInstance(),
+            Header_TargetAudience::getInstance(),
+            Header_PercentTargetAudience::getInstance(),
+            Header_Countries::getInstance(),
+            Header_CountryCount::getInstance(),
+            Header_PresenceCount::getInstance(),
+            Header_Options::getInstance(),
         );
-
-        foreach(self::tableMetrics() as $name => $title){
-            $return[$name] = true;
-        }
-        $return['countries'] = true;
-        $return['options'] = false;
-
-        return $return;
     }
 
     /**

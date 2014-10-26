@@ -11,7 +11,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
     <div class="row bk-dark">
         <div class="small-24 large-centered columns">
             <ul class="button-group">
-                <li><div id="presence-search"><?php // search box will go in here ?></div></li>
+                <li id="search-table"><?php // search box will go in here ?></li>
                 <?php foreach ($buttons as $button) : ?>
                 <li><?php echo $button; ?></li>
                 <?php endforeach; ?>
@@ -25,7 +25,8 @@ $buttons = $this->gatekeeper()->filterAll(array(
     "tableHeaders" => $this->tableHeaders,
     "tableId" => "all-presences",
     "rows" => $this->presences,
-    "view" => $this
+    'emptyText' => 'No presences found',
+    'sortCol' => $this->sortCol
 )); ?>
 
 

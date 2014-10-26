@@ -8,8 +8,8 @@ class Header_Compare extends Header_Abstract {
     {
         $this->label = '<span class="icon-check"></span>';
         $this->description = 'Select all the presences that you would like to compare, and then click on the Compare Button above';
-        $this->sort = 'checkbox';
-        $this->csv = false;
+        $this->sort = self::SORT_TYPE_CHECKBOX;;
+        $this->display = self::DISPLAY_TYPE_SCREEN;
     }
 
 

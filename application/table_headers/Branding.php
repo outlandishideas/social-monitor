@@ -8,8 +8,8 @@ class Header_Branding extends Header_Abstract {
     {
         $this->label = 'Branding';
         $this->description = 'Branding shows whether a presence meets the British Council branding guidelines for social media presences.';
-        $this->sort = "data-value-numeric";
-        $this->requiredType = 'presence';
+        $this->sort = self::SORT_TYPE_NUMERIC_DATA_VALUE;
+        $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE);
     }
 
 

@@ -4,6 +4,10 @@ class Zend_View_Helper_Gatekeeper extends Zend_View_Helper_Abstract
 {
 	static $_cache = array();
 
+    const PLACEHOLDER_URL = '%url%';
+    const PLACEHOLDER_CONTROLLER = '%controller%';
+    const PLACEHOLDER_ACTION = '%action%';
+
 	public function gatekeeper()
 	{
 		return new Zend_View_Helper_Gatekeeper($this->view);
@@ -115,9 +119,9 @@ class Zend_View_Helper_Gatekeeper extends Zend_View_Helper_Abstract
 	public function filter($text, $urlArgs = array(), $name = null, $reset = false, $encode = true) {
 		$this->populateMissingArgs($urlArgs);
 		if ($this->isPublicAction($urlArgs) || $this->userCanAccess($urlArgs)) {
-			$text = str_replace('%url%', $this->view->url($urlArgs, $name, $reset, $encode), $text);
-			$text = str_replace('%controller%', $urlArgs['controller'], $text);
-			$text = str_replace('%action%', $urlArgs['action'], $text);
+			$text = str_replace(self::PLACEHOLDER_URL, $this->view->url($urlArgs, $name, $reset, $encode), $text);
+			$text = str_replace(self::PLACEHOLDER_CONTROLLER, $urlArgs['controller'], $text);
+			$text = str_replace(self::PLACEHOLDER_ACTION, $urlArgs['action'], $text);
 			return $text;
 		} else {
 			return null;

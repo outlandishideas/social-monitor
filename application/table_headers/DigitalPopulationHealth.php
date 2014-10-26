@@ -7,8 +7,8 @@ class Header_DigitalPopulationHealth extends Header_Abstract {
     function __construct()
     {
         $this->label = "Digital Population Health";
-        $this->sort = "data-value-numeric";
-        $this->csv = false;
+        $this->sort = self::SORT_TYPE_NUMERIC_DATA_VALUE;
+        $this->allowedTypes = array(self::MODEL_TYPE_COUNTRY);
     }
 
 
@@ -18,12 +18,29 @@ class Header_DigitalPopulationHealth extends Header_Abstract {
      */
     public function getTableCellValue($model)
     {
-        $value = $model->getDigitalPopulationHealth();
-        $value = is_numeric($value) ? round($value, 2) : "N/A";
+        $value = $this->getValue($model);
 
-        if(!is_numeric($value)) return "<span data-value='-1'>{$value}</span>";
+        if($value == self::NO_VALUE) {
+            $dataValue = -1;
+            $style = '';
+        } else {
+            $dataValue = $value;
+            $color = Util_Color::getDigitalPopulationHealthColor($value);
+            $style = 'style="color:' . $color . ';"';
+        }
 
-        $color = Util_Color::getDigitalPopulationHealthColor($value);
-        return "<span style='color:{$color};' data-value='{$value}'>{$value}%<span>";
+        return "<span $style data-value='{$dataValue}'>{$value}<span>";
     }
+
+    /**
+     * @param Model_Country $model
+     * @return null
+     */
+    function getValue($model = null)
+    {
+        $value = $model->getDigitalPopulationHealth();
+        return is_numeric($value) ? round($value, 2) . '%' : self::NO_VALUE;
+    }
+
+
 }

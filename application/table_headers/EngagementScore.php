@@ -1,6 +1,6 @@
 <?php
 
-class Header_EngagementScore extends Header_BadgeScores {
+class Header_EngagementScore extends Header_BadgeScore {
 
     protected static $name = "engagement-score";
 
@@ -9,14 +9,12 @@ class Header_EngagementScore extends Header_BadgeScores {
         parent::__construct();
         $this->label = "Engagement Score";
         $this->description = "Engagement Score shows the score for the combined measures that measure a presences engagement";
-        $this->csv = true;
     }
-
 
     /**
      * @return mixed
      */
-    public function getBadge()
+    public function getBadgeName()
     {
         return Badge_Engagement::getName();
     }

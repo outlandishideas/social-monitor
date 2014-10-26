@@ -26,6 +26,7 @@ abstract class Header_Factory
 			Header_EngagementScore::getName() => 'Header_EngagementScore',
 			Header_TotalRank::getName() => 'Header_TotalRank',
 			Header_TotalScore::getName() => 'Header_TotalScore',
+			Header_PresenceCount::getName() => 'Header_PresenceCount',
 			Header_Presences::getName() => 'Header_Presences',
 			Header_Options::getName() => 'Header_Options',
 			Header_Handle::getName() => 'Header_Handle',
@@ -33,6 +34,7 @@ abstract class Header_Factory
 			Header_CurrentAudience::getName() => 'Header_CurrentAudience',
 			Header_Name::getName() => 'Header_Name',
 			Header_Country::getName() => 'Header_Country',
+			Header_CountryCount::getName() => 'Header_CountryCount',
 			Header_Countries::getName() => 'Header_Countries',
 			Header_PercentTargetAudience::getName() => 'Header_PercentTargetAudience'
 		);

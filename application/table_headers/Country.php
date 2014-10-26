@@ -2,20 +2,20 @@
 
 class Header_Country extends Header_Abstract {
 
-    protected static  $name = "country";
+    protected static $name = "country";
 
     function __construct()
     {
         $this->label = "Country";
-        $this->csv = true;
+        $this->allowedTypes = array(self::MODEL_TYPE_COUNTRY);
     }
 
 
     /**
      * @param Model_Country $model
-     * @return mixed
+     * @return string
      */
-    public function getTableCellValue($model)
+    public function getValue($model = null)
     {
         return $model->country;
     }

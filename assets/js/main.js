@@ -90,8 +90,7 @@ $.extend(app, {
 app.init = {
 	//application entry point, called at end of this file
 	bootstrap: function() {
-		$('a.autoConfirm').live('click', app.autoConfirm.ask);
-		$('form.autoConfirm a').live('click', app.autoConfirm.cancel);
+		$('a.autoConfirm, .button-delete').on('click', app.autoConfirm.ask);
 
 		//run conditional init functions if selector exists on page
 		for (var selector in app.init.selectors) {
@@ -462,7 +461,9 @@ app.api = {
 		}
 	},
 	errorCallback: function(response) {
-		if (app.state.unloading) return; //don't show errors caused by navigation away from page
+		if (app.state.unloading) {
+			return; //don't show errors caused by navigation away from page
+		}
 
 		var data = $.parseJSON(response.responseText);
 		var message = '';
@@ -473,7 +474,9 @@ app.api = {
 		} else {
 			message = data.error;
 		}
-		if (message) app.flashMessenger.show(message, 'error');
+		if (message) {
+			app.flashMessenger.show(message, 'error');
+		}
 	}
 };
 
@@ -489,8 +492,12 @@ app.autoConfirm = {
 		} else {
 			title = '';
 		}
-		$(this).replaceWith('<form method="post" action="'+$(this).attr('href')+'" class="'+$(this).attr('class')+' uniForms">' +
-			'Are you sure? <input type="submit" value="'+$(this).text()+'"'+title+' class="inlineAction"> <a href="" class="secondaryAction inline">Cancel</a></form>');
+		var $form = $('<form method="post" action="'+$(this).attr('href')+'">' +
+			'Are you sure? <input type="submit" value="'+$(this).text()+'"'+title+' class="button-bc inline"> ' +
+			'<a href="#">Cancel</a>' +
+			'</form>');
+		$form.on('click', 'a', app.autoConfirm.cancel);
+		$(this).hide().after($form);
 	},
 
 	cancel: function(e) {
@@ -502,8 +509,8 @@ app.autoConfirm = {
 		} else {
 			title = '';
 		}
-		$form.replaceWith('<a href="'+$form.attr('action')+'" class="'+$form.attr('class')+'"'+title+'>' +
-			$form.find('input').attr('value') + '</a>');
+		$form.prev().show();
+		$form.remove();
 	}
 };
 

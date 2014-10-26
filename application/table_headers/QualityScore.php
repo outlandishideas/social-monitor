@@ -1,6 +1,6 @@
 <?php
 
-class Header_QualityScore extends Header_BadgeScores {
+class Header_QualityScore extends Header_BadgeScore {
 
     protected static $name = "quality-score";
 
@@ -9,13 +9,12 @@ class Header_QualityScore extends Header_BadgeScores {
         parent::__construct();
         $this->label = "Quality Score";
         $this->description = "Quality Score shows the score for the combined measures that measure a presences engagement";
-        $this->csv = true;
     }
 
     /**
      * @return mixed
      */
-    public function getBadge()
+    public function getBadgeName()
     {
         return Badge_Quality::getName();
     }
