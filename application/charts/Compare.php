@@ -29,7 +29,7 @@ class Chart_Compare extends Chart_Abstract {
             foreach ($data as $row) {
                 $row = (object)$row;
                 $value = isset($row->$column) ? $row->$column : null;
-                if ($column != $this->getXColumn()) {
+                if ($column != $this->getXColumn() && !is_null($value)) {
                     $value = round($value, 1);
                 }
                 $dataRow[] = $value;
