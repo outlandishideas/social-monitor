@@ -1,0 +1,7 @@
+<ul>
+    <?php foreach ($this->statuses as $status) : ?>
+    <li>
+        <?php echo date('jS M Y (H:i)', strtotime($status->created_time)); ?>: <?php echo $this->partial('partials/presence_inline.phtml', array('presence'=>$status->presence)); ?>
+    </li>
+    <?php endforeach; ?>
+</ul>

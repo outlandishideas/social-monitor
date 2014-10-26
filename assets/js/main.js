@@ -363,6 +363,22 @@ app.init = {
 				}
 			});
 			$toggle.next().css('height', 0);
+		},
+		'.domain-link .toggle-expand': function($togglers) {
+			$togglers.on('click', function(e) {
+				e.preventDefault();
+				var $container = $(this).closest('.domain-link');
+				var $list = $container.find('.status-list');
+				if ($list.length == 0) {
+					$list = $('<div class="status-list"></div>').appendTo($container).hide();
+					var url = app.utils.baseUrl() + 'domain/status-list/id/' + $container.data('domain-id') + '?url=' + $container.data('url');
+					$list.load(url, function(event) {
+						console.log(event);
+					});
+				}
+				$(this).toggleClass('open');
+				$list.slideToggle();
+			});
 		}
 	}
 };

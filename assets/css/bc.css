@@ -1351,17 +1351,17 @@ ul.tabs li.fl-right {
 
 /* domains */
 
-.link-title {
-	border-bottom: 1px solid #ccc;
-	border-top: 1px solid #ccc;
-	background-color: #f2f2f2;
-	margin: 0 -20px;
-	padding: 8px 20px;
+/* todo: style these properly */
+.domain-link .toggle-expand {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
 }
-ul.link-list {
-	margin-top: 5px;
-	list-style: none;
-	padding: 0;
+.domain-link .toggle-expand:before {
+	content: ">";
+}
+.domain-link .toggle-expand.open:before {
+	content: "<";
 }
 
 /* group display on front page */

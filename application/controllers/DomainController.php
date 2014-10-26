@@ -31,6 +31,38 @@ class DomainController extends BaseController {
 		$this->view->canEdit = $this->view->user->isManager;
 	}
 
+    /**
+     * Called via ajax to show the list of statuses that contain a given url
+     */
+    function statusListAction() {
+        $id = $this->_request->getParam('id');
+        /** @var Model_Domain $domain */
+        $domain = $id ? Model_Domain::fetchById($id) : null;
+        if(!$domain){
+            $this->_helper->viewRenderer->setNoRender(true);
+        } else {
+            $twitterLookup = $this->db()->prepare('SELECT * FROM twitter_tweets WHERE id = :id');
+            $facebookLookup = $this->db()->prepare('SELECT * FROM facebook_stream WHERE id = :id');
+
+            $statuses = array();
+            foreach ($domain->getLinksForUrl($this->_request->getParam('url')) as $link) {
+                $lookup = $link->type == 'facebook' ? $facebookLookup : $twitterLookup;
+                $lookup->execute(array(':id'=>$link->status_id));
+                $status = $lookup->fetchAll(PDO::FETCH_OBJ);
+                if ($status) {
+                    $status = array_pop($status);
+                    $status->presence = NewModel_PresenceFactory::getPresenceById($status->presence_id);
+                    if ($status->presence) {
+                        $statuses[] = $status;
+                    }
+                }
+            }
+            usort($statuses, function($a, $b) { return strcasecmp($b->created_time, $a->created_time); });
+            $this->view->statuses = $statuses;
+        }
+        $this->_helper->layout()->disableLayout();
+    }
+
 	/**
 	 * Ajax function for getting a page of domains
 	 */
