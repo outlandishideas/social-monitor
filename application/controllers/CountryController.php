@@ -2,6 +2,8 @@
 
 class CountryController extends CampaignController {
 
+    protected static $publicActions = array('stats-panel');
+
 	public function init() {
 		parent::init();
 		$this->view->titleIcon = Model_Country::ICON_TYPE;

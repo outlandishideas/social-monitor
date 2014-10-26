@@ -17,7 +17,7 @@ users:
       label: Edit Users
       controller: user
     signout:
-      label: Signout
+      label: Sign Out
       controller: user
       action: logout
 config:
