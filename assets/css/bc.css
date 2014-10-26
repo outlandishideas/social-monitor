@@ -1764,6 +1764,12 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	stroke-width: 3;
 }
 
+#new-chart .c3-tooltip-container table th,
+#new-chart .c3-tooltip-container table td {
+	color: #000;
+	text-align: left;
+}
+
 /* Model Header */
 .model-header {
 	padding-bottom: 1rem;

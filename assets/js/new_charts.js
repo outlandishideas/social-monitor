@@ -45,8 +45,14 @@ app.newCharts = {
 
         app.api.get(url, params)
             .done(function(response) {
-                data = response.data;
-                console.log(data);
+                var data = response.data;
+		        if (data.axis.x.type == 'timeseries') {
+			        data.axis.x.tick = {
+				        format: function(x) {
+					        return x.getDate() + '/' + (x.getMonth()+1) + '/' + (x.getFullYear()-2000);
+				        }
+			        };
+		        }
                 app.state.chart = c3.generate(data)
             })
             .always(function() {

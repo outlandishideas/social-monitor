@@ -28,7 +28,11 @@ class Chart_Compare extends Chart_Abstract {
             $dataRow = array($column);
             foreach ($data as $row) {
                 $row = (object)$row;
-                $dataRow[] = isset($row->$column) ? $row->$column : null;
+                $value = isset($row->$column) ? $row->$column : null;
+                if ($column != $this->getXColumn()) {
+                    $value = round($value, 1);
+                }
+                $dataRow[] = $value;
             }
             $columns[] = $dataRow;
         }
@@ -79,7 +83,7 @@ class Chart_Compare extends Chart_Abstract {
 
         foreach($reducedData as &$row){
             foreach($dataColumns as $colName){
-                $row->$colName /= $presenceCount;
+                $row->$colName = round($row->$colName/$presenceCount, 1);
             }
         }
 
