@@ -48,7 +48,7 @@ class Util_Csv {
                 $output = null;
                 foreach ($dataTypes as $type) {
                     if ($column->isAllowedType($type)) {
-                        $output = $column->getValue($model);
+                        $output = $column->getFormattedValue($model);
                         break;
                     }
                 }

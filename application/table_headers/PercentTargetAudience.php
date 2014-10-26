@@ -17,8 +17,15 @@ class Header_PercentTargetAudience extends Header_Abstract {
      */
     function getValue($model = null)
     {
-        $target = $model->getPercentTargetAudience();
-        return is_numeric($target) ? round($target, 2).'%' : self::NO_VALUE;
+        return $model->getPercentTargetAudience();
+    }
+
+    function formatValue($value)
+    {
+        if (is_numeric($value)) {
+            return round($value, 2).'%';
+        }
+        return self::NO_VALUE;
     }
 
 

@@ -19,17 +19,16 @@ class Header_DigitalPopulationHealth extends Header_Abstract {
     public function getTableCellValue($model)
     {
         $value = $this->getValue($model);
+        $text = $this->formatValue($value);
 
-        if($value == self::NO_VALUE) {
-            $dataValue = -1;
+        if(is_null($value)) {
+            $value = -1;
             $style = '';
         } else {
-            $dataValue = $value;
-            $color = Util_Color::getDigitalPopulationHealthColor($value);
-            $style = 'style="color:' . $color . ';"';
+            $style = 'style="color:' . Util_Color::getDigitalPopulationHealthColor($value) . ';"';
         }
 
-        return "<span $style data-value='{$dataValue}'>{$value}<span>";
+        return "<span $style data-value='{$value}'>{$text}<span>";
     }
 
     /**
@@ -38,8 +37,15 @@ class Header_DigitalPopulationHealth extends Header_Abstract {
      */
     function getValue($model = null)
     {
-        $value = $model->getDigitalPopulationHealth();
-        return is_numeric($value) ? round($value, 2) . '%' : self::NO_VALUE;
+        return $model->getDigitalPopulationHealth();
+    }
+
+    function formatValue($value)
+    {
+        if (is_numeric($value)) {
+            return round($value, 2) . '%';
+        }
+        return self::NO_VALUE;
     }
 
 

@@ -15,16 +15,13 @@ class Header_DigitalPopulation extends Header_Abstract {
     public function getTableCellValue($model)
     {
         $value = $this->getValue($model);
+        $text = $this->formatValue($model);
 
-        if($value == self::NO_VALUE) {
-            $dataValue = -1;
-            $text = $value;
-        } else {
-            $text = $value;
-            $dataValue = $value;
+        if(is_null($value)) {
+            $value = -1;
         }
 
-        return "<span data-value='{$dataValue}'>{$text}<span>";
+        return "<span data-value='{$value}'>{$text}<span>";
     }
 
     /**
@@ -33,9 +30,14 @@ class Header_DigitalPopulation extends Header_Abstract {
      */
     function getValue($model = null)
     {
-        $value = $model->getDigitalPopulation();
-        return is_numeric($value) ? number_format(round($value)) : self::NO_VALUE;
+        return $model->getDigitalPopulation();
     }
 
+    function formatValue($value) {
+        if (is_numeric($value)) {
+            return number_format(round($value));
+        }
+        return self::NO_VALUE;
+    }
 
 }

@@ -63,7 +63,7 @@ abstract class Header_Abstract {
      * @return mixed
      */
     public function getTableCellValue($model) {
-        return $this->getValue($model);
+        return $this->getFormattedValue($model);
     }
 
     /**
@@ -146,6 +146,15 @@ abstract class Header_Abstract {
     function getValue($model = null)
     {
         return $model;
+    }
+
+    final function getFormattedValue($model = null)
+    {
+        return $this->formatValue($this->getValue($model));
+    }
+
+    function formatValue($value) {
+        return $value;
     }
 
     public static function getInstance()

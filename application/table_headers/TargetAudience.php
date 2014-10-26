@@ -17,8 +17,15 @@ class Header_TargetAudience extends Header_Abstract {
      */
     function getValue($model = null)
     {
-        $target = $model->getTargetAudience();
-        return is_numeric($target) ? number_format(round($target)) : self::NO_VALUE;
+        return $model->getTargetAudience();
+    }
+
+    function formatValue($value)
+    {
+        if (is_numeric($value)) {
+            return number_format(round($value));
+        }
+        return self::NO_VALUE;
     }
 
 

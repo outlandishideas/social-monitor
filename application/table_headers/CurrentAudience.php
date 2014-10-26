@@ -17,9 +17,15 @@ class Header_CurrentAudience extends Header_Abstract {
      */
     function getValue($model = null)
     {
-        $current = $model->getPopularity();
-        return is_numeric($current) ? number_format(round($current)) : self::NO_VALUE;
+        return $model->getPopularity();
     }
 
+    function formatValue($value)
+    {
+        if (is_numeric($value)) {
+            return number_format(round($value));
+        }
+        return self::NO_VALUE;
+    }
 
 }

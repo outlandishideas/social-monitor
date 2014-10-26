@@ -16,17 +16,16 @@ abstract class Header_BadgeScore extends Header_Abstract {
     public function getTableCellValue($model)
     {
         $value = $this->getValue($model);
+        $text = $this->formatValue($value);
 
-        if($value == self::NO_VALUE) {
-            $dataValue = -1;
+        if(is_null($value)) {
+            $value = -1;
             $style = '';
         } else {
-            $dataValue = $value;
-            $color = Badge_Abstract::colorize($value);
-            $style = 'style="color:' . $color . '"';
+            $style = 'style="color:' . Badge_Abstract::colorize($value) . '"';
         }
 
-        return "<span $style data-value='{$dataValue}'>{$value}<span>";
+        return "<span $style data-value='{$value}'>{$text}<span>";
     }
 
     /**
@@ -45,10 +44,15 @@ abstract class Header_BadgeScore extends Header_Abstract {
         }
         $badgeName = $this->getBadgeName();
         if (is_array($badges) && array_key_exists($badgeName, $badges)) {
-            return round($badges[$badgeName]);
+            return floatval($badges[$badgeName]);
+        }
+        return null;
+    }
+
+    function formatValue($value) {
+        if (is_numeric($value)) {
+            return round($value);
         }
         return self::NO_VALUE;
     }
-
-
 }

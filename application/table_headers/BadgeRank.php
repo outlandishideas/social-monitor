@@ -29,7 +29,15 @@ abstract class Header_BadgeRank extends Header_Abstract {
         }
         $badgeName = $this->getBadgeName();
         if (is_array($badges) && array_key_exists($badgeName, $badges)) {
-            return round($badges[$badgeName]);
+            return floatval($badges[$badgeName]);
+        }
+        return null;
+    }
+
+    function formatValue($value)
+    {
+        if (is_numeric($value)) {
+            return round($value);
         }
         return self::NO_VALUE;
     }
