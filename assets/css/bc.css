@@ -2061,3 +2061,9 @@ td.countries a {
 	top: 1px;
 	position: relative;
 }
+
+#country-stats {
+	min-height: 20px;
+	background-color: #0a3542;
+	background-position: right top;
+}

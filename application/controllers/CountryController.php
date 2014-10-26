@@ -36,7 +36,19 @@ class CountryController extends CampaignController {
         $this->view->sortCol = Header_Name::getName();
 	}
 
-	/**
+    public function statsPanelAction()
+    {
+        $id = $this->_request->getParam('id');
+        $country = $id ? Model_Country::fetchById($id) : null;
+        if(!$country){
+            $this->_helper->viewRenderer->setNoRender(true);
+        } else {
+            $this->view->country = $country;
+        }
+        $this->_helper->layout()->disableLayout();
+    }
+
+    /**
 	 * Views a specific country
 	 * @user-level user
 	 */

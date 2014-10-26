@@ -195,7 +195,9 @@ app.geochart = {
 	 */
 	loadCampaignStats: function(id) {
 		var $countryStats = $('#country-stats');
-		$countryStats.load('index/country-stats/id/' + id, function(event){
+		$countryStats.addClass('loading');
+		$countryStats.load('country/stats-panel/id/' + id, function(event){
+			$countryStats.removeClass('loading');
 			app.home.update();
 		});
 

@@ -75,6 +75,9 @@ abstract class NewModel_Enum
         return self::$constantsCache[$calledClass];
     }
 
+    /**
+     * @return NewModel_PresenceType[]
+     */
     public static function enumValues()
     {
         $values = array();

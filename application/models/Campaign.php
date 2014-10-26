@@ -113,7 +113,11 @@ class Model_Campaign extends Model_Base {
 		return $this->presences;
 	}
 
-	public function getPresencesByType(NewModel_PresenceType $type){
+    /**
+     * @param NewModel_PresenceType $type
+     * @return NewModel_Presence[]
+     */
+    public function getPresencesByType(NewModel_PresenceType $type){
 		$presences = $this->getPresences();
 		return array_filter($presences, function(NewModel_Presence $a) use ($type) {
 			return $a->getType() == $type;

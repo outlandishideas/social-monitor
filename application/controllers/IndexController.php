@@ -60,20 +60,6 @@ class IndexController extends GraphingController
 		}
 	}
 
-	public function countryStatsAction()
-	{
-		$id = $this->_request->getParam('id');
-		if($id){
-			$country = Model_Country::fetchById($id);
-		}
-		if(!$country){
-			$this->_helper->viewRenderer->setNoRender(true);
-		} else {
-			$this->view->country = $country;
-		}
-		$this->_helper->layout()->disableLayout();
-	}
-
 	public function campaignStatsAction()
 	{
 		$model = $this->_request->getParam('model');

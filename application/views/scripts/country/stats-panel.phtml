@@ -1,7 +1,10 @@
 <?php
-/** @var Model_Country $this->country */
-$badges = $this->country->getBadges();
-$presences = $this->country->getPresences(); ?>
+/** @var Model_Country $country */
+$country = $this->country;
+$badges = $country->getBadges();
+/** @var NewModel_Presence[] $presences */
+$presences = $country->getPresences();
+?>
 <div class="badge-small"
      data-total="<?php echo round($badges['total']); ?>"
      data-reach="<?php echo round($badges['reach']); ?>"
@@ -11,7 +14,7 @@ $presences = $this->country->getPresences(); ?>
      data-reach-color="<?php echo $badges['reach_color']; ?>"
      data-engagement-color="<?php echo $badges['engagement_color']; ?>"
      data-quality-color="<?php echo $badges['quality_color']; ?>">
-    <h3><?php echo $this->country->display_name; ?></h3>
+    <h3><?php echo $country->display_name; ?></h3>
     <div class="badge-score bd-btm">
         <h4><span data-badge-title></span> Score</h4>
         <div class="score-value" data-badge-score></div>
@@ -22,19 +25,15 @@ $presences = $this->country->getPresences(); ?>
         <div class="score-value"><?php echo count($presences);?></div>
     </div>
     <?php foreach(NewModel_PresenceType::enumValues() as $type) :
-        /** @var NewModel_PresenceType $type */
-        $typePresences = $this->country->getPresencesByType($type);
+        $typePresences = $country->getPresencesByType($type);
         if(count($typePresences) > 0) : ?>
             <div class="bd-btm">
                 <h4><?php echo $type->getTitle(); ?></h4>
                 <ul class="badge-presences">
-                    <?php
-                    /** @var NewModel_Presence $presence */
-                    foreach($presences as $presence):
-                        if($presence->getType() != $type) continue; ?>
-                        <li>
-                            <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getName(); ?>
-                        </li>
+                    <?php foreach($typePresences as $presence): ?>
+                    <li>
+                        <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getName(); ?>
+                    </li>
                     <?php endforeach; ?>
                 </ul>
             </div>

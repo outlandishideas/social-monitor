@@ -352,11 +352,6 @@ class NewModel_Presence
 
 	public function getKpiData(DateTime $start = null, DateTime $end = null, $useCache = true)
 	{
-		// if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
-		// 	$presence = Model_Presence::fetchById($this->getId());
-		// 	return $presence->getKpiData($start, $end, $useCache);
-		// }
-
 		if (!$start || !$end) {
 			$end = new DateTime();
 			$start = clone $end;
@@ -388,7 +383,6 @@ class NewModel_Presence
 
 	public function getCachedKpiData(DateTime $start, DateTime $end)
 	{
-		$kpis = array();
 		$stmt = $this->db->prepare(
 			"SELECT metric, value FROM `kpi_cache`
 				WHERE `presence_id` = :pid
