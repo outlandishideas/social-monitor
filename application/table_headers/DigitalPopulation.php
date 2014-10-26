@@ -15,7 +15,7 @@ class Header_DigitalPopulation extends Header_Abstract {
     public function getTableCellValue($model)
     {
         $value = $this->getValue($model);
-        $text = $this->formatValue($model);
+        $text = $this->formatValue($value);
 
         if(is_null($value)) {
             $value = -1;
