@@ -150,4 +150,8 @@ class DomainController extends BaseController {
 		$this->view->links = $links;
 		$this->view->title = $domain->domain;
 	}
+
+//    function downloadAction() {
+//        die;
+//    }
 }

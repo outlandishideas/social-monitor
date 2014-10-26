@@ -371,9 +371,9 @@ app.datatables = {
 						$wrapper.hideLoader();
 					});
 			},
-			fnInfoCallback:function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-				return sPre + ' <a href="">Download as CSV</a>';
-			},
+//			fnInfoCallback:function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+//				return sPre + ' <a href="">Download as CSV</a>';
+//			},
 			bPaginate:true,
 			iDisplayLength:parseInt(jsConfig.pageSize),
 			bInfo:true,

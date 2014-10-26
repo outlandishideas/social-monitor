@@ -7,7 +7,9 @@
 $buttons = array();
 if ($this->canEdit) : ?>
 		<?php $buttons = $this->gatekeeper()->filterAll(array(
-			'<a class="button-bc" href="%url%">Cancel</a>' => array('action'=>'index')
+			'<a class="button-bc" href="%url%">Cancel</a>' => array('action'=>'index'),
+            //todo: reinstate this
+//			'<a class="button-bc" href="%url%">Download as CSV</a>' => array('action'=>'download')
 		)); ?>
 <?php endif; ?>
 <form method="post" action="<?php echo $this->url(); ?>">
@@ -16,8 +18,7 @@ if ($this->canEdit) : ?>
 		<div class="row bk-dark">
 			<div class="small-24 large-centered columns">
 				<ul class="button-group">
-					<li><div id="domain-search"><?php // search box will go in here ?></div></li>
-<!--					<li><a class="button-bc" href="#">Download CSV</a></li>-->
+					<li><div id="search-table"><?php // search box will go in here ?></div></li>
 					<?php foreach($buttons as $button): ?>
 						<li><?php echo $button; ?></li>
 					<?php endforeach; ?>
