@@ -189,7 +189,7 @@ h3 {
 	padding-top: 76px;
 }
 
-#content .content-in-header, #content .messages {
+#content .content-in-header {
     margin: -20px -42px 0 -42px;
     background: #edf5f8;
     padding: 0 42px 20px 42px;
@@ -1481,7 +1481,7 @@ ul.tabs li.fl-right {
 body {
 	font-family: 'Open Sans', sans-serif;
 	color: #fff;
-	color: rgba(255,255,255, 0.5);
+	/*color: rgba(255,255,255, 0.5);*/
 }
 
 /* foundation styles */
@@ -1943,6 +1943,7 @@ table tbody tr td {
 
 table tbody tr td {
 	text-align: center;
+	vertical-align: top;
 }
 
 table tbody tr td.left-align {
@@ -2101,6 +2102,12 @@ td.countries a {
 	background-color: #0a3542;
 	background-position: right top;
 }
+
+.dataTable th {
+	font-weight: normal;
+	text-transform: uppercase;
+}
+
 
 /* tabs on right-hand-side of presence/campaign page */
 #model-tabs {
