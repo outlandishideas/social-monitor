@@ -1926,6 +1926,7 @@ table tbody tr td {
 
 table tbody tr td {
 	text-align: center;
+	vertical-align: top;
 }
 
 table tbody tr td.left-align {

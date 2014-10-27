@@ -13,6 +13,20 @@
     </div>
 </div>
 
+<div class="button-bc-bar">
+    <div class="row">
+        <div class="small-24 columns">
+            <ul class="button-group stack-for-small badge-buttons">
+                <?php
+                /** @var Badge_Abstract $badge */
+                foreach($this->badges as $badge): ?>
+                    <li><a href="#<?php echo $badge->getName(); ?>" class="button-bc"><?php echo $badge->getTitle(); ?></a></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <h2 data-badge-title></h2>
 <div class="row">
     <div class="small-24 large-5 columns hide-for-small-down">
@@ -58,20 +72,6 @@
     </div>
     <div class="small-24 large-5 columns">
         <div id="country-stats"></div>
-    </div>
-</div>
-
-<div class="button-bc-bar">
-    <div class="row">
-        <div class="small-24 columns">
-            <ul class="button-group stack-for-small badge-buttons">
-                <?php
-                /** @var Badge_Abstract $badge */
-                foreach($this->badges as $badge): ?>
-                    <li><a href="#<?php echo $badge->getName(); ?>" class="button-bc"><?php echo $badge->getTitle(); ?></a></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
     </div>
 </div>
 
