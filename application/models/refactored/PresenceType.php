@@ -35,7 +35,7 @@ class NewModel_PresenceType extends NewModel_Enum
                     Metric_SignOff::getName()
                 );
                 $this->badges = array(
-                    Badge_Factory::getBadge(Badge_Reach::getName())
+                    Badge_Reach::getInstance()
                 );
                 break;
             case self::FACEBOOK:

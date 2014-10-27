@@ -630,19 +630,6 @@ class NewModel_Presence
 		}
 	}
 
-	/**
-	 * @param bool $includeBreakdown
-	 * @return array
-	 */
-	public function badges($includeBreakdown = true)
-	{
-//		trigger_error("Deprecated function called.", E_USER_NOTICE);
-		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
-			$presence = Model_Presence::fetchById($this->getId());
-			return $presence->badges($includeBreakdown);
-		}
-	}
-
 	public function save()
 	{
         if (!$this->id) {

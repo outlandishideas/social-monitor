@@ -198,55 +198,6 @@ class Model_Campaign extends Model_Base {
      * Badge Factory
      *****************************************************************/
 
-	/**
-	 * Gets the badges for this campaign
-	 * @return array
-	 */
-	public function badges(){
-
-		$end = new DateTime();
-		$start = clone $end;
-		$start->modify("-30 days");
-
-		$badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
-
-        $allCampaigns = static::getAllBadges();
-
-		$campaignCount = count($allCampaigns);
-		$badges = array();
-		$badgeData = $allCampaigns[$this->id];
-		$presences = $this->getPresences();
-		foreach ($badgeTypes as $badgeType) {
-			$badge = array(
-				'type'=>$badgeType,
-				'score'=>floatval($badgeData->{$badgeType}),
-				'rank'=>intval($badgeData->{$badgeType.'_rank'}),
-				'rankTotal'=>$campaignCount,
-				'metrics'=>array()
-			);
-			// average the individual metric scores
-			foreach ($presences as $presence) {
-				$metrics = $presence->getMetrics($badgeType);
-				foreach ($metrics as $m=>$metric) {
-					if (!isset($badge['metrics'][$m])) {
-						$badge['metrics'][$m] = (object)array(
-							'score' => 0,
-							'type' => $m,
-							'title' => $metric->getTitle()
-						);
-					}
-					$badge['metrics'][$m]->score += $metric->getScore($presence, $start, $end);
-				}
-			}
-			foreach($badge['metrics'] as $metric){
-				$metric->score /= count($presences);
-			}
-			$badges[$badgeType] = (object)$badge;
-		}
-
-		return $badges;
-	}
-
 	public function getBadges()
 	{
         $allBadges = self::getAllBadges();
@@ -259,7 +210,11 @@ class Model_Campaign extends Model_Base {
 
 	public function getBadgeHistory(DateTime $start, DateTime $end)
 	{
-		return Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), $start, $end, $this->getPresenceIds());
+        $presenceIds = $this->getPresenceIds();
+        if (!$presenceIds) {
+            return array();
+        }
+		return Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), $start, $end, $presenceIds);
 	}
 
     /**
@@ -268,7 +223,8 @@ class Model_Campaign extends Model_Base {
      */
     public static function getAllBadges()
 	{
-		if(empty(static::$badges)){
+        $key = get_called_class();
+		if(empty(static::$badges[$key])){
 			$campaignIds = array();
             foreach (static::fetchAll() as $campaign) {
                 $campaignIds[] = $campaign->id;
@@ -320,10 +276,10 @@ class Model_Campaign extends Model_Base {
 					}
 				}
 			}
-			static::$badges = $keyedData;
+			static::$badges[$key] = $keyedData;
 		}
 
-		return static::$badges;
+		return static::$badges[$key];
 	}
 
     /**
@@ -359,12 +315,13 @@ class Model_Campaign extends Model_Base {
 		}
 		$maxDate = new DateTime($maxDate);
 
-		$badgeTypes = Model_Badge::$ALL_BADGE_TYPES;
+		$badgeTypes = Badge_Factory::getBadges();
 
 		$campaigns = array();
 
-		/** @var Model_Campaign $campaign */
-		foreach (static::fetchAll('id IN (' . implode(',', array_filter(array_keys($campaignIds))) . ')') as $campaign) {
+		/** @var Model_Campaign[] $campaignData */
+        $campaignData = static::fetchAll('id IN (' . implode(',', array_filter(array_keys($campaignIds))) . ')');
+		foreach ($campaignData as $campaign) {
 			$row = (object)array(
 				'id'=>intval($campaign->id),
 				'c' => $campaign->country,
@@ -375,8 +332,9 @@ class Model_Campaign extends Model_Base {
 
 			// add data structures for keeping scores in
 			foreach ($badgeTypes as $type) {
-				if ($type != Model_Badge::BADGE_TYPE_TOTAL) {
-					$row->b->$type = array();
+				if ((!$type instanceof Badge_Total)) {
+                    $typeName = $type::getName();
+					$row->b->$typeName = array();
 				}
 			}
 			$campaigns[$campaign->id] = $row;
@@ -427,7 +385,7 @@ class Model_Campaign extends Model_Base {
 				$value /= $badgeCount; // average out the badges
 				$total[$day] = (object)array('s'=>round($value*10)/10, 'l'=>round($value).'%');
 			}
-			$campaign->b->{Model_Badge::BADGE_TYPE_TOTAL} = $total;
+			$campaign->b->{Badge_Total::getName()} = $total;
 		}
 
 		// fill in any holes by copying the closest day

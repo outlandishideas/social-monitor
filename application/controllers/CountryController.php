@@ -289,21 +289,6 @@ class CountryController extends CampaignController {
 		$this->_helper->redirector->gotoSimple('index');
 	}
 
-    /**
-     * Gets all of the graph data for the requested presence
-     */
-    public function badgeDataAction() {
-        Zend_Session::writeClose(); // release session on long running actions
-
-	    /** @var Model_Country $country */
-        $country = Model_Country::fetchById($this->_request->getParam('id'));
-
-        $response = $country->badges();
-
-        $this->apiSuccess($response);
-
-    }
-
 	/**
 	 * Gets all of the graph data for the requested presence
 	 */

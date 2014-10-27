@@ -57,4 +57,9 @@ abstract class Metric_Abstract {
     protected static function boundScore($score, $min = 0, $max = 100) {
         return max($min, min($max, $score));
     }
+
+    public static function getInstance()
+    {
+        return Metric_Factory::getMetric(self::getName());
+    }
 }

@@ -101,15 +101,13 @@ abstract class GraphingController extends BaseController {
 		$this->assignRgbColors($metrics);
 
         $geochart = array();
-        $badges = Model_Badge::$ALL_BADGE_TYPES;
-        foreach($badges as $type){
-            $geochart[$type] = (object)array(
-                'range' => array(0, 1, 20, 50, 80, 100),
-                'colors' => array($colors->grey, $colors->red, $colors->red, $colors->yellow, $colors->green, $colors->green)
-            );
-        }
-		foreach (Model_Badge::$ALL_BADGE_TYPES as $type) {
-            $geochart[$type]->label = Model_Badge::badgeTitle($type);
+        $badges = Badge_Factory::getBadges();
+        foreach($badges as $badge){
+            $badgeArgs = new stdClass();
+            $badgeArgs->range = array(0, 1, 20, 50, 80, 100);
+            $badgeArgs->colors = array($colors->grey, $colors->red, $colors->red, $colors->yellow, $colors->green, $colors->green);
+            $badgeArgs->label = $badge::getTitle();
+            $geochart[$badge::getName()] = $badgeArgs;
         }
 		$this->assignRgbColors($geochart);
 
@@ -135,110 +133,6 @@ abstract class GraphingController extends BaseController {
 		}
 	}
 
-    public static function tableHeader($type, $csv = true){
-        $header = new stdClass();
-	    $header->name = $type;
-	    $header->csv = $csv;
-	    $header->sort = 'auto';
-	    $header->title = '';
-	    $header->desc = null;
-
-        $metrics = self::tableMetrics();
-
-	    if (array_key_exists($type, $metrics)) {
-		    $header->sort = 'traffic-light';
-		    $header->width = '150px';
-		    $header->title = $metrics[$type];
-	    }
-
-        switch($type){
-            case 'name' :
-				$header->title = 'Name';
-                break;
-            case 'country':
-				$header->title = 'Country';
-                break;
-            case 'countries':
-				$header->title = 'Countries';
-                break;
-            case 'total-rank':
-				$header->sort = 'numeric';
-				$header->title = 'Overall Rank';
-                $header->desc = 'Overall Rank shows the rank of this presence or group when compared against others.';
-                break;
-            case 'total-score':
-				$header->sort = 'numeric';
-				$header->title = 'Overall Score';
-				$header->desc = 'Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality.';
-                break;
-            case 'current-audience':
-				$header->sort = 'fuzzy-numeric';
-				$header->title = 'Audience';
-				$header->desc = 'Audience is the currently measured audience for this presence.';
-                break;
-            case 'target-audience':
-				$header->sort = 'fuzzy-numeric';
-	            $header->title = 'Target Audience';
-                $header->desc = 'Target Audience is the audience that must be reached by this presence or group of presences.';
-                break;
-            case 'percent-target-audience':
-				$header->sort = 'fuzzy-numeric';
-	            $header->title = '% of Target Audience';
-                $header->desc = 'The percentage of the target audience that has so far been reached.';
-                break;
-            case 'digital-population':
-                $header->sort = 'fuzzy-numeric';
-                $header->title = 'Digital Population';
-                $header->desc = 'The Digital Population is based on internet penetration in the country.';
-                break;
-            case 'digital-population-health':
-                $header->sort = 'traffic-light';
-                $header->title = 'Percent of Digital Population';
-                $header->desc = 'Target Audience as a percent of the Digital Population based on internet penetration in the country.';
-	            break;
-            case Model_Presence::METRIC_POPULARITY_PERCENT:
-                $header->desc = 'Percent of target audience shows the current audience as a percentage against the target audience.';
-                break;
-            case Model_Presence::METRIC_POPULARITY_TIME:
-                $header->desc = 'Time to target audience shows the calculated time it will take to reach the target audience given the current trend in gains of followers / fans per day.';
-                break;
-            case Model_Presence::METRIC_POSTS_PER_DAY:
-                $header->desc = 'Actions per day measures the average number of posts, comments and other actions per day.';
-                break;
-            case Model_Presence::METRIC_RESPONSE_TIME:
-                $header->desc = 'Response time measures the average time it takes to reply to a post or tweet';
-                break;
-            case 'presences':
-                $header->title = 'Presences';
-                break;
-            case 'options':
-				$header->sort = null;
-                $header->width = '100px';
-                break;
-            case 'compare':
-                $header->sort = 'checkbox';
-                $header->title = '<span class="icon-check"></span>';
-                $header->desc = 'Select all the presences that you would like to compare, and then click on the Compare Button above';
-                break;
-            case 'handle':
-                $header->title = 'Handle';
-                break;
-            case 'sign-off':
-                $header->sort = 'data-value-numeric';
-                $header->title = 'Sign-Off';
-                $header->desc = 'Sign Off shows whether a presence has been signed off by the Head of Digital.';
-                break;
-            case 'branding':
-                $header->sort = 'data-value-numeric';
-                $header->title = 'Branding';
-                $header->desc = 'Branding shows whether a presence meets the British Council branding guidelines for social media presences.';
-                break;
-            default:
-                return null;
-        }
-        return $header;
-    }
-
     /**
      * @return Header_Abstract[]
      */
@@ -253,7 +147,11 @@ abstract class GraphingController extends BaseController {
      */
     public function badgeInformation($badgeData, $badge)
 	{
-		$score = round($badgeData[$badge->getName()]);
+        if ($badgeData) {
+    		$score = round($badgeData[$badge::getName()]);
+        } else {
+            $score = 0;
+        }
 
 		$colors = $this->view->geochartMetrics[$badge->getName()];
 		$color = $colors->colors[0];
@@ -264,11 +162,18 @@ abstract class GraphingController extends BaseController {
 		}
 
 		$badgeArr = array();
-		$badgeArr["title"] = $badge->getTitle();
-		$badgeArr["rank"] = array(
-			"value" => $badgeData[$badge->getName()."_rank"], //get rank for badge
-			"denominator" => $badgeData['denominator'] //get count of $model type
-		);
+		$badgeArr["title"] = $badge::getTitle();
+        if ($badgeData) {
+            $badgeArr["rank"] = array(
+                "value" => $badgeData[$badge::getName()."_rank"], //get rank for badge
+                "denominator" => $badgeData['denominator'] //get count of $model type
+            );
+        } else {
+            $badgeArr["rank"] = array(
+                "value" => '?',
+                "denominator" => '?'
+            );
+        }
 		$badgeArr['score'] = array(
 			"value"	=> $score, //get score badge
 			"color" => $color //get colour for this score

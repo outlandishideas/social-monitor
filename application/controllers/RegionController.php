@@ -231,22 +231,6 @@ class RegionController extends CampaignController
 		$this->_helper->redirector->gotoSimple('index');
 	}
 
-    /**
-     * Gets all of the graph data for the requested presence
-     */
-    public function badgeDataAction()
-    {
-        Zend_Session::writeClose(); // release session on long running actions
-
-	    /** @var Model_Region $region */
-        $region = Model_Region::fetchById($this->_request->getParam('id'));
-
-        $response = $region->badges();
-
-        $this->apiSuccess($response);
-
-    }
-
 	public function downloadAction() {
         $csvData = Util_Csv::generateCsvData(Model_Region::fetchAll(), $this->tableIndexHeaders());
         Util_Csv::outputCsv($csvData, 'regions');

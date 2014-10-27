@@ -11,9 +11,13 @@ class Badge_Reach extends Badge_Abstract
 					<li>Average number of shares / retweets for each post / tweet</li>
 				</ul>';
 
-	public $metrics = array(
-		"Metric_Popularity",
-		"Metric_PopularityTime"
-	);
+    public function __construct(PDO $db = null)
+    {
+        parent::__construct($db);
+        $this->metrics = array(
+            Metric_Popularity::getInstance(),
+            Metric_PopularityTime::getInstance()
+        );
+    }
 
 }

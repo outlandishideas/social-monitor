@@ -217,10 +217,6 @@ app.init = {
 			app.newCharts.setup();
 		},
 
-        '#badges': function($item) {
-            app.badges.setup();
-        },
-
         '#map': function($item) {
             app.geochart.setup($item);
         },

@@ -249,21 +249,6 @@ class GroupController extends CampaignController {
 		$this->_helper->redirector->gotoSimple('index');
 	}
 
-    /**
-     * Gets all of the graph data for the requested presence
-     */
-    public function badgeDataAction() {
-        Zend_Session::writeClose(); // release session on long running actions
-
-	    /** @var Model_Group $group */
-        $group = Model_Group::fetchById($this->_request->getParam('id'));
-
-        $response = $group->badges();
-
-        $this->apiSuccess($response);
-
-    }
-
 	public function downloadAction() {
         $csvData = Util_Csv::generateCsvData(Model_Group::fetchAll(), $this->tableIndexHeaders());
         Util_Csv::outputCsv($csvData, 'SBUs');

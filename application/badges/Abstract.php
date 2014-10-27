@@ -82,7 +82,6 @@ abstract class Badge_Abstract
 		if (count($this->metricsWeighting) == 0) {
 			$metrics = array();
 			foreach($this->getMetrics() as $metric){
-                /** @var Metric_Abstract $metric */
                 $metricName = $metric::getName();
                 //get weight from database, if it exists
                 $weight = floatval(BaseController::getOption($metricName . '_weighting'));
@@ -199,4 +198,8 @@ abstract class Badge_Abstract
 		}
 		return $color;
 	}
+
+    static function getInstance() {
+        return Badge_Factory::getBadge(self::getName());
+    }
 }

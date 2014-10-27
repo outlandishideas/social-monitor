@@ -173,20 +173,6 @@ class PresenceController extends GraphingController
 		$this->_helper->redirector->gotoSimple('index');
 	}
 
-    /**
-     * Gets all of the graph data for the requested presence
-     */
-    public function badgeDataAction() {
-        Zend_Session::writeClose(); // release session on long running actions
-
-	    /** @var Model_Presence $presence */
-        $presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
-
-        $response = $presence->badges();
-
-        $this->apiSuccess($response);
-    }
-
 	/**
 	 * Gets all of the graph data for the requested presence
 	 */

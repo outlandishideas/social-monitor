@@ -12,10 +12,14 @@ class Badge_Engagement extends Badge_Abstract
 							<li>The Facebook Engagement score for this presence (Facebook Only).</li>
 						</ul>';
 
-	protected $metrics = array(
-		"Metric_Klout",
-		"Metric_FBEngagement",
-		"Metric_ResponseTime",
-		"Metric_ResponseRatio"
-	);
+    public function __construct(PDO $db = null)
+    {
+        parent::__construct($db);
+        $this->metrics = array(
+            Metric_Klout::getInstance(),
+            Metric_FBEngagement::getInstance(),
+            Metric_ResponseTime::getInstance(),
+            Metric_ResponseRatio::getInstance()
+        );
+    }
 }

@@ -84,7 +84,17 @@
                 /** @var Model_Group $group */
                 foreach($this->groups as $group):
                     $badges = $group->getBadges();
-                    $presences = $group->getPresences(); ?>
+                    $presenceGroups = array();
+                    foreach(NewModel_PresenceType::enumValues() as $type) {
+                        $typePresences = $group->getPresencesByType($type);
+                        if (count($typePresences) > 0) {
+                            $presenceGroups[] = array(
+                                'type' => $type,
+                                'presences' => $typePresences
+                            );
+                        }
+                    }
+                ?>
                     <div class="small-24 large-8 columns">
                         <div class="badge-small"
                              data-total="<?php echo round($badges['total']); ?>"
@@ -95,7 +105,7 @@
                              data-reach-color="<?php echo $badges['reach_color']; ?>"
                              data-engagement-color="<?php echo $badges['engagement_color']; ?>"
                              data-quality-color="<?php echo $badges['quality_color']; ?>">
-                            <h3><?php echo $group->display_name; ?></h3>
+                            <h3><a href="<?php echo $this->url(array('controller'=>'group', 'action'=>'view', 'id'=>$group->id)); ?>"><?php echo $group->display_name; ?></a></h3>
                             <div class="badge-score bd-btm">
                                 <h4><span data-badge-title></span> Score</h4>
                                 <div class="score-value" data-badge-score></div>
@@ -107,28 +117,27 @@
                                 <ul class="small-block-grid-3">
                                     <li>
                                         <h4>Presences</h4>
-                                        <div class="score-value"><?php echo count($presences) ?></div>
+                                        <div class="score-value"><?php echo count($group->getPresences()) ?></div>
                                     </li>
-                                    <?php
-                                    foreach(NewModel_PresenceType::enumValues() as $type):
-                                        /** @var NewModel_PresenceType $type */
-                                        $count = count($group->getPresencesByType($type));
-                                        if($count < 1) continue; ?>
+                                    <?php foreach ($presenceGroups as $pg) : $type = $pg['type']; /** @var $type NewModel_PresenceType */?>
                                         <li>
-                                            <a href="#<?php echo $type; ?>">
+                                            <a href="#<?php echo $type->getValue(); ?>">
                                                 <h4><?php echo $type->getTitle(); ?></h4>
-                                                <div class="score-value"><?php echo $count; ?></div>
+                                                <div class="score-value"><?php echo count($pg['presences']); ?></div>
                                             </a>
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
                             <div class="hide-for-small-down">
-                                <?php foreach(NewModel_PresenceType::enumValues() as $type):
-                                    /** @var NewModel_PresenceType $type */ ?>
-                                    <ul class="badge-presences" data-<?php echo $type; ?>-presences>
-                                        <?php foreach($group->getPresencesByType($type) as $presence): ?>
-                                            <li><span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getHandle(); ?></li>
+                                <?php foreach ($presenceGroups as $pg) : $type = $pg['type']; /** @var $type NewModel_PresenceType */ ?>
+                                    <ul class="badge-presences" data-<?php echo $type->getValue(); ?>-presences>
+                                        <?php foreach($pg['presences'] as $presence) : /** @var $presence NewModel_Presence */ ?>
+                                            <li>
+                                                <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
+                                                    <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getHandle(); ?>
+                                                </a>
+                                            </li>
                                         <?php endforeach; ?>
                                     </ul>
                                 <?php endforeach; ?>
@@ -142,10 +151,10 @@
 <?php endif; ?>
 
 <div id="badge-titles"
-     data-total-title="<?php echo $this->badges['total']->getTitle(); ?>"
-     data-quality-title="<?php echo $this->badges['quality']->getTitle(); ?>"
-     data-reach-title="<?php echo $this->badges['reach']->getTitle(); ?>"
-     data-engagement-title="<?php echo $this->badges['engagement']->getTitle(); ?>"></div>
+     <?php foreach ($this->badges as $name=>$badge) : ?>
+     data-<?php echo $name; ?>-title="<?php echo $badge->getTitle(); ?>"
+     <?php endforeach; ?>
+    ></div>
 
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>

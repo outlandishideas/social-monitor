@@ -18,11 +18,13 @@ abstract class Chart_Badge extends Chart_Compare {
     {
         $presenceIds = $this->getPresenceIdsFromData($data);
 
-        $presences = NewModel_PresenceFactory::getPresencesById($presenceIds);
-
         $names = array();
-        foreach ($presences as $p) {
-            $names[$p->getId()] = $p->getName();
+        if ($presenceIds) {
+            $presences = NewModel_PresenceFactory::getPresencesById($presenceIds);
+
+            foreach ($presences as $p) {
+                $names[$p->getId()] = $p->getName();
+            }
         }
         return $names;
     }

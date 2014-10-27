@@ -14,7 +14,7 @@ $presences = $country->getPresences();
      data-reach-color="<?php echo $badges['reach_color']; ?>"
      data-engagement-color="<?php echo $badges['engagement_color']; ?>"
      data-quality-color="<?php echo $badges['quality_color']; ?>">
-    <h3><?php echo $country->display_name; ?></h3>
+    <h3><a href="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$country->id)); ?>"><?php echo $country->display_name; ?></a></h3>
     <div class="badge-score bd-btm">
         <h4><span data-badge-title></span> Score</h4>
         <div class="score-value" data-badge-score></div>
@@ -32,7 +32,9 @@ $presences = $country->getPresences();
                 <ul class="badge-presences">
                     <?php foreach($typePresences as $presence): ?>
                     <li>
-                        <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getName(); ?>
+                        <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
+                            <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getName(); ?>
+                        </a>
                     </li>
                     <?php endforeach; ?>
                 </ul>

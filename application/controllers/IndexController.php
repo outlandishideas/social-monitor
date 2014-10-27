@@ -2,7 +2,7 @@
 
 class IndexController extends GraphingController
 {
-	protected static $publicActions = array('index', 'campaign-stats', 'build-badge-data');
+	protected static $publicActions = array('index', 'build-badge-data');
 
 	public function indexAction()
 	{
@@ -11,18 +11,6 @@ class IndexController extends GraphingController
 		$old = clone $now;
 		$old->modify("-$dayRange days");
 
-		//$allBadgeTypes = Model_Badge::$ALL_BADGE_TYPES;
-		$allBadgeTypes = Badge_Factory::getClassNames();
-		/** @var Zend_View_Helper_TrafficLight $trafficLight */
-		$trafficLight = $this->view->trafficLight();
-
-		$metrics = array();
-		$descriptions = array();
-		foreach ($allBadgeTypes as $type) {
-			//$metrics[$type] = Model_Badge::badgeTitle($type);
-			$metrics[$type] = $type::getTitle();
-			$descriptions[$type::getName()] = $type::getDescription();
-		}
 		$this->view->title = 'British Council Social Media Monitor';
 		$this->view->titleIcon = 'icon-home';
 		$this->view->countries = Model_Country::fetchAll();
@@ -32,7 +20,9 @@ class IndexController extends GraphingController
 		$smallCountries = array();
 		foreach(Model_Country::smallCountryCodes() as $code => $country) {
 			$smallCountry = Model_Country::fetchByCountryCode($code);
-			if($smallCountry) $smallCountries[] = $smallCountry;
+			if($smallCountry) {
+                $smallCountries[] = $smallCountry;
+            }
 		}
 
 		$this->view->mapData = $mapData;
@@ -41,7 +31,6 @@ class IndexController extends GraphingController
 		$this->view->dateRangeString = $old->format('d M Y') . ' - ' . $now->format('d M Y');
 		$this->view->currentDate = $now->format('Y-m-d');
 		$this->view->dayRange = $dayRange;
-        $this->view->badgeDescriptions = $descriptions;
 		$this->view->badges = Badge_Factory::getBadges();
 		$this->view->smallCountries = $smallCountries;
 		$this->view->groups = Model_Group::fetchAll();
@@ -57,42 +46,6 @@ class IndexController extends GraphingController
 		} else {
 			$this->apiError('Invalid date range');
 		}
-	}
-
-	public function campaignStatsAction()
-	{
-		$model = $this->_request->getParam('model');
-		$id = $this->_request->getParam('id');
-		/** @var Model_Campaign $campaign */
-		switch ($model) {
-			case 'group':
-	            $campaign = Model_Group::fetchById($id);
-				break;
-			case 'region':
-				$campaign = Model_Region::fetchById($id);
-				break;
-			case 'country':
-			default:
-	            $campaign = Model_Country::fetchById($id);
-				break;
-        }
-
-		if ($campaign) {
-			$date = new DateTime();
-			$badgeData = array();
-			foreach ($campaign->getPresences() as $presence) {
-				$badgeData[$presence->id] = $presence->badges(false);
-			}
-
-			$this->view->campaign = $campaign;
-			$this->view->metric = $this->_request->getParam('metric');
-			$this->view->badgeData = $badgeData;
-			$this->view->date = $date;
-            $this->view->model = $model;
-		} else {
-			$this->_helper->viewRenderer->setNoRender(true);
-		}
-		$this->_helper->layout()->disableLayout();
 	}
 
 	public function downloadimageAction()
@@ -125,7 +78,6 @@ class IndexController extends GraphingController
 	}
 
 	protected function getCacheableData($dayRange, $temp) {
-		//$allBadgeTypes = Model_Badge::$ALL_BADGE_TYPES;
 		$allBadgeTypes = Badge_Factory::getBadgeNames();
 		/** @var Zend_View_Helper_TrafficLight $trafficLight */
 		$trafficLight = $this->view->trafficLight();
@@ -134,7 +86,6 @@ class IndexController extends GraphingController
 		$badgeData = self::getObjectCache($key, $temp);
 		if(!$badgeData){
 			//todo include week data in the data that we send out as json
-			//$badgeData = Model_Badge::getAllCurrentData('month', new DateTime("now -$dayRange days"), new DateTime('now'));
 			$badgeData = Badge_Factory::getAllCurrentData(
 				Badge_Period::MONTH(),
 				new \DateTime("now -$dayRange days"),
@@ -155,14 +106,15 @@ class IndexController extends GraphingController
 
 			// construct a set of data for a country that has no presence
 			$blankBadges = new stdClass();
-			foreach (reset($mapData)->b as $badgeType=>$dayData) {
+			foreach ($allBadgeTypes as $badgeType) {
 				$blankBadges->{$badgeType} = array();
-				foreach ($dayData as $day=>$value) {
+				for ($day = 1; $day <= $dayRange; $day++) {
 					$blankBadges->{$badgeType}[$day] = (object)array('s'=>0,'l'=>'N/A');
 				}
 			}
 
-			foreach(array_diff_key(Model_Country::countryCodes(), $existingCountries) as $code => $name){
+            $missingCountries = array_diff_key(Model_Country::countryCodes(), $existingCountries);
+			foreach($missingCountries as $code => $name){
 				$mapData[] = (object)array(
 					'id'=>-1,
 					'c' => $code,
@@ -227,11 +179,10 @@ class IndexController extends GraphingController
         if(!$oldData) {
             //if no oldData (too old or temp) get current data (which is now up to date) and set it in the object cache
             $data = Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), new DateTime(), new DateTime());
-	        //$data = Model_Badge::calculateTotalScoresAndRanks($data);
             self::setObjectCache($key, $data, false);
         }
 
-//		Model_Badge::getAllData('week', $start, $end); //todo: uncomment this when it is needed
+//		Badge_Factory::getAllCurrentData(Badge_Period::WEEK(), new DateTime(), new DateTime()); //todo: uncomment this when it is needed
 		exit;
 
 	}
