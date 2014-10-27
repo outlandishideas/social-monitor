@@ -1,20 +1,28 @@
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button" href="%url%"><span class="icon-eye-open icon-large"></span> View Region</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$this->editingRegion->id),
-	'<a class="button" href="%url%"><span class="icon-tasks icon-large"></span> Manage Countries</a>' => array('controller'=>'region', 'action'=>'manage', 'id'=>$this->editingRegion->id),
-    '<a href="%url%" class="button remove"><span class="icon-remove icon-large"></span> Delete</a>' => array('controller'=>'region', 'action'=>'delete', 'id'=>$this->editingRegion->id)
+	'<a class="button-bc" href="%url%"><span class="icon-eye-open icon-large"></span> View Region</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$this->editingRegion->id),
+	'<a class="button-bc" href="%url%"><span class="icon-tasks icon-large"></span> Manage Countries</a>' => array('controller'=>'region', 'action'=>'manage', 'id'=>$this->editingRegion->id),
+    '<a href="%url%" class="button-bc remove"><span class="icon-remove icon-large"></span> Delete</a>' => array('controller'=>'region', 'action'=>'delete', 'id'=>$this->editingRegion->id)
 ));
 if ($buttons && $this->showButtons) :
 ?>
-<p>
-	<?php echo implode('', $buttons); ?>
-</p>
+    <div class="button-bc-bar">
+        <div class="row bk-dark">
+            <div class="small-24 large-centered columns">
+                <ul class="button-group">
+                    <?php foreach($buttons as $button): ?>
+                        <li><?php echo $button; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+    </div>
 <?php endif; ?>
 
 <form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-region">
 
 	<fieldset class="inlineLabels">
-		<legend>Region details</legend>
+		<h2 class="page-title">Region details</h2>
         <div class="ctrlHolder">
             <label for="display_name" class="requiredField">
                 Display name<span class="asteriskField">*</span>
@@ -33,7 +41,7 @@ if ($buttons && $this->showButtons) :
 
     <?php if(!empty($this->presences)) : ?>
     <fieldset class="inlineLabels">
-        <legend>Presence details</legend>
+        <h2 class="page-title">Presence details</h2>
         <div class="ctrlHolder">
             <p>These presences will be automatically added to this region:</p>
             <ul id="added-presences">
@@ -49,9 +57,15 @@ if ($buttons && $this->showButtons) :
 
     <input name="campaign_type" value="<?php echo Model_Region::$campaignType; ?>" type="hidden" id="campaign_type">
 
-	<div class="buttonHolder">
-		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true); ?>
-		<input type="submit" value="Save" class="primaryAction">
-	</div>
+    <div class="button-bc-bar">
+        <div class="row bk-dark">
+            <div class="small-24 large-centered columns">
+                <ul class="button-group">
+                        <li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true); ?></li>
+                        <li><input type="submit" value="Save" class="primaryAction button-bc"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </form>
 

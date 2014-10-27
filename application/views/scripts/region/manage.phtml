@@ -7,9 +7,15 @@
 		));
 	?>
 
-	<div class="buttonHolder">
-		<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true); ?>
-		<input type="submit" value="Save" class="primaryAction">
-	</div>
+	<div class="button-bc-bar">
+        <div class="row bk-dark">
+            <div class="small-24 large-centered columns">
+                <ul class="button-group">
+                        <li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true); ?></li>
+                        <li><input type="submit" value="Save" class="primaryAction button-bc"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </form>
 

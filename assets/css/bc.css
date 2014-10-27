@@ -1743,6 +1743,7 @@ table .cell-options .button-bc {
 .button-bc-bar .button-group {
 	margin: 1rem 0;
 	text-align: center;
+	width: 100%;
 }
 
 .button-bc-bar .button-group > li {
