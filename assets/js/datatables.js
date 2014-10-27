@@ -133,10 +133,13 @@ app.datatables = {
 				bScrollCollapse: true,
 				bFilter: true,
 				bInfo: false,
-				aoColumns: app.datatables.generateColumns($table)
+				aoColumns: app.datatables.generateColumns($table),
+				oLanguage: {
+					sSearch: ''
+				}
 			});
 
-			$('div.dataTables_filter').appendTo($('#search-table'));
+			app.datatables.moveSearchBox();
 		},
 		'table#domains': function($table) {
 			var args = {
@@ -186,7 +189,7 @@ app.datatables = {
 				.dataTable($.extend({}, app.datatables.serverSideArgs(), args))
 				.fnSetFilteringDelay(250);
 
-			$('div.dataTables_filter').appendTo($('#search-table'));
+			app.datatables.moveSearchBox();
 		},
 		'#statuses .facebook': function($div) {
 			var args = {
@@ -322,9 +325,14 @@ app.datatables = {
 				.fnSetFilteringDelay(250);
 		}
 	},
+	moveSearchBox: function() {
+		var $filter = $('div.dataTables_filter');
+		$filter.find('input').first().attr('placeholder', 'Search');
+		$filter.appendTo($('#search-table'));
+	},
 	generateLanguage: function(type) {
 		return {
-			sSearch:'Search ' + type + 's:',
+			sSearch:'',
 			sEmptyTable:'No ' + type + 's found',
 			sZeroRecords:'No matching ' + type + 's',
 			sInfo:'Showing ' + type + 's: _START_ to _END_',
