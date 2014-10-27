@@ -2,7 +2,7 @@
  * Created by outlander on 16/10/2014.
  */
 
-var app = app || {}
+var app = app || {};
 
 app.home = {
     setup: function(){
@@ -12,14 +12,6 @@ app.home = {
                 event.preventDefault();
                 var id = $(this).parent('li').data('id');
                 app.geochart.loadCampaignStats(id);
-            });
-
-        $('.badge-buttons')
-            .on('click', 'li a', function(event){
-                event.preventDefault();
-                window.location.hash = $(this).attr('href');
-                app.home.update();
-                app.geochart.refreshMap();
             });
 
         $('.badge-presences-buttons')
@@ -47,27 +39,28 @@ app.home = {
         }
         $badgeDescriptions.css('height', height);
 
-        app.home.update()
+	    var $homepageTabs = $('#homepage-tabs');
+	    $homepageTabs.on('click', 'a', function(e) {
+		    app.home.setActiveTab($(this).closest('dd'));
+	    });
+
+	    var badge = window.location.hash.replace("#", "");
+	    if(!badge){
+		    badge = "total";
+	    }
+	    $homepageTabs.find('a[href="#' + badge + '"]').trigger('click');
     },
     currentBadge: function(){
-        var badge = window.location.hash.replace("#", "");
-        if(!badge){
-            badge = "total";
-        }
-        return badge;
+	    return $('#homepage-tabs').find('.active').data('badge');
     },
-    update: function(){
-        var badge = app.home.currentBadge();
+    setActiveTab: function($tab){
+	    var badge = $tab.data('badge');
 
-        //activate badge buttons
-        $('.badge-buttons')
-            .find('li a').removeClass('active')
-            .filter('[href="#'+ badge +'"]').addClass('active');
+        $('#homepage-tabs').find('dd').removeClass('active');
+	    $tab.addClass('active');
 
         //updating badge Titles
-        var $badgeTitles = $('#badge-titles');
-        var badgeTitle = $badgeTitles.data(badge + '-title');
-        $('[data-badge-title]').text(badgeTitle);
+        $('[data-badge-title]').text($tab.data('title'));
 
         //show descriptions
         $('.badge-description').hide().filter('[data-badge-description="' + badge + '"]').show();
@@ -86,5 +79,7 @@ app.home = {
             }
 
         });
+        app.geochart.refreshMap();
     }
 }
+;

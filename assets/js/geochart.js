@@ -144,6 +144,9 @@ app.geochart = {
 	 * Changes the view of the data used by the geochart
 	 */
 	refreshMap:function () {
+		if (!app.geochart.map) {
+			return; // setup has not been called yet
+		}
 		var metric = app.geochart.metrics[app.home.currentBadge()];
 		var day = app.geochart.currentDay();
 		app.geochart.map.options.colorAxis.values = metric.range;

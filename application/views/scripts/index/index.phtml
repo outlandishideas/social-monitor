@@ -13,21 +13,18 @@
     </div>
 </div>
 
-<div class="button-bc-bar">
-    <div class="row">
-        <div class="small-24 columns">
-            <ul class="button-group stack-for-small badge-buttons">
-                <?php
-                /** @var Badge_Abstract $badge */
-                foreach($this->badges as $badge): ?>
-                    <li><a href="#<?php echo $badge->getName(); ?>" class="button-bc"><?php echo $badge->getTitle(); ?></a></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
+<div class="row">
+    <div class="small-24 columns">
+        <dl class="tabs" id="homepage-tabs">
+            <?php foreach($this->badges as $badge) : /** @var $badge Badge_Abstract */?>
+                <dd data-badge="<?php echo $badge->getName(); ?>" data-title="<?php echo $badge->getTitle(); ?>">
+                    <a href="#<?php echo $badge->getName(); ?>"><?php echo $badge->getTitle(); ?></a>
+                </dd>
+            <?php endforeach; ?>
+        </dl>
     </div>
 </div>
 
-<h2 data-badge-title></h2>
 <div class="row">
     <div class="small-24 large-5 columns hide-for-small-down">
         <div class="row">
@@ -149,12 +146,6 @@
         </div>
     </div>
 <?php endif; ?>
-
-<div id="badge-titles"
-     <?php foreach ($this->badges as $name=>$badge) : ?>
-     data-<?php echo $name; ?>-title="<?php echo $badge->getTitle(); ?>"
-     <?php endforeach; ?>
-    ></div>
 
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>

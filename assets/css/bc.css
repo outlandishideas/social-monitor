@@ -2110,14 +2110,25 @@ td.countries a {
 
 
 /* tabs on right-hand-side of presence/campaign page */
-#model-tabs {
+#model-tabs,
+#homepage-tabs {
 	border-bottom: 1px solid #fff;
 	margin-bottom: 10px !important;
 }
-#model-tabs dd {
+#homepage-tabs {
+	/* todo */
+	text-align: center;
+}
+#model-tabs dd,
+#homepage-tabs dd {
 	margin-bottom: -3px !important;
 }
-#model-tabs dd a {
+#homepage-tabs dd {
+	display: inline-block;
+	float: none;
+}
+#model-tabs dd a,
+#homepage-tabs dd a {
 	background: none;
 	color: #fff;
 	text-transform: uppercase;
@@ -2126,13 +2137,20 @@ td.countries a {
 	padding: 35px 0 10px;
 	width: 100px;
 	text-align: center;
+	border-bottom: 5px solid transparent;
+}
+#homepage-tabs dd a {
+	width: 150px;
 }
 #model-tabs dd a:hover,
-#model-tabs dd.active a {
-	border-bottom: 5px solid #2ba6cb;
+#model-tabs dd.active a,
+#homepage-tabs dd a:hover,
+#homepage-tabs dd.active a {
+	border-bottom-color: #2ba6cb;
 	opacity: 1;
 }
-#model-tabs dd.active a {
+#model-tabs dd.active a,
+#homepage-tabs dd.active a {
 	font-weight: bold;
 }
 

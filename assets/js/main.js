@@ -119,7 +119,7 @@ app.init = {
 			$item.uniform();
 		},
 
-		'#badge-titles': function ($item) {
+		'#homepage-tabs': function ($item) {
 			app.home.setup()
 		},
 
