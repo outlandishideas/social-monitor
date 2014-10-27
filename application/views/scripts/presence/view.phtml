@@ -10,7 +10,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
 		<?php //echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
 
         <div class="model-header bd-btm">
-            <span class="page-icon fa-lg fa-fw <?php echo $this->presence->getPresenceSign(); ?>"></span>
+            <a href="<?php echo $this->presence->page_url; ?>" target="_blank"><span class="page-icon <?php echo $this->presence->getPresenceSign(); ?>"></span></a>
             <div class="picker">
                 <label for="presence-switcher">Presence:</label>
                 <select id="presence-switcher" data-url-template="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>'the_id')); ?>">
