@@ -4,7 +4,7 @@
         <?php //echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
 
         <div class="model-header bd-btm">
-            <span class="icon-large <?php echo $this->titleIcon; ?>"></span>
+            <span class="page-icon icon-large <?php echo $this->titleIcon; ?>"></span>
             <div class="picker">
                 <label for="campaign-switcher"><?php echo $this->campaignType; ?>:</label>
                 <select id="campaign-switcher" data-url-template="<?php echo $this->url(array('controller'=>$this->controllerName, 'action'=>'view', 'id'=>'the_id')); ?>">

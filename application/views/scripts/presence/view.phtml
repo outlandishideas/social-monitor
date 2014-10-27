@@ -4,14 +4,26 @@ $buttons = $this->gatekeeper()->filterAll(array(
 ));
 ?>
 
-<h2 class="page-title"><span class="<?php echo $this->presence->getPresenceSign(); ?> fa-lg fa-fw"></span> <?php echo $this->presence->getName(); ?></h2>
-
 <div class="row">
 	<div class="small-24 large-12 xlarge-8 columns">
 
 		<?php //echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
 
-
+        <div class="model-header bd-btm">
+            <span class="page-icon fa-lg fa-fw <?php echo $this->presence->getPresenceSign(); ?>"></span>
+            <div class="picker">
+                <label for="presence-switcher">Presence:</label>
+                <select id="presence-switcher" data-url-template="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>'the_id')); ?>">
+                    <?php foreach ($this->allPresences as $type=>$presences) : ?>
+                        <optgroup label="<?php echo $type; ?>">
+                            <?php foreach ($presences as $p) : ?>
+                            <option value="<?php echo $p->id; ?>" <?php if ($p->id == $this->presence->id) { echo 'selected'; } ?>><?php echo $p->handle; ?></option>
+                            <?php endforeach; ?>
+                        </optgroup>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
 
 		<?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial)); ?>
 
