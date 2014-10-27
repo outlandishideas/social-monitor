@@ -2,7 +2,7 @@
 
 class Model_Region extends Model_Campaign {
 
-    const ICON_TYPE = 'icon-compass';
+    const ICON_TYPE = 'icon-globe';
 
 	public static $campaignType = '2';
 

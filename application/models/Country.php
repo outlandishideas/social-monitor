@@ -2,7 +2,7 @@
 
 class Model_Country extends Model_Campaign {
 
-	const ICON_TYPE = 'icon-globe';
+	const ICON_TYPE = 'icon-flag';
 
 	public static $campaignType = '1';
 

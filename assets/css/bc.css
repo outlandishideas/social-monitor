@@ -1665,8 +1665,17 @@ h4 {
     vertical-align: top;
 }
 
-.picker.model-header {
+.model-header .icon-large {
+	float: left;
+	font-size: 2rem;
+	margin-top: 16px;
+	width: 50px;
+	text-align: center;
+}
+.model-header .picker {
 	display: block;
+	padding-left: 55px;
+	clear: none;
 }
 
 .picker label {
@@ -1779,6 +1788,9 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 #new-chart .c3-tooltip-container table td {
 	color: #000;
 	text-align: left;
+}
+#new-chart .c3-legend-item text {
+	fill: #fff;
 }
 
 .fa.fa-twitter {
