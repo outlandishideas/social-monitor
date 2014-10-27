@@ -23,14 +23,6 @@ class Model_Presence extends Model_Base {
     const METRIC_FB_ENGAGEMENT = 'fb_engagement_score';
     const METRIC_RELEVANCE = 'relevance';
 
-	public static $ALL_METRICS = array(
-		self::METRIC_POPULARITY_PERCENT,
-		self::METRIC_POPULARITY_TIME,
-		self::METRIC_POPULARITY_RATE,
-		self::METRIC_POSTS_PER_DAY,
-		self::METRIC_RESPONSE_TIME,
-	);
-
 	public static $bucketSizes = array(
 		'bucket_half_hour' => 1800, // 30*60
 		'bucket_4_hours' => 14400, // 4*60*60

@@ -185,15 +185,19 @@ abstract class Badge_Abstract
 			'yellow' => '#FFFF50'
 		);
 
-		$badges = array(
-			'range' => array(0, 1, 20, 50, 80, 100),
-			'colors' => array($colors['grey'], $colors['red'], $colors['red'], $colors['yellow'], $colors['green'], $colors['green'])
-		);
+        $map = array(
+            0 => $colors['grey'],
+            1 => $colors['red'],
+            20 => $colors['red'],
+            50 => $colors['yellow'],
+            80 => $colors['green'],
+            100 => $colors['green']
+        );
 
-		$color = $badges['colors'][0];
-		foreach($badges['range'] as $i => $range){
-			if($score >= $range) {
-                $color = $badges['colors'][$i];
+		$color = $map[0];
+		foreach($map as $min => $c){
+			if($score >= $min) {
+                $color = $c;
             }
 		}
 		return $color;
