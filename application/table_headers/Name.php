@@ -18,6 +18,11 @@ class Header_Name extends Header_Abstract {
      */
     public function getValue($model = null)
     {
+        if ($model instanceof Model_Country) {
+            $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
+            $imageUrl = $baseUrl.'/assets/img/flags/'.$model->getCountryCode().'.png';
+            return '<span class="flag"><img src="'.$imageUrl.'" /></span> '.$model->display_name;
+        }
         return $model->display_name;
     }
 

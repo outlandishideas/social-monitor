@@ -2084,3 +2084,8 @@ td.countries a {
 	background-color: #0a3542;
 	background-position: right top;
 }
+
+.dataTable th {
+	font-weight: normal;
+	text-transform: uppercase;
+}
