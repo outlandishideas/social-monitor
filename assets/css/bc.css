@@ -1558,6 +1558,10 @@ h4 {
 	display: none;
 }
 
+.badge-rank h3,
+.badge-score h3 {
+	border-bottom: none;
+}
 .rank-value,
 .score-value {
 	font-size: 4rem;
@@ -1681,6 +1685,10 @@ h4 {
     outline: none;
 }
 
+
+.chart-description {
+	margin-top: 10px;
+}
 
 #chart-picker {
     min-width: 221px;

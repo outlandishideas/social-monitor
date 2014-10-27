@@ -34,6 +34,7 @@ class GroupController extends CampaignController {
 		$this->view->chartOptions = self::chartOptions();
 		$this->view->tableMetrics = self::tableMetrics();
         $this->view->group = $group;
+        $this->view->title = 'SBU: ' . $group->display_name;
 	}
 
     /**

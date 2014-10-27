@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: Matthew
- * Date: 05/06/13
- * Time: 12:36
- * To change this template use File | Settings | File Templates.
- */
 
 $locale = 'en_US';
 $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
@@ -14,7 +7,7 @@ $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
 
 <div class="badges">
     <div class="badge-main bd-btm">
-        <?php $badge = $this->badges['main']; //echo $this->partial('partials/badge.phtml', array('badge' => $this->badges['main'])) ;?>
+        <?php $badge = $this->badges['main']; ?>
         <h2 class="bd-btm"><?php echo $badge['title']; ?></h2>
         <div class="row">
             <div class="small-24 medium-12 columns">
@@ -44,7 +37,6 @@ $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
         <?php foreach($this->badges['small'] as $badge) : ?>
             <div class="small-24 medium-8 columns">
                 <div class="badge-small">
-                    <?php //echo $this->partial('partials/badge.phtml', array('badge' => $badge)) ;?>
                     <h2 class="bd-btm"><?php echo $badge['title']; ?></h2>
 
                     <div class="badge-rank bd-btm">

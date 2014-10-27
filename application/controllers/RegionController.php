@@ -37,13 +37,14 @@ class RegionController extends CampaignController
      */
     public function viewAction()
     {
-        /** @var Model_Country $country */
+        /** @var Model_Region $region */
         $region = Model_Region::fetchById($this->_request->getParam('id'));
         $this->validateData($region);
 
         $this->view->badgePartial = $this->badgeDetails($region->getBadges());
         $this->view->chartOptions = $this->chartOptions();
         $this->view->region = $region;
+        $this->view->title = 'Region: ' . $region->display_name;
     }
 
 	/**

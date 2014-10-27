@@ -1,44 +1,9 @@
 <?php
-$buttons = $this->gatekeeper()->filterAll(array(
-    '<a class="button" href="%url%"><span class="icon-edit icon-large"></span> Edit Region</a>' => array('action'=>'edit', 'id'=>$this->region->id),
-    '<a class="button" href="%url%"><span class="icon-tasks icon-large"></span> Manage Countries</a>' => array('action'=>'manage', 'id'=>$this->region->id)
-));
-?>
+//$buttons = $this->gatekeeper()->filterAll(array(
+//    '<a class="button" href="%url%"><span class="icon-edit icon-large"></span> Edit Region</a>' => array('action'=>'edit', 'id'=>$this->region->id),
+//    '<a class="button" href="%url%"><span class="icon-tasks icon-large"></span> Manage Countries</a>' => array('action'=>'manage', 'id'=>$this->region->id)
+//));
 
-
-
-<div class="row">
-    <div class="small-24 large-12 xlarge-8 columns">
-
-        <?php //echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
-
-        <div class="model-header bd-btm">
-            <h2><?php echo $this->region->display_name; ?></h2>
-        </div>
-
-        <?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial)); ?>
-
-    </div>
-    <div class="small-24 large-12 xlarge-16 columns">
-
-        <div class="show-for-medium-up">
-
-            <div id="pickers" class="bd-btm">
-                <?php echo $this->render('partials/chart-picker.phtml'); ?>
-                <?php echo $this->render('partials/daterange.phtml'); ?>
-            </div>
-
-            <div class="chart-description"></div>
-
-            <div id="new-chart" data-controller="region" data-id="<?php echo $this->region->id; ?>"></div>
-
-        </div>
-
-    </div>
-</div>
-
-
-
-
-
-
+$this->campaign = $this->region;
+$this->controllerName = 'region';
+echo $this->render('partials/campaign-view.phtml');
