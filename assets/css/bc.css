@@ -844,55 +844,6 @@ form.management #assigned {
     /*margin-right: 200px;*/
 }
 
-#map-sidebar {
-    width: 299px;
-    float: left;
-    padding: 0 15px 15px;
-    border: 2px solid #afd1e4;
-    background-color: #fff;
-    position: relative;
-    z-index: 990;
-}
-
-#map-sidebar .loading {
-	position: absolute;
-	top: 0;
-    bottom: 0;
-	right: 0;
-    left: 0;
-	display: none;
-    background-color: #fff;
-    background-color: rgba(255,255,255,0.8);
-}
-
-#map-sidebar .country {
-    opacity:1;
-    transition: opacity 1s ease-out;
-    -webkit-transition: opacity 5s ease-out; /* Safari */
-}
-
-#map-sidebar .desc-box.hide {
-    display: none;
-}
-
-#map-sidebar .desc-box h3 [class^="icon-"] {
-    float: right;
-    cursor: pointer;
-}
-
-#map-sidebar .desc-box.min .desc-content {
-    display: none;
-}
-
-#map-sidebar .desc-box.min h3 [class^="icon-"] {
-    float: right;
-    cursor: pointer;
-}
-
-#map-sidebar .country.hide {
-    opacity:0;
-}
-
 .close {
 	position: absolute;
     top: 6px;
@@ -903,15 +854,6 @@ form.management #assigned {
     color: #666;
 }
 
-#map-sidebar h3 {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 0 -15px 10px;
-    padding: 8px 20px;
-    background: #edf5f8;
-}
-
-#map-sidebar .country ul,
 .entity-list {
     margin: 0;
     padding: 0;
@@ -921,32 +863,6 @@ form.management #assigned {
 
 .entity-list li {
     margin: 3px 0;
-}
-
-#map-sidebar .country ul li {
-    border-top: 1px solid #ccc;
-    padding: 8px 0;
-}
-
-#map-sidebar .country ul li:first-child {
-    border-top-style: none;
-}
-
-#map-sidebar .country ul li span.icon-ok-sign,
-#map-sidebar .country ul li span.icon-remove-sign{
-    opacity: 0;
-    transition: opacity 1s ease-out;
-    -webkit-transition: opacity 1s ease-out; /* Safari */
-}
-
-#map-sidebar .country ul li:hover span.icon-ok-sign,
-#map-sidebar .country ul li:hover span.icon-remove-sign{
-    opacity: 1;
-}
-
-#map-sidebar #campaign-stats ul {
-	max-height: 500px;
-	overflow-y: auto;
 }
 
 .key {
@@ -982,22 +898,20 @@ form.management #assigned {
 
 /* Slider & Date */
 
-.map-date {
-    padding: 0 0 20px 0;
-    width: 279px;
-    position: absolute;
-    right: 50px;
-    top: -82px;
-}
-
-.map-date #date-slider {
-    margin: 0 auto;
-    display: block;
-}
-
-#slider {
+#map-date .range-slider {
     width: auto;
-    margin-top: 20px;
+    margin: 10px 0 20px;
+	height: 3px;
+	border: none;
+	background: #fff;
+}
+#map-date .range-slider .range-slider-active-segment {
+	height: 100%;
+	background: #fff;
+}
+#map-date .range-slider .range-slider-handle {
+	height: 15px;
+	top: -7px;
 }
 
 /* health box next to chart */
@@ -1360,54 +1274,6 @@ ul.tabs li.fl-right {
 	content: "<";
 }
 
-/* group display on front page */
-
-#group-map, #small-maps {
-    margin-top: 20px;
-}
-
-#group-map h3, #small-maps h3 {
-    float: left;
-    width: 70px;
-    margin: 0;
-    padding: 10px;
-    font-size: 14px;
-    font-weight: normal;
-    clear: left;
-}
-
-#group-map ul, #small-maps ul {
-    margin: 0;
-    padding: 0;
-    width: 700px;
-    text-align: left;
-}
-
-.group-display, .small-maps-display {
-    display: block;
-    float: left;
-    text-align: center;
-    padding: 10px;
-    margin: 0 5px;
-    color: #666;
-    font-size: 14px;
-    position: relative;
-    cursor: pointer;
-}
-
-.group-display .title, .small-maps-display .title {
-    color: #444;
-    z-index: 10;
-}
-
-.group-display .score, .small-maps-display .score {
-    margin-left: 10px;
-}
-
-.region-display .title, .small-maps-display .score {
-
-}
-
 @media print {
     * {
         background: transparent !important;
@@ -1509,6 +1375,10 @@ body.errorController.errorAction {
 	border-bottom: 1px solid #fff;
 }
 
+.bd-top {
+	border-top: 1px solid #fff;
+}
+
 h2 {
 	font-family: 'Open Sans', sans-serif;
 	color: #0071bc;
@@ -1546,6 +1416,12 @@ h4 {
 	margin: 0;
 	padding: 0.25rem 0;
 	text-transform: uppercase;
+}
+
+#model-tabs-content #info h4.campaign-name,
+#model-tabs-content #info h4.presence-name {
+	font-size: 1.5rem;
+	margin-bottom: 10px;
 }
 
 /* Badge CSS */
@@ -1648,8 +1524,8 @@ h4 {
 	color: #fff;
 }
 
-.badge-descriptions {
-	padding-bottom: 1rem;
+.badge-description {
+	padding-top: 10px;
 }
 
 
@@ -1659,6 +1535,10 @@ h4 {
 
 #pickers {
     text-align: right;
+}
+#pickers select,
+#pickers input {
+	margin: 0;
 }
 
 .picker + .picker {
@@ -1700,6 +1580,9 @@ h4 {
     border: 1px solid #44656f;
     background-color: #051b21;
     background-color: rgba(0,0,0,0.5);
+	background-image: url(../img/down-arrow.png);
+	background-repeat: no-repeat;
+	background-position: right center;
     color: #fff;
     font-weight: 300;
     font-family: 'Open Sans', sans-serif;
@@ -1715,11 +1598,7 @@ h4 {
     min-width: 221px;
 }
 
-#date-picker, #date-slider {
-}
-
 #chart-picker:focus,
-#date-slider:focus,
 #date-picker:focus {
     border-color: #fff;
     background-color: #051b21;
@@ -2094,4 +1973,58 @@ td.countries a {
 .dataTable th {
 	font-weight: normal;
 	text-transform: uppercase;
+}
+
+
+/* tabs on right-hand-side of presence/campaign page */
+#model-tabs,
+#homepage-tabs {
+	border-bottom: 1px solid #fff;
+	margin-bottom: 10px !important;
+}
+#homepage-tabs {
+	text-align: center;
+}
+#model-tabs dd {
+	margin-bottom: -3px !important;
+}
+#homepage-tabs dl {
+	display: inline-block;
+}
+#homepage-tabs dl:before,
+#homepage-tabs dl:after {
+	display: none;
+}
+#homepage-tabs dd {
+	margin-bottom: -8px !important;
+}
+#model-tabs dd a,
+#homepage-tabs dd a {
+	background: none;
+	color: #fff;
+	text-transform: uppercase;
+	opacity: 0.5;
+	outline: none;
+	padding: 35px 0 10px;
+	width: 100px;
+	text-align: center;
+	border-bottom: 5px solid transparent;
+}
+#homepage-tabs dd a {
+	width: 150px;
+}
+#model-tabs dd a:hover,
+#model-tabs dd.active a,
+#homepage-tabs dd a:hover,
+#homepage-tabs dd.active a {
+	border-bottom-color: #2ba6cb;
+	opacity: 1;
+}
+#model-tabs dd.active a,
+#homepage-tabs dd.active a {
+	font-weight: bold;
+}
+
+#model-tabs-content .content {
+	padding-top: 0;
 }

@@ -18,9 +18,7 @@ $.extend(app, {
 		timestamps: [],
 		unloading: false,
         barDate: [],
-        badges: [],
-        groupCharts: [],
-        smallMapsCharts: [],
+        badges: []
 	},
 	templates: {
 		legendLabel: '<div class="dataset <%=className%>" data-line-id="<%=line_id%>">\
@@ -119,7 +117,7 @@ app.init = {
 			$item.uniform();
 		},
 
-		'#badge-titles': function ($item) {
+		'#homepage-tabs': function ($item) {
 			app.home.setup()
 		},
 
@@ -216,10 +214,6 @@ app.init = {
 		'#new-chart': function($item) {
 			app.newCharts.setup();
 		},
-
-        '#map': function($item) {
-            app.geochart.setup($item);
-        },
 
 		'input#query, input#slug': function($item) {
 			//set list/search name to slug/query value when creating it
@@ -324,30 +318,6 @@ app.init = {
 				$(this).closest('.link.box').remove();
 			});
 		},
-		'#date-slider': function($sliderDate) {
-			var currentDate = Date.parse($sliderDate.data('current-date'));
-			var dayRange = parseInt($sliderDate.data('day-range'));
-			$( "#slider" ).slider({
-				value: dayRange,
-				min: 1,
-				max: dayRange,
-				step: 1,
-				slide: function( event, ui ) {
-					var days = dayRange - ui.value;
-					var now = new Date(currentDate)
-                    now.addDays(-days);
-					var then = now.clone();
-					then.addDays(-dayRange);
-					$( "#slider" ).data('val', ui.value);
-					$( "#date-slider" ).val( then.toString('dd MMM yyyy') + ' - ' + now.toString('dd MMM yyyy') );
-					app.geochart.refreshMap();
-					app.geochart.refreshCampaigns(app.state.groupCharts);
-					app.geochart.refreshCampaigns(app.state.smallMapsCharts);
-				}
-			});
-
-		},
-
 		'.entity-list-toggle': function($toggle) {
 			$toggle.on('click', function(e) {
 				e.preventDefault();

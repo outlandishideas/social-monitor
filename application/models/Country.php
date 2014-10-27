@@ -24,6 +24,16 @@ class Model_Country extends Model_Campaign {
 		return self::getNameFromCode($this->country);
 	}
 
+    /**
+     * @return Model_Region|null
+     */
+    public function getRegion() {
+        if (!$this->parent) {
+            return null;
+        }
+        return Model_Region::fetchById($this->parent);
+    }
+
 	public static function getNameFromCode($code){
 		$countries = static::countryCodes();
 		if(array_key_exists($code, $countries)){

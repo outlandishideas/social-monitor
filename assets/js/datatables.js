@@ -188,7 +188,7 @@ app.datatables = {
 
 			$('div.dataTables_filter').appendTo($('#search-table'));
 		},
-		'#statuses.facebook': function($div) {
+		'#statuses .facebook': function($div) {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + "presence/statuses",
 				fnServerParams: function(aoData) {
@@ -283,7 +283,7 @@ app.datatables = {
 					});
 			});
 		},
-		'#statuses.twitter': function($div) {
+		'#statuses .twitter': function($div) {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + "presence/statuses",
 				fnServerParams: function(aoData) {

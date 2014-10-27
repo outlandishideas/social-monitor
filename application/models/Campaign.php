@@ -240,13 +240,13 @@ class Model_Campaign extends Model_Base {
 				if(in_array($campaignId, $campaignIds)) {
 					if(!array_key_exists($campaignId, $keyedData)){
                         $keyedData[$campaignId] = array('presences' => 0, 'denominator' => count($campaignIds));
-						foreach($badgeNames as $name){
-                            $keyedData[$campaignId][$name] = 0;
+						foreach($badgeNames as $badgeName){
+                            $keyedData[$campaignId][$badgeName] = 0;
 						}
 					}
-					foreach($badgeNames as $name){
-						if($name != $totalBadgeName) {
-                            $keyedData[$campaignId][$name] += $row->$name;
+					foreach($badgeNames as $badgeName){
+						if($badgeName != $totalBadgeName) {
+                            $keyedData[$campaignId][$badgeName] += $row->$badgeName;
                         }
 					}
                     $keyedData[$campaignId]['presences']++;
@@ -254,12 +254,12 @@ class Model_Campaign extends Model_Base {
 			}
 
 			foreach($keyedData as &$campaignData){
-				foreach($badgeNames as $name){
-					if($name != $totalBadgeName) {
+				foreach($badgeNames as $badgeName){
+					if($badgeName != $totalBadgeName) {
                         //get average for kpi scores by dividing by number of presences
-                        $campaignData[$name] /= $campaignData['presences'];
+                        $campaignData[$badgeName] /= $campaignData['presences'];
                         //add average to total score
-                        $campaignData[$totalBadgeName] += $campaignData[$name];
+                        $campaignData[$totalBadgeName] += $campaignData[$badgeName];
                     }
 				}
 				//divide the total score by the number of badges (-1 for the total badge)
@@ -267,12 +267,12 @@ class Model_Campaign extends Model_Base {
 				unset($campaignData['presences']);
 			}
 
-			foreach($badgeNames as $name){
-                Badge_Abstract::doRanking($keyedData, $name, $name . '_rank');
+			foreach($badgeNames as $badgeName){
+                Badge_Abstract::doRanking($keyedData, $badgeName, $badgeName . '_rank');
 				//colorize
-				foreach($keyedData as &$row) {
-					if (array_key_exists($name, $row)){
-						$row[$name . '_color'] = Badge_Abstract::colorize($row[$name]);
+				foreach($keyedData as $id=>&$row) {
+					if (array_key_exists($badgeName, $row)){
+						$row[$badgeName . '_color'] = Badge_Abstract::colorize($row[$badgeName]);
 					}
 				}
 			}
