@@ -189,7 +189,7 @@ h3 {
 	padding-top: 76px;
 }
 
-#content .content-in-header, #content .messages {
+#content .content-in-header {
     margin: -20px -42px 0 -42px;
     background: #edf5f8;
     padding: 0 42px 20px 42px;
