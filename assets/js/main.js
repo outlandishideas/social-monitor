@@ -375,6 +375,11 @@ app.init = {
 				$(this).toggleClass('open');
 				$list.slideToggle();
 			});
+		},
+		'#campaign-switcher': function($select) {
+			$select.on('change', function() {
+				window.location = $select.data('url-template').replace('the_id', $select.val());
+			});
 		}
 	}
 };

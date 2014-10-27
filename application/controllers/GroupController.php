@@ -35,6 +35,7 @@ class GroupController extends CampaignController {
 		$this->view->tableMetrics = self::tableMetrics();
         $this->view->group = $group;
         $this->view->title = 'SBU: ' . $group->display_name;
+        $this->view->allCampaigns = Model_Group::fetchAll();
 	}
 
     /**

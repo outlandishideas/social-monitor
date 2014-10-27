@@ -64,6 +64,7 @@ class CountryController extends CampaignController {
 		$this->view->chartOptions = self::chartOptions();
         $this->view->country = $country;
         $this->view->title = 'Country: ' . $country->display_name;
+        $this->view->allCampaigns = Model_Country::fetchAll();
 	}
 
 	/**

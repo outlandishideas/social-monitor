@@ -45,6 +45,7 @@ class RegionController extends CampaignController
         $this->view->chartOptions = $this->chartOptions();
         $this->view->region = $region;
         $this->view->title = 'Region: ' . $region->display_name;
+        $this->view->allCampaigns = Model_Region::fetchAll();
     }
 
 	/**
