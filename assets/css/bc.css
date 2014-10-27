@@ -1504,6 +1504,10 @@ body {
 	border-bottom: 1px solid #fff;
 }
 
+.bd-top {
+	border-top: 1px solid #fff;
+}
+
 h2 {
 	font-family: 'Open Sans', sans-serif;
 	color: #0071bc;
@@ -1541,6 +1545,12 @@ h4 {
 	margin: 0;
 	padding: 0.25rem 0;
 	text-transform: uppercase;
+}
+
+#model-tabs-content #info h4.campaign-name,
+#model-tabs-content #info h4.presence-name {
+	font-size: 1.5rem;
+	margin-bottom: 10px;
 }
 
 /* Badge CSS */
@@ -1655,6 +1665,10 @@ h4 {
 #pickers {
     text-align: right;
 }
+#pickers select,
+#pickers input {
+	margin: 0;
+}
 
 .picker + .picker {
 	margin-left: 20px;
@@ -1695,6 +1709,9 @@ h4 {
     border: 1px solid #44656f;
     background-color: #051b21;
     background-color: rgba(0,0,0,0.5);
+	background-image: url(../img/down-arrow.png);
+	background-repeat: no-repeat;
+	background-position: right center;
     color: #fff;
     font-weight: 300;
     font-family: 'Open Sans', sans-serif;
@@ -2083,4 +2100,35 @@ td.countries a {
 	min-height: 20px;
 	background-color: #0a3542;
 	background-position: right top;
+}
+
+/* tabs on right-hand-side of presence/campaign page */
+#model-tabs {
+	border-bottom: 1px solid #fff;
+	margin-bottom: 10px !important;
+}
+#model-tabs dd {
+	margin-bottom: -3px !important;
+}
+#model-tabs dd a {
+	background: none;
+	color: #fff;
+	text-transform: uppercase;
+	opacity: 0.5;
+	outline: none;
+	padding: 35px 0 10px;
+	width: 100px;
+	text-align: center;
+}
+#model-tabs dd a:hover,
+#model-tabs dd.active a {
+	border-bottom: 5px solid #2ba6cb;
+	opacity: 1;
+}
+#model-tabs dd.active a {
+	font-weight: bold;
+}
+
+#model-tabs-content .content {
+	padding-top: 0;
 }

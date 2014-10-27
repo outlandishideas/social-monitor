@@ -1,12 +1,14 @@
-<?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>'country', 'action'=>'view', 'id'=>$this->country->id));
-if ($url) : ?>
-	<a href="<?php echo $url; ?>" title="<?php echo $this->country->getName(); ?>" class="entity country">
-		<span class="flag"><img src="<?php echo $this->baseUrl('/'); ?>assets/img/flags/<?php echo($this->country->getCountryCode()); ?>.png" /></span>
-		<?php echo $this->country->getName(); ?>
-	</a>
-<?php else : ?>
-    <span title="<?php echo $this->presence->label; ?>" class="entity presence <?php echo $this->presence->type; ?>">
-		<span class="flag"><img src="<?php echo $this->baseUrl('/'); ?>assets/img/flags/<?php echo($this->country->getCountryCode()); ?>.png" /></span>
-        <?php echo $this->country->getName(); ?>
-	</span>
-<?php endif; ?>
+<?php
+$url = $this->gatekeeper()->filter('%url%', array('controller'=>'country', 'action'=>'view', 'id'=>$this->country->id));
+if ($url) {
+    $tag = 'a';
+    $attrs = 'href="' . $url . '"';
+} else {
+    $tag = 'span';
+    $attrs = '';
+}
+?>
+<<?php echo $tag; ?> <?php echo $attrs; ?> class="entity country">
+    <span class="flag"><img src="<?php echo $this->baseUrl('/') . 'assets/img/flags/' . $this->country->getCountryCode() . '.png'; ?>" /></span>
+    <?php echo $this->country->getName(); ?>
+</<?php echo $tag; ?>>

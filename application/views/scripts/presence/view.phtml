@@ -2,6 +2,37 @@
 $buttons = $this->gatekeeper()->filterAll(array(
     '<a class="button" href="%url%"><span class="icon-edit icon-large"></span> Edit Presence</a>' => array('action'=>'edit', 'id'=>$this->presence->id)
 ));
+/** @var NewModel_Presence $presence */
+$presence = $this->presence;
+$presenceType = strtolower($presence->getType()->getTitle());
+$owner = $presence->getOwner();
+$ownerUrl = null;
+if ($owner) {
+    $ownerController = strtolower(substr(get_class($owner), 6));
+    $ownerUrl = $this->url(array('controller'=>$ownerController, 'action'=>'view', 'id'=>$owner->id));
+}
+//todo: show this data
+//$kpiData = $presence->getKpiData();
+///** @var Badge_Abstract[] $badges */
+//$badges = array(
+//    Badge_Reach::getInstance(),
+//    Badge_Engagement::getInstance(),
+//    Badge_Quality::getInstance()
+//);
+//$groupedKpiData = array();
+//foreach ($badges as $badge) {
+//    $badgeMetrics = array();
+//    foreach ($badge->getMetrics() as $metric) {
+//        $metricName = $metric::getName();
+//        if (array_key_exists($metricName, $kpiData)) {
+//            $badgeMetrics[$metricName] = $kpiData[$metricName];
+//        }
+//    }
+//    $groupedKpiData[] = array(
+//        'badge' => $badge,
+//        'metrics' => $badgeMetrics
+//    );
+//}
 ?>
 
 <div class="row">
@@ -10,14 +41,14 @@ $buttons = $this->gatekeeper()->filterAll(array(
 		<?php //echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
 
         <div class="model-header bd-btm">
-            <a href="<?php echo $this->presence->page_url; ?>" target="_blank"><span class="page-icon <?php echo $this->presence->getPresenceSign(); ?>"></span></a>
+            <a href="<?php echo $presence->page_url; ?>" target="_blank"><span class="page-icon <?php echo $presence->getPresenceSign(); ?>"></span></a>
             <div class="picker">
                 <label for="presence-switcher">Presence:</label>
                 <select id="presence-switcher" data-url-template="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>'the_id')); ?>">
                     <?php foreach ($this->allPresences as $type=>$presences) : ?>
                         <optgroup label="<?php echo $type; ?>">
                             <?php foreach ($presences as $p) : ?>
-                            <option value="<?php echo $p->id; ?>" <?php if ($p->id == $this->presence->id) { echo 'selected'; } ?>><?php echo $p->handle; ?></option>
+                            <option value="<?php echo $p->id; ?>" <?php if ($p->id == $presence->id) { echo 'selected'; } ?>><?php echo $p->name . ' (' . $p->handle . ')'; ?></option>
                             <?php endforeach; ?>
                         </optgroup>
                     <?php endforeach; ?>
@@ -26,22 +57,63 @@ $buttons = $this->gatekeeper()->filterAll(array(
         </div>
 
 		<?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial)); ?>
-
 	</div>
+
 	<div class="small-24 large-12 xlarge-16 columns">
 
-		<div class="show-for-medium-up">
+        <dl class="tabs" data-tab id="model-tabs">
+            <dd class="active"><a href="#chart">Charts</a></dd>
+            <dd><a href="#info">Info</a></dd>
+<!--            <dd><a href="#statuses">Statuses</a></dd>--><?php //todo ?>
+        </dl>
+        <div class="tabs-content" id="model-tabs-content">
+            <div class="content active" id="chart">
+                <div class="show-for-medium-up">
+                    <div id="pickers">
+                        <?php echo $this->render('partials/chart-picker.phtml'); ?>
+                        <?php echo $this->render('partials/daterange.phtml'); ?>
+                    </div>
 
-			<div id="pickers" class="bd-btm">
-				<?php echo $this->render('partials/chart-picker.phtml'); ?>
-				<?php echo $this->render('partials/daterange.phtml'); ?>
-			</div>
+                    <div class="chart-description"></div>
 
-			<div class="chart-description"></div>
-
-			<div id="new-chart" data-controller="presence" data-id="<?php echo $this->presence->getId(); ?>"></div>
-
-		</div>
+                    <div id="new-chart" data-controller="presence" data-id="<?php echo $presence->getId(); ?>"></div>
+                </div>
+            </div>
+            <div class="content" id="info">
+                <h4 class="presence-name">
+                    <?php if ($presence->image_url) : ?>
+                    <img src="<?php echo $presence->image_url; ?>" />
+                    <?php endif; ?>
+                    <?php echo $presence->getName(); ?>
+                </h4>
+                <p>This is a <a href="<?php echo $presence->page_url; ?>" target="_blank"><?php echo $presenceType; ?> <span class="icon-external-link"></span></a> presence</p>
+                <?php if ($ownerUrl) : ?>
+                    <p>This presence contributes to the statistics for <a href="<?php echo $ownerUrl; ?>"><?php echo $owner->display_name; ?></a></p>
+                <?php endif; ?>
+            </div>
+            <div class="content" id="statuses">
+                <div class="statusesDisplay <?php echo $presenceType; ?>" data-presence-id="<?php echo $presence->id; ?>">
+                    <table>
+                        <thead>
+                        <tr>
+                            <?php if ($presence->isForFacebook()) : ?>
+                                <th class="user">User</th>
+                                <th class="message">Message</th>
+                                <th class="links">Links</th>
+                                <th class="response">Response</th>
+                                <th class="date">Date</th>
+                            <?php else : ?>
+                                <th class="message">Message</th>
+                                <th class="date">Date</th>
+                            <?php endif; ?>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
 	</div>
 </div>

@@ -1,32 +1,14 @@
-<?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>'presence', 'action'=>'view', 'id'=>$this->presence->id));
-if ($url) : ?>
-	<a href="<?php echo $url; ?>" title="<?php echo $this->presence->label; ?>" class="entity presence <?php echo $this->presence->type; ?>">
-		<span class="<?php echo $this->presence->getPresenceSign();?>"></span>
-		<?php echo $this->presence->handle;
-        if ($this->presence->isForTwitter()) : ?>
-            <span class="klout" title="Klout score: <?php echo $this->presence->klout_score; ?>">
-                <?php echo round($this->presence->klout_score); ?>
-            </span><?php
-        else:
-            $fb = $this->presence->facebook_engagement; ?>
-            <span class="klout facebook" title="Facebook Engagement score: <?php echo $fb; ?>">
-                <?php echo round($fb); ?>
-            </span><?php
-        endif; ?>
-	</a>
-<?php else : ?>
-    <span title="<?php echo $this->presence->label; ?>" class="entity presence <?php echo $this->presence->type; ?>">
-		<span class="<?php echo $this->presence->getPresenceSign();?>"></span>
-        <?php echo $this->presence->handle;
-        if ($this->presence->isForTwitter()) : ?>
-        <span class="klout" title="Klout score: <?php echo $this->presence->klout_score; ?>">
-            <?php echo round($this->presence->klout_score); ?>
-            </span><?php
-        else:
-            $fb = $this->presence->facebook_engagement; ?>
-        <span class="klout facebook" title="Facebook Engagement score: <?php echo $fb; ?>">
-            <?php echo round($fb); ?>
-            </span><?php
-        endif; ?>
-	</span>
-<?php endif; ?>
+<?php
+$url = $this->gatekeeper()->filter('%url%', array('controller'=>'presence', 'action'=>'view', 'id'=>$this->presence->id));
+if ($url) {
+    $tag = 'a';
+    $attrs = 'href="' . $url . '"';
+} else {
+    $tag = 'span';
+    $attrs = '';
+}
+?>
+<<?php echo $tag; ?> <?php echo $attrs; ?> title="<?php echo $this->presence->label; ?>" class="entity presence <?php echo $this->presence->type; ?>">
+    <span class="<?php echo $this->presence->getPresenceSign();?>"></span>
+    <?php echo $this->presence->handle; ?>
+</<?php echo $tag; ?>>

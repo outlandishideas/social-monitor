@@ -1,3 +1,18 @@
+<?php
+/** @var Model_Country|Model_Group|Model_Region $campaign */
+$campaign = $this->campaign;
+$presences = $campaign->getPresences();
+$infoIcon = null;
+$region = null;
+$countries = array();
+if ($campaign instanceof Model_Country) {
+    $infoIcon = '<span class="flag"><img src="' . $this->baseUrl('/') . 'assets/img/flags/' . $campaign->getCountryCode() . '.png" /></span>';
+    $region = $campaign->getRegion();
+} else if ($campaign instanceof Model_Region) {
+    $countries = $campaign->getCountries();
+}
+?>
+
 <div class="row">
     <div class="small-24 large-12 xlarge-8 columns">
 
@@ -9,7 +24,7 @@
                 <label for="campaign-switcher"><?php echo $this->campaignType; ?>:</label>
                 <select id="campaign-switcher" data-url-template="<?php echo $this->url(array('controller'=>$this->controllerName, 'action'=>'view', 'id'=>'the_id')); ?>">
                     <?php foreach ($this->allCampaigns as $c) : ?>
-                    <option value="<?php echo $c->id; ?>" <?php if ($c->id == $this->campaign->id) { echo 'selected'; } ?>><?php echo $c->display_name; ?></option>
+                    <option value="<?php echo $c->id; ?>" <?php if ($c->id == $campaign->id) { echo 'selected'; } ?>><?php echo $c->display_name; ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -20,17 +35,51 @@
     </div>
     <div class="small-24 large-12 xlarge-16 columns">
 
-        <div class="show-for-medium-up">
+        <dl class="tabs" data-tab id="model-tabs">
+            <dd class="active"><a href="#chart">Charts</a></dd>
+            <dd><a href="#info">Info</a></dd>
+        </dl>
+        <div class="tabs-content" id="model-tabs-content">
+            <div class="content active" id="chart">
+                <div class="show-for-medium-up">
+                    <div id="pickers">
+                        <?php echo $this->render('partials/chart-picker.phtml'); ?>
+                        <?php echo $this->render('partials/daterange.phtml'); ?>
+                    </div>
 
-            <div id="pickers" class="bd-btm">
-                <?php echo $this->render('partials/chart-picker.phtml'); ?>
-                <?php echo $this->render('partials/daterange.phtml'); ?>
+                    <div class="chart-description"></div>
+
+                    <div id="new-chart" data-controller="<?php echo $this->controllerName; ?>" data-id="<?php echo $campaign->id; ?>"></div>
+                </div>
             </div>
+            <div class="content" id="info">
+                <h4 class="campaign-name">
+                    <?php if ($infoIcon) { echo $infoIcon; } ?>
+                    <?php echo $campaign->display_name; ?>
+                </h4>
 
-            <div class="chart-description"></div>
+                <?php if ($region) : ?>
+                <p>Part of the <a href="<?php echo $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)); ?>"><?php echo $region->display_name; ?></a> region</p>
+                <?php endif; ?>
 
-            <div id="new-chart" data-controller="<?php echo $this->controllerName; ?>" data-id="<?php echo $this->campaign->id; ?>"></div>
+                <?php if ($countries) : ?>
+                    <h4>Countries: <?php echo count($countries); ?></h4>
+                    <ul class="entity-list">
+                        <?php foreach ($countries as $c) : ?>
+                            <li><?php echo $this->partial('partials/country_inline.phtml', array('country'=>$c)); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
 
+                <h4>Presences: <?php echo count($presences); ?></h4>
+                <?php if ($presences) : ?>
+                <ul class="entity-list">
+                    <?php foreach ($presences as $p) : ?>
+                    <li><?php echo $this->partial('partials/presence_inline.phtml', array('presence'=>$p)); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php endif; ?>
+            </div>
         </div>
 
     </div>
