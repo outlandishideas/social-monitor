@@ -6,12 +6,14 @@ class Chart_Compare extends Chart_Abstract {
     protected static $name = "compare";
 
     protected $dataColumns;
+    protected $xColumn;
 
     public function __construct(PDO $db = null)
     {
         parent::__construct($db);
         $this->xLabel = "Time";
         $this->yLabel = "KPI Score";
+        $this->xColumn = 'date';
         $this->dataColumns = array(
             Badge_Quality::getName(),
             Badge_Engagement::getName(),
@@ -22,7 +24,7 @@ class Chart_Compare extends Chart_Abstract {
     protected function getColumns($data = null)
     {
         $columns = array();
-        $wantedColumns = array_merge($this->getDataColumns(), array($this->getXColumn()));
+        $wantedColumns = array_merge($this->dataColumns, array($this->xColumn));
 
         foreach ($wantedColumns as $column) {
             $dataRow = array($column);
@@ -30,7 +32,7 @@ class Chart_Compare extends Chart_Abstract {
                 foreach ($data as $row) {
                     $row = (object)$row;
                     $value = isset($row->$column) ? $row->$column : null;
-                    if ($column != $this->getXColumn() && !is_null($value)) {
+                    if ($column != $this->xColumn && !is_null($value)) {
                         $value = round($value, 1);
                     }
                     $dataRow[] = $value;
@@ -44,7 +46,7 @@ class Chart_Compare extends Chart_Abstract {
     protected function getNames()
     {
         $names = array();
-        foreach($this->getDataColumns() as $column){
+        foreach($this->dataColumns as $column){
             /** @var Badge_Abstract $badge */
             $badge = Badge_Factory::getBadge($column);
             $names[$column] = $badge->getTitle();
@@ -61,7 +63,7 @@ class Chart_Compare extends Chart_Abstract {
         //get the number of presences in this data so we can divide by this number later
         $presenceCount = count($this->getPresenceIdsFromData($data));
 
-        $dataColumns = $this->getDataColumns();
+        $dataColumns = $this->dataColumns;
 
         $reducedData = array();
         foreach ($data as $row) {
@@ -120,7 +122,7 @@ class Chart_Compare extends Chart_Abstract {
 
 
         return array(
-            "x" => $this->getXColumn(),
+            "x" => $this->xColumn,
             "columns" => $columns,
             "names" => $names
         );
@@ -131,7 +133,7 @@ class Chart_Compare extends Chart_Abstract {
     {
         return array(
             "type" => 'timeseries',
-            "label" => $this->getXLabel(),
+            "label" => $this->xLabel,
             "position" => 'outer-center'
         );
     }
@@ -139,7 +141,7 @@ class Chart_Compare extends Chart_Abstract {
     public function getYAxis()
     {
         return array(
-            "label" => $this->getYLabel(),
+            "label" => $this->yLabel,
             "max" => 100,
             "min" => 0,
             "position" => 'outer-middle',
@@ -148,16 +150,6 @@ class Chart_Compare extends Chart_Abstract {
                 "bottom" => 0
             )
         );
-    }
-
-    public function getXColumn()
-    {
-        return "date";
-    }
-
-    public function getDataColumns()
-    {
-        return $this->dataColumns;
     }
 
     private function getPresenceIdsFromData($data)

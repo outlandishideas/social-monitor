@@ -5,18 +5,11 @@ class Chart_Popularity extends Chart_Abstract {
     protected static $title = "Measure: Popularity";
     protected static $name = "popularity";
 
-    public function __construct(PDO $db = null)
-    {
-        parent::__construct($db);
-        $this->xLabel = "Date";
-        $this->yLabel = "Number of Fans/Followers";
-    }
-
     protected function getXAxis()
     {
         return array(
             "type" => 'timeseries',
-            "label" => $this->getXLabel(),
+            "label" => 'Date',
             "position" => 'outer-center'
         );
     }
@@ -24,74 +17,69 @@ class Chart_Popularity extends Chart_Abstract {
     protected function getYAxis()
     {
         return array(
-            "label" => $this->getYLabel(),
+            "label" => 'Number of Fans/Followers',
             "position" => 'outer-middle',
          );
-    }
-
-    protected function getColumns($dataSets = null)
-    {
-        $dates = array();
-        $columns = array();
-        foreach ($dataSets as $key=>$dataSet) {
-            $popularity = array();
-            foreach ($dataSet as $row) {
-                $datetime = $row['datetime'];
-                $date = date('Y-m-d', strtotime($datetime));
-                if (!array_key_exists($date, $dates)) {
-                    $dates[$date] = $date;
-                }
-                if (!array_key_exists($date, $popularity)) {
-                    $popularity[$date] = floatval($row['value']);
-                }
-            }
-            $columns[$key] = $popularity;
-        }
-        foreach ($columns as $key=>&$column) {
-            foreach ($dates as $date) {
-                if (!isset($column[$date])) {
-                    $column[$date] = null;
-                }
-            }
-            ksort($column);
-            array_unshift($column, $key);
-        }
-        $columns = array_values(array_map('array_values', $columns));
-        $dates = array_values($dates);
-        sort($dates);
-        array_unshift($dates, 'date');
-        $columns[] = $dates;
-        return $columns;
     }
 
     protected function getData($model, DateTime $start, DateTime $end)
     {
         $names = array();
-        $columns = array();
+        $dataSets = array();
         switch(get_class($model)) {
             case "NewModel_Presence":
                 /** @var NewModel_Presence $model */
                 $data = $model->getPopularityData($start, $end);
-                $columns = $this->getColumns(array('popularity'=>$data));
-                $names[Metric_Popularity::getName()] = Metric_Popularity::getTitle();
+                if ($data) {
+                    $key = Metric_Popularity::getName();
+                    $names[$key] = Metric_Popularity::getTitle();
+                    $dataSets[$key] = $data;
+                }
                 break;
             case "Model_Country":
             case "Model_Group":
             case "Model_Region":
                 /** @var Model_Campaign $model */
-                $data = array();
                 foreach ($model->getPresences() as $presence) {
-                    $data[$presence->getId()] = $presence->getPopularityData($start, $end);
-                    $names[$presence->getId()] = $presence->getName();
+                    $data = $presence->getPopularityData($start, $end);
+                    if ($data) {
+                        $dataSets[$presence->getId()] = $data;
+                        $names[$presence->getId()] = $presence->getName();
+                    }
                 }
-                $columns = $this->getColumns($data);
-//                $columns = array_values($this->getCampaignColumns($data));
-//                $names = $this->getCampaignNames($data);
                 break;
             default:
                 return array();
         }
 
+        $columns = array();
+
+        if ($dataSets) {
+            $dates = array();
+            $current = clone $start;
+            while ($current <= $end) {
+                $dates[] = $current->format('Y-m-d');
+                $current->modify('1 day');
+            }
+            foreach ($dataSets as $key=>$dataSet) {
+                $popularity = array();
+                foreach ($dates as $date) {
+                    $popularity[$date] = null;
+                }
+                foreach ($dataSet as $row) {
+                    $datetime = $row['datetime'];
+                    $date = date('Y-m-d', strtotime($datetime));
+                    if (empty($popularity[$date])) {
+                        $popularity[$date] = floatval($row['value']);
+                    }
+                }
+                $popularity = array_values($popularity);
+                array_unshift($popularity, $key);
+                $columns[] = $popularity;
+            }
+            array_unshift($dates, 'date');
+            $columns[] = $dates;
+        }
 
         return array(
             "x" => 'date',

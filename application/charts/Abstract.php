@@ -60,16 +60,6 @@ abstract class Chart_Abstract {
         return static::$name;
     }
 
-    protected function getYLabel()
-    {
-        return $this->yLabel;
-    }
-
-    protected function getXLabel()
-    {
-        return $this->xLabel;
-    }
-
     /**
      * Return parameters for the x axis
      * See c3.js documentation for what to return
