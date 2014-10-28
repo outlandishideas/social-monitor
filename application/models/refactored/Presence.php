@@ -577,11 +577,6 @@ class NewModel_Presence
 	 * @return array
 	 */
 	public function getPopularityData(DateTime $start, DateTime $end){
-//		trigger_error("Deprecated function called.", E_USER_NOTICE);
-		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
-			$presence = Model_Presence::fetchById($this->getId());
-			return $presence->getPopularityData($start->format("Y-m-d"), $end->format("Y-m-d"));
-		}
 		$data = $this->getHistoricData($start, $end);
 		return array_filter($data, function($row){
 			return $row['type'] == Metric_Popularity::getName();

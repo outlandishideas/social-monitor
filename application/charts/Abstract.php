@@ -84,19 +84,6 @@ abstract class Chart_Abstract {
      */
     abstract protected function getYAxis();
 
-    /**
-     * Get the public names for each dataset from $data
-     * @return array // eg. array("internal_name" => "external_name", "internal_name_2" => "external_name_2")
-     */
-    abstract protected function getNames();
-
-    /**
-     * Get columns chart from $data
-     * @param $data
-     * @return array // eg. array(array("internal_name", value1, value2, etc.), array("x_axis", tick1, tick2)
-     */
-    abstract protected function getColumns($data = null);
-
     static function getInstance() {
         return Chart_Factory::getChart(self::getName());
     }

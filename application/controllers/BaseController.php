@@ -242,7 +242,8 @@ class BaseController extends Zend_Controller_Action
             header('Content-type: application/json');
         }
 
-        echo json_encode($ret);
+        $json = json_encode($ret);
+        echo $json;
 
         exit;
     }
