@@ -9,7 +9,7 @@ $topBar = $this->gatekeeper()->filterAll(array(
     '<a href="%url%" class="button-bc button-delete">Delete</a>' => array('action'=>'delete', 'id'=>$presence->id)
 ));
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'presence', 'action'=>'index'), null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id), null, true);
 if ($cancel) {
     $bottomBar[] = $cancel;
 }

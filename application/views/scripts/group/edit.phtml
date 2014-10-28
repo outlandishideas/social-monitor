@@ -1,11 +1,12 @@
 <?php
+$sbu = $this->editingGroup;
 $topBar = $this->gatekeeper()->filterAll(array(
-	'<a class="button-bc button-view" href="%url%">View SBU</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$this->editingGroup->id),
-	'<a class="button-bc button-manage" href="%url%">Manage Presences</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$this->editingGroup->id),
-    '<a class="button-bc button-delete" href="%url%">Delete</a>' => array('controller'=>'group', 'action'=>'delete', 'id'=>$this->editingGroup->id)
+	'<a class="button-bc button-view" href="%url%">View SBU</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
+	'<a class="button-bc button-manage" href="%url%">Manage Presences</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$sbu->id),
+    '<a class="button-bc button-delete" href="%url%">Delete</a>' => array('controller'=>'group', 'action'=>'delete', 'id'=>$sbu->id)
 ));
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id), null, true);
 if ($cancel) {
     $bottomBar[] = $cancel;
 }
@@ -30,7 +31,7 @@ if ($topBar && $this->showButtons) {
                 </label>
             </div>
             <div class="small-24 medium-16 large-16 end columns">
-                <input name="display_name" value="<?php echo htmlspecialchars($this->editingGroup->display_name); ?>" class="textInput"
+                <input name="display_name" value="<?php echo htmlspecialchars($sbu->display_name); ?>" class="textInput"
                        type="text" id="display_name">
             </div>
         </div>
@@ -42,7 +43,7 @@ if ($topBar && $this->showButtons) {
                 </label>
             </div>
             <div class="small-24 medium-16 large-16 end columns">
-                <input name="audience" value="<?php echo htmlspecialchars($this->editingGroup->audience); ?>" class="textInput"
+                <input name="audience" value="<?php echo htmlspecialchars($sbu->audience); ?>" class="textInput"
                        type="text" id="audience">
             </div>
         </div>

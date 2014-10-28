@@ -1,13 +1,14 @@
 <?php
+$region = $this->region;
 $buttons = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'region', 'action'=>'view', 'id'=>$region->id), null, true);
 if ($cancel) {
     $buttons[] = $cancel;
 }
 $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 ?>
 
-<h2 class="page-title">Manage Countries: <?php echo $this->region->display_name; ?></h2>
+<h2 class="page-title">Manage Countries: <?php echo $region->display_name; ?></h2>
 
 <form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-region">
 
@@ -15,7 +16,7 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
     echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
 
 	echo $this->partial('partials/assign-countries.phtml', array(
-			'owner'=>$this->region,
+			'owner'=>$region,
 			'allCountries'=>$this->allCountries
 		));
 
