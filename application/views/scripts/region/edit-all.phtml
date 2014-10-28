@@ -1,12 +1,15 @@
-<div class="button-bc-bar">
-    <div class="row bk-dark">
-        <div class="small-24 columns">
-            <ul class="button-group">
-                <li id="search-table"><?php // search box will go in here ?></li>
-            </ul>
-        </div>
-    </div>
-</div>
+<?php
+$bottomBar = array();
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true);
+if ($cancel) {
+    $bottomBar[] = $cancel;
+}
+$bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button>';
+$topBar = $bottomBar;
+array_unshift($topBar, '<div id="search-table"></div>');
+?>
+
+<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true)); ?>
 
 <form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-all-regions">
 
@@ -33,15 +36,6 @@
         </tbody>
     </table>
 
-    <div class="button-bc-bar">
-        <div class="row bk-dark">
-            <div class="small-24 large-centered columns">
-                <ul class="button-group">
-                        <li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true); ?></li>
-                        <li><input type="submit" value="Save" class="primaryAction button-bc"></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$bottomBar, 'dark'=>true)); ?>
 </form>
 

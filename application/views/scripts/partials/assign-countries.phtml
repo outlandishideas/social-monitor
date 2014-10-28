@@ -1,12 +1,7 @@
 <fieldset class="inlineLabels">
-	<h2 class="page-title"><?php echo $this->owner->display_name; ?></h2>
+    <h2>Available countries</h2>
 	<div class="row">
-        <div class="small-24 medium-8 large-8 columns">
-            <label for="countries">
-				Available countries
-			</label>
-        </div>
-        <div class="small-24 medium-16 large-16 end columns">
+        <div class="small-24 columns">
 			<select id="countries" class="selectInput">
 				<option value="">-- Select --</option>
 				<?php foreach ($this->allCountries as $c) : ?>
@@ -23,13 +18,9 @@
         </div>
     </div>
 
+    <h2>Currently assigned countries</h2>
     <div class="row">
-        <div class="small-24 medium-8 large-8 columns">
-            <label>
-				Currently assigned countries
-			</label>
-        </div>
-        <div class="small-24 medium-16 large-16 end columns">
+        <div class="small-24 columns">
 			<ul id="assigned">
 				<?php
 				foreach ($this->owner->getCountries() as $country) {

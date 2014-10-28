@@ -1,5 +1,3 @@
-<h2 class="page-title">Edit SBU</h2>
-
 <?php
 $topBar = $this->gatekeeper()->filterAll(array(
 	'<a class="button-bc button-view" href="%url%">View SBU</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$this->editingGroup->id),
@@ -12,7 +10,11 @@ if ($cancel) {
     $bottomBar[] = $cancel;
 }
 $bottomBar[] = '<button type="submit" class="button-bc">Save</button>';
+?>
 
+<h2 class="page-title"><?php echo $this->title; ?></h2>
+
+<?php
 if ($topBar && $this->showButtons) {
     echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true));
 }
@@ -52,17 +54,17 @@ if ($topBar && $this->showButtons) {
         <h2>Presence details</h2>
         <div class="row">
             <div class="small-24 medium-8 large-8 columns">
-            <p>These presences will be automatically added to this SBU:</p>
+               <p>These presences will be automatically added to this SBU:</p>
             </div>
             <div class="small-24 medium-16 large-16 end columns">
-            <ul id="added-presences">
-	            <?php
-	            foreach ($this->presences as $presence) {
-		            echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence, 'varname'=>'p'));
-	            }
-	            ?>
-            </ul>
-        </div>
+                <ul id="added-presences">
+                    <?php
+                    foreach ($this->presences as $presence) {
+                        echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence, 'varname'=>'p'));
+                    }
+                    ?>
+                </ul>
+            </div>
         </div>
     </fieldset>
     <?php endif; ?>

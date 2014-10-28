@@ -1,3 +1,12 @@
+<?php
+$buttons = array();
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'user', 'action'=>'index'), null, true);
+if ($cancel) {
+    $buttons[] = $cancel;
+}
+$buttons[] = '<button type="submit" class="button-bc">Save</button>';
+?>
+
 <h2 class="page-title">Edit User</h2>
 <p>On this page you can edit your user information, such as updating your email address or changing your password.</p>
 
@@ -6,7 +15,6 @@
 	<div class="row">
 		<div class="small-24 columns">
 			<fieldset>
-				<h2>User Details</h2>
 				<div class="row">
 					<div class="small-24 medium-8 large-4 columns">
 						<label for="name" class="requiredField">
@@ -71,16 +79,7 @@
 		</div>
 	</div>
 
-	<div class="button-bc-bar">
-		<div class="row bk-dark">
-			<div class="small-24 columns">
-				<ul class="button-group">
-					<li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', $this->gatekeeper()->fallbackUrlArgs(array('controller'=>'user', 'action'=>'index')), null, true); ?></li>
-					<li><button type="submit" class="button-bc">Save</li>
-				</ul>
-			</div>
-		</div>
-	</div>
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
 
 </form>
 

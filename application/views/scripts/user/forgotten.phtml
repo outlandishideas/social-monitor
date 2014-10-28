@@ -1,6 +1,10 @@
-<div class="login-title">
-    <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>" class="site-title-link"><div class="site-title"><span>British Council Social Media Monitor</span></div></a>
-</div>
+<?php
+$buttons = array(
+    '<a href="' . $this->url(array('controller'=>'user', 'action'=>'login')) . '" class="button-bc">Back to login</a>',
+    '<button type="submit" class="button-bc">Send</button>'
+);
+?>
+
 <h2 class="page-title">Password reset</h2>
 <form method="post" action="<?php echo $this->url(); ?>">
     <input type="hidden" name="redirect_to" value="<?php echo $this->redirect_to; ?>" />
@@ -12,15 +16,6 @@
 
     </fieldset>
 
-    <div class="button-bc-bar">
-        <div class="row bk-dark">
-            <div class="small-24 columns">
-                <ul class="button-group">
-                    <li><a href="<?php echo $this->url(array('controller'=>'user', 'action'=>'login')); ?>" class="button-bc">Back to login</a></li>
-                    <li><button type="submit" class="button-bc">Send</button></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
 </form>
 

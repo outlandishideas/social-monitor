@@ -1,21 +1,18 @@
-<?php $button = $this->gatekeeper()->filter('<a class="button-bc" href="%url%">Add new</a>', array('controller'=>'user', 'action'=>'new'), null, true); ?>
+<?php
+$buttons = array();
+$new = $this->gatekeeper()->filter('<a class="button-bc" href="%url%">Add new</a>', array('controller'=>'user', 'action'=>'new'), null, true);
+if ($new) {
+    $buttons[] = $new;
+}
+?>
 
 <h2 class="page-title">Users</h2>
 
-<?php if($button): ?>
-
-	<div class="button-bc-bar">
-		<div class="row bk-dark">
-			<div class="small-24 columns">
-				<ul class="button-group">
-					<li><?php echo $button; ?></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-
-<?php endif; ?>
-
+<?php
+if($buttons) {
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+}
+?>
 
 <table class="users text">
 	<thead>
