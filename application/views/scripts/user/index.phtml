@@ -14,15 +14,15 @@ if($buttons) {
 }
 ?>
 
-<table class="users text">
+<table class="users text dtable" id="all-users" data-sort-col="name">
 	<thead>
 	<tr>
-		<th class="name">Name</th>
-		<th class="email">Email Address</th>
-		<th class="user-level">User Level</th>
-		<th class="access">Access rights</th>
-		<th class="last-sign-in">Last Sign In</th>
-		<th></th>
+		<th class="name" data-name="name" data-sort="auto">Name</th>
+		<th class="email" data-name="email" data-sort="auto">Email Address</th>
+		<th class="user-level" data-name="user-level" data-sort="auto">User Level</th>
+		<th class="access" data-name="access" data-sort="auto">Access rights</th>
+		<th class="last-sign-in" data-name="last-sign-in" data-sort="auto">Last Sign In</th>
+		<th class="options" data-name="options" data-sort="none" data-width="160px">Options</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -33,9 +33,9 @@ if($buttons) {
 	?>
 	<tr <?php if ($user->id == $this->user->id) echo 'class="current-user"'; ?>>
 		<td class="name left-align"><?php echo $user->safeName; ?></td>
-		<td class="email"><?php echo $user->email; ?></td>
-		<td class="user-level"><?php echo $userLevel; ?></td>
-		<td class="access">
+		<td class="email left-align"><?php echo $user->email; ?></td>
+		<td class="user-level left-align"><?php echo $userLevel; ?></td>
+		<td class="access left-align">
 			<?php if ($user->isManager) : ?>
 			all
 			<?php else : ?>
@@ -62,18 +62,18 @@ if($buttons) {
 			</ul>
 			<?php endif; ?>
 		</td>
-		<td class="last-sign-in"><?php echo $this->prettyDate($user->last_sign_in, 'Never signed in'); ?></td>
-		<td>
+		<td class="last-sign-in left-align"><?php echo $this->prettyDate($user->last_sign_in, 'Never signed in'); ?></td>
+		<td class="cell-options">
 			<?php
 				$links = array();
 				if ($this->user->id == $user->id) {
-					$links['<a href="%url%"Edit</a>'] = array('controller'=>'user', 'action'=>'edit-self');
+					$links['<a href="%url%" class="button-bc">Edit</a>'] = array('controller'=>'user', 'action'=>'edit-self');
 				} else {
-					$links['<a href="%url%">Edit</a>'] = array('controller'=>'user', 'action'=>'edit', 'id'=>$user->id);
+					$links['<a href="%url%" class="button-bc">Edit</a>'] = array('controller'=>'user', 'action'=>'edit', 'id'=>$user->id);
 					if (!$user->isManager) {
-						$links['<a href="%url%">Access Rights</a>'] = array('controller'=>'user', 'action'=>'manage', 'id'=>$user->id);
+						$links['<a href="%url%" class="button-bc">Access Rights</a>'] = array('controller'=>'user', 'action'=>'manage', 'id'=>$user->id);
 					}
-					$links['<a href="%url%" class="autoConfirm">Delete</a>'] = array('controller'=>'user', 'action'=>'delete', 'id'=>$user->id);
+					$links['<a href="%url%" class="autoConfirm button-bc">Delete</a>'] = array('controller'=>'user', 'action'=>'delete', 'id'=>$user->id);
 				}
 				$links = $this->gatekeeper()->filterAll($links);
 			?>

@@ -16,34 +16,34 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 		<div class="small-24 columns">
 			<fieldset>
 				<div class="row">
-					<div class="small-24 medium-8 large-4 columns">
+					<div class="small-24 medium-8 large-8 columns">
 						<label for="name" class="requiredField">
 							User name<span class="asteriskField">*</span>
 						</label>
 					</div>
-					<div class="small-24 medium-12 large-8 end columns">
+					<div class="small-24 medium-16 large-16 end columns">
 						<input id="name" name="name" type="text" class="textInput" value="<?php echo $this->editingUser->safeName; ?>" />
 					</div>
 				</div>
 
 				<div class="row">
-					<div class="small-24 medium-8 large-4 columns">
+					<div class="small-24 medium-8 large-8 columns">
 						<label for="email" class="requiredField">
 							Email address<span class="asteriskField">*</span>
 						</label>
 					</div>
-					<div class="small-24 medium-12 large-8 end columns">
+					<div class="small-24 medium-16 large-16 end columns">
 						<input id="email" name="email" type="text" class="textInput" value="<?php echo htmlspecialchars($this->editingUser->email); ?>" />
 					</div>
 				</div>
 
 				<div class="row">
-					<div class="small-24 medium-8 large-4 columns">
+					<div class="small-24 medium-8 large-8 columns">
 						<label for="user_level" class="requiredField">
 							User Level<span class="asteriskField">*</span>
 						</label>
 					</div>
-					<div class="small-24 medium-12 large-8 end columns">
+					<div class="small-24 medium-16 large-16 end columns">
 						<select id="user_level" name="user_level" class="selectInput" <?php if (!$this->canChangeLevel) echo 'disabled'; ?>>
 							<?php foreach ($this->userLevels as $value=>$label) : ?>
 								<option value="<?php echo $value; ?>" <?php if ($value == $this->editingUser->user_level) echo 'selected'; ?>><?php echo $label; ?></option>
@@ -53,23 +53,23 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 				</div>
 
 				<div class="row">
-					<div class="small-24 medium-8 large-4 columns">
+					<div class="small-24 medium-8 large-8 columns">
 						<label for="password" class="requiredField">
 							Password<span class="asteriskField">*</span>
 						</label>
 					</div>
-					<div class="small-24 medium-12 large-8 end columns">
+					<div class="small-24 medium-16 large-16 end columns">
 						<input id="password" name="password" type="password" class="textInput" />
 					</div>
 				</div>
 
 				<div class="row">
-					<div class="small-24 medium-8 large-4 columns">
+					<div class="small-24 medium-8 large-8 columns">
 						<label for="password_confirm" class="requiredField">
 							Password (again)<span class="asteriskField">*</span>
 						</label>
 					</div>
-					<div class="small-24 medium-12 large-8 end columns">
+					<div class="small-24 medium-16 large-16 end columns">
 						<input id="password_confirm" name="password_confirm" type="password" class="textInput" />
 					</div>
 				</div>

@@ -1,109 +1,140 @@
+<h2 class="page-title">Edit access rights for <?php echo $this->editingUser->safeName; ?></h2>
 <?php if ($this->editingUser->isManager) : ?>
-	<?php echo $this->gatekeeper()->filter('<p><a href="%url%" class="button">Back</a></p>', array('controller'=>'user', 'action'=>'index'), null, true); ?>
+	<?php $buttons = $this->gatekeeper()->filterAll(array(
+		'<p><a href="%url%" class="button-bc">Back</a></p>' => array('controller'=>'user', 'action'=>'index')
+	)); ?>
+	<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
 	<p>This user automatically has access to all parts of the monitor.</p>
 <?php else : ?>
-	<form method="post" action="<?php echo $this->url(); ?>" class="uniForm management" novalidate id="manage-user">
+	<form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-user">
 
 		<fieldset class="inlineLabels">
-			<legend><?php echo $this->editingUser->safeName; ?></legend>
-			<div class="ctrlHolder">
-				<div class="formHint">Adding a country or SBU automatically adds any presences belonging to it to the user.</div>
+			<div class="row">
+				<div class="small-24 columns">
+					<div class="formHint"><p>Adding a country or SBU automatically adds any presences belonging to it to the user.</p></div>
+				</div>
 			</div>
-			<div class="ctrlHolder">
-				<label for="country">
-					Available countries
-				</label>
-				<button type="button" class="button add-item">Add</button>
-				<select id="country" class="selectInput" data-icon="<?php echo Model_Country::ICON_TYPE; ?>" data-type="country">
-					<option value="">-- Select --</option>
-					<?php foreach ($this->countries as $c) : ?>
-						<option value="<?php echo $c->id; ?>"
-						        data-url="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$c->id)); ?>"
-						        data-label="<?php echo $c->display_name; ?>"
-						        data-hover="<?php echo $c->display_name; ?>">
-							<?php echo $c->display_name; ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
+			<div class="row">
+				<div class="small-24 medium-8 large-8 columns">
+					<label for="country">
+						Available countries
+					</label>
+				</div>
+				<div class="small-24 medium-16 large-16 end columns">
+					<select id="country" class="selectInput" data-icon="<?php echo Model_Country::ICON_TYPE; ?>" data-type="country">
+						<option value="">-- Select --</option>
+						<?php foreach ($this->countries as $c) : ?>
+							<option value="<?php echo $c->id; ?>"
+							        data-url="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$c->id)); ?>"
+							        data-label="<?php echo $c->display_name; ?>"
+							        data-hover="<?php echo $c->display_name; ?>">
+								<?php echo $c->display_name; ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+					<button type="button" class="button-bc add-item">Add</button>
+				</div>
 			</div>
-			<div class="ctrlHolder">
-				<label for="group">
-					Available SBUs
-				</label>
-				<button type="button" class="button add-item">Add</button>
-				<select id="group" class="selectInput" data-icon="<?php echo Model_Group::ICON_TYPE; ?>" data-type="group">
-					<option value="">-- Select --</option>
-					<?php foreach ($this->groups as $g) : ?>
-						<option value="<?php echo $g->id; ?>"
-						        data-url="<?php echo $this->url(array('controller'=>'group', 'action'=>'view', 'id'=>$g->id)); ?>"
-						        data-label="<?php echo $g->display_name; ?>"
-						        data-hover="<?php echo $g->display_name; ?>">
-							<?php echo $g->display_name; ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
+
+			<div class="row">
+				<div class="small-24 medium-8 large-8 columns">
+					<label for="group">
+						Available SBUs
+					</label>
+				</div>
+				<div class="small-24 medium-16 large-16 end columns">
+					<select id="group" class="selectInput" data-icon="<?php echo Model_Group::ICON_TYPE; ?>" data-type="group">
+						<option value="">-- Select --</option>
+						<?php foreach ($this->groups as $g) : ?>
+							<option value="<?php echo $g->id; ?>"
+							        data-url="<?php echo $this->url(array('controller'=>'group', 'action'=>'view', 'id'=>$g->id)); ?>"
+							        data-label="<?php echo $g->display_name; ?>"
+							        data-hover="<?php echo $g->display_name; ?>">
+								<?php echo $g->display_name; ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+					<button type="button" class="button-bc add-item">Add</button>
+				</div>
 			</div>
-			<div class="ctrlHolder">
-				<label for="twitter">
-					Available twitter presences
-				</label>
-				<button type="button" class="button add-item">Add</button>
-				<select id="twitter" class="selectInput" data-icon="icon-twitter-sign" data-type="twitter">
-					<option value="">-- Select --</option>
-					<?php foreach ($this->twitterPresences as $p) : ?>
-						<option value="<?php echo $p->id; ?>"
-						        data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
-						        data-label="<?php echo '@' . $p->handle; ?>"
-						        data-hover="<?php echo $p->label; ?>">
-							<?php echo '@' . $p->handle . ' (' . $p->label . ')'; ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
+
+			<div class="row">
+				<div class="small-24 medium-8 large-8 columns">
+					<label for="twitter">
+						Available twitter presences
+					</label>
+				</div>
+				<div class="small-24 medium-16 large-16 end columns">
+					<select id="twitter" class="selectInput" data-icon="icon-twitter-sign" data-type="twitter">
+						<option value="">-- Select --</option>
+						<?php foreach ($this->twitterPresences as $p) : ?>
+							<option value="<?php echo $p->id; ?>"
+							        data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
+							        data-label="<?php echo '@' . $p->handle; ?>"
+							        data-hover="<?php echo $p->label; ?>">
+								<?php echo '@' . $p->handle . ' (' . $p->label . ')'; ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+					<button type="button" class="button-bc add-item">Add</button>
+				</div>
 			</div>
-			<div class="ctrlHolder">
-				<label for="facebook">
-					Available facebook presences
-				</label>
-				<button type="button" class="button add-item">Add</button>
-				<select id="facebook" class="selectInput" data-icon="icon-facebook-sign" data-type="facebook">
-					<option value="">-- Select --</option>
-					<?php foreach ($this->facebookPresences as $p) : ?>
-						<option value="<?php echo $p->id; ?>"
-						        data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
-						        data-label="<?php echo $p->handle; ?>"
-						        data-hover="<?php echo $p->label; ?>">
-							<?php echo $p->handle . ' (' . $p->label . ')'; ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
+
+			<div class="row">
+				<div class="small-24 medium-8 large-8 columns">
+					<label for="facebook">
+						Available facebook presences
+					</label>
+				</div>
+				<div class="small-24 medium-16 large-16 end columns">
+					<select id="facebook" class="selectInput" data-icon="icon-facebook-sign" data-type="facebook">
+						<option value="">-- Select --</option>
+						<?php foreach ($this->facebookPresences as $p) : ?>
+							<option value="<?php echo $p->id; ?>"
+							        data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
+							        data-label="<?php echo $p->handle; ?>"
+							        data-hover="<?php echo $p->label; ?>">
+								<?php echo $p->handle . ' (' . $p->label . ')'; ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+					<button type="button" class="button-bc add-item">Add</button>
+				</div>
 			</div>
-			<div class="ctrlHolder">
-				<label>
-					Currently assigned
-				</label>
-				<ul id="assigned">
-					<?php foreach ($this->editingUser->getAccessEntities() as $entity) : ?>
-						<?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>$entity->controller, 'action'=>'view', 'id'=>$entity->entity_id)); ?>
-						<li class="link box <?php echo $entity->entity_type; ?> split">
-							<input type="hidden" value="<?php echo $entity->entity_id;?>" name="assigned[<?php echo $entity->entity_type; ?>][]">
-							<a href="<?php echo $url ?: '#'; ?>" class="first" title="<?php echo $entity->title; ?>" target="_blank">
-								<span class="<?php echo $entity->icon; ?> icon-large"></span>
-								<?php echo $entity->text; ?>
-							</a><a href="#" class="remove-item last">
-								<span class="icon-remove"></span>
-							</a>
+
+			<div class="row">
+				<div class="small-24 medium-8 large-8 columns">
+					<label>
+						Currently assigned
+					</label>
+				</div>
+				<div class="small-24 medium-16 large-16 end columns">
+					<ul id="assigned">
+						<?php foreach ($this->editingUser->getAccessEntities() as $entity) : ?>
+							<?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>$entity->controller, 'action'=>'view', 'id'=>$entity->entity_id)); ?>
+							<li class="link box <?php echo $entity->entity_type; ?> split">
+								<input type="hidden" value="<?php echo $entity->entity_id;?>" name="assigned[<?php echo $entity->entity_type; ?>][]">
+								<a href="<?php echo $url ?: '#'; ?>" class="first" title="<?php echo $entity->title; ?>" target="_blank">
+									<span class="<?php echo $entity->icon; ?> icon-large"></span>
+									<?php echo $entity->text; ?>
+								</a><a href="#" class="remove-item last">
+									<span class="icon-remove"></span>
+								</a>
+							</li>
+						<?php endforeach; ?>
+						<li class="none-found">
+							None assigned
 						</li>
-					<?php endforeach; ?>
-					<li class="none-found">
-						None assigned
-					</li>
-				</ul>
+					</ul>
+				</div>
 			</div>
 		</fieldset>
-
-		<div class="buttonHolder">
-			<?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'user', 'action'=>'index'), null, true); ?>
-			<input type="submit" value="Save" class="primaryAction">
-		</div>
+		<?php
+		$buttons = $this->gatekeeper()->filterAll(array(
+			'<p><a href="%url%" class="button-bc">Cancel</a></p>' => array('controller'=>'user', 'action'=>'index')
+		));
+		$buttons[] = '<input type="submit" value="Save" class="primaryAction button-bc">';
+		?>
+		<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
 	</form>
 <?php endif; ?>
