@@ -135,10 +135,6 @@ class PresenceController extends GraphingController
                         $presence->update();
                         $presence->save();
                     }
-
-                    $this->flashMessage('Presence saved');
-                    $this->_helper->redirector->gotoSimple('index');
-                    exit;
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
                         $errorMessages[] = 'Presence already exists';
@@ -153,7 +149,8 @@ class PresenceController extends GraphingController
                     $this->flashMessage($message, 'error');
 				}
 			} else {
-				$this->_helper->redirector->gotoSimple('index');
+                $this->flashMessage('Presence saved');
+				$this->_helper->redirector->gotoRoute(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id));
 			}
 		}
 

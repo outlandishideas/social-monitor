@@ -191,18 +191,15 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 
 		if(!empty($results)){
 
-			$total = array_reduce($results, function($total, $status){
-				$total += $status['comments'];
-				$total += $status['likes'];
-				$total += $status['share_count'];
-				return $total;
-			}, 0);
+			$total = 0;
+            $last = null;
+            foreach ($results as $row) {
+                $total += $row->comments + $row->likes + $row->share_count;
+                $last = $row;
+            }
 
-			if($total > 0) {
-				$last = end($s);
-				if($last['popularity'] < 0){
-					$score = ($total / $last['popularity']) * 1000;
-				}
+            if ($last && $last->popularity > 0){
+                $score = ($total / $last->popularity) * 1000;
 			}
 		}
 		return $score;

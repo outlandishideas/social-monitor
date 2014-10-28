@@ -77,6 +77,9 @@ if ($owner) {
 
                     <div id="new-chart" data-controller="presence" data-id="<?php echo $presence->getId(); ?>"></div>
                 </div>
+                <div class="hide-for-medium-up">
+                    <p>Sorry, charts are not available on your device</p>
+                </div>
             </div>
             <div class="content" id="info">
                 <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
