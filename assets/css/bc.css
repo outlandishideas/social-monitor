@@ -1976,6 +1976,10 @@ td.countries a {
 	-moz-transition: background-color .7s;
 	-webkit-transition: background-color .7s;
 	transition: background-color .7s;
+	color: #fff;
+}
+.inlineLabels #assigned li a span {
+	color: #fff;
 }
 
 .inlineLabels #assigned li:hover a {
