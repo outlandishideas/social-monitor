@@ -5,7 +5,7 @@
 		<fieldset>
             <h2><?php echo $section->title; ?></h2>
             <div class="row">
-                <div class="columns small-24 medium-24 large-16">
+                <div class="columns small-24 medium-24 large-24">
                     <?php echo $section->description; ?>
                 </div>
             </div>
@@ -21,7 +21,7 @@
                                 <?php echo $args->label; ?>
                             </label>
                         </div>
-                        <div class="small-24 medium-12 large-8 end columns">
+                        <div class="small-24 medium-16 large-16 end columns">
                             <input name="<?php echo $args->key; ?>" value="<?php echo htmlspecialchars($args->value); ?>" class="textInput <?php if ($args->error) { echo 'error'; } ?>"
                                    type="text" id="<?php echo $args->key; ?>">
                             <?php if ($args->hint) : ?>
@@ -46,7 +46,7 @@
                     Choose a file to upload:
                 </label>
             </div>
-            <div class="small-24 medium-12 large-8 end columns">
+            <div class="small-24 medium-16 large-16 end columns">
                 <input name="uploadedfile" id="uploadedfile" type="file" />
             </div>
         </div>
