@@ -9,11 +9,7 @@ array_unshift($buttons, '<div id="search-table"></div>');
 
 <h2 class="page-title">Users</h2>
 
-<?php
-if($buttons) {
-    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
-}
-?>
+<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));?>
 
 <table class="users text dtable" id="all-users" data-sort-col="name">
 	<thead>
