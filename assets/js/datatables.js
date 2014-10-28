@@ -262,10 +262,10 @@ app.datatables = {
 								return '<h4>' + Date.parse(response.date).toString('d MMM HH:mm') + ' (' + response.date_diff + ')</h4>' +
 									'<p>' + response.message.replace(/\\n/g, '<br />') + '</p>';
 							} else if (o.aData.needs_response == '1') {
-								return '<p class="more"><a href="#" class="require-response">Does not require a response</a></p>' +
+								return '<p class="more"><a href="#" class="require-response" title="Does not require a response"><span class="icon-comment-alt icon-large"></span></a></p>' +
 									'<p class="no-response">Awaiting response (' + response.date_diff + ')...</p>';
 							} else {
-								return '<p class="more"><a href="#" class="require-response">Requires a response</a></p>' +
+								return '<p class="more"><a href="#" class="require-response" title="Requires a response"><span class="icon-comments icon-large"></span></a></p>' +
 									'<p class="no-response">No response required</p>';
 							}
 						},
