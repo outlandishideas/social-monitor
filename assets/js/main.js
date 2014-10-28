@@ -31,7 +31,7 @@ $.extend(app, {
 		addTextSearch: '<tr><td valign="top" colspan="<%=colspan%>" class="dataTables_empty"><span class="add-manual-search link">Add manual search</span></td></tr>',
 		tweet:'<p class="more"><a href="<%=twitter_url%>" target="_blank">View on Twitter</a></p>' +
 				'<p><%=message.replace(/\\n/g, "<br />")%></p>',
-		post:'<p class="more"><a href="<%=facebook_url%>" target="_blank">View on Facebook</a></p>' +
+		post:'<p class="more"><a href="<%=facebook_url%>" target="_blank" title="View on Facebook"><span class="icon-facebook-sign icon-large"></span></a></p>' +
 			'<%if(actor_name){%>' +
 				'<h4><%if(profile_url){%><a href="<%=profile_url%>" target="_blank"><%=actor_name%></a><%}else{%><%=actor_name%><%}%></h4>' +
 				'<%}else{%>' +

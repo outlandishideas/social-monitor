@@ -546,6 +546,10 @@ form.autoConfirm {
 	text-align: left;
 }
 
+.statusesDisplay .icon-large {
+	font-size: 20px;
+}
+
 .statusesDisplay td.date {
 	min-width: 100px;
 	max-width: 100px;
