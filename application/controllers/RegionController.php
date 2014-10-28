@@ -117,7 +117,6 @@ class RegionController extends CampaignController
 
 
         $this->view->editingRegion = $editingRegion;
-        $this->view->presences = $editingRegion->getPresences();
         $this->view->title = 'Edit Region';
         $this->view->titleIcon = 'icon-edit';
     }
@@ -208,7 +207,7 @@ class RegionController extends CampaignController
             }
             $region->assignCountries($countryIds);
             $this->flashMessage('Region countries updated');
-            $this->_helper->redirector->gotoSimple('index');
+            $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 
         $this->view->title = 'Manage Region Countries';

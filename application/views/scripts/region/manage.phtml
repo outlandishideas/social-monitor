@@ -1,11 +1,17 @@
 <?php
 $region = $this->region;
-$buttons = array();
+
+$topBar = $this->gatekeeper()->filterAll(array(
+        '<a class="button-bc button-view" href="%url%">View Region</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$region->id),
+        '<a class="button-bc button-edit" href="%url%">Edit Region</a>' => array('controller'=>'region', 'action'=>'edit', 'id'=>$region->id)
+    ));
+
+$bottomBar = array();
 $cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'region', 'action'=>'view', 'id'=>$region->id), null, true);
 if ($cancel) {
-    $buttons[] = $cancel;
+    $bottomBar[] = $cancel;
 }
-$buttons[] = '<button type="submit" class="button-bc">Save</button>';
+$bottomBar[] = '<button type="submit" class="button-bc">Save</button>';
 ?>
 
 <h2 class="page-title">Manage Countries: <?php echo $region->display_name; ?></h2>
@@ -13,14 +19,14 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 <form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-region">
 
 	<?php
-    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true));
 
 	echo $this->partial('partials/assign-countries.phtml', array(
 			'owner'=>$region,
 			'allCountries'=>$this->allCountries
 		));
 
-    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$bottomBar, 'dark'=>true));
     ?>
 </form>
 

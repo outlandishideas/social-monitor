@@ -1,5 +1,7 @@
 <?php
+/** @var Model_Region $region */
 $region = $this->editingRegion;
+$presences = $region->getPresences();
 $topBar = $this->gatekeeper()->filterAll(array(
 	'<a class="button-bc button-view" href="%url%">View Region</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$region->id),
 	'<a class="button-bc button-manage" href="%url%">Manage Countries</a>' => array('controller'=>'region', 'action'=>'manage', 'id'=>$region->id),
@@ -33,7 +35,7 @@ if ($topBar && $this->showButtons) {
         </div>
     </div>
 
-    <?php if(!empty($this->presences)) : ?>
+    <?php if(!empty($presences)) : ?>
     <fieldset class="inlineLabels">
         <h2>Presence details</h2>
         <div class="row">
@@ -43,8 +45,8 @@ if ($topBar && $this->showButtons) {
             <div class="small-24 medium-16 large-16 end columns">
                 <ul id="added-presences">
                     <?php
-                    foreach ($this->presences as $presence) {
-                        echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence, 'varname'=>'p'));
+                    foreach ($presences as $presence) {
+                        echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence));
                     }
                     ?>
                 </ul>
