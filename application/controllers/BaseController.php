@@ -391,10 +391,17 @@ class BaseController extends Zend_Controller_Action
      */
     public static function setOption($name, $value)
     {
+        self::setOptions(array($name=>$value));
+    }
+
+    public static function setOptions($options) {
+        $options = (array)$options;
         $statement = self::db()->prepare('REPLACE INTO options (name, value) VALUES (:name, :value)');
-        $statement->execute(array(':name' => $name, ':value' => $value));
-        if (array_key_exists($name, BaseController::$optionCache)) {
-            unset(BaseController::$optionCache[$name]);
+        foreach ($options as $name=>$value) {
+            $statement->execute(array(':name' => $name, ':value' => $value));
+            if (array_key_exists($name, BaseController::$optionCache)) {
+                unset(BaseController::$optionCache[$name]);
+            }
         }
     }
 
