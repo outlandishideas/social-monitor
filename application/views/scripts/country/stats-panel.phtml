@@ -4,7 +4,31 @@ $country = $this->country;
 $badges = $country->getBadges();
 /** @var NewModel_Presence[] $presences */
 $presences = $country->getPresences();
+$countryLink = $this->gatekeeper()->filter('<a href="%url%">' . $country->display_name . '</a>', array('controller'=>'country', 'action'=>'view', 'id'=>$country->id));
+if (!$countryLink) {
+    $countryLink = $country->display_name;
+}
+$presenceGroups = array();
+foreach(NewModel_PresenceType::enumValues() as $type) {
+    $typePresences = $country->getPresencesByType($type);
+    if(count($typePresences) > 0) {
+        $group = array();
+        foreach($typePresences as $presence) {
+            $presenceText = '<span class="' . $presence->getPresenceSign() . '"></span> ' . $presence->getName();
+            $presenceLink = $this->gatekeeper()->filter('<a href="%url%">' . $presenceText . '</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId()));
+            if (!$presenceLink) {
+                $presenceLink = $presenceText;
+            }
+            $group[] = $presenceLink;
+        }
+        $presenceGroups[] = array(
+            'type' => $type,
+            'links' => $group
+        );
+    }
+}
 ?>
+
 <div class="badge-small"
      data-total="<?php echo round($badges['total']); ?>"
      data-reach="<?php echo round($badges['reach']); ?>"
@@ -14,7 +38,7 @@ $presences = $country->getPresences();
      data-reach-color="<?php echo $badges['reach_color']; ?>"
      data-engagement-color="<?php echo $badges['engagement_color']; ?>"
      data-quality-color="<?php echo $badges['quality_color']; ?>">
-    <h3><a href="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$country->id)); ?>"><?php echo $country->display_name; ?></a></h3>
+    <h3><?php echo $countryLink; ?></h3>
     <div class="badge-score bd-btm">
         <h4><span data-badge-title></span> Score</h4>
         <div class="score-value" data-badge-score></div>
@@ -24,21 +48,15 @@ $presences = $country->getPresences();
         <h4>Presences</h4>
         <div class="score-value"><?php echo count($presences);?></div>
     </div>
-    <?php foreach(NewModel_PresenceType::enumValues() as $type) :
-        $typePresences = $country->getPresencesByType($type);
-        if(count($typePresences) > 0) : ?>
-            <div class="bd-btm">
-                <h4><?php echo $type->getTitle(); ?></h4>
-                <ul class="badge-presences">
-                    <?php foreach($typePresences as $presence): ?>
-                    <li>
-                        <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
-                            <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getName(); ?>
-                        </a>
-                    </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif;
-    endforeach; ?>
+
+    <?php foreach ($presenceGroups as $group) : ?>
+    <div class="bd-btm presence-list">
+        <h4><?php echo $group['type']->getTitle(); ?></h4>
+        <ul class="badge-presences">
+            <?php foreach($group['links'] as $link): ?>
+                <li><?php echo $link; ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php endforeach; ?>
 </div>

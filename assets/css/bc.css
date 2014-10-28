@@ -1998,6 +1998,10 @@ td.countries a {
 	background-position: right top;
 }
 
+#country-stats .presence-list h4 {
+	text-transform: none;
+}
+
 .dataTable th {
 	font-weight: normal;
 	text-transform: uppercase;
