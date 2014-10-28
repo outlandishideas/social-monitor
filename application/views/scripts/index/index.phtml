@@ -7,12 +7,7 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
 }
 ?>
 
-<h2 class="page-title">
-    Social Media Monitor
-    <?php if ($pdfLink) : ?>
-    <a href="<?php echo $pdfLink; ?>" target="_blank" id="kpi-download" title="Download KPIs PDF"><span class="icon-download icon-large"></span> KPIs</a>
-    <?php endif; ?>
-</h2>
+<h2 class="page-title">Social Media Monitor</h2>
 
 <div class="row hide-for-small-down">
     <div class="small-24 medium-8 columns">
@@ -157,6 +152,20 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
             </div>
         </div>
     </div>
+<?php endif; ?>
+
+<?php if ($pdfLink) : ?>
+<div class="button-bc-bar">
+    <div class="row bk-dark">
+        <div class="small-24 columns" id="kpi-download">
+            <p>These scores are derived from the organisation's social media Key Performance Indicators (KPIs).</p>
+            <p>You can download a copy of the PDF that explains them here:</p>
+            <ul class="button-group">
+                <li><a href="<?php echo $pdfLink; ?>" target="_blank" title="Download KPIs PDF" class="button-bc">Download KPIs</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 <?php endif; ?>
 
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>

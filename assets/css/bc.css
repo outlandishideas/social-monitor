@@ -2081,5 +2081,6 @@ select.selectInput:hover {
 }
 
 #kpi-download {
-	float: right;
+	text-align: center;
+	padding-top: 20px;
 }
