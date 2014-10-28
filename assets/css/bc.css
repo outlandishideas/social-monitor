@@ -1347,7 +1347,12 @@ ul.tabs li.fl-right {
 body {
 	font-family: 'Open Sans', sans-serif;
 	color: #fff;
-	/*color: rgba(255,255,255, 0.5);*/
+	color: rgba(255,255,255, 0.5);
+}
+
+body.indexController.indexAction,
+body.errorController.errorAction {
+	color: #FFF !important;
 }
 
 /* foundation styles */
@@ -1759,6 +1764,7 @@ table .cell-options .button-bc {
 .button-bc-bar .button-group {
 	margin: 1rem 0;
 	text-align: center;
+	width: 100%;
 }
 
 .button-bc-bar .button-group > li {
@@ -1911,10 +1917,12 @@ form select {
 	margin-bottom: 1rem;
 }
 
-form label {
+form label,
+form p.label {
 	font-size: 1rem;
 	color: #fff;
 	margin: 0.5rem 0;
+	background-color: transparent;
 }
 
 form input {
@@ -2043,4 +2051,10 @@ td.countries a {
 
 #model-tabs-content .content {
 	padding-top: 0;
+}
+
+
+ul.blockLabels {
+	margin-left: 0;
+	list-style: none;
 }

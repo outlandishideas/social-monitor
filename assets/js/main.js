@@ -264,9 +264,9 @@ app.init = {
 				$form.find('.none-found').toggle($form.find('.link.box').length == 0);
 			};
 			var updateAddButton = function() {
-				var type = $(this).closest('select').data('type');
+				var type = $(this).data('type');
 				var val = $(this).val();
-				$(this).closest('.ctrlHolder').find('.add-item').css('visibility', (val != '' && canAdd(val, type)) ? 'visible' : 'hidden');
+				$(this).closest('.row').find('.add-item').css('visibility', (val != '' && canAdd(val, type)) ? 'visible' : 'hidden');
 			};
 			var updateAddButtons = function() {
 				$form.find('select').each(updateAddButton);
@@ -284,7 +284,7 @@ app.init = {
 					updateAddButtons();
 				})
 				.on('click', '.add-item', function() {
-					var $select = $(this).closest('.ctrlHolder').find('select');
+					var $select = $(this).closest('.row').find('select');
 					var $selected = $select.find('option:selected');
 					var type = $select.data('type');
 					var id = $selected.val();
@@ -293,6 +293,7 @@ app.init = {
 						args.id = id;
 						args.name = (type ? 'assigned['+type+'][]' : 'assigned[]');
 						args.icon = $select.data('icon');
+						args.type = type;
 						var template = (type ? app.templates.linkBox : app.templates.countryBox);
 						$(_.template(template, args)).appendTo($('#assigned'));
 						updateNoneFound();

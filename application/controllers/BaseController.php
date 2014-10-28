@@ -107,7 +107,7 @@ class BaseController extends Zend_Controller_Action
 //		}
         $this->config = Zend_Registry::get('config');
 
-        $this->view->bodyClass = $this->_request->getActionName() . 'Action';
+        $this->view->bodyClass = $this->_request->getActionName() . 'Action '.$this->_request->getControllerName().'Controller';
         // provide a default page title
         $this->view->title = ucfirst($this->_request->getControllerName()) . ' > ' . ucfirst($this->_request->getActionName());
         $this->view->subtitle = '';
