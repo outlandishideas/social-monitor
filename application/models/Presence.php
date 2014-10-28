@@ -798,12 +798,12 @@ class Model_Presence extends Model_Base {
 			} else {
 				$textMatchColumn = ($this->isForTwitter() ? 'text_expanded' : 'message');
 				$textMatches = array("$textMatchColumn LIKE :search");
-				if ($this->isForTwitter()) {
-					$textMatches[] = 'user.name LIKE :search';
-					$textMatches[] = 'user.screen_name LIKE :search';
-				} else {
-					$textMatches[] = 'actor.name LIKE :search';
-				}
+				// if ($this->isForTwitter()) {
+				// 	$textMatches[] = 'user.name LIKE :search';
+				// 	$textMatches[] = 'user.screen_name LIKE :search';
+				// } else {
+				// 	$textMatches[] = 'actor.name LIKE :search';
+				// }
 				$clauses[] = '(' . implode(' OR ', $textMatches) . ')';
 				$args[':search'] = "%$search%";
 			}

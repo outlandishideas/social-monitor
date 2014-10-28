@@ -278,6 +278,8 @@ app.datatables = {
 				.dataTable($.extend({}, app.datatables.serverSideArgs(), args))
 				.fnSetFilteringDelay(250);
 
+			app.datatables.moveSearchBox();
+
 			$div.on('click', '.require-response', function(e) {
 				e.preventDefault();
 				app.api.post('presence/toggle-response-needed', { id: $(this).closest('tr').data('id') })
@@ -323,6 +325,8 @@ app.datatables = {
 			app.datatables.statusesTable = $div.find('table')
 				.dataTable(args)
 				.fnSetFilteringDelay(250);
+
+			app.datatables.moveSearchBox();
 		}
 	},
 	moveSearchBox: function() {
@@ -387,7 +391,7 @@ app.datatables = {
 			bInfo:true,
 			bScrollInfinite:true,
 			bScrollCollapse:false,
-			sScrollY:"400px",
+			sScrollY:"600px",
 			iScrollLoadGap:500,
 			fnDrawCallback:app.datatables.reloadAvatars
 		};

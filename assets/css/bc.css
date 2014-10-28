@@ -543,13 +543,13 @@ form.autoConfirm {
 .statusesDisplay td {
 	padding: 10px;
 	border-bottom-color: #ddd;
+	text-align: left;
 }
 
 .statusesDisplay td.date {
 	min-width: 100px;
 	max-width: 100px;
 	text-align: center;
-	background: #efefef;
 }
 .statusesDisplay td.links {
 	min-width: 200px;
