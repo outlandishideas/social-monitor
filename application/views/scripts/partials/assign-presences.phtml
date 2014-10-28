@@ -25,17 +25,19 @@
 	        </div>
 	    </div>
 	<?php endforeach; ?>
-	<div class="ctrlHolder">
-		<h2>Currently assigned presences</h2>
-		<ul id="assigned">
-			<?php
-			foreach ($this->owner->presences as $presence) {
-				echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence, 'varname'=>'assigned[' . $presence->type . ']'));
-			}
-			?>
-			<li class="none-found">
-				No presences assigned
-			</li>
-		</ul>
-	</div>
+    <div class="row">
+        <div class="small-24 columns">
+            <h2>Currently assigned presences</h2>
+            <ul id="assigned">
+                <?php
+                foreach ($this->owner->presences as $presence) {
+                    echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence, 'varname'=>'assigned[' . $presence->type . ']'));
+                }
+                ?>
+                <li class="none-found">
+                    No presences assigned
+                </li>
+            </ul>
+        </div>
+    </div>
 </fieldset>

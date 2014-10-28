@@ -9,7 +9,7 @@ abstract class CampaignController extends GraphingController
             /** @var NewModel_PresenceType $type */
             $presences[] = array(
                 'type' => $type->getValue(),
-                'title' => "Available " . $type->getTitle() . " Presences",
+                'title' => $type->getTitle(),
                 'presences' => NewModel_PresenceFactory::getPresencesByType($type),
                 'sign' => $type->getSign()
             );
