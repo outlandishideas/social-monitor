@@ -1,3 +1,4 @@
+<h2 class="page-title">Edit region</h2>
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
 	'<a class="button-bc button-view" href="%url%">View Region</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$this->editingRegion->id),
@@ -10,8 +11,6 @@ if ($buttons && $this->showButtons) {
 ?>
 
 <form method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-region">
-
-	<h2>Region details</h2>
     <div class="row">
         <div class="small-24 medium-8 large-8 columns">
             <label for="display_name" class="requiredField">
