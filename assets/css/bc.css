@@ -817,11 +817,6 @@ form.management button.add-item {
 	visibility: hidden;
 }
 
-/*form.management #assigned {
-	margin-left: 66px;
-	width: 50%;
-}*/
-
 .none-found {
 	display: none;
 }
@@ -1966,6 +1961,7 @@ td.countries a {
 
 .inlineLabels #assigned {
 	display: block;
+	list-style: none;
 }
 
 .inlineLabels #assigned li {
