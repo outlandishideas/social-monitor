@@ -117,15 +117,17 @@ fieldset {
 	float: left;
 }
 
-.title-area li.name {
+.title-area li.name h1 a {
     background: url('../img/British-Council-stacked-negative.png') center center no-repeat;
     background-size: contain;
     width: 120px;
+	height: 45px;
     margin-left: 10px;
-    margin-right: 10px;
+	margin-right: 10px;
+	padding: 0;
 }
 
-.title-area li a span {
+.title-area li.name a span {
     display: none;
 }
 
