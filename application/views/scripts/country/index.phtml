@@ -1,20 +1,19 @@
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
-    '<a class="button-bc" href="%url%">Add new</a>' => array('action'=>'new'),
+    '<a class="button-bc" href="%url%">Add New</a>' => array('action'=>'new'),
     '<a class="button-bc" href="%url%">Edit All</a>' => array('action'=>'edit-all'),
     '<a class="button-bc" href="%url%">Download CSV</a>' => array('action' => 'download')
 ));
 array_unshift($buttons, '<div id="search-table"></div>');
-?>
 
-<h2 class="page-title">Countries</h2>
+echo '<h2 class="page-title">Countries</h2>';
 
-<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
+echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
 
-<?php echo $this->partial("partials/index-table.phtml", array(
+echo $this->partial("partials/index-table.phtml", array(
 	"tableHeaders" => $this->tableHeaders,
 	"tableId" => "all-countries",
 	"rows" => $this->countries,
     'emptyText' => 'No countries found',
     'sortCol' => $this->sortCol
-)); ?>
+));

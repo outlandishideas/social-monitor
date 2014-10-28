@@ -43,21 +43,8 @@ abbr {
 }
 
 #loginWrapper {
-	margin-top: 100px;
+	margin-top: 50px;
     position: relative;
-}
-
-#loginWrapper .login-title {
-    position: absolute;
-    top: -58px;
-    left: -19px;
-}
-
-#loginWrapper h1 {
-	margin-bottom: 20px;
-	padding-bottom: 10px;
-	margin-top: 0;
-	border-bottom: 1px solid #CCCCCC;
 }
 
 #loginWrapper legend {
@@ -129,6 +116,19 @@ fieldset {
 
 .title-area li.name a span {
     display: none;
+}
+
+#loginWrapper .top-bar {
+	background: transparent;
+	text-align: center;
+}
+#loginWrapper .title-area {
+	float: none;
+	display: inline-block;
+}
+#loginWrapper .title-area li.name h1 a {
+	width: 200px;
+	margin: 0;
 }
 
 h1 {

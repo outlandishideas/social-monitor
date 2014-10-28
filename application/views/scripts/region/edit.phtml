@@ -1,12 +1,22 @@
-<h2 class="page-title">Edit region</h2>
 <?php
-$buttons = $this->gatekeeper()->filterAll(array(
+$topBar = $this->gatekeeper()->filterAll(array(
 	'<a class="button-bc button-view" href="%url%">View Region</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$this->editingRegion->id),
 	'<a class="button-bc button-manage" href="%url%">Manage Countries</a>' => array('controller'=>'region', 'action'=>'manage', 'id'=>$this->editingRegion->id),
     '<a class="button-bc button-delete" href="%url%">Delete</a>' => array('controller'=>'region', 'action'=>'delete', 'id'=>$this->editingRegion->id)
 ));
-if ($buttons && $this->showButtons) {
-    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+$bottomBar = array();
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true);
+if ($cancel) {
+    $bottomBar[] = $cancel;
+}
+$bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button>';
+?>
+
+<h2 class="page-title"><?php echo $this->title; ?></h2>
+
+<?php
+if ($topBar && $this->showButtons) {
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true));
 }
 ?>
 
@@ -44,15 +54,6 @@ if ($buttons && $this->showButtons) {
 
     <input name="campaign_type" value="<?php echo Model_Region::$campaignType; ?>" type="hidden" id="campaign_type">
 
-    <div class="button-bc-bar">
-        <div class="row bk-dark">
-            <div class="small-24 large-centered columns">
-                <ul class="button-group">
-                        <li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true); ?></li>
-                        <li><input type="submit" value="Save" class="primaryAction button-bc"></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$bottomBar, 'dark'=>true)); ?>
 </form>
 

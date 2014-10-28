@@ -7,19 +7,18 @@ if ($cancel) {
 $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 ?>
 
-<h2 class="page-title">Manage Presences</h2>
+<h2 class="page-title">Manage Presences: <?php echo $this->country->display_name; ?></h2>
 
 <form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-country">
+    <?php
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
 
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
-
-	<?php
 	echo $this->partial('partials/assign-presences.phtml', array(
-			'owner'=>$this->country,
-			'presences'=>$this->presences,
+			'owner' => $this->country,
+			'presences' => $this->presences,
 		));
-	?>
 
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+    ?>
 </form>
 

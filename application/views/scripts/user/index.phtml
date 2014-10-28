@@ -1,14 +1,15 @@
 <?php
-	$buttons = $this->gatekeeper()->filterAll(array(
-		'<a class="button-bc" href="%url%">Add new</a>' => array('controller'=>'user', 'action'=>'new')
-	));
-	array_unshift($buttons, '<div id="search-table"></div>');
+$buttons = array();
+$new = $this->gatekeeper()->filter('<a class="button-bc" href="%url%">Add new</a>', array('controller'=>'user', 'action'=>'new'), null, true);
+if ($new) {
+    $buttons[] = $new;
+}
+array_unshift($buttons, '<div id="search-table"></div>');
 ?>
 
 <h2 class="page-title">Users</h2>
 
-<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
-
+<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));?>
 
 <table class="users text dtable" id="all-users" data-sort-col="name">
 	<thead>

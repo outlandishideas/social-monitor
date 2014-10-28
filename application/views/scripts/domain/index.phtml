@@ -1,7 +1,21 @@
+<?php
+$bottomBar = array();
+if ($this->canEdit) {
+    $bottomBar = $this->gatekeeper()->filterAll(array(
+            '<a class="button-bc" href="%url%">Cancel</a>' => array('controller'=>'index', 'action'=>'index'),
+            //todo: reinstate this
+//          '<a class="button-bc" href="%url%">Download as CSV</a>' => array('action'=>'download')
+        ));
+    $bottomBar[] = '<button type="submit" class="button-bc">Save</button>';
+}
+$topBar = $bottomBar;
+array_unshift($topBar, '<div id="search-table"></div>');
+?>
+
 <h2 class="page-title">Domains</h2>
 <div class="row">
     <div class="small-24 medium-12 columns">
-        <p>This shows the list of all domains linked to by tweets or facebook statues. Click the links to see more usage information and the specific URLs.</p>
+        <p>This shows the list of all domains linked to by tweets or facebook statuses. Click the links to see more usage information and the specific URLs.</p>
     </div>
     <div class="small-24 medium-12 columns">
         <p>You can say whether or not a domain belongs to the British Council by toggling the checkbox on the right, and clicking 'save'.
@@ -9,30 +23,9 @@
     </div>
 </div>
 
-<?php
-$buttons = array();
-if ($this->canEdit) : ?>
-		<?php $buttons = $this->gatekeeper()->filterAll(array(
-			'<a class="button-bc" href="%url%">Cancel</a>' => array('action'=>'index'),
-            //todo: reinstate this
-//			'<a class="button-bc" href="%url%">Download as CSV</a>' => array('action'=>'download')
-		)); ?>
-<?php endif; ?>
 <form method="post" action="<?php echo $this->url(); ?>">
 
-	<div class="button-bc-bar">
-		<div class="row bk-dark">
-			<div class="small-24 large-centered columns">
-				<ul class="button-group">
-					<li><div id="search-table"><?php // search box will go in here ?></div></li>
-					<?php foreach($buttons as $button): ?>
-						<li><?php echo $button; ?></li>
-					<?php endforeach; ?>
-					<li><button formaction="submit" class="button-bc">Save</button></li>
-				</ul>
-			</div>
-		</div>
-	</div>
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true)); ?>
 
 	<table class="text dtable" id="domains">
 		<thead>
@@ -46,18 +39,6 @@ if ($this->canEdit) : ?>
 		</tbody>
 	</table>
 
-	<div class="button-bc-bar">
-		<div class="row bk-dark">
-			<div class="small-24 large-centered columns">
-				<ul class="button-group">
-<!--					<li><a class="button-bc" href="#">Download CSV</a></li>-->
-					<?php foreach($buttons as $button): ?>
-						<li><?php echo $button; ?></li>
-					<?php endforeach; ?>
-					<li><button formaction="submit" class="button-bc">Save</button></li>
-				</ul>
-			</div>
-		</div>
-	</div>
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$bottomBar, 'dark'=>true)); ?>
 
 </form>

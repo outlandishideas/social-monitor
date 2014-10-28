@@ -1,33 +1,24 @@
-<h2 class="page-title">Manage Presences</h2>
+<?php
+$buttons = array();
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true);
+if ($cancel) {
+    $buttons[] = $cancel;
+}
+$buttons[] = '<button type="submit" class="button-bc">Save</button>';
+?>
+
+<h2 class="page-title">Manage Presences: <?php echo $this->group->display_name; ?></h2>
 
 <form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-group">
-
-    <div class="button-bc-bar">
-        <div class="row bk-dark">
-            <div class="small-24 columns">
-                <ul class="button-group">
-                    <li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?></li>
-                    <li><button type="submit" class="button-bc">Save</button></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
     <?php
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+
 	echo $this->partial('partials/assign-presences.phtml', array(
-			'owner'=>$this->group,
-			'presences'=>$this->presences,
+			'owner' => $this->group,
+			'presences' => $this->presences,
 		));
-	?>
-    <div class="button-bc-bar">
-        <div class="row bk-dark">
-            <div class="small-24 columns">
-                <ul class="button-group">
-                    <li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?></li>
-                    <li><button type="submit" class="button-bc">Save</button></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+    ?>
 </form>
 

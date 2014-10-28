@@ -17,6 +17,17 @@
     <div class="small-24 medium-16 large-8 medium-centered columns">
         <div id="loginWrapper">
             <?php echo $this->FlashMessages(); ?>
+            <nav class="top-bar" data-topbar role="navigation">
+                <ul class="title-area">
+                    <li class="name">
+                        <h1>
+                            <a href="<?php echo $this->url(array('controller'=>'index', 'action'=>'index'), null, true); ?>">
+                                <span>British Council Social Media Monitor</span>
+                            </a>
+                        </h1>
+                    </li>
+                </ul>
+            </nav>
             <?php echo $this->layout()->content; ?>
         </div>
     </div>

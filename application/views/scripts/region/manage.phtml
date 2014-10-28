@@ -1,21 +1,25 @@
+<?php
+$buttons = array();
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true);
+if ($cancel) {
+    $buttons[] = $cancel;
+}
+$buttons[] = '<button type="submit" class="button-bc">Save</button>';
+?>
+
+<h2 class="page-title">Manage Countries: <?php echo $this->region->display_name; ?></h2>
+
 <form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-region">
 
 	<?php
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+
 	echo $this->partial('partials/assign-countries.phtml', array(
 			'owner'=>$this->region,
 			'allCountries'=>$this->allCountries
 		));
-	?>
 
-	<div class="button-bc-bar">
-        <div class="row bk-dark">
-            <div class="small-24 large-centered columns">
-                <ul class="button-group">
-                        <li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'region', 'action'=>'index'), null, true); ?></li>
-                        <li><input type="submit" value="Save" class="primaryAction button-bc"></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+    ?>
 </form>
 
