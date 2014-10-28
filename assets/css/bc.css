@@ -1896,10 +1896,12 @@ form select {
 	margin-bottom: 1rem;
 }
 
-form label {
+form label,
+form p.label {
 	font-size: 1rem;
 	color: #fff;
 	margin: 0.5rem 0;
+	background-color: transparent;
 }
 
 form input {
@@ -2028,4 +2030,10 @@ td.countries a {
 
 #model-tabs-content .content {
 	padding-top: 0;
+}
+
+
+ul.blockLabels {
+	margin-left: 0;
+	list-style: none;
 }

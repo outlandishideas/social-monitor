@@ -1,8 +1,8 @@
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button-bc" href="%url%"><span class="icon-eye-open icon-large"></span> View Region</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$this->editingRegion->id),
-	'<a class="button-bc" href="%url%"><span class="icon-tasks icon-large"></span> Manage Countries</a>' => array('controller'=>'region', 'action'=>'manage', 'id'=>$this->editingRegion->id),
-    '<a href="%url%" class="button-bc remove"><span class="icon-remove icon-large"></span> Delete</a>' => array('controller'=>'region', 'action'=>'delete', 'id'=>$this->editingRegion->id)
+	'<a class="button-bc" href="%url%">View Region</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$this->editingRegion->id),
+	'<a class="button-bc" href="%url%">Manage Countries</a>' => array('controller'=>'region', 'action'=>'manage', 'id'=>$this->editingRegion->id),
+    '<a href="%url%" class="button-bc remove">Delete</a>' => array('controller'=>'region', 'action'=>'delete', 'id'=>$this->editingRegion->id)
 ));
 if ($buttons && $this->showButtons) :
 ?>
@@ -19,29 +19,23 @@ if ($buttons && $this->showButtons) :
     </div>
 <?php endif; ?>
 
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-region">
+<form method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-region">
 
-	<fieldset class="inlineLabels">
-		<h2 class="page-title">Region details</h2>
-        <div class="ctrlHolder">
+	<h2>Region details</h2>
+    <div class="row">
+        <div class="small-24 medium-8 large-4 columns">
             <label for="display_name" class="requiredField">
                 Display name<span class="asteriskField">*</span>
             </label>
-            <input name="display_name" value="<?php echo htmlspecialchars($this->editingRegion->display_name); ?>"
-                   type="text" id="display_name">
         </div>
-        <!--<div class="ctrlHolder">
-            <label for="audience">
-                Available audience size
-            </label>
-            <input name="audience" value="<?php echo htmlspecialchars($this->editingRegion->audience); ?>" class="textInput"
-                   type="text" id="audience">
-        </div>-->
-	</fieldset>
+        <div class="small-24 medium-12 large-8 end columns">
+            <input name="display_name" value="<?php echo htmlspecialchars($this->editingRegion->display_name); ?>" class="textInput" type="text" id="display_name">
+        </div>
+    </div>
 
     <?php if(!empty($this->presences)) : ?>
     <fieldset class="inlineLabels">
-        <h2 class="page-title">Presence details</h2>
+        <h2>Presence details</h2>
         <div class="ctrlHolder">
             <p>These presences will be automatically added to this region:</p>
             <ul id="added-presences">
