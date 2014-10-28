@@ -6,14 +6,12 @@
         <div class="row bk-dark">
             <div class="small-24 columns">
                 <ul class="button-group">
-                    <li><?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?></li>
+                    <li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?></li>
                     <li><button type="submit" class="button-bc">Save</button></li>
                 </ul>
             </div>
         </div>
     </div>
-
-    <h2>SBU Details</h2>
 
     <table class="text dtable standard" id="all-groups">
         <thead>
@@ -43,7 +41,7 @@
         <div class="row bk-dark">
             <div class="small-24 columns">
                 <ul class="button-group">
-                    <li><?php echo $this->gatekeeper()->filter('<a href="%url%">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?></li>
+                    <li><?php echo $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true); ?></li>
                     <li><button type="submit" class="button-bc">Save</button></li>
                 </ul>
             </div>
