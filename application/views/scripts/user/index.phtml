@@ -4,6 +4,7 @@ $new = $this->gatekeeper()->filter('<a class="button-bc" href="%url%">Add new</a
 if ($new) {
     $buttons[] = $new;
 }
+array_unshift($buttons, '<div id="search-table"></div>');
 ?>
 
 <h2 class="page-title">Users</h2>
