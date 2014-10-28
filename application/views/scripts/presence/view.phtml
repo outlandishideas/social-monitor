@@ -63,7 +63,7 @@ if ($owner) {
         <dl class="tabs" data-tab id="model-tabs">
             <dd class="active"><a href="#chart">Charts</a></dd>
             <dd><a href="#info">Info</a></dd>
-<!--            <dd><a href="#statuses">Statuses</a></dd>--><?php //todo ?>
+           <dd><a href="#statuses">Statuses</a></dd>
         </dl>
         <div class="tabs-content" id="model-tabs-content">
             <div class="content active" id="chart">
@@ -96,20 +96,26 @@ if ($owner) {
             </div>
             <div class="content" id="statuses">
                 <div class="statusesDisplay <?php echo $presenceType; ?>" data-presence-id="<?php echo $presence->id; ?>">
+                    <?php
+                    $buttons = array();
+                    array_unshift($buttons, '<div id="search-table"></div>');
+
+                    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+                    ?>
                     <table>
                         <thead>
-                        <tr>
-                            <?php if ($presence->isForFacebook()) : ?>
-                                <th class="user">User</th>
-                                <th class="message">Message</th>
-                                <th class="links">Links</th>
-                                <th class="response">Response</th>
-                                <th class="date">Date</th>
-                            <?php else : ?>
-                                <th class="message">Message</th>
-                                <th class="date">Date</th>
-                            <?php endif; ?>
-                        </tr>
+                            <tr>
+                                <?php if ($presence->isForFacebook()) : ?>
+                                    <th class="user">User</th>
+                                    <th class="message">Message</th>
+                                    <th class="links">Links</th>
+                                    <th class="response">Response</th>
+                                    <th class="date">Date</th>
+                                <?php else : ?>
+                                    <th class="message">Message</th>
+                                    <th class="date">Date</th>
+                                <?php endif; ?>
+                            </tr>
                         </thead>
                         <tbody>
                         </tbody>
