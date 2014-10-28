@@ -861,6 +861,11 @@ form.management button.add-item {
     margin: 3px 0;
 }
 
+.tabs-content #info .entity-list {
+	float: left;
+	margin-right: 10px;
+}
+
 .key {
     top: 200px;
     position: absolute;
@@ -1085,16 +1090,14 @@ li.link.box {
 }
 .link.box.split a.first {
     padding: 2px 7px 2px 3px;
-	border-radius: 5px;
-	border-bottom-right-radius: 0;
-	border-top-right-radius: 0;
+	border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
 }
 
 .link.box.split a.last {
     padding: 3px 5px 2px 5px;
-	border-radius: 5px;
-	border-bottom-left-radius: 0;
-	border-top-left-radius: 0;
+	border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
 }
 
 .link.box.facebook a {
@@ -1450,6 +1453,10 @@ h4 {
 	margin-bottom: 3rem;
 	/*margin-top: 2.4rem;*/
 }
+.badge-main .badge-score,
+.badge-main .score-value {
+	text-align: right;
+}
 
 .badge-main h2 {
 	display: none;
@@ -1692,6 +1699,9 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	stroke-width: 3;
 }
 
+#new-chart .c3-tooltip-container {
+	z-index: 1;
+}
 #new-chart .c3-tooltip-container table th,
 #new-chart .c3-tooltip-container table td {
 	color: #000;
@@ -1947,16 +1957,6 @@ td.countries a {
 
 .entity-list-toggle {
 	cursor: pointer;
-}
-
-#edit-region #added-presences .remove-item {
-	display: none;
-}
-
-#edit-region #added-presences .link.box.split a.first {
-	border-radius: 5px;
-	border-bottom-right-radius: 5px;
-	border-top-right-radius: 5px;
 }
 
 .inlineLabels #assigned {
