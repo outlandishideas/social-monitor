@@ -3,23 +3,14 @@
 
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button-bc" href="%url%">View Country</a>' => array('controller'=>'country', 'action'=>'view', 'id'=>$this->editingCountry->id),
-	'<a class="button-bc" href="%url%">Manage Presences</a>' => array('controller'=>'country', 'action'=>'manage', 'id'=>$this->editingCountry->id),
-    '<a href="%url%" class="button-bc">Delete</a>' => array('controller'=>'country', 'action'=>'delete', 'id'=>$this->editingCountry->id)
+	'<a class="button-bc button-view" href="%url%">View Country</a>' => array('controller'=>'country', 'action'=>'view', 'id'=>$this->editingCountry->id),
+	'<a class="button-bc button-manage" href="%url%">Manage Presences</a>' => array('controller'=>'country', 'action'=>'manage', 'id'=>$this->editingCountry->id),
+    '<a class="button-bc button-delete" href="%url%">Delete</a>' => array('controller'=>'country', 'action'=>'delete', 'id'=>$this->editingCountry->id)
 ));
-if ($buttons && $this->showButtons) : ?>
-	<div class="button-bc-bar">
-		<div class="row bk-dark">
-			<div class="small-24 columns">
-				<ul class="button-group">
-				<?php foreach($buttons as $button) : ?>
-					<li><?php echo $button; ?></li>
-				<?php endforeach; ?>
-				</ul>
-			</div>
-		</div>
-	</div>
-<?php endif; ?>
+if ($buttons && $this->showButtons) {
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+}
+?>
 
 <form method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-country">
 

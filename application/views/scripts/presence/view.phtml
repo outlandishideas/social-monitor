@@ -1,6 +1,7 @@
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
-    '<a class="button" href="%url%"><span class="icon-edit icon-large"></span> Edit Presence</a>' => array('action'=>'edit', 'id'=>$this->presence->id)
+    '<a class="button-bc button-edit" href="%url%">Edit Presence</a>' => array('action'=>'edit', 'id'=>$this->presence->id),
+    '<a class="button-bc button-delete" href="%url%"></span>Delete Presence</a>' => array('action'=>'delete', 'id'=>$this->presence->id),
 ));
 /** @var NewModel_Presence $presence */
 $presence = $this->presence;
@@ -37,8 +38,6 @@ if ($owner) {
 
 <div class="row">
 	<div class="small-24 large-12 xlarge-8 columns">
-
-		<?php //echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
 
         <div class="model-header bd-btm">
             <a href="<?php echo $presence->page_url; ?>" target="_blank"><span class="page-icon <?php echo $presence->getPresenceSign(); ?>"></span></a>
@@ -80,6 +79,7 @@ if ($owner) {
                 </div>
             </div>
             <div class="content" id="info">
+                <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons)); ?>
                 <h4 class="presence-name">
                     <?php if ($presence->image_url) : ?>
                     <img src="<?php echo $presence->image_url; ?>" />

@@ -1,9 +1,13 @@
 <?php if ($this->buttons && is_array($this->buttons)) : ?>
-    <div class="button-bar">
-        <ul class="button-group">
-            <?php foreach($this->buttons as $button): ?>
-                <li><?php echo $button; ?></li>
-            <?php endforeach; ?>
-        </ul>
+    <div class="button-bc-bar">
+        <div class="row <?php if (!empty($this->dark)) echo 'bk-dark'; ?>">
+            <div class="small-24 columns">
+                <ul class="button-group">
+                    <?php foreach($this->buttons as $button): ?>
+                        <li><?php echo $button; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
     </div>
 <?php endif; ?>

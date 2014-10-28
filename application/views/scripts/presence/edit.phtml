@@ -4,23 +4,13 @@ $presence = $this->presence;
 /** @var NewModel_PresenceType[] $types */
 $types = $this->types;
 $buttons = $this->gatekeeper()->filterAll(array(
-    '<a href="%url%" class="button-bc remove">Delete</a>' => array('action'=>'delete', 'id'=>$presence->id)
+    '<a href="%url%" class="button-bc button-view">View</a>' => array('action'=>'view', 'id'=>$presence->id),
+    '<a href="%url%" class="button-bc button-delete">Delete</a>' => array('action'=>'delete', 'id'=>$presence->id)
 ));
-if ($buttons && $this->showButtons) :
-    ?>
-    <div class="button-bc-bar">
-        <div class="row bk-dark">
-            <div class="small-24 large-centered columns">
-                <ul class="button-group">
-                    <?php foreach($buttons as $button): ?>
-                        <li><?php echo $button; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>
-
+if ($buttons && $this->showButtons) {
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+}
+?>
 
 <form method="post" action="<?php echo $this->url(); ?>">
 

@@ -1,9 +1,9 @@
 <?php
-//$buttons = $this->gatekeeper()->filterAll(array(
-//    '<a class="button" href="%url%"><span class="icon-edit icon-large"></span> Edit Region</a>' => array('action'=>'edit', 'id'=>$this->region->id),
-//    '<a class="button" href="%url%"><span class="icon-tasks icon-large"></span> Manage Countries</a>' => array('action'=>'manage', 'id'=>$this->region->id)
-//));
-
+$this->buttons = $this->gatekeeper()->filterAll(array(
+    '<a class="button-bc button-edit" href="%url%">Edit Region</a>' => array('action'=>'edit', 'id'=>$this->region->id),
+    '<a class="button-bc button-manage" href="%url%">Manage Countries</a>' => array('action'=>'manage', 'id'=>$this->region->id),
+    '<a class="button-bc button-delete" href="%url%">Delete Region</a>' => array('action'=>'delete', 'id'=>$this->region->id),
+));
 $this->campaign = $this->region;
 $this->controllerName = 'region';
 $this->campaignType = 'Region';

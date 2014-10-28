@@ -26,13 +26,15 @@ class Chart_Compare extends Chart_Abstract {
 
         foreach ($wantedColumns as $column) {
             $dataRow = array($column);
-            foreach ($data as $row) {
-                $row = (object)$row;
-                $value = isset($row->$column) ? $row->$column : null;
-                if ($column != $this->getXColumn() && !is_null($value)) {
-                    $value = round($value, 1);
+            if ($data) {
+                foreach ($data as $row) {
+                    $row = (object)$row;
+                    $value = isset($row->$column) ? $row->$column : null;
+                    if ($column != $this->getXColumn() && !is_null($value)) {
+                        $value = round($value, 1);
+                    }
+                    $dataRow[] = $value;
                 }
-                $dataRow[] = $value;
             }
             $columns[] = $dataRow;
         }

@@ -1754,7 +1754,7 @@ table .cell-options .button-bc {
 	margin: 2rem 0;
 }
 
-.button-bc-bar .row {
+.button-bc-bar .row.bk-dark {
 	background-color: #000;
 	background-color: rgba(0,0,0,0.5);
 }
@@ -2049,6 +2049,9 @@ td.countries a {
 
 #model-tabs-content .content {
 	padding-top: 0;
+}
+#model-tabs-content .content .button-bc-bar {
+	margin: 0;
 }
 
 

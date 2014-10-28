@@ -229,8 +229,11 @@ class RegionController extends CampaignController
 		if ($this->_request->isPost()) {
 			$region->delete();
             $this->flashMessage('Region saved');
+    		$this->_helper->redirector->gotoSimple('index');
+        } else {
+            $this->flashMessage('Incorrect usage of delete');
+            $this->_helper->redirector->gotoRoute(array('action'=>'view'));
 		}
-		$this->_helper->redirector->gotoSimple('index');
 	}
 
 	public function downloadAction() {

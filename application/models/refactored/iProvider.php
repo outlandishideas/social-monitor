@@ -4,6 +4,8 @@ abstract class NewModel_iProvider
 {
 	protected $db;
 	protected $tableName;
+    /** @var NewModel_PresenceType */
+    protected $type = null;
 
 	public function __construct(PDO $db)
 	{
