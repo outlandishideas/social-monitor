@@ -2011,6 +2011,12 @@ td.countries a {
 	text-transform: uppercase;
 }
 
+.dataTables_scrollHead table {
+	margin-bottom: 0;
+}
+.dataTables_scrollBody thead {
+	border: 0;
+}
 
 /* tabs on right-hand-side of presence/campaign page */
 #model-tabs,
