@@ -2065,7 +2065,6 @@ ul.blockLabels {
 	margin-left: 0;
 	list-style: none;
 }
-<<<<<<< HEAD
 
 select {
 	line-height: 28px;
@@ -2075,5 +2074,8 @@ select:hover {
 	background: inherit;
 	border-color: inherit;
 }
-=======
->>>>>>> 3548cca0a3a088950e1f97744eeee77faccdc0c6
+
+
+.button-bc.add-item {
+	margin-bottom: 1.25rem;
+}

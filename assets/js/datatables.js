@@ -112,7 +112,7 @@ app.datatables = {
 		return columns;
 	},
 	selectors: {
-		'.dtable.standard, #all-sbus, #all-countries, #all-regions, #all-presences': function($table) {
+		'.dtable.standard, #all-sbus, #all-countries, #all-regions, #all-presences, #all-users': function($table) {
 			var columns = app.datatables.generateColumns($table);
 			var sortCol = 0;
 			var sortColName = $table.data('sortCol');
