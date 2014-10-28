@@ -292,6 +292,16 @@ app.datatables = {
 
 			app.datatables.moveSearchBox();
 
+			$(document).foundation({
+				tab: {
+					callback: function(tab) {
+						if (tab.context.hash == '#statuses') {
+							$(document).trigger('dataChanged'); // fix header cells when switching to this tab
+						}
+					}
+				}
+			});
+
 			$div.on('click', '.require-response', function(e) {
 				e.preventDefault();
 				app.api.post('presence/toggle-response-needed', { id: $(this).closest('tr').data('id') })
