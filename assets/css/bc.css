@@ -632,6 +632,9 @@ table.dtable.dataTable {
 .dataTables_filter {
 	margin-bottom: 10px;
 }
+#search-table .dataTables_filter {
+	margin-bottom: 0;
+}
 
 .dataTable .sorting,
 .dataTable .sorting_asc,
