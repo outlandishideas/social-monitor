@@ -2062,13 +2062,13 @@ ul.blockLabels {
 	list-style: none;
 }
 
-select {
+select.selectInput {
 	line-height: 28px;
 }
 
-select:hover {
-	background: inherit;
-	border-color: inherit;
+select.selectInput:hover {
+	background: rgba(0,0,0,.5);
+	border-color: #FFF;
 }
 
 
