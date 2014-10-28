@@ -1362,6 +1362,27 @@ body {
     margin-bottom: 0.5rem;
 }
 
+.top-bar-section > ul > li > a {
+	position: relative;
+}
+.top-bar-section > ul > li > a:hover > .triangle,
+.top-bar-section > ul > li.active > a > .triangle {
+	width: 0;
+	height: 0;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-top: 6px solid #234a55;
+	position: absolute;
+	left: 50%;
+	margin-left: -8px;
+}
+.top-bar-section > ul > li.active > a > .triangle {
+	border-top-color: #2ba6cb;
+}
+.top-bar-section > ul > li.active > a:hover > .triangle {
+	border-top-color: #258faf;
+}
+
 .top-bar-section li:not(.has-form) a:not(.button):hover {
 	background: #234a55;
 }
