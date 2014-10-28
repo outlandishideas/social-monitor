@@ -1,10 +1,16 @@
-<?php $url = $this->gatekeeper()->filter('%url%', array('controller'=>'presence', 'action'=>'view', 'id'=>$this->presence->id), null, true); ?>
+<?php
+$url = $this->gatekeeper()->filter('%url%', array('controller'=>'presence', 'action'=>'view', 'id'=>$this->presence->id), null, true);
+$forForm = !empty($this->varname);
+?>
 <li class="link box <?php echo $this->presence->type; ?> split">
-	<input type="hidden" value="<?php echo $this->presence->id;?>" name="<?php echo $this->varname; ?>[]">
-	<a href="<?php echo ($url ?: '#'); ?>" title="<?php echo $this->presence->getLabel(); ?>" class="first" <?php if ($url) echo 'target="_blank"'; ?>>
+    <?php if ($forForm) : ?>
+	<input type="hidden" value="<?php echo $this->presence->id;?>" name="<?php echo $this->varname; ?>">
+    <?php endif; ?>
+	<a href="<?php echo ($url ?: '#'); ?>" title="<?php echo $this->presence->getLabel(); ?>" class="first <?php if (!$forForm) { echo 'last'; } ?>" <?php if ($url) echo 'target="_blank"'; ?>>
 		<span class="icon-<?php echo $this->presence->type; ?>-sign icon-large"></span>
 		<?php echo ($this->presence->isForTwitter() ? '@' : '') . $this->presence->handle; ?>
-	</a><a href="#" class="remove-item last">
+	</a><?php if ($forForm) : ?><a href="#" class="remove-item last">
 		<span class="icon-remove"></span>
 	</a>
+    <?php endif; ?>
 </li>

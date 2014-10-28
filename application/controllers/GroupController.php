@@ -227,7 +227,7 @@ class GroupController extends CampaignController {
             }
             $group->assignPresences($presenceIds);
             $this->flashMessage('SBU presences updated');
-            $this->_helper->redirector->gotoSimple('index');
+            $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 
         $this->view->title = 'Manage SBU Presences';

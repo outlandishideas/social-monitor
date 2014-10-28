@@ -1,5 +1,7 @@
 <?php
+/** @var Model_Group $sbu */
 $sbu = $this->editingGroup;
+$presences = $sbu->getPresences();
 $topBar = $this->gatekeeper()->filterAll(array(
 	'<a class="button-bc button-view" href="%url%">View SBU</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
 	'<a class="button-bc button-manage" href="%url%">Manage Presences</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$sbu->id),
@@ -49,26 +51,6 @@ if ($topBar && $this->showButtons) {
         </div>
 
 	</fieldset>
-
-    <?php if(!empty($this->presences)) : ?>
-    <fieldset class="inlineLabels">
-        <h2>Presence details</h2>
-        <div class="row">
-            <div class="small-24 medium-8 large-8 columns">
-               <p>These presences will be automatically added to this SBU:</p>
-            </div>
-            <div class="small-24 medium-16 large-16 end columns">
-                <ul id="added-presences">
-                    <?php
-                    foreach ($this->presences as $presence) {
-                        echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence, 'varname'=>'p'));
-                    }
-                    ?>
-                </ul>
-            </div>
-        </div>
-    </fieldset>
-    <?php endif; ?>
 
     <input name="campaign_type" value="<?php echo Model_Group::$campaignType; ?>" type="hidden" id="campaign_type">
 

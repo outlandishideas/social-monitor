@@ -1,25 +1,31 @@
 <?php
 $sbu = $this->group;
-$buttons = array();
+
+$topBar = $this->gatekeeper()->filterAll(array(
+    '<a class="button-bc button-view" href="%url%">View SBU</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
+    '<a class="button-bc button-edit" href="%url%">Edit SBU</a>' => array('controller'=>'group', 'action'=>'edit', 'id'=>$sbu->id)
+));
+
+$bottomBar = array();
 $cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id), null, true);
 if ($cancel) {
-    $buttons[] = $cancel;
+    $bottomBar[] = $cancel;
 }
-$buttons[] = '<button type="submit" class="button-bc">Save</button>';
+$bottomBar[] = '<button type="submit" class="button-bc">Save</button>';
 ?>
 
 <h2 class="page-title">Manage Presences: <?php echo $sbu->display_name; ?></h2>
 
 <form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-group">
     <?php
-    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true));
 
 	echo $this->partial('partials/assign-presences.phtml', array(
 			'owner' => $sbu,
 			'presences' => $this->presences,
 		));
 
-    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$bottomBar, 'dark'=>true));
     ?>
 </form>
 

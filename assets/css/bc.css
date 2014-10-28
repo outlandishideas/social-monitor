@@ -861,7 +861,7 @@ form.management button.add-item {
     margin: 3px 0;
 }
 
-.tabs-content #info .entity-list {
+.tabs-content #info .entity-list li {
 	float: left;
 	margin-right: 10px;
 }

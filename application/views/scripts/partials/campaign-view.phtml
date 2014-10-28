@@ -68,7 +68,7 @@ if ($campaign instanceof Model_Country) {
                     <h4>Countries: <?php echo count($countries); ?></h4>
                     <ul class="entity-list">
                         <?php foreach ($countries as $c) : ?>
-                            <li><?php echo $this->partial('partials/country_inline.phtml', array('country'=>$c)); ?></li>
+                            <?php echo $this->partial('partials/country_box.phtml', array('country'=>$c)); ?>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
@@ -77,7 +77,7 @@ if ($campaign instanceof Model_Country) {
                 <?php if ($presences) : ?>
                 <ul class="entity-list">
                     <?php foreach ($presences as $p) : ?>
-                    <li><?php echo $this->partial('partials/presence_inline.phtml', array('presence'=>$p)); ?></li>
+                    <?php echo $this->partial('partials/presence_box.phtml', array('presence'=>$p)); ?>
                     <?php endforeach; ?>
                 </ul>
                 <?php endif; ?>
