@@ -173,13 +173,16 @@ class PresenceController extends GraphingController
 	public function deleteAction()
 	{
 		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
-		$this->validateData($presence, 'page');
+		$this->validateData($presence);
 
 		if ($this->_request->isPost()) {
 			$presence->delete();
             $this->flashMessage('Presence deleted');
-		}
-		$this->_helper->redirector->gotoSimple('index');
+            $this->_helper->redirector->gotoSimple('index');
+		} else {
+            $this->flashMessage('Incorrect usage of delete');
+            $this->_helper->redirector->gotoRoute(array('action'=>'view'));
+        }
 	}
 
 	/**

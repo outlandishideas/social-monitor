@@ -662,6 +662,21 @@ class NewModel_Presence
         $statement->execute(array_values($data));
 	}
 
+    public function delete() {
+        $tables = array(
+            'badge_history',
+            'kpi_cache',
+            'campaign_presences',
+            'presence_history',
+            $this->provider->getTableName()
+        );
+        foreach ($tables as $table) {
+            $this->db->prepare("DELETE FROM $table WHERE presence_id = :pid")
+                ->execute(array(':pid'=>$this->id));
+        }
+        $this->db->prepare('DELETE FROM '.NewModel_PresenceFactory::TABLE_PRESENCES.' WHERE id = ?')
+            ->execute(array($this->id));
+    }
 
 
 }

@@ -8,9 +8,6 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 
 	protected $connection = null;
 
-	protected $tableName = 'sina_weibo_posts';
-	protected $type = null;
-
 	public function __construct(PDO $db) {
 		parent::__construct($db);
 		$this->connection = new SaeTClientV2('1247980630', 'cfcd7c7170b70420d7e1c00628d639c2', '2.00cBChiFjjAm3C216d675d51UwGFRE');
@@ -18,6 +15,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 			$this->connection->set_remote_ip('127.0.0.1');
 		}
 		$this->type = NewModel_PresenceType::SINA_WEIBO();
+        $this->tableName = 'sina_weibo_posts';
 	}
 
 	public function fetchStatusData(NewModel_Presence $presence)
@@ -261,7 +259,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 			}
 		}
 
-        $presence->type = NewModel_PresenceType::SINA_WEIBO();
+        $presence->type = $this->type;
 		$presence->uid = $ret['idstr'];
 		$presence->image_url = $ret['profile_image_url'];
 		$presence->name = $ret['name'];

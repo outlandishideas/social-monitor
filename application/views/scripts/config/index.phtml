@@ -52,19 +52,11 @@
         </div>
     </fieldset>
 
-    <div class="button-bc-bar">
-        <div class="row bk-dark">
-            <div class="small-24 columns">
-                <ul class="button-group">
-                    <?php $buttons = $this->gatekeeper()->filterAll(array(
-                        '<a class="button-bc" href="%url%">Cancel</a>' => array('controller'=>'index', 'action'=>'index')
-                    ));
-                    foreach($buttons as $button): ?>
-                    <li><?php echo $button; ?></li>
-                    <li><button type="submit" class="button-bc">Save</li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        </div>
-    </div>
+    <?php
+    $buttons = $this->gatekeeper()->filterAll(array(
+            '<a class="button-bc" href="%url%">Cancel</a>' => array('controller'=>'index', 'action'=>'index')
+        ));
+    $buttons[] = '<button type="submit" class="button-bc">Save</button>';
+    echo $this->partial('partials/button-bar.phtml', array('buttons' => $buttons, 'dark' => true));
+    ?>
 </form>

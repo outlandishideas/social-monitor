@@ -117,19 +117,17 @@ fieldset {
 	float: left;
 }
 
-.site-title {
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 56px;
+.title-area li.name h1 a {
     background: url('../img/British-Council-stacked-negative.png') center center no-repeat;
     background-size: contain;
-    color: #065284;
     width: 120px;
-    height: 56px;
+	height: 45px;
     margin-left: 10px;
+	margin-right: 10px;
+	padding: 0;
 }
 
-.site-title span {
+.title-area li.name a span {
     display: none;
 }
 
@@ -633,6 +631,9 @@ table.dtable.dataTable {
 
 .dataTables_filter {
 	margin-bottom: 10px;
+}
+#search-table .dataTables_filter {
+	margin-bottom: 0;
 }
 
 .dataTable .sorting,
@@ -1370,6 +1371,27 @@ body.errorController.errorAction {
     margin-bottom: 0.5rem;
 }
 
+.top-bar-section > ul > li > a {
+	position: relative;
+}
+.top-bar-section > ul > li > a:hover > .triangle,
+.top-bar-section > ul > li.active > a > .triangle {
+	width: 0;
+	height: 0;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-top: 6px solid #234a55;
+	position: absolute;
+	left: 50%;
+	margin-left: -8px;
+}
+.top-bar-section > ul > li.active > a > .triangle {
+	border-top-color: #2ba6cb;
+}
+.top-bar-section > ul > li.active > a:hover > .triangle {
+	border-top-color: #258faf;
+}
+
 .top-bar-section li:not(.has-form) a:not(.button):hover {
 	background: #234a55;
 }
@@ -1738,7 +1760,7 @@ table .cell-options .button-bc {
 	margin: 2rem 0;
 }
 
-.button-bc-bar .row {
+.button-bc-bar .row.bk-dark {
 	background-color: #000;
 	background-color: rgba(0,0,0,0.5);
 }
@@ -2034,12 +2056,16 @@ td.countries a {
 #model-tabs-content .content {
 	padding-top: 0;
 }
+#model-tabs-content .content .button-bc-bar {
+	margin: 0;
+}
 
 
 ul.blockLabels {
 	margin-left: 0;
 	list-style: none;
 }
+<<<<<<< HEAD
 
 select {
 	line-height: 28px;
@@ -2049,3 +2075,5 @@ select:hover {
 	background: inherit;
 	border-color: inherit;
 }
+=======
+>>>>>>> 3548cca0a3a088950e1f97744eeee77faccdc0c6

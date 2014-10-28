@@ -197,28 +197,33 @@ class ConfigController extends BaseController {
                     }
                 }
 			}
-            $adapter = new Zend_File_Transfer();
+            $adapter = new Zend_File_Transfer('Http', false, array('ignoreNoFile'=>true));
 
-            $adapter->addFilter('Rename', array('target' => APPLICATION_PATH . '/../data/uploads/kpis.pdf',
-                'overwrite' => true));
-
-            if (!$adapter->receive()) {
-                $messages = $adapter->getMessages();
-                foreach($messages as $message){
-                    $this->flashMessage($message, 'error');
+            if ($adapter->isUploaded()) {
+                $adapter->addFilter('Rename', array(
+                        'target' => APPLICATION_PATH . '/../data/uploads/kpis.pdf',
+                        'overwrite' => true
+                    ));
+                if (!$adapter->receive()) {
+                    $messages = $adapter->getMessages();
+                    foreach($messages as $message){
+                        $this->flashMessage($message, 'error');
+                    }
+                } else {
+                    $this->flashMessage('File Successfully uploaded');
                 }
-            } else {
-                $this->flashMessage('File Successfully uploaded');
             }
 
 			if ($valid) {
+                $args = array();
                 foreach($values as $section){
                     foreach($section->kpis as $kpi){
-                        foreach ($kpi->values as $args) {
-                            $this->setOption($args->key, $args->value);
+                        foreach($kpi->values as $value) {
+                            $args[$value->key] = $value->value;
                         }
                     }
                 }
+                self::setOptions($args);
                 $this->flashMessage('Settings saved');
 				$this->_helper->redirector->gotoSimple('');
 			} else {

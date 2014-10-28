@@ -5,8 +5,6 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 {
 	protected $connection = null;
 
-	protected $tableName = 'twitter_tweets';
-	protected $type = null;
 	protected $kloutApi = null;
 
 	const KLOUT_API_ENDPOINT = 'http://api.klout.com/v2/';
@@ -14,6 +12,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 	public function __construct(PDO $db) {
 		parent::__construct($db);
 		$this->type = NewModel_PresenceType::TWITTER();
+        $this->tableName = 'twitter_tweets';
 	}
 
 	public function fetchStatusData(NewModel_Presence $presence)
@@ -193,7 +192,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 
         $data = Util_Twitter::userInfo($presence->handle);
 
-        $presence->type = NewModel_PresenceType::TWITTER();
+        $presence->type = $this->type;
         $presence->uid = $data->id_str;
         $presence->image_url = $data->profile_image_url;
         $presence->name = $data->name;

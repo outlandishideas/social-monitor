@@ -5,12 +5,10 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 {
 	protected $connection = null;
 
-	protected $tableName = 'facebook_stream';
-	protected $type = null;
-
 	public function __construct(PDO $db) {
 		parent::__construct($db);
 		$this->type = NewModel_PresenceType::FACEBOOK();
+        $this->tableName = 'facebook_stream';
 	}
 
 	public function fetchStatusData(NewModel_Presence $presence)
@@ -255,7 +253,7 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 
         $data = Util_Facebook::pageInfo($presence->handle);
 
-        $presence->type = NewModel_PresenceType::FACEBOOK();
+        $presence->type = $this->type;
         $presence->uid = $data['page_id'];
         $presence->image_url = $data['pic_square'];
         $presence->name = $data['name'];

@@ -247,8 +247,11 @@ class GroupController extends CampaignController {
 		if ($this->_request->isPost()) {
 			$group->delete();
             $this->flashMessage('SBU deleted');
+    		$this->_helper->redirector->gotoSimple('index');
+        } else {
+            $this->flashMessage('Incorrect usage of delete');
+            $this->_helper->redirector->gotoRoute(array('action'=>'view'));
 		}
-		$this->_helper->redirector->gotoSimple('index');
 	}
 
 	public function downloadAction() {
