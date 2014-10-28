@@ -1,13 +1,22 @@
 <?php
 /** @var Badge_Abstract[] $allBadges */
 $allBadges = $this->badges;
+$pdfLink = null;
+if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
+    $pdfLink = $this->url() . 'data/uploads/kpis.pdf';
+}
 ?>
 
-<h2 class="page-title">Social Media Monitor</h2>
+<h2 class="page-title">
+    Social Media Monitor
+    <?php if ($pdfLink) : ?>
+    <a href="<?php echo $pdfLink; ?>" target="_blank" id="kpi-download" title="Download KPIs PDF"><span class="icon-download icon-large"></span> KPIs</a>
+    <?php endif; ?>
+</h2>
 
 <div class="row hide-for-small-down">
     <div class="small-24 medium-8 columns">
-        <p>Choose from either Overall, Reach, Engagement or Quality to see the health of each country and SBU.</p>
+        <p>Choose from Overall, Reach, Engagement or Quality to see the health of each country and SBU.</p>
     </div>
     <div class="small-24 medium-8 columns">
         <p>Move the date slider to view the historic trend of the score for each country and SBU.</p>

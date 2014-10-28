@@ -2079,3 +2079,7 @@ select.selectInput:hover {
 .button-bc.add-item {
 	margin-bottom: 1.25rem;
 }
+
+#kpi-download {
+	float: right;
+}
