@@ -1,12 +1,13 @@
 <fieldset class="inlineLabels">
+    <h2>Available presences</h2>
 	<?php foreach($this->presences as $presenceType): ?>
 		<div class="row">
-	        <div class="small-24 medium-8 large-4 columns">
+	        <div class="small-24 medium-8 large-8 columns">
 	            <label for="<?php echo $presenceType['type']; ?>">
 					<?php echo $presenceType['title']; ?>
 				</label>
 	        </div>
-	        <div class="small-24 medium-12 large-8 end columns">
+	        <div class="small-24 medium-16 large-16 end columns">
 				<select id="<?php echo $presenceType['type']; ?>"
 						class="selectInput"
 						data-icon="<?php echo $presenceType['sign']; ?>"
@@ -25,19 +26,22 @@
 	        </div>
 	    </div>
 	<?php endforeach; ?>
-    <div class="row">
-        <div class="small-24 columns">
-            <h2>Currently assigned presences</h2>
-            <ul id="assigned">
-                <?php
-                foreach ($this->owner->presences as $presence) {
-                    echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence, 'varname'=>'assigned[' . $presence->type . ']'));
-                }
-                ?>
-                <li class="none-found">
-                    No presences assigned
-                </li>
-            </ul>
+	<h2>Currently assigned presences</h2>
+	<div class="row">
+        <div class="small-24 medium-8 large-8 columns">
+            &nbsp;
+        </div>
+        <div class="small-24 medium-16 large-16 end columns">
+			<ul id="assigned">
+				<?php
+				foreach ($this->owner->presences as $presence) {
+					echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence, 'varname'=>'assigned[' . $presence->type . ']'));
+				}
+				?>
+				<li class="none-found">
+					No presences assigned
+				</li>
+			</ul>
         </div>
     </div>
 </fieldset>

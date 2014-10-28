@@ -1,19 +1,19 @@
 <?php
-$buttons = array();
+$bottomBar = array();
 $cancel = $this->gatekeeper()->filter('<a class="button-bc" href="%url%">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true);
 if ($cancel) {
-    $buttons[] = $cancel;
+    $bottomBar[] = $cancel;
 }
-$buttons[] = '<button type="submit" class="button-bc">Save</button>';
+$bottomBar[] = '<button type="submit" class="button-bc">Save</button>';
+$topBar = $bottomBar;
+array_unshift($topBar, '<div id="search-table"></div>');
 ?>
 
 <h2 class="page-title">Edit All SBUs</h2>
 
 <form method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-all-groups">
 
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
-
-    <h2>SBU Details</h2>
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true)); ?>
 
     <table class="text dtable standard" id="all-groups">
         <thead>
@@ -39,6 +39,6 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
         </tbody>
     </table>
 
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$bottomBar, 'dark'=>true)); ?>
 </form>
 

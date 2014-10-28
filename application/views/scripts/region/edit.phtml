@@ -1,3 +1,4 @@
+<h2 class="page-title">Edit region</h2>
 <?php
 $buttons = $this->gatekeeper()->filterAll(array(
 	'<a class="button-bc button-view" href="%url%">View Region</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$this->editingRegion->id),
@@ -10,15 +11,13 @@ if ($buttons && $this->showButtons) {
 ?>
 
 <form method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-region">
-
-	<h2>Region details</h2>
     <div class="row">
-        <div class="small-24 medium-8 large-4 columns">
+        <div class="small-24 medium-8 large-8 columns">
             <label for="display_name" class="requiredField">
                 Display name<span class="asteriskField">*</span>
             </label>
         </div>
-        <div class="small-24 medium-12 large-8 end columns">
+        <div class="small-24 medium-16 large-16 end columns">
             <input name="display_name" value="<?php echo htmlspecialchars($this->editingRegion->display_name); ?>" class="textInput" type="text" id="display_name">
         </div>
     </div>
@@ -26,15 +25,19 @@ if ($buttons && $this->showButtons) {
     <?php if(!empty($this->presences)) : ?>
     <fieldset class="inlineLabels">
         <h2>Presence details</h2>
-        <div class="ctrlHolder">
-            <p>These presences will be automatically added to this region:</p>
-            <ul id="added-presences">
-	            <?php
-	            foreach ($this->presences as $presence) {
-		            echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence, 'varname'=>'p'));
-	            }
-	            ?>
-            </ul>
+        <div class="row">
+            <div class="small-24 medium-8 large-8 columns">
+                <p>These presences will be automatically added to this region:</p>
+            </div>
+            <div class="small-24 medium-16 large-16 end columns">
+                <ul id="added-presences">
+                    <?php
+                    foreach ($this->presences as $presence) {
+                        echo $this->partial('partials/presence_box.phtml', array('presence'=>$presence, 'varname'=>'p'));
+                    }
+                    ?>
+                </ul>
+            </div>
         </div>
     </fieldset>
     <?php endif; ?>

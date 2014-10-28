@@ -817,10 +817,10 @@ form.management button.add-item {
 	visibility: hidden;
 }
 
-form.management #assigned {
+/*form.management #assigned {
 	margin-left: 66px;
 	width: 50%;
-}
+}*/
 
 .none-found {
 	display: none;
@@ -1044,17 +1044,20 @@ body .compare.list li {
 
 a.presence.twitter .icon-large,
 .icon-twitter-sign {
-	color: #4099FF;
+	/*color: #4099FF;*/
+	color: #FFF;
 }
 
 a.presence.sina_weibo .icon-large,
 .icon-sina_weibo-sign {
-	color: #e6162d;
+	/*color: #e6162d;*/
+	color: #FFF;
 }
 
 a.presence.facebook .icon-large,
 .icon-facebook-sign{
-	color: #3B5998;
+	/*color: #3B5998;*/
+	color: #FFF;
 }
 
 /* link box */
@@ -2061,4 +2064,13 @@ td.countries a {
 ul.blockLabels {
 	margin-left: 0;
 	list-style: none;
+}
+
+select {
+	line-height: 28px;
+}
+
+select:hover {
+	background: inherit;
+	border-color: inherit;
 }

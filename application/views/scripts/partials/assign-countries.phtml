@@ -1,36 +1,45 @@
 <fieldset class="inlineLabels">
 	<h2 class="page-title"><?php echo $this->owner->display_name; ?></h2>
-	<div class="ctrlHolder">
-		<label for="countries">
-			Available countries
-		</label>
-		<button type="button" class="button add-item">Add</button>
-		<select id="countries" class="selectInput">
-			<option value="">-- Select --</option>
-			<?php foreach ($this->allCountries as $c) : ?>
-				<option value="<?php echo $c->id; ?>"
-						data-url="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$c->id)); ?>"
-						data-label="<?php echo $c->getName(); ?>"
-						data-flag="<?php echo $this->baseUrl('/'); ?>assets/img/flags/<?php echo($c->getCountryCode()); ?>.png"
-				>
-					<?php echo $c->getName(); ?>
-				</option>
-			<?php endforeach; ?>
-		</select>
-	</div>
-	<div class="ctrlHolder">
-		<label>
-			Currently assigned countries
-		</label>
-		<ul id="assigned">
-			<?php
-			foreach ($this->owner->getCountries() as $country) {
-				echo $this->partial('partials/country_box.phtml', array('country'=>$country, 'varname'=>'assigned[]'));
-			}
-			?>
-			<li class="none-found">
-				No presences assigned
-			</li>
-		</ul>
-	</div>
+	<div class="row">
+        <div class="small-24 medium-8 large-8 columns">
+            <label for="countries">
+				Available countries
+			</label>
+        </div>
+        <div class="small-24 medium-16 large-16 end columns">
+			<select id="countries" class="selectInput">
+				<option value="">-- Select --</option>
+				<?php foreach ($this->allCountries as $c) : ?>
+					<option value="<?php echo $c->id; ?>"
+							data-url="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$c->id)); ?>"
+							data-label="<?php echo $c->getName(); ?>"
+							data-flag="<?php echo $this->baseUrl('/'); ?>assets/img/flags/<?php echo($c->getCountryCode()); ?>.png"
+					>
+						<?php echo $c->getName(); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+            <button type="button" class="button-bc add-item">Add</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="small-24 medium-8 large-8 columns">
+            <label>
+				Currently assigned countries
+			</label>
+        </div>
+        <div class="small-24 medium-16 large-16 end columns">
+			<ul id="assigned">
+				<?php
+				foreach ($this->owner->getCountries() as $country) {
+					echo $this->partial('partials/country_box.phtml', array('country'=>$country, 'varname'=>'assigned[]'));
+				}
+				?>
+				<li class="none-found">
+					No presences assigned
+				</li>
+			</ul>
+        </div>
+    </div>
 </fieldset>

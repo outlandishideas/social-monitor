@@ -21,15 +21,13 @@ if ($topButtons && $this->showButtons) {
 
 <form method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-country">
 
-	<h2>Country details</h2>
-
 	<div class="row">
-		<div class="small-24 medium-8 large-4 columns">
+		<div class="small-24 medium-8 large-8 columns">
 			<label for="country" class="requiredField">
 				Country<span class="asteriskField">*</span>
 			</label>
 		</div>
-		<div class="small-24 medium-12 large-8 end columns">
+		<div class="small-24 medium-16 large-16 end columns">
 			<select name="country" id="country" class="selectInput">
 				<option value="">--Select--</option>
 				<?php foreach ($this->countryCodes as $code => $name) : ?>
@@ -41,48 +39,48 @@ if ($topButtons && $this->showButtons) {
 	</div>
 
 	<div class="row">
-		<div class="small-24 medium-8 large-4 columns">
+		<div class="small-24 medium-8 large-8 columns">
 			<label for="display_name" class="requiredField">
 				Display name<span class="asteriskField">*</span>
 			</label>
 		</div>
-		<div class="small-24 medium-12 large-8 end columns">
+		<div class="small-24 medium-16 large-16 end columns">
 			<input name="display_name" value="<?php echo htmlspecialchars($this->editingCountry->display_name); ?>" class="textInput"
 				   type="text" id="display_name">
 		</div>
 	</div>
 
 	<div class="row">
-		<div class="small-24 medium-8 large-4 columns">
+		<div class="small-24 medium-8 large-8 columns">
 			<label for="audience">
 				Available audience size
 			</label>
 		</div>
-		<div class="small-24 medium-12 large-8 end columns">
+		<div class="small-24 medium-16 large-16 end columns">
 			<input name="audience" value="<?php echo htmlspecialchars($this->editingCountry->audience); ?>" class="textInput"
 				   type="text" id="audience">
 		</div>
 	</div>
 
 	<div class="row">
-		<div class="small-24 medium-8 large-4 columns">
+		<div class="small-24 medium-8 large-8 columns">
 			<label for="population">
 				Country population
 			</label>
 		</div>
-		<div class="small-24 medium-12 large-8 end columns">
+		<div class="small-24 medium-16 large-16 end columns">
 			<input name="population" value="<?php echo htmlspecialchars($this->editingCountry->population); ?>" class="textInput"
 				   type="text" id="population">
 		</div>
 	</div>
 
 	<div class="row">
-		<div class="small-24 medium-8 large-4 columns">
+		<div class="small-24 medium-8 large-8 columns">
 			<label for="penetration">
 				Internet Penetration (%)
 			</label>
 		</div>
-		<div class="small-24 medium-12 large-8 end columns">
+		<div class="small-24 medium-16 large-16 end columns">
 			<input name="penetration" value="<?php echo htmlspecialchars($this->editingCountry->penetration); ?>" class="textInput" type="text" id="penetration">
 		</div>
 	</div>

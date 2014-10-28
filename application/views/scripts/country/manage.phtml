@@ -11,17 +11,13 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 
 <form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-country">
 
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
-
-    <h2>Presences in <?php echo $this->country->display_name; ?></h2>
-
-	<?php
+    <?php
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
 	echo $this->partial('partials/assign-presences.phtml', array(
 			'owner'=>$this->country,
 			'presences'=>$this->presences,
 		));
-	?>
-
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+    ?>
 </form>
 

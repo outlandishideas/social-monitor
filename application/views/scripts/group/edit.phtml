@@ -21,28 +21,25 @@ if ($topBar && $this->showButtons) {
 <form method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-group">
 
 	<fieldset class="inlineLabels">
-		<h2>SBU details</h2>
-
-
         <div class="row">
-            <div class="small-24 medium-8 large-4 columns">
+            <div class="small-24 medium-8 large-8 columns">
                 <label for="display_name" class="requiredField">
                     Display name<span class="asteriskField">*</span>
                 </label>
             </div>
-            <div class="small-24 medium-12 large-8 end columns">
+            <div class="small-24 medium-16 large-16 end columns">
                 <input name="display_name" value="<?php echo htmlspecialchars($this->editingGroup->display_name); ?>" class="textInput"
                        type="text" id="display_name">
             </div>
         </div>
 
         <div class="row">
-            <div class="small-24 medium-8 large-4 columns">
+            <div class="small-24 medium-8 large-8 columns">
                 <label for="audience">
                     Available audience size
                 </label>
             </div>
-            <div class="small-24 medium-12 large-8 end columns">
+            <div class="small-24 medium-16 large-16 end columns">
                 <input name="audience" value="<?php echo htmlspecialchars($this->editingGroup->audience); ?>" class="textInput"
                        type="text" id="audience">
             </div>
@@ -52,9 +49,12 @@ if ($topBar && $this->showButtons) {
 
     <?php if(!empty($this->presences)) : ?>
     <fieldset class="inlineLabels">
-        <legend>Presence details</legend>
-        <div class="ctrlHolder">
+        <h2>Presence details</h2>
+        <div class="row">
+            <div class="small-24 medium-8 large-8 columns">
             <p>These presences will be automatically added to this SBU:</p>
+            </div>
+            <div class="small-24 medium-16 large-16 end columns">
             <ul id="added-presences">
 	            <?php
 	            foreach ($this->presences as $presence) {
@@ -62,6 +62,7 @@ if ($topBar && $this->showButtons) {
 	            }
 	            ?>
             </ul>
+        </div>
         </div>
     </fieldset>
     <?php endif; ?>

@@ -1,3 +1,4 @@
+<h2 class="page-title">Edit presence</h2>
 <?php
 /** @var NewModel_Presence $presence */
 $presence = $this->presence;
@@ -15,12 +16,11 @@ if ($buttons && $this->showButtons) {
 <form method="post" action="<?php echo $this->url(); ?>">
 
 	<fieldset class="inlineLabels">
-		<h2>Presence details</h2>
         <div class="row">
-            <div class="small-24 medium-8 large-4 columns">
+            <div class="small-24 medium-8 large-8 columns">
                 <p class="label">Type<span class="asteriskField">*</span></p>
             </div>
-            <div class="small-24 medium-12 large-8 end columns">
+            <div class="small-24 medium-16 large-16 end columns">
                 <ul class="blockLabels">
                     <?php foreach ($types as $val) : ?>
                     <li>
@@ -38,12 +38,12 @@ if ($buttons && $this->showButtons) {
         </div>
 
         <div class="row">
-            <div class="small-24 medium-8 large-4 columns">
+            <div class="small-24 medium-8 large-8 columns">
                 <label for="handle" class="requiredField">
                     Handle<span class="asteriskField">*</span>
                 </label>
             </div>
-            <div class="small-24 medium-12 large-8 end columns">
+            <div class="small-24 medium-16 large-16 end columns">
                 <input name="handle" id="handle" type="text" value="<?php echo $presence->handle; ?>">
                 <p class="formHint">
                     For www.facebook.com/<strong>platform</strong> or www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'<br />
@@ -53,10 +53,10 @@ if ($buttons && $this->showButtons) {
         </div>
 
         <div class="row">
-            <div class="small-24 medium-8 large-4 columns">
+            <div class="small-24 medium-8 large-8 columns">
                 <p class="label">Signed Off</p>
             </div>
-            <div class="small-24 medium-12 large-8 end columns">
+            <div class="small-24 medium-16 large-16 end columns">
                 <ul class="blockLabels">
                     <li>
                         <label class="radio"><input name="sign_off" type="radio" value="0"
@@ -73,10 +73,10 @@ if ($buttons && $this->showButtons) {
         </div>
 
         <div class="row">
-            <div class="small-24 medium-8 large-4 columns">
+            <div class="small-24 medium-8 large-8 columns">
                 <p class="label">Branding</p>
             </div>
-            <div class="small-24 medium-12 large-8 end columns">
+            <div class="small-24 medium-16 large-16 end columns">
                 <ul class="blockLabels">
                     <li>
                         <label class="radio"><input name="branding" type="radio" value="0"

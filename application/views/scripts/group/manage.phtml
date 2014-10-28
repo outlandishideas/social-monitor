@@ -9,18 +9,14 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 
 <h2 class="page-title">Manage Presences</h2>
 
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm management" novalidate id="manage-group">
-
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
-
-    <h2>Available Presences</h2>
+<form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-group">
     <?php
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
 	echo $this->partial('partials/assign-presences.phtml', array(
 			'owner' => $this->group,
 			'presences' => $this->presences,
 		));
-	?>
-
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
+    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+    ?>
 </form>
 
