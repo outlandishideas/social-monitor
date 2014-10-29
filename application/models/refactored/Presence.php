@@ -31,6 +31,13 @@ class NewModel_Presence
 	public $owner;
 	public $last_updated;
 	public $last_fetched;
+	public $size;
+
+	protected $sizes = array(
+		0 => "Small",
+		1 => "Medium",
+		2 => "Large"
+	);
 
     /**
      * Creates a new presence
@@ -70,6 +77,7 @@ class NewModel_Presence
         $this->image_url = $internals['image_url'];
         $this->last_updated = $internals['last_updated'];
         $this->last_fetched = $internals['last_fetched'];
+        $this->size = $internals['size'];
     }
 
 	public function getId()
@@ -164,6 +172,48 @@ class NewModel_Presence
 	public function getPopularity()
 	{
 		return $this->popularity;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getSize()
+	{
+		return $this->size;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getSizes()
+	{
+		return $this->sizes;
+	}
+
+	/**
+	 * @return mixed|null
+	 */
+	public function getSizeLabel()
+	{
+		$size = $this->getSize();
+		$sizes = $this->getSizes();
+		if(array_key_exists($size, $sizes)){
+			return $sizes[$size];
+		} else {
+			return null;
+		}
+
+	}
+
+	/**
+	 * @param mixed $size
+	 */
+	public function setSize($size)
+	{
+		$sizes = $this->getSizes();
+		if(array_key_exists($size, $sizes)){
+			$this->size = $size;
+		}
 	}
 
 	/**
