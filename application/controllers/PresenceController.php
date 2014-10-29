@@ -255,7 +255,8 @@ class PresenceController extends GraphingController
 					'twitter_url'=>Model_TwitterTweet::getTwitterUrl($presence->handle, $tweet->tweet_id)
 				);
 			}
-		} else {
+			$count = count($data->statuses);
+		} else if ($presence->isForFacebook()) {
 			foreach ($data->statuses as $post) {
 				if($post->message){
 					if ($post->first_response) {
@@ -302,8 +303,19 @@ class PresenceController extends GraphingController
 					);
 				}
 			}
+			$count = count($data->statuses);
+		} else if ($presence->isForSinaWeibo()) {
+			foreach ($data as $post) {
+				$tableData[] = array(
+					'id'	=> $post['id'],
+					'url'	=> NewModel_SinaWeiboProvider::BASEURL . $post['remote_user_id'] . '/' . NewModel_SinaWeiboProvider::getMidForPostId($post['remote_id']),
+					'message' => $post['text'],
+					'date' => Model_Base::localeDate($post['created_at'])
+				);
+			}
+			$count = count($data);
+			$data = (object) array('total' => $count); //todo: fix this to have a real total
 		}
-		$count = count($data->statuses);
 
 		//return CSV or JSON?
 		if ($this->_request->getParam('format') == 'csv') {

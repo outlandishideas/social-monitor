@@ -47,10 +47,17 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
         }
 	}
 
-	public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
-	{
+	public function getHistoricStream (
+		NewModel_Presence $presence,
+		\DateTime $start,
+		\DateTime $end,
+		$search = null,
+		$order = null,
+		$limit = null,
+		$offset = null
+	) {
 		$ret = array();
-		$stmt = $this->db->prepare("
+		$sql = "
 			SELECT
 				p.*,
 				l.links
@@ -81,25 +88,51 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 				p.`created_at` >= :start
 				AND p.`created_at` <= :end
 				AND p.`presence_id` = :id
-		");
-		$stmt->execute(array(
+		";
+		$args = array(
 			':start'	=> $start->format('Y-m-d H:i:s'),
 			':end'	=> $end->format('Y-m-d H:i:s'),
 			':id'		=> $presence->getId()
-		));
+		);
+		if (!is_null($search)) {
+			$sql .= ' AND `text` LIKE :search';
+			$args[':search'] = '%'.$search.'%';
+		}
+		if (!is_null($order) && count($order) > 0) {
+			$ordering = array();
+			foreach ($order as $column=>$dir) {
+				switch ($column) {
+					case 'date':
+						$column = 'created_at';
+						break;
+					default:
+						$column = 'created_at';
+						break;
+				}
+				$ordering[] = $column . ' ' . $dir;
+			}
+			$sql .= ' ORDER BY '.implode(',', $ordering);
+		}
+		if (!is_null($limit)) {
+			if (is_null($offset)) $offset = 0;
+			$sql .= ' LIMIT '.$offset.','.$limit;
+		}
+		$stmt = $this->db->prepare($sql);
+		$stmt->execute($args);
 		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		$ids = array();
+		foreach ($ret as $r) {
+			$ids[] = $r['remote_id'];
+		}
 
 		//get retweets
 		$stmt = $this->db->prepare("
 			SELECT * FROM {$this->tableName} WHERE `remote_id` IN (
-				SELECT DISTINCT `included_retweet` FROM {$this->tableName} WHERE `created_at` >= :start AND `created_at` <= :end AND `presence_id` = :id
+				".implode(',', array_fill(0, count($ids), '?'))."
 			)
 		");
-		$stmt->execute(array(
-			':start'	=> $start->format('Y-m-d H:i:s'),
-			':end'	=> $end->format('Y-m-d H:i:s'),
-			':id'		=> $presence->getId()
-		));
+		$stmt->execute($ids);
 		$r = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		$retweets = array();
 		foreach ($r as $retweet) {
@@ -108,7 +141,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 
 		//add retweets and links to posts
 		foreach ($ret as &$r) {
-			if (!is_null($r['included_retweet'])) {
+			if (!is_null($r['included_retweet']) && array_key_exists($r['included_retweet'], $retweets)) {
 				$r['included_retweet'] = $retweets[$r['included_retweet']];
 			}
 			$r['links'] = is_null($r['links']) ? array() : explode(',', $r['links']);
@@ -265,5 +298,22 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		$presence->name = $ret['name'];
 		$presence->page_url = self::BASEURL.$ret['profile_url'];
 		$presence->popularity = $ret['followers_count'];
+	}
+
+
+	public static function getMidForPostId($postId)
+	{
+		$mid = '';
+		$postId = (string) $postId;
+		while (strlen($postId) >= 7) {
+			$part = substr($postId, strlen($postId) - 7);
+			$postId = substr($postId, 0, strlen($postId) - 7);
+			$mid = Util_Base62::base10to62($part) . $mid;
+		}
+		if (strlen($postId)) {
+			//do the remaining chars
+			$mid = Util_Base62::base10to62($postId).$mid;
+		}
+		return $mid;
 	}
 }

@@ -407,9 +407,9 @@ class NewModel_Presence
 		return $this->provider->getHistoricData($this, $start, $end);
 	}
 
-	public function getHistoricStream(\DateTime $start, \DateTime $end)
+	public function getHistoricStream(\DateTime $start, \DateTime $end, $search = null, $order = null, $limit = null, $offset = null)
 	{
-		return $this->provider->getHistoricStream($this, $start, $end);
+		return $this->provider->getHistoricStream($this, $start, $end, $search, $order, $limit, $offset);
 	}
 
 	public function getHistoricStreamMeta(\DateTime $start, \DateTime $end)
@@ -567,7 +567,7 @@ class NewModel_Presence
 			return $presence->getStatuses($start->format("Y-m-d"), $end->format("Y-m-d"), $search, $order, $limit, $offset);
 		}
 
-		return $this->getHistoricStream($start, $end);
+		return $this->getHistoricStream($start, $end, $search, $order, $limit, $offset);
 	}
 
 	/**

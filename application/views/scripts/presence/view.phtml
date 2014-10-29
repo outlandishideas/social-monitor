@@ -95,7 +95,7 @@ if ($owner) {
                 <?php endif; ?>
             </div>
             <div class="content" id="statuses">
-                <div class="statusesDisplay <?php echo $presenceType; ?>" data-presence-id="<?php echo $presence->id; ?>">
+                <div class="statusesDisplay <?php echo str_replace(' ', '_', $presenceType); ?>" data-presence-id="<?php echo $presence->id; ?>">
                     <?php
                     $buttons = array();
                     array_unshift($buttons, '<div id="search-table"></div>');
@@ -106,7 +106,6 @@ if ($owner) {
                         <thead>
                             <tr>
                                 <?php if ($presence->isForFacebook()) : ?>
-                                    <th class="user">User</th>
                                     <th class="message">Message</th>
                                     <th class="links">Links</th>
                                     <th class="response">Response</th>

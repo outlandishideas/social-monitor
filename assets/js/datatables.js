@@ -215,18 +215,18 @@ app.datatables = {
 					$(nRow).data('id', aData.id);
 				},
 				aaSorting:[
-					[4, 'desc']
+					[3, 'desc']
 				],
 				aoColumns:[
-					{
-						mDataProp:'actor_name',
-						fnRender:function (o, val) {
-							return '<img data-src="' + o.aData.pic_url + '" class="facebook-actor async-load" />';
-						},
-						sClass:'statusPic',
-						bSortable:false,
-						bUseRendered:false
-					},
+					// {
+					// 	mDataProp:'actor_name',
+					// 	fnRender:function (o, val) {
+					// 		return '<img data-src="' + o.aData.pic_url + '" class="facebook-actor async-load" />';
+					// 	},
+					// 	sClass:'statusPic',
+					// 	bSortable:false,
+					// 	bUseRendered:false
+					// },
 					{
 						mDataProp:'message',
 						fnRender:function (o) {
@@ -349,6 +349,66 @@ app.datatables = {
 				.fnSetFilteringDelay(250);
 
 			app.datatables.moveSearchBox();
+
+			$(document).foundation({
+				tab: {
+					callback: function(tab) {
+						if (tab.context.hash == '#statuses') {
+							$(document).trigger('dataChanged'); // fix header cells when switching to this tab
+						}
+					}
+				}
+			});
+		},
+		'#statuses .sina_weibo': function($div) {
+			var args = {
+				sAjaxSource:jsConfig.apiEndpoint + "presence/statuses",
+				fnServerParams: function(aoData) {
+					aoData.push({ name:"dateRange", value:app.state.dateRange });
+					aoData.push({ name:"id", value:$div.data('presence-id') });
+				},
+				aaSorting:[
+					[1, 'desc']
+				],
+				aoColumns:[
+					{
+						mDataProp:'message',
+						fnRender:function (o) {
+							return parseTemplate(app.templates.swPost, o.aData);
+						},
+						sClass: 'message',
+						bSortable:false,
+						bUseRendered:false
+					},
+					{
+						mDataProp:'date',
+						fnRender:function (o, val) {
+							return Date.parse(val).toString('d MMM<br>HH:mm');
+						},
+						bUseRendered:false,
+						sClass:'date',
+						asSorting:['desc', 'asc']
+					}
+				],
+				oLanguage:app.datatables.generateLanguage('post')
+			};
+
+			args = $.extend({}, app.datatables.serverSideArgs(), args);
+			app.datatables.statusesTable = $div.find('table')
+				.dataTable(args)
+				.fnSetFilteringDelay(250);
+
+			app.datatables.moveSearchBox();
+
+			$(document).foundation({
+				tab: {
+					callback: function(tab) {
+						if (tab.context.hash == '#statuses') {
+							$(document).trigger('dataChanged'); // fix header cells when switching to this tab
+						}
+					}
+				}
+			});
 		}
 	},
 	moveSearchBox: function() {
