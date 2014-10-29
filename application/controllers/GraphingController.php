@@ -189,6 +189,7 @@ abstract class GraphingController extends BaseController {
 				);
 				if ($this->view->presence) {
 					$metricScore = $metric->getScore($this->view->presence, new \DateTime('-30 days'), new \DateTime());
+					if (is_null($metricScore)) $metricScore = 0;
 					$metricColor = $colors->colors[0];
 					foreach($colors->range as $i => $value){
 						if($metricScore >= $value) {
