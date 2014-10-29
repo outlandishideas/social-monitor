@@ -183,10 +183,22 @@ abstract class GraphingController extends BaseController {
 		if(count($badge->getMetrics()) > 0){
 			$metrics = array();
 			foreach($badge->getMetrics() as $metric){
-				$metrics[] = array(
+				$m = array(
 					"title" => $metric::getTitle(),
 					"icon" => $metric::getIcon()
 				);
+				if ($this->view->presence) {
+					$metricScore = $metric->getScore($this->view->presence, new \DateTime('-30 days'), new \DateTime());
+					$metricColor = $colors->colors[0];
+					foreach($colors->range as $i => $value){
+						if($metricScore >= $value) {
+			                $metricColor = $colors->colors[$i];
+			            }
+					}
+					$m['score'] = $metricScore;
+					$m['color'] = $metricColor;
+				}
+				$metrics[] = $m;
 			}
 			$badgeArr['metrics'] = $metrics;
 		}

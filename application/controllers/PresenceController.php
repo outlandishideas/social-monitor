@@ -28,9 +28,9 @@ class PresenceController extends GraphingController
 		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		$this->validateData($presence);
 
+		$this->view->presence = $presence;
 		$this->view->badgePartial = $this->badgeDetails($presence->getBadges());
 		$this->view->chartOptions = $this->chartOptions();
-		$this->view->presence = $presence;
         $allPresences = array();
         foreach (NewModel_PresenceFactory::getPresences() as $p) {
             $group = $p->getType()->getTitle();
