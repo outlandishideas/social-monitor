@@ -8,7 +8,9 @@ abstract class GraphingController extends BaseController {
 			Chart_Compare::getInstance(),
 			Chart_Reach::getInstance(),
 			Chart_Engagement::getInstance(),
-			Chart_Quality::getInstance()
+			Chart_Quality::getInstance(),
+			Chart_Popularity::getInstance(),
+			Chart_PopularityTrend::getInstance()
 		);
 	}
 

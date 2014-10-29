@@ -49,9 +49,12 @@ abstract class NewModel_iProvider
 	 */
 	public function getHistoricData(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
 	{
-		$ret = array();
 		$stmt = $this->db->prepare("
-			SELECT * FROM `presence_history` WHERE `datetime` >= :start AND `datetime` <= :end AND `presence_id` = :id
+			SELECT *
+			FROM `presence_history`
+			WHERE `datetime` >= :start
+			AND `datetime` <= :end
+			AND `presence_id` = :id
 		");
 		$stmt->execute(array(
 			':start'	=> $start->format('Y-m-d H:i:s'),
@@ -60,7 +63,7 @@ abstract class NewModel_iProvider
 		));
 		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-		return $ret; //don't return null, just return an empty array
+		return $ret;
 	}
 
 	/**
