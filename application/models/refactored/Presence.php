@@ -694,7 +694,8 @@ class NewModel_Presence
             'facebook_engagement' => $this->facebook_engagement,
             'last_updated' => $this->last_updated,
             'sign_off' => $this->sign_off,
-            'branding' => $this->branding
+            'branding' => $this->branding,
+			'size' => $this->getSize()
         );
 
         $query = 'UPDATE '.NewModel_PresenceFactory::TABLE_PRESENCES.' '.
