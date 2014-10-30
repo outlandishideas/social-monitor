@@ -99,7 +99,9 @@ abstract class Badge_Factory
                 foreach ($badges as $b) {
                     if ($missing || is_null($existing[$b->getName()])) {
                         $missingCount++;
-                        if (!is_null($b->calculate($p, $currentDate, $daterange))) {
+                        $score = $b->calculate($p, $currentDate, $daterange);
+                        $p->saveBadgeResult($score, $currentDate, $daterange, $b::getName());
+                        if (!is_null($score)) {
                             $successCount++;
                         }
                     }

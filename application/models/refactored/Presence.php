@@ -355,23 +355,25 @@ class NewModel_Presence
 		if (!$start || !$end) {
 			$end = new DateTime();
 			$start = clone $end;
-			$start->sub(DateInterval::createFromDateString('1 month'));
+			$start->sub(DateInterval::createFromDateString('30 days'));
 		}
 
 		$endString = $end->format('Y-m-d');
 		$startString = $start->format('Y-m-d');
 		$key = $startString . $endString;
 
-		if(!array_key_exists($key, $this->kpiData)){
-
+		if(!array_key_exists($key, $this->kpiData) || !$useCache) {
+			//start (re)calculation when data not available, or when indicated not to use cache
 			$cachedValues = array();
 			if ($useCache) {
 				$cachedValues = $this->getCachedKpiData($start, $end);
 			}
 
-			foreach($this->getMetrics() as $metric){
-				if(!array_key_exists($metric->getName(), $cachedValues)){
-					$cachedValues[$metric->getName()] = $metric->calculate($this, $start, $end);
+			foreach($this->getMetrics() as $metric) {
+				if(!array_key_exists($metric->getName(), $cachedValues)) {
+					$result = $metric->calculate($this, $start, $end);
+					$this->saveMetric($metric->getName(), $start, $end, $result);
+					$cachedValues[$metric->getName()] = $result;
 				}
 			}
 
@@ -438,7 +440,14 @@ class NewModel_Presence
     public function updateHistory() {
         $date = gmdate('Y-m-d H:i:s');
         //if the presence was updated, update presence_history
-        $stmt = $this->db->prepare("INSERT INTO `presence_history` (`presence_id`, `datetime`, `type`, `value`) VALUES (:id, :datetime, :type, :value)");
+        $stmt = $this->db->prepare("
+        	INSERT INTO `presence_history`
+        	(`presence_id`, `datetime`, `type`, `value`)
+        	VALUES
+        	(:id, :datetime, :type, :value)
+        	ON DUPLICATE KEY UPDATE
+        	`value` = VALUES(`value`)
+        ");
         foreach($this->presenceHistoryColumns as $type){
             $value = $this->$type;
             if (!is_null($value)) {

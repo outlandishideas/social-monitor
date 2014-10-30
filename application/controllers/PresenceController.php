@@ -368,7 +368,6 @@ class PresenceController extends GraphingController
 				$stmt->execute($args);
 			}
 		}
-		print_r($presences);
 		exit;
 	}
 

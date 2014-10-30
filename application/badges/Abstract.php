@@ -49,8 +49,6 @@ abstract class Badge_Abstract
 		$result = round($totalScore/$totalWeight);
 		$result = max(0, min(100, $result));
 
-		$presence->saveBadgeResult($result, $date, $range, static::getName());
-
 		return $result;
 	}
 

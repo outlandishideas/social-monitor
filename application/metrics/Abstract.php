@@ -18,7 +18,7 @@ abstract class Metric_Abstract {
     public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $result = static::doCalculations($presence, $start, $end);
-        $presence->saveMetric(static::getName(), $start, $end, $result);
+        //$presence->saveMetric(static::getName(), $start, $end, $result);
         return $result;
     }
 
