@@ -111,6 +111,7 @@ class PresenceController extends GraphingController
             $handle = $this->_request->getParam('handle');
             $signOff = $this->_request->getParam('sign_off');
             $branding = $this->_request->getParam('branding');
+            $size = $this->_request->getParam('size');
 			if (!$type) {
 				$errorMessages[] = 'Please choose a type';
 			}
@@ -125,6 +126,7 @@ class PresenceController extends GraphingController
             $presence->handle = $handle;
             $presence->sign_off = $signOff;
             $presence->branding = $branding;
+			$presence->setSize($size);
 
             if (!$errorMessages) {
                 try {

@@ -31,6 +31,13 @@ class NewModel_Presence
 	public $owner;
 	public $last_updated;
 	public $last_fetched;
+	public $size;
+
+	protected $sizes = array(
+		0 => "Small",
+		1 => "Medium",
+		2 => "Large"
+	);
 
     /**
      * Creates a new presence
@@ -70,6 +77,7 @@ class NewModel_Presence
         $this->image_url = $internals['image_url'];
         $this->last_updated = $internals['last_updated'];
         $this->last_fetched = $internals['last_fetched'];
+        $this->size = $internals['size'];
     }
 
 	public function getId()
@@ -169,6 +177,48 @@ class NewModel_Presence
 	/**
 	 * @return mixed
 	 */
+	public function getSize()
+	{
+		return $this->size;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getSizes()
+	{
+		return $this->sizes;
+	}
+
+	/**
+	 * @return mixed|null
+	 */
+	public function getSizeLabel()
+	{
+		$size = $this->getSize();
+		$sizes = $this->getSizes();
+		if(array_key_exists($size, $sizes)){
+			return $sizes[$size];
+		} else {
+			return null;
+		}
+
+	}
+
+	/**
+	 * @param mixed $size
+	 */
+	public function setSize($size)
+	{
+		$sizes = $this->getSizes();
+		if(array_key_exists($size, $sizes)){
+			$this->size = $size;
+		}
+	}
+
+	/**
+	 * @return mixed
+	 */
 	public function getFacebookEngagement()
 	{
 		return $this->facebook_engagement;
@@ -212,20 +262,42 @@ class NewModel_Presence
 		$owner = $this->getOwner();
 		if($owner){
 			$target = $owner->getTargetAudience();
-            $percent = 0;
-            switch ($this->getType()->getValue()) {
-                case NewModel_PresenceType::SINA_WEIBO:
-                    $percent = BaseController::getOption('sw_min');
-                    break;
-                case NewModel_PresenceType::FACEBOOK:
-                    $percent = BaseController::getOption('fb_min');
-                    break;
-                case NewModel_PresenceType::TWITTER:
-                    $percent = BaseController::getOption('tw_min');
-                    break;
-            }
-			$target *= $percent;
-			$target /= 100;
+			if(is_numeric($target) && $target > 0){
+
+				// if Model_Group is the owner then we divide up the target population amongst the presences
+				// we use the size of the presence to calculate how much of the target population should be
+				// used by them.
+				// eg. SBU has two large / six medium / eight small presences. the two large presences take 50%/2
+				// of the target population as their target, the medium take 30%/6 of the target population as their target, etc.
+				if($owner instanceof Model_Group){
+
+					$size = $this->getSize();
+					// get the number of presences of the same size as $this
+					$presenceCount = count(array_filter($owner->getPresences(), function($presence) use ($size) {
+						/** @var NewModel_Presence $presence */
+						return $presence->getSize() == $size;
+					}));
+
+					$sizePercent = BaseController::getOption("size_{$size}_presences");
+
+					$target *= $sizePercent/100 / $presenceCount;
+
+				}
+				$percent = 0;
+				switch ($this->getType()->getValue()) {
+					case NewModel_PresenceType::SINA_WEIBO:
+						$percent = BaseController::getOption('sw_min');
+						break;
+					case NewModel_PresenceType::FACEBOOK:
+						$percent = BaseController::getOption('fb_min');
+						break;
+					case NewModel_PresenceType::TWITTER:
+						$percent = BaseController::getOption('tw_min');
+						break;
+				}
+				$target *= $percent;
+				$target /= 100;
+			}
 		}
 		return $target;
 	}
@@ -653,7 +725,8 @@ class NewModel_Presence
             'facebook_engagement' => $this->facebook_engagement,
             'last_updated' => $this->last_updated,
             'sign_off' => $this->sign_off,
-            'branding' => $this->branding
+            'branding' => $this->branding,
+			'size' => $this->getSize()
         );
 
         $query = 'UPDATE '.NewModel_PresenceFactory::TABLE_PRESENCES.' '.

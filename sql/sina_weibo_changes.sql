@@ -30,3 +30,6 @@ CHANGE  `quality`  `quality` INT( 11 ) NULL DEFAULT NULL ;
 ALTER TABLE  `campaigns` ADD  `parent` INT NOT NULL ;
 
 ALTER TABLE  `campaigns` CHANGE  `is_country`  `campaign_type` TINYINT( 1 ) NOT NULL DEFAULT  '1';
+
+# add size to presences table
+ALTER TABLE  `presences` ADD  `size` TINYINT NOT NULL DEFAULT  '0' AFTER  `facebook_engagement` ;
