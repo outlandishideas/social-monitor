@@ -25,9 +25,12 @@ class IndexController extends GraphingController
             }
 		}
 
-		$this->view->mapData = $mapData;
-        $this->view->smallMapData = $smallMapData;
-		$this->view->groupData = $groupData;
+        $this->view->mapArgs = array(
+            'geochartMetrics' => $this->view->geochartMetrics,
+            'mapData' => $mapData,
+            'smallMapData' => $smallMapData,
+            'groupData' => $groupData
+        );
 		$this->view->dateRangeString = $old->format('d M Y') . ' - ' . $now->format('d M Y');
 		$this->view->currentDate = $now->format('Y-m-d');
 		$this->view->dayRange = $dayRange;
@@ -168,7 +171,7 @@ class IndexController extends GraphingController
 	public function buildBadgeDataAction()
 	{
 		// make sure that the last 60 day's worth of badge_history data exists
-		Badge_Factory::guaranteeHistoricalData(Badge_Period::MONTH(), new \DateTime('now -60 days'), new \DateTime('now'));
+		Badge_Factory::guaranteeHistoricalData(Badge_Period::MONTH(), new \DateTime('now -60 days'), new \DateTime('now'), true);
 
 		// do everything that the index page does, but using the (potentially) updated data
 		$this->getCacheableData(30, false);

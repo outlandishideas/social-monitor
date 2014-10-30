@@ -170,10 +170,5 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
 
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>
-    var mapArgs = <?php echo json_encode(array(
-        'geochartMetrics' => $this->geochartMetrics,
-        'mapData' => $this->mapData,
-        'smallMapData' => $this->smallMapData,
-        'groupData' => $this->groupData
-    )); ?>;
+    var mapArgs = <?php echo json_encode($this->mapArgs); ?>;
 </script>
