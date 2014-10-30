@@ -158,8 +158,8 @@ abstract class Badge_Factory
 				AND NOT c.parent = 0
 				AND '.implode(' AND ', $clauses).'
 			ORDER BY
-				h.presence_id ASC,
-				h.date DESC
+				presence_id ASC,
+				date DESC
 		';
 
 		$stmt = self::getDb()->prepare($sql);
