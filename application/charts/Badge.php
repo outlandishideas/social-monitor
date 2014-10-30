@@ -40,14 +40,14 @@ abstract class Chart_Badge extends Chart_Compare {
     {
         //seed the $columns array
         $columns = array(
-            $this->getXColumn() => array($this->getXColumn())
+            $this->xColumn => array($this->xColumn)
         );
         foreach($this->getPresenceIdsFromData($data) as $presenceId){
             $columns[$presenceId] = array($presenceId);
         }
 
-        $xCol = $this->getXColumn();
-        foreach($this->getDataColumns() as $column){
+        $xCol = $this->xColumn;
+        foreach($this->dataColumns as $column){
             $columns = array_reduce($data, function($carry, $row) use($column, $xCol){
                 $row = (array)$row;
                 //if we haven't already added the date to the date records, do so
@@ -88,7 +88,7 @@ abstract class Chart_Badge extends Chart_Compare {
         $color = $range['colors'][0];
 
         foreach($data['columns'] as $column) {
-            if(in_array($column[0], $this->getDataColumns())){
+            if(in_array($column[0], $this->dataColumns)){
                 $value = $column[1];
                 foreach($range['range'] as $i => $score){
                     if($value >= $score) {
