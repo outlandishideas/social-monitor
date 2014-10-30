@@ -90,7 +90,7 @@ class ConfigController extends BaseController {
                     ),
                     (object)array(
                         'title' => 'Facebook Engagement Score (Facebook only)',
-                        'description' => 'The Facebook Engagement Score is based on Social Baker\'s Daily Page Engagment Rate calculation.',
+                        'description' => 'The Facebook Engagement Score is based on Social Baker\'s Daily Page Engagement Rate calculation.',
                         'values' => array(
                             'fb_engagement_score_weighting'=>array('label'=>'Facebook Engagement Score Weighting'),
                         )

@@ -4,6 +4,7 @@ abstract class Badge_Factory
 {
 	protected static $badges = array();
 
+    /** @var PDO */
 	protected static $db = null;
 
 	protected static function getClassName($name)
@@ -54,21 +55,32 @@ abstract class Badge_Factory
 	}
 
 	public static function guaranteeHistoricalData(
-		Badge_Period $daterange,
+		Badge_Period $dateRange,
 		\DateTime $startDate,
 		\DateTime $endDate,
+        $log = false,
 		$presenceIds = array()
 	) {
-		$data = static::getAllCurrentData($daterange, $startDate, $endDate, $presenceIds);
+        if ($log) {
+            $log = function($message) {
+                echo '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL;
+            };
+        } else {
+            $log = function($message) {};
+        }
+
+		$data = static::getAllCurrentData($dateRange, $startDate, $endDate, $presenceIds);
 		if (is_null($data)) {
             $data = array();
         }
-		$sorted = array();
+
+        // group data by date, then by presence
+		$groupedData = array();
 		foreach ($data as $row) {
-			if (!array_key_exists($row->date, $sorted)) {
-				$sorted[$row->date] = array();
+			if (!array_key_exists($row->date, $groupedData)) {
+				$groupedData[$row->date] = array();
 			}
-			$sorted[$row->date][$row->presence_id] = $row;
+			$groupedData[$row->date][$row->presence_id] = $row;
 		}
 
 		if (count($presenceIds)) {
@@ -78,45 +90,83 @@ abstract class Badge_Factory
 		}
 
 		$currentDate = clone $startDate;
+        $dateRangeString = (string)$dateRange;
 
         // get all badges, except for total (the total score is not saved)
         $badges = static::getBadges();
         unset($badges[Badge_Total::getName()]);
 
+        $createRow = self::$db->prepare("INSERT INTO `badge_history` (`presence_id`, `daterange`, `date`) VALUES (:presence_id, :date_range, :date)");
+        $emptyRow = array();
+        foreach ($badges as $b) {
+            $emptyRow[$b->getName()] = null;
+            $emptyRow[$b->getName() . '_rank'] = null;
+        }
 		while ($currentDate <= $endDate) {
             $formattedDate = $currentDate->format('Y-m-d');
-			if (array_key_exists($formattedDate, $sorted)) {
-                $badgeScores = $sorted[$formattedDate];
+            $log("Checking $formattedDate");
+			if (array_key_exists($formattedDate, $groupedData)) {
+                $badgeScores = $groupedData[$formattedDate];
             } else {
                 $badgeScores = array();
             }
+
             // only calculate the scores for missing presences, and only calculate ranks if something new has been calculated
             $missingCount = 0;
             $successCount = 0;
             foreach ($presences as $p) {
-                $missing = !array_key_exists($p->getId(), $badgeScores);
-                $existing = $missing ? array() : (array)$badgeScores[$p->getId()];
+                $presenceId = $p->getId();
+                // create the data in the database if it is missing
+                if (array_key_exists($presenceId, $badgeScores)) {
+                    $existing = (array)$badgeScores[$presenceId];
+                } else {
+                    $createRow->execute(array(
+                        ':presence_id' => $presenceId,
+                        ':date_range' => $dateRangeString,
+                        ':date' => $formattedDate
+                    ));
+                    $existing = array_merge($emptyRow, array(
+                        'id' => self::$db->lastInsertId(),
+                        'presence_id' => $presenceId,
+                        'date_range' => $dateRangeString,
+                        'date' => $formattedDate
+                    ));
+                }
                 foreach ($badges as $b) {
-                    if ($missing || is_null($existing[$b->getName()])) {
+                    $badgeName = $b->getName();
+                    if (is_null($existing[$badgeName])) {
                         $missingCount++;
-                        $score = $b->calculate($p, $currentDate, $daterange);
-                        $p->saveBadgeResult($score, $currentDate, $daterange, $b::getName());
+                        $score = $b->calculate($p, $currentDate, $dateRange);
                         if (!is_null($score)) {
+                            $stmt = self::$db->prepare("UPDATE `badge_history` SET `{$badgeName}` = :score WHERE `id` = :id");
+                            $stmt->execute(array(':score' => $score, ':id' => $existing['id']));
                             $successCount++;
                         }
                     }
                 }
             }
+
+            $log("Found $missingCount missing, updated $successCount");
+
             if ($successCount > 0) {
                 foreach ($badges as $b) {
-                    $b->assignRanks($currentDate, $daterange);
+                    $b->assignRanks($currentDate, $dateRange);
                 }
             }
 			$currentDate->modify('+1 day');
 		}
 	}
 
-	public static function getAllCurrentData(
+    /**
+     * Gets all of the badge history data for the given presences, in the given date range, with the campaign(s) they belong to.
+     * If no presence IDs are given, all presence data is returned
+     * @param Badge_Period $dateRange
+     * @param DateTime $startDate
+     * @param DateTime $endDate
+     * @param array $presenceIds
+     * @return array|null
+     */
+    public static function getAllCurrentData(
 		Badge_Period $dateRange,
 		\DateTime $startDate,
 		\DateTime $endDate,
@@ -139,24 +189,14 @@ abstract class Badge_Factory
 		$sql = '
 			SELECT
 				h.*,
-				c.campaign_id
-			FROM
-				badge_history as h
-				LEFT OUTER JOIN campaign_presences as c ON h.presence_id = c.presence_id
-			WHERE
-				'.implode(' AND ', $clauses).'
-			UNION
-			SELECT
-				h.*,
-				c.parent as campaign_id
+				c.id AS campaign_id,
+				NULLIF(c.parent, 0) AS region_id
 			FROM
 				badge_history as h
 				LEFT OUTER JOIN campaign_presences as cp ON h.presence_id = cp.presence_id
-				LEFT OUTER JOIN campaigns AS c ON (c.id = cp.campaign_id)
+				LEFT OUTER JOIN campaigns AS c ON cp.campaign_id = c.id
 			WHERE
-				c.campaign_type = 1
-				AND NOT c.parent = 0
-				AND '.implode(' AND ', $clauses).'
+				'.implode(' AND ', $clauses).'
 			ORDER BY
 				presence_id ASC,
 				date DESC

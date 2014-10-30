@@ -40,27 +40,35 @@ abstract class NewModel_iProvider
 	 */
 	abstract public function getHistoricStreamMeta(NewModel_Presence $presence, \DateTime $start, \DateTime $end);
 
-	/**
-	 * Get performancedata for a specific presence between 2 dates
-	 * @param NewModel_Presence $presence  The presence to get the data for
-	 * @param \DateTime $start      The first day to fetch the data for (inclusive)
-	 * @param \DateTime $end        The last day to fetch the data for (inclusive)
-	 * @return array   The historic performancedata
-	 */
-	public function getHistoricData(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    /**
+     * Get performancedata for a specific presence between 2 dates
+     * @param NewModel_Presence $presence The presence to get the data for
+     * @param \DateTime $start The first day to fetch the data for (inclusive)
+     * @param \DateTime $end The last day to fetch the data for (inclusive)
+     * @param string $type The type of data to get. Use null to get all
+     * @return array   The historic performancedata
+     */
+	public function getHistoricData(NewModel_Presence $presence, \DateTime $start, \DateTime $end, $type = null)
 	{
+        $clauses = array(
+            '`datetime` >= :start',
+            '`datetime` <= :end',
+            '`presence_id` = :id'
+        );
+        $args = array(
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end'	=> $end->format('Y-m-d H:i:s'),
+            ':id' => $presence->getId()
+        );
+        if ($type) {
+            $clauses[] = '`type` = :type';
+            $args[':type'] = $type;
+        }
 		$stmt = $this->db->prepare("
 			SELECT *
 			FROM `presence_history`
-			WHERE `datetime` >= :start
-			AND `datetime` <= :end
-			AND `presence_id` = :id
-		");
-		$stmt->execute(array(
-			':start'	=> $start->format('Y-m-d H:i:s'),
-			':end'	=> $end->format('Y-m-d H:i:s'),
-			':id'		=> $presence->getId()
-		));
+			WHERE " . implode(' AND ', $clauses));
+		$stmt->execute($args);
 		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		return $ret;

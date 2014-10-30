@@ -108,7 +108,7 @@ class FetchController extends BaseController
                         $infoStmt->execute(array(
                                 ':id'       => $p->id,
                                 ':datetime' => gmdate('Y-m-d H:i:s'),
-                                ':type'     => 'facebook_engagment_score',
+                                ':type'     => 'facebook_engagement_score',
                                 ':value'    => $p->facebook_engagement
                             ));
                     }

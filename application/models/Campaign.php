@@ -236,20 +236,22 @@ class Model_Campaign extends Model_Base {
             $totalBadgeName = Badge_Total::getName();
 			$keyedData = array();
             foreach ($badgeData as $row) {
-				$campaignId = $row->campaign_id;
-				if(in_array($campaignId, $campaignIds)) {
-					if(!array_key_exists($campaignId, $keyedData)){
-                        $keyedData[$campaignId] = array('presences' => 0, 'denominator' => count($campaignIds));
-						foreach($badgeNames as $badgeName){
-                            $keyedData[$campaignId][$badgeName] = 0;
-						}
-					}
-					foreach($badgeNames as $badgeName){
-						if($badgeName != $totalBadgeName) {
-                            $keyedData[$campaignId][$badgeName] += $row->$badgeName;
+				$toAdd = array($row->campaign_id, $row->region_id);
+                foreach ($toAdd as $campaignId) {
+                    if(in_array($campaignId, $campaignIds)) {
+                        if(!array_key_exists($campaignId, $keyedData)){
+                            $keyedData[$campaignId] = array('presences' => 0, 'denominator' => count($campaignIds));
+                            foreach($badgeNames as $badgeName){
+                                $keyedData[$campaignId][$badgeName] = 0;
+                            }
                         }
-					}
-                    $keyedData[$campaignId]['presences']++;
+                        foreach($badgeNames as $badgeName){
+                            if($badgeName != $totalBadgeName) {
+                                $keyedData[$campaignId][$badgeName] += $row->$badgeName;
+                            }
+                        }
+                        $keyedData[$campaignId]['presences']++;
+                    }
                 }
 			}
 

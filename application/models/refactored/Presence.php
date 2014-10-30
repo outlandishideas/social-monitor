@@ -323,53 +323,47 @@ class NewModel_Presence
 		$popularity = $this->getPopularity();
 		if(is_numeric($target) && $target > 0 && $popularity < $target) {
 
-			$data = $this->getHistoricData($start, $end);
+			$data = $this->getHistoricData($start, $end, 'popularity');
 
-			if(count($data) > 0) {
+            $count = count($data);
 
-				//remove any non-popularity values
-				$cleanData = array_filter($data, function($row){
-					return $row['type'] == 'popularity';
-				});
+            if ($count > 1) {
+                // calculate line of best fit (see http://www.endmemo.com/statistics/lr.php)
+                $meanX = $meanY = $sumXY = $sumXX = 0;
 
-				$count = count($cleanData);
+                foreach ($data as $row) {
+                    // scale x down by a large factor, to avoid large number issues. We only need it for the gradient calculation anyway
+                    $rowDate = strtotime($row['datetime'])/1000000;
+                    $meanX += $rowDate;
+                    $meanY += $row['value'];
+                    $sumXY += $rowDate*$row['value'];
+                    $sumXX += $rowDate*$rowDate;
+                }
 
-				if ($count > 1) {
-					// calculate line of best fit (see http://www.endmemo.com/statistics/lr.php)
-					$meanX = $meanY = $sumXY = $sumXX = 0;
+                $meanX /= $count;
+                $meanY /= $count;
 
-					foreach ($data as $row) {
-						$rowDate = $start->diff(new DateTime($row['datetime']))->days; //use days instead of timestamps to prevent overflowing
-						$meanX += $rowDate;
-						$meanY += $row['value'];
-						$sumXY += $rowDate*$row['value'];
-						$sumXX += $rowDate*$rowDate;
-					}
+                $denominator = ($sumXX - $count*$meanX*$meanX);
+                $numerator = ($sumXY - $count*$meanX*$meanY);
 
-					$meanX /= $count;
-					$meanY /= $count;
+                if ($denominator != 0 && $numerator/$denominator > 0) {
+                    $a = $numerator/$denominator;
+                    $b = $meanY - $a*$meanX;
+                    $timestamp = ($target - $b)/$a;
+                    if ($timestamp < PHP_INT_MAX) {
 
-                    $denominator = ($sumXX - $count*$meanX*$meanX);
-                    $numerator = ($sumXY - $count*$meanX*$meanY);
+                        //we've been having some difficulties with DateTime and
+                        //large numbers. Try to run a DateTime construct to see if it works
+                        //if not nullify $date so that we can create a DateTime from PHP_INI_MAX
+                        try {
+                            $date = new DateTime(round($timestamp));
+                        } catch (Exception $e) {
+                            $date = null;
+                        }
 
-					if ($denominator != 0 && $numerator/$denominator > 0) {
-                        $a = $numerator/$denominator;
-                        $b = $meanY - $a*$meanX;
-						$daysNeeded = ceil(($target - $b)/$a);
-
-						//we've been having some difficulties with DateTime and
-						//large numbers. Try to run a DateTime construct to see if it works
-						//if not nullify $date so that we can create a DateTime from PHP_INI_MAX
-						try {
-							$date = clone $start;
-							$date->modify("+ $daysNeeded days");
-						} catch (Exception $e) {
-							$date = null;
-						}
-					}
-				}
-
-			}
+                    }
+                }
+            }
 
 			if (!($date instanceof DateTime) || $date->getTimestamp() < time()) {
 				try {
@@ -462,11 +456,12 @@ class NewModel_Presence
 				WHERE `presence_id` = :pid
 				AND `start_date` = :start
 				AND `end_date` = :end");
-		$stmt->execute(array(
-			':pid' => $this->getId(),
-			':start' => $start->format("Y-m-d"),
-			':end' => $end->format("Y-m-d")
-		));
+        $args = array(
+            ':pid' => $this->getId(),
+            ':start' => $start->format("Y-m-d"),
+            ':end' => $end->format("Y-m-d")
+        );
+		$stmt->execute($args);
 		$kpis = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 		return $kpis;
 	}
@@ -476,9 +471,9 @@ class NewModel_Presence
 		$this->kpiData[$key] = $value;
 	}
 
-	public function getHistoricData(\DateTime $start, \DateTime $end)
+	public function getHistoricData(\DateTime $start, \DateTime $end, $type = null)
 	{
-		return $this->provider->getHistoricData($this, $start, $end);
+		return $this->provider->getHistoricData($this, $start, $end, $type);
 	}
 
 	public function getHistoricStream(\DateTime $start, \DateTime $end, $search = null, $order = null, $limit = null, $offset = null)
@@ -549,24 +544,6 @@ class NewModel_Presence
 			':end' => $end->format("Y-m-d"),
 			':value' => $value
 		));
-	}
-
-	public function saveBadgeResult($result, \DateTime $date, Badge_Period $range, $badgeName)
-	{
-		$stmt = $this->db->prepare("SELECT `id` FROM `badge_history` WHERE `presence_id` = :id AND `date` = :date AND `daterange` = :range");
-		$stmt->execute(array(
-			':id'	=> $this->getId(),
-			':date'	=> $date->format('Y-m-d'),
-			':range'=> (string) $range
-		));
-		$id = $stmt->fetchColumn(0);
-		if (false === $id) {
-			$stmt = $this->db->prepare("INSERT INTO `badge_history` (`presence_id`, `daterange`, `date`, `{$badgeName}`) VALUES (?, ?, ?, ?)");
-			$stmt->execute(array($this->getId(), (string) $range, $date->format('Y-m-d'), $result));
-		} else {
-			$stmt = $this->db->prepare("UPDATE `badge_history` SET `{$badgeName}` = :result WHERE `id` = :id");
-			$stmt->execute(array(':result' => $result, ':id' => $id));
-		}
 	}
 
     public function getBadgeScores(DateTime $date, Badge_Period $range) {
@@ -658,10 +635,7 @@ class NewModel_Presence
 	 * @return array
 	 */
 	public function getPopularityData(DateTime $start, DateTime $end){
-		$data = $this->getHistoricData($start, $end);
-		return array_filter($data, function($row){
-			return $row['type'] == Metric_Popularity::getName();
-		});
+		return $this->getHistoricData($start, $end, Metric_Popularity::getName());
 	}
 
 	public function getActionsPerDayData(DateTime $start, DateTime $end)

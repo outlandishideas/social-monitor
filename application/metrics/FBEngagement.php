@@ -8,6 +8,7 @@ class Metric_FBEngagement extends Metric_Abstract {
 
     function __construct()
     {
+        //todo: this is wrong
         $this->target = floatval(BaseController::getOption('fb_engagement_target'));
     }
 
@@ -25,14 +26,12 @@ class Metric_FBEngagement extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $data = $presence->getHistoricData($start, $end);
+        $data = $presence->getHistoricData($start, $end, self::getName());
         $total = 0;
         $count = 0;
         foreach ($data as $d) {
-            if ($d['type'] == self::$name) {
-                $total += $d['value'];
-                $count++;
-            }
+            $total += $d['value'];
+            $count++;
         }
         if ($count == 0) {
             return 0;
