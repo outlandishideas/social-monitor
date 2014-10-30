@@ -77,7 +77,7 @@ class NewModel_Presence
         $this->image_url = $internals['image_url'];
         $this->last_updated = $internals['last_updated'];
         $this->last_fetched = $internals['last_fetched'];
-        $this->size = $internals['size'];
+        if (array_key_exists('size', $internals)) $this->size = $internals['size'];
     }
 
 	public function getId()
@@ -662,6 +662,11 @@ class NewModel_Presence
 		return array_filter($data, function($row){
 			return $row['type'] == Metric_Popularity::getName();
 		});
+	}
+
+	public function getActionsPerDayData(DateTime $start, DateTime $end)
+	{
+		return $this->provider->getHistoricStreamMeta($this, $start, $end);
 	}
 
 	/**
