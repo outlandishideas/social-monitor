@@ -30,9 +30,9 @@ class ConfigController extends BaseController {
                             'sw_min'=>array('label'=>'Sina Weibo Minimum Audience (% of total)'),
                             'sw_opt'=>array('label'=>'Sina Weibo Optimum Audience (% of total)'),
 
-                            'large_presences'=>array('label'=>'% of owner Target Audience that is shared amongst large presences'),
-                            'medium_presences'=>array('label'=>'% of owner Target Audience that is shared amongst medium presences'),
-                            'small_presences'=>array('label'=>'% of owner Target Audience that is shared amongst small presences'),
+                            'size_2_presences'=>array('label'=>'% of owner Target Audience that is shared amongst large presences'),
+                            'size_1_presences'=>array('label'=>'% of owner Target Audience that is shared amongst medium presences'),
+                            'size_0_presences'=>array('label'=>'% of owner Target Audience that is shared amongst small presences'),
                         )
                     ),
                     (object)array(

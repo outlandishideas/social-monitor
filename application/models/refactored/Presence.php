@@ -262,6 +262,26 @@ class NewModel_Presence
 		$owner = $this->getOwner();
 		if($owner){
 			$target = $owner->getTargetAudience();
+
+			// if Model_Group is the owner then we divide up the target population amongst the presences
+			// we use the size of the presence to calculate how much of the target population should be
+			// used by them.
+			// eg. SBU has two large / six medium / eight small presences. the two large presences take 50%/2
+			// of the target population as their target, the medium take 30%/6 of the target population as their target, etc.
+			if($owner instanceof Model_Group){
+
+				$size = $this->getSize();
+				// get the number of presences of the same size as $this
+				$presenceCount = count(array_filter($owner->getPresences(), function($presence) use ($size) {
+					/** @var NewModel_Presence $presence */
+					return $presence->getSize() == $size;
+				}));
+
+				$sizePercent = BaseController::getOption("size_{$size}_presences");
+
+				$target *= $sizePercent/100 / $presenceCount;
+
+			}
             $percent = 0;
             switch ($this->getType()->getValue()) {
                 case NewModel_PresenceType::SINA_WEIBO:
