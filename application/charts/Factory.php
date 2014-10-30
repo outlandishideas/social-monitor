@@ -27,6 +27,7 @@ abstract class Chart_Factory {
             Chart_Reach::getName() => 'Chart_Reach',
             Chart_Engagement::getName() => 'Chart_Engagement',
             Chart_Quality::getName() => 'Chart_Quality',
+            Chart_ActionsPerDay::getName() => 'Chart_ActionsPerDay'
         );
     }
 

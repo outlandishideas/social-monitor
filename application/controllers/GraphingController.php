@@ -10,7 +10,8 @@ abstract class GraphingController extends BaseController {
 			Chart_Engagement::getInstance(),
 			Chart_Quality::getInstance(),
 			Chart_Popularity::getInstance(),
-			Chart_PopularityTrend::getInstance()
+			Chart_PopularityTrend::getInstance(),
+			Chart_ActionsPerDay::getInstance()
 		);
 	}
 
