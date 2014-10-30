@@ -145,6 +145,18 @@ abstract class Badge_Factory
 				LEFT OUTER JOIN campaign_presences as c ON h.presence_id = c.presence_id
 			WHERE
 				'.implode(' AND ', $clauses).'
+			UNION
+			SELECT
+				h.*,
+				c.parent as campaign_id
+			FROM
+				badge_history as h
+				LEFT OUTER JOIN campaign_presences as cp ON h.presence_id = cp.presence_id
+				LEFT OUTER JOIN campaigns AS c ON (c.id = cp.campaign_id)
+			WHERE
+				c.campaign_type = 1
+				AND NOT c.parent = 0
+				AND '.implode(' AND ', $clauses).'
 			ORDER BY
 				h.presence_id ASC,
 				h.date DESC
