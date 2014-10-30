@@ -4,6 +4,12 @@ class PresenceController extends GraphingController
 {
 	protected static $publicActions = array('update-kpi-cache');
 
+	protected function chartOptions() {
+		$ret = parent::chartOptions();
+		$ret[] = Chart_ActionsPerDay::getInstance();
+		return $ret;
+	}
+
 	/**
 	 * Lists all presences
 	 * @user-level user
