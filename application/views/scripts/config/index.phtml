@@ -1,6 +1,6 @@
 <h2 class="page-title">Settings</h2>
 
-<form class="edit" method="post" action="<?php echo $this->url(); ?>" enctype="multipart/form-data" id="settings">
+<form method="post" action="<?php echo $this->url(); ?>" enctype="multipart/form-data" id="settings">
     <?php foreach ($this->values as $section) : ?>
 		<fieldset>
             <h2><?php echo $section->title; ?></h2>
@@ -15,20 +15,22 @@
                 <p><?php echo $kpi->description; ?></p>
                 <?php foreach ($kpi->values as $args) : ?>
 
-                    <div class="row">
+                    <div class="row field">
                         <div class="small-24 medium-8 large-8 columns">
                             <label for="<?php echo $args->key; ?>">
                                 <?php echo $args->label; ?>
                             </label>
                         </div>
-                        <div class="small-24 medium-16 large-16 end columns">
+                        <div class="small-24 medium-8 large-6 columns">
                             <input name="<?php echo $args->key; ?>" value="<?php echo htmlspecialchars($args->value); ?>" class="textInput <?php if ($args->error) { echo 'error'; } ?>"
                                    type="text" id="<?php echo $args->key; ?>">
-                            <?php if ($args->hint) : ?>
-                                <p class="formHint"><?php echo $args->hint; ?></p>
-                            <?php endif; ?>
                             <?php if ($args->error) : ?>
                                 <p class="formError"><?php echo $args->error; ?></p>
+                            <?php endif; ?>
+                        </div>
+                        <div class="small-24 medium-8 large-10 columns">
+                            <?php if ($args->hint) : ?>
+                                <p class="formHint"><?php echo $args->hint; ?></p>
                             <?php endif; ?>
                         </div>
                     </div>
