@@ -18,7 +18,7 @@ class ConfigController extends BaseController {
                 'kpis' => array(
                     (object)array(
                         'title' => 'Target Audience',
-                        'description' => 'Each presence has a target audience set against it. The score is given based on how close the presence is to it’s target',
+                        'description' => 'Each presence has a target audience set against it. The score is given based on how close the presence is to its target',
                         'values' => array(
                             'popularity_weighting'=>array('label'=>'Target Audience Weighting'),
                             'fb_min'=>array('label'=>'Facebook Minimum Audience (% of total)'),
@@ -37,7 +37,7 @@ class ConfigController extends BaseController {
                     ),
                     (object)array(
                         'title' => 'Time to Target Audience',
-                        'description' => 'Each presence has a target audience set against it. The score is given based on how close the presence is to it’s target',
+                        'description' => 'Each presence has a target audience set against it. The score is given based on how close the presence is to its target',
                         'values' => array(
                             'popularity_time_weighting'=>array('label'=>'Time to Target Audience Weighting'),
                             'achieve_audience_best'=>array('label'=>'Target audience best score (months)', 'hint'=>'The number of months the target audience should be reached within to get the best score'),
@@ -47,7 +47,7 @@ class ConfigController extends BaseController {
                     ),
                     (object)array(
                         'title' => 'Retweets/Shares',
-                        'description' => 'How often each presence’s posts are shared (Facebook) or retweeted (Twitter)',
+                        'description' => 'How often each presence\'s posts are shared (Facebook) or retweeted (Twitter)',
                         'values' => array(
                             'sharing_weighting'=>array('label'=>'Retweets/Shares Weighting'),
                             'fb_share'=>array('label'=>'Average shares per post target (% of total audience)'),
@@ -85,7 +85,7 @@ class ConfigController extends BaseController {
                         'description' => 'The Klout Score is a third party measurement of your engagement with your audience (Twitter only)',
                         'values' => array(
                             'klout_score_weighting'=>array('label'=>'Klout Score Weighting'),
-                            'klout_score_target'=>array('label'=>'Klout Score Target', 'hint'=>'The presence will score 100% if it meets or excedes this target, but will only receive 0% if it does not meet it.')
+                            'klout_score_target'=>array('label'=>'Klout Score Target', 'hint'=>'The presence will score 100% if it meets or exceeds this target, but will only receive 0% if it does not meet it.')
                         )
                     ),
                     (object)array(
@@ -93,6 +93,7 @@ class ConfigController extends BaseController {
                         'description' => 'The Facebook Engagement Score is based on Social Baker\'s Daily Page Engagement Rate calculation.',
                         'values' => array(
                             'fb_engagement_score_weighting'=>array('label'=>'Facebook Engagement Score Weighting'),
+                            'fb_engagement_target'=>array('label'=>'Facebook Engagement Score Target', 'hint'=>'The presence will score 100% if it meets or exceeds this target, but will only receive 0% if it does not meet it.')
                         )
                     ),
                 )

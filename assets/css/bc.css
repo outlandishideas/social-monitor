@@ -465,6 +465,10 @@ form.autoConfirm {
 	padding: 0;
 }
 
+form .formError {
+	color: #c55f5f;
+}
+
 .autoConfirm input {
 	/* counter the border and padding */
 	margin-top: -3px;
@@ -625,12 +629,6 @@ table.dtable {
 }
 table.dtable.dataTable {
 	display: table;
-}
-
-.uniForm .dataTables_filter input[type=text] {
-	padding: 4px 2px;
-	border: 1px solid #aaa;
-	background: #fff;
 }
 
 .dataTables_filter {
@@ -1962,6 +1960,9 @@ td.countries a {
 .entity-list-toggle {
 	cursor: pointer;
 }
+.entity-list-toggle:hover {
+	color: #ddd;
+}
 
 .inlineLabels #assigned {
 	display: block;
@@ -2097,4 +2098,77 @@ select.selectInput:hover {
 #kpi-download {
 	text-align: center;
 	padding-top: 20px;
+}
+
+/* messages */
+ol.messages {
+	clear: left;
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+ol.messages li {
+	padding: 8px 35px 8px 14px;
+	margin-bottom: 18px;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	/*background: #fcf8e3 url(../img/msg-close.png) no-repeat right center;*/
+	background-color: #fcf8e3;
+	border: 1px solid #fbeed5;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	color: #c09853;
+}
+ol.messages .alert .close {
+	position: relative;
+	top: -2px;
+	right: -21px;
+	line-height: 18px;
+}
+ol.messages li.success {
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
+	color: #468847;
+}
+ol.messages li.danger,
+ol.messages li.error {
+	background-color: #f2dede;
+	border-color: #eed3d7;
+	color: #b94a48;
+}
+ol.messages li.info {
+	background-color: #d9edf7;
+	border-color: #bce8f1;
+	color: #3a87ad;
+}
+ol.messages li a {
+	text-decoration: underline;
+}
+
+/* Config Screen*/
+
+form#settings fieldset + fieldset{
+	margin-top: 80px;
+}
+form#settings .config-description {
+	width: 66%;
+}
+form#settings .config-description ul {
+	list-style: circle;
+	width: 100%;
+	float: none;
+	margin-left: 20px;
+}
+form#settings .config-description ul li {
+	list-style: circle;
+	width: 100%;
+	margin: 0;
+}
+
+#audience-rates th {
+	color: #fff;
+}
+
+table a.view-link:hover {
+	color: #ddd;
 }
