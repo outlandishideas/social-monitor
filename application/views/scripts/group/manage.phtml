@@ -16,7 +16,7 @@ $bottomBar[] = '<button type="submit" class="button-bc">Save</button>';
 
 <h2 class="page-title">Manage Presences: <?php echo $sbu->display_name; ?></h2>
 
-<form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-group">
+<form class="management" method="post" action="<?php echo $this->url(); ?>" novalidate id="manage-group">
     <?php
     echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true));
 

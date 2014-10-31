@@ -1,6 +1,6 @@
 <h2 class="page-title">Settings</h2>
 
-<form method="post" action="<?php echo $this->url(); ?>" enctype="multipart/form-data" id="settings">
+<form class="edit" method="post" action="<?php echo $this->url(); ?>" enctype="multipart/form-data" id="settings">
     <?php foreach ($this->values as $section) : ?>
 		<fieldset>
             <h2><?php echo $section->title; ?></h2>

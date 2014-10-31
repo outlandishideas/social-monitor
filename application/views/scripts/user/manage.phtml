@@ -6,7 +6,7 @@
 	<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
 	<p>This user automatically has access to all parts of the monitor.</p>
 <?php else : ?>
-	<form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-user">
+	<form class="management" method="post" action="<?php echo $this->url(); ?>" novalidate id="manage-user">
 
 		<fieldset class="inlineLabels">
 			<div class="row">
