@@ -12,11 +12,23 @@ class Header_Handle extends Header_Abstract {
         $this->cellClasses[] = 'left-align';
     }
 
-
+    /**
+     * @param NewModel_Presence $model
+     * @return mixed|string
+     */
     public function getTableCellValue($model)
     {
-        $value = $this->getValue($model);
-        return "<span class='{$model->getPresenceSign()} fa-lg fa-fw'></span> $value";
+        $handle = $this->getValue($model);
+        $sign = $model->getPresenceSign();
+        $value = "<span class=\"$sign fa-lg fa-fw\"></span> $handle";
+        if ($model->isForFacebook()) {
+            $score = $model->getFacebookEngagement();
+            $value .= " <span class=\"engagement-score facebook\" title=\"Facebook engagement score: $score\">" . round($score) . '</span>';
+        } else if ($model->isForTwitter()) {
+            $score = $model->getKloutScore();
+            $value .= " <span class=\"engagement-score klout\" title=\"Klout score: $score\">" . round($score) . '</span>';
+        }
+        return $value;
     }
 
     /**
