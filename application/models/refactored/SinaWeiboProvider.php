@@ -255,7 +255,11 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 			foreach ($matches as $match) {
 				$fullurl = $match[0];
 				$finalPart = $match[4];
-				$finalStart = strpos($fullurl, $finalPart);
+                if ($finalPart) {
+    				$finalStart = strpos($fullurl, $finalPart);
+                } else {
+                    $finalStart = strlen($fullurl);
+                }
 				$url = substr($fullurl, 0, $finalStart + strlen($finalPart));
 				try {
 					$url = Util_Http::resolveUrl($url);
