@@ -1,0 +1,24 @@
+<?php
+/** @var Model_Country $country */
+$country = $this->campaign;
+$presences = $country->getPresences();
+$region = $country->getRegion();
+?>
+
+<h4 class="campaign-name">
+    <span class="flag"><img src="<?php echo $this->baseUrl('/') . 'assets/img/flags/' . $country->getCountryCode(); ?>.png" /></span>
+    <?php echo $country->display_name; ?>
+</h4>
+
+<?php if ($region) : ?>
+    <p>Part of the <a href="<?php echo $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)); ?>"><?php echo $region->display_name; ?></a> region</p>
+<?php endif; ?>
+
+<h4>Presences: <?php echo count($presences); ?></h4>
+<?php if ($presences) : ?>
+    <ul class="entity-list">
+        <?php foreach ($presences as $p) : ?>
+            <?php echo $this->partial('partials/presence_box.phtml', array('presence'=>$p)); ?>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

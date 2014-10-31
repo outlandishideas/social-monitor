@@ -25,7 +25,7 @@ abstract class Header_BadgeScore extends Header_Abstract {
             $style = 'style="color:' . Badge_Abstract::colorize($value) . '"';
         }
 
-        return "<span $style data-value='{$value}'>{$text}<span>";
+        return "<span $style data-value='{$value}'>{$text}</span>";
     }
 
     /**

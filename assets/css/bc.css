@@ -1960,6 +1960,9 @@ td.countries a {
 .entity-list-toggle {
 	cursor: pointer;
 }
+.entity-list-toggle:hover {
+	color: #ddd;
+}
 
 .inlineLabels #assigned {
 	display: block;
@@ -2164,4 +2167,8 @@ form#settings .config-description ul li {
 
 #audience-rates th {
 	color: #fff;
+}
+
+table a.view-link:hover {
+	color: #ddd;
 }

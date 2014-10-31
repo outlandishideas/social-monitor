@@ -55,8 +55,8 @@ $gatekeeper = $this->gatekeeper();
                             } else {
                                 $countText = $count . ' presence' . ($count == 1 ? '' : 's');
                             }
-                            echo '<span class="entity-list-toggle">' . $countText . '</span>';
                             if($count > 0) {
+                                echo '<span href="#" class="entity-list-toggle" title="Click to expand">' . $countText . '</span>';
                                 echo '<ul class="entity-list">';
                                 foreach ($cellValue as $template=>$urlArgs) {
                                     $link = $gatekeeper->filter($template, $urlArgs);
@@ -72,13 +72,15 @@ $gatekeeper = $this->gatekeeper();
                                     }
                                 }
                                 echo "</ul>";
+                            } else {
+                                echo '<span>' . $countText . '</span>';
                             }
                             break;
                         case Header_Handle::getName():
                         case Header_Name::getName():
                             $url = $gatekeeper->filter('%url%', array("action" => "view", "id" => $row->id));
                             if ($url) {
-                                echo '<a href="' . $url . '">' . $cellValue . '</a>';
+                                echo '<a href="' . $url . '" class="view-link">' . $cellValue . '</a>';
                             } else {
                                 echo $cellValue;
                             }

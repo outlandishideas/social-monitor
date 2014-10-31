@@ -106,18 +106,18 @@ app.datatables = {
 			if (typeof width != 'undefined') {
 				column.sWidth = width;
 			}
-			column.mRender = function(content, type, c) {
-				if (type == 'filter') {
-					switch (column.sType) {
-						case 'forminput':
-							var $input = $(content);
-							if ($input.length > 0) {
-								return $input.val();
-							}
+
+			if (column.sType == 'forminput') {
+				column.mRender = function(content, type, c) {
+					if (type == 'filter') {
+						var $input = $(content);
+						if ($input.length > 0) {
+							return $input.val();
+						}
 					}
-				}
-				return content;
-			};
+					return content;
+				};
+			}
 
 			columns.push(column);
 		});

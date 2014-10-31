@@ -49,9 +49,9 @@ abstract class Header_Abstract {
             $properties['data-width'] =  $this->getWidth();
         }
 
-        $html = "<th ";
+        $html = "<th";
         foreach($properties as $property => $value){
-            $html .= "{$property}='{$value}'";
+            $html .= " {$property}='{$value}'";
         }
         $html .= ">{$this->getLabel()}</th>";
         return $html;

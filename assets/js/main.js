@@ -319,15 +319,10 @@ app.init = {
 		},
 		'.entity-list-toggle': function($toggle) {
 			$toggle.on('click', function(e) {
-				e.preventDefault();
-				$list = $(this).next();
-				if (parseInt($list.css('height')) > 0) {
-					$list.css('height', 0);
-				} else {
-					$list.css('height', 'auto');
-				}
+				$(this).closest('td').find('.entity-list')
+					.slideToggle('fast');
 			});
-			$toggle.next().css('height', 0);
+			$toggle.trigger('click');
 		},
 		'.domain-link .toggle-expand': function($togglers) {
 			$togglers.on('click', function(e) {
