@@ -6,7 +6,6 @@ var app = app || {};
 
 app.home = {
 	map: null,
-	smallMaps: [],
 	mapData: null,
 	metrics: {},
     setup: function(){
@@ -144,23 +143,6 @@ app.home = {
 		}
 		return wrapper;
 	},
-//	refreshCampaigns: function(campaigns) {
-//		var day = app.home.currentDay();
-//		var metric = app.home.currentBadge();
-//
-//		for(var i in campaigns){
-//			var g = campaigns[i];
-//			var data = g.data;
-//			var color = data.b[metric][day].c;
-//			var score = Math.round(data.b[metric][day].s);
-//			var title = data.n +' (Presences: '+ data.p +')\n'+ app.home.metrics[metric].label +': '+ data.b[metric][day].l;
-//
-//			g.$dom
-//				.css('background-color', color)
-//				.attr('title', title)
-//				.find('.score').empty().append(score);
-//		}
-//	},
 	currentDay:function () {
 		var day = $('#map-date').find('.range-slider').data('val');
 		if(typeof day == 'undefined'){
@@ -186,15 +168,6 @@ app.home = {
 		view.setColumns([0, metric.days[day].columnIndex]);
 
 		app.home.map.draw(view, app.home.map.options);
-
-		for(var i in app.home.smallMaps){
-			var country = app.home.smallMaps[i];
-			country.map.options.colorAxis.values = metric.range;
-			country.map.options.colorAxis.colors = metric.colors;
-			view = new google.visualization.DataView(country.data);
-			view.setColumns([0, metric.days[day].columnIndex]);
-			country.map.draw(view, country.map.options);
-		}
 	},
 	/**
 	 * Called when a country is clicked
@@ -204,16 +177,6 @@ app.home = {
 		var selection = app.home.map.getSelection();
 		app.home.map.setSelection();
 		var data = app.home.mapData;
-		if(selection.length == 0){
-			for(var i in app.home.smallMaps){
-				selection = app.home.smallMaps[i].map.getSelection();
-				if(selection.length > 0) {
-					app.home.smallMaps[i].map.setSelection();
-					data = app.home.smallMaps[i].data;
-					break;
-				}
-			}
-		}
 		if (selection.length > 0) {
 			var id = data.getValue(selection[0].row, 3);
 			if(id != -1){
@@ -228,6 +191,7 @@ app.home = {
 	loadCampaignStats: function(id) {
 		var $countryStats = $('#country-stats');
 		$countryStats.addClass('loading');
+		$countryStats.data('country-id', id);
 		$countryStats.load('country/stats-panel/id/' + id, function(event){
 			$countryStats.removeClass('loading');
 			app.home.updateAll();
@@ -320,10 +284,48 @@ app.home = {
 				then.addDays(-dayRange);
 				$slider.data('val', value);
 				$text.text( then.toString('dd MMM yyyy') + ' - ' + now.toString('dd MMM yyyy') );
-				app.home.refreshMap();
+				app.home.updateDataAttributes();
+				app.home.updateAll();
 			}
 		});
-	}
-}
+	},
 
-;
+	updateDataAttributes: function() {
+		var day = app.home.currentDay();
+
+		//small countries
+		var data = window.mapArgs.smallMapData;
+		for (var i = 0; i < data.length; i++) {
+			var c = data[i];
+			var $li = $('.small-country-list').find('[data-id="'+c.id+'"]').first();
+			for (var badge in c.b) {
+				$li.data(badge, Math.round(c.b[badge][day].s));
+				$li.data(badge+'-color', c.b[badge][day].c);
+			}
+		}
+
+		//country popout
+		$countryStats = $('#country-stats');
+		var $div = $countryStats.find('.badge-small').first();
+		var countryId = parseInt($countryStats.data('country-id'));
+		for (var i in window.mapArgs.mapData) {
+			c = window.mapArgs.mapData[i];
+			if (c.id == countryId) {
+				for (var badge in c.b) {
+					$div.data(badge, Math.round(c.b[badge][day].s));
+					$div.data(badge+'-color', c.b[badge][day].c);
+				}
+			}
+		}
+
+		//sbus
+		for (var i in window.mapArgs.groupData) {
+			var g = window.mapArgs.groupData[i];
+			$div = $('[data-group-id="'+g.id+'"]');
+			for (var badge in g.b) {
+				$div.data(badge, Math.round(g.b[badge][day].s));
+				$div.data(badge+'-color', g.b[badge][day].c);
+			}
+		}
+	}
+};
