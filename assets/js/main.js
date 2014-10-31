@@ -115,10 +115,6 @@ app.init = {
 			$item.on('click', '.link', app.charts.grabSvgElement);
 		},
 
-		'form.uniForm': function ($item) {
-			$item.uniform();
-		},
-
 		'#homepage-tabs': function ($item) {
 			app.home.setup()
 		},

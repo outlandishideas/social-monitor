@@ -8,9 +8,35 @@ $presence = $this->presence;
 $presenceType = strtolower($presence->getType()->getTitle());
 $owner = $presence->getOwner();
 $ownerUrl = null;
+$targetSize = $presence->getTargetAudience();
+$currentSize = $presence->getPopularity();
+$timeToTarget = $presence->getTargetAudienceDate();
 if ($owner) {
     $ownerController = strtolower(substr(get_class($owner), 6));
     $ownerUrl = $this->url(array('controller'=>$ownerController, 'action'=>'view', 'id'=>$owner->id));
+}
+$sizeDiff = $targetSize - $currentSize;
+$requiredRates = array();
+if ($sizeDiff > 0) {
+    //get the different targets (best, good, bad)
+    $scores = array(
+        'best' => BaseController::getOption('achieve_audience_best'),
+        'good' => BaseController::getOption('achieve_audience_good'),
+        'bad' => BaseController::getOption('achieve_audience_bad')
+    );
+
+    $daysPerMonth = 365/12;
+    foreach ($scores as $key=>$score) {
+        $rate = $sizeDiff/($daysPerMonth*$score);
+        //what rates are required to meet the different targets
+        if ($rate > 0) {
+            $requiredRates[] = array(
+                'type' => $key,
+                'rate' => round($rate, 1),
+                'date' => date('F Y', strtotime('now +' . $score . ' months'))
+            );
+        }
+    }
 }
 //todo: show this data
 //$kpiData = $presence->getKpiData();
@@ -92,6 +118,32 @@ if ($owner) {
                 <p>This is a <a href="<?php echo $presence->page_url; ?>" target="_blank"><?php echo $presenceType; ?> <span class="icon-external-link"></span></a> presence</p>
                 <?php if ($ownerUrl) : ?>
                     <p>This presence contributes to the statistics for <a href="<?php echo $ownerUrl; ?>"><?php echo $owner->display_name; ?></a></p>
+                    <p>The target audience size is <?php echo number_format($targetSize); ?></p>
+                    <p>The current audience size is <?php echo number_format($currentSize); ?></p>
+                    <?php if ($requiredRates) : ?>
+                        <?php if ($timeToTarget) : ?>
+                        <p>At the current rate, the target will be reached by <?php echo $timeToTarget->format('F Y'); ?></p>
+                        <?php endif; ?>
+                        <p>The following daily gains are required to meet the target audience size:</p>
+                        <table id="audience-rates">
+                            <tbody>
+                            <tr>
+                                <th>Target date</th>
+                                <?php foreach ($requiredRates as $rate) : ?>
+                                <td class="<?php echo $rate['type']; ?>">by <?php echo $rate['date']; ?></td>
+                                <?php endforeach; ?>
+                            </tr>
+                            <tr>
+                                <th>Required gain per day</th>
+                                <?php foreach ($requiredRates as $rate) : ?>
+                                <td class="<?php echo $rate['type']; ?>"><?php echo $rate['rate']; ?></td>
+                                <?php endforeach; ?>
+                            </tr>
+                            </tbody>
+                        </table>
+                    <?php foreach ($requiredRates as $rate) : ?>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
             <div class="content" id="statuses">

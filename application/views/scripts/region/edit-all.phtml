@@ -9,9 +9,11 @@ $topBar = $bottomBar;
 array_unshift($topBar, '<div id="search-table"></div>');
 ?>
 
-<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true)); ?>
+<h2 class="page-title">Edit All Regions</h2>
 
-<form method="post" action="<?php echo $this->url(); ?>" class="uniForm" novalidate id="edit-all-regions">
+<form method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-all-regions">
+
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true)); ?>
 
     <table class="text dtable" id="all-regions">
         <thead>
