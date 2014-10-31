@@ -7,12 +7,16 @@ var app = app || {};
 app.home = {
 	map: null,
 	mapData: null,
+	smallCountryData: [],
+	groupData: [],
 	metrics: {},
     setup: function(){
 
-	    //todo: update SBUs and popup
-
 	    var mapArgs = window.mapArgs;
+	    app.home.smallCountryData = mapArgs.smallMapData;
+	    app.home.groupData = mapArgs.groupData;
+	    app.home.countryData = mapArgs.mapData;
+	    app.home.geochartMetrics = mapArgs.geochartMetrics;
 
 	    // copy the provided metrics to app.home, and populate values
 	    app.home.metrics = mapArgs['geochartMetrics'];
@@ -31,7 +35,7 @@ app.home = {
 		    };
 		    google.visualization.events.addListener(app.home.map, 'select', app.home.mapClickHandler);
 
-		    app.home.mapData = app.home.buildDataTable(mapArgs['mapData']);
+		    app.home.mapData = app.home.buildDataTable(app.home.countryData);
 
 		    app.home.refreshMap();
 	    });
@@ -75,11 +79,12 @@ app.home = {
 	    return $('#homepage-tabs').find('.active').data('badge');
     },
 	updateAll: function() {
+		app.home.updateDataAttributes();
 		var badge = app.home.currentBadge();
-		$('[data-' + badge + ']').each(function(){
+		$('[data-badge]').each(function(){
 			var $this = $(this);
-			var score = $this.data(badge);
-			var color = $this.data(badge + '-color');
+			var score = $this.data('score');
+			var color = $this.data('color');
 			if (!color) {
 				color = '#d2d2d2';
 			}
@@ -108,41 +113,6 @@ app.home = {
 
 	    app.home.updateAll();
     },
-	/**
-	 * Creates DOM elements, adds them to the screen and initialises their data
-	 * @param selector
-	 * @param data
-	 * @param className
-	 * @param modelType
-	 * @returns {Array}
-	 */
-	initCampaigns: function(selector, data, className, modelType) {
-		var $container = $(selector);
-
-		var wrapper = [];
-		for(var i in data){
-			var campaignData = data[i];
-			var id = campaignData.id;
-
-			var $dom = $('<li></li>')
-				.addClass(className)
-				.data('id', id)
-				.append('<span class="label">'+ campaignData.n +'</span>')
-				.append('<span class="score"></span>')
-				.appendTo($container);
-
-			$dom.on('click', function(e){
-				e.preventDefault();
-				app.home.loadCampaignStats($(this).data('id'));
-			});
-
-			wrapper.push({
-				$dom: $dom,
-				data: campaignData
-			});
-		}
-		return wrapper;
-	},
 	currentDay:function () {
 		var day = $('#map-date').find('.range-slider').data('val');
 		if(typeof day == 'undefined'){
@@ -191,13 +161,12 @@ app.home = {
 	loadCampaignStats: function(id) {
 		var $countryStats = $('#country-stats');
 		$countryStats.addClass('loading');
-		$countryStats.data('country-id', id);
 		$countryStats.load('country/stats-panel/id/' + id, function(event){
 			$countryStats.removeClass('loading');
 			app.home.updateAll();
 		});
-
 	},
+
 	/**
 	 * Creates the data structure used by the geochart.
 	 * Called when the geochart is ready for data to be added to it
@@ -284,48 +253,57 @@ app.home = {
 				then.addDays(-dayRange);
 				$slider.data('val', value);
 				$text.text( then.toString('dd MMM yyyy') + ' - ' + now.toString('dd MMM yyyy') );
-				app.home.updateDataAttributes();
 				app.home.updateAll();
 			}
 		});
 	},
 
 	updateDataAttributes: function() {
+		var badge = $('#homepage-tabs').find('dd.active').data('badge');
 		var day = app.home.currentDay();
+		var i;
+		var colorArgs = app.home.geochartMetrics[badge];
+
+		var updateElement = function($el, d) {
+			var score = d.b[badge][day].s;
+			$el.data('score', Math.round(score));
+			var color = colorArgs.colors[0];
+			for (var j=0; j<colorArgs.colors.length; j++) {
+				if (score >= colorArgs.range[j]) {
+					color = colorArgs.colors[j];
+				}
+			}
+			$el.data('color', color);
+		};
 
 		//small countries
-		var data = window.mapArgs.smallMapData;
-		for (var i = 0; i < data.length; i++) {
+		var data = app.home.smallCountryData;
+		for (i = 0; i < data.length; i++) {
 			var c = data[i];
-			var $li = $('.small-country-list').find('[data-id="'+c.id+'"]').first();
-			for (var badge in c.b) {
-				$li.data(badge, Math.round(c.b[badge][day].s));
-				$li.data(badge+'-color', c.b[badge][day].c);
-			}
+			var $li = $('.small-country-list').find('[data-id="'+c.id+'"]');
+			updateElement($li, c);
 		}
 
 		//country popout
-		$countryStats = $('#country-stats');
-		var $div = $countryStats.find('.badge-small').first();
-		var countryId = parseInt($countryStats.data('country-id'));
-		for (var i in window.mapArgs.mapData) {
-			c = window.mapArgs.mapData[i];
-			if (c.id == countryId) {
-				for (var badge in c.b) {
-					$div.data(badge, Math.round(c.b[badge][day].s));
-					$div.data(badge+'-color', c.b[badge][day].c);
+		data = app.home.countryData;
+		var $countryStats = $('#country-stats');
+		var $div = $countryStats.find('[data-badge]');
+		if ($div.length > 0) {
+			var countryId = parseInt($div.data('country-id'));
+			for (i = 0; i < data.length; i++) {
+				if (data[i].id == countryId) {
+					updateElement($div, data[i]);
+					break;
 				}
 			}
 		}
 
 		//sbus
-		for (var i in window.mapArgs.groupData) {
-			var g = window.mapArgs.groupData[i];
+		data = app.home.groupData;
+		for (i = 0; i<data.length; i++) {
+			var g = data[i];
 			$div = $('[data-group-id="'+g.id+'"]');
-			for (var badge in g.b) {
-				$div.data(badge, Math.round(g.b[badge][day].s));
-				$div.data(badge+'-color', g.b[badge][day].c);
-			}
+			updateElement($div, g);
 		}
 	}
 };
