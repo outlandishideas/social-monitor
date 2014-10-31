@@ -15,6 +15,13 @@ foreach(NewModel_PresenceType::enumValues() as $type) {
         $group = array();
         foreach($typePresences as $presence) {
             $presenceText = '<span class="' . $presence->getPresenceSign() . '"></span> ' . $presence->getName();
+            if ($presence->isForFacebook()) {
+                $score = $presence->getFacebookEngagement();
+                $presenceText .= " <span class=\"engagement-score facebook\" title=\"Facebook engagement score: $score\">" . round($score) . '</span>';
+            } else if ($presence->isForTwitter()) {
+                $score = $presence->getKloutScore();
+                $presenceText .= " <span class=\"engagement-score klout\" title=\"Klout score: $score\">" . round($score) . '</span>';
+            }
             $presenceLink = $this->gatekeeper()->filter('<a href="%url%">' . $presenceText . '</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId()));
             if (!$presenceLink) {
                 $presenceLink = $presenceText;
