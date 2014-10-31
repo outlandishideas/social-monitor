@@ -46,14 +46,16 @@ app.newCharts = {
         app.api.get(url, params)
             .done(function(response) {
                 var data = response.data;
-		        if (data.axis.x.type == 'timeseries') {
-			        data.axis.x.tick = {
+		        $('.chart-description').text(data.description ? data.description : '');
+		        var chartArgs = data.chartArgs;
+		        if (chartArgs.axis.x.type == 'timeseries') {
+			        chartArgs.axis.x.tick = {
 				        format: function(x) {
 					        return x.getDate() + '/' + (x.getMonth()+1) + '/' + (x.getFullYear()-2000);
 				        }
 			        };
 		        }
-                app.state.chart = c3.generate(data)
+                app.state.chart = c3.generate(chartArgs)
             })
             .always(function() {
                 //$('.chart-container').hideLoader();

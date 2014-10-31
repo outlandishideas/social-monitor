@@ -3,11 +3,11 @@
 abstract class Chart_Abstract {
 
     protected static $title;
-    protected static $description;
     protected static $name;
 
     protected $xLabel;
     protected $yLabel;
+    protected $description;
 
     public function __construct(PDO $db = null)
     {
@@ -21,15 +21,18 @@ abstract class Chart_Abstract {
     {
         $chartData = $this->getData($model, $start, $end);
         return array(
-            "bindto" => '#new-chart',
-            //this doesn't seem to work
-            "line" => array(
-                "connectNull" => true
-            ),
-            "data" => $chartData,
-            "axis" => array(
-                "x" => $this->getXAxis(),
-                "y" => $this->getYAxis()
+            'description' => $this->getDescription(),
+            'chartArgs' => array(
+                "bindto" => '#new-chart',
+                //this doesn't seem to work
+                "line" => array(
+                    "connectNull" => true
+                ),
+                "data" => $chartData,
+                "axis" => array(
+                    "x" => $this->getXAxis(),
+                    "y" => $this->getYAxis()
+                )
             )
         );
     }
@@ -47,9 +50,9 @@ abstract class Chart_Abstract {
     /**
      * @return mixed
      */
-    public static function getDescription()
+    public function getDescription()
     {
-        return static::$description;
+        return $this->description;
     }
 
     /**
