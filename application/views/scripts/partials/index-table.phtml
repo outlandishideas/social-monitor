@@ -56,7 +56,7 @@ $gatekeeper = $this->gatekeeper();
                                 $countText = $count . ' presence' . ($count == 1 ? '' : 's');
                             }
                             if($count > 0) {
-                                echo '<span href="#" class="entity-list-toggle" title="Click to expand">' . $countText . '</span>';
+                                echo '<span class="entity-list-toggle" title="Click to expand">' . $countText . '</span>';
                                 echo '<ul class="entity-list">';
                                 foreach ($cellValue as $template=>$urlArgs) {
                                     $link = $gatekeeper->filter($template, $urlArgs);
