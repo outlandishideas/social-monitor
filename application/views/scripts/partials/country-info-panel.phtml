@@ -14,6 +14,10 @@ $region = $country->getRegion();
     <p>Part of the <a href="<?php echo $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)); ?>"><?php echo $region->display_name; ?></a> region</p>
 <?php endif; ?>
 
+<p>Available audience size: <?php echo number_format($country->getTargetAudience()); ?></p>
+<p>Country population: <?php echo number_format($country->population); ?></p>
+<p>Digital population: <?php echo number_format(round($country->getDigitalPopulation())) . ' (' . $country->penetration . '% penetration)'; ?></p>
+
 <h4>Presences: <?php echo count($presences); ?></h4>
 <?php if ($presences) : ?>
     <ul class="entity-list">
