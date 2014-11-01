@@ -60,7 +60,7 @@ class CountryController extends CampaignController {
 		$country = Model_Country::fetchById($this->_request->getParam('id'));
 		$this->validateData($country);
 
-		$this->view->badgePartial = $this->badgeDetails($country->getBadges());
+		$this->view->badgePartial = $this->badgeDetails($country);
 		$this->view->chartOptions = self::chartOptions();
         $this->view->country = $country;
         $this->view->title = 'Country: ' . $country->display_name;

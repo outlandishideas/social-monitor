@@ -5,9 +5,12 @@ class PresenceController extends GraphingController
 	protected static $publicActions = array('update-kpi-cache');
 
 	protected function chartOptions() {
-		$ret = parent::chartOptions();
-		$ret[] = Chart_ActionsPerDay::getInstance();
-		return $ret;
+        return array(
+            Chart_Compare::getInstance(),
+            Chart_Popularity::getInstance(),
+            Chart_PopularityTrend::getInstance(),
+            Chart_ActionsPerDay::getInstance()
+        );
 	}
 
 	/**
@@ -30,12 +33,11 @@ class PresenceController extends GraphingController
 	 */
 	public function viewAction()
 	{
-		/** @var NewModel_Presence $presence */
 		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		$this->validateData($presence);
 
 		$this->view->presence = $presence;
-		$this->view->badgePartial = $this->badgeDetails($presence->getBadges());
+		$this->view->badgePartial = $this->badgeDetails($presence);
 		$this->view->chartOptions = $this->chartOptions();
         $allPresences = array();
         foreach (NewModel_PresenceFactory::getPresences() as $p) {
@@ -56,7 +58,6 @@ class PresenceController extends GraphingController
     {
         $compareData = array();
         foreach(explode(',',$this->_request->getParam('id')) as $id){
-	        /** @var Model_Presence $presence */
             $presence = NewModel_PresenceFactory::getPresenceById($id);
             $this->validateData($presence);
             $compareData[$id] = (object)array(
@@ -198,7 +199,6 @@ class PresenceController extends GraphingController
 
 		$this->validateChartRequest();
 
-		/** @var $presence NewModel_Presence */
 		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		if(!$presence) {
 			$this->apiError('Presence could not be found');
@@ -238,7 +238,6 @@ class PresenceController extends GraphingController
 			$this->apiError('Missing date range');
 		}
 
-		/** @var $presence Model_Presence */
 		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		if (!$presence) {
 			$this->apiError('Presence not found');

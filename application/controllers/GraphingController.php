@@ -143,12 +143,13 @@ abstract class GraphingController extends BaseController {
     }
 
     /**
-     * @param $badgeData
+     * @param $model Model_Campaign|NewModel_Presence
      * @param Badge_Abstract $badge
      * @return array
      */
-    public function badgeInformation($badgeData, $badge)
+    public function badgeInformation($model, $badge)
 	{
+        $badgeData = $model->getBadges();
         if ($badgeData) {
     		$score = round($badgeData[$badge::getName()]);
         } else {
@@ -180,16 +181,19 @@ abstract class GraphingController extends BaseController {
 			"value"	=> $score, //get score badge
 			"color" => $color //get colour for this score
 		);
-		if(count($badge->getMetrics()) > 0){
+        $badgeMetrics = $badge->getMetrics();
+		if(count($badgeMetrics) > 0){
 			$metrics = array();
-			foreach($badge->getMetrics() as $metric){
+			foreach($badgeMetrics as $metric){
 				$m = array(
 					"title" => $metric::getTitle(),
 					"icon" => $metric::getIcon()
 				);
-				if ($this->view->presence) {
-					$metricScore = $metric->getScore($this->view->presence, new \DateTime('-30 days'), new \DateTime());
-					if (is_null($metricScore)) $metricScore = 0;
+				if ($model instanceof NewModel_Presence && $model->getType()->isMetricApplicable($metric)) {
+					$metricScore = $metric->getScore($model, new \DateTime('-30 days'), new \DateTime());
+					if (is_null($metricScore)) {
+                        $metricScore = 0;
+                    }
 					$metricColor = $colors->colors[0];
 					foreach($colors->range as $i => $value){
 						if($metricScore >= $value) {
@@ -206,25 +210,27 @@ abstract class GraphingController extends BaseController {
 		return $badgeArr;
 	}
 
-	public function badgeDetails($badgeData)
+    /**
+     * @param $model Model_Campaign|NewModel_Presence
+     * @return array
+     */
+    public function badgeDetails($model)
 	{
-		$badges = Badge_Factory::getBadges();
-
-		$badgeArr = array(
+		$badges = array(
             'main' => null,
             'small' => array()
         );
 
-		foreach($badges as $badge){
-            $currentBadgeData = $this->badgeInformation($badgeData, $badge);
+		foreach(Badge_Factory::getBadges() as $badge){
+            $currentBadgeData = $this->badgeInformation($model, $badge);
             if ($badge instanceof Badge_Total) {
-                $badgeArr['main'] = $currentBadgeData;
+                $badges['main'] = $currentBadgeData;
             } else {
-                $badgeArr['small'][] = $currentBadgeData;
+                $badges['small'][] = $currentBadgeData;
             }
 		}
 
-		return $badgeArr;
+		return $badges;
 	}
 
 }
