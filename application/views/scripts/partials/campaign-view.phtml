@@ -55,7 +55,7 @@ if ($campaign instanceof Model_Country) {
             </div>
             <div class="content" id="info">
                 <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$this->buttons)); ?>
-                <?php echo $this->partial('partials/' . $this->controllerName . '-info-panel.phtml', array('campaign'=>$campaign)); ?>
+                <?php echo $this->partial($this->controllerName . '/view-info-panel.phtml', array('campaign'=>$campaign)); ?>
             </div>
         </div>
 
