@@ -45,7 +45,7 @@ class Metric_PopularityTime extends Metric_Abstract {
      * @param DateTime $end
      * @return null|DateTime
      */
-    public function getTargetAudienceDate(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    protected function getTargetAudienceDate(NewModel_Presence $presence, DateTime $start, DateTime $end)
     {
         $date = new DateTime; //the return value
 

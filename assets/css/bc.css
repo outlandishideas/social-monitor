@@ -634,8 +634,12 @@ table.dtable.dataTable {
 .dataTables_filter {
 	margin-bottom: 10px;
 }
-#search-table .dataTables_filter {
-	margin-bottom: 0;
+#search-table {
+	min-width: 320px;
+}
+#search-table .dataTables_filter,
+#search-table .dataTables_filter label {
+	margin: 0;
 }
 
 .dataTable .sorting,
@@ -815,7 +819,6 @@ table.dtable.dataTable {
 }
 
 form.management button.add-item {
-	float: left;
 	visibility: hidden;
 }
 
@@ -882,8 +885,8 @@ form.management button.add-item {
     display: block;
 }
 
-.klout {
-	background: url(../img/klout.png) no-repeat 0 0;
+.engagement-score {
+	background: no-repeat 0 0;
 	display: inline-block;
 	width: 20px;
 	height: 18px;
@@ -895,8 +898,11 @@ form.management button.add-item {
 	line-height: 18px;
 }
 
-.klout.facebook {
-    background: url(../img/facebook_engagement.png) no-repeat 0 0;
+.engagement-score.klout {
+	background-image: url(../img/klout.png);
+}
+.engagement-score.facebook {
+    background-image: url(../img/facebook_engagement.png);
 }
 
 /* Slider & Date */
@@ -1604,21 +1610,6 @@ h4 {
     text-align: left;
 }
 
-.picker input,
-.picker select {
-    border: 1px solid #44656f;
-    background-color: #051b21;
-    background-color: rgba(0,0,0,0.5);
-	background-image: url(../img/down-arrow.png);
-	background-repeat: no-repeat;
-	background-position: right center;
-    color: #fff;
-    font-weight: 300;
-    font-family: 'Open Sans', sans-serif;
-    outline: none;
-}
-
-
 .chart-description {
 	margin-top: 10px;
 }
@@ -1783,16 +1774,13 @@ table .cell-options .button-bc {
 	float: none;
 }
 
-#search-table input[type="text"],
+/* forms */
+#search-table input,
 form input[type="text"],
-form select,
-form select:disabled,
-form select:focus,
-form input[type="text"]:focus,
 form input[type="password"],
-form input[type="password"]:focus {
+form select,
+form select:hover {
 	margin: 0;
-	min-width: 20rem;
 	border: 1px solid #fff;
 	padding: 0.25rem 1rem;
 	background-color: #000;
@@ -1803,21 +1791,46 @@ form input[type="password"]:focus {
 	color: #fff;
 }
 
-form input[type="text"],
-form select,
-form select:disabled,
-form select:focus,
+form select:hover,
 form input[type="text"]:focus,
-form input[type="password"],
 form input[type="password"]:focus {
+	background-color: #000;
+	background-color: rgba(0,0,0,0.5);
+}
+
+.picker input,
+.picker select,
+form select {
+	background-image: url(../img/down-arrow.png);
+	background-position: right center;
+	background-repeat: no-repeat;
+}
+
+form.edit input,
+form.edit select,
+form.management input,
+form.management select {
 	margin-bottom: 1rem;
 }
 
+#search-table input:focus,
 form select:focus,
 form input[type="text"]:focus,
 form input[type="password"]:focus {
 	border-color: #0071bc;
 	transition: border-color 200ms ease-in, box-shadow 200ms ease-in;
+}
+
+.picker input,
+.picker select {
+	color: #fff;
+	border: 1px solid #44656f;
+	background-color: #051b21;
+	background-color: rgba(0,0,0,0.5);
+	font-weight: 300;
+	font-family: 'Open Sans', sans-serif;
+	line-height: normal;
+	outline: none;
 }
 
 /* tables */
@@ -1924,20 +1937,13 @@ table td ul li a:hover {
 
 /* form styles */
 
-form select {
-	margin-bottom: 1rem;
-}
-
 form label,
 form p.label {
 	font-size: 1rem;
 	color: #fff;
 	margin: 0.5rem 0;
 	background-color: transparent;
-}
-
-form input {
-
+	padding: 0;
 }
 
 .flag {
@@ -2081,20 +2087,6 @@ ul.blockLabels {
 	list-style: none;
 }
 
-select.selectInput {
-	line-height: 28px;
-}
-
-select.selectInput:hover {
-	background: rgba(0,0,0,.5);
-	border-color: #FFF;
-}
-
-
-.button-bc.add-item {
-	margin-bottom: 1.25rem;
-}
-
 #kpi-download {
 	text-align: center;
 	padding-top: 20px;
@@ -2163,6 +2155,15 @@ form#settings .config-description ul li {
 	list-style: circle;
 	width: 100%;
 	margin: 0;
+}
+
+form#settings input {
+	margin-bottom: 5px;
+}
+
+form#settings .field {
+	padding-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 #audience-rates th {

@@ -57,16 +57,8 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
             <div class="small-country-list">
                 <h4>Small Countries</h4>
                 <ul class="country-list">
-                    <?php
-                    /** @var Model_Country $country */
-                    foreach($this->smallCountries as $country):
-                        $badges = $country->getBadges(); ?>
-                        <li data-id="<?php echo $country->id; ?>"
-                            <?php foreach ($allBadges as $badge) {
-                                echo ' data-' . $badge::getName() . '="' . round($badges[$badge::getName()]) . '"';
-                                echo ' data-' . $badge::getName() . '-color="' . $badges[$badge::getName() . '_color'] . '"';
-                            } ?>
-                            >
+                    <?php foreach($this->smallCountries as $country) : /** @var Model_Country $country */ ?>
+                        <li data-id="<?php echo $country->id; ?>" data-badge>
                             <a href="#"><?php echo $country->getName(); ?> <span data-badge-score></span></a>
                         </li>
                     <?php endforeach; ?>
@@ -90,7 +82,6 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                 <?php
                 /** @var Model_Group $group */
                 foreach($this->groups as $group):
-                    $badges = $group->getBadges();
                     $presenceGroups = array();
                     foreach(NewModel_PresenceType::enumValues() as $type) {
                         $typePresences = $group->getPresencesByType($type);
@@ -103,13 +94,7 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                     }
                 ?>
                     <div class="small-24 large-8 columns">
-                        <div class="badge-small"
-                            data-group-id="<?php echo $group->id ?>"
-                            <?php foreach ($allBadges as $badge) {
-                                echo ' data-' . $badge::getName() . '="' . round($badges[$badge::getName()]) . '"';
-                                echo ' data-' . $badge::getName() . '-color="' . $badges[$badge::getName() . '_color'] . '"';
-                            } ?>
-                            >
+                        <div class="badge-small" data-group-id="<?php echo $group->id ?>" data-badge>
                             <h3><a href="<?php echo $this->url(array('controller'=>'group', 'action'=>'view', 'id'=>$group->id)); ?>"><?php echo $group->display_name; ?></a></h3>
                             <div class="badge-score bd-btm">
                                 <h4><span data-badge-title></span> Score</h4>

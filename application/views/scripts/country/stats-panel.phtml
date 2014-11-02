@@ -1,7 +1,6 @@
 <?php
 /** @var Model_Country $country */
 $country = $this->country;
-$badges = $country->getBadges();
 /** @var NewModel_Presence[] $presences */
 $presences = $country->getPresences();
 $countryLink = $this->gatekeeper()->filter('<a href="%url%">' . $country->display_name . '</a>', array('controller'=>'country', 'action'=>'view', 'id'=>$country->id));
@@ -15,6 +14,13 @@ foreach(NewModel_PresenceType::enumValues() as $type) {
         $group = array();
         foreach($typePresences as $presence) {
             $presenceText = '<span class="' . $presence->getPresenceSign() . '"></span> ' . $presence->getName();
+            if ($presence->isForFacebook()) {
+                $score = $presence->getFacebookEngagement();
+                $presenceText .= " <span class=\"engagement-score facebook\" title=\"Facebook engagement score: $score\">" . round($score) . '</span>';
+            } else if ($presence->isForTwitter()) {
+                $score = $presence->getKloutScore();
+                $presenceText .= " <span class=\"engagement-score klout\" title=\"Klout score: $score\">" . round($score) . '</span>';
+            }
             $presenceLink = $this->gatekeeper()->filter('<a href="%url%">' . $presenceText . '</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId()));
             if (!$presenceLink) {
                 $presenceLink = $presenceText;
@@ -29,15 +35,7 @@ foreach(NewModel_PresenceType::enumValues() as $type) {
 }
 ?>
 
-<div class="badge-small"
-     data-total="<?php echo round($badges['total']); ?>"
-     data-reach="<?php echo round($badges['reach']); ?>"
-     data-engagement="<?php echo round($badges['engagement']); ?>"
-     data-quality="<?php echo round($badges['quality']); ?>"
-     data-total-color="<?php echo $badges['total_color']; ?>"
-     data-reach-color="<?php echo $badges['reach_color']; ?>"
-     data-engagement-color="<?php echo $badges['engagement_color']; ?>"
-     data-quality-color="<?php echo $badges['quality_color']; ?>">
+<div class="badge-small" data-country-id="<?php echo $country->id; ?>" data-badge>
     <h3><?php echo $countryLink; ?></h3>
     <div class="badge-score bd-btm">
         <h4><span data-badge-title></span> Score</h4>

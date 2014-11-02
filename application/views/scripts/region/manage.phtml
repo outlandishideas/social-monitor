@@ -16,7 +16,7 @@ $bottomBar[] = '<button type="submit" class="button-bc">Save</button>';
 
 <h2 class="page-title">Manage Countries: <?php echo $region->display_name; ?></h2>
 
-<form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-region">
+<form class="management" method="post" action="<?php echo $this->url(); ?>" novalidate id="manage-region">
 
 	<?php
     echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true));

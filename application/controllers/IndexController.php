@@ -82,8 +82,6 @@ class IndexController extends GraphingController
 
 	protected function getCacheableData($dayRange, $temp) {
 		$allBadgeTypes = Badge_Factory::getBadgeNames();
-		/** @var Zend_View_Helper_TrafficLight $trafficLight */
-		$trafficLight = $this->view->trafficLight();
 
 		$key = 'badge_data_'.$dayRange;
 		$badgeData = self::getObjectCache($key, $temp);
@@ -138,11 +136,6 @@ class IndexController extends GraphingController
 			foreach($mapData as $country){
 				if(array_key_exists($country->c, $smallCountries)){
 					$smallMapData[] = $country;
-					foreach ($allBadgeTypes as $badgeType) {
-						foreach ($country->b->$badgeType as $value) {
-							$value->c = $trafficLight->color($value->s, $badgeType);
-						}
-					}
 				}
 			}
 			self::setObjectCache($key, $smallMapData, $temp);
@@ -152,13 +145,6 @@ class IndexController extends GraphingController
 		$groupData = self::getObjectCache($key, $temp);
 		if (!$groupData) {
 			$groupData = Model_Group::constructFrontPageData($badgeData, $dayRange);
-			foreach ($groupData as $group) {
-				foreach ($allBadgeTypes as $badgeType) {
-					foreach ($group->b->$badgeType as $value) {
-						$value->c = $trafficLight->color($value->s, $badgeType);
-					}
-				}
-			}
 			self::setObjectCache($key, $groupData, $temp);
 		}
 

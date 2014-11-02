@@ -6,7 +6,7 @@
 	<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
 	<p>This user automatically has access to all parts of the monitor.</p>
 <?php else : ?>
-	<form method="post" action="<?php echo $this->url(); ?>" class="management" novalidate id="manage-user">
+	<form class="management" method="post" action="<?php echo $this->url(); ?>" novalidate id="manage-user">
 
 		<fieldset class="inlineLabels">
 			<div class="row">
@@ -20,7 +20,7 @@
 						Available countries
 					</label>
 				</div>
-				<div class="small-24 medium-16 large-16 end columns">
+				<div class="small-24 medium-13 large-11 columns">
 					<select id="country" class="selectInput" data-icon="<?php echo Model_Country::ICON_TYPE; ?>" data-type="country">
 						<option value="">-- Select --</option>
 						<?php foreach ($this->countries as $c) : ?>
@@ -32,6 +32,8 @@
 							</option>
 						<?php endforeach; ?>
 					</select>
+				</div>
+                <div class="small-24 medium-3 large-5 end columns">
 					<button type="button" class="button-bc add-item">Add</button>
 				</div>
 			</div>
@@ -42,7 +44,7 @@
 						Available SBUs
 					</label>
 				</div>
-				<div class="small-24 medium-16 large-16 end columns">
+				<div class="small-24 medium-13 large-11 columns">
 					<select id="group" class="selectInput" data-icon="<?php echo Model_Group::ICON_TYPE; ?>" data-type="group">
 						<option value="">-- Select --</option>
 						<?php foreach ($this->groups as $g) : ?>
@@ -54,6 +56,8 @@
 							</option>
 						<?php endforeach; ?>
 					</select>
+				</div>
+                <div class="small-24 medium-3 large-5 end columns">
 					<button type="button" class="button-bc add-item">Add</button>
 				</div>
 			</div>
@@ -64,7 +68,7 @@
 						Available twitter presences
 					</label>
 				</div>
-				<div class="small-24 medium-16 large-16 end columns">
+				<div class="small-24 medium-13 large-11 columns">
 					<select id="twitter" class="selectInput" data-icon="icon-twitter-sign" data-type="twitter">
 						<option value="">-- Select --</option>
 						<?php foreach ($this->twitterPresences as $p) : ?>
@@ -76,6 +80,8 @@
 							</option>
 						<?php endforeach; ?>
 					</select>
+				</div>
+                <div class="small-24 medium-3 large-5 end columns">
 					<button type="button" class="button-bc add-item">Add</button>
 				</div>
 			</div>
@@ -86,7 +92,7 @@
 						Available facebook presences
 					</label>
 				</div>
-				<div class="small-24 medium-16 large-16 end columns">
+				<div class="small-24 medium-13 large-11 columns">
 					<select id="facebook" class="selectInput" data-icon="icon-facebook-sign" data-type="facebook">
 						<option value="">-- Select --</option>
 						<?php foreach ($this->facebookPresences as $p) : ?>
@@ -98,6 +104,8 @@
 							</option>
 						<?php endforeach; ?>
 					</select>
+				</div>
+                <div class="small-24 medium-3 large-5 end columns">
 					<button type="button" class="button-bc add-item">Add</button>
 				</div>
 			</div>
