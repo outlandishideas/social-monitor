@@ -231,23 +231,7 @@ class FetchController extends BaseController
 
 	protected function setupConsoleOutput() {
 
-		$this->_helper->viewRenderer->setNoRender();
-		$this->_helper->layout()->disableLayout();
-
-		if (PHP_SAPI != 'cli'){
-			header('Content-Type: text/plain');
-
-			//output 1k of data to trigger rendering on client side, unless using CLI
-			if (!$this->_request->getParam('silent')) {
-				echo str_repeat(" ", 1024);
-			}
-		}
-
-		//disable output buffering
-		for ($i = 0; $i <= ob_get_level(); $i++) {
-			ob_end_flush();
-		}
-		ob_implicit_flush(true);
+        parent::setupConsoleOutput();
 
 		if (!file_exists(APP_ROOT_PATH . '/log')) {
 			mkdir(APP_ROOT_PATH . '/log', 0777, true);
