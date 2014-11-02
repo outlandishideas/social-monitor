@@ -74,6 +74,14 @@ abstract class NewModel_iProvider
 	}
 
     /**
+     * @param NewModel_Presence $presence
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
+    public abstract function getResponseData(NewModel_Presence $presence, DateTime $start, DateTime $end);
+
+    /**
      * @param string $type
      * @param array $links map of status_id=>links
      */

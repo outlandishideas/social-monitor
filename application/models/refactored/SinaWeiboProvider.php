@@ -323,4 +323,11 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		}
 		return $mid;
 	}
+
+    public function getResponseData(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    {
+        return array();
+    }
+
+
 }

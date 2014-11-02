@@ -353,4 +353,44 @@ class NewModel_FacebookProvider extends NewModel_iProvider
         $presence->page_url = $data['page_url'];
         $presence->popularity = $data['fan_count'];
 	}
+
+    /**
+     * @param NewModel_Presence $presence
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
+    public function getResponseData(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    {
+        $responseData = array();
+        $clauses = array(
+            'r.presence_id = :pid',
+            't.created_time >= :start_date',
+            't.created_time <= :end_date'
+        );
+        $args = array(
+            ':pid'=>$presence->getId(),
+            ':start_date' => $start->format('Y-m-d'),
+            ':end_date' => $end->format('Y-m-d')
+        );
+        $stmt = $this->db->prepare("
+          SELECT t.post_id as id, t.created_time as created, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
+          FROM {$this->tableName} AS t
+            INNER JOIN {$this->tableName} AS r ON t.post_id = r.in_response_to
+            WHERE " . implode(' AND ', $clauses) ."");
+        $stmt->execute($args);
+        foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
+            $key = $r->id;
+            if(!array_key_exists($key, $responseData)) {
+                $responseData[$key] = (object)array('diff' => null, 'created' => null);
+            }
+            if (empty($responseData[$key]->diff) || $r->time < $responseData[$key]->diff) {
+                $responseData[$key]->diff = $r->time;
+                $responseData[$key]->created = $r->created;
+            }
+        }
+        return $responseData;
+    }
+
+
 }

@@ -267,4 +267,45 @@ class NewModel_TwitterProvider extends NewModel_iProvider
         $presence->page_url = 'https://www.twitter.com/' . $data->screen_name;
         $presence->popularity = $data->followers_count;
 	}
+
+    /**
+     * @param NewModel_Presence $presence
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
+    public function getResponseData(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    {
+        $responseData = array();
+        $clauses = array(
+            't.responsible_presence = :pid',
+            't.needs_response = 1',
+            't.created_time >= :start_date',
+            't.created_time <= :end_date'
+        );
+        $args = array(
+            ':pid'=>$presence->getId(),
+            ':start_date' => $start->format('Y-m-d'),
+            ':end_date' => $end->format('Y-m-d')
+        );
+        $stmt = $this->db->prepare("
+          SELECT t.tweet_id as id, t.created_time as created, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
+          FROM {$this->tableName} AS t
+            INNER JOIN {$this->tableName} AS r ON t.tweet_id = r.in_reply_to_status_uid
+            WHERE " . implode(' AND ', $clauses) ."");
+        $stmt->execute($args);
+        foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
+            $key = $r->id;
+            if(!array_key_exists($key, $responseData)) {
+                $responseData[$key] = (object)array('diff' => null, 'created' => null);
+            }
+            if (empty($responseData[$key]->diff) || $r->time < $responseData[$key]->diff) {
+                $responseData[$key]->diff = $r->time;
+                $responseData[$key]->created = $r->created;
+            }
+        }
+        return $responseData;
+    }
+
+
 }
