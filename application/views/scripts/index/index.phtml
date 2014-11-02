@@ -106,8 +106,10 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                             <div class="bd-btm badge-presences-buttons">
                                 <ul class="small-block-grid-3">
                                     <li>
-                                        <h4>Presences</h4>
-                                        <div class="score-value"><?php echo count($group->getPresences()) ?></div>
+                                        <a href="#all">
+                                            <h4>Presences</h4>
+                                            <div class="score-value"><?php echo count($group->getPresences()) ?></div>
+                                        </a>
                                     </li>
                                     <?php foreach ($presenceGroups as $pg) : $type = $pg['type']; /** @var $type NewModel_PresenceType */?>
                                         <li>
@@ -120,6 +122,15 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                                 </ul>
                             </div>
                             <div class="hide-for-small-down">
+                                <ul class="badge-presences" data-all-presences>
+                                    <?php foreach($group->getPresences() as $presence) : /** @var $presence NewModel_Presence */ ?>
+                                        <li>
+                                            <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
+                                                <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getHandle(); ?>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
                                 <?php foreach ($presenceGroups as $pg) : $type = $pg['type']; /** @var $type NewModel_PresenceType */ ?>
                                     <ul class="badge-presences" data-<?php echo $type->getValue(); ?>-presences>
                                         <?php foreach($pg['presences'] as $presence) : /** @var $presence NewModel_Presence */ ?>
