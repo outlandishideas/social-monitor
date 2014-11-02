@@ -26,6 +26,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		$since_id = $data['since_id'];
 		$popularity = null;
 		$page = 0;
+        $count = 0;
 		do {
 			$page++;
 			$data = $this->connection->friends_timeline($page, 200, $since_id);
@@ -36,7 +37,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
                 }
 				$s['presence_id'] = $presence->getId();
 				$s['posted_by_presence'] = 1;
-				$this->parseStatus($s);
+				$count += $this->parseStatus($s);
                 if (!$popularity) {
                     $popularity = $s['user']['followers_count'];
                 }
@@ -45,6 +46,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
         if ($popularity) {
             $presence->popularity = $popularity;
         }
+        return $count;
 	}
 
 	public function getHistoricStream (
@@ -202,21 +204,23 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 
 	protected function parseStatus($status)
 	{
+        $count = 0;
 		$statusExists = $this->db->prepare("SELECT EXISTS(SELECT 1 FROM {$this->tableName} WHERE `remote_id` = ?)");
 		$statusExists->execute(array($status['idstr']));
 		if($statusExists->fetchColumn() == 0){
 			$id = $this->saveStatus($status);
-			$status['local_id'] = $id;
-			$this->findAndSaveLinks($status);
+            $count++;
+			$this->findAndSaveLinks($status['text'], $id);
 			if (array_key_exists('retweeted_status', $status)) {
 				$s = $status['retweeted_status'];
 				NewModel_PresenceFactory::setDatabase($this->db);
 				$presence = NewModel_PresenceFactory::getPresenceByHandle($s['user']['profile_url'], $this->type);
 				$s['posted_by_presence'] = $presence ? 1 : 0;
 				$s['presence_id'] = $presence ? $presence->getId() : null;
-				$this->parseStatus($s);
+				$count += $this->parseStatus($s);
 			}
 		}
+        return $count;
 	}
 
 	protected function saveStatus($status)
@@ -246,12 +250,11 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		return $this->db->lastInsertId();
 	}
 
-	protected function findAndSaveLinks($status)
+	protected function findAndSaveLinks($message, $id)
 	{
-		$text = $status['text'];
 		$stmt = $this->db->prepare("INSERT INTO status_links (`type`, `status_id`, `url`, `domain`) VALUES (:type, :status_id, :url, :domain)");
 		$domainstmt = $this->db->prepare("INSERT IGNORE INTO domains (domain) VALUES (?)");
-		if (preg_match_all('@((https?://[\w\d-_]+(\.[\w\d-_]+)+(/[\w\d-_]+)*/?[^\s]*)|(^|\s)([\w\d-_]+(\.[\w\d-_]+){2,}(/[\w\d-_]+)*/?[^\s]*))(\s|$)@', $text, $matches, PREG_SET_ORDER)) {
+		if (preg_match_all('@((https?://[\w\d-_]+(\.[\w\d-_]+)+(/[\w\d-_]+)*/?[^\s]*)|(^|\s)([\w\d-_]+(\.[\w\d-_]+){2,}(/[\w\d-_]+)*/?[^\s]*))(\s|$)@', $message, $matches, PREG_SET_ORDER)) {
 			foreach ($matches as $match) {
 				$fullurl = $match[0];
 				$finalPart = $match[4];
@@ -269,7 +272,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 				$domain = parse_url($url, PHP_URL_HOST);
 				$stmt->execute(array(
 					':type'			=> 'sina_weibo',
-					':status_id'	=> $status['local_id'],
+					':status_id'	=> $id,
 					':url'			=> $url,
 					':domain'		=> $domain
 				));
@@ -282,7 +285,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 
 	public function updateMetadata(NewModel_Presence $presence) {
 		//test if user exists
-		$ret = $this->connection->show_user_by_name($presence->handle);
+		$ret = $this->connection->show_user_by_name($presence->getHandle());
 		if (!is_array($ret)) {
 			//something went really wrong
 			throw new RuntimeException('No data received');
@@ -290,7 +293,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		if (array_key_exists('error_code', $ret)) {
 			switch ($ret['error_code']) {
 				case 20003:
-                    throw new Exception('User does not exist');
+                    throw new Exception('User does not exist: ' . $presence->getHandle());
 				default:
 					throw new LogicException("Unknown error code {$ret['error_code']} encountered.");
 			}

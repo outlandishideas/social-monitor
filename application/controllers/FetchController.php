@@ -5,22 +5,31 @@ class FetchController extends BaseController
 	protected static $publicActions = array('index');
 
 	/**
-	 * Fetches all tweets/trends/facebook pages etc
+	 * Fetches all tweets/facebook posts etc
 	 */
 	public function indexAction() {
+        $force = $this->_request->getParam('force');
+        if ($force) {
+            $this->releaseLock($this->lockName('fetch'));
+        }
+
         $db = self::db();
 
 		$this->setupConsoleOutput();
 		$lockName = $this->acquireLock();
 		set_time_limit($this->config->app->fetch_time_limit);
 
-		$presences = NewModel_PresenceFactory::getPresencesByType(NewModel_PresenceType::SINA_WEIBO());
+		$presences = NewModel_PresenceFactory::getPresences();
 		$presenceCount = count($presences);
 
 		$infoInterval = ($this->config->presence->cache_data_hours ?: 4) * 3600;
-		usort($presences, function($a, $b) { return strcmp($a->last_updated ?: '000000', $b->last_updated ?: '000000'); });
 
 		//updating presence info
+        usort($presences, function(NewModel_Presence $a, NewModel_Presence $b) {
+                $aVal = $a->getLastUpdated() ?: '000000';
+                $bVal = $b->getLastUpdated() ?: '000000';
+                return strcmp($aVal, $bVal);
+            });
 		$index = 0;
 		foreach($presences as $presence) {
 			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
@@ -30,10 +39,14 @@ class FetchController extends BaseController
 			$now = time();
 			$lastUpdated = strtotime($presence->getLastUpdated());
 			if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
-				$this->log('Updating ' . $presence->type . ' info (' . $index . '/' . $presenceCount . '): ' . $presence->handle);
+				$this->log('Update info [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
+                    '[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . ']');
 				try {
+                    // update using provider
 					$presence->update();
+                    // save to DB
                     $presence->save();
+                    // add subset of properties into presence_history table
                     $presence->updateHistory();
 				} catch (Exception $e) {
 					$this->log("Error updating presence info: " . $e->getMessage());
@@ -43,109 +56,25 @@ class FetchController extends BaseController
 		}
 
 		//updating presence statuses
-		usort($presences, function($a, $b) { return strcmp($a->getLastFetched() ?: '000000', $b->getLastFetched() ?: '000000'); });
+        usort($presences, function(NewModel_Presence $a, NewModel_Presence $b) {
+                $aVal = $a->getLastFetched() ?: '000000';
+                $bVal = $b->getLastFetched() ?: '000000';
+                return strcmp($aVal, $bVal);
+            });
 		$index = 0;
 		foreach($presences as $presence) {
 			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
 			$db->closeConnection();
 			$db->getConnection();
 			$index++;
-			$this->log('Fetching statuses (' . $index . '/' . $presenceCount . '): ' . $presence->handle);
+            $this->log('Fetch statuses [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
+                '[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . ']');
 			try {
-				$presence->fetch();
+				$count = $presence->fetch();
+                $presence->save();
+                $this->log('Inserted ' . $count);
 			} catch (Exception $e) {
-				$this->log("Error updating presence statuses: " . $e->getMessage());
-			}
-			$this->touchLock($lockName);
-		}
-//
-//		$this->touchLock($lockName);
-//
-//		$this->log('Finished');
-//		$this->releaseLock($lockName);
-
-		/*
-		 * THIS IS GOING TO GO ONCE WE MOVE FACEBOOK AND TWITTER TO NEW PRESENCES
-		 *
-		 * */
-		$presences = null;
-		$presences = array_merge(Model_Presence::fetchAllFacebook(), Model_Presence::fetchAllTwitter());
-		$presenceCount = count($presences);
-
-		$db = self::db();
-		$infoStmt = $db->prepare('INSERT INTO presence_history (presence_id, datetime, type, value) VALUES (:id, :datetime, :type, :value)');
-
-		$infoInterval = ($this->config->presence->cache_data_hours ?: 4) * 3600;
-		usort($presences, function($a, $b) { return strcmp($a->last_updated ?: '000000', $b->last_updated ?: '000000'); });
-		$index = 0;
-		foreach ($presences as $p) {
-			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
-			self::db()->closeConnection();
-			self::db()->getConnection();
-			$index++;
-			$now = time();
-			$lastUpdated = strtotime($p->last_updated);
-			if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
-				$saveLastUpdated = true;
-				try {
-					$this->log('Updating ' . $p->type . ' info (' . $index . '/' . $presenceCount . '): ' . $p->handle);
-					$p->updateInfo();
-					$infoStmt->execute(array(
-						':id'       => $p->id,
-						':datetime' => gmdate('Y-m-d H:i:s'),
-						':type'     => 'popularity',
-						':value'    => $p->popularity
-					));
-                    if($p->isForTwitter() && $p->klout_score){
-                        $infoStmt->execute(array(
-                            ':id'       => $p->id,
-                            ':datetime' => gmdate('Y-m-d H:i:s'),
-                            ':type'     => 'klout_score',
-                            ':value'    => $p->klout_score
-                        ));
-                    }
-                    if($p->isForFacebook() && $p->facebook_engagement){
-                        $infoStmt->execute(array(
-                                ':id'       => $p->id,
-                                ':datetime' => gmdate('Y-m-d H:i:s'),
-                                ':type'     => 'facebook_engagement_score',
-                                ':value'    => $p->facebook_engagement
-                            ));
-                    }
-				} catch (Exception_TwitterNotFound $e) {
-					$this->log($e->getMessage());
-				} catch (Exception_FacebookNotFound $e) {
-					$this->log($e->getMessage());
-				} catch (Exception $e) {
-					$this->log("Error updating presence info: " . $e->getMessage());
-					$saveLastUpdated = false;
-				}
-
-				if ($saveLastUpdated) {
-					$p->last_updated = gmdate('Y-m-d H:i:s');
-					$p->save();
-				}
-			}
-			$this->touchLock($lockName);
-		}
-
-
-		usort($presences, function($a, $b) { return strcmp($a->last_fetched ?: '000000', $b->last_fetched ?: '000000'); });
-		$index = 0;
-        /** @var $presences Model_Presence[] */
-		foreach ($presences as $p) {
-			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
-			self::db()->closeConnection();
-			self::db()->getConnection();
-			$index++;
-			$this->log('Fetching ' . ($p->isForTwitter() ? 'tweets' : 'posts') . ' (' . $index . '/' . $presenceCount . '): ' . $p->handle);
-			try {
-				$this->log($p->updateStatuses());
-				$p->refetchStatusInfo();
-				$p->last_fetched = gmdate('Y-m-d H:i:s');
-				$p->save();
-			} catch (Exception $e) {
-				$this->log("Error updating presence statuses: " . $e->getMessage());
+				$this->log("Error: " . $e->getMessage());
 			}
 			$this->touchLock($lockName);
 		}

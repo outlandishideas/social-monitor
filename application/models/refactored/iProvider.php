@@ -15,7 +15,6 @@ abstract class NewModel_iProvider
 	/**
 	 * Fetch data for a certain handle (twitter handle, facebook name, sina weibo name etc)
 	 * @param NewModel_Presence $presence  The handle to fetch data for
-	 * @uses findAndSaveLinks
 	 */
 	abstract public function fetchStatusData(NewModel_Presence $presence);
 
@@ -74,25 +73,44 @@ abstract class NewModel_iProvider
 		return $ret;
 	}
 
-	/**
-	 * Find links in a single post/tweet/streamdatum and save them (and the corresponding domain)
-	 * @param mixed $streamdatum   The streamdatum to find a link in
-	 * @return int   The number of links found
-	 */
-	abstract protected function findAndSaveLinks($streamdatum);
+    /**
+     * @param string $type
+     * @param array $links map of status_id=>links
+     */
+    protected function saveLinks($type, $links) {
+        $links = array_filter($links);
+        if (!$links) {
+            return;
+        }
+        $insertStmt = $this->db->prepare('INSERT INTO status_links
+            (type, status_id, url, domain)
+            VALUES
+            (:type, :status_id, :url, :domain)');
+        foreach ($links as $statusId => $urls) {
+            foreach ($urls as $url) {
+                try {
+                    $url = Util_Http::resolveUrl($url);
+                    $domain = Util_Http::extractDomain($url);
+                    $insertStmt->execute(array(
+                        ':type' => $type,
+                        ':status_id' => $statusId,
+                        ':url' => $url,
+                        ':domain' => $domain
+                    ));
+                } catch (Exception $ex) {
+                    // do nothing
+                }
+            }
+        }
+    }
 
-	/**
+    /**
 	 * Updates the presence
 	 *
 	 * @param NewModel_Presence $presence
 	 */
 	public function update(NewModel_Presence $presence) {
 		$this->updateMetadata($presence);
-        $presence->last_updated = gmdate('Y-m-d H:i:s');
-	}
-
-	public function getKloutId($uid) {
-		return null;
 	}
 
 	/**
