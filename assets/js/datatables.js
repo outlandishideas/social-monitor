@@ -414,7 +414,7 @@ app.datatables = {
 	moveSearchBox: function() {
 		var $filter = $('div.dataTables_filter');
 		$filter.find('input').first().attr('placeholder', 'Search');
-		$filter.appendTo($('#search-table'));
+		$('#search-table').empty().append($filter);
 	},
 	generateLanguage: function(type) {
 		return {
