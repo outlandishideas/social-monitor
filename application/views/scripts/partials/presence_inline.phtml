@@ -8,7 +8,7 @@ if ($url) {
     $attrs = '';
 }
 ?>
-<<?php echo $tag; ?> <?php echo $attrs; ?> title="<?php echo $this->presence->label; ?>" class="entity presence <?php echo $this->presence->type; ?>">
+<<?php echo $tag; ?> <?php echo $attrs; ?> title="<?php echo $this->presence->getLabel(); ?>" class="entity presence <?php echo $this->presence->type; ?>">
     <span class="<?php echo $this->presence->getPresenceSign();?>"></span>
     <?php echo $this->presence->handle; ?>
 </<?php echo $tag; ?>>
