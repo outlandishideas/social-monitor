@@ -126,8 +126,7 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 					case 'twitter':
 					case 'facebook':
 						$e->controller = 'presence';
-						/** @var Model_Presence $entity */
-						$entity = Model_Presence::fetchById($e->entity_id);
+						$entity = NewModel_PresenceFactory::getPresenceById($e->entity_id);
 						if ($entity) {
 							$e->icon = 'icon-'.$entity->type.'-sign';
 							$e->title = $entity->getLabel();

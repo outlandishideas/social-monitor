@@ -69,7 +69,7 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
 
             $label = round($value * 100)/100;
             switch ($metric) {
-                case Model_Presence::METRIC_POPULARITY_TIME:
+                case Metric_PopularityTime::getName():
                     if ($value == 0) {
                         $label = 'Target already reached';
                     } else {
@@ -88,13 +88,13 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
                         $label = implode(', ', $components);
                     }
                     break;
-                case Model_Presence::METRIC_POPULARITY_PERCENT:
+                case Metric_Popularity::getName():
                     $label .= '%';
                     break;
                 case 'digital_population':
                     $label .= '%';
                     break;
-                case Model_Presence::METRIC_RESPONSE_TIME:
+                case Metric_ResponseTime::getName():
                     $label .= ' hours';
                     break;
             }
