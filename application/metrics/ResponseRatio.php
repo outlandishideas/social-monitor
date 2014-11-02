@@ -20,7 +20,7 @@ class Metric_ResponseRatio extends Metric_Abstract {
      * @param DateTime $end
      * @return null/string
      */
-    protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $ret = $presence->getRatioRepliesToOthersPosts($start, $end);
         return $ret;
@@ -28,9 +28,9 @@ class Metric_ResponseRatio extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $current = $presence->getRatioRepliesToOthersPosts($start, $end);
+        $score = $presence->getMetricValue($this);
 
-        $score = round($current / $this->target * 100);
+        $score = round(100 * $score / $this->target);
         return self::boundScore($score);
     }
 }

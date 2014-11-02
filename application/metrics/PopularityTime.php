@@ -19,7 +19,7 @@ class Metric_PopularityTime extends Metric_Abstract {
      * @param DateTime $end
      * @return null/string
      */
-    protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $estimate = $this->getTargetAudienceDate($presence, $start, $end);
         $actualMonths = null;
@@ -114,11 +114,10 @@ class Metric_PopularityTime extends Metric_Abstract {
         $score = null;
 
         if ($this->target > 0) {
-            $data = $presence->getKpiData($start, $end);
-            $current = $data[self::getName()];
+            $current = $presence->getMetricValue($this);
 
             if($current > 0){
-                $score = round($this->target / $current * 100);
+                $score = round(100 * $this->target / $current);
                 $score = self::boundScore($score);
             } else if ($current === 0 || $current === '0') {
                 // target is already reached

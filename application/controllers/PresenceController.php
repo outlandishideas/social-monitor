@@ -339,43 +339,12 @@ class PresenceController extends GraphingController
 
 	}
 
-	private function fillDateGaps($points, DateTime $start, DateTime $end, $value) {
-		$currentDate = clone $start;
-		while ($currentDate < $end) {
-			$currentDateKey = $currentDate->format("Y-m-d");
-			if (!array_key_exists($currentDateKey, $points)) {
-				$points[$currentDateKey] = (object)array('date'=>$currentDateKey, 'value'=>$value);
-			}
-			$currentDate->modify('+1 day');
-		}
-		ksort($points);
-		return $points;
-	}
-
 	/**
 	 * This should be called via a cron job (~hourly), and does not output anything
 	 */
 	public function updateKpiCacheAction() {
-		/** @var NewModel_Presence[] $presences */
-		$presences = NewModel_PresenceFactory::getPresences();
-		$endDate = new DateTime();
-		$startDate = new DateTime();
-		$startDate->sub(DateInterval::createFromDateString('30 days'));
-		$stmt = self::db()->prepare('REPLACE INTO kpi_cache (presence_id, metric, start_date, end_date, value) VALUES (:pid, :metric, :start, :end, :value)');
-		$args = array(
-			':start'=>$startDate->format('Y-m-d'),
-			':end'=>$endDate->format('Y-m-d')
-		);
-		foreach ($presences as $p) {
-			$args[':pid'] = $p->id;
-			$stats = $p->getKpiData($startDate, $endDate, false);
-			foreach ($stats as $metric=>$value) {
-				$args[':metric'] = $metric;
-				$args[':value'] = $value;
-				$stmt->execute($args);
-			}
-		}
-		exit;
+        //moved to be part of build-badge-data
+        exit;
 	}
 
     public function downloadAction() {

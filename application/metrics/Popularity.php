@@ -13,7 +13,7 @@ class Metric_Popularity extends Metric_Abstract {
      * @param DateTime $end
      * @return int
      */
-    protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $popularity = $presence->getPopularity();
         return $popularity == 0 ? null : $popularity;
@@ -21,7 +21,7 @@ class Metric_Popularity extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $current = $presence->getPopularity();
+        $current = $presence->getMetricValue($this);
         $target = $presence->getTargetAudience();
 
         if ($target == 0) {

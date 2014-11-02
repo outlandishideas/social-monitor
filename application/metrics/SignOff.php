@@ -13,7 +13,7 @@ class Metric_SignOff extends Metric_Abstract {
      * @param DateTime $end
      * @return int
      */
-    protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         return $presence->getSignOff();
     }

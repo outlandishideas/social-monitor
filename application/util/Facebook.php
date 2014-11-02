@@ -101,6 +101,7 @@ class Util_Facebook {
 					$replies[$i] = (object)$post;
 				}
 			} catch (Exception_FacebookNotFound $e) {
+                $x=0;
 			}
 		}
 		return $replies;

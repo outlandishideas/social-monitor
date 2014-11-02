@@ -21,26 +21,17 @@ class Metric_Relevance extends Metric_Abstract {
      * @param DateTime $end
      * @return int
      */
-    protected function doCalculations(NewModel_Presence $presence, DateTime $start, DateTime $end){
+    public function calculate(NewModel_Presence $presence, DateTime $start, DateTime $end){
         $data = $presence->getHistoricStreamMeta($start, $end);
 
         $actual = null;
 
         if(!empty($data)){
-            $totals = array(
-                'total' => 0,
-                'links' => 0,
-                'bc_links' => 0
-            );
-
-            $totals = array_reduce($data, function($totals, $row){
-                $totals['total'] += $row['number_of_actions'];
-                $totals['links'] += $row['number_of_links'];
-                $totals['bc_links'] += $row['number_of_bc_links'];
-                return $totals;
-            }, $totals);
-
-            $actual = $totals['bc_links'] / count($data);
+            $actual = 0;
+            foreach ($data as $row) {
+                $actual += $row['number_of_bc_links'];
+            }
+            $actual /= count($data);
         }
 
         return $actual;
@@ -49,38 +40,20 @@ class Metric_Relevance extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $score = null;
+        $score = $presence->getMetricValue($this);
 
-        $data = $presence->getHistoricStreamMeta($start, $end);
-
-        if (empty($data)) {
+        if (is_null($score)) {
             return null;
         }
-
-        $totals = array(
-            'total' => 0,
-            'links' => 0,
-            'bc_links'  => 0
-        );
-
-        foreach ($data as $row) {
-            $totals['total'] += $row['number_of_actions'];
-            $totals['links'] += $row['number_of_links'];
-            $totals['bc_links'] += $row['number_of_bc_links'];
-        }
-
-        if ($totals['total'] < $this->updatesPerDay) {
+        if (empty($score)) {
             return 0;
         }
 
         $targetPercent = $presence->getType()->getRelevancePercentage()/100;
-        $target = $totals['total'] * $targetPercent;
+        $target = $presence->getMetricValue(Metric_ActionsPerDay::getName()) * $targetPercent;
 
-        if($target > 0){
-            $current = $totals['bc_links'];
-            $score = round($current/$target * 100);
-            $score = self::boundScore($score);
-        }
+        $score = round(100 * $score/$target);
+        $score = self::boundScore($score);
 
         return $score;
     }
