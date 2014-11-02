@@ -7,9 +7,9 @@ class RegionController extends CampaignController
 
     protected static function tableMetrics(){
         return array(
-            Model_Presence::METRIC_POPULARITY_TIME => 'Time to Target Audience',
-            Model_Presence::METRIC_POSTS_PER_DAY => 'Actions Per Day',
-            Model_Presence::METRIC_RESPONSE_TIME => 'Response Time',
+            Metric_PopularityTime::getName() => 'Time to Target Audience',
+            Metric_ActionsPerDay::getName() => 'Actions Per Day',
+            Metric_ResponseTime::getName() => 'Response Time',
         );
     }
 
@@ -64,7 +64,7 @@ class RegionController extends CampaignController
         if($presenceIds){
 	        $presenceIds = explode(',',html_entity_decode($presenceIds));
             foreach($presenceIds as $id){
-                $presences[$id] = Model_Presence::fetchById($id);
+                $presences[$id] = NewModel_PresenceFactory::getPresenceById($id);
             }
         }
 

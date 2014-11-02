@@ -16,10 +16,10 @@ abstract class GraphingController extends BaseController {
 
 	protected static function tableMetrics(){
 		return array(
-			Model_Presence::METRIC_POPULARITY_PERCENT => 'Percent of Target Audience',
-			Model_Presence::METRIC_POPULARITY_TIME => 'Time to Target Audience',
-			Model_Presence::METRIC_POSTS_PER_DAY => 'Actions Per Day',
-			Model_Presence::METRIC_RESPONSE_TIME => 'Response Time',
+            Metric_Popularity::getName() => 'Percent of Target Audience',
+            Metric_PopularityTime::getName() => 'Time to Target Audience',
+            Metric_ActionsPerDay::getName() => 'Actions Per Day',
+            Metric_ResponseTime::getName() => 'Response Time',
 		);
 	}
 
@@ -62,7 +62,7 @@ abstract class GraphingController extends BaseController {
             'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green, $colors->green)
         );
 
-		$metrics[Model_Presence::METRIC_POPULARITY_PERCENT] = (object)array(
+		$metrics[Metric_Popularity::getName()] = (object)array(
 			'range' => array(0, 50, 100),
 			'colors' => array($colors->red, $colors->yellow, $colors->green)
 		);
@@ -70,11 +70,11 @@ abstract class GraphingController extends BaseController {
 		$audienceBest = self::getOption('achieve_audience_best');
 		$audienceGood = self::getOption('achieve_audience_good');
 		$audienceBad = self::getOption('achieve_audience_bad');
-		$metrics[Model_Presence::METRIC_POPULARITY_TIME] = (object)array(
+		$metrics[Metric_PopularityTime::getName()] = (object)array(
 			'range' => array($audienceBest, $audienceGood, $audienceBad, $audienceGood+$audienceBad),
 			'colors' => array($colors->green, $colors->yellow, $colors->orange, $colors->red)
 		);
-		$metrics[Model_Presence::METRIC_POPULARITY_RATE] = (object)array(
+		$metrics['popularity_rate'] = (object)array(
 			'range' => array(0, 33, 66, 100),
 			'colors' => array($colors->red, $colors->orange, $colors->yellow, $colors->green)
 		);
@@ -82,13 +82,13 @@ abstract class GraphingController extends BaseController {
 		$postsPerDay = self::getOption('updates_per_day');
 		$postsPerDayOk = self::getOption('updates_per_day_ok_range');
 		$postsPerDayBad = self::getOption('updates_per_day_bad_range');
-		$metrics[Model_Presence::METRIC_POSTS_PER_DAY] = (object)array(
+		$metrics[Metric_ActionsPerDay::getName()] = (object)array(
 			'range' => array(0, $postsPerDay - $postsPerDayBad, $postsPerDay - $postsPerDayOk, $postsPerDay + $postsPerDayOk, $postsPerDay + $postsPerDayBad, max($postsPerDay + $postsPerDayBad + 1, 2*$postsPerDay)),
 			'colors' => array($colors->red, $colors->yellow, $colors->green, $colors->green, $colors->yellow, $colors->red)
 		);
 
         $relevanceTarget = (self::getOption('updates_per_day')/100)*self::getOption('facebook_relevance_percentage');
-        $metrics[Model_Presence::METRIC_RELEVANCE] = (object)array(
+        $metrics[Metric_Relevance::getName()] = (object)array(
             'range' => array(0, $relevanceTarget/2, $relevanceTarget),
             'colors' => array($colors->red, $colors->yellow, $colors->green)
         );
@@ -96,7 +96,7 @@ abstract class GraphingController extends BaseController {
 		$responseTimeBest = self::getOption('response_time_best');
 		$responseTimeGood = self::getOption('response_time_good');
 		$responseTimeBad = self::getOption('response_time_bad');
-		$metrics[Model_Presence::METRIC_RESPONSE_TIME] = (object)array(
+		$metrics[Metric_ResponseTime::getName()] = (object)array(
 			'range' => array(0, $responseTimeBest, $responseTimeGood, $responseTimeBad),
 			'colors' => array($colors->green, $colors->yellow, $colors->orange, $colors->red)
 		);
