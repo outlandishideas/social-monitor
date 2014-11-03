@@ -31,6 +31,19 @@ class IndexController extends GraphingController
             'smallMapData' => $smallMapData,
             'groupData' => $groupData
         );
+		
+		$totalScore = 0;
+		$allBadges = NewModel_Presence::getAllBadges();
+		if(count($allBadges) > 0 ){
+			foreach($allBadges as $presence) {
+				foreach($presence as $badges){
+					if($badges->type = "total") $totalScore += $badges->score;
+				}
+			};
+			$totalScore /= count($allBadges);
+		}
+		$this->view->totalScore = $totalScore;
+
 		$this->view->dateRangeString = $old->format('d M Y') . ' - ' . $now->format('d M Y');
 		$this->view->currentDate = $now->format('Y-m-d');
 		$this->view->dayRange = $dayRange;
