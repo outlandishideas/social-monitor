@@ -31,14 +31,12 @@ class IndexController extends GraphingController
             'smallMapData' => $smallMapData,
             'groupData' => $groupData
         );
-		
+
 		$totalScore = 0;
 		$allBadges = NewModel_Presence::getAllBadges();
 		if(count($allBadges) > 0 ){
 			foreach($allBadges as $presence) {
-				foreach($presence as $badges){
-					if($badges->type = "total") $totalScore += $badges->score;
-				}
+				$totalScore += $presence['total'];
 			};
 			$totalScore /= count($allBadges);
 		}

@@ -61,11 +61,12 @@ class Util_Color {
 
     public static function getScoreColor($range, $score)
     {
-        $colorName = array_shift($range);
-        foreach($range as $number => $color){
-            if($score >= $number) $colorName = $color;
-        }
-        return self::getColor($colorName);
+        return Badge_Abstract::colorize($score);
+        // $colorName = array_shift($range);
+        // foreach($range as $number => $color){
+        //     if($score >= $number) $colorName = $color;
+        // }
+        // return self::getColor($colorName);
     }
 
 }

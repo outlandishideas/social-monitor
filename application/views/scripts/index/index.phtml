@@ -78,14 +78,14 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
     </div>
     <div class="small-24 large-5 columns">
         <div id="country-stats">
-            <div class="badge-small" data-country-id="0" data-badge>
+            <div class="badge-small" data-country-id="0" data-badge data-score="<?php echo(round($this->totalScore)); ?>" data-color="<?php echo(Badge_Abstract::colorize($this->totalScore)); ?>">
                 <h3>British Council around the web</h3>
                 <div class="badge-score bd-btm">
                     <h4>Overall Score</h4>
                     <div class="score-value" data-badge-score></div>
                 </div>
                 <div class="bd-btm">
-                    <div class="score-value">
+                    <div>
                         This is build up of the total score from all British Coundil presences around the world.
                     </div>
                 </div>

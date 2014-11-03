@@ -90,11 +90,12 @@ abstract class Chart_Badge extends Chart_Compare {
         foreach($data['columns'] as $column) {
             if(in_array($column[0], $this->dataColumns)){
                 $value = $column[1];
-                foreach($range['range'] as $i => $score){
-                    if($value >= $score) {
-                        $color = $range['colors'][$i];
-                    }
-                }
+                // foreach($range['range'] as $i => $score){
+                //     if($value >= $score) {
+                //         $color = $range['colors'][$i];
+                //     }
+                // }
+                $color = Badge_Abstract::colorize($value);
                 $colorValues[$column[0]] = $color;
             }
         }
