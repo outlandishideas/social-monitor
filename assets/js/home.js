@@ -74,6 +74,10 @@ app.home = {
 
 	    app.home.initDateSlider($('#map-date'));
 
+	    $('.help-text-toggle').on('click', function(e) {
+	    	$('#help-text').toggleClass('open');
+	    });
+
     },
     currentBadge: function(){
 	    return $('#homepage-tabs').find('.active').data('badge');

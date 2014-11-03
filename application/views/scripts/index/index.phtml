@@ -7,11 +7,9 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
 }
 ?>
 
-<h2 class="page-title">Social Media Monitor</h2>
-
-<div class="row hide-for-small-down">
+<div class="row hide-for-small-down" id="help-text">
     <div class="small-24 medium-8 columns">
-        <p>Choose from Overall, Reach, Engagement or Quality to see the health of each country and SBU.</p>
+        <p>Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU.</p>
     </div>
     <div class="small-24 medium-8 columns">
         <p>Move the date slider to view the historic trend of the score for each country and SBU.</p>
@@ -37,6 +35,8 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
 
 <div class="row">
     <div class="small-24 large-5 columns hide-for-small-down">
+        <span class="help-text-toggle icon-question-sign icon-large" title="How to use this page"></span>
+
         <div id="map-date" class="bd-btm" data-current-date="<?php echo $this->currentDate; ?>" data-day-range="<?php echo $this->dayRange; ?>">
             <h4>Date range</h4>
             <div class="date-range-text"></div>

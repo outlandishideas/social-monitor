@@ -105,17 +105,30 @@ fieldset {
 }
 
 .title-area li.name h1 a {
-    background: url('../img/British-Council-stacked-negative.png') center center no-repeat;
+    background: url('../img/British-Council-stacked-negative.png') center left no-repeat;
     background-size: contain;
-    width: 120px;
 	height: 45px;
     margin-left: 10px;
 	margin-right: 10px;
 	padding: 0;
+	padding-left: 150px;
 }
 
-.title-area li.name a span {
-    display: none;
+#help-text {
+	max-height: 0;
+	transition: max-height .7s ease-in-out;
+	overflow: hidden;
+}
+
+.help-text-toggle {
+	position: absolute;
+	top: 6px;
+	right: 10px;
+	cursor: pointer;
+}
+
+#help-text.open {
+	max-height: 150px;
 }
 
 #loginWrapper .top-bar {
