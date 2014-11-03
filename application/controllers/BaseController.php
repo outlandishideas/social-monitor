@@ -492,4 +492,25 @@ class BaseController extends Zend_Controller_Action
         $this->_helper->FlashMessenger(array($type => $message));
     }
 
+    protected function setupConsoleOutput() {
+
+        $this->_helper->viewRenderer->setNoRender();
+        $this->_helper->layout()->disableLayout();
+
+        if (PHP_SAPI != 'cli'){
+            header('Content-Type: text/plain');
+
+            //output 1k of data to trigger rendering on client side, unless using CLI
+            if (!$this->_request->getParam('silent')) {
+                echo str_repeat(" ", 1024);
+            }
+        }
+
+        //disable output buffering
+        for ($i = 0; $i <= ob_get_level(); $i++) {
+            ob_end_flush();
+        }
+        ob_implicit_flush(true);
+    }
+
 }

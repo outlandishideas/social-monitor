@@ -81,7 +81,7 @@ if ($sizeDiff > 0) {
             </div>
         </div>
 
-		<?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial)); ?>
+		<?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial, 'titles'=>true)); ?>
 	</div>
 
 	<div class="small-24 large-12 xlarge-16 columns">
@@ -116,6 +116,11 @@ if ($sizeDiff > 0) {
                     <?php echo $presence->getName(); ?>
                 </h4>
                 <p>This is a <a href="<?php echo $presence->page_url; ?>" target="_blank"><?php echo $presenceType; ?> <span class="icon-external-link"></span></a> presence</p>
+                <?php if ($presence->isForFacebook()) : ?>
+                <p>Engagement score: <?php echo $presence->facebook_engagement; ?></p>
+                <?php elseif ($presence->isForTwitter()) : ?>
+                <p>Klout score: <?php echo $presence->klout_score; ?></p>
+                <?php endif; ?>
                 <?php if ($ownerUrl) : ?>
                     <p>This presence contributes to the statistics for <a href="<?php echo $ownerUrl; ?>"><?php echo $owner->display_name; ?></a></p>
                     <p>The target audience size is <?php echo number_format($targetSize); ?></p>
@@ -141,8 +146,6 @@ if ($sizeDiff > 0) {
                             </tr>
                             </tbody>
                         </table>
-                    <?php foreach ($requiredRates as $rate) : ?>
-                    <?php endforeach; ?>
                     <?php endif; ?>
                 <?php endif; ?>
             </div>

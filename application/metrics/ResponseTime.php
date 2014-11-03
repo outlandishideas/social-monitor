@@ -19,7 +19,7 @@ class Metric_ResponseTime extends Metric_Abstract {
      * @param DateTime $end
      * @return null/string
      */
-    protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $data = $presence->getResponseData($start, $end);
         if (is_null($data)) return null;
@@ -33,22 +33,15 @@ class Metric_ResponseTime extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $data = $presence->getResponseData($start, $end);
-        if (is_null($data)) {
+        $score = $presence->getMetricValue($this);
+        if (is_null($score)) {
             return null;
         }
-        if (empty($data)) {
+        if (empty($score)) {
             return 0;
         }
 
-        $total = 0;
-        foreach ($data as $d) {
-            $total += $d->diff;
-        }
-
-        $current = $total/count($data);
-
-        $score = round($this->target / $current * 100);
+        $score = round(100 * $this->target / $score);
         return self::boundScore($score);
     }
 }

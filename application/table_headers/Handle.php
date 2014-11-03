@@ -28,6 +28,9 @@ class Header_Handle extends Header_Abstract {
             $score = $model->getKloutScore();
             $value .= " <span class=\"engagement-score klout\" title=\"Klout score: $score\">" . round($score) . '</span>';
         }
+        if (!$model->getUID()) {
+            $value = '<span class="missing" title="Presence not found">' . $value . '</span>';
+        }
         return $value;
     }
 

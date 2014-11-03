@@ -91,7 +91,7 @@ class Model_Campaign extends Model_Base {
 	 * Gets the presences for this campaign. If $mapping and $allPresences are present, they will be used instead
 	 * of doing a database query
 	 * @param array $mapping
-	 * @param Model_Presence[] $allPresences
+	 * @param NewModel_Presence[] $allPresences
 	 * @return NewModel_Presence[]
 	 */
 	function getPresences($mapping = null, $allPresences = null) {
@@ -135,14 +135,6 @@ class Model_Campaign extends Model_Base {
 		}
 	}
 
-	function getFacebookPages() {
-		return array_filter($this->getPresences(), function($a) { return $a->type == 'facebook'; });
-	}
-
-	function getTwitterAccounts() {
-		return array_filter($this->getPresences(), function($a) { return $a->type == 'twitter'; });
-	}
-
 	function getKpiData(){
 		$return = array();
 
@@ -158,40 +150,6 @@ class Model_Campaign extends Model_Base {
 		}
 
 		return $return;
-	}
-
-	function getKpiAverages() {
-		if (!isset($this->kpiAverages)) {
-
-			$scores = array();
-			foreach ($this->getKpiData() as $p) {
-				foreach ($p as $m => $v) {
-					if ($m == 'name' || $m == 'id') continue;
-					if (!array_key_exists($m, $scores)) {
-						$scores[$m] = array();
-					}
-					$scores[$m][] = $v;
-				}
-			}
-
-			$averages = array();
-			foreach ($scores as $key=>$s) {
-				$total = 0;
-				$count = 0;
-				foreach ($s as $value) {
-					if ($value !== null) {
-						$total += $value;
-						$count++;
-					}
-				}
-				$average = $count > 0 ? $total/$count : null;
-				$averages[$key] = $average;
-			}
-			$this->kpiAverages = $averages;
-
-		}
-
-		return $this->kpiAverages;
 	}
 
     /*****************************************************************

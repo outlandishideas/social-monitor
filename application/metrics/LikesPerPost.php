@@ -12,30 +12,27 @@ class Metric_LikesPerPost extends Metric_Abstract {
     }
 
     /**
-     * Returns score depending on number of actions per day against target
+     * Calculates average number of likes per post
      * @param NewModel_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return int
      */
-    protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        switch ((string) $presence->getType()) {
-            case NewModel_PresenceType::FACEBOOK:
-                //do nothing and continue to calculations
-                break;
-            default:
-                return null; //Likes only are available for facebook
-                break;
+        if (!$presence->isForFacebook()) {
+            return null;
         }
         $data = $presence->getHistoricStream($start, $end);
 
         $actual = null;
-        //if no data, do not try and calculate anything
+
         if(count($data) > 0){
-            $actual = array_reduce($data, function($actions, $row){
-                    return $actions + $row['likes'];
-                }, 0) / count($data);
+            $actual = 0;
+            foreach ($data as $row) {
+                $actual += $row['likes'];
+            }
+            $actual /= count($data);
         }
 
         return $actual;
@@ -44,15 +41,12 @@ class Metric_LikesPerPost extends Metric_Abstract {
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        if ($this->target == 0) {
+        if ($this->target == 0 || !$presence->isForFacebook()) {
             return null;
         }
-        if (!$presence->isForFacebook()) {
-            return null;
-        }
-        $data = $presence->getKpiData($start, $end);
-        $current = array_key_exists(self::getName(), $data) ? $data[self::getName()] : 0;
-        $score = round($current/$this->target * 100);
+
+        $score = $presence->getMetricValue($this);
+        $score = round(100 * $score/$this->target);
         return self::boundScore($score);
     }
 

@@ -8,7 +8,7 @@ class Metric_Klout extends Metric_Abstract {
 
     function __construct()
     {
-        $this->target = floatval(BaseController::getOption('klout_target'));
+        $this->target = floatval(BaseController::getOption('klout_score_target'));
     }
 
     /**
@@ -18,14 +18,14 @@ class Metric_Klout extends Metric_Abstract {
      * @param DateTime $end
      * @return int
      */
-    protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         return $presence->getKloutScore();
     }
 
     public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $actual = round($presence->getKloutScore());
+        $actual = $presence->getMetricValue($this);
         $score = ($actual < $this->target) ? 0 : 100 ;
         return $score;
     }

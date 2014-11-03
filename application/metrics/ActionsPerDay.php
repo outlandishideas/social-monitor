@@ -12,21 +12,23 @@ class Metric_ActionsPerDay extends Metric_Abstract {
     }
 
     /**
-     * Returns score depending on number of actions per day against target
+     * Returns average number of actions per day
      * @param NewModel_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return int
      */
-    protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end){
+    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end){
         $data = $presence->getHistoricStreamMeta($start, $end);
 
         $actual = null;
-        //if no data, do not try and calculate anything
+
         if(count($data) > 0){
-            $actual = array_reduce($data, function($actions, $row){
-                    return $actions + $row['number_of_actions'];
-                }, 0) / count($data);
+            $actual = 0;
+            foreach ($data as $row) {
+                $actual += $row['number_of_actions'];
+            }
+            $actual /= count($data);
         }
 
         return $actual;
@@ -38,9 +40,8 @@ class Metric_ActionsPerDay extends Metric_Abstract {
         if ($this->target == 0) {
             return null;
         }
-        $data = $presence->getKpiData($start, $end);
-        $current = $data[self::getName()];
-        $score = round($current/$this->target * 100);
+        $score = $presence->getMetricValue($this);
+        $score = round(100 * $score/$this->target);
         return self::boundScore($score);
     }
 

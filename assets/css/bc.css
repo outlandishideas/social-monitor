@@ -1766,6 +1766,9 @@ table .cell-options .button-bc {
 	padding: 2px 5px;
 	margin-top: 2px;
 }
+table .cell-handle .missing {
+	text-decoration: line-through;
+}
 
 .button-bc-bar {
 	margin: 2rem 0;

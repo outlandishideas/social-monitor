@@ -67,6 +67,16 @@ class Util_Http {
 		return $url;
 	}
 
+    public static function extractDomain($url) {
+        $start = max(strpos($url, '//')+2, 0);
+        $domain = substr($url, $start);
+        $end = strpos($domain, '/');
+        if ($end > 0) {
+            $domain = substr($domain, 0, $end);
+        }
+        return $domain;
+    }
+
 	public static function fetchJson($url) {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

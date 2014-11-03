@@ -5,9 +5,12 @@ class PresenceController extends GraphingController
 	protected static $publicActions = array('update-kpi-cache');
 
 	protected function chartOptions() {
-		$ret = parent::chartOptions();
-		$ret[] = Chart_ActionsPerDay::getInstance();
-		return $ret;
+        return array(
+            Chart_Compare::getInstance(),
+            Chart_Popularity::getInstance(),
+            Chart_PopularityTrend::getInstance(),
+            Chart_ActionsPerDay::getInstance()
+        );
 	}
 
 	/**
@@ -30,12 +33,11 @@ class PresenceController extends GraphingController
 	 */
 	public function viewAction()
 	{
-		/** @var NewModel_Presence $presence */
 		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		$this->validateData($presence);
 
 		$this->view->presence = $presence;
-		$this->view->badgePartial = $this->badgeDetails($presence->getBadges());
+		$this->view->badgePartial = $this->badgeDetails($presence);
 		$this->view->chartOptions = $this->chartOptions();
         $allPresences = array();
         foreach (NewModel_PresenceFactory::getPresences() as $p) {
@@ -56,7 +58,6 @@ class PresenceController extends GraphingController
     {
         $compareData = array();
         foreach(explode(',',$this->_request->getParam('id')) as $id){
-	        /** @var Model_Presence $presence */
             $presence = NewModel_PresenceFactory::getPresenceById($id);
             $this->validateData($presence);
             $compareData[$id] = (object)array(
@@ -198,7 +199,6 @@ class PresenceController extends GraphingController
 
 		$this->validateChartRequest();
 
-		/** @var $presence NewModel_Presence */
 		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		if(!$presence) {
 			$this->apiError('Presence could not be found');
@@ -238,7 +238,6 @@ class PresenceController extends GraphingController
 			$this->apiError('Missing date range');
 		}
 
-		/** @var $presence Model_Presence */
 		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		if (!$presence) {
 			$this->apiError('Presence not found');
@@ -340,43 +339,12 @@ class PresenceController extends GraphingController
 
 	}
 
-	private function fillDateGaps($points, DateTime $start, DateTime $end, $value) {
-		$currentDate = clone $start;
-		while ($currentDate < $end) {
-			$currentDateKey = $currentDate->format("Y-m-d");
-			if (!array_key_exists($currentDateKey, $points)) {
-				$points[$currentDateKey] = (object)array('date'=>$currentDateKey, 'value'=>$value);
-			}
-			$currentDate->modify('+1 day');
-		}
-		ksort($points);
-		return $points;
-	}
-
 	/**
 	 * This should be called via a cron job (~hourly), and does not output anything
 	 */
 	public function updateKpiCacheAction() {
-		/** @var NewModel_Presence[] $presences */
-		$presences = NewModel_PresenceFactory::getPresences();
-		$endDate = new DateTime();
-		$startDate = new DateTime();
-		$startDate->sub(DateInterval::createFromDateString('30 days'));
-		$stmt = self::db()->prepare('REPLACE INTO kpi_cache (presence_id, metric, start_date, end_date, value) VALUES (:pid, :metric, :start, :end, :value)');
-		$args = array(
-			':start'=>$startDate->format('Y-m-d'),
-			':end'=>$endDate->format('Y-m-d')
-		);
-		foreach ($presences as $p) {
-			$args[':pid'] = $p->id;
-			$stats = $p->getKpiData($startDate, $endDate, false);
-			foreach ($stats as $metric=>$value) {
-				$args[':metric'] = $metric;
-				$args[':value'] = $value;
-				$stmt->execute($args);
-			}
-		}
-		exit;
+        //moved to be part of build-badge-data
+        exit;
 	}
 
     public function downloadAction() {

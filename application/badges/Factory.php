@@ -58,14 +58,10 @@ abstract class Badge_Factory
 		Badge_Period $dateRange,
 		\DateTime $startDate,
 		\DateTime $endDate,
-        $log = false,
+        $log = null,
 		$presenceIds = array()
 	) {
-        if ($log) {
-            $log = function($message) {
-                echo '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL;
-            };
-        } else {
+        if (!$log) {
             $log = function($message) {};
         }
 
@@ -149,6 +145,7 @@ abstract class Badge_Factory
             $log("Found $missingCount missing, updated $successCount");
 
             if ($successCount > 0) {
+                $log("Assigning ranks");
                 foreach ($badges as $b) {
                     $b->assignRanks($currentDate, $dateRange);
                 }

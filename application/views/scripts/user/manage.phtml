@@ -75,8 +75,8 @@
 							<option value="<?php echo $p->id; ?>"
 							        data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
 							        data-label="<?php echo '@' . $p->handle; ?>"
-							        data-hover="<?php echo $p->label; ?>">
-								<?php echo '@' . $p->handle . ' (' . $p->label . ')'; ?>
+							        data-hover="<?php echo $p->name; ?>">
+								<?php echo '@' . $p->handle . ' (' . $p->name . ')'; ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
@@ -99,8 +99,8 @@
 							<option value="<?php echo $p->id; ?>"
 							        data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
 							        data-label="<?php echo $p->handle; ?>"
-							        data-hover="<?php echo $p->label; ?>">
-								<?php echo $p->handle . ' (' . $p->label . ')'; ?>
+							        data-hover="<?php echo $p->name; ?>">
+								<?php echo $p->handle . ' (' . $p->name . ')'; ?>
 							</option>
 						<?php endforeach; ?>
 					</select>

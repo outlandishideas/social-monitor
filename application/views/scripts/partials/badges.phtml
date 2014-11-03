@@ -61,9 +61,13 @@ $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
                         <?php foreach($badge['metrics'] as $metric): ?>
                             <li
                                 class="bd-btm"
-                                <?php if (array_key_exists('score', $metric)): ?>
-                                    style="color: <?php echo($metric['color']); ?>"
-                                    title="This presence has scored <?php echo($metric['score']); ?>% for <?php echo $metric['title']; ?>."
+                                <?php if (!empty($this->titles)) : ?>
+                                    <?php if (array_key_exists('score', $metric)): ?>
+                                        style="color: <?php echo($metric['color']); ?>"
+                                        title="This presence has scored <?php echo($metric['score']); ?>% for <?php echo $metric['title']; ?>."
+                                    <?php else : ?>
+                                        title="<?php echo $metric['title']; ?> is not applicable for this presence"
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             >
                                 <span class="<?php echo $metric['icon']; ?> fa-fw"></span> <?php echo $metric['title']; ?>

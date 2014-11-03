@@ -156,8 +156,28 @@ class IndexController extends GraphingController
 	 */
 	public function buildBadgeDataAction()
 	{
+        $this->setupConsoleOutput();
+        $log = function($message) {
+            echo '[' . date('Y-m-d H:i:s') . '] ' . $message . PHP_EOL;
+        };
+
+        // make sure all KPI data is up-to-date
+        $presences = NewModel_PresenceFactory::getPresences();
+        $endDate = new DateTime();
+        $startDate = new DateTime();
+        $startDate->modify('-30 days');
+        $presenceCount = count($presences);
+        $index = 0;
+        foreach ($presences as $p) {
+            $index++;
+            $log('Recalculating KPIs [' . $index . '/' . $presenceCount . '] [' . $p->getId() . ']');
+            $p->getKpiData($startDate, $endDate, false);
+        }
+
+        $log('Recalculating badges');
+
 		// make sure that the last 60 day's worth of badge_history data exists
-		Badge_Factory::guaranteeHistoricalData(Badge_Period::MONTH(), new \DateTime('now -60 days'), new \DateTime('now'), true);
+		Badge_Factory::guaranteeHistoricalData(Badge_Period::MONTH(), new \DateTime('now -60 days'), new \DateTime('now'), $log);
 
 		// do everything that the index page does, but using the (potentially) updated data
 		$this->getCacheableData(30, false);
@@ -172,8 +192,10 @@ class IndexController extends GraphingController
         }
 
 //		Badge_Factory::getAllCurrentData(Badge_Period::WEEK(), new DateTime(), new DateTime()); //todo: uncomment this when it is needed
-		exit;
 
+        $log('Recalculating badges complete');
+
+		exit;
 	}
 
 	public function servefileAction()

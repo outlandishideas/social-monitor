@@ -4,7 +4,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
     '<a class="button-bc" href="%url%">Edit All</a>' => array('action'=>'edit-all'),
     '<a class="button-bc" href="%url%">Download CSV</a>' => array('action' => 'download')
 ));
-array_unshift($buttons, '<div id="search-table"></div>');
+array_unshift($buttons, '<div id="search-table">Loading data...</div>');
 
 echo '<h2 class="page-title">Countries</h2>';
 

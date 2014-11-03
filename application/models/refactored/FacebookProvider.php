@@ -17,61 +17,143 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 			throw new Exception('Presence not initialised/found');
 		}
 
-
-		$stmt = $this->db->prepare("SELECT created_time FROM {$this->tableName} WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
+        // get all posts since the last time we fetched
+		$stmt = $this->db->prepare("SELECT created_time
+		    FROM {$this->tableName}
+		    WHERE presence_id = :id
+		    ORDER BY created_time DESC
+		    LIMIT 1");
 		$stmt->execute(array(':id' => $presence->getId()));
 		$since = $stmt->fetchColumn();
 		if ($since) {
 			$since = strtotime($since);
 		}
-
 		$posts = Util_Facebook::pagePosts($presence->getUID(), $since);
-		foreach ($posts as $s) {
-			$this->parseStatus($presence, $s);
-		}
+        $count = $this->parseAndInsertStatuses($presence, $posts);
 
-		return array();
+        $count += $this->updateResponses($presence);
+
+        return $count;
 	}
 
-	protected function parseStatus(NewModel_Presence $presence, $post)
+	protected function parseAndInsertStatuses(NewModel_Presence $presence, $postData)
 	{
-		$id = $this->saveStatus($presence, $post);
-		$post->local_id = $id;
-		$postedByOwner = $post->actor_id == $presence->getUID();
-		if ($postedByOwner) {
-			$this->findAndSaveLinks($post);
-		}
-	}
-
-
-	protected function saveStatus(NewModel_Presence $presence, $post)
-	{
-		$postedByOwner = $post->actor_id == $presence->getUID();
-		$stmt = $this->db->prepare("
+        $insertStmt = $this->db->prepare("
 			INSERT INTO `{$this->tableName}`
-			(`post_id`, `presence_id`, `message`, `create_time`, `actor_id`, `comments`,
+			(`post_id`, `presence_id`, `message`, `created_time`, `actor_id`, `comments`,
 				`likes`, `share_count`, `permalink`, `type`, `posted_by_owner`, `needs_response`, `in_response_to`)
 			VALUES
-			(:post_id, :presence_id, :message, :create_time, :actor_id, :comments,
+			(:post_id, :presence_id, :message, :created_time, :actor_id, :comments,
 				:likes, :share_count, :permalink, :type, :posted_by_owner, :needs_response, :in_response_to)
 		");
-		$args = array(
-			'post_id' => $post->post_id,
-			'presence_id' => $presence->id,
-			'message' => $post->message,
-			'created_time' => gmdate('Y-m-d H:i:s', $post->created_time),
-			'actor_id' => $post->actor_id,
-			'permalink' => $post->permalink,
-			'comments' => isset($post->comments['count']) ? intval($post->comments['count']) : 0,
-			'likes' => isset($post->likes['count']) ? intval($post->likes['count']) : 0,
-			'share_count' => $post->share_count,
-			'type' => $post->type,
-			'posted_by_owner' => $postedByOwner,
-			'needs_response' => !$postedByOwner && $post->message
-		);
-		$stmt->execute($args);
-		return $this->db->lastInsertId();
+
+        $count = 0;
+        $links = array();
+        while ($postData) {
+            $post = array_shift($postData);
+            $postedByOwner = $post->actor_id == $presence->getUID();
+            $args = array(
+                ':post_id' => $post->post_id,
+                ':presence_id' => $presence->id,
+                ':message' => $post->message,
+                ':created_time' => gmdate('Y-m-d H:i:s', $post->created_time),
+                ':actor_id' => $post->actor_id,
+                ':comments' => isset($post->comments['count']) ? intval($post->comments['count']) : 0,
+                ':likes' => isset($post->likes['count']) ? intval($post->likes['count']) : 0,
+                ':share_count' => $post->share_count,
+                ':permalink' => $post->permalink,
+                ':type' => $post->type,
+                ':posted_by_owner' => $postedByOwner,
+                ':needs_response' => !$postedByOwner && $post->message,
+                ':in_response_to' => null
+            );
+            try {
+                $insertStmt->execute($args);
+                $id = $this->db->lastInsertId();
+                if ($postedByOwner && $post->message) {
+                    $links[$id] = $this->extractLinks($post->message);
+                }
+                $count++;
+            } catch (Exception $ex) {
+                $x=0;
+            }
+        }
+
+        $this->saveLinks('facebook', $links);
+
+        return $count;
 	}
+
+    protected function updateResponses(NewModel_Presence $presence) {
+        $presenceId = $presence->getId();
+
+        // update the responses for any non-page posts that don't have a response yet.
+        // Only get those that explicitly need one, or were posted in the last 3 days
+        $args = array(
+            ':id' => $presenceId,
+            ':necessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days')),
+            ':unnecessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -3 days'))
+        );
+        $stmt = $this->db->prepare("SELECT DISTINCT a.post_id
+            FROM (
+                SELECT *
+                FROM {$this->tableName}
+                WHERE presence_id = :id
+                AND in_response_to IS NULL
+                AND
+                (
+                    (
+                      needs_response = 1
+                      AND created_time > :necessary_since
+                    )
+                    OR
+                    (
+                      posted_by_owner = 0
+                      AND message <> ''
+                      AND message IS NOT NULL
+                      AND created_time > :unnecessary_since
+                    )
+                )
+            ) as a
+            LEFT OUTER JOIN {$this->tableName} AS b
+                ON b.presence_id = a.presence_id
+                AND b.in_response_to = a.post_id
+            WHERE b.id IS NULL");
+        $stmt->execute($args);
+        $postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        $count = 0;
+        if ($postIds) {
+            $responses = Util_Facebook::responses($presence->getUID(), $postIds);
+
+            $insertStmt = $this->db->prepare("
+                INSERT INTO `{$this->tableName}`
+                (`post_id`, `presence_id`, `message`, `created_time`, `actor_id`, `posted_by_owner`, `in_response_to`)
+                VALUES
+                (:post_id, :presence_id, :message, :created_time, :actor_id, :posted_by_owner, :in_response_to)
+            ");
+            while ($responses) {
+                $response = array_shift($responses);
+                $args = array(
+                    'post_id' => $response->id,
+                    'presence_id' => $presenceId,
+                    'message' => $response->text,
+                    'created_time' => gmdate('Y-m-d H:i:s', $response->time),
+                    'actor_id' => $response->fromid,
+                    'posted_by_owner' => true,
+                    'in_response_to' => $response->post_id
+                );
+                try {
+                    $insertStmt->execute($args);
+                    $count++;
+                } catch (Exception $ex) {
+                    $x=0;
+                }
+            }
+        }
+
+        return $count;
+    }
 
 	public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
 	{
@@ -187,25 +269,21 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 
 		$score = null;
 
-		$results = $this->getFacebookCommentsSharesLikes($presence, $start, $end);
+		$stats = $this->getCommentsSharesLikes($presence, $start, $end);
 
-		if(!empty($results)){
-
+        // sum comments, likes and shares, and divide by current fan count
+		if(!empty($stats) && $presence->popularity > 0){
 			$total = 0;
-            $last = null;
-            foreach ($results as $row) {
-                $total += $row->comments + $row->likes + $row->share_count;
-                $last = $row;
+            foreach ($stats as $row) {
+                $total += $row->comment_count + $row->like_count + $row->share_count;
             }
 
-            if ($last && $last->popularity > 0){
-                $score = ($total / $last->popularity) * 1000;
-			}
+            $score = ($total / $presence->popularity) * 1000;
 		}
 		return $score;
 	}
 
-	protected function getFacebookCommentsSharesLikes(NewModel_Presence $presence, DateTime $start, DateTime $end)
+	protected function getCommentsSharesLikes(NewModel_Presence $presence, DateTime $start, DateTime $end)
 	{
 		$args = array(
 			':pid' => $presence->getId(),
@@ -214,20 +292,26 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 		);
 
 		$sql = "
-            SELECT ph.created_time as time, SUM(fs.comments) as comments, SUM(fs.likes) as likes, SUM(fs.share_count) as share_count, ph.popularity
+            SELECT
+              ph.created_time AS time,
+              SUM(fs.comments) AS comment_count,
+              SUM(fs.likes) AS like_count,
+              SUM(fs.share_count) AS share_count,
+              ph.popularity
             FROM (
                 SELECT presence_id, DATE(datetime) as created_time, MAX(value) as popularity
                 FROM presence_history
                 WHERE type = 'popularity'
-                AND presence_id = :pid
-                AND DATE(datetime) >= :start_time
-                AND DATE(datetime) <= :end_time
-                GROUP BY DATE(datetime) ) as ph
+                  AND presence_id = :pid
+                  AND datetime >= :start_time
+                  AND datetime <= :end_time
+                GROUP BY DATE(datetime)
+            ) AS ph
             LEFT JOIN facebook_stream as fs
-            ON DATE(fs.created_time) = ph.created_time
-            AND fs.presence_id = ph.presence_id
+              ON DATE(fs.created_time) = ph.created_time
+              AND fs.presence_id = ph.presence_id
             WHERE ph.created_time >= :start_time
-            AND ph.created_time <= :end_time
+              AND ph.created_time <= :end_time
             GROUP BY ph.created_time";
 
 		$stmt = $this->db->prepare($sql);
@@ -235,20 +319,32 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
 
+    private function extractLinks($message) {
+        $links = array();
+        if (preg_match_all('/[^\s]{5,}/', $message, $tokens)) {
+            foreach ($tokens[0] as $token) {
+                $token = trim($token, '.,;!"()');
+                if (filter_var($token, FILTER_VALIDATE_URL)) {
+                    try {
+                        $links[] = $token;
+                    } catch (RuntimeException $ex) {
+                        // ignore failed URLs
+                        $failedLinks[] = $token;
+                    }
+                }
+            }
+        }
+        return $links;
+    }
 
-	protected function findAndSaveLinks($streamdatum)
-	{
-		$newLinks = $this->extractLinks($streamdatum->message);
-		foreach ($newLinks as $link) {
-			$link['external_id'] = $streamdatum->post_id;
-//			$link['type'] = $presence->getType();
-			$links[] = $link;
-		}
-	}
+    public function updateMetadata(NewModel_Presence $presence) {
 
-	public function updateMetadata(NewModel_Presence $presence) {
-
-        $data = Util_Facebook::pageInfo($presence->handle);
+        try {
+            $data = Util_Facebook::pageInfo($presence->handle);
+        } catch (Exception_FacebookNotFound $e) {
+            $presence->uid = null;
+            throw new Exception_FacebookNotFound('Facebook page not found: ' . $presence->handle, $e->getCode(), $e->getFql(), $e->getErrors());
+        }
 
         $presence->type = $this->type;
         $presence->uid = $data['page_id'];
@@ -257,4 +353,44 @@ class NewModel_FacebookProvider extends NewModel_iProvider
         $presence->page_url = $data['page_url'];
         $presence->popularity = $data['fan_count'];
 	}
+
+    /**
+     * @param NewModel_Presence $presence
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
+    public function getResponseData(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    {
+        $responseData = array();
+        $clauses = array(
+            'r.presence_id = :pid',
+            't.created_time >= :start_date',
+            't.created_time <= :end_date'
+        );
+        $args = array(
+            ':pid'=>$presence->getId(),
+            ':start_date' => $start->format('Y-m-d'),
+            ':end_date' => $end->format('Y-m-d')
+        );
+        $stmt = $this->db->prepare("
+          SELECT t.post_id as id, t.created_time as created, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
+          FROM {$this->tableName} AS t
+            INNER JOIN {$this->tableName} AS r ON t.post_id = r.in_response_to
+            WHERE " . implode(' AND ', $clauses) ."");
+        $stmt->execute($args);
+        foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
+            $key = $r->id;
+            if(!array_key_exists($key, $responseData)) {
+                $responseData[$key] = (object)array('diff' => null, 'created' => null);
+            }
+            if (empty($responseData[$key]->diff) || $r->time < $responseData[$key]->diff) {
+                $responseData[$key]->diff = $r->time;
+                $responseData[$key]->created = $r->created;
+            }
+        }
+        return $responseData;
+    }
+
+
 }

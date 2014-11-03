@@ -29,7 +29,7 @@ class GroupController extends CampaignController {
 		$group = Model_Group::fetchById($this->_request->getParam('id'));
 		$this->validateData($group);
 
-        $this->view->badgePartial = $this->badgeDetails($group->getBadges());
+        $this->view->badgePartial = $this->badgeDetails($group);
 
 		$this->view->chartOptions = self::chartOptions();
 		$this->view->tableMetrics = self::tableMetrics();

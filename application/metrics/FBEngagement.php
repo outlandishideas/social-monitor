@@ -8,23 +8,17 @@ class Metric_FBEngagement extends Metric_Abstract {
 
     function __construct()
     {
-        //todo: this is wrong
         $this->target = floatval(BaseController::getOption('fb_engagement_target'));
     }
 
     /**
-     * Returns 100 if presence has been signed off, else returns 0
+     * Gets the average facebook engagement over the given range
      * @param NewModel_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return int
      */
-    protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
-    {
-        return $presence->getFacebookEngagement();
-    }
-
-    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $data = $presence->getHistoricData($start, $end, self::getName());
         $total = 0;
@@ -36,8 +30,13 @@ class Metric_FBEngagement extends Metric_Abstract {
         if ($count == 0) {
             return 0;
         }
-        $actual = $total/$count;
-        $score = ($actual < $this->target) ? 0 : 100 ;
+        return $total/$count;
+    }
+
+    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        $score = $presence->getMetricValue($this);
+        $score = ($score < $this->target) ? 0 : 100 ;
         return $score;
     }
 

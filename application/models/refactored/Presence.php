@@ -302,28 +302,38 @@ class NewModel_Presence
 		return $target;
 	}
 
-    public function getTargetAudienceDate() {
+    public function getMetricValue($metric) {
+        if ($metric instanceof Metric_Abstract) {
+            $metric = $metric->getName();
+        }
         $kpiData = $this->getKpiData();
-        if ($kpiData && isset($kpiData[Metric_PopularityTime::getName()])) {
-            $months = $kpiData[Metric_PopularityTime::getName()];
-            return new DateTime('now +' . round($months) . ' months');
+        if ($kpiData && isset($kpiData[$metric])) {
+            return $kpiData[$metric];
+        }
+        return null;
+    }
+
+    public function getTargetAudienceDate() {
+        $score = $this->getMetricValue(Metric_PopularityTime::getName());
+        if ($score) {
+            return new DateTime('now +' . round($score) . ' months');
         }
         return null;
     }
 
 	public function getRatioRepliesToOthersPosts(\DateTime $startDate, \DateTime $endDate)
 	{
-		$clauses = array(
-			'presence_id = :pid',
-			'created_time >= :start_date',
-			'created_time <= :end_date'
-		);
-
 		if (!$this->isForFacebook()) {
 			return null;
 		}
 
-		$tableName = $this->provider->getTableName();
+        $clauses = array(
+            'presence_id = :pid',
+            'created_time >= :start_date',
+            'created_time <= :end_date'
+        );
+
+        $tableName = $this->provider->getTableName();
 		$sql = '
 		SELECT t1.replies/t2.posts as replies_to_others_posts FROM
 		(
@@ -360,17 +370,33 @@ class NewModel_Presence
 		$key = $startString . $endString;
 
 		if(!array_key_exists($key, $this->kpiData) || !$useCache) {
-			//start (re)calculation when data not available, or when indicated not to use cache
+            $stmt = $this->db->prepare("
+                INSERT INTO `kpi_cache`
+                    (`presence_id`, `metric`, `start_date`, `end_date`, `value`)
+                VALUES
+                    (:id, :metric, :start, :end, :value)
+                ON DUPLICATE KEY UPDATE
+                    `value` = VALUES(`value`)
+            ");
+
+            //start (re)calculation when data not available, or when indicated not to use cache
 			$cachedValues = array();
 			if ($useCache) {
 				$cachedValues = $this->getCachedKpiData($start, $end);
 			}
 
 			foreach($this->getMetrics() as $metric) {
-				if(!array_key_exists($metric->getName(), $cachedValues)) {
+                $metricName = $metric->getName();
+				if(!array_key_exists($metricName, $cachedValues)) {
 					$result = $metric->calculate($this, $start, $end);
-					$this->saveMetric($metric->getName(), $start, $end, $result);
-					$cachedValues[$metric->getName()] = $result;
+                    $stmt->execute(array(
+                            ':id' => $this->getId(),
+                            ':metric' => $metricName,
+                            ':start' => $startString,
+                            ':end' => $endString,
+                            ':value' => $result
+                        ));
+					$cachedValues[$metricName] = $result;
 				}
 			}
 
@@ -419,9 +445,9 @@ class NewModel_Presence
 
 	public function fetch()
 	{
-		$this->provider->fetchStatusData($this);
+		$count = $this->provider->fetchStatusData($this);
         $this->last_fetched = gmdate('Y-m-d H:i:s');
-        $this->save();
+        return $count;
 	}
 
     /**
@@ -433,6 +459,7 @@ class NewModel_Presence
 	public function update()
 	{
         $this->provider->update($this);
+        $this->last_updated = gmdate('Y-m-d H:i:s');
 	}
 
     public function updateHistory() {
@@ -458,24 +485,6 @@ class NewModel_Presence
             }
         }
     }
-
-	public function saveMetric($metric, DateTime $start, DateTime $end, $value){
-		$stmt = $this->db->prepare("
-			INSERT INTO `kpi_cache`
-				(`presence_id`, `metric`, `start_date`, `end_date`, `value`)
-			VALUES
-				(:id, :metric, :start, :end, :value)
-			ON DUPLICATE KEY UPDATE
-				`value` = VALUES(`value`)
-		");
-		$stmt->execute(array(
-			':id' => $this->getId(),
-			':metric' => $metric,
-			':start' => $start->format("Y-m-d"),
-			':end' => $end->format("Y-m-d"),
-			':value' => $value
-		));
-	}
 
     public function getBadgeScores(DateTime $date, Badge_Period $range) {
         if (!$date || !$range) {
@@ -550,12 +559,6 @@ class NewModel_Presence
 	 */
 	public function getStatuses(DateTime $start, DateTime $end, $search, $order, $limit, $offset)
 	{
-//		trigger_error("Deprecated function called.", E_USER_NOTICE);
-		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
-			$presence = Model_Presence::fetchById($this->getId());
-			return $presence->getStatuses($start->format("Y-m-d"), $end->format("Y-m-d"), $search, $order, $limit, $offset);
-		}
-
 		return $this->getHistoricStream($start, $end, $search, $order, $limit, $offset);
 	}
 
@@ -575,32 +578,76 @@ class NewModel_Presence
 	}
 
 	/**
+     * Unused
 	 * @param DateTime $start
 	 * @param DateTime $end
 	 * @return mixed
 	 */
-	public function getPostsPerDayData(DateTime $start, DateTime $end)
-	{
-//		trigger_error("Deprecated function called.", E_USER_NOTICE);
-		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
-			$presence = Model_Presence::fetchById($this->getId());
-			return $presence->getPostsPerDayData($start->format("Y-m-d"), $end->format("Y-m-d"));
-		}
-	}
+//	public function getPostsPerDayData(DateTime $start, DateTime $end)
+//	{
+//        $clauses = array(
+//            'presence_id = :pid',
+//            'created_time >= :start_date',
+//            'created_time <= :end_date'
+//        );
+//
+//        $tableName = $this->statusTable();
+//        if ($this->isForFacebook()) {
+//            $clauses[] = 'posted_by_owner = 1';
+//            $clauses[] = 'in_response_to IS NULL';
+//        } else {
+//            $clauses[] = 'responsible_presence IS NULL';
+//        }
+//
+//        $sql = 'SELECT date, COUNT(date) AS value
+//			FROM (
+//				SELECT DATE(created_time) AS date
+//				FROM ' . $tableName . '
+//				WHERE ' . implode(' AND ', $clauses) . '
+//			) AS tmp GROUP BY date';
+//        $stmt = $this->_db->prepare($sql);
+//        $stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
+//        $counts = array();
+//        $date = gmdate('Y-m-d', strtotime($startDate));
+//        while ($date <= $endDate) {
+//            $counts[$date] = (object)array('date'=>$date, 'value'=>0);
+//            $date = gmdate('Y-m-d', strtotime($date . '+1 day'));
+//        }
+//        foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
+//            $counts[$row->date] = $row;
+//        }
+//        return $counts;
+//	}
 
 	/**
+     * unused
 	 * @param DateTime $start
 	 * @param DateTime $end
 	 * @return mixed
 	 */
-	public function getRelevanceData(DateTime $start, DateTime $end)
-	{
-//		trigger_error("Deprecated function called.", E_USER_NOTICE);
-		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
-			$presence = Model_Presence::fetchById($this->getId());
-			return $presence->getRelevanceData($start->format("Y-m-d"), $end->format("Y-m-d"));
-		}
-	}
+//	public function getRelevanceData(DateTime $start, DateTime $end)
+//	{
+//        $args = array(
+//            ':pid' => $this->id,
+//            ':start_time' => $start->format('Y-m-d'),
+//            ':end_time' => $end->format('Y-m-d')
+//        );
+//
+//        $sql ="
+//            SELECT DATE(fs.created_time) as created_time, COUNT(fs.id) as total, COUNT(sl.domain) as total_links, IFNULL(SUM(IF(d.is_bc=1,1,NULL)), 0) as total_bc_links
+//            FROM facebook_stream as fs
+//            LEFT JOIN status_links as sl ON fs.id = sl.status_id
+//            LEFT JOIN domains as d ON sl.domain = d.domain
+//            WHERE presence_id = :pid
+//                AND posted_by_owner = 1
+//                AND DATE(fs.created_time) >= :start_time
+//                AND DATE(fs.created_time) <= :end_time
+//            GROUP BY DATE(fs.created_time)";
+//
+//        $stmt = $this->db->prepare($sql);
+//        $stmt->execute($args);
+//        return $stmt->fetchAll(PDO::FETCH_OBJ);
+//	}
 
 	/**
 	 * @param DateTime $start
@@ -609,11 +656,7 @@ class NewModel_Presence
 	 */
 	public function getResponseData(DateTime $start, DateTime $end)
 	{
-//		trigger_error("Deprecated function called.", E_USER_NOTICE);
-		if($this->getType() != NewModel_PresenceType::SINA_WEIBO()){
-			$presence = Model_Presence::fetchById($this->getId());
-			return $presence->getResponseData($start->format("Y-m-d"), $end->format("Y-m-d"));
-		}
+        return $this->provider->getResponseData($this, $start, $end);
 	}
 
 	public function save()
@@ -623,19 +666,20 @@ class NewModel_Presence
         }
 
         $data = array(
-            'type' => $this->type->getValue(),
-            'handle' => $this->handle,
-            'uid' => $this->uid,
-            'image_url' => $this->image_url,
-            'name' => $this->name,
-            'page_url' => $this->page_url,
-            'popularity' => $this->popularity,
-            'klout_id' => $this->klout_id,
-            'klout_score' => $this->klout_score,
-            'facebook_engagement' => $this->facebook_engagement,
-            'last_updated' => $this->last_updated,
-            'sign_off' => $this->sign_off,
-            'branding' => $this->branding,
+            'type' => $this->getType()->getValue(),
+            'handle' => $this->getHandle(),
+            'uid' => $this->getUID(),
+            'image_url' => $this->getImageUrl(),
+            'name' => $this->getName(),
+            'page_url' => $this->getPageUrl(),
+            'popularity' => $this->getPopularity(),
+            'klout_id' => $this->getKloutId(),
+            'klout_score' => $this->getKloutScore(),
+            'facebook_engagement' => $this->getFacebookEngagement(),
+            'last_updated' => $this->getLastUpdated(),
+            'last_fetched' => $this->getLastFetched(),
+            'sign_off' => $this->getSignOff(),
+            'branding' => $this->getBranding(),
 			'size' => $this->getSize()
         );
 
@@ -643,7 +687,7 @@ class NewModel_Presence
             'SET '.implode('=?, ', array_keys($data)).'=? '.
             'WHERE id=?';
         //add id to fill last placeholder
-        $data[] = $this->id;
+        $data[] = $this->getId();
 
         $statement = $this->db->prepare($query);
         $statement->execute(array_values($data));

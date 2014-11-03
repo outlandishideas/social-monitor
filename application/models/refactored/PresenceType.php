@@ -126,9 +126,12 @@ class NewModel_PresenceType extends NewModel_Enum
         return $this->relevancePercentage;
 	}
 
-	public function isMetricApplicable($metricName)
+	public function isMetricApplicable($metric)
 	{
-		return in_array($metricName, $this->getApplicableMetrics());
+        if ($metric instanceof Metric_Abstract) {
+            $metric = $metric->getName();
+        }
+		return in_array($metric, $this->getApplicableMetrics());
 	}
 
 	public function getApplicableMetrics()

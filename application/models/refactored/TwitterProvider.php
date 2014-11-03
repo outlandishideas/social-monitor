@@ -20,11 +20,71 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 		if (!$presence->uid) {
 			throw new Exception('Presence not initialised/found');
 		}
-
-
-
-		return array();
+//        $fetchCount->type = 'tweet';
+        $stmt = $this->db->prepare("SELECT tweet_id FROM {$this->tableName} WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
+        $stmt->execute(array(':id'=>$presence->getId()));
+        $lastTweetId = $stmt->fetchColumn();
+        $tweets = Util_Twitter::userTweets($presence->getUID(), $lastTweetId);
+        $mentions = Util_Twitter::userMentions($presence->getHandle(), $lastTweetId);
+        $count = 0;
+        $count += $this->parseAndInsertTweets($presence, $tweets);
+        $count += $this->parseAndInsertTweets($presence, $mentions, true);
+        return $count;
 	}
+
+    /**
+     * @param NewModel_Presence $presence
+     * @param array $tweetData
+     * @param bool $mentions
+     * @return array
+     */
+    protected function parseAndInsertTweets($presence, $tweetData, $mentions = false) {
+        $stmt = $this->db->prepare("
+            INSERT INTO {$this->tableName}
+            (tweet_id, presence_id, text_expanded, created_time, retweet_count, html_tweet,
+                responsible_presence, needs_response, in_reply_to_user_uid, in_reply_to_status_uid)
+            VALUES
+            (:tweet_id, :presence_id, :text_expanded, :created_time, :retweet_count, :html_tweet,
+                :responsible_presence, :needs_response, :in_reply_to_user_uid, :in_reply_to_status_uid)
+            ON DUPLICATE KEY UPDATE
+            retweet_count = VALUES(retweet_count)");
+
+        $presenceId = $presence->getId();
+        $presenceUID = $presence->getUID();
+        $count = 0;
+        $links = array();
+        while ($tweetData) {
+            $tweet = array_shift($tweetData);
+            $parsedTweet = Util_Twitter::parseTweet($tweet);
+            $isRetweet = isset($tweet->retweeted_status) && $tweet->retweeted_status->user->id == $presenceUID;
+            $args = array(
+                ':tweet_id' => $tweet->id_str,
+                ':presence_id' => $presenceId,
+                ':text_expanded' => $parsedTweet['text_expanded'],
+                ':created_time' => gmdate('Y-m-d H:i:s', strtotime($tweet->created_at)),
+                ':retweet_count' => $tweet->retweet_count,
+                ':html_tweet' => $parsedTweet['html_tweet'],
+                ':responsible_presence' => $mentions ? $presenceId : null,
+                ':needs_response' => $mentions && !$isRetweet ? 1 : 0,
+                ':in_reply_to_user_uid' => $tweet->in_reply_to_user_id_str,
+                ':in_reply_to_status_uid' => $tweet->in_reply_to_status_id_str
+            );
+            try {
+                $stmt->execute($args);
+                $id = $this->db->lastInsertId();
+                if (!empty($tweet->entities->urls)) {
+                    $links[$id] = array_map(function($a) { return $a->expanded_url; }, $tweet->entities->urls);
+                }
+                $count++;
+            } catch (Exception $ex) {
+                $i=0;
+            }
+        }
+
+        $this->saveLinks('twitter', $links);
+
+        return $count;
+    }
 
 	public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
 	{
@@ -126,20 +186,19 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 	}
 
 
-	protected function findAndSaveLinks($streamdatum)
-	{
-		return 0;
-	}
-
 	public function update(NewModel_Presence $presence)
 	{
         parent::update($presence);
         $kloutId = $presence->getKloutId();
-        if(!$kloutId){
-            $kloutId = $this->getKloutId($presence->getUID());
+        if (!$kloutId) {
+            $kloutId = $this->lookupKloutId($presence->getUID());
             $presence->klout_id = $kloutId;
         }
-        $presence->klout_score = $this->getKloutScore($kloutId);
+        if ($kloutId) {
+            $presence->klout_score = $this->lookupKloutScore($kloutId);
+        } else {
+            $presence->klout_score = null;
+        }
 	}
 
 	protected function getKloutApi()
@@ -158,11 +217,15 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 	 * @param $uid
 	 * @return mixed|null
 	 */
-	public function getKloutId($uid)
+	public function lookupKloutId($uid)
 	{
 		$apiKey = $this->getKloutApi();
-		if($apiKey){
-			$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $uid . '?key=' . $apiKey);
+		if ($apiKey) {
+            try {
+    			$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $uid . '?key=' . $apiKey);
+            } catch (Exception $ex) {
+                return null;
+            }
 			return $json->id;
 		}
 		return null;
@@ -172,7 +235,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 	 * @param $kloutId
 	 * @return mixed|null
 	 */
-	public function getKloutScore($kloutId)
+	public function lookupKloutScore($kloutId)
 	{
 		$apiKey = $this->getKloutApi();
 		if($apiKey){
@@ -190,13 +253,59 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 
 	public function updateMetadata(NewModel_Presence $presence) {
 
-        $data = Util_Twitter::userInfo($presence->handle);
+        try {
+            $data = Util_Twitter::userInfo($presence->handle);
+        } catch (Exception_TwitterNotFound $e) {
+            $presence->uid = null;
+            throw new Exception_TwitterNotFound('Twitter user not found: ' . $presence->handle, $e->getCode(), $e->getPath(), $e->getErrors());
+        }
 
         $presence->type = $this->type;
         $presence->uid = $data->id_str;
         $presence->image_url = $data->profile_image_url;
         $presence->name = $data->name;
-        $presence->page_url = 'http://www.twitter.com/' . $data->screen_name;
+        $presence->page_url = 'https://www.twitter.com/' . $data->screen_name;
         $presence->popularity = $data->followers_count;
 	}
+
+    /**
+     * @param NewModel_Presence $presence
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
+    public function getResponseData(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    {
+        $responseData = array();
+        $clauses = array(
+            't.responsible_presence = :pid',
+            't.needs_response = 1',
+            't.created_time >= :start_date',
+            't.created_time <= :end_date'
+        );
+        $args = array(
+            ':pid'=>$presence->getId(),
+            ':start_date' => $start->format('Y-m-d'),
+            ':end_date' => $end->format('Y-m-d')
+        );
+        $stmt = $this->db->prepare("
+          SELECT t.tweet_id as id, t.created_time as created, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
+          FROM {$this->tableName} AS t
+            INNER JOIN {$this->tableName} AS r ON t.tweet_id = r.in_reply_to_status_uid
+            WHERE " . implode(' AND ', $clauses) ."");
+        $stmt->execute($args);
+        foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
+            $key = $r->id;
+            if(!array_key_exists($key, $responseData)) {
+                $responseData[$key] = (object)array('diff' => null, 'created' => null);
+            }
+            if (empty($responseData[$key]->diff) || $r->time < $responseData[$key]->diff) {
+                $responseData[$key]->diff = $r->time;
+                $responseData[$key]->created = $r->created;
+            }
+        }
+        return $responseData;
+    }
+
+
 }

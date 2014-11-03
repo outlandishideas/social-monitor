@@ -9,27 +9,13 @@ abstract class Metric_Abstract {
     protected $target = 0;
 
     /**
-     * Calculate a given metric for the passed presence within the $start and $end
-     * @param NewModel_Presence $presence
-     * @param DateTime $start
-     * @param DateTime $end
-     * @return mixed
-     */
-    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
-    {
-        $result = static::doCalculations($presence, $start, $end);
-        //$presence->saveMetric(static::getName(), $start, $end, $result);
-        return $result;
-    }
-
-    /**
      * run the actual calculations
      * @param NewModel_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return mixed
      */
-    abstract protected function doCalculations(NewModel_Presence $presence, \DateTime $start, \DateTime $end);
+    abstract public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end);
 
     /**
      * Get the metric-score for a given presence for a given daterange
