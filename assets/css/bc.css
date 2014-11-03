@@ -2221,3 +2221,11 @@ form#settings .field {
 table a.view-link:hover {
 	color: #ddd;
 }
+
+
+[data-badge-bar] {
+	transition: width .5s ease-in-out, background-color .5s ease-in-out;
+}
+[data-badge-score] {
+	transition: color .5s ease-in-out;
+}
