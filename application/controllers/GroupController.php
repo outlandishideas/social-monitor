@@ -123,7 +123,7 @@ class GroupController extends CampaignController {
                         $editingGroup->assignPresences($p);
                     }
                     $this->flashMessage('SBU saved');
-                    $this->_helper->redirector->gotoSimple('index');
+                    $this->_helper->redirector->gotoRoute(array('action' => 'view'));
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
                         $this->flashMessage('Display name already taken', 'error');

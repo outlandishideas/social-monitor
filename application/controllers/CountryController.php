@@ -122,7 +122,7 @@ class CountryController extends CampaignController {
 					$editingCountry->save();
 
                     $this->flashMessage('Country saved');
-					$this->_helper->redirector->gotoSimple('index');
+					$this->_helper->redirector->gotoRoute(array('action' => 'view'));
 				} catch (Exception $ex) {
 					if (strpos($ex->getMessage(), '23000') !== false) {
                         $this->flashMessage('Display name already taken', 'error');
