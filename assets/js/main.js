@@ -344,6 +344,11 @@ app.init = {
 			$select.on('change', function() {
 				window.location = $select.data('url-template').replace('the_id', $select.val());
 			});
+		},
+		'ol.messages .close': function($closeBtn) {
+			$closeBtn.on('click', function() {
+				$(this).parent('li').remove();
+			})
 		}
 	}
 };

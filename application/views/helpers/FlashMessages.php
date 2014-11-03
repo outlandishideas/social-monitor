@@ -17,7 +17,7 @@ class Zend_View_Helper_FlashMessages extends Zend_View_Helper_Abstract
 			//don't show current on next request
 			$flashMessenger->clearCurrentMessages();
 		}
-		
+
 		if (!$messages) return '';
 
 		//process messages
@@ -36,7 +36,7 @@ class Zend_View_Helper_FlashMessages extends Zend_View_Helper_Abstract
 				$seenInaction = true;
 				$type = 'error';
 			}
-			$output .= '<li class="'.$type.'">'.$message.'</li>';
+			$output .= '<li class="'.$type.'">'.$message.'<span class="close icon-remove-circle icon-large"></span></li>';
 		}
 		$output .= '</ol>';
 
