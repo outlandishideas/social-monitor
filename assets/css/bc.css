@@ -28,14 +28,14 @@ abbr {
     color: rgba(255,255,255,0.7);
 }
 
-#footer .navigation>a .label:hover,
-#footer .navigation>a .label:focus {
+#footer .navigation>a span:hover,
+#footer .navigation>a span:focus {
     text-decoration: underline;
     color: rgba(255,255,255,0.9);
 }
 
 #footer .navigation>a:before, #footer .navigation>span:before {
-    content: "  / ";
+    content: " | ";
 }
 
 #footer .navigation>a:first-child:before, #footer .navigation>span:first-child:before {

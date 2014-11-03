@@ -23,11 +23,11 @@
 
                 if ($href) : ?>
                     <a href="<?php echo $href; ?>" class="<?php echo implode(' ', $classes); ?>">
-                        <span class="label"><?php echo $page->getLabel(); ?></span>
+                        <span><?php echo $page->getLabel(); ?></span>
                     </a><?php
                 else : ?>
                     <span class="<?php echo implode(' ', $classes); ?>">
-                        <span class="label"><?php echo $page->getLabel(); ?></span>
+                        <span><?php echo $page->getLabel(); ?></span>
                     </span><?php
                 endif;
 
