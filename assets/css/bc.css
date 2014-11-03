@@ -1802,6 +1802,10 @@ table .cell-handle .missing {
 	margin: 2rem 0;
 }
 
+.button-bc-bar.pdflink {
+	margin-bottom: 0;
+}
+
 .button-bc-bar .row.bk-dark {
 	background-color: #000;
 	background-color: rgba(0,0,0,0.5);
