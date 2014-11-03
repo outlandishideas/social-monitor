@@ -7,20 +7,16 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
 }
 ?>
 
-<div class="row hide-for-small-down" id="help-text">
-    <div class="small-24 medium-8 columns">
-        <p>Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU.</p>
-    </div>
-    <div class="small-24 medium-8 columns">
-        <p>Move the date slider to view the historic trend of the score for each country and SBU.</p>
-    </div>
-    <div class="small-24 medium-8 columns">
-        <p>Click on a map to select a country and preview the individual social media presences.</p>
-    </div>
-</div>
-
 <div class="row">
-    <div class="small-24 columns">
+    <div class="small-24 large-5 columns homepage-title">
+        <h2 class="page-title">Social Media Monitor</h2>
+        <span class="help-text-toggle icon-question-sign icon-large">
+            <div class="help-text">
+                <p>Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU.</p>
+            </div>
+        </span>
+    </div>
+    <div class="small-24 large-19 columns">
         <div id="homepage-tabs">
             <dl class="tabs">
             <?php foreach($allBadges as $badge) : ?>
@@ -35,7 +31,11 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
 
 <div class="row">
     <div class="small-24 large-5 columns hide-for-small-down">
-        <span class="help-text-toggle icon-question-sign icon-large" title="How to use this page"></span>
+        <span class="help-text-toggle icon-question-sign icon-large">
+            <div class="help-text">
+                <p>Move the date slider to view the historic trend of the score for each country and SBU.</p>
+            </div>
+        </span>
 
         <div id="map-date" class="bd-btm" data-current-date="<?php echo $this->currentDate; ?>" data-day-range="<?php echo $this->dayRange; ?>">
             <h4>Date range</h4>
@@ -67,7 +67,14 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
         <?php endif; ?>
     </div>
     <div class="small-24 large-14 columns">
-        <div id="map"><div id="geo-map"></div></div>
+        <div id="map">
+            <span class="help-text-toggle icon-question-sign icon-large">
+                <div class="help-text">
+                    <p>Click on the map to select a country and preview the individual social media presences.</p>
+                </div>
+            </span>
+            <div id="geo-map"></div>
+        </div>
     </div>
     <div class="small-24 large-5 columns">
         <div id="country-stats"></div>

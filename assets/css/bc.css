@@ -105,30 +105,56 @@ fieldset {
 }
 
 .title-area li.name h1 a {
-    background: url('../img/British-Council-stacked-negative.png') center left no-repeat;
+    background: url('../img/British-Council-stacked-negative.png') center center no-repeat;
     background-size: contain;
 	height: 45px;
+	width: 120px;
     margin-left: 10px;
 	margin-right: 10px;
 	padding: 0;
-	padding-left: 150px;
 }
 
-#help-text {
-	max-height: 0;
-	transition: max-height .7s ease-in-out;
+.help-text {
+	max-width: 0;
+	transition: max-width .7s ease-in-out;
 	overflow: hidden;
+	background-color: #0071bc;
+	color: white;
+	position: absolute;
+	left: 16px;
+	top: 16px;
+	border-radius: 10px;
+	border-top-left-radius: 0px;
+}
+
+.help-text p {
+	width: 255px;
+	padding: 10px;
+}
+
+.help-text.open {
+	max-width: 255px;
 }
 
 .help-text-toggle {
 	position: absolute;
 	top: 6px;
-	right: 10px;
+	left: 90%;
 	cursor: pointer;
+	z-index: 10;
 }
 
-#help-text.open {
-	max-height: 150px;
+.homepage-title .page-title {
+	padding: 30px 0 10px;
+}
+
+.homepage-title .help-text-toggle {
+	top: 39px;
+}
+
+#map .help-text-toggle {
+	top: 10px;
+	right: 10px;
 }
 
 #loginWrapper .top-bar {
@@ -933,6 +959,8 @@ form.management button.add-item {
 }
 #map-date .range-slider .range-slider-handle {
 	height: 15px;
+	width: 15px;
+	border-radius: 50%;
 	top: -7px;
 }
 
@@ -2047,9 +2075,6 @@ td.countries a {
 	border-bottom: 1px solid #fff;
 	margin-bottom: 10px !important;
 }
-#homepage-tabs {
-	text-align: center;
-}
 #model-tabs dd {
 	margin-bottom: -3px !important;
 }
@@ -2078,16 +2103,15 @@ td.countries a {
 #homepage-tabs dd a {
 	width: 150px;
 }
-#model-tabs dd a:hover,
 #model-tabs dd.active a,
-#homepage-tabs dd a:hover,
 #homepage-tabs dd.active a {
 	border-bottom-color: #2ba6cb;
 	opacity: 1;
-}
-#model-tabs dd.active a,
-#homepage-tabs dd.active a {
 	font-weight: bold;
+}
+#model-tabs dd a:hover,
+#homepage-tabs dd a:hover {
+	opacity: 1;
 }
 
 #model-tabs-content .content {

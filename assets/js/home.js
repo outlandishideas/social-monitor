@@ -75,7 +75,7 @@ app.home = {
 	    app.home.initDateSlider($('#map-date'));
 
 	    $('.help-text-toggle').on('click', function(e) {
-	    	$('#help-text').toggleClass('open');
+	    	$(this).find('.help-text').toggleClass('open');
 	    });
 
     },
