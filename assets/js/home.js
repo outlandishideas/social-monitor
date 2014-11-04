@@ -272,12 +272,12 @@ app.home = {
 			var score = d.b[badge][day].s;
 			$el.data('score', Math.round(score));
 			var color = colorArgs.colors[0];
-			for (var j=0; j<colorArgs.colors.length; j++) {
+			for (var j=0; j<colorArgs.colors.length-1; j++) {
 				if (score >= colorArgs.range[j] && score <= colorArgs.range[j+1]) {
-					lowColor = colorArgs.colors[j];
-					highColor = colorArgs.colors[j+1];
-					low = [lowColor.substring(1,3), lowColor.substring(3,5), lowColor.substring(5,7)];
-					high = [highColor.substring(1,3), highColor.substring(3,5), highColor.substring(5,7)];
+					var lowColor = colorArgs.colors[j];
+					var highColor = colorArgs.colors[j+1];
+					var low = [lowColor.substring(1,3), lowColor.substring(3,5), lowColor.substring(5,7)];
+					var high = [highColor.substring(1,3), highColor.substring(3,5), highColor.substring(5,7)];
 					low = low.map(function(e) {return parseInt(e, 16);});
 					high = high.map(function(e) {return parseInt(e, 16);});
 					color = [
@@ -286,6 +286,7 @@ app.home = {
 						Math.floor(low[2] + ((score/100) * (high[2] - low[2])))
 					];
 					color = '#'+(color[0].toString(16))+(color[1].toString(16))+(color[2].toString(16));
+					break;
 				}
 			}
 			$el.data('color', color);
