@@ -137,7 +137,7 @@ class NewModel_Presence
 
 	public function getImageUrl()
 	{
-		return $this->page_url;
+		return $this->image_url;
 	}
 
 	public function getLabel() {
