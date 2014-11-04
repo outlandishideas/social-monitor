@@ -276,24 +276,23 @@ app.home = {
 				if (score > colorArgs.range[j] && score <= colorArgs.range[j+1]) {
 					var lowColor = colorArgs.colors[j];
 					var highColor = colorArgs.colors[j+1];
-					if (score == colorArgs.range[j]) {
-						// score equals lower bound
-						color = colorArgs.colors[j];
-					} else if (score == colorArgs.range[j+1]) {
+					if (score == lowColor || lowColor == highColor) {
+						// score equals lower bound, or lower colour == upper colour
+						color = lowColor;
+					} else if (score == highColor) {
 						// score equals upper bound
-						color = colorArgs.colors[j+1];
+						color = highColor;
 					} else {
 						// score somewhere in the middle, so interpolate the colours
-						var low = [lowColor.substring(1,3), lowColor.substring(3,5), lowColor.substring(5,7)];
-						var high = [highColor.substring(1,3), highColor.substring(3,5), highColor.substring(5,7)];
-						low = low.map(function(e) {return parseInt(e, 16);});
-						high = high.map(function(e) {return parseInt(e, 16);});
-						color = [
-							Math.floor(low[0] + ((score/100) * (high[0] - low[0]))),
-							Math.floor(low[1] + ((score/100) * (high[1] - low[1]))),
-							Math.floor(low[2] + ((score/100) * (high[2] - low[2])))
-						];
-						color = '#'+(color[0].toString(16))+(color[1].toString(16))+(color[2].toString(16));
+						lowColor = [lowColor.substring(1,3), lowColor.substring(3,5), lowColor.substring(5,7)];
+						highColor = [highColor.substring(1,3), highColor.substring(3,5), highColor.substring(5,7)];
+						lowColor = lowColor.map(function(e) {return parseInt(e, 16);});
+						highColor = highColor.map(function(e) {return parseInt(e, 16);});
+						var fraction = (score - colorArgs.range[j])/(colorArgs.range[j+1] - colorArgs.range[j]);
+						color = '#';
+						for (var k=0; k<lowColor.length; k++) {
+							color += Math.floor(lowColor[k] + (fraction * (highColor[k] - lowColor[k]))).toString(16);
+						}
 					}
 					break;
 				}
