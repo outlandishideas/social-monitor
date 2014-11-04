@@ -252,7 +252,7 @@ class UserController extends BaseController
 				try {
 					$editingUser->save();
                     $this->flashMessage('User saved');
-					$this->_helper->redirector->gotoRoute(array('action' => 'view'));
+                    $this->_helper->redirector->gotoSimple('index');
 				} catch (Exception $ex) {
 					if (strpos($ex->getMessage(), '23000') !== false) {
 						if (strpos($ex->getMessage(), 'email') !== false) {
@@ -303,7 +303,7 @@ class UserController extends BaseController
 		if ($this->_request->isPost()) {
 			$user->assignAccess($this->_request->getParam('assigned'));
             $this->flashMessage('User permissions saved');
-			$this->_helper->redirector->gotoRoute(array('action' => 'view'));
+            $this->_helper->redirector->gotoSimple('index');
 		}
 
 		$this->view->title = 'User Permissions';
