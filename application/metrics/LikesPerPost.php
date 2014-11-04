@@ -23,7 +23,7 @@ class Metric_LikesPerPost extends Metric_Abstract {
         if (!$presence->isForFacebook()) {
             return null;
         }
-        $data = $presence->getHistoricStream($start, $end);
+        $data = $presence->getHistoricStream($start, $end)->stream;
 
         $actual = null;
 

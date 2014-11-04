@@ -242,8 +242,9 @@ class PresenceController extends GraphingController
 		if (!$presence) {
 			$this->apiError('Presence not found');
 		}
+        $format = $this->_request->getParam('format');
 
-		$data = $presence->getStatuses(
+		$data = $presence->getHistoricStream(
 			$dateRange[0],
 			$dateRange[1],
 			$this->getRequestSearchQuery(),
@@ -251,28 +252,33 @@ class PresenceController extends GraphingController
 			$this->getRequestLimit(),
 			$this->getRequestOffset()
 		);
+        $stream = $data->stream;
+        $total = $data->total;
 
 		$tableData = array();
 		// convert statuses to appropriate datatables.js format
 		if ($presence->isForTwitter()) {
-			foreach ($data->statuses as $tweet) {
+			foreach ($stream as $tweet) {
+                $tweet = (object)$tweet;
 				$tableData[] = array(
-					'message'=> $this->_request->getParam('format') == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
-					'date'=>Model_Base::localeDate($tweet->created_time),
-					'twitter_url'=>Model_TwitterTweet::getTwitterUrl($presence->handle, $tweet->tweet_id)
+					'message' => $format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
+					'date' => Model_Base::localeDate($tweet->created_time),
+					'twitter_url' => Model_TwitterTweet::getTwitterUrl($presence->handle, $tweet->tweet_id)
 				);
 			}
-			$count = count($data->statuses);
+			$count = count($stream);
 		} else if ($presence->isForFacebook()) {
-			foreach ($data->statuses as $post) {
+			foreach ($stream as $post) {
+                $post = (object)$post;
 				if($post->message){
-					if ($post->first_response) {
-						$message = $post->first_response->message;
-						$responseDate = $post->first_response->created_time;
-					} else {
+                    //todo: fix this
+//					if ($post->first_response) {
+//						$message = $post->first_response->message;
+//						$responseDate = $post->first_response->created_time;
+//					} else {
 						$message = null;
 						$responseDate = gmdate('Y-m-d H:i:s');
-					}
+//					}
 
 					$timeDiff = strtotime($responseDate) - strtotime($post->created_time);
 					$components = array();
@@ -293,11 +299,11 @@ class PresenceController extends GraphingController
 
 					$tableData[] = array(
 						'id' => $post->id,
-						'actor_type' => $post->actor->type,
-						'actor_name' => $post->actor->name,
-						'pic_url' => $post->actor->pic_url,
+//						'actor_type' => $post->actor->type,
+						'actor_name' => 'todo',//$post->actor->name,
+//						'pic_url' => $post->actor->pic_url,
 						'facebook_url' => $post->permalink,
-						'profile_url' => $post->actor->profile_url,
+						'profile_url' => '#todo',//$post->actor->profile_url,
 						'message' => $post->message,
 						'links' => $post->links,
 						'date' => Model_Base::localeDate($post->created_time),
@@ -310,18 +316,18 @@ class PresenceController extends GraphingController
 					);
 				}
 			}
-			$count = count($data->statuses);
+			$count = count($stream);
 		} else if ($presence->isForSinaWeibo()) {
-			foreach ($data as $post) {
+			foreach ($stream as $post) {
+                $post = (object)$post;
 				$tableData[] = array(
-					'id'	=> $post['id'],
-					'url'	=> NewModel_SinaWeiboProvider::BASEURL . $post['remote_user_id'] . '/' . NewModel_SinaWeiboProvider::getMidForPostId($post['remote_id']),
-					'message' => $post['text'],
-					'date' => Model_Base::localeDate($post['created_at'])
+					'id'	=> $post->id,
+					'url'	=> NewModel_SinaWeiboProvider::BASEURL . $post->remote_user_id . '/' . NewModel_SinaWeiboProvider::getMidForPostId($post->remote_id),
+					'message' => $post->text,
+					'date' => Model_Base::localeDate($post->created_at)
 				);
 			}
-			$count = count($data);
-			$data = (object) array('total' => $count); //todo: fix this to have a real total
+			$count = count($stream);
 		}
 
 		//return CSV or JSON?
@@ -331,7 +337,7 @@ class PresenceController extends GraphingController
 			$apiResult = array(
 				'sEcho' => $this->_request->getParam('sEcho'),
 				'iTotalRecords' => $count,
-				'iTotalDisplayRecords' => $data->total,
+				'iTotalDisplayRecords' => $total,
 				'aaData' => $tableData
 			);
 			$this->apiSuccess($apiResult);

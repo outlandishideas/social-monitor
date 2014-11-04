@@ -588,8 +588,16 @@ form .formError {
 	padding: 10px;
 	border-bottom-color: #ddd;
 	text-align: left;
+	font-size: 0.75rem;
 }
 
+.statusesDisplay td p {
+	font-size: 0.75rem;
+}
+
+.statusesDisplay .button-bc-bar .button-group > li {
+	float: left;
+}
 .statusesDisplay .icon-large {
 	font-size: 20px;
 }

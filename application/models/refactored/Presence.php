@@ -548,21 +548,6 @@ class NewModel_Presence
 	}
 
 	/**
-	 * DEPRECATED: Use getHistoricStream() instead
-	 * @param $start
-	 * @param $end
-	 * @param $search
-	 * @param $order
-	 * @param $limit
-	 * @param $offset
-	 * @return array
-	 */
-	public function getStatuses(DateTime $start, DateTime $end, $search, $order, $limit, $offset)
-	{
-		return $this->getHistoricStream($start, $end, $search, $order, $limit, $offset);
-	}
-
-	/**
 	 * DEPRECATED: Use getHistoricData()
 	 * @param DateTime $start
 	 * @param DateTime $end

@@ -18,14 +18,19 @@ abstract class NewModel_iProvider
 	 */
 	abstract public function fetchStatusData(NewModel_Presence $presence);
 
-	/**
-	 * Get all posts/tweets/streamdata for a specific presence between 2 dates
-	 * @param NewModel_Presence $presence  The presence to get the data for
-	 * @param \DateTime $start      The first day to fetch the data for (inclusive)
-	 * @param \DateTime $end        The last day to fetch the data for (inclusive)
-	 * @return array   The historic streamdata
-	 */
-	abstract public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end);
+    /**
+     * Get all posts/tweets/streamdata for a specific presence between 2 dates
+     * @param NewModel_Presence $presence The presence to get the data for
+     * @param \DateTime $start The first day to fetch the data for (inclusive)
+     * @param \DateTime $end The last day to fetch the data for (inclusive)
+     * @param null $search
+     * @param null $order
+     * @param null $limit
+     * @param null $offset
+     * @return object   The historic streamdata and the total count
+     */
+	abstract public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end,
+        $search = null, $order = null, $limit = null, $offset = null);
 
 	/**
 	 * Get all metadata for posts/tweets/streamdata for a specific presence between 2 dates
@@ -133,4 +138,27 @@ abstract class NewModel_iProvider
 	{
 		return $this->tableName;
 	}
+
+    protected function getOrderSql($order, $validColumns) {
+        if (!is_null($order) && count($order) > 0) {
+            $ordering = array();
+            foreach ($order as $column=>$dir) {
+                if (array_key_exists($column, $validColumns)) {
+                    $ordering[] = $validColumns[$column] . ' ' . $dir;
+                }
+            }
+            return ' ORDER BY '.implode(',', $ordering);
+        }
+        return '';
+    }
+
+    protected function getLimitSql($limit, $offset) {
+        if (!is_null($limit)) {
+            if (is_null($offset)) {
+                $offset = 0;
+            }
+            return ' LIMIT '.$offset.','.$limit;
+        }
+        return '';
+    }
 }

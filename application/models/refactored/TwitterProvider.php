@@ -86,11 +86,12 @@ class NewModel_TwitterProvider extends NewModel_iProvider
         return $count;
     }
 
-	public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+	public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end,
+        $search = null, $order = null, $limit = null, $offset = null)
 	{
-		$ret = array();
-		$stmt = $this->db->prepare("
-			SELECT
+        //todo: correct this sql and decorate data
+		$sql = "
+			SELECT SQL_CALC_FOUND_ROWS
 				p.*,
 				l.links
 			FROM
@@ -120,19 +121,27 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 				p.`created_time` >= :start
 				AND p.`created_time` <= :end
 				AND p.`presence_id` = :id
-		");
+		";
+        $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
+        $sql .= $this->getLimitSql($limit, $offset);
+        $stmt = $this->db->prepare($sql);
 		$stmt->execute(array(
 			':start'	=> $start->format('Y-m-d H:i:s'),
 			':end'	=> $end->format('Y-m-d H:i:s'),
 			':id'		=> $presence->getId()
 		));
 		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
 
 		//add retweets and links to posts
 		foreach ($ret as &$r) {
 			$r['links'] = is_null($r['links']) ? array() : explode(',', $r['links']);
 		}
-		return count($ret) ? $ret : null;
+
+        return (object)array(
+            'stream' => count($ret) ? $ret : null,
+            'total' => $total
+        );
 	}
 
 

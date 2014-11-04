@@ -49,18 +49,11 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
         return $count;
 	}
 
-	public function getHistoricStream (
-		NewModel_Presence $presence,
-		\DateTime $start,
-		\DateTime $end,
-		$search = null,
-		$order = null,
-		$limit = null,
-		$offset = null
+	public function getHistoricStream (NewModel_Presence $presence, \DateTime $start, \DateTime $end,
+        $search = null, $order = null, $limit = null, $offset = null
 	) {
-		$ret = array();
 		$sql = "
-			SELECT
+			SELECT SQL_CALC_FOUND_ROWS
 				p.*,
 				l.links
 			FROM
@@ -100,28 +93,12 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 			$sql .= ' AND `text` LIKE :search';
 			$args[':search'] = '%'.$search.'%';
 		}
-		if (!is_null($order) && count($order) > 0) {
-			$ordering = array();
-			foreach ($order as $column=>$dir) {
-				switch ($column) {
-					case 'date':
-						$column = 'created_at';
-						break;
-					default:
-						$column = 'created_at';
-						break;
-				}
-				$ordering[] = $column . ' ' . $dir;
-			}
-			$sql .= ' ORDER BY '.implode(',', $ordering);
-		}
-		if (!is_null($limit)) {
-			if (is_null($offset)) $offset = 0;
-			$sql .= ' LIMIT '.$offset.','.$limit;
-		}
+        $sql .= $this->getOrderSql($order, array('date'=>'created_at'));
+        $sql .= $this->getLimitSql($limit, $offset);
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute($args);
 		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
 
 		$ids = array();
 		foreach ($ret as $r) {
@@ -148,7 +125,11 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 			}
 			$r['links'] = is_null($r['links']) ? array() : explode(',', $r['links']);
 		}
-		return count($ret) ? $ret : null;
+
+        return (object)array(
+            'stream' => count($ret) ? $ret : null,
+            'total' => $total
+        );
 	}
 
 	public function getHistoricStreamMeta(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
