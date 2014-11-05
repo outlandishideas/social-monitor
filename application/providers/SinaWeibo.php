@@ -52,78 +52,50 @@ class Provider_SinaWeibo extends Provider_Abstract
 	public function getHistoricStream (Model_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null
 	) {
-		$sql = "
-			SELECT SQL_CALC_FOUND_ROWS
-				p.*,
-				l.links
-			FROM
-				{$this->tableName} AS p
-				LEFT JOIN (
-					SELECT
-						status_id,
-						GROUP_CONCAT(url) AS links
-					FROM
-						status_links
-					WHERE
-						status_id IN (
-							SELECT
-								`id`
-							FROM
-								{$this->tableName}
-							WHERE
-								`created_at` >= :start
-								AND `created_at` <= :end
-								AND `presence_id` = :id
-						)
-						AND type = 'sina_weibo'
-					GROUP BY
-						status_id
-				) AS l ON (p.id = l.status_id)
-			WHERE
-				p.`created_at` >= :start
-				AND p.`created_at` <= :end
-				AND p.`presence_id` = :id
-		";
-		$args = array(
-			':start'	=> $start->format('Y-m-d H:i:s'),
-			':end'	=> $end->format('Y-m-d H:i:s'),
-			':id'		=> $presence->getId()
-		);
-		if (!is_null($search)) {
-			$sql .= ' AND `text` LIKE :search';
-			$args[':search'] = '%'.$search.'%';
-		}
+        $clauses = array(
+            'p.created_at >= :start',
+            'p.created_at <= :end',
+            'p.presence_id = :id'
+        );
+        $args = array(
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end'   => $end->format('Y-m-d H:i:s'),
+            ':id'    => $presence->getId()
+        );
+        $searchArgs = $this->getSearchClauses($search, array('p.text'));
+        $clauses = array_merge($clauses, $searchArgs['clauses']);
+        $args = array_merge($args, $searchArgs['args']);
+        $sql = "
+			SELECT SQL_CALC_FOUND_ROWS p.*
+			FROM {$this->tableName} AS p
+			WHERE " . implode(' AND ', $clauses);
         $sql .= $this->getOrderSql($order, array('date'=>'created_at'));
         $sql .= $this->getLimitSql($limit, $offset);
+
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute($args);
 		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
 
-		$ids = array();
-		foreach ($ret as $r) {
-			$ids[] = $r['remote_id'];
-		}
-
-		//get retweets
-		$stmt = $this->db->prepare("
-			SELECT * FROM {$this->tableName} WHERE `remote_id` IN (
-				".implode(',', array_fill(0, count($ids), '?'))."
-			)
-		");
-		$stmt->execute($ids);
-		$r = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		$retweets = array();
-		foreach ($r as $retweet) {
-			$retweets[$retweet['remote_id']] = $retweet;
-		}
-
 		//add retweets and links to posts
-		foreach ($ret as &$r) {
-			if (!is_null($r['included_retweet']) && array_key_exists($r['included_retweet'], $retweets)) {
-				$r['included_retweet'] = $retweets[$r['included_retweet']];
+        $postIds = array();
+        $remoteIds = array();
+        foreach ($ret as $post) {
+            $postIds[] = $post['id'];
+            $remoteIds[] = $post['remote_id'];
+        }
+
+        $retweets = $this->getRetweets($remoteIds);
+        $links = $this->getLinks($postIds, 'sina_weibo');
+
+        foreach ($ret as &$r) {
+            $id = $r['id'];
+            $r['links'] = isset($links[$id]) ? $links[$id] : array();
+
+            $retweet = $r['included_retweet'];
+			if (!$retweet && array_key_exists($retweet, $retweets)) {
+				$r['included_retweet'] = $retweets[$retweet];
 			}
-			$r['links'] = is_null($r['links']) ? array() : explode(',', $r['links']);
 		}
 
         return (object)array(
@@ -131,6 +103,23 @@ class Provider_SinaWeibo extends Provider_Abstract
             'total' => $total
         );
 	}
+
+    protected function getRetweets($postIds) {
+        $retweets = array();
+        if ($postIds) {
+            $stmt = $this->db->prepare("
+                SELECT * FROM {$this->tableName} WHERE `remote_id` IN (
+                    ".implode(',', array_fill(0, count($postIds), '?'))."
+                )
+            ");
+            $stmt->execute($postIds);
+            $r = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($r as $retweet) {
+                $retweets[$retweet['remote_id']] = $retweet;
+            }
+        }
+        return $retweets;
+    }
 
 	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end)
 	{
