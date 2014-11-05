@@ -1,17 +1,17 @@
 <?php
 
 
-class NewModel_FacebookProvider extends NewModel_iProvider
+class Provider_Facebook extends Provider_Abstract
 {
 	protected $connection = null;
 
 	public function __construct(PDO $db) {
 		parent::__construct($db);
-		$this->type = NewModel_PresenceType::FACEBOOK();
+		$this->type = Enum_PresenceType::FACEBOOK();
         $this->tableName = 'facebook_stream';
 	}
 
-	public function fetchStatusData(NewModel_Presence $presence)
+	public function fetchStatusData(Model_Presence $presence)
 	{
 		if (!$presence->getUID()) {
 			throw new Exception('Presence not initialised/found');
@@ -36,7 +36,7 @@ class NewModel_FacebookProvider extends NewModel_iProvider
         return $count;
 	}
 
-	protected function parseAndInsertStatuses(NewModel_Presence $presence, $postData)
+	protected function parseAndInsertStatuses(Model_Presence $presence, $postData)
 	{
         $insertStmt = $this->db->prepare("
 			INSERT INTO `{$this->tableName}`
@@ -84,7 +84,7 @@ class NewModel_FacebookProvider extends NewModel_iProvider
         return $count;
 	}
 
-    protected function updateResponses(NewModel_Presence $presence) {
+    protected function updateResponses(Model_Presence $presence) {
         $presenceId = $presence->getId();
 
         // update the responses for any non-page posts that don't have a response yet.
@@ -155,7 +155,7 @@ class NewModel_FacebookProvider extends NewModel_iProvider
         return $count;
     }
 
-	public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end,
+	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null)
 	{
         $clauses = array(
@@ -269,7 +269,7 @@ class NewModel_FacebookProvider extends NewModel_iProvider
         return $actors;
     }
 
-	public function getHistoricStreamMeta(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end)
 	{
 		$stmt = $this->db->prepare("
 			SELECT
@@ -318,13 +318,13 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function update(NewModel_Presence $presence)
+	public function update(Model_Presence $presence)
 	{
 		parent::update($presence);
         $presence->facebook_engagement = $this->calculateFacebookEngagement($presence);
 	}
 
-	protected function calculateFacebookEngagement(NewModel_Presence $presence)
+	protected function calculateFacebookEngagement(Model_Presence $presence)
 	{
 		$week = new DateInterval('P6D');
 		$end = new DateTime();
@@ -347,7 +347,7 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 		return $score;
 	}
 
-	protected function getCommentsSharesLikes(NewModel_Presence $presence, DateTime $start, DateTime $end)
+	protected function getCommentsSharesLikes(Model_Presence $presence, DateTime $start, DateTime $end)
 	{
 		$args = array(
 			':pid' => $presence->getId(),
@@ -401,7 +401,7 @@ class NewModel_FacebookProvider extends NewModel_iProvider
         return $links;
     }
 
-    public function updateMetadata(NewModel_Presence $presence) {
+    public function updateMetadata(Model_Presence $presence) {
 
         try {
             $data = Util_Facebook::pageInfo($presence->handle);
@@ -419,12 +419,12 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 	}
 
     /**
-     * @param NewModel_Presence $presence
+     * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return array
      */
-    public function getResponseData(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    public function getResponseData(Model_Presence $presence, DateTime $start, DateTime $end)
     {
         $responseData = array();
         $clauses = array(

@@ -64,7 +64,7 @@ class RegionController extends CampaignController
         if($presenceIds){
 	        $presenceIds = explode(',',html_entity_decode($presenceIds));
             foreach($presenceIds as $id){
-                $presences[$id] = NewModel_PresenceFactory::getPresenceById($id);
+                $presences[$id] = Model_PresenceFactory::getPresenceById($id);
             }
         }
 

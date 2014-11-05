@@ -15,37 +15,31 @@ class Header_Options extends Header_Abstract {
 
     public function getTableCellValue($model)
     {
-        switch(get_class($model)){
-            case "NewModel_Presence":
-                $options = array(
-                    'Edit' => array('controller'=>'presence', 'action'=>'edit', 'id'=>$model->id),
-                    'Delete' => array('controller'=>'presence', 'action'=>'delete', 'id'=>$model->id)
-                );
-                break;
-            case "Model_Country":
-                $options = array(
-                    'Edit' => array('controller'=>'country', 'action'=>'edit', 'id'=>$model->id),
-                    'Presences' => array('controller'=>'country', 'action'=>'manage', 'id'=>$model->id),
-                    'Delete' => array('controller'=>'country', 'action'=>'delete', 'id'=>$model->id)
-                );
-                break;
-            case "Model_Group":
-                $options = array(
-                    'Edit' => array('controller'=>'group', 'action'=>'edit', 'id'=>$model->id),
-                    'Presences' => array('controller'=>'group', 'action'=>'manage', 'id'=>$model->id),
-					'Delete' => array('controller'=>'group', 'action'=>'delete', 'id'=>$model->id)
-                );
-                break;
-            case 'Model_Region':
-                $options = array(
-                    'Edit' => array('controller'=>'region', 'action'=>'edit', 'id'=>$model->id),
-                    'Countries' => array('controller'=>'region', 'action'=>'manage', 'id'=>$model->id),
-					'Delete' => array('controller'=>'region', 'action'=>'delete', 'id'=>$model->id)
-                );
-                break;
-            default:
-                $options = array();
-                break;
+        if ($model instanceof Model_Presence) {
+            $options = array(
+                'Edit' => array('controller'=>'presence', 'action'=>'edit', 'id'=>$model->id),
+                'Delete' => array('controller'=>'presence', 'action'=>'delete', 'id'=>$model->id)
+            );
+        } else if ($model instanceof Model_Country) {
+            $options = array(
+                'Edit' => array('controller'=>'country', 'action'=>'edit', 'id'=>$model->id),
+                'Presences' => array('controller'=>'country', 'action'=>'manage', 'id'=>$model->id),
+                'Delete' => array('controller'=>'country', 'action'=>'delete', 'id'=>$model->id)
+            );
+        } else if ($model instanceof Model_Group) {
+            $options = array(
+                'Edit' => array('controller'=>'group', 'action'=>'edit', 'id'=>$model->id),
+                'Presences' => array('controller'=>'group', 'action'=>'manage', 'id'=>$model->id),
+                'Delete' => array('controller'=>'group', 'action'=>'delete', 'id'=>$model->id)
+            );
+        } else if ($model instanceof Model_Region) {
+            $options = array(
+                'Edit' => array('controller'=>'region', 'action'=>'edit', 'id'=>$model->id),
+                'Countries' => array('controller'=>'region', 'action'=>'manage', 'id'=>$model->id),
+                'Delete' => array('controller'=>'region', 'action'=>'delete', 'id'=>$model->id)
+            );
+        } else {
+            $options = array();
         }
 
         $mappedOptions = array();

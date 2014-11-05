@@ -28,7 +28,7 @@ class PeriodTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testMonth($input, $expected)
 	{
-		$period = Badge_Period::MONTH();
+		$period = Enum_Period::MONTH();
 		$this->assertEquals($expected['month'], $period->getBegin($input));
 	}
 
@@ -38,7 +38,7 @@ class PeriodTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testWeek($input, $expected)
 	{
-		$period = Badge_Period::WEEK();
+		$period = Enum_Period::WEEK();
 		$this->assertEquals($expected['week'], $period->getBegin($input));
 	}
 

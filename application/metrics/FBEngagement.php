@@ -13,12 +13,12 @@ class Metric_FBEngagement extends Metric_Abstract {
 
     /**
      * Gets the average facebook engagement over the given range
-     * @param NewModel_Presence $presence
+     * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return int
      */
-    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $data = $presence->getHistoricData($start, $end, self::getName());
         $total = 0;
@@ -33,7 +33,7 @@ class Metric_FBEngagement extends Metric_Abstract {
         return $total/$count;
     }
 
-    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $score = $presence->getMetricValue($this);
         $score = ($score < $this->target) ? 0 : 100 ;

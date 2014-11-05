@@ -50,9 +50,9 @@ class NewModel_PresenceTest extends PHPUnit_Extensions_Database_TestCase {
         $resourceLoader->addResourceType('refactored', 'models/refactored/', 'NewModel');
         $resourceLoader->addResourceType('metric', 'metrics/', 'Metric');
         $resourceLoader->addResourceType('badge', 'badges/', 'Badge');
-        NewModel_PresenceFactory::setDatabase(self::$pdo);
+        Model_PresenceFactory::setDatabase(self::$pdo);
         Badge_Factory::setDB(self::$pdo);
-        $this->presence = NewModel_PresenceFactory::getPresenceById(1);
+        $this->presence = Model_PresenceFactory::getPresenceById(1);
     }
 
     public function testGetId()
@@ -69,7 +69,7 @@ class NewModel_PresenceTest extends PHPUnit_Extensions_Database_TestCase {
 
     public function testGetOwnerIfOwnerIsGroup()
     {
-        $presence = NewModel_PresenceFactory::getPresenceById(2);
+        $presence = Model_PresenceFactory::getPresenceById(2);
         $owner = $presence->getOwner();
         $this->assertInstanceOf("Model_Group", $owner);
         $this->assertEquals(2, $owner->id);

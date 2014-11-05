@@ -101,23 +101,18 @@ class Chart_Compare extends Chart_Abstract {
 
     protected function getData($model, DateTime $start, DateTime $end)
     {
-        switch(get_class($model)) {
-            case "NewModel_Presence":
-                /** @var NewModel_Presence $model */
-                $data = $model->getBadgeHistory($start, $end);
-                $columns = $this->getColumns($data);
-                $names = $this->getNames($data);
-                break;
-            case "Model_Country":
-            case "Model_Group":
-            case "Model_Region":
-                /** @var Model_Campaign $model */
-                $data = $model->getBadgeHistory($start, $end);
-                $columns = array_values($this->getCampaignColumns($data));
-                $names = $this->getCampaignNames($data);
-                break;
-            default:
-                return array();
+        if ($model instanceof Model_Presence) {
+            /** @var Model_Presence $model */
+            $data = $model->getBadgeHistory($start, $end);
+            $columns = $this->getColumns($data);
+            $names = $this->getNames($data);
+        } else if ($model instanceof Model_Country || $model instanceof Model_Group || $model instanceof Model_Region) {
+            /** @var Model_Campaign $model */
+            $data = $model->getBadgeHistory($start, $end);
+            $columns = array_values($this->getCampaignColumns($data));
+            $names = $this->getCampaignNames($data);
+        } else {
+            return array();
         }
 
 

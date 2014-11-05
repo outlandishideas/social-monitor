@@ -13,12 +13,12 @@ class Metric_ActionsPerDay extends Metric_Abstract {
 
     /**
      * Returns average number of actions per day
-     * @param NewModel_Presence $presence
+     * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return int
      */
-    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end){
+    public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end){
         $data = $presence->getHistoricStreamMeta($start, $end);
 
         $actual = null;
@@ -35,7 +35,7 @@ class Metric_ActionsPerDay extends Metric_Abstract {
 
     }
 
-    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         if ($this->target == 0) {
             return null;

@@ -143,7 +143,7 @@ abstract class GraphingController extends BaseController {
     }
 
     /**
-     * @param $model Model_Campaign|NewModel_Presence
+     * @param $model Model_Campaign|Model_Presence
      * @param Badge_Abstract $badge
      * @return array
      */
@@ -189,7 +189,7 @@ abstract class GraphingController extends BaseController {
 					"title" => $metric::getTitle(),
 					"icon" => $metric::getIcon()
 				);
-				if ($model instanceof NewModel_Presence && $model->getType()->isMetricApplicable($metric)) {
+				if ($model instanceof Model_Presence && $model->getType()->isMetricApplicable($metric)) {
 					$metricScore = $metric->getScore($model, new \DateTime('-30 days'), new \DateTime());
 					if (is_null($metricScore)) {
                         $metricScore = 0;
@@ -211,7 +211,7 @@ abstract class GraphingController extends BaseController {
 	}
 
     /**
-     * @param $model Model_Campaign|NewModel_Presence
+     * @param $model Model_Campaign|Model_Presence
      * @return array
      */
     public function badgeDetails($model)

@@ -19,13 +19,13 @@ class FetchController extends BaseController
 		$lockName = $this->acquireLock();
 		set_time_limit($this->config->app->fetch_time_limit);
 
-		$presences = NewModel_PresenceFactory::getPresences();
+		$presences = Model_PresenceFactory::getPresences();
 		$presenceCount = count($presences);
 
 		$infoInterval = ($this->config->presence->cache_data_hours ?: 4) * 3600;
 
 		//updating presence info
-        usort($presences, function(NewModel_Presence $a, NewModel_Presence $b) {
+        usort($presences, function(Model_Presence $a, NewModel_Presence $b) {
                 $aVal = $a->getLastUpdated() ?: '000000';
                 $bVal = $b->getLastUpdated() ?: '000000';
                 return strcmp($aVal, $bVal);
@@ -56,7 +56,7 @@ class FetchController extends BaseController
 		}
 
 		//updating presence statuses
-        usort($presences, function(NewModel_Presence $a, NewModel_Presence $b) {
+        usort($presences, function(Model_Presence $a, Model_Presence $b) {
                 $aVal = $a->getLastFetched() ?: '000000';
                 $bVal = $b->getLastFetched() ?: '000000';
                 return strcmp($aVal, $bVal);

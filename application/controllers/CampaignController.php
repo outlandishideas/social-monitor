@@ -5,12 +5,12 @@ abstract class CampaignController extends GraphingController
     public function managePresencesList()
     {
         $presences = array();
-        foreach(NewModel_PresenceType::enumValues() as $type) {
-            /** @var NewModel_PresenceType $type */
+        foreach(Enum_PresenceType::enumValues() as $type) {
+            /** @var Enum_PresenceType $type */
             $presences[] = array(
                 'type' => $type->getValue(),
                 'title' => $type->getTitle(),
-                'presences' => NewModel_PresenceFactory::getPresencesByType($type),
+                'presences' => Model_PresenceFactory::getPresencesByType($type),
                 'sign' => $type->getSign()
             );
         }

@@ -13,17 +13,17 @@ class Metric_Klout extends Metric_Abstract {
 
     /**
      * Returns 100 if presence has been signed off, else returns 0
-     * @param NewModel_Presence $presence
+     * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return int
      */
-    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         return $presence->getKloutScore();
     }
 
-    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $actual = $presence->getMetricValue($this);
         $score = ($actual < $this->target) ? 0 : 100 ;

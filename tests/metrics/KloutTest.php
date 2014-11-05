@@ -16,7 +16,7 @@ class KloutTest extends MetricTest
 	 */
 	public function testCalculation($input, $expected)
 	{
-		$presence = $this->getMockBuilder('NewModel_Presence')
+		$presence = $this->getMockBuilder('Model_Presence')
 									->disableOriginalConstructor()
 									->getMock()
 		;

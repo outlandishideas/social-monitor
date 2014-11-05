@@ -46,7 +46,7 @@ class GroupController extends CampaignController {
 
         $this->validateChartRequest();
 
-        /** @var $group NewModel_Presence */
+        /** @var $group Model_Presence */
         $group = Model_Group::fetchById($this->_request->getParam('id'));
         if(!$group) {
             $this->apiError('Group could not be found');
@@ -77,7 +77,7 @@ class GroupController extends CampaignController {
         if($presenceIds){
 	        $presenceIds = explode(',',html_entity_decode($presenceIds));
             foreach($presenceIds as $id){
-                $presences[$id] = NewModel_PresenceFactory::getPresenceById($id);
+                $presences[$id] = Model_PresenceFactory::getPresenceById($id);
             }
         }
 

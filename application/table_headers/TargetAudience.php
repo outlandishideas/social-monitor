@@ -12,7 +12,7 @@ class Header_TargetAudience extends Header_Abstract {
     }
 
     /**
-     * @param NewModel_Presence|Model_Campaign $model
+     * @param Model_Presence|Model_Campaign $model
      * @return null|string
      */
     function getValue($model = null)

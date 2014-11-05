@@ -1,6 +1,6 @@
 <?php
 
-class Badge_Period extends NewModel_Enum
+class Enum_Period extends Enum_Abstract
 {
 	const MONTH = 'month';
 	const WEEK  = 'week';

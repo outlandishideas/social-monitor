@@ -1,10 +1,10 @@
 <?php
 
-abstract class NewModel_iProvider
+abstract class Provider_Abstract
 {
 	protected $db;
 	protected $tableName;
-    /** @var NewModel_PresenceType */
+    /** @var Enum_PresenceType */
     protected $type = null;
 
 	public function __construct(PDO $db)
@@ -14,13 +14,13 @@ abstract class NewModel_iProvider
 
 	/**
 	 * Fetch data for a certain handle (twitter handle, facebook name, sina weibo name etc)
-	 * @param NewModel_Presence $presence  The handle to fetch data for
+	 * @param Model_Presence $presence  The handle to fetch data for
 	 */
-	abstract public function fetchStatusData(NewModel_Presence $presence);
+	abstract public function fetchStatusData(Model_Presence $presence);
 
     /**
      * Get all posts/tweets/streamdata for a specific presence between 2 dates
-     * @param NewModel_Presence $presence The presence to get the data for
+     * @param Model_Presence $presence The presence to get the data for
      * @param \DateTime $start The first day to fetch the data for (inclusive)
      * @param \DateTime $end The last day to fetch the data for (inclusive)
      * @param null $search
@@ -29,12 +29,12 @@ abstract class NewModel_iProvider
      * @param null $offset
      * @return object   The historic streamdata and the total count
      */
-	abstract public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end,
+	abstract public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null);
 
 	/**
 	 * Get all metadata for posts/tweets/streamdata for a specific presence between 2 dates
-	 * @param NewModel_Presence $presence  The presence to get the data for
+	 * @param Model_Presence $presence  The presence to get the data for
 	 * @param \DateTime $start      The first day to fetch the data for (inclusive)
 	 * @param \DateTime $end        The last day to fetch the data for (inclusive)
 	 * @return array   The historic metadata for the stream in format: array(
@@ -42,17 +42,17 @@ abstract class NewModel_iProvider
 	 *                                     										...
 	 *                                 											 )
 	 */
-	abstract public function getHistoricStreamMeta(NewModel_Presence $presence, \DateTime $start, \DateTime $end);
+	abstract public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end);
 
     /**
      * Get performancedata for a specific presence between 2 dates
-     * @param NewModel_Presence $presence The presence to get the data for
+     * @param Model_Presence $presence The presence to get the data for
      * @param \DateTime $start The first day to fetch the data for (inclusive)
      * @param \DateTime $end The last day to fetch the data for (inclusive)
      * @param string $type The type of data to get. Use null to get all
      * @return array   The historic performancedata
      */
-	public function getHistoricData(NewModel_Presence $presence, \DateTime $start, \DateTime $end, $type = null)
+	public function getHistoricData(Model_Presence $presence, \DateTime $start, \DateTime $end, $type = null)
 	{
         $clauses = array(
             '`datetime` >= :start',
@@ -79,12 +79,12 @@ abstract class NewModel_iProvider
 	}
 
     /**
-     * @param NewModel_Presence $presence
+     * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return array
      */
-    public abstract function getResponseData(NewModel_Presence $presence, DateTime $start, DateTime $end);
+    public abstract function getResponseData(Model_Presence $presence, DateTime $start, DateTime $end);
 
     /**
      * @param string $type
@@ -120,9 +120,9 @@ abstract class NewModel_iProvider
     /**
 	 * Updates the presence
 	 *
-	 * @param NewModel_Presence $presence
+	 * @param Model_Presence $presence
 	 */
-	public function update(NewModel_Presence $presence) {
+	public function update(Model_Presence $presence) {
 		$this->updateMetadata($presence);
 	}
 
@@ -132,7 +132,7 @@ abstract class NewModel_iProvider
 	 * @param mixed $presence The presence to update
 	 * @return array|null Return null when handle is invalid, otherwise an array with the following data in order: `type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `klout_id`, `klout_score`, `facebook_engagement`, `last_updated`
 	 */
-	abstract public function updateMetadata(NewModel_Presence $presence);
+	abstract public function updateMetadata(Model_Presence $presence);
 
 	public function getTableName()
 	{

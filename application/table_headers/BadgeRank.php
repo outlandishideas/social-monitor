@@ -14,13 +14,13 @@ abstract class Header_BadgeRank extends Header_Abstract {
     abstract public function getBadgeName();
 
     /**
-     * @param NewModel_Presence|Model_Campaign $model
+     * @param Model_Presence|Model_Campaign $model
      * @throws RuntimeException
      * @return float|null|string
      */
     function getValue($model = null)
     {
-        if ($model instanceof NewModel_Presence) {
+        if ($model instanceof Model_Presence) {
             $badges = $model->getBadges();
         } else if ($model instanceof Model_Campaign) {
             $badges = $model->getBadges();

@@ -103,7 +103,7 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                 /** @var Model_Group $group */
                 foreach($this->groups as $group):
                     $presenceGroups = array();
-                    foreach(NewModel_PresenceType::enumValues() as $type) {
+                    foreach(Enum_PresenceType::enumValues() as $type) {
                         $typePresences = $group->getPresencesByType($type);
                         if (count($typePresences) > 0) {
                             $presenceGroups[] = array(
@@ -131,7 +131,7 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                                             <div class="score-value"><?php echo count($group->getPresences()) ?></div>
                                         </a>
                                     </li>
-                                    <?php foreach ($presenceGroups as $pg) : $type = $pg['type']; /** @var $type NewModel_PresenceType */?>
+                                    <?php foreach ($presenceGroups as $pg) : $type = $pg['type']; /** @var $type Enum_PresenceType */?>
                                         <li>
                                             <a href="#<?php echo $type->getValue(); ?>">
                                                 <h4><?php echo $type->getTitle(); ?></h4>
@@ -143,7 +143,7 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                             </div>
                             <div class="hide-for-small-down">
                                 <ul class="badge-presences" data-all-presences>
-                                    <?php foreach($group->getPresences() as $presence) : /** @var $presence NewModel_Presence */ ?>
+                                    <?php foreach($group->getPresences() as $presence) : /** @var $presence Model_Presence */ ?>
                                         <li>
                                             <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
                                                 <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getHandle(); ?>
@@ -151,9 +151,9 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>
-                                <?php foreach ($presenceGroups as $pg) : $type = $pg['type']; /** @var $type NewModel_PresenceType */ ?>
+                                <?php foreach ($presenceGroups as $pg) : $type = $pg['type']; /** @var $type Enum_PresenceType */ ?>
                                     <ul class="badge-presences" data-<?php echo $type->getValue(); ?>-presences>
-                                        <?php foreach($pg['presences'] as $presence) : /** @var $presence NewModel_Presence */ ?>
+                                        <?php foreach($pg['presences'] as $presence) : /** @var $presence Model_Presence */ ?>
                                             <li>
                                                 <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
                                                     <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getHandle(); ?>

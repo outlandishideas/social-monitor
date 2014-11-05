@@ -18,13 +18,13 @@ abstract class Badge_Abstract
 		$this->db = $db;
 	}
 
-	public function calculate(NewModel_Presence $presence, \DateTime $date = null, Badge_Period $range = null)
+	public function calculate(Model_Presence $presence, \DateTime $date = null, Enum_Period $range = null)
 	{
 		if (is_null($date)) {
 			$date = new \DateTime();
 		}
 		if (is_null($range)) {
-			$range = Badge_Period::MONTH();
+			$range = Enum_Period::MONTH();
 		}
 
 		$totalWeight = 0;
@@ -93,14 +93,14 @@ abstract class Badge_Abstract
 		return $this->metricsWeighting;
 	}
 
-	public function assignRanks(\DateTime $date = null, Badge_Period $range = null)
+	public function assignRanks(\DateTime $date = null, Enum_Period $range = null)
 	{
 		if (is_null($date)) {
 			$date = new \DateTime();
 			$date->modify('-1 day'); //badges always work on yesterday as the most recent day
 		}
 		if (is_null($range)) {
-            $range = Badge_Period::MONTH();
+            $range = Enum_Period::MONTH();
         }
 
 		$name = static::getName();

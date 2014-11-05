@@ -309,8 +309,8 @@ class UserController extends BaseController
 		$this->view->title = 'User Permissions';
 		$this->view->titleIcon = 'icon-tasks';
 		$this->view->editingUser = $user;
-		$this->view->twitterPresences = NewModel_PresenceFactory::getPresencesByType(NewModel_PresenceType::TWITTER());
-		$this->view->facebookPresences = NewModel_PresenceFactory::getPresencesByType(NewModel_PresenceType::FACEBOOK());
+		$this->view->twitterPresences = Model_PresenceFactory::getPresencesByType(Enum_PresenceType::TWITTER());
+		$this->view->facebookPresences = Model_PresenceFactory::getPresencesByType(Enum_PresenceType::FACEBOOK());
 		$this->view->countries = Model_Country::fetchAll();
 		$this->view->groups = Model_Group::fetchAll();
 	}

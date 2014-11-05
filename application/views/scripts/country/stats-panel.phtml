@@ -1,14 +1,14 @@
 <?php
 /** @var Model_Country $country */
 $country = $this->country;
-/** @var NewModel_Presence[] $presences */
+/** @var Model_Presence[] $presences */
 $presences = $country->getPresences();
 $countryLink = $this->gatekeeper()->filter('<a href="%url%">' . $country->display_name . '</a>', array('controller'=>'country', 'action'=>'view', 'id'=>$country->id));
 if (!$countryLink) {
     $countryLink = $country->display_name;
 }
 $presenceGroups = array();
-foreach(NewModel_PresenceType::enumValues() as $type) {
+foreach(Enum_PresenceType::enumValues() as $type) {
     $typePresences = $country->getPresencesByType($type);
     if(count($typePresences) > 0) {
         $group = array();

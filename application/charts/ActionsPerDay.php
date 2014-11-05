@@ -26,23 +26,18 @@ class Chart_ActionsPerDay extends Chart_Abstract {
     {
         $names = array();
         $dataSets = array();
-        switch(get_class($model)) {
-            case "NewModel_Presence":
-                /** @var NewModel_Presence $model */
-                $data = $model->getActionsPerDayData($start, $end);
-                if ($data) {
-                    $key = Metric_ActionsPerDay::getName();
-                    $key2 = 'relevant';
-                    $names[$key] = Metric_ActionsPerDay::getTitle();
-                    $names[$key2] = 'Relevant links per day';
-                    $dataSets[$key] = $data;
-                }
-                break;
-            case "Model_Country":
-            case "Model_Group":
-            case "Model_Region":
-            default:
-                return array();
+        if (!($model instanceof Model_Presence)) {
+            return array();
+        }
+
+        /** @var Model_Presence $model */
+        $data = $model->getActionsPerDayData($start, $end);
+        if ($data) {
+            $key = Metric_ActionsPerDay::getName();
+            $key2 = 'relevant';
+            $names[$key] = Metric_ActionsPerDay::getTitle();
+            $names[$key2] = 'Relevant links per day';
+            $dataSets[$key] = $data;
         }
 
         $columns = array();

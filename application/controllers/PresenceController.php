@@ -19,8 +19,8 @@ class PresenceController extends GraphingController
 	 */
 	public function indexAction()
 	{
-		NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
-		$presences = NewModel_PresenceFactory::getPresences();
+		Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
+		$presences = Model_PresenceFactory::getPresences();
 
         $this->view->title = 'Presences';
         $this->view->presences = $presences;
@@ -33,14 +33,14 @@ class PresenceController extends GraphingController
 	 */
 	public function viewAction()
 	{
-		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		$this->validateData($presence);
 
 		$this->view->presence = $presence;
 		$this->view->badgePartial = $this->badgeDetails($presence);
 		$this->view->chartOptions = $this->chartOptions();
         $allPresences = array();
-        foreach (NewModel_PresenceFactory::getPresences() as $p) {
+        foreach (Model_PresenceFactory::getPresences() as $p) {
             $group = $p->getType()->getTitle();
             if (!isset($allPresences[$group])) {
                 $allPresences[$group] = array();
@@ -58,7 +58,7 @@ class PresenceController extends GraphingController
     {
         $compareData = array();
         foreach(explode(',',$this->_request->getParam('id')) as $id){
-            $presence = NewModel_PresenceFactory::getPresenceById($id);
+            $presence = Model_PresenceFactory::getPresenceById($id);
             $this->validateData($presence);
             $compareData[$id] = (object)array(
 	            'presence'=>$presence,
@@ -93,10 +93,10 @@ class PresenceController extends GraphingController
 	 */
 	public function editAction()
 	{
-        NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
+        Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
 
 		if ($this->_request->getActionName() == 'edit') {
-            $presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+            $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
             $this->view->showButtons = true;
 		} else {
 			$presence = (object)array(
@@ -138,8 +138,8 @@ class PresenceController extends GraphingController
             if (!$errorMessages) {
                 try {
                     if (!$presence->id) {
-                        $type = NewModel_PresenceType::get($type);
-                        $presence = NewModel_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
+                        $type = Enum_PresenceType::get($type);
+                        $presence = Model_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
                     } else {
                         $presence->update();
                         $presence->save();
@@ -164,7 +164,7 @@ class PresenceController extends GraphingController
 		}
 
         $this->view->editType = false;
-		$this->view->types = NewModel_PresenceType::enumValues();
+		$this->view->types = Enum_PresenceType::enumValues();
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->groups = Model_Group::fetchAll();
 		$this->view->presence = $presence;
@@ -178,7 +178,7 @@ class PresenceController extends GraphingController
 	 */
 	public function deleteAction()
 	{
-		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		$this->validateData($presence);
 
 		if ($this->_request->isPost()) {
@@ -199,7 +199,7 @@ class PresenceController extends GraphingController
 
 		$this->validateChartRequest();
 
-		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		if(!$presence) {
 			$this->apiError('Presence could not be found');
 		}
@@ -238,7 +238,7 @@ class PresenceController extends GraphingController
 			$this->apiError('Missing date range');
 		}
 
-		$presence = NewModel_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		if (!$presence) {
 			$this->apiError('Presence not found');
 		}
@@ -323,7 +323,7 @@ class PresenceController extends GraphingController
                 $post = (object)$post;
 				$tableData[] = array(
 					'id'	=> $post->id,
-					'url'	=> NewModel_SinaWeiboProvider::BASEURL . $post->remote_user_id . '/' . NewModel_SinaWeiboProvider::getMidForPostId($post->remote_id),
+					'url'	=> Provider_SinaWeibo::BASEURL . $post->remote_user_id . '/' . Provider_SinaWeibo::getMidForPostId($post->remote_id),
 					'message' => $post->text,
                     'links' => $post->links,
 					'date' => Model_Base::localeDate($post->created_at)
@@ -356,8 +356,8 @@ class PresenceController extends GraphingController
 	}
 
     public function downloadAction() {
-        NewModel_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
-        $presences = NewModel_PresenceFactory::getPresences();
+        Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
+        $presences = Model_PresenceFactory::getPresences();
 
         $csvData = Util_Csv::generateCsvData($presences, $this->tableIndexHeaders());
 

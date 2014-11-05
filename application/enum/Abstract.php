@@ -11,7 +11,7 @@
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
  */
-abstract class NewModel_Enum
+abstract class Enum_Abstract
 {
     /**
      * Enum value
@@ -76,7 +76,7 @@ abstract class NewModel_Enum
     }
 
     /**
-     * @return NewModel_PresenceType[]
+     * @return Enum_PresenceType[]
      */
     public static function enumValues()
     {

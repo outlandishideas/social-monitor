@@ -11,13 +11,13 @@ class Badge_Total extends Badge_Abstract
                     <li>Quality KPI</li>
                 </ul>';
 
-	public function calculate(NewModel_Presence $presence, \DateTime $date = null, Badge_Period $range = null)
+	public function calculate(Model_Presence $presence, \DateTime $date = null, Enum_Period $range = null)
 	{
 		if (is_null($date)) {
 			$date = new \DateTime();
 		}
 		if (is_null($range)) {
-			$range = Badge_Period::MONTH();
+			$range = Enum_Period::MONTH();
 		}
 
 		$badgeNames = array(
@@ -47,7 +47,7 @@ class Badge_Total extends Badge_Abstract
 		return $result;
 	}
 
-	public function assignRanks(\DateTime $date = null, Badge_Period $range = null)
+	public function assignRanks(\DateTime $date = null, Enum_Period $range = null)
 	{
 		return; //do nothing
 	}

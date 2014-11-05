@@ -1,6 +1,6 @@
 <?php
 
-class NewModel_Presence
+class Model_Presence
 {
 	protected $provider;
 	protected $db;
@@ -15,7 +15,7 @@ class NewModel_Presence
 	//these should be public to mimic existing Presence Class
 	public $id;
 	public $handle;
-    /** @var NewModel_PresenceType */
+    /** @var Enum_PresenceType */
 	public $type;
 	public $name;
 	public $label;
@@ -45,12 +45,12 @@ class NewModel_Presence
      * todo: only pass in a (mockable) type instead?
      * @param PDO $db
      * @param array $internals
-     * @param NewModel_iProvider $provider
+     * @param Provider_Abstract $provider
      * @param array $metrics
      * @param array $badges
      * @throws InvalidArgumentException
      */
-    public function __construct(PDO $db, array $internals, NewModel_iProvider $provider, array $metrics = array(), array $badges = array())
+    public function __construct(PDO $db, array $internals, Provider_Abstract $provider, array $metrics = array(), array $badges = array())
 	{
 		$this->db = $db;
 		$this->provider = $provider;
@@ -122,7 +122,7 @@ class NewModel_Presence
 
 	public function setType($typeName)
 	{
-        $this->type = NewModel_PresenceType::get($typeName);
+        $this->type = Enum_PresenceType::get($typeName);
 	}
 
 	public function getName()
@@ -231,17 +231,17 @@ class NewModel_Presence
 
 	public function isForTwitter()
 	{
-		return $this->getType()->getValue() == NewModel_PresenceType::TWITTER;
+		return $this->getType()->getValue() == Enum_PresenceType::TWITTER;
 	}
 
 	public function isForFacebook()
 	{
-		return $this->getType()->getValue() == NewModel_PresenceType::FACEBOOK;
+		return $this->getType()->getValue() == Enum_PresenceType::FACEBOOK;
 	}
 
 	public function isForSinaWeibo()
 	{
-		return $this->getType()->getValue() == NewModel_PresenceType::SINA_WEIBO;
+		return $this->getType()->getValue() == Enum_PresenceType::SINA_WEIBO;
 	}
 
     /**
@@ -274,7 +274,7 @@ class NewModel_Presence
 					$size = $this->getSize();
 					// get the number of presences of the same size as $this
 					$presenceCount = count(array_filter($owner->getPresences(), function($presence) use ($size) {
-						/** @var NewModel_Presence $presence */
+						/** @var Model_Presence $presence */
 						return $presence->getSize() == $size;
 					}));
 
@@ -285,13 +285,13 @@ class NewModel_Presence
 				}
 				$percent = 0;
 				switch ($this->getType()->getValue()) {
-					case NewModel_PresenceType::SINA_WEIBO:
+					case Enum_PresenceType::SINA_WEIBO:
 						$percent = BaseController::getOption('sw_min');
 						break;
-					case NewModel_PresenceType::FACEBOOK:
+					case Enum_PresenceType::FACEBOOK:
 						$percent = BaseController::getOption('fb_min');
 						break;
-					case NewModel_PresenceType::TWITTER:
+					case Enum_PresenceType::TWITTER:
 						$percent = BaseController::getOption('tw_min');
 						break;
 				}
@@ -486,7 +486,7 @@ class NewModel_Presence
         }
     }
 
-    public function getBadgeScores(DateTime $date, Badge_Period $range) {
+    public function getBadgeScores(DateTime $date, Enum_Period $range) {
         if (!$date || !$range) {
             throw new LogicException('date cannot be null');
         }
@@ -515,7 +515,7 @@ class NewModel_Presence
 
 	public function getBadgeHistory(DateTime $start, DateTime $end)
 	{
-		return Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), $start, $end, array($this->getId()));
+		return Badge_Factory::getAllCurrentData(Enum_Period::MONTH(), $start, $end, array($this->getId()));
 	}
 
 	public static function getAllBadges()
@@ -668,7 +668,7 @@ class NewModel_Presence
 			'size' => $this->getSize()
         );
 
-        $query = 'UPDATE '.NewModel_PresenceFactory::TABLE_PRESENCES.' '.
+        $query = 'UPDATE '.Model_PresenceFactory::TABLE_PRESENCES.' '.
             'SET '.implode('=?, ', array_keys($data)).'=? '.
             'WHERE id=?';
         //add id to fill last placeholder
@@ -690,7 +690,7 @@ class NewModel_Presence
             $this->db->prepare("DELETE FROM $table WHERE presence_id = :pid")
                 ->execute(array(':pid'=>$this->id));
         }
-        $this->db->prepare('DELETE FROM '.NewModel_PresenceFactory::TABLE_PRESENCES.' WHERE id = ?')
+        $this->db->prepare('DELETE FROM '.Model_PresenceFactory::TABLE_PRESENCES.' WHERE id = ?')
             ->execute(array($this->id));
     }
 

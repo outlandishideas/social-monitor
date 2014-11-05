@@ -1,7 +1,7 @@
 <?php
 
 
-class NewModel_TwitterProvider extends NewModel_iProvider
+class Provider_Twitter extends Provider_Abstract
 {
 	protected $connection = null;
 
@@ -11,11 +11,11 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 
 	public function __construct(PDO $db) {
 		parent::__construct($db);
-		$this->type = NewModel_PresenceType::TWITTER();
+		$this->type = Enum_PresenceType::TWITTER();
         $this->tableName = 'twitter_tweets';
 	}
 
-	public function fetchStatusData(NewModel_Presence $presence)
+	public function fetchStatusData(Model_Presence $presence)
 	{
 		if (!$presence->uid) {
 			throw new Exception('Presence not initialised/found');
@@ -33,7 +33,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 	}
 
     /**
-     * @param NewModel_Presence $presence
+     * @param Model_Presence $presence
      * @param array $tweetData
      * @param bool $mentions
      * @return array
@@ -72,7 +72,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
             try {
                 $stmt->execute($args);
                 $id = $this->db->lastInsertId();
-                if (!empty($tweet->entities->urls)) {
+                if (!empty($tweet->entities->urls) && !$mentions) {
                     $links[$id] = array_map(function($a) { return $a->expanded_url; }, $tweet->entities->urls);
                 }
                 $count++;
@@ -86,13 +86,14 @@ class NewModel_TwitterProvider extends NewModel_iProvider
         return $count;
     }
 
-	public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end,
+	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null)
 	{
         $clauses = array(
             'p.created_time >= :start',
             'p.created_time <= :end',
             'p.presence_id = :id',
+            'p.responsible_presence IS NULL'
         );
         $args = array(
             ':start' => $start->format('Y-m-d H:i:s'),
@@ -133,7 +134,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 	}
 
 
-	public function getHistoricStreamMeta(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end)
 	{
 		$stmt = $this->db->prepare("
 			SELECT
@@ -183,7 +184,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 	}
 
 
-	public function update(NewModel_Presence $presence)
+	public function update(Model_Presence $presence)
 	{
         parent::update($presence);
         $kloutId = $presence->getKloutId();
@@ -248,7 +249,7 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 		return null;
 	}
 
-	public function updateMetadata(NewModel_Presence $presence) {
+	public function updateMetadata(Model_Presence $presence) {
 
         try {
             $data = Util_Twitter::userInfo($presence->handle);
@@ -266,12 +267,12 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 	}
 
     /**
-     * @param NewModel_Presence $presence
+     * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return array
      */
-    public function getResponseData(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    public function getResponseData(Model_Presence $presence, DateTime $start, DateTime $end)
     {
         $responseData = array();
         $clauses = array(

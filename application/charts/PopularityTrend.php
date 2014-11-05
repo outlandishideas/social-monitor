@@ -30,30 +30,25 @@ class Chart_PopularityTrend extends Chart_Abstract {
 
         $names = array();
         $dataSets = array();
-        switch(get_class($model)) {
-            case "NewModel_Presence":
-                /** @var NewModel_Presence $model */
-                $data = $model->getPopularityData($start, $end);
+        if ($model instanceof Model_Presence) {
+            /** @var Model_Presence $model */
+            $data = $model->getPopularityData($start, $end);
+            if ($data) {
+                $key = Metric_Popularity::getName();
+                $names[$key] = Metric_Popularity::getTitle();
+                $dataSets[$key] = $data;
+            }
+        } else if ($model instanceof Model_Country || $model instanceof Model_Group || $model instanceof Model_Region) {
+            /** @var Model_Campaign $model */
+            foreach ($model->getPresences() as $presence) {
+                $data = $presence->getPopularityData($start, $end);
                 if ($data) {
-                    $key = Metric_Popularity::getName();
-                    $names[$key] = Metric_Popularity::getTitle();
-                    $dataSets[$key] = $data;
+                    $dataSets[$presence->getId()] = $data;
+                    $names[$presence->getId()] = $presence->getName();
                 }
-                break;
-            case "Model_Country":
-            case "Model_Group":
-            case "Model_Region":
-                /** @var Model_Campaign $model */
-                foreach ($model->getPresences() as $presence) {
-                    $data = $presence->getPopularityData($start, $end);
-                    if ($data) {
-                        $dataSets[$presence->getId()] = $data;
-                        $names[$presence->getId()] = $presence->getName();
-                    }
-                }
-                break;
-            default:
-                return array();
+            }
+        } else {
+            return array();
         }
 
         $columns = array();

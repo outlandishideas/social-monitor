@@ -55,7 +55,7 @@ abstract class Badge_Factory
 	}
 
 	public static function guaranteeHistoricalData(
-		Badge_Period $dateRange,
+		Enum_Period $dateRange,
 		\DateTime $startDate,
 		\DateTime $endDate,
         $log = null,
@@ -80,9 +80,9 @@ abstract class Badge_Factory
 		}
 
 		if (count($presenceIds)) {
-			$presences = NewModel_PresenceFactory::getPresencesById($presenceIds);
+			$presences = Model_PresenceFactory::getPresencesById($presenceIds);
 		} else {
-			$presences = NewModel_PresenceFactory::getPresences();
+			$presences = Model_PresenceFactory::getPresences();
 		}
 
 		$currentDate = clone $startDate;
@@ -157,14 +157,14 @@ abstract class Badge_Factory
     /**
      * Gets all of the badge history data for the given presences, in the given date range, with the campaign(s) they belong to.
      * If no presence IDs are given, all presence data is returned
-     * @param Badge_Period $dateRange
+     * @param Enum_Period $dateRange
      * @param DateTime $startDate
      * @param DateTime $endDate
      * @param array $presenceIds
      * @return array|null
      */
     public static function getAllCurrentData(
-		Badge_Period $dateRange,
+		Enum_Period $dateRange,
 		\DateTime $startDate,
 		\DateTime $endDate,
 		$presenceIds = array()
@@ -238,7 +238,7 @@ abstract class Badge_Factory
 			for ($i = 0; $i < 5; $i++) {
 				// while no count data keep trying further back in the past.
 				// only try 5 times, as it is probably a new presence and so has no cached data
-				$data = Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), $startDate, $endDate);
+				$data = Badge_Factory::getAllCurrentData(Enum_Period::MONTH(), $startDate, $endDate);
 				if ($data) {
 					break;
 				}

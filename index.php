@@ -44,11 +44,12 @@ $resourceLoader = new Zend_Application_Module_Autoloader(array(
 ));
 $resourceLoader->addResourceType('exception', 'exceptions/', 'Exception');
 $resourceLoader->addResourceType('util', 'util/', 'Util');
-$resourceLoader->addResourceType('refactored', 'models/refactored/', 'NewModel');
 $resourceLoader->addResourceType('metric', 'metrics/', 'Metric');
 $resourceLoader->addResourceType('badge', 'badges/', 'Badge');
 $resourceLoader->addResourceType('chart', 'charts/', 'Chart');
 $resourceLoader->addResourceType('header', 'table_headers/', 'Header');
+$resourceLoader->addResourceType('provider', 'providers/', 'Provider');
+$resourceLoader->addResourceType('enum', 'enum/', 'Enum');
 
 //load config
 if (!file_exists(APPLICATION_PATH . '/configs/config.yaml')) {
@@ -67,7 +68,7 @@ Zend_Registry::set('db', $db);
 
 
 //set db for PresenceFactory
-NewModel_PresenceFactory::setDatabase($db->getConnection());
+Model_PresenceFactory::setDatabase($db->getConnection());
 
 //set up logging
 //$logger = new Zend_Log();

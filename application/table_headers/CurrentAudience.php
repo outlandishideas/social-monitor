@@ -12,7 +12,7 @@ class Header_CurrentAudience extends Header_Abstract {
     }
 
     /**
-     * @param NewModel_Presence $model
+     * @param Model_Presence $model
      * @return string
      */
     function getValue($model = null)

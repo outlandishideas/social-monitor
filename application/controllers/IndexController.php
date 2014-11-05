@@ -33,7 +33,7 @@ class IndexController extends GraphingController
         );
 
 		$totalScore = 0;
-		$allBadges = NewModel_Presence::getAllBadges();
+		$allBadges = Model_Presence::getAllBadges();
 		if(count($allBadges) > 0 ){
 			foreach($allBadges as $presence) {
 				$totalScore += $presence['total'];
@@ -99,7 +99,7 @@ class IndexController extends GraphingController
 		if(!$badgeData){
 			//todo include week data in the data that we send out as json
 			$badgeData = Badge_Factory::getAllCurrentData(
-				Badge_Period::MONTH(),
+				Enum_Period::MONTH(),
 				new \DateTime("now -$dayRange days"),
 				new \DateTime('now')
 			);
@@ -173,7 +173,7 @@ class IndexController extends GraphingController
         };
 
         // make sure all KPI data is up-to-date
-        $presences = NewModel_PresenceFactory::getPresences();
+        $presences = Model_PresenceFactory::getPresences();
         $endDate = new DateTime();
         $startDate = new DateTime();
         $startDate->modify('-30 days');
@@ -188,7 +188,7 @@ class IndexController extends GraphingController
         $log('Recalculating badges');
 
 		// make sure that the last 60 day's worth of badge_history data exists
-		Badge_Factory::guaranteeHistoricalData(Badge_Period::MONTH(), new \DateTime('now -60 days'), new \DateTime('now'), $log);
+		Badge_Factory::guaranteeHistoricalData(Enum_Period::MONTH(), new \DateTime('now -60 days'), new \DateTime('now'), $log);
 
 		// do everything that the index page does, but using the (potentially) updated data
 		$this->getCacheableData(30, false);
@@ -198,11 +198,11 @@ class IndexController extends GraphingController
         $oldData = self::getObjectCache($key, false);
         if(!$oldData) {
             //if no oldData (too old or temp) get current data (which is now up to date) and set it in the object cache
-            $data = Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), new DateTime(), new DateTime());
+            $data = Badge_Factory::getAllCurrentData(Enum_Period::MONTH(), new DateTime(), new DateTime());
             self::setObjectCache($key, $data, false);
         }
 
-//		Badge_Factory::getAllCurrentData(Badge_Period::WEEK(), new DateTime(), new DateTime()); //todo: uncomment this when it is needed
+//		Badge_Factory::getAllCurrentData(Enum_Period::WEEK(), new DateTime(), new DateTime()); //todo: uncomment this when it is needed
 
         $log('Recalculating badges complete');
 

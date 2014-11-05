@@ -17,7 +17,7 @@ class CountryController extends CampaignController {
 		/** @var Model_Country[] $countries */
 		$countries = Model_Country::fetchAll();
 		$presences = array();
-		foreach (NewModel_PresenceFactory::getPresences() as $p) {
+		foreach (Model_PresenceFactory::getPresences() as $p) {
 			$presences[$p->id] = $p;
 		}
 		$query = self::db()->prepare('SELECT c.id, cp.presence_id FROM campaigns AS c LEFT OUTER JOIN campaign_presences AS cp ON c.id = cp.campaign_id');
@@ -302,7 +302,7 @@ class CountryController extends CampaignController {
 
 		$this->validateChartRequest();
 
-		/** @var $presence NewModel_Presence */
+		/** @var $presence Model_Presence */
 		$presence = Model_Country::fetchById($this->_request->getParam('id'));
 		if(!$presence) {
 			$this->apiError('Country could not be found');

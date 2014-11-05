@@ -1,8 +1,8 @@
 <?php
 
-require_once(__DIR__.'/../../../lib/sina_weibo/sinaweibo.php');
+require_once(__DIR__ . '/../../lib/sina_weibo/sinaweibo.php');
 
-class NewModel_SinaWeiboProvider extends NewModel_iProvider
+class Provider_SinaWeibo extends Provider_Abstract
 {
 	const BASEURL = 'http://www.weibo.com/';
 
@@ -14,11 +14,11 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		if (!array_key_exists('REMOTE_ADDR', $_SERVER)) {
 			$this->connection->set_remote_ip('127.0.0.1');
 		}
-		$this->type = NewModel_PresenceType::SINA_WEIBO();
+		$this->type = Enum_PresenceType::SINA_WEIBO();
         $this->tableName = 'sina_weibo_posts';
 	}
 
-	public function fetchStatusData(NewModel_Presence $presence)
+	public function fetchStatusData(Model_Presence $presence)
 	{
 		$stmt = $this->db->prepare("SELECT MAX(`remote_id`) AS `since_id` FROM `{$this->tableName}` WHERE `presence_id` = ".$presence->getId());
 		$stmt->execute();
@@ -49,7 +49,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
         return $count;
 	}
 
-	public function getHistoricStream (NewModel_Presence $presence, \DateTime $start, \DateTime $end,
+	public function getHistoricStream (Model_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null
 	) {
 		$sql = "
@@ -132,7 +132,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
         );
 	}
 
-	public function getHistoricStreamMeta(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end)
 	{
 		$stmt = $this->db->prepare("
 			SELECT
@@ -194,8 +194,8 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 			$this->findAndSaveLinks($status['text'], $id);
 			if (array_key_exists('retweeted_status', $status)) {
 				$s = $status['retweeted_status'];
-				NewModel_PresenceFactory::setDatabase($this->db);
-				$presence = NewModel_PresenceFactory::getPresenceByHandle($s['user']['profile_url'], $this->type);
+				Model_PresenceFactory::setDatabase($this->db);
+				$presence = Model_PresenceFactory::getPresenceByHandle($s['user']['profile_url'], $this->type);
 				$s['posted_by_presence'] = $presence ? 1 : 0;
 				$s['presence_id'] = $presence ? $presence->getId() : null;
 				$count += $this->parseStatus($s);
@@ -264,7 +264,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		}
 	}
 
-	public function updateMetadata(NewModel_Presence $presence) {
+	public function updateMetadata(Model_Presence $presence) {
 		//test if user exists
 		$ret = $this->connection->show_user_by_name($presence->getHandle());
 		if (!is_array($ret)) {
@@ -305,7 +305,7 @@ class NewModel_SinaWeiboProvider extends NewModel_iProvider
 		return $mid;
 	}
 
-    public function getResponseData(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    public function getResponseData(Model_Presence $presence, DateTime $start, DateTime $end)
     {
         return array();
     }

@@ -8,18 +8,18 @@ class Metric_Popularity extends Metric_Abstract {
 
     /**
      * Calculates the average percentage of target popularity from a range of popularity values
-     * @param NewModel_Presence $presence
+     * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return int
      */
-    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $popularity = $presence->getPopularity();
         return $popularity == 0 ? null : $popularity;
     }
 
-    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $current = $presence->getMetricValue($this);
         $target = $presence->getTargetAudience();

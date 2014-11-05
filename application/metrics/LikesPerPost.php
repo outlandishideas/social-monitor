@@ -13,12 +13,12 @@ class Metric_LikesPerPost extends Metric_Abstract {
 
     /**
      * Calculates average number of likes per post
-     * @param NewModel_Presence $presence
+     * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return int
      */
-    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         if (!$presence->isForFacebook()) {
             return null;
@@ -47,7 +47,7 @@ class Metric_LikesPerPost extends Metric_Abstract {
 
     }
 
-    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         if ($this->target == 0 || !$presence->isForFacebook()) {
             return null;

@@ -91,8 +91,8 @@ class Model_Campaign extends Model_Base {
 	 * Gets the presences for this campaign. If $mapping and $allPresences are present, they will be used instead
 	 * of doing a database query
 	 * @param array $mapping
-	 * @param NewModel_Presence[] $allPresences
-	 * @return NewModel_Presence[]
+	 * @param Model_Presence[] $allPresences
+	 * @return Model_Presence[]
 	 */
 	function getPresences($mapping = null, $allPresences = null) {
 		if (!isset($this->presences)) {
@@ -106,7 +106,7 @@ class Model_Campaign extends Model_Base {
 						}
 					}
 				} else {
-					$this->presences = NewModel_PresenceFactory::getPresencesById($ids);
+					$this->presences = Model_PresenceFactory::getPresencesById($ids);
 				}
 			}
 		}
@@ -114,12 +114,12 @@ class Model_Campaign extends Model_Base {
 	}
 
     /**
-     * @param NewModel_PresenceType $type
-     * @return NewModel_Presence[]
+     * @param Enum_PresenceType $type
+     * @return Model_Presence[]
      */
-    public function getPresencesByType(NewModel_PresenceType $type){
+    public function getPresencesByType(Enum_PresenceType $type){
 		$presences = $this->getPresences();
-		return array_filter($presences, function(NewModel_Presence $a) use ($type) {
+		return array_filter($presences, function(Model_Presence $a) use ($type) {
 			return $a->getType() == $type;
 		});
 	}
@@ -172,11 +172,11 @@ class Model_Campaign extends Model_Base {
         if (!$presenceIds) {
             return array();
         }
-		return Badge_Factory::getAllCurrentData(Badge_Period::MONTH(), $start, $end, $presenceIds);
+		return Badge_Factory::getAllCurrentData(Enum_Period::MONTH(), $start, $end, $presenceIds);
 	}
 
     /**
-     * Very similar to NewModel_Presence::getAllBadges, but presences are grouped and keyed by campaign ID
+     * Very similar to Model_Presence::getAllBadges, but presences are grouped and keyed by campaign ID
      * @return array
      */
     public static function getAllBadges()

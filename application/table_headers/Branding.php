@@ -21,7 +21,7 @@ class Header_Branding extends Header_Abstract {
     }
 
     /**
-     * @param NewModel_Presence $model
+     * @param Model_Presence $model
      * @return int|null
      */
     function getValue($model = null)

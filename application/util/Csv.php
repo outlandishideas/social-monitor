@@ -2,7 +2,7 @@
 
 class Util_Csv {
     /**
-     * @param NewModel_Presence[]|Model_Campaign[] $models
+     * @param Model_Presence[]|Model_Campaign[] $models
      * @param Header_Abstract[] $headers
      * @return array
      */
@@ -39,7 +39,7 @@ class Util_Csv {
                 } else if ($model instanceof Model_Region) {
                     $dataTypes[] = Header_Abstract::MODEL_TYPE_REGION;
                 }
-            } else if ($model instanceof NewModel_Presence) {
+            } else if ($model instanceof Model_Presence) {
                 $dataTypes[] = Header_Abstract::MODEL_TYPE_PRESENCE;
             }
 

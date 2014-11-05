@@ -20,7 +20,7 @@ class Header_SignOff extends Header_Abstract {
     }
 
     /**
-     * @param NewModel_Presence $model
+     * @param Model_Presence $model
      * @return null
      */
     function getValue($model = null)

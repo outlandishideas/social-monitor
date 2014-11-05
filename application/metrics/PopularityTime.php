@@ -14,12 +14,12 @@ class Metric_PopularityTime extends Metric_Abstract {
     /**
      * Counts the months between now and estimated date of reaching target audience
      * calculates score based on
-     * @param NewModel_Presence $presence
+     * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return null/string
      */
-    public function calculate(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $estimate = $this->getTargetAudienceDate($presence, $start, $end);
         $actualMonths = null;
@@ -40,12 +40,12 @@ class Metric_PopularityTime extends Metric_Abstract {
      * - the calculated date is in the past
      * - there are fewer than 2 data points
      * - the calculated date would be too far in the future (32-bit date problem)
-     * @param NewModel_Presence $presence
+     * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
      * @return null|DateTime
      */
-    protected function getTargetAudienceDate(NewModel_Presence $presence, DateTime $start, DateTime $end)
+    protected function getTargetAudienceDate(Model_Presence $presence, DateTime $start, DateTime $end)
     {
         $date = new DateTime; //the return value
 
@@ -109,7 +109,7 @@ class Metric_PopularityTime extends Metric_Abstract {
         return $date;
     }
 
-    public function getScore(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
+    public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $score = null;
 

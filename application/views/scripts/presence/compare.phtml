@@ -51,7 +51,7 @@
             <?php endforeach; ?>
         </tr>
 
-        <?php foreach($this->compareData as $data) : /** @var NewModel_Presence $presence */ $presence = $data->presence; ?>
+        <?php foreach($this->compareData as $data) : /** @var Model_Presence $presence */ $presence = $data->presence; ?>
             <tr>
                 <td>
                     <div class="presence <?php echo $presence->type; ?>">
