@@ -25,7 +25,7 @@ class FetchController extends BaseController
 		$infoInterval = ($this->config->presence->cache_data_hours ?: 4) * 3600;
 
 		//updating presence info
-        usort($presences, function(Model_Presence $a, NewModel_Presence $b) {
+        usort($presences, function(Model_Presence $a, Model_Presence $b) {
                 $aVal = $a->getLastUpdated() ?: '000000';
                 $bVal = $b->getLastUpdated() ?: '000000';
                 return strcmp($aVal, $bVal);
