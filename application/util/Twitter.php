@@ -199,7 +199,11 @@ class Util_Twitter {
         }
 
         if ($isRetweet) {
-            $rt = 'RT <a href="https://twitter.com/' . $tweet->retweeted_status->user->screen_name . '" target="_blank">@' . $tweet->retweeted_status->user->screen_name . '</a>: ';
+            $rt = 'RT ';
+            if (!empty($tweet->retweeted_status->user->screen_name)) {
+                $screenName = $tweet->retweeted_status->user->screen_name;
+                $rt .= '<a href="https://twitter.com/' . $screenName . '" target="_blank">@' . $screenName . '</a>: ';
+            }
             $htmlTweet = $rt . $htmlTweet;
             $expandedText = $rt . $expandedText;
         }
