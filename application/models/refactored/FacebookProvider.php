@@ -224,15 +224,17 @@ class NewModel_FacebookProvider extends NewModel_iProvider
      */
     protected function getResponses($presenceId, $facebookIds)
     {
-        $idString = array_map(function($a) { return "'" . $a . "'"; }, $facebookIds);
-        $idString = implode(',', $idString);
-        $stmt = $this->db->prepare("SELECT * FROM facebook_stream WHERE presence_id = :pid AND in_response_to IN ($idString)");
-        $stmt->execute(array(':pid'=>$presenceId));
         $responses = array();
-        foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $response) {
-            $key = $response->in_response_to;
-            if (!array_key_exists($key, $responses) || ($response->created_time < $responses[$key]->created_time)) {
-                $responses[$key] = $response;
+        if ($facebookIds) {
+            $idString = array_map(function($a) { return "'" . $a . "'"; }, $facebookIds);
+            $idString = implode(',', $idString);
+            $stmt = $this->db->prepare("SELECT * FROM facebook_stream WHERE presence_id = :pid AND in_response_to IN ($idString)");
+            $stmt->execute(array(':pid'=>$presenceId));
+            foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $response) {
+                $key = $response->in_response_to;
+                if (!array_key_exists($key, $responses) || ($response->created_time < $responses[$key]->created_time)) {
+                    $responses[$key] = $response;
+                }
             }
         }
         return $responses;
