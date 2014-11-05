@@ -36,7 +36,11 @@ class Metric_LikesPerPost extends Metric_Abstract {
                     $count++;
                 }
             }
-            $actual /= $count;
+            if ($count == 0) {
+                $actual = 0;
+            } else {
+                $actual /= $count;
+            }
         }
 
         return $actual;
