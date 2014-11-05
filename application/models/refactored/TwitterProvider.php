@@ -89,54 +89,42 @@ class NewModel_TwitterProvider extends NewModel_iProvider
 	public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null)
 	{
-        //todo: correct this sql and decorate data
-		$sql = "
-			SELECT SQL_CALC_FOUND_ROWS
-				p.*,
-				l.links
-			FROM
-				{$this->tableName} AS p
-				LEFT JOIN (
-					SELECT
-						status_id,
-						GROUP_CONCAT(url) AS links
-					FROM
-						status_links
-					WHERE
-						status_id IN (
-							SELECT
-								`id`
-							FROM
-								{$this->tableName}
-							WHERE
-								`created_time` >= :start
-								AND `created_time` <= :end
-								AND `presence_id` = :id
-						)
-						AND type = 'twitter'
-					GROUP BY
-						status_id
-				) AS l ON (p.id = l.status_id)
-			WHERE
-				p.`created_time` >= :start
-				AND p.`created_time` <= :end
-				AND p.`presence_id` = :id
-		";
+        $clauses = array(
+            'p.created_time >= :start',
+            'p.created_time <= :end',
+            'p.presence_id = :id',
+        );
+        $args = array(
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end'   => $end->format('Y-m-d H:i:s'),
+            ':id'    => $presence->getId()
+        );
+        $searchArgs = $this->getSearchClauses($search, array('p.html_tweet'));
+        $clauses = array_merge($clauses, $searchArgs['clauses']);
+        $args = array_merge($args, $searchArgs['args']);
+        $sql = "
+			SELECT SQL_CALC_FOUND_ROWS p.*
+			FROM {$this->tableName} AS p
+			WHERE " . implode(' AND ', $clauses);
         $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
         $sql .= $this->getLimitSql($limit, $offset);
+
         $stmt = $this->db->prepare($sql);
-		$stmt->execute(array(
-			':start'	=> $start->format('Y-m-d H:i:s'),
-			':end'	=> $end->format('Y-m-d H:i:s'),
-			':id'		=> $presence->getId()
-		));
-		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute($args);
+        $ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
 
-		//add retweets and links to posts
-		foreach ($ret as &$r) {
-			$r['links'] = is_null($r['links']) ? array() : explode(',', $r['links']);
-		}
+		// decorate tweets with links
+        $tweetIds = array();
+        foreach ($ret as $tweet) {
+            $tweetIds[] = $tweet['id'];
+        }
+
+        $links = $this->getLinks($tweetIds, 'twitter');
+        foreach ($ret as &$r) {
+            $id = $r['id'];
+            $r['links'] = isset($links[$id]) ? $links[$id] : array();
+        }
 
         return (object)array(
             'stream' => count($ret) ? $ret : null,

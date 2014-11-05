@@ -237,22 +237,7 @@ app.datatables = {
 					bSortable:false,
 					bUseRendered:false
 				},
-				{
-					mDataProp:'links',
-					fnRender:function (o, links) {
-						var linkStrings = [];
-						if (links) {
-							for (var i=0; i<links.length; i++) {
-								var link = links[i];
-								linkStrings.push('<a href="' + link.url + '" target="_blank">' + link.domain + '</a> (' + (link.is_bc == '1' ? 'BC' : 'non-BC') + ')');
-							}
-						}
-						return linkStrings.join(', ');
-					},
-					sClass: 'links',
-					bSortable:false,
-					bUseRendered:false
-				},
+				app.datatables.linksColumn(),
 				app.datatables.dateColumn()
 			]);
 
@@ -275,6 +260,7 @@ app.datatables = {
 					bSortable:false,
 					bUseRendered:false
 				},
+				app.datatables.linksColumn(),
 				app.datatables.dateColumn()
 			]);
 		},
@@ -289,6 +275,7 @@ app.datatables = {
 					bSortable:false,
 					bUseRendered:false
 				},
+				app.datatables.linksColumn(),
 				app.datatables.dateColumn()
 			]);
 		}
@@ -347,6 +334,24 @@ app.datatables = {
 				}
 			}
 		});
+	},
+	linksColumn: function() {
+		return {
+			mDataProp:'links',
+			fnRender:function (o, links) {
+				var linkStrings = [];
+				if (links) {
+					for (var i=0; i<links.length; i++) {
+						var link = links[i];
+						linkStrings.push('<a href="' + link.url + '" target="_blank">' + link.domain + '</a> (' + (link.is_bc == '1' ? 'BC' : 'non-BC') + ')');
+					}
+				}
+				return linkStrings.join(', ');
+			},
+			sClass: 'links',
+			bSortable: false,
+			bUseRendered: false
+		};
 	},
 	dateColumn: function() {
 		return {

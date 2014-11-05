@@ -1951,9 +1951,11 @@ table .fa-circle.value-good {
 
 table td a,
 table td a:link,
-table td a:visited,
-table td a:hover {
+table td a:visited {
 	color: #fff;
+}
+table td a:hover {
+	color: #ddd;
 }
 
 table td ul {

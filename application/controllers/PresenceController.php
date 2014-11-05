@@ -261,8 +261,10 @@ class PresenceController extends GraphingController
 			foreach ($stream as $tweet) {
                 $tweet = (object)$tweet;
 				$tableData[] = array(
+                    'id' => $tweet->id,
 					'message' => $format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
 					'date' => Model_Base::localeDate($tweet->created_time),
+                    'links' => $tweet->links,
 					'twitter_url' => Model_TwitterTweet::getTwitterUrl($presence->handle, $tweet->tweet_id)
 				);
 			}
@@ -323,6 +325,7 @@ class PresenceController extends GraphingController
 					'id'	=> $post->id,
 					'url'	=> NewModel_SinaWeiboProvider::BASEURL . $post->remote_user_id . '/' . NewModel_SinaWeiboProvider::getMidForPostId($post->remote_id),
 					'message' => $post->text,
+                    'links' => $post->links,
 					'date' => Model_Base::localeDate($post->created_at)
 				);
 			}

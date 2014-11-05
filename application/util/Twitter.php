@@ -148,49 +148,61 @@ class Util_Twitter {
 	 */
 	public static function parseTweet($tweet) {
 
-		$htmlTweet = $tweet->text;
-		$expandedText = $tweet->text;
+        $isRetweet = !empty($tweet->retweeted_status->text);
 
-		if (array_key_exists('entities', $tweet)) {
-			$entities = array();
-			foreach (array('hashtags', 'urls', 'user_mentions'/*, 'media'*/) as $entityType) {
-				if (!empty($tweet->entities->$entityType)) {
-					foreach ($tweet->entities->$entityType as $entity) {
-						$entity->entityType = $entityType;
-						$entities[] = $entity;
-					}
-				}
-			}
-			// reverse sort by start index
-			usort($entities, function ($a, $b) {
-				return (int)$a->indices[0] > (int)$b->indices[0] ? -1 : 1;
-			});
-			// make all of the substitutions
-			foreach ($entities as $entity) {
-				switch ($entity->entityType) {
-					case 'hashtags':
-						$replace = '<a href="https://twitter.com/search/%23'.$entity->text.'" target="_blank">#'.$entity->text.'</a>';
-						$htmlTweet = self::replaceTweetSubstring($htmlTweet, $replace, $entity->indices);
-						break;
-					case 'urls':
-						// linkify urls, but use the full url (not t.co)
-						//display_url is sometimes missing and expanded_url is sometimes null
-						if (empty($entity->display_url)) $entity->display_url = $entity->url;
-						if (empty($entity->expanded_url)) $entity->expanded_url = $entity->url;
-						$replace = '<a href="' . $entity->expanded_url . '" target="_blank">' . $entity->display_url . '</a>';
-						$htmlTweet = self::replaceTweetSubstring($htmlTweet, $replace, $entity->indices);
-						$expandedText = self::replaceTweetSubstring($expandedText, $replace, $entity->indices);
-						break;
-					case 'user_mentions':
-						$replace = '<a href="https://twitter.com/' . $entity->screen_name . '" target="_blank">@' . $entity->screen_name . '</a>';
-						$htmlTweet = self::replaceTweetSubstring($htmlTweet, $replace, $entity->indices);
-						break;
+        if ($isRetweet) {
+            $htmlTweet = $tweet->retweeted_status->text;
+            $entities = $tweet->retweeted_status->entities;
+        } else {
+            $htmlTweet = $tweet->text;
+            $entities = $tweet->entities;
+        }
+        $expandedText = $htmlTweet;
+
+        $allEntities = array();
+        foreach (array('hashtags', 'urls', 'user_mentions'/*, 'media'*/) as $entityType) {
+            if (!empty($entities->$entityType)) {
+                foreach ($entities->$entityType as $entity) {
+                    $entity->entityType = $entityType;
+                    $allEntities[] = $entity;
+                }
+            }
+        }
+        // reverse sort by start index
+        usort($allEntities, function ($a, $b) {
+            return (int)$a->indices[0] > (int)$b->indices[0] ? -1 : 1;
+        });
+        // make all of the substitutions
+        foreach ($allEntities as $entity) {
+            switch ($entity->entityType) {
+                case 'hashtags':
+                    $replace = '<a href="https://twitter.com/search/%23'.$entity->text.'" target="_blank">#'.$entity->text.'</a>';
+                    $htmlTweet = self::replaceTweetSubstring($htmlTweet, $replace, $entity->indices);
+                    break;
+                case 'urls':
+                    // linkify urls, but use the full url (not t.co)
+                    //display_url is sometimes missing and expanded_url is sometimes null
+                    if (empty($entity->display_url)) $entity->display_url = $entity->url;
+                    if (empty($entity->expanded_url)) $entity->expanded_url = $entity->url;
+                    $replace = '<a href="' . $entity->expanded_url . '" target="_blank">' . $entity->display_url . '</a>';
+                    $htmlTweet = self::replaceTweetSubstring($htmlTweet, $replace, $entity->indices);
+                    $expandedText = self::replaceTweetSubstring($expandedText, $replace, $entity->indices);
+                    break;
+                case 'user_mentions':
+                    $replace = '<a href="https://twitter.com/' . $entity->screen_name . '" target="_blank">@' . $entity->screen_name . '</a>';
+                    $htmlTweet = self::replaceTweetSubstring($htmlTweet, $replace, $entity->indices);
+                    break;
 //					case 'media':
 //						$replacement = '<a href="' . $entity->url . '" class="media">' . $entity->display_url . '</a>';
 //						break;
-				}
-			}
-		}
+            }
+        }
+
+        if ($isRetweet) {
+            $rt = 'RT <a href="https://twitter.com/' . $tweet->retweeted_status->user->screen_name . '" target="_blank">@' . $tweet->retweeted_status->user->screen_name . '</a>: ';
+            $htmlTweet = $rt . $htmlTweet;
+            $expandedText = $rt . $expandedText;
+        }
 
 		return array(
 			'html_tweet' => $htmlTweet,
