@@ -29,10 +29,14 @@ class Metric_LikesPerPost extends Metric_Abstract {
 
         if(count($data) > 0){
             $actual = 0;
+            $count = 0;
             foreach ($data as $row) {
-                $actual += $row['likes'];
+                if ($row['posted_by_owner']) {
+                    $actual += $row['likes'];
+                    $count++;
+                }
             }
-            $actual /= count($data);
+            $actual /= $count;
         }
 
         return $actual;
