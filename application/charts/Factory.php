@@ -6,39 +6,12 @@ abstract class Chart_Factory {
     protected static $db = null;
 
     /**
-     * @param $name
-     * @return mixed
-     */
-    protected static function getClassName($name)
-    {
-        $classNames = self::getClassNames();
-        return $classNames[$name];
-    }
-
-    /**
-     * @return array
-     */
-    public static function getClassNames()
-    {
-        return array(
-            Chart_Compare::getName() => 'Chart_Compare',
-            Chart_Popularity::getName() => 'Chart_Popularity',
-            Chart_PopularityTrend::getName() => 'Chart_PopularityTrend',
-            Chart_Reach::getName() => 'Chart_Reach',
-            Chart_Engagement::getName() => 'Chart_Engagement',
-            Chart_Quality::getName() => 'Chart_Quality',
-            Chart_ActionsPerDay::getName() => 'Chart_ActionsPerDay'
-        );
-    }
-
-    /**
      * return an array of the Chart Names
      * @return array
      */
     public static function getChartNames()
     {
-        $classNames = self::getClassNames();
-        return array_keys($classNames);
+        return array_keys(self::getCharts());
     }
 
     /**
@@ -47,25 +20,39 @@ abstract class Chart_Factory {
      */
     public static function getCharts()
     {
-        $charts = array();
-        foreach(self::getChartNames() as $name){
-            $charts[$name] = self::getChart($name);
+        if (empty(self::$charts)) {
+            $db = self::getDb();
+            /** @var Chart_Abstract[] $charts */
+            $charts = array(
+                new Chart_Compare($db),
+                new Chart_Popularity($db),
+                new Chart_PopularityTrend($db),
+                new Chart_Reach($db),
+                new Chart_Engagement($db),
+                new Chart_Quality($db),
+                new Chart_ActionsPerDay($db)
+            );
+            self::$charts = array();
+            foreach ($charts as $c) {
+                self::$charts[$c->getName()] = $c;
+            }
         }
-        return $charts;
+        return self::$charts;
     }
 
     /**
      * method to get a single chart singleton
-     * @param mixed $name
+     * @param string $name
+     * @throws Exception
      * @return Chart_Abstract
      */
     public static function getChart($name)
     {
-        if (!array_key_exists($name, self::$charts)) {
-            $className = static::getClassName($name);
-            self::$charts[$name] = new $className(self::getDb());
+        $charts = self::getCharts();
+        if (!array_key_exists($name, $charts)) {
+            throw new Exception('Invalid chart name: ' . $name);
         }
-        return self::$charts[$name];
+        return $charts[$name];
     }
 
     public static function setDB(PDO $db)

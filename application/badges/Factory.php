@@ -7,37 +7,20 @@ abstract class Badge_Factory
     /** @var PDO */
 	protected static $db = null;
 
-	protected static function getClassName($name)
-	{
-		$classNames = self::getClassNames();
-		return $classNames[$name];
-	}
-
-	public static function getClassNames()
-	{
-		return array(
-			Badge_Reach::getName() => 'Badge_Reach',
-			Badge_Engagement::getName() => 'Badge_Engagement',
-			Badge_Quality::getName() => 'Badge_Quality',
-			Badge_Total::getName() => 'Badge_Total'
-		);
-	}
-
 	public static function getBadgeNames()
 	{
-		$classNames = self::getClassNames();
-		return array_keys($classNames);
+		return array_keys(self::getBadges());
 	}
 
     /**
      * @param $name
+     * @throws Exception
      * @return Badge_Abstract
      */
     public static function getBadge($name)
 	{
-		if (!array_key_exists($name, self::$badges)) {
-			$className = static::getClassName($name);
-			self::$badges[$name] = new $className(self::getDb());
+		if (!array_key_exists($name, self::getBadges())) {
+            throw new Exception('Invalid badge name: ' . $name);
 		}
 		return self::$badges[$name];
 	}
@@ -47,11 +30,21 @@ abstract class Badge_Factory
      */
     public static function getBadges()
 	{
-		$badges = array();
-		foreach(self::getBadgeNames() as $name){
-			$badges[$name] = self::getBadge($name);
-		}
-		return $badges;
+        if (empty(self::$badges)) {
+            /** @var Badge_Abstract[] $badges */
+            $db = self::getDb();
+            $badges = array(
+                new Badge_Reach($db),
+                new Badge_Engagement($db),
+                new Badge_Quality($db),
+                new Badge_Total($db)
+            );
+            self::$badges = array();
+            foreach ($badges as $b) {
+                self::$badges[$b->getName()] = $b;
+            }
+        }
+        return self::$badges;
 	}
 
 	public static function guaranteeHistoricalData(

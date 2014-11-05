@@ -4,64 +4,55 @@ abstract class Header_Factory
 {
 	protected static $headers = array();
 
-	protected static function getClassName($name)
-	{
-		$classNames = self::getClassNames();
-		return $classNames[$name];
-	}
-
-	public static function getClassNames()
-	{
-		return array(
-			Header_Branding::getName() => 'Header_Branding',
-			Header_SignOff::getName() => 'Header_SignOff',
-			Header_Compare::getName() => 'Header_Compare',
-			Header_DigitalPopulation::getName() => 'Header_DigitalPopulation',
-			Header_DigitalPopulationHealth::getName() => 'Header_DigitalPopulationHealth',
-			Header_ReachRank::getName() => 'Header_ReachRank',
-			Header_ReachScore::getName() => 'Header_ReachScore',
-			Header_QualityRank::getName() => 'Header_QualityRank',
-			Header_QualityScore::getName() => 'Header_QualityScore',
-			Header_EngagementRank::getName() => 'Header_EngagementRank',
-			Header_EngagementScore::getName() => 'Header_EngagementScore',
-			Header_TotalRank::getName() => 'Header_TotalRank',
-			Header_TotalScore::getName() => 'Header_TotalScore',
-			Header_PresenceCount::getName() => 'Header_PresenceCount',
-			Header_Presences::getName() => 'Header_Presences',
-			Header_Options::getName() => 'Header_Options',
-			Header_Handle::getName() => 'Header_Handle',
-			Header_TargetAudience::getName() => 'Header_TargetAudience',
-			Header_CurrentAudience::getName() => 'Header_CurrentAudience',
-			Header_Name::getName() => 'Header_Name',
-			Header_Country::getName() => 'Header_Country',
-			Header_CountryCount::getName() => 'Header_CountryCount',
-			Header_Countries::getName() => 'Header_Countries',
-			Header_PercentTargetAudience::getName() => 'Header_PercentTargetAudience'
-		);
-	}
-
 	public static function getHeaderNames()
 	{
-		$classNames = self::getClassNames();
-		return array_keys($classNames);
+		return array_keys(self::getHeaders());
 	}
 
 	public static function getHeader($name)
 	{
-		if (!array_key_exists($name, self::$headers)) {
-			$className = static::getClassName($name);
-			self::$headers[$name] = new $className();
+		if (!array_key_exists($name, self::getHeaders())) {
+            throw new Exception('Invalid header name: ' . $name);
 		}
 		return self::$headers[$name];
 	}
 
 	public static function getHeaders()
 	{
-		$badges = array();
-		foreach(self::getHeaderNames() as $name){
-			$badges[$name] = self::getHeader($name);
-		}
-		return $badges;
+        if (empty(self::$headers)) {
+            /** @var Header_Abstract[] $headers */
+            $headers = array(
+                new Header_Branding(),
+                new Header_SignOff(),
+                new Header_Compare(),
+                new Header_DigitalPopulation(),
+                new Header_DigitalPopulationHealth(),
+                new Header_ReachRank(),
+                new Header_ReachScore(),
+                new Header_QualityRank(),
+                new Header_QualityScore(),
+                new Header_EngagementRank(),
+                new Header_EngagementScore(),
+                new Header_TotalRank(),
+                new Header_TotalScore(),
+                new Header_PresenceCount(),
+                new Header_Presences(),
+                new Header_Options(),
+                new Header_Handle(),
+                new Header_TargetAudience(),
+                new Header_CurrentAudience(),
+                new Header_Name(),
+                new Header_Country(),
+                new Header_CountryCount(),
+                new Header_Countries(),
+                new Header_PercentTargetAudience()
+            );
+            self::$headers = array();
+            foreach ($headers as $h) {
+                self::$headers[$h->getName()] = $h;
+            }
+        }
+		return self::$headers;
 	}
 
 }
