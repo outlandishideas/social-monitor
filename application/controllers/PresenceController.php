@@ -271,14 +271,13 @@ class PresenceController extends GraphingController
 			foreach ($stream as $post) {
                 $post = (object)$post;
 				if($post->message){
-                    //todo: fix this
-//					if ($post->first_response) {
-//						$message = $post->first_response->message;
-//						$responseDate = $post->first_response->created_time;
-//					} else {
-						$message = null;
+					if ($post->first_response) {
+						$response = $post->first_response->message;
+						$responseDate = $post->first_response->created_time;
+					} else {
+                        $response = null;
 						$responseDate = gmdate('Y-m-d H:i:s');
-//					}
+					}
 
 					$timeDiff = strtotime($responseDate) - strtotime($post->created_time);
 					$components = array();
@@ -300,16 +299,16 @@ class PresenceController extends GraphingController
 					$tableData[] = array(
 						'id' => $post->id,
 //						'actor_type' => $post->actor->type,
-						'actor_name' => 'todo',//$post->actor->name,
+						'actor_name' => $post->actor->name,
 //						'pic_url' => $post->actor->pic_url,
 						'facebook_url' => $post->permalink,
-						'profile_url' => '#todo',//$post->actor->profile_url,
+						'profile_url' => $post->actor->profile_url,
 						'message' => $post->message,
 						'links' => $post->links,
 						'date' => Model_Base::localeDate($post->created_time),
 						'needs_response' => $post->needs_response,
 						'first_response' => array(
-							'message'=>$message,
+							'message' => $response,
 							'date' => Model_Base::localeDate($responseDate),
 							'date_diff' => implode(', ', $components),
 						)

@@ -55,7 +55,6 @@ app.datatables = {
 
 		if (typeof app.datatables.statusesTable == 'object' && app.datatables.statusesTable != null) {
 			$(document)
-				.on('dateRangeUpdated', app.datatables.refreshStatuses)
 				.on('dataChanged', app.datatables.refreshStatuses);
 		}
 	},
@@ -204,103 +203,58 @@ app.datatables = {
 			app.datatables.moveSearchBox();
 		},
 		'#statuses .facebook': function($div) {
-			var args = {
-				sAjaxSource:jsConfig.apiEndpoint + "presence/statuses",
-				fnServerParams: function(aoData) {
-                    var date = app.state.barDate.length == 2 ? app.state.barDate : app.state.dateRange ;
-                    aoData.push({ name:"dateRange", value:date });
-					aoData.push({ name:"id", value:$div.data('presence-id') });
-				},
-				fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-					$(nRow).data('id', aData.id);
-				},
-				aaSorting:[
-					[3, 'desc']
-				],
-				aoColumns:[
-					// {
-					// 	mDataProp:'actor_name',
-					// 	fnRender:function (o, val) {
-					// 		return '<img data-src="' + o.aData.pic_url + '" class="facebook-actor async-load" />';
-					// 	},
-					// 	sClass:'statusPic',
-					// 	bSortable:false,
-					// 	bUseRendered:false
-					// },
-					{
-						mDataProp:'message',
-						fnRender:function (o) {
-							if (typeof o.aData.message != 'string') {
-								o.aData.message = '';
-							}
-							return parseTemplate(app.templates.post, o.aData);
-						},
-						sClass: 'message',
-						bSortable:false,
-						bUseRendered:false
-					},
-					{
-						mDataProp:'links',
-						fnRender:function (o, links) {
-							var linkStrings = [];
-							if (links) {
-								for (var i=0; i<links.length; i++) {
-									var link = links[i];
-									linkStrings.push('<a href="' + link.url + '" target="_blank">' + link.domain + '</a> (' + (link.is_bc == '1' ? 'BC' : 'non-BC') + ')');
-								}
-							}
-							return linkStrings.join(', ');
-						},
-						sClass: 'links',
-						bSortable:false,
-						bUseRendered:false
-					},
-					{
-						mDataProp:'first_response',
-						fnRender:function(o, response) {
-							if (response.message != null) {
-								return '<h4>' + Date.parse(response.date).toString('d MMM HH:mm') + ' (' + response.date_diff + ')</h4>' +
-									'<p>' + response.message.replace(/\\n/g, '<br />') + '</p>';
-							} else if (o.aData.needs_response == '1') {
-								return '<p class="more"><a href="#" class="require-response" title="Does not require a response"><span class="icon-comment-alt icon-large"></span></a></p>' +
-									'<p class="no-response">Awaiting response (' + response.date_diff + ')...</p>';
-							} else {
-								return '<p class="more"><a href="#" class="require-response" title="Requires a response"><span class="icon-comments icon-large"></span></a></p>' +
-									'<p class="no-response">No response required</p>';
-							}
-						},
-						sClass: 'message',
-						bSortable: false,
-						bUseRendered: false
-					},
-					{
-						mDataProp:'date',
-						fnRender:function (o, val) {
-							return Date.parse(val).toString('d MMM<br>HH:mm');
-						},
-						bUseRendered:false,
-						sClass:'date',
-						asSorting:['desc', 'asc']
-					}
-				],
-				oLanguage:app.datatables.generateLanguage('post')
-			};
-
-			app.datatables.statusesTable = $div.find('table')
-				.dataTable($.extend({}, app.datatables.serverSideArgs(), args))
-				.fnSetFilteringDelay(250);
-
-			app.datatables.moveSearchBox();
-
-			$(document).foundation({
-				tab: {
-					callback: function(tab) {
-						if (tab.context.hash == '#statuses') {
-							$(document).trigger('dataChanged'); // fix header cells when switching to this tab
+			app.datatables.initStatusList($div, 'post', [
+				{
+					mDataProp:'message',
+					fnRender:function (o) {
+						if (typeof o.aData.message != 'string') {
+							o.aData.message = '';
 						}
-					}
-				}
-			});
+						var message = parseTemplate(app.templates.post, o.aData);
+						var response = o.aData.first_response;
+						if (response.message != null) {
+							message += '<div class="first-response">' +
+								'<h4>First response: ' + Date.parse(response.date).toString('d MMM HH:mm') + ' <span>(' + response.date_diff + ')</span></h4>' +
+								'<p>' + response.message.replace(/\\n/g, '<br />') + '</p>' +
+								'</div>';
+						} else {
+							var rTitle, rMessage, rIcon;
+							if (o.aData.needs_response == '1') {
+								rTitle = 'Does not require a response';
+								rMessage = 'Awaiting response (' + response.date_diff + ')...';
+								rIcon = 'icon-comment-alt';
+							} else {
+								rTitle = 'Requires a response';
+								rMessage = 'No response required';
+								rIcon = 'icon-comments';
+							}
+							message += '<p class="more"><a href="#" class="require-response" title="' + rTitle + '"><span class="' + rIcon + ' icon-large"></span></a></p>' +
+								'<p class="no-response">' + rMessage + '</p>';
+						}
+						return message;
+					},
+					sClass: 'message',
+					bSortable:false,
+					bUseRendered:false
+				},
+				{
+					mDataProp:'links',
+					fnRender:function (o, links) {
+						var linkStrings = [];
+						if (links) {
+							for (var i=0; i<links.length; i++) {
+								var link = links[i];
+								linkStrings.push('<a href="' + link.url + '" target="_blank">' + link.domain + '</a> (' + (link.is_bc == '1' ? 'BC' : 'non-BC') + ')');
+							}
+						}
+						return linkStrings.join(', ');
+					},
+					sClass: 'links',
+					bSortable:false,
+					bUseRendered:false
+				},
+				app.datatables.dateColumn()
+			]);
 
 			$div.on('click', '.require-response', function(e) {
 				e.preventDefault();
@@ -311,105 +265,99 @@ app.datatables = {
 			});
 		},
 		'#statuses .twitter': function($div) {
-			var args = {
-				sAjaxSource:jsConfig.apiEndpoint + "presence/statuses",
-				fnServerParams: function(aoData) {
-					aoData.push({ name:"dateRange", value:app.state.dateRange });
-					aoData.push({ name:"id", value:$div.data('presence-id') });
-				},
-				aaSorting:[
-					[1, 'desc']
-				],
-				aoColumns:[
-					{
-						mDataProp:'message',
-						fnRender:function (o) {
-							return parseTemplate(app.templates.tweet, o.aData);
-						},
-						sClass: 'message',
-						bSortable:false,
-						bUseRendered:false
+			app.datatables.initStatusList($div, 'tweet', [
+				{
+					mDataProp:'message',
+					fnRender:function (o) {
+						return parseTemplate(app.templates.tweet, o.aData);
 					},
-					{
-						mDataProp:'date',
-						fnRender:function (o, val) {
-							return Date.parse(val).toString('d MMM<br>HH:mm');
-						},
-						bUseRendered:false,
-						sClass:'date',
-						asSorting:['desc', 'asc']
-					}
-				],
-				oLanguage:app.datatables.generateLanguage('tweet')
-			};
-
-			args = $.extend({}, app.datatables.serverSideArgs(), args);
-			app.datatables.statusesTable = $div.find('table')
-				.dataTable(args)
-				.fnSetFilteringDelay(250);
-
-			app.datatables.moveSearchBox();
-
-			$(document).foundation({
-				tab: {
-					callback: function(tab) {
-						if (tab.context.hash == '#statuses') {
-							$(document).trigger('dataChanged'); // fix header cells when switching to this tab
-						}
-					}
-				}
-			});
+					sClass: 'message',
+					bSortable:false,
+					bUseRendered:false
+				},
+				app.datatables.dateColumn()
+			]);
 		},
 		'#statuses .sina_weibo': function($div) {
-			var args = {
-				sAjaxSource:jsConfig.apiEndpoint + "presence/statuses",
-				fnServerParams: function(aoData) {
-					aoData.push({ name:"dateRange", value:app.state.dateRange });
-					aoData.push({ name:"id", value:$div.data('presence-id') });
-				},
-				aaSorting:[
-					[1, 'desc']
-				],
-				aoColumns:[
-					{
-						mDataProp:'message',
-						fnRender:function (o) {
-							return parseTemplate(app.templates.swPost, o.aData);
-						},
-						sClass: 'message',
-						bSortable:false,
-						bUseRendered:false
+			app.datatables.initStatusList($div, 'post', [
+				{
+					mDataProp:'message',
+					fnRender:function (o) {
+						return parseTemplate(app.templates.swPost, o.aData);
 					},
-					{
-						mDataProp:'date',
-						fnRender:function (o, val) {
-							return Date.parse(val).toString('d MMM<br>HH:mm');
-						},
-						bUseRendered:false,
-						sClass:'date',
-						asSorting:['desc', 'asc']
-					}
-				],
-				oLanguage:app.datatables.generateLanguage('post')
-			};
+					sClass: 'message',
+					bSortable:false,
+					bUseRendered:false
+				},
+				app.datatables.dateColumn()
+			]);
+		}
+	},
+	initStatusList: function($container, statusType, columns, sortColumn) {
+		if (typeof sortColumn == 'undefined') {
+			sortColumn = 'date';
+		}
+		// default to any sortable column, but try to match the given one
+		var sortColumnIndex = 0;
+		for (var i=0; i<columns.length; i++) {
+			if (columns[i].bSortable !== false) {
+				sortColumnIndex = i;
+				if (columns[i].mDataProp == sortColumn) {
+					break;
+				}
+			}
+		}
 
-			args = $.extend({}, app.datatables.serverSideArgs(), args);
-			app.datatables.statusesTable = $div.find('table')
-				.dataTable(args)
-				.fnSetFilteringDelay(250);
+		// limit the date range to the last 2 months
+		var d = new Date();
+		var end = d.toString('yyyy-MM-dd');
+		d.setDate(d.getDate() - 60);
+		var start = d.toString('yyyy-MM-dd');
 
-			app.datatables.moveSearchBox();
+		var args = {
+			sAjaxSource:jsConfig.apiEndpoint + "presence/statuses",
+			fnServerParams: function(aoData) {
+				aoData.push({ name:"dateRange", value:[start, end] });
+				aoData.push({ name:"id", value:$container.data('presence-id') });
+			},
+			aaSorting:[
+				[sortColumnIndex, 'desc']
+			],
+			fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				$(nRow).data('id', aData.id);
+			},
+			aoColumns:columns,
+			oLanguage:app.datatables.generateLanguage(statusType)
+		};
 
-			$(document).foundation({
-				tab: {
-					callback: function(tab) {
-						if (tab.context.hash == '#statuses') {
-							$(document).trigger('dataChanged'); // fix header cells when switching to this tab
-						}
+		args = $.extend({}, app.datatables.serverSideArgs(), args);
+		app.datatables.statusesTable = $container.find('table')
+			.dataTable(args)
+			.fnSetFilteringDelay(250);
+
+		app.datatables.moveSearchBox();
+
+		// fix header cells when switching to the statuses tab
+		$(document).foundation({
+			tab: {
+				callback: function(tab) {
+					if (tab.context.hash == '#statuses') {
+						$(document).trigger('dataChanged');
 					}
 				}
-			});
-		}
+			}
+		});
+	},
+	dateColumn: function() {
+		return {
+			mDataProp:'date',
+			fnRender:function (o, val) {
+				return Date.parse(val).toString('d MMM<br>HH:mm');
+			},
+			bUseRendered:false,
+			sClass:'date',
+			asSorting:['desc', 'asc']
+		};
 	},
 	moveSearchBox: function() {
 		var $filter = $('div.dataTables_filter');

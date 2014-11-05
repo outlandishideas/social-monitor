@@ -158,53 +158,56 @@ class NewModel_FacebookProvider extends NewModel_iProvider
 	public function getHistoricStream(NewModel_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null)
 	{
-        //todo: correct this sql and decorate data
+        $clauses = array(
+            'p.created_time >= :start',
+            'p.created_time <= :end',
+            'p.presence_id = :id',
+            'p.in_response_to IS NULL' // response data are merged into the original posts
+        );
+        $args = array(
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end'   => $end->format('Y-m-d H:i:s'),
+            ':id'    => $presence->getId()
+        );
+        $searchArgs = $this->getSearchClauses($search, array('p.message'));
+        $clauses = array_merge($clauses, $searchArgs['clauses']);
+        $args = array_merge($args, $searchArgs['args']);
+
 		$sql = "
-			SELECT SQL_CALC_FOUND_ROWS
-				p.*,
-				l.links
-			FROM
-				{$this->tableName} AS p
-				LEFT JOIN (
-					SELECT
-						status_id,
-						GROUP_CONCAT(url) AS links
-					FROM
-						status_links
-					WHERE
-						status_id IN (
-							SELECT
-								`id`
-							FROM
-								{$this->tableName}
-							WHERE
-								`created_time` >= :start
-								AND `created_time` <= :end
-								AND `presence_id` = :id
-						)
-						AND type = 'facebook'
-					GROUP BY
-						status_id
-				) AS l ON (p.id = l.status_id)
-			WHERE
-				p.`created_time` >= :start
-				AND p.`created_time` <= :end
-				AND p.`presence_id` = :id
-		";
+			SELECT SQL_CALC_FOUND_ROWS p.*
+			FROM {$this->tableName} AS p
+			WHERE " . implode(' AND ', $clauses);
         $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
         $sql .= $this->getLimitSql($limit, $offset);
+
         $stmt = $this->db->prepare($sql);
-		$stmt->execute(array(
-			':start'	=> $start->format('Y-m-d H:i:s'),
-			':end'	=> $end->format('Y-m-d H:i:s'),
-			':id'		=> $presence->getId()
-		));
+		$stmt->execute($args);
 		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
 
-		//add retweets and links to posts
+		// decorate the posts with actors, links and responses
+        $postIds = array();
+        $actorIds = array();
+        $facebookIds = array();
+        foreach ($ret as $post) {
+            $postIds[] = $post['id'];
+            $actorIds[] = $post['actor_id'];
+            $facebookIds[] = $post['post_id'];
+        }
+
+        $links = $this->getLinks($postIds, 'facebook');
+        $actors = $this->getActors($actorIds);
+        $responses = $this->getResponses($presence->getId(), $facebookIds);
+
 		foreach ($ret as &$r) {
-			$r['links'] = is_null($r['links']) ? array() : explode(',', $r['links']);
+            $id = $r['id'];
+			$r['links'] = isset($links[$id]) ? $links[$id] : array();
+
+            $facebookId = $r['post_id'];
+			$r['first_response'] = isset($responses[$facebookId]) ? $responses[$facebookId] : array();
+
+            $actorId = $r['actor_id'];
+            $r['actor'] = isset($actors[$actorId]) ? $actors[$actorId] : new stdClass();
 		}
 
 		return (object)array(
@@ -213,6 +216,56 @@ class NewModel_FacebookProvider extends NewModel_iProvider
         );
 	}
 
+    /**
+     * Gets (object) data for the first response (if any) to the given posts, keyed by the originating post
+     * @param $presenceId
+     * @param $facebookIds
+     * @return array
+     */
+    protected function getResponses($presenceId, $facebookIds)
+    {
+        $idString = array_map(function($a) { return "'" . $a . "'"; }, $facebookIds);
+        $idString = implode(',', $idString);
+        $stmt = $this->db->prepare("SELECT * FROM facebook_stream WHERE presence_id = :pid AND in_response_to IN ($idString)");
+        $stmt->execute(array(':pid'=>$presenceId));
+        $responses = array();
+        foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $response) {
+            $key = $response->in_response_to;
+            if (!array_key_exists($key, $responses) || ($response->created_time < $responses[$key]->created_time)) {
+                $responses[$key] = $response;
+            }
+        }
+        return $responses;
+    }
+
+    /**
+     * Gets (object) data for all of the given actor IDs. Some may be blank
+     * @param $actorIds
+     * @return array
+     */
+    protected function getActors($actorIds)
+    {
+        $actors = array();
+        if ($actorIds) {
+            $actorIdsString = implode(',', array_unique($actorIds));
+            $stmt = $this->db->prepare("SELECT * FROM facebook_actors WHERE id IN ( $actorIdsString )");
+            $stmt->execute();
+            foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
+                $actors[$row->id] = $row;
+            }
+            // create blanks for any missing ones
+            foreach ($actorIds as $id) {
+                if (!isset($actors[$id])) {
+                    $actors[$id] = (object)array(
+                        'id' => $id,
+                        'name' => '',
+                        'profile_url' => ''
+                    );
+                }
+            }
+        }
+        return $actors;
+    }
 
 	public function getHistoricStreamMeta(NewModel_Presence $presence, \DateTime $start, \DateTime $end)
 	{

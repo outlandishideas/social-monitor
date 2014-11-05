@@ -139,6 +139,20 @@ abstract class NewModel_iProvider
 		return $this->tableName;
 	}
 
+    protected function getSearchClauses($search, $columns) {
+        $clauses = array();
+        $args = array();
+        if ($search && $columns) {
+            $matches = array();
+            foreach ($columns as $column) {
+                $matches = array("$column LIKE :search");
+            }
+            $clauses[] = '(' . implode(' OR ', $matches) . ')';
+            $args[':search'] = "%$search%";
+        }
+        return array('clauses'=>$clauses, 'args'=>$args);
+    }
+
     protected function getOrderSql($order, $validColumns) {
         if (!is_null($order) && count($order) > 0) {
             $ordering = array();
@@ -160,5 +174,35 @@ abstract class NewModel_iProvider
             return ' LIMIT '.$offset.','.$limit;
         }
         return '';
+    }
+
+    /**
+     * Returns all links from the given statuses, grouped by status ID
+     * @param $statusIds
+     * @param $type
+     * @return array
+     */
+    protected function getLinks($statusIds, $type) {
+        $links = array();
+        if ($statusIds) {
+            $placeholders = implode(',', array_fill(0, count($statusIds), '?'));
+            $linksStmt = $this->db->prepare("
+                SELECT sl.*, d.is_bc
+                FROM status_links AS sl
+                  INNER JOIN domains AS d ON sl.domain = d.domain
+                WHERE
+                    status_id IN ({$placeholders})
+                    AND type = '{$type}'
+                ORDER BY is_bc DESC");
+            $linksStmt->execute($statusIds);
+            foreach ($linksStmt->fetchAll(PDO::FETCH_ASSOC) as $link) {
+                $statusId = $link['status_id'];
+                if (!isset($links[$statusId])) {
+                    $links[$statusId] = array();
+                }
+                $links[$statusId][] = $link;
+            }
+        }
+        return $links;
     }
 }

@@ -17,7 +17,6 @@ $.extend(app, {
 		colors: {},
 		timestamps: [],
 		unloading: false,
-        barDate: [],
         badges: []
 	},
 	templates: {
@@ -36,7 +35,8 @@ $.extend(app, {
 				'<h4><%if(profile_url){%><a href="<%=profile_url%>" target="_blank"><%=actor_name%></a><%}else{%><%=actor_name%><%}%></h4>' +
 				'<%}else{%>' +
 				'<h4>Unknown author</h4>' +
-				'<%}%><p><%=message.replace(/\\n/g, "<br />")%></p>',
+			'<%}%><p>' +
+			'<%=message.replace(/\\n/g, "<br />")%></p>',
 		swPost:'<p class="more"><a href="<%=url%>" target="_blank" title="View on Sina Weibo"><span class="icon-external-link icon-large"></span></a></p>' +
 				'<p><%=message.replace(/\\n/g, "<br />")%></p>',
 		searchArea: '<li class="area">\

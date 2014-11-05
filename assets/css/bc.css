@@ -620,7 +620,7 @@ form .formError {
 	vertical-align: top;
 }
 .statusesDisplay td.message {
-	width: 10000px;
+	/*width: 10000px;*/
 	vertical-align: top;
 }
 .statusesDisplay td.message h4 {
@@ -630,9 +630,19 @@ form .formError {
 .statusesDisplay td.message p {
 	margin: 0;
 }
-.statusesDisplay td.message .no-response {
+.statusesDisplay td.message .first-response {
+	margin-top: 15px;
+	margin-left: 20px;
+}
+.statusesDisplay td.message .first-response h4 {
+	text-transform: none;
+	font-size: 0.9rem;
+}
+.statusesDisplay td.message .no-response,
+.statusesDisplay td.message .first-response h4 span {
 	color: #999;
 	font-style: italic;
+	font-size: 0.75rem;
 }
 
 .statusesDisplay .dataTables_info {

@@ -114,8 +114,11 @@ class FetchController extends BaseController
 		$actorQuery = $db->prepare('SELECT DISTINCT actor_id
 			FROM facebook_stream AS stream
 			LEFT OUTER JOIN facebook_actors AS actors ON stream.actor_id = actors.id
-			WHERE actors.last_fetched IS NULL OR actors.last_fetched < NOW() - INTERVAL ' . $this->config->facebook->cache_user_data . ' DAY
-			ORDER BY RAND()
+			WHERE actors.last_fetched IS NULL
+			   OR actors.last_fetched < NOW() - INTERVAL ' . $this->config->facebook->cache_user_data . ' DAY
+			ORDER BY
+			   IF(actors.last_fetched IS NULL, 0, 1) ASC,
+			   RAND()
 			LIMIT ' . $limit);
 		$actorQuery->execute();
 		$actorIds = $actorQuery->fetchAll(PDO::FETCH_COLUMN);
