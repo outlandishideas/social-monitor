@@ -73,8 +73,8 @@ if ($topBar && $this->showButtons) {
             </div>
             <div class="small-24 medium-8 large-8 columns">
                 <select name="size" id="size">
-                    <?php foreach($presence->getSizes() as $value => $label) :
-                        $selected = $value == $presence->getSize() ? "selected" : ""; ?>
+                    <?php foreach(Model_Presence::getSizes() as $value => $label) :
+                        $selected = ($this->isNew ? '' : ($value == $presence->getSize() ? "selected" : "")); ?>
                         <option value="<?php echo $value; ?>" <?php echo $selected; ?>><?php echo $label; ?></option>
                     <?php endforeach; ?>
                 </select>

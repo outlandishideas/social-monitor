@@ -84,6 +84,7 @@ class PresenceController extends GraphingController
         $this->view->editType = true;
 		$this->view->title = 'New presence';
 		$this->view->titleIcon = 'icon-plus-sign';
+		$this->view->isNew = true;
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -170,6 +171,7 @@ class PresenceController extends GraphingController
 		$this->view->presence = $presence;
 		$this->view->title = 'Edit Presence';
 		$this->view->titleIcon = 'icon-edit';
+		$this->view->isNew = false;
 	}
 
 	/**

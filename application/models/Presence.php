@@ -33,7 +33,7 @@ class Model_Presence
 	public $last_fetched;
 	public $size;
 
-	protected $sizes = array(
+	protected static $sizes = array(
 		0 => "Small",
 		1 => "Medium",
 		2 => "Large"
@@ -185,9 +185,9 @@ class Model_Presence
 	/**
 	 * @return array
 	 */
-	public function getSizes()
+	public static function getSizes()
 	{
-		return $this->sizes;
+		return self::$sizes;
 	}
 
 	/**
