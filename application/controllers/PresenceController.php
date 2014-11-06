@@ -134,14 +134,16 @@ class PresenceController extends GraphingController
             $presence->handle = $handle;
             $presence->sign_off = $signOff;
             $presence->branding = $branding;
-			$presence->setSize($size);
 
             if (!$errorMessages) {
                 try {
                     if (!$presence->id) {
                         $type = Enum_PresenceType::get($type);
                         $presence = Model_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
+                        $presence->setSize($size);
+                        $presence->save();
                     } else {
+                    	$presence->setSize($size);
                         $presence->update();
                         $presence->save();
                     }
