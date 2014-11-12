@@ -32,7 +32,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 			$data = $this->connection->friends_timeline($page, 200, $since_id);
             $statuses = isset($data['statuses']) ? $data['statuses'] : array();
 			foreach ($statuses as $s) {
-                if (!$s['user'] || $s['user']['profile_url'] != $presence->getHandle()) {
+                if (!$s['user'] || $s['user']['idstr'] != $presence->getUID()) {
                     continue;
                 }
 				$s['presence_id'] = $presence->getId();
