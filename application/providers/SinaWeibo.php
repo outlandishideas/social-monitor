@@ -184,7 +184,10 @@ class Provider_SinaWeibo extends Provider_Abstract
 			if (array_key_exists('retweeted_status', $status)) {
 				$s = $status['retweeted_status'];
 				Model_PresenceFactory::setDatabase($this->db);
-				$presence = Model_PresenceFactory::getPresenceByHandle($s['user']['profile_url'], $this->type);
+				$presence = null;
+				if (array_key_exists('user', $s)) { //apparently some retweets don't have a user (??) so, check to prevent errors
+					$presence = Model_PresenceFactory::getPresenceByHandle($s['user']['profile_url'], $this->type);
+				}
 				$s['posted_by_presence'] = $presence ? 1 : 0;
 				$s['presence_id'] = $presence ? $presence->getId() : null;
 				$count += $this->parseStatus($s);
@@ -204,17 +207,17 @@ class Provider_SinaWeibo extends Provider_Abstract
 				:posted_by_presence, :included_retweet, :repost_count, :comment_count, :attitude_count)
 		");
 		$args = array(
-			':remote_id'				=> $status['idstr'],
-			':text'						=> $status['text'],
-			':presence_id'				=> $status['presence_id'],
-			':remote_user_id'			=> $status['user']['idstr'],
-			':created_at'				=> date_format(date_create($status['created_at']), 'Y-m-d H:i:s'),
-			':picture_url'				=> array_key_exists('original_pic', $status) ? $status['original_pic'] : null,
+			':remote_id'			=> $status['idstr'],
+			':text'					=> $status['text'],
+			':presence_id'			=> $status['presence_id'],
+			':remote_user_id'		=> array_key_exists('user', $status) ? $status['user']['idstr'] : 0,
+			':created_at'			=> date_format(date_create($status['created_at']), 'Y-m-d H:i:s'),
+			':picture_url'			=> array_key_exists('original_pic', $status) ? $status['original_pic'] : null,
 			':posted_by_presence'	=> $status['posted_by_presence'],
 			':included_retweet'		=> array_key_exists('retweeted_status', $status) ? $status['retweeted_status']['idstr'] : null,
-			':repost_count'			=> $status['reposts_count'],
-			':comment_count'			=> $status['comments_count'],
-			':attitude_count'			=> $status['attitudes_count']
+			':repost_count'			=> array_key_exists('reposts_count', $status) ? $status['reposts_count'] : 0,
+			':comment_count'		=> array_key_exists('comments_count', $status) ? $status['comments_count'] : 0,
+			':attitude_count'		=> array_key_exists('attitudes_count', $status) ? $status['attitudes_count'] : 0
 		);
 		$stmt->execute($args);
 		return $this->db->lastInsertId();
