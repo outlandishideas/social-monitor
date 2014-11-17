@@ -357,26 +357,26 @@ class Provider_Facebook extends Provider_Abstract
 
 		$sql = "
             SELECT
-              ph.created_time AS time,
-              SUM(fs.comments) AS comment_count,
-              SUM(fs.likes) AS like_count,
-              SUM(fs.share_count) AS share_count,
-              ph.popularity
+              `ph`.`created_time` AS `time`,
+              IFNULL(SUM(`fs`.`comments`), 0) AS `comment_count`,
+              IFNULL(SUM(`fs`.`likes`), 0) AS `like_count`,
+              IFNULL(SUM(`fs`.`share_count`), 0) AS `share_count`,
+              `ph`.`popularity`
             FROM (
-                SELECT presence_id, DATE(datetime) as created_time, MAX(value) as popularity
-                FROM presence_history
-                WHERE type = 'popularity'
-                  AND presence_id = :pid
-                  AND datetime >= :start_time
-                  AND datetime <= :end_time
-                GROUP BY DATE(datetime)
-            ) AS ph
-            LEFT JOIN facebook_stream as fs
-              ON DATE(fs.created_time) = ph.created_time
-              AND fs.presence_id = ph.presence_id
-            WHERE ph.created_time >= :start_time
-              AND ph.created_time <= :end_time
-            GROUP BY ph.created_time";
+                SELECT `presence_id`, DATE(`datetime`) as `created_time`, MAX(`value`) as `popularity`
+                FROM `presence_history`
+                WHERE `type` = 'popularity'
+                  AND `presence_id` = :pid
+                  AND `datetime` >= :start_time
+                  AND `datetime` <= :end_time
+                GROUP BY DATE(`datetime`)
+            ) AS `ph`
+            LEFT JOIN `facebook_stream` as `fs`
+              ON DATE(`fs`.`created_time`) = `ph`.`created_time`
+              AND `fs`.`presence_id` = `ph`.`presence_id`
+            WHERE `ph`.`created_time` >= :start_time
+              AND `ph`.`created_time` <= :end_time
+            GROUP BY `ph`.`created_time`";
 
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute($args);
