@@ -438,9 +438,9 @@ class Model_Presence
 		return $this->provider->getHistoricStream($this, $start, $end, $search, $order, $limit, $offset);
 	}
 
-	public function getHistoricStreamMeta(\DateTime $start, \DateTime $end)
+	public function getHistoricStreamMeta(\DateTime $start, \DateTime $end, $ownPostsOnly = false)
 	{
-		return $this->provider->getHistoricStreamMeta($this, $start, $end);
+		return $this->provider->getHistoricStreamMeta($this, $start, $end, !!$ownPostsOnly);
 	}
 
 	public function fetch()

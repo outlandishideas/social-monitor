@@ -134,7 +134,7 @@ class Provider_Twitter extends Provider_Abstract
 	}
 
 
-	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end)
+	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false)
 	{
 		$stmt = $this->db->prepare("
 			SELECT
@@ -153,6 +153,7 @@ class Provider_Twitter extends Provider_Abstract
 						created_time >= :start
 						AND created_time <= :end
 						AND presence_id = :id
+                        ".($ownPostsOnly ? 'AND responsible_presence = presence_id' : '')."
 					GROUP BY
 						DATE_FORMAT(created_time, '%Y-%m-%d')
 				) AS posts
@@ -169,6 +170,7 @@ class Provider_Twitter extends Provider_Abstract
 						p.created_time >= :start
 						AND p.created_time <= :end
 						AND p.presence_id = :id
+                        ".($ownPostsOnly ? 'AND p.responsible_presence = p.presence_id' : '')."
 					GROUP BY
 						DATE_FORMAT(p.created_time, '%Y-%m-%d')
 				) AS links ON (posts.date = links.date)

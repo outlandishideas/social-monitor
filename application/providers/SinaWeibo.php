@@ -121,7 +121,7 @@ class Provider_SinaWeibo extends Provider_Abstract
         return $retweets;
     }
 
-	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end)
+	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false)
 	{
 		$stmt = $this->db->prepare("
 			SELECT
@@ -140,6 +140,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 						created_at >= :start
 						AND created_at <= :end
 						AND presence_id = :id
+						".($ownPostsOnly ? 'AND posted_by_presence = 1' : '')."
 					GROUP BY
 						DATE_FORMAT(created_at, '%Y-%m-%d')
 				) AS posts
@@ -156,6 +157,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 						p.created_at >= :start
 						AND p.created_at <= :end
 						AND p.presence_id = :id
+						".($ownPostsOnly ? 'AND p.posted_by_presence = 1' : '')."
 					GROUP BY
 						DATE_FORMAT(p.created_at, '%Y-%m-%d')
 				) AS links ON (posts.date = links.date)

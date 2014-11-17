@@ -269,7 +269,7 @@ class Provider_Facebook extends Provider_Abstract
         return $actors;
     }
 
-	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end)
+	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false)
 	{
 		$stmt = $this->db->prepare("
 			SELECT
@@ -288,6 +288,7 @@ class Provider_Facebook extends Provider_Abstract
 						created_time >= :start
 						AND created_time <= :end
 						AND presence_id = :id
+                        ".($ownPostsOnly ? 'AND posted_by_owner = 1' : '')."
 					GROUP BY
 						DATE_FORMAT(created_time, '%Y-%m-%d')
 				) AS posts
@@ -304,6 +305,7 @@ class Provider_Facebook extends Provider_Abstract
 						p.created_time >= :start
 						AND p.created_time <= :end
 						AND p.presence_id = :id
+                        ".($ownPostsOnly ? 'AND p.posted_by_owner = 1' : '')."
 					GROUP BY
 						DATE_FORMAT(p.created_time, '%Y-%m-%d')
 				) AS links ON (posts.date = links.date)

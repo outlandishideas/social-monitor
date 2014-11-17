@@ -50,10 +50,15 @@ class Metric_Relevance extends Metric_Abstract {
         }
 
         $targetPercent = $presence->getType()->getRelevancePercentage()/100;
-        $target = $presence->getMetricValue(Metric_ActionsPerDay::getName()) * $targetPercent;
+        $numActions = $presence->getMetricValue(Metric_ActionsPerDay::getName());
 
-        $score = round(100 * $score/$target);
-        $score = self::boundScore($score);
+        if ($numActions > 0) {
+            $target = $numActions * $targetPercent;
+            $score = round(100 * $score/$target);
+            $score = self::boundScore($score);
+        } else {
+            $score = 0;
+        }
 
         return $score;
     }

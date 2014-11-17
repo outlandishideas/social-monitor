@@ -42,7 +42,7 @@ abstract class Provider_Abstract
 	 *                                     										...
 	 *                                 											 )
 	 */
-	abstract public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end);
+	abstract public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false);
 
     /**
      * Get performancedata for a specific presence between 2 dates

@@ -19,7 +19,7 @@ class Metric_ActionsPerDay extends Metric_Abstract {
      * @return int
      */
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end){
-        $data = $presence->getHistoricStreamMeta($start, $end);
+        $data = $presence->getHistoricStreamMeta($start, $end, true);
 
         $actual = null;
 
