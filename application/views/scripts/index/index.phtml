@@ -47,12 +47,6 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
             </div>
         </div>
 
-        <?php foreach($allBadges as $badge): ?>
-        <div class="badge-description" data-badge-name="<?php echo $badge->getName(); ?>">
-            <?php echo $badge->getDescription(); ?>
-        </div>
-        <?php endforeach; ?>
-
         <?php if(count($this->smallCountries) > 0) : ?>
             <div class="small-country-list">
                 <h4>Small Countries</h4>
@@ -65,6 +59,13 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                 </ul>
             </div>
         <?php endif; ?>
+
+        <?php foreach($allBadges as $badge): ?>
+        <div class="badge-description" data-badge-name="<?php echo $badge->getName(); ?>">
+            <?php echo $badge->getDescription(); ?>
+        </div>
+        <?php endforeach; ?>
+
     </div>
     <div class="small-24 large-14 columns">
         <div id="map">

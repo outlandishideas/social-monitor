@@ -1970,8 +1970,8 @@ table td ul li a:hover {
 }
 
 .small-country-list {
-	margin-top: 2rem;
-	border-top: 1px solid #fff;
+	margin-top: 1rem;
+	margin-bottom: 2rem;
 }
 
 .small-country-list h4 {
