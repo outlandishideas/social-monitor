@@ -167,6 +167,7 @@ app.home = {
 		$countryStats.addClass('loading');
 		$countryStats.load('country/stats-panel/id/' + id, function(event){
 			$countryStats.removeClass('loading');
+			$('[data-badge-title]').text($('#homepage-tabs').find('dd.active').data('title'));
 			app.home.updateAll();
 		});
 	},
