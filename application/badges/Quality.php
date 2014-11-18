@@ -4,7 +4,7 @@ class Badge_Quality extends Badge_Abstract
 {
 	protected static $name = 'quality';
 	protected static $title = 'Quality';
-	protected static $description = '<p>The Quality Badge provides an overall score for the quality of the posts produced by the presence or presences in a Country or SBU. This score combines the following metrics:</p>
+	protected static $description = '<p>The Quality KPI provides an overall score for the quality of the posts produced by the presence or presences in a Country or SBU. This score combines the following metrics:</p>
 						<ul>
 							<li>The average number of posts / tweets per day.</li>
 							<li>The average number of links per day.</li>

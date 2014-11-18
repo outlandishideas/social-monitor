@@ -4,7 +4,7 @@ class Badge_Engagement extends Badge_Abstract
 {
 	protected static $name = 'engagement';
 	protected static $title = 'Engagement';
-	protected static $description = '<p>The Engagement Badge provides an overall score for how well the presence, country or SBU engages with its audience. This score combines the following metrics:</p>
+	protected static $description = '<p>The Engagement KPI provides an overall score for how well the presence, country or SBU engages with its audience. This score combines the following metrics:</p>
 						<ul>
 							<li>The ratio of replies by the presence owner to the number of posts / tweets by others.</li>
 							<li>The average time it takes to reply to a post / tweet.</li>
