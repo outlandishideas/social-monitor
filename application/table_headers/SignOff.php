@@ -15,8 +15,8 @@ class Header_SignOff extends Header_Abstract {
     public function getTableCellValue($model)
     {
         $value = $this->getValue($model);
-        $class = $value==1 ? "value-good" : "value-bad";
-        return "<span class='fa fa-lg fa-circle {$class}' data-value='{$value}'></span>";
+        $class = $value==1 ? "value-good icon-ok-sign" : "value-bad icon-remove-sign";
+        return "<span class='icon-background'><span class='fa fa-lg icon-large {$class}' data-value='{$value}'></span></span>";
     }
 
     /**
