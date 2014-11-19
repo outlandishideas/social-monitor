@@ -32,7 +32,9 @@ abstract class Chart_Abstract {
                 "axis" => array(
                     "x" => $this->getXAxis(),
                     "y" => $this->getYAxis()
-                )
+                ),
+                "tooltip" => $this->getTooltip(),
+                "legend" => $this->getLegend()
             )
         );
     }
@@ -76,6 +78,18 @@ abstract class Chart_Abstract {
      * @return mixed
      */
     abstract protected function getYAxis();
+
+    protected function getTooltip() {
+        return array(
+            'show' => false
+        );
+    }
+
+    protected function getLegend() {
+        return array(
+            'show' => false
+        );
+    }
 
     static function getInstance() {
         return Chart_Factory::getChart(self::getName());

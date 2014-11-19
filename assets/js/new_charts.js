@@ -55,7 +55,76 @@ app.newCharts = {
 				        }
 			        };
 		        }
-                app.state.chart = c3.generate(chartArgs)
+                chartArgs.data.onmouseover = (function() {
+                    var lastDate = 0;
+
+                    return function(a) {
+                        // this in this function refers to the chartInternals
+                        var date = new Date(a.x);
+                        //check if we have to update the table
+                        if (date == lastDate) {
+                            //nopes, so return early
+                            return;
+                        }
+                        //save the date for later use
+                        lastDate = date;
+                        //find the index to use
+                        var index = null;
+                        var targets = this.data.targets;
+                        for (var i = 0, l = targets[0].values.length; i < l; i++) {
+                            if (new Date(targets[0].values[i].x) - date === 0) {
+                                index = i;
+                                break;
+                            }
+                        }
+                        //now update the table
+                        for (var i = 0, l = targets.length; i < l; i++) {
+                            $('#chart-table-value-'+targets[i].id).html(targets[i].values[index].value);
+                        }
+                    };
+                })();
+                app.state.chart = c3.generate(chartArgs);
+                var targets = app.state.chart.internal.data.targets;
+                var numCols = Math.ceil((targets.length) / 10);
+                if (numCols > 3) {
+                    numCols = 3;
+                }
+                currentCol = 0;
+                var createRow = function(name, color, id, value) {
+                    return '<th data-series="'+id+'" class="series-toggle"><span class="color-block" style="background-color:'+color+'"></span>'+name+'</th><td id="chart-table-value-'+id+'">'+value+'</td>';
+                };
+                // create table
+                date = new Date(targets[0].values[0].x);
+                var html = '<table class="size-'+numCols+'"><tr><th colspan="'+(numCols * 2)+'" class="header">'+date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear()+'</th></tr>';
+                var startRow = true;
+                for (var i = 0, l = targets.length; i < l; i++) {
+                    var id = targets[i].id;
+                    var name = chartArgs.data.names[id], color = app.state.chart.color(id), value = targets[i].values[0].value;
+                    html += (startRow ? '<tr>' : '') + createRow(name, color, id, value);
+                    currentCol++;
+                    startRow = (currentCol % numCols == 0);
+                    html += (startRow ? '</tr>' : '');
+                }
+                if (!startRow) {
+                    // we are halfway through a row, so complete it first
+                    html += '<td colspan="'+((currentCol % numCols) * 2)+'">&nbsp;</td></tr>';
+                }
+                html += '</table>';
+                $('#new-chart-values').html(html);
+                $('.series-toggle').on({
+                    mouseenter: function(e) {
+                        app.state.chart.focus(''+$(this).data('series'));
+                    },
+                    mouseleave: function(e) {
+                        app.state.chart.revert();
+                    },
+                    click: function(e) {
+                        $this = $(this);
+                        app.state.chart.toggle(''+$this.data('series'));
+                        $this.toggleClass('inactive');
+                        $this.next('td').toggleClass('inactive');
+                    }
+                });
             })
             .always(function() {
                 //$('.chart-container').hideLoader();
