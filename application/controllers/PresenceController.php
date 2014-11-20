@@ -9,7 +9,8 @@ class PresenceController extends GraphingController
             Chart_Compare::getInstance(),
             Chart_Popularity::getInstance(),
             Chart_PopularityTrend::getInstance(),
-            Chart_ActionsPerDay::getInstance()
+            Chart_ActionsPerDay::getInstance(),
+            Chart_ResponseTime::getInstance()
         );
 	}
 

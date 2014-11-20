@@ -30,7 +30,8 @@ abstract class Chart_Factory {
                 new Chart_Reach($db),
                 new Chart_Engagement($db),
                 new Chart_Quality($db),
-                new Chart_ActionsPerDay($db)
+                new Chart_ActionsPerDay($db),
+                new Chart_ResponseTime($db)
             );
             self::$charts = array();
             foreach ($charts as $c) {
