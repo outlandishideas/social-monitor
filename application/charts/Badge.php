@@ -29,26 +29,19 @@ abstract class Chart_Badge extends Chart_Compare {
         return $names;
     }
 
-    private function getPresenceIdsFromData($data)
-    {
-        $ids = array_map(function($row){ return $row->presence_id; }, $data);
-        $ids = array_unique($ids);
-        return array_values($ids);
-    }
-
-    protected function getCampaignColumns($data = null)
+    protected function getCampaignColumns($data = null, $property = 'presence_id')
     {
         //seed the $columns array
         $columns = array(
             $this->xColumn => array($this->xColumn)
         );
-        foreach($this->getPresenceIdsFromData($data) as $presenceId){
-            $columns[$presenceId] = array($presenceId);
+        foreach($this->getPropertyFromData($property, $data) as $id){
+            $columns[$id] = array($id);
         }
 
         $xCol = $this->xColumn;
         foreach($this->dataColumns as $column){
-            $columns = array_reduce($data, function($carry, $row) use($column, $xCol){
+            $columns = array_reduce($data, function($carry, $row) use($column, $xCol, $property){
                 $row = (array)$row;
                 //if we haven't already added the date to the date records, do so
                 if(!in_array($row[$xCol], $carry[$xCol])) {
@@ -57,7 +50,7 @@ abstract class Chart_Badge extends Chart_Compare {
 
                 //our data column appears in this row, add it to the correct presence
                 if(array_key_exists($column, $row)){
-                    $carry[$row['presence_id']][] = $row[$column];
+                    $carry[$row[$property]][] = $row[$column];
                 }
                 return $carry;
             }, $columns);

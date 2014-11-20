@@ -54,14 +54,14 @@ class Chart_Compare extends Chart_Abstract {
         return $names;
     }
 
-    protected function getCampaignColumns($data = null)
+    protected function getCampaignColumns($data = null, $property = 'presence_id')
     {
         if (!is_array($data)) {
             return array();
         }
 
         //get the number of presences in this data so we can divide by this number later
-        $presenceCount = count($this->getPresenceIdsFromData($data));
+        $presenceCount = count($this->getPropertyFromData($property, $data));
 
         $dataColumns = $this->dataColumns;
 
@@ -106,7 +106,18 @@ class Chart_Compare extends Chart_Abstract {
             $data = $model->getBadgeHistory($start, $end);
             $columns = $this->getColumns($data);
             $names = $this->getNames($data);
-        } else if ($model instanceof Model_Country || $model instanceof Model_Group || $model instanceof Model_Region) {
+        } else if ($model instanceof Model_Region) {
+            $data = $model->getBadgeHistory($start, $end);
+            $columns = array_values($this->getCampaignColumns($data, 'campaign_id'));
+            if (get_class($this) == 'Chart_Compare') {
+                $names = $this->getNames();
+            } else {
+                $names = array();
+                foreach (Model_Country::fetchByIds($this->getCountryIdsFromData($data)) as $c) {
+                    $names[$c->id] = $c->getName();
+                }
+            }
+        } else if ($model instanceof Model_Country || $model instanceof Model_Group) {
             /** @var Model_Campaign $model */
             $data = $model->getBadgeHistory($start, $end);
             $columns = array_values($this->getCampaignColumns($data));
@@ -147,16 +158,20 @@ class Chart_Compare extends Chart_Abstract {
         );
     }
 
-    private function getPresenceIdsFromData($data)
+    protected function getPresenceIdsFromData($data)
     {
-        $ids = array();
-        if (is_array($data)) {
-            $ids = array_map(function($a) { return $a->presence_id; }, $data);
-            $ids = array_unique($ids);
-            $ids = array_values($ids);
-        }
-        return $ids;
+        return $this->getPropertyFromData('presence_id', $data);
     }
 
+    protected function getCountryIdsFromData($data)
+    {
+        return $this->getPropertyFromData('campaign_id', $data);
+    }
 
+    protected function getPropertyFromData($property, $data)
+    {
+        $values = array_map(function($row) use ($property) { return $row->$property; }, $data);
+        $values = array_unique($values);
+        return array_values($values);
+    }
 }

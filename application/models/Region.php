@@ -13,6 +13,42 @@ class Model_Region extends Model_Campaign {
         parent::fromArray($data);
     }
 
+    public function getBadgeHistory(DateTime $start, DateTime $end)
+    {
+        $ret = array();
+        foreach ($this->getCountries() as $c) {
+            $data = $c->getBadgeHistory($start, $end);
+            $temp = array();
+            foreach ($data as $d) {
+                if (!array_key_exists($d->date, $temp)) $temp[$d->date] = array();
+                $temp[$d->date][] = $d;
+            }
+            foreach ($temp as $date => $scores) {
+                $reach = 0;
+                $engagement = 0;
+                $quality = 0;
+                foreach ($scores as $s) {
+                    $reach += $s->reach;
+                    $engagement += $s->engagement;
+                    $quality += $s->quality;
+                }
+                $reach /= count($scores);
+                $engagement /= count($scores);
+                $quality /= count($scores);
+
+                $ret[] = (object) array(
+                    'daterange' => $s->daterange,
+                    'reach' => round($reach),
+                    'engagement' => round($engagement),
+                    'quality' => round($quality),
+                    'date' => $date,
+                    'campaign_id' => $c->id
+                );
+            }
+        }
+        return $ret;
+    }
+
     /**
      * @return Model_Country[]
      */

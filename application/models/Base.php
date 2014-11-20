@@ -19,7 +19,7 @@ abstract class Model_Base
 	protected $_db;
 
 	protected $_row, $_isNew;
-	
+
 	public function __construct($data = null, $fromDb = false)
 	{
 		if(empty(self::$db)){
@@ -52,7 +52,7 @@ abstract class Model_Base
 		}
 		return array();
 	}
-	
+
 	public function __get($name)
 	{
 		$methodName = 'get'.ucfirst($name);
@@ -63,7 +63,7 @@ abstract class Model_Base
 		}
 		return null;
 	}
-	
+
 	public function __set($name, $value)
 	{
 		$methodName = 'set'.ucfirst($name);
@@ -75,11 +75,11 @@ abstract class Model_Base
 			return $this->$name = $value;
 		}
 	}
-	
+
 	public function save()
 	{
 		$data = $this->_row;
-		
+
 		if ($this->_isNew) {
 			$query = 'INSERT INTO '.static::$tableName.' '.
 				'(`'.implode('`,`', array_keys($data)).'`) '.
@@ -91,7 +91,7 @@ abstract class Model_Base
 			//add id to fill last placeholder
 			$data[] = $this->id;
 		}
-		
+
 		$statement = $this->_db->prepare($query);
 		$statement->execute(array_values($data));
 
@@ -99,9 +99,9 @@ abstract class Model_Base
 			$this->id = $this->_db->lastInsertId();
 			$this->_isNew = false;
 		}
-				
+
 	}
-	
+
 	public function delete()
 	{
 		$statement = $this->_db->prepare('DELETE FROM '.static::$tableName.' WHERE id = ?');
@@ -109,7 +109,7 @@ abstract class Model_Base
 		$this->_row = array();
 		$this->_isNew = true;
 	}
-	
+
 	public function deleteIfEmpty()
 	{
 		foreach ($this->toArray() as $name=>$value) {
@@ -120,7 +120,7 @@ abstract class Model_Base
 		$this->delete();
 		return true;
 	}
-	
+
 	public function toArray($extraColumns = array())
 	{
 		$row = $this->_row;
@@ -129,7 +129,7 @@ abstract class Model_Base
 		}
 		return $row;
 	}
-	
+
 	public function fromArray($data)
 	{
 		if ($data) {
@@ -147,6 +147,13 @@ abstract class Model_Base
 			return null;
 		}
 		return self::fetchBy('id', $id);
+	}
+
+	public static function fetchByIds($ids) {
+		if (!is_array($ids)) {
+			$ids = array($ids);
+		}
+		return self::fetchAll("`id` IN (".implode(', ', array_fill(0, count($ids), '?')).")", $ids);
 	}
 
 	/**
@@ -242,7 +249,7 @@ abstract class Model_Base
 		}
 		return $objects;
 	}
-	
+
 	public static function insertData($tableName, $data) {
 		$dataSize = count($data);
 		if ($dataSize == 0) return 0;
@@ -303,7 +310,7 @@ abstract class Model_Base
 				$c[] = $validCols[$col] . ' ' . $dir;
 			}
 		}
-		
+
 		return $c ? ' ORDER BY ' . implode(', ', $c) : '';
 	}
 

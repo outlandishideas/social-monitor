@@ -5,6 +5,15 @@ class RegionController extends CampaignController
 
     protected static $publicActions = array();
 
+    protected function chartOptions() {
+        return array(
+            Chart_Compare::getInstance(),
+            Chart_Reach::getInstance(),
+            Chart_Engagement::getInstance(),
+            Chart_Quality::getInstance()
+        );
+    }
+
     protected static function tableMetrics(){
         return array(
             Metric_PopularityTime::getName() => 'Time to Target Audience',
