@@ -250,6 +250,8 @@ class RegionController extends CampaignController
             Header_TotalScore::getInstance(),
             Header_TargetAudience::getInstance(),
             Header_PercentTargetAudience::getInstance(),
+            Header_ActionsPerDay::getInstance(),
+            Header_ResponseTime::getInstance(),
             Header_Countries::getInstance(),
             Header_CountryCount::getInstance(),
             Header_PresenceCount::getInstance(),

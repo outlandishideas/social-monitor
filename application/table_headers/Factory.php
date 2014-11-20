@@ -45,7 +45,9 @@ abstract class Header_Factory
                 new Header_Country(),
                 new Header_CountryCount(),
                 new Header_Countries(),
-                new Header_PercentTargetAudience()
+                new Header_PercentTargetAudience(),
+                new Header_ActionsPerDay(),
+                new Header_ResponseTime()
             );
             self::$headers = array();
             foreach ($headers as $h) {

@@ -382,6 +382,8 @@ class PresenceController extends GraphingController
             Header_TotalScore::getInstance(),
             Header_CurrentAudience::getInstance(),
             Header_TargetAudience::getInstance(),
+            Header_ActionsPerDay::getInstance(),
+            Header_ResponseTime::getInstance(),
             Header_Options::getInstance()
         );
     }

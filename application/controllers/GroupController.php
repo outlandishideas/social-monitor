@@ -267,6 +267,8 @@ class GroupController extends CampaignController {
             Header_TotalRank::getInstance(),
             Header_TotalScore::getInstance(),
             Header_TargetAudience::getInstance(),
+            Header_ActionsPerDay::getInstance(),
+            Header_ResponseTime::getInstance(),
             Header_Presences::getInstance(),
             Header_PresenceCount::getInstance(),
             Header_Options::getInstance()
