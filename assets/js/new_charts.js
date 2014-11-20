@@ -79,7 +79,11 @@ app.newCharts = {
                         }
                         //now update the table
                         for (var i = 0, l = targets.length; i < l; i++) {
-                            $('#chart-table-value-'+targets[i].id).html(targets[i].values[index].value);
+                            //$('#chart-table-value-'+targets[i].id).html(targets[i].values[index].value);
+                            // go for native JS instead of jQuery here, since it's much faster. jQuery will give a noticable lag
+                            // when moveing the mouse over the chart, native JS is much snappier. Profiling confirms that
+                            // native JS is indeed the best way to go in this case. (jQuery's html method on elements is the culprit)
+                            document.getElementById('chart-table-value-'+targets[i].id).innerHTML = targets[i].values[index].value;
                         }
                     };
                 })();
@@ -107,7 +111,7 @@ app.newCharts = {
                 }
                 if (!startRow) {
                     // we are halfway through a row, so complete it first
-                    html += '<td colspan="'+((currentCol % numCols) * 2)+'">&nbsp;</td></tr>';
+                    html += '<td colspan="'+((numCols - (currentCol % numCols)) * 2)+'">&nbsp;</td></tr>';
                 }
                 html += '</table>';
                 $('#new-chart-values').html(html);

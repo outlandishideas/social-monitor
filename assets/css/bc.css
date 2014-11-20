@@ -1776,27 +1776,32 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	padding: 20px 10px 20px 50px;
 }
 #new-chart-values table {
-	background: #FFF;
-	color: #000;
+	color: #FFF;
 	width: 100%;
+	background-color: #0A3542;
+}
+#new-chart-values table tr {
+	background-color: #0A3542;
 }
 #new-chart-values table th {
-	background: #FFF;
-	color: #000;
-	border-left: 1px solid black;
+	color: #FFF;
+	border-left: 1px solid white;
 	border-bottom: 1px solid #AAA;
 	transition: opacity .4s ease-in-out;
+	font-weight: normal;
+	background-color: #0A3542;
 }
 #new-chart-values table td {
-	background: #FFF;
-	color: #000;
-	border-right: 1px solid black;
+	color: #FFF;
+	border-right: 1px solid white;
 	border-bottom: 1px solid #AAA;
 	transition: opacity .2s ease-in-out;
+	font-weight: bold;
+	background-color: #0A3542;
 }
 #new-chart-values table th.header {
-	background: #DDD;
-	border: 1px solid black;
+	border: 1px solid white;
+	background-color: #0A3542;
 }
 #new-chart-values span.color-block {
 	display: inline-block;
