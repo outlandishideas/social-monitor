@@ -24,7 +24,7 @@ class Header_ResponseTime extends Header_Abstract {
         if ($model instanceof Model_Presence) {
             $data = $model->getResponseData($start, $end);
             if (is_null($data)) return null;
-            if (!$data || empty($data)) return 0;
+            if (!$data || empty($data)) return null;
             $total = 0;
             foreach ($data as $d) {
                 $total += $d->diff;
