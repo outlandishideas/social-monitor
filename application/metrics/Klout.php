@@ -5,6 +5,7 @@ class Metric_Klout extends Metric_Abstract {
     protected static $name = "klout_score";
     protected static $title = "Klout Score";
     protected static $icon = "fa fa-hand-o-right";
+    protected static $gliding = false;
 
     function __construct()
     {

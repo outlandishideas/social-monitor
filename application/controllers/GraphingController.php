@@ -202,6 +202,15 @@ abstract class GraphingController extends BaseController {
 					}
 					$m['score'] = $metricScore;
 					$m['color'] = $metricColor;
+					$m['gliding'] = $metric::isGliding();
+
+					if (!$m['gliding']) {
+						if ($m['score'] == 0) {
+							$m['color'] = '#D06959';
+						} else {
+							$m['color'] = '#84af5b';
+						}
+					}
 				}
 				$metrics[] = $m;
 			}

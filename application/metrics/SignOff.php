@@ -5,6 +5,7 @@ class Metric_SignOff extends Metric_Abstract {
     protected static $name = "sign_off";
     protected static $title = "Signed Off";
     protected static $icon = "fa fa-check-square";
+    protected static $gliding = false;
 
     /**
      * Returns 100 if presence has been signed off, else returns 0

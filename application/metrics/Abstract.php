@@ -5,6 +5,7 @@ abstract class Metric_Abstract {
     protected static $name;
     protected static $title;
     protected static $icon;
+    protected static $gliding = true;
 
     protected $target = 0;
 
@@ -42,6 +43,10 @@ abstract class Metric_Abstract {
 
     protected static function boundScore($score, $min = 0, $max = 100) {
         return max($min, min($max, $score));
+    }
+
+    public static function isGliding() {
+        return static::$gliding;
     }
 
     public static function getInstance()
