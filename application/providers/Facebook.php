@@ -21,6 +21,7 @@ class Provider_Facebook extends Provider_Abstract
 		$stmt = $this->db->prepare("SELECT created_time
 		    FROM {$this->tableName}
 		    WHERE presence_id = :id
+            AND created_time <= DATE_SUB(NOW(), INTERVAL 7 DAY)
 		    ORDER BY created_time DESC
 		    LIMIT 1");
 		$stmt->execute(array(':id' => $presence->getId()));
@@ -45,6 +46,8 @@ class Provider_Facebook extends Provider_Abstract
 			VALUES
 			(:post_id, :presence_id, :message, :created_time, :actor_id, :comments,
 				:likes, :share_count, :permalink, :type, :posted_by_owner, :needs_response, :in_response_to)
+            ON DUPLICATE KEY UPDATE
+                `likes` = VALUES(`likes`), `share_count` = VALUES(`share_count`), `comments` = VALUES(`comments`)
 		");
 
         $count = 0;
