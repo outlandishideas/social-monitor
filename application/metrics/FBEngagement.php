@@ -37,6 +37,7 @@ class Metric_FBEngagement extends Metric_Abstract {
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $score = $presence->getMetricValue($this);
+        var_dump($score);
         $score = ($score < $this->target) ? 0 : 100 ;
         return $score;
     }
