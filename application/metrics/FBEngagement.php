@@ -28,7 +28,6 @@ class Metric_FBEngagement extends Metric_Abstract {
             $total += $d['value'];
             $count++;
         }
-        exit;
         if ($count == 0) {
             return 0;
         }
