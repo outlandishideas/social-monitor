@@ -2340,3 +2340,10 @@ table a.view-link:hover {
 [data-badge-score] {
 	transition: color .5s ease-in-out;
 }
+
+#uncheck-all {
+	cursor: pointer;
+}
+#uncheck-all:hover {
+	text-decoration: underline;
+}
