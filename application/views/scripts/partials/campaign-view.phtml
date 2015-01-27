@@ -28,7 +28,7 @@ if ($campaign instanceof Model_Country) {
             </div>
         </div>
 
-        <?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial)); ?>
+        <?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial, 'showMetrics' => false)); ?>
 
     </div>
     <div class="small-24 large-12 xlarge-16 columns">
