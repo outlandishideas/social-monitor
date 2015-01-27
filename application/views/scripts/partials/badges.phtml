@@ -66,7 +66,7 @@ $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
                                         <?php if (array_key_exists('score', $metric)): ?>
                                             style="color: <?php echo($metric['color']); ?>"
                                             <?php if ($metric['score'] > 0): ?>
-                                                title="This presence has scored <?php echo($metric['score']); ?>% for <?php echo $metric['title']; ?>."
+                                                title="This presence has scored <?php echo($metric['score']); ?>% for <?php echo $metric['title']; ?> based on an average of the last 30 days of data"."
                                             <?php else: ?>
                                                 <?php if ($metric['gliding']): ?>
                                                     title="There is no data available to calculate <?php echo $metric['title']; ?>."
