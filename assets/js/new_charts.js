@@ -78,7 +78,7 @@ app.newCharts = {
                             }
                         }
                         //now update the table
-                        document.getElementById('current-chart-date').innerHTML = date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear();
+                        document.getElementById('current-chart-date').innerHTML = date.toDateString();
                         for (var i = 0, l = targets.length; i < l; i++) {
                             //$('#chart-table-value-'+targets[i].id).html(targets[i].values[index].value);
                             // go for native JS instead of jQuery here, since it's much faster. jQuery will give a noticable lag
@@ -100,7 +100,7 @@ app.newCharts = {
                 };
                 // create table
                 date = new Date(targets[0].values[0].x);
-                var html = '<table class="size-'+numCols+'"><tr><th colspan="'+((numCols * 2) - 1)+'" class="header" id="current-chart-date">'+date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear()+'</th><th class="header"><span id="uncheck-all">Uncheck all</span></th></tr>';
+                var html = '<table class="size-'+numCols+'"><tr><th colspan="'+((numCols * 2) - 1)+'" class="header" id="current-chart-date">'+date.toDateString()+'</th><th class="header"><span id="uncheck-all">Uncheck all</span></th></tr>';
                 var startRow = true;
                 for (var i = 0, l = targets.length; i < l; i++) {
                     var id = targets[i].id;
