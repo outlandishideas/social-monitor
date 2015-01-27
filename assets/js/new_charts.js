@@ -100,7 +100,8 @@ app.newCharts = {
                 };
                 // create table
                 date = new Date(targets[0].values[0].x);
-                var html = '<table class="size-'+numCols+'"><tr><th colspan="'+((numCols * 2) - 1)+'" class="header" id="current-chart-date">'+date.toDateString()+'</th><th class="header"><span id="uncheck-all">Uncheck all</span></th></tr>';
+                var html = '<p>Click on each item to toggle them on or off the graph</p>';
+                html += '<table class="size-'+numCols+'"><tr><th colspan="'+(numCols * 2)+'" class="header" id="current-chart-date">'+date.toDateString()+'</th><th class="header"><span id="uncheck-all">Uncheck all</span></th></tr>';
                 var startRow = true;
                 for (var i = 0, l = targets.length; i < l; i++) {
                     var id = targets[i].id;
