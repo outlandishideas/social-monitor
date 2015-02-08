@@ -90,6 +90,7 @@ app.newCharts = {
                 })();
                 app.state.chart = c3.generate(chartArgs);
                 var targets = app.state.chart.internal.data.targets;
+                var shown = targets.length; //keep track of how many series are being shown
                 var numCols = Math.ceil((targets.length) / 10);
                 if (numCols > 3) {
                     numCols = 3;
@@ -101,7 +102,7 @@ app.newCharts = {
                 // create table
                 date = new Date(targets[0].values[0].x);
                 var html = '<p>Click on each item to toggle them on or off the graph</p>';
-                html += '<table class="size-'+numCols+'"><tr><th colspan="'+(numCols * 2)+'" class="header" id="current-chart-date">'+date.toDateString()+'</th><th class="header"><span id="uncheck-all">Uncheck all</span></th></tr>';
+                html += '<table class="size-'+numCols+'"><tr><th colspan="'+((numCols * 2) - 1)+'" class="header" id="current-chart-date">'+date.toDateString()+'</th><th class="header"><span id="uncheck-all">Hide all</span></th></tr>';
                 var startRow = true;
                 for (var i = 0, l = targets.length; i < l; i++) {
                     var id = targets[i].id;
@@ -129,18 +130,36 @@ app.newCharts = {
                         app.state.chart.toggle(''+$this.data('series'));
                         $this.toggleClass('inactive');
                         $this.next('td').toggleClass('inactive');
+                        $this.hasClass('inactive') ? shown-- : shown++;
+                        $('#uncheck-all').html(shown > 0 ? 'Hide all' : 'Show all');
                     }
                 });
                 $('#uncheck-all').on('click', function() {
-                    $('.series-toggle').each(function () {
-                        $this = $(this);
-                        if ($this.hasClass('inactive')) {
-                            return;
-                        }
-                        app.state.chart.toggle(''+$this.data('series'));
-                        $this.addClass('inactive');
-                        $this.next('td').addClass('inactive');
-                    });
+                    var $self = $(this);
+                    if (shown == 0) {
+                        $('.series-toggle').each(function() {
+                            $this = $(this);
+                            if (!$this.hasClass('inactive')) {
+                                return;
+                            }
+                            app.state.chart.show(''+$this.data('series'));
+                            $this.removeClass('inactive');
+                            $this.next('td').removeClass('inactive');
+                            shown++;
+                        });
+                    } else {
+                        $('.series-toggle').each(function () {
+                            $this = $(this);
+                            if ($this.hasClass('inactive')) {
+                                return;
+                            }
+                            app.state.chart.hide(''+$this.data('series'));
+                            $this.addClass('inactive');
+                            $this.next('td').addClass('inactive');
+                            shown--;
+                        });
+                    }
+                    $self.html(shown > 0 ? 'Hide all' : 'Show all');
                 });
             })
             .always(function() {
