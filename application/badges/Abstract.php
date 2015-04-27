@@ -103,6 +103,8 @@ abstract class Badge_Abstract
             $range = Enum_Period::MONTH();
         }
 
+        $defaultRank = count(Model_PresenceFactory::getPresences());
+
 		$name = static::getName();
 
 		$sql = "
@@ -129,7 +131,7 @@ abstract class Badge_Abstract
 		$data = static::doRanking($data);
 		foreach($data as $row) {
 			$stmt->execute(array(
-				':rank'		=> $row['rank'],
+				':rank'		=> isset($row['rank']) and !empty($row['rank']) ? $row['rank'] : $defaultRank,
 				':id'		=> $row['presence_id'],
 				':date'		=> $date->format('Y-m-d'),
 				':range'	=> $range
