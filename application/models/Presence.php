@@ -341,12 +341,14 @@ class Model_Presence
 			FROM ' . $tableName . '
 			WHERE ' . implode(' AND ', $clauses) .'
 			AND in_response_to IS NOT NULL
+			GROUP BY presence_id
 		) as t1,
 		(
 			SELECT presence_id, COUNT(*) as posts
 			FROM ' . $tableName . '
 			WHERE ' . implode(' AND ', $clauses) .'
 			AND posted_by_owner = 0
+			GROUP BY presence_id
 		) as t2';
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute(array(
