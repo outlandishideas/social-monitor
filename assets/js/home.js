@@ -207,6 +207,7 @@ app.home = {
 		var $countryStats = $('#country-stats');
 		$countryStats.addClass('loading');
 		$countryStats.load('country/stats-panel/id/' + id, function(event){
+            $countryStats.removeClass('global');
 			$countryStats.removeClass('loading');
 			$('[data-badge-title]').text($('#homepage-tabs').find('dd.active').data('title'));
 			app.home.updateAll();
@@ -374,7 +375,7 @@ app.home = {
 
         //totalscore
         var score = app.home.totalScore();
-        $div = $('#country-stats [data-badge]');
+        $div = $('#country-stats.global [data-badge]');
         updateElement($div, score)
 	}
 };
