@@ -23,7 +23,7 @@ abstract class Chart_Badge extends Chart_Compare {
             $presences = Model_PresenceFactory::getPresencesById($presenceIds);
 
             foreach ($presences as $p) {
-                $names[$p->getId()] = $p->getName();
+                $names[$p->getId()] = "[{$p->getType()}]" . $p->getName();
             }
         }
         return $names;
