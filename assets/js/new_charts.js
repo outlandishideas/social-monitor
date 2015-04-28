@@ -167,11 +167,15 @@ app.newCharts = {
                     var text = $toggle.text()
                     var matches = text.match(socialMediaType);
 
-                    var newText = text.replace(matches[1], '');
+                    if (matches.length == 3) {
+                        var newText = text.replace(matches[1], '');
+                        var $icon = $('<span>').addClass('fa-fw ' + matches[2]);
+                        var $colorBlock = $toggle.find('.color-block');
 
-                    var $icon = $('<span>').addClass('fa-fw ' + matches[2]);
+                        $toggle.text('');
+                        $toggle.append($colorBlock).append($icon).append(newText);
+                    }
 
-                    $toggle.text('').append($icon).append(newText);
                 });
             })
             .always(function() {
