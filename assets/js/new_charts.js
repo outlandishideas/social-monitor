@@ -149,7 +149,7 @@ app.newCharts = {
                         });
                     } else {
                         $('.series-toggle').each(function () {
-                            $this = $(this);
+                            var $this = $(this);
                             if ($this.hasClass('inactive')) {
                                 return;
                             }
@@ -160,6 +160,18 @@ app.newCharts = {
                         });
                     }
                     $self.html(shown > 0 ? 'Hide all' : 'Show all');
+                });
+                var socialMediaType = new RegExp(/^(\[(.+)\])/);
+                $('.series-toggle').each(function() {
+                    var $toggle = $(this);
+                    var text = $toggle.text()
+                    var matches = text.match(socialMediaType);
+
+                    var newText = text.replace(matches[1], '');
+
+                    var $icon = $('<span>').addClass('fa-fw ' + matches[2]);
+
+                    $toggle.text('').append($icon).append(newText);
                 });
             })
             .always(function() {
