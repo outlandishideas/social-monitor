@@ -3,7 +3,7 @@
 class Metric_ResponseRatio extends Metric_Abstract {
 
     protected static $name = "response_ratio";
-    protected static $title = "Conversation";
+    protected static $title = "Replies";
     protected static $icon = "fa fa-reply";
 
     function __construct()

@@ -3,7 +3,7 @@
 class Metric_LikesPerPost extends Metric_Abstract {
 
     protected static $name = "likes_per_post";
-    protected static $title = "Applause";
+    protected static $title = "Likes per post";
     protected static $icon = "fa fa-thumbs-o-up";
 
     function __construct()
