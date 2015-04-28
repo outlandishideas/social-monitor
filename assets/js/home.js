@@ -10,6 +10,46 @@ app.home = {
 	smallCountryData: [],
 	groupData: [],
 	metrics: {},
+    totalData: undefined,
+
+    totalScore: function() {
+        if (!app.home.totalData) {
+            var data = [app.home.countryData, app.home.smallCountryData, app.home.groupData],
+                total = {},
+                divideBy = 0,
+                i, d, badge, day;
+
+
+            for (d in data) {
+                for (i in data[d]) {
+                    for (badge in data[d][i].b) {
+                        for (day in data[d][i].b[badge]) {
+                            if (!total.hasOwnProperty(badge)) {
+                                total[badge] = {}
+                            }
+                            if (!total[badge].hasOwnProperty(day)) {
+                                total[badge][day] = {s: 0};
+                            }
+                            total[badge][day].s += data[d][i].b[badge][day].s
+                        }
+                    }
+                }
+
+                divideBy += data[d].length;
+            }
+
+            for (badge in total) {
+                for (day in total[badge]) {
+                    total[badge][day].s /= divideBy;
+                }
+            }
+
+            app.home.totalData = {b: total};
+        }
+
+        return app.home.totalData;
+    },
+
     setup: function(){
 
 	    var mapArgs = window.mapArgs;
@@ -143,6 +183,7 @@ app.home = {
 
 		app.home.map.draw(view, app.home.map.options);
 	},
+
 	/**
 	 * Called when a country is clicked
 	 * @param e
@@ -330,5 +371,10 @@ app.home = {
 			$div = $('[data-group-id="'+g.id+'"]');
 			updateElement($div, g);
 		}
+
+        //totalscore
+        var score = app.home.totalScore();
+        $div = $('#country-stats [data-badge]');
+        updateElement($div, score)
 	}
 };
