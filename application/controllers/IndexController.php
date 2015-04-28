@@ -42,6 +42,23 @@ class IndexController extends GraphingController
 		}
 		$this->view->totalScore = $totalScore;
 
+        $totalScores = array_fill_keys(Badge_Factory::getBadgeNames(), 0);
+        $allBadges = Model_Presence::getAllBadges();
+        if(count($allBadges) > 0 ){
+            foreach($allBadges as $presence) {
+                foreach($presence as $badge => $score) {
+                    if (array_key_exists($badge, $totalScores)) {
+                        $totalScores[$badge] += $score;
+                    }
+                }
+            };
+            $badgeCount = count($allBadges);
+            foreach($totalScores as $key => $score) {
+                $totalScores[$key] /= $badgeCount;
+            }
+        }
+        $this->view->totalScores = $totalScores;
+
 		$this->view->dateRangeString = $old->format('d M Y') . ' - ' . $now->format('d M Y');
 		$this->view->currentDate = $now->format('Y-m-d');
 		$this->view->dayRange = $dayRange;
