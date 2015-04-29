@@ -9,6 +9,7 @@ app.home = {
 	mapData: null,
 	smallCountryData: [],
 	groupData: [],
+	fanData: [],
 	metrics: {},
     totalData: undefined,
 
@@ -59,6 +60,7 @@ app.home = {
 	    app.home.groupData = mapArgs.groupData;
 	    app.home.countryData = mapArgs.mapData;
 	    app.home.geochartMetrics = mapArgs.geochartMetrics;
+	    app.home.fanData = mapArgs.fanData;
 
 	    // copy the provided metrics to app.home, and populate values
 	    app.home.metrics = mapArgs['geochartMetrics'];
@@ -136,7 +138,8 @@ app.home = {
 			}
 			var $score = $this.find('[data-badge-score]');
 			var $bar = $this.find('[data-badge-bar]');
-			$score.text(score + '%').css('color', color);
+
+			$score.text(score + $score.data('badge-score')).css('color', color);
 			$bar.css({
 				'width': score + '%',
 				'background-color': color
@@ -377,7 +380,12 @@ app.home = {
 
         //totalscore
         var score = app.home.totalScore();
-        $div = $('#country-stats.global [data-badge]');
+        $div = $('#country-stats.global #overall-score[data-badge]');
+        updateElement($div, score)
+
+        //totalscore
+        var score = app.home.fanData;
+        $div = $('#country-stats.global #overall-fans[data-badge]');
         updateElement($div, score)
 	}
 };

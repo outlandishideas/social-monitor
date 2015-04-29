@@ -1,5 +1,9 @@
 <?php
 
+use Outlandish\SocialMonitor\ObjectCache\FanDataObjectCache;
+use Outlandish\SocialMonitor\Query\PresencePopularityHistoryDataQuery;
+use Outlandish\SocialMonitor\Query\TotalPopularityHistoryDataQuery;
+
 class IndexController extends GraphingController
 {
 	protected static $publicActions = array('index', 'build-badge-data');
@@ -25,39 +29,20 @@ class IndexController extends GraphingController
             }
 		}
 
+
+        $fanDataCache = new FanDataObjectCache(Zend_Registry::get('db')->getConnection());
+        $fanData = $fanDataCache->get(true);
+        if (!$fanData) {
+            $fanData = $fanDataCache->set(true);
+        }
+
         $this->view->mapArgs = array(
             'geochartMetrics' => $this->view->geochartMetrics,
             'mapData' => $mapData,
             'smallMapData' => $smallMapData,
-            'groupData' => $groupData
+            'groupData' => $groupData,
+            'fanData' => $fanData
         );
-
-		$totalScore = 0;
-		$allBadges = Model_Presence::getAllBadges();
-		if(count($allBadges) > 0 ){
-			foreach($allBadges as $presence) {
-				$totalScore += $presence['total'];
-			};
-			$totalScore /= count($allBadges);
-		}
-		$this->view->totalScore = $totalScore;
-
-        $totalScores = array_fill_keys(Badge_Factory::getBadgeNames(), 0);
-        $allBadges = Model_Presence::getAllBadges();
-        if(count($allBadges) > 0 ){
-            foreach($allBadges as $presence) {
-                foreach($presence as $badge => $score) {
-                    if (array_key_exists($badge, $totalScores)) {
-                        $totalScores[$badge] += $score;
-                    }
-                }
-            };
-            $badgeCount = count($allBadges);
-            foreach($totalScores as $key => $score) {
-                $totalScores[$key] /= $badgeCount;
-            }
-        }
-        $this->view->totalScores = $totalScores;
 
 		$this->view->dateRangeString = $old->format('d M Y') . ' - ' . $now->format('d M Y');
 		$this->view->currentDate = $now->format('Y-m-d');
