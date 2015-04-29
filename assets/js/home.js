@@ -14,7 +14,7 @@ app.home = {
 
     totalScore: function() {
         if (!app.home.totalData) {
-            var data = [app.home.countryData, app.home.smallCountryData, app.home.groupData],
+            var data = [app.home.countryData, app.home.groupData],
                 total = {},
                 divideBy = 0,
                 i, d, badge, day;
@@ -22,6 +22,10 @@ app.home = {
 
             for (d in data) {
                 for (i in data[d]) {
+                    if (data[d][i].id == -1) {
+                        continue;
+                    }
+                    divideBy += 1;
                     for (badge in data[d][i].b) {
                         for (day in data[d][i].b[badge]) {
                             if (!total.hasOwnProperty(badge)) {
@@ -34,8 +38,6 @@ app.home = {
                         }
                     }
                 }
-
-                divideBy += data[d].length;
             }
 
             for (badge in total) {
