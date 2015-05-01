@@ -1,6 +1,6 @@
-<h1>Engagement Scoring</h1>
+<?php
+    $buttons = $this->gatekeeper()->filterAll(array(
+        '<a class="button-bc" href="%url%">Download CSV</a>' => array('action'=>'download'),
+    ));
 
-<h2>Type 1</h2>
-<ul>
-    <li>Likes: </li>
-</ul>
+echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
