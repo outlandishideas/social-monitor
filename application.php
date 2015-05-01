@@ -14,7 +14,7 @@ use Outlandish\SocialMonitor\Command\GreetCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
-$application->add(new GreetCommand());
-$application->add(new CalculateAverageScoreCommand());
-$application->add(new FacebookEngagementCommand());
+$application->add(new GreetCommand(null, $container));
+$application->add(new CalculateAverageScoreCommand(null, $container));
+$application->add(new FacebookEngagementCommand(null, $container));
 $application->run();
