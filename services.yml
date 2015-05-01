@@ -1,0 +1,26 @@
+parameters:
+    mailer.transport: sendmail
+
+services:
+    pdo:
+        class: PDO
+        arguments:
+            dsn: "mysql:host=127.0.0.1;dbname=bcmonitor"
+            user: "root"
+            password: ""
+
+    facebook_engagement.query.standard:
+        class:     Outlandish\SocialMonitor\FacebookEngagement\Query\StandardFacebookEngagementQuery
+        arguments: ["@pdo"]
+
+    facebook_engagement.query.weighted:
+        class:     Outlandish\SocialMonitor\FacebookEngagement\Query\WeightedFacebookEngagementQuery
+        arguments: ["@pdo"]
+
+    facebook_engagement.standard:
+        class:     Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric
+        arguments: ["@facebook_engagement.query.standard"]
+
+    facebook_engagement.weighted:
+        class:     Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric
+        arguments: ["@facebook_engagement.query.weighted"]

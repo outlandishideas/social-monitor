@@ -19,8 +19,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
-class FacebookEngagementCommand extends Command
+class FacebookEngagementCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
@@ -63,8 +64,8 @@ class FacebookEngagementCommand extends Command
         $then = clone $now;
         $days = $input->getOption('days');
         $then->modify("-$days days");
-        $factory = new FacebookEngagementMetricFactory();
-        $engagementScore = $factory->getMetric($input->getOption('type'))->get($presenceId, $now, $then);
+
+        $engagementScore = $this->getContainer()->get('facebook_engagement.standard')->get($presenceId, $now, $then);
 
         if ($engagementScore) {
             $output->writeln("Engagement Score for $presenceId is $engagementScore");
