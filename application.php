@@ -22,4 +22,5 @@ $application->add(new CalculateAverageScoreCommand(null, $container));
 $application->add(new FacebookEngagementCommand(null, $container));
 $application->add(new UpdatePresencesCommand(null, $container));
 $application->add(new UpdateStatusesCommand(null, $container));
+$application->add(new FacebookPageCommand(null, $container));
 $application->run();
