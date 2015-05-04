@@ -13,7 +13,7 @@ class Provider_Facebook extends Provider_Abstract
      */
     private $facebook;
 
-    public function __construct(PDO $db, FacebookApp $facebook) {
+	public function __construct(PDO $db, FacebookApp $facebook) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::FACEBOOK();
         $this->tableName = 'facebook_stream';
