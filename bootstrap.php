@@ -82,6 +82,8 @@ $container = new ContainerBuilder();
 $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
 $loader->load('services.yml');
 
+Enum_PresenceType::setContainer($container);
+
 
 //set db for PresenceFactory
 Model_PresenceFactory::setDatabase($db->getConnection());

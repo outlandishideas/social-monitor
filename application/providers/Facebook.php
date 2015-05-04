@@ -1,11 +1,13 @@
 <?php
 
 
+use Outlandish\SocialMonitor\FacebookApp;
+
 class Provider_Facebook extends Provider_Abstract
 {
 	protected $connection = null;
 
-	public function __construct(PDO $db) {
+	public function __construct(PDO $db, FacebookApp $facebook) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::FACEBOOK();
         $this->tableName = 'facebook_stream';
