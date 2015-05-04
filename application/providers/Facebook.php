@@ -1,17 +1,23 @@
 <?php
 
 
+use Facebook\FacebookRequestException;
 use Outlandish\SocialMonitor\FacebookApp;
 
 class Provider_Facebook extends Provider_Abstract
 {
 	protected $connection = null;
+    /**
+     * @var FacebookApp
+     */
+    private $facebook;
 
-	public function __construct(PDO $db, FacebookApp $facebook) {
+    public function __construct(PDO $db, FacebookApp $facebook) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::FACEBOOK();
         $this->tableName = 'facebook_stream';
-	}
+        $this->facebook = $facebook;
+    }
 
 	public function fetchStatusData(Model_Presence $presence)
 	{
@@ -411,19 +417,31 @@ class Provider_Facebook extends Provider_Abstract
     public function updateMetadata(Model_Presence $presence) {
 
         try {
-            $data = Util_Facebook::pageInfo($presence->handle);
-        } catch (Exception_FacebookNotFound $e) {
+            $data = $this->facebook->pageInfo($presence->handle);
+        } catch (FacebookRequestException $e) {
             $presence->uid = null;
             throw new Exception_FacebookNotFound('Facebook page not found: ' . $presence->handle, $e->getCode(), $e->getFql(), $e->getErrors());
         }
 
         $presence->type = $this->type;
-        $presence->uid = $data['page_id'];
-        $presence->image_url = $data['pic_square'];
-        $presence->name = $data['name'];
-        $presence->page_url = $data['page_url'];
-        $presence->popularity = $data['fan_count'];
+        $presence->uid = $data->getProperty('id');
+        $presence->name = $data->getProperty('name');
+        $presence->page_url = $data->getProperty('link');
+        $presence->popularity = $data->getProperty('likes');
+
+        $this->updatePicture($presence);
 	}
+
+    protected function updatePicture(Model_Presence $presence)
+    {
+        try {
+            $data = $this->facebook->pagePicture($presence->handle);
+        } catch (FacebookRequestException $e) {
+            return;
+        }
+
+        $presence->image_url = $data->getProperty('pic_square');
+    }
 
     /**
      * @param Model_Presence $presence

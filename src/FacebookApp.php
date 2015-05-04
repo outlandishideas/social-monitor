@@ -27,11 +27,21 @@ class FacebookApp
         $this->secret = $secret;
     }
 
-    public function getPage($pageId)
+    public function pageInfo($pageId)
     {
-        $request = new FacebookRequest($this->getSession(), "GET", "/{$pageId}");
+        $request = $this->getRequest("GET", "/{$pageId}");
         $response = $request->execute();
         return $response->getGraphObject();
+    }
+
+    public function pagePicture($pageId)
+    {
+        return $this->getRequest("GET", "/{$pageId}/picture")->execute()->getGraphObject();
+    }
+
+    public function getRequest($method, $endpoint)
+    {
+        return new FacebookRequest($this->getSession(), $method, $endpoint);
     }
 
     private function getSession()
