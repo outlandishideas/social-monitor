@@ -1,6 +1,3 @@
-parameters:
-    mailer.transport: sendmail
-
 services:
     pdo:
         class: PDO
@@ -24,3 +21,7 @@ services:
     facebook_engagement.weighted:
         class:     Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric
         arguments: ["@facebook_engagement.query.weighted"]
+
+    facebook.session:
+        class: Facebook\FacebookSession
+        arguments: ["facebook.access_token"]
