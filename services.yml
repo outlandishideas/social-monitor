@@ -1,3 +1,7 @@
+parameters:
+    facebook.app_id: ***REMOVED***
+    facebook.app_secret: ***REMOVED***
+
 services:
     pdo:
         class: PDO
@@ -22,6 +26,6 @@ services:
         class:     Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric
         arguments: ["@facebook_engagement.query.weighted"]
 
-    facebook.session:
-        class: Facebook\FacebookSession
-        arguments: ["facebook.access_token"]
+    facebook.app:
+        class: Outlandish\SocialMonitor\FacebookApp
+        arguments: ["%facebook.app_id%", "%facebook.app_secret%"]
