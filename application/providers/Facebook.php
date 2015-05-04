@@ -13,7 +13,7 @@ class Provider_Facebook extends Provider_Abstract
      */
     private $facebook;
 
-	public function __construct(PDO $db, FacebookApp $facebook) {
+    public function __construct(PDO $db, FacebookApp $facebook) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::FACEBOOK();
         $this->tableName = 'facebook_stream';
@@ -512,6 +512,17 @@ class Provider_Facebook extends Provider_Abstract
 
         $this->updatePicture($presence);
 	}
+
+    protected function updatePicture(Model_Presence $presence)
+    {
+        try {
+            $data = $this->facebook->pagePicture($presence->handle);
+        } catch (FacebookRequestException $e) {
+            return;
+        }
+
+        $presence->image_url = $data->getProperty('pic_square');
+    }
 
     protected function updatePicture(Model_Presence $presence)
     {
