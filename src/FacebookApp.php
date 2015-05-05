@@ -9,7 +9,9 @@
 namespace Outlandish\SocialMonitor;
 
 
+use DateTime;
 use Facebook\FacebookRequest;
+use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
 
 class FacebookApp
@@ -29,9 +31,7 @@ class FacebookApp
 
     public function pageInfo($pageId)
     {
-        $request = $this->getRequest("GET", "/{$pageId}");
-        $response = $request->execute();
-        return $response->getGraphObject();
+        return $this->getRequest("GET", "/{$pageId}")->execute()->getGraphObject();
     }
 
     public function pagePicture($pageId)
@@ -39,9 +39,44 @@ class FacebookApp
         return $this->getRequest("GET", "/{$pageId}/picture")->execute()->getGraphObject();
     }
 
-    public function getRequest($method, $endpoint)
+    /**
+     * Gets the page feed for the page
+     *
+     * @param $pageId
+     * @param DateTime $since
+     * @return mixed
+     * @throws FacebookRequestException
+     */
+    public function pageFeed($pageId, DateTime $since = null)
     {
-        return new FacebookRequest($this->getSession(), $method, $endpoint);
+        $parameters = [];
+        if ($since) {
+            $parameters['since'] = $since->getTimestamp();
+        }
+
+        $graphObject = $this->getRequest("GET", "/{$pageId}/feed", $parameters)->execute()->getGraphObject();
+
+        return $graphObject;
+    }
+
+    public function pagePosts(array $postIds)
+    {
+        $parameters = [
+            'ids' => implode(',', $postIds)
+        ];
+
+        return $this->getRequest("GET", "/", $parameters)->execute()->getGraphObject();
+    }
+
+    public function get($url)
+    {
+        $url = str_replace('https://graph.facebook.com/v2.3', '', $url);
+        return $this->getRequest("GET", $url)->execute()->getGraphObject();
+    }
+
+    public function getRequest($method, $endpoint, $parameters = [])
+    {
+        return new FacebookRequest($this->getSession(), $method, $endpoint, $parameters);
     }
 
     private function getSession()
@@ -53,6 +88,48 @@ class FacebookApp
         }
 
         return $this->session;
+    }
+
+    /**
+     * Gets the shares for a post
+     *
+     * @param $postId
+     * @return mixed
+     * @throws FacebookRequestException
+     */
+    public function postShares($postId)
+    {
+        return $this->getRequest("GET", "/{$postId}/sharedposts")->execute()->getGraphObject();
+    }
+
+    /**
+     * Gets the likes for a post
+     *
+     * @param $postId
+     * @return mixed
+     * @throws FacebookRequestException
+     */
+    public function postLikes($postId)
+    {
+        $parameters = [
+            'summary' => true
+        ];
+        return $this->getRequest("GET", "/{$postId}/likes", $parameters)->execute()->getGraphObject();
+    }
+
+    /**
+     * Gets the comments for a post
+     *
+     * @param $postId
+     * @return mixed
+     * @throws FacebookRequestException
+     */
+    public function postComments($postId)
+    {
+        $parameters = [
+            'summary' => true
+        ];
+        return $this->getRequest("GET", "/{$postId}/comments", $parameters)->execute()->getGraphObject();
     }
 
     private function getAccessToken()
