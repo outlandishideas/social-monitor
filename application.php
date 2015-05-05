@@ -9,6 +9,7 @@
 require __DIR__.'/bootstrap.php';
 
 use Outlandish\SocialMonitor\Command\CalculateAverageScoreCommand;
+use Outlandish\SocialMonitor\Command\EngagementBadgeCommand;
 use Outlandish\SocialMonitor\Command\FacebookEngagementCommand;
 use Outlandish\SocialMonitor\Command\GreetCommand;
 use Symfony\Component\Console\Application;
@@ -17,4 +18,5 @@ $application = new Application();
 $application->add(new GreetCommand(null, $container));
 $application->add(new CalculateAverageScoreCommand(null, $container));
 $application->add(new FacebookEngagementCommand(null, $container));
+$application->add(new EngagementBadgeCommand(null, $container));
 $application->run();
