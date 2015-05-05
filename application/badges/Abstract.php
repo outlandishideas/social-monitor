@@ -10,7 +10,7 @@ abstract class Badge_Abstract
 	protected $metrics = array();
 	protected $metricsWeighting = array();
 
-	public function __construct(PDO $db = null)
+    public function __construct(PDO $db = null)
 	{
 		if (is_null($db)) {
 			$db = Zend_Registry::get('db')->getConnection();
@@ -205,5 +205,11 @@ abstract class Badge_Abstract
 
     static function getInstance() {
         return Badge_Factory::getBadge(self::getName());
+    }
+
+    public function setMetrics(array $metrics, $weighting = array())
+    {
+        $this->metrics = $metrics;
+        $this->metricsWeighting = $weighting;
     }
 }

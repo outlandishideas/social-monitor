@@ -53,7 +53,26 @@ class EngagementBadgeCommand extends ContainerAwareCommand
 
         $score = $engagementBadge->calculate($presence, $now);
 
-        $output->writeln("Engagement Score for {$presenceId} is {$score}");
+        $output->writeln("Old Engagement Score for {$presenceId} is {$score}");
+
+        $newMetrics = [
+            \Metric_Klout::getInstance(),
+            \Metric_FBEngagementLeveled::getInstance(),
+            \Metric_ResponseTimeNew::getInstance(),
+            \Metric_ResponseRatio::getInstance()
+        ];
+
+        $weighting = [
+            \Metric_Klout::getName() => '3',
+            \Metric_FBEngagementLeveled::getName() => '7',
+            \Metric_ResponseTimeNew::getName() => '3',
+            \Metric_ResponseRatio::getName() => '2'
+        ];
+
+        $engagementBadge->setMetrics($newMetrics, $weighting);
+
+        $score = $engagementBadge->calculate($presence, $now);
+        $output->writeln("New Engagement Score for {$presenceId} is {$score}");
     }
 
 }
