@@ -93,6 +93,7 @@ class ConfigController extends BaseController {
                         'description' => 'The Facebook Engagement Score is based on Social Baker\'s Daily Page Engagement Rate calculation.',
                         'values' => array(
                             'fb_engagement_score_weighting'=>array('label'=>'Facebook Engagement Score Weighting'),
+                            'fb_engagement_target'=>array('label'=>'Facebook Engagement Score (For a single level)', 'hint' => 'The presence will score 100% if it reaches this target (and we are using the old calculation)'),
                             'fb_engagement_target_level_1'=>array('label'=>'Facebook Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
                             'fb_engagement_target_level_2'=>array('label'=>'Facebook Engagement Score Level 2', 'hint' => 'The presence will score 40% if it reaches this target'),
                             'fb_engagement_target_level_3'=>array('label'=>'Facebook Engagement Score Level 3', 'hint' => 'The presence will score 60% if it reaches this target'),
