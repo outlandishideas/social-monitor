@@ -59,13 +59,13 @@ class FacebookApp
         return $graphObject;
     }
 
-    public function pagePosts(array $postIds)
+    public function postResponses(array $postIds)
     {
         $parameters = [
             'ids' => implode(',', $postIds)
         ];
 
-        return $this->getRequest("GET", "/", $parameters)->execute()->getGraphObject();
+        return $this->getRequest("GET", "/comments", $parameters)->execute()->getGraphObject();
     }
 
     public function get($url)

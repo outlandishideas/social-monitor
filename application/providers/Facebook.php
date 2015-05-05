@@ -200,7 +200,8 @@ class Provider_Facebook extends Provider_Abstract
 
 //        $count = 0;
         if ($postIds) {
-            $responses = $this->facebook->pagePosts($postIds);
+            /** @var GraphObject $responses */
+            $responses = $this->facebook->postResponses($postIds);
 
             $insertStmt = $this->db->prepare("
                 INSERT INTO `{$this->tableName}`
@@ -209,15 +210,10 @@ class Provider_Facebook extends Provider_Abstract
                 (:post_id, :presence_id, :message, :created_time, :actor_id, :posted_by_owner, :in_response_to)
             ");
             while (true) {
-                /** @var GraphObject $posts */
-                $posts = $responses->getPropertyAsArray('backingData');
-
-                if (empty($posts)) {
-                    break;
-                }
 
                 /** @var GraphObject $post */
-                foreach ($posts as $post) {
+                foreach ($postIds as $postId) {
+                    $comments = $responses->getProperty($postId);
                     $postArray = $post->asArray();
                     $actorId = $postArray['from']->id;
                     $createdTime = date_create_from_format(DateTime::ISO8601, $postArray['created_time']);
