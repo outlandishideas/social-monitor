@@ -9,7 +9,7 @@ class Metric_FBEngagement extends Metric_Abstract {
 
     function __construct()
     {
-        $this->target = floatval(BaseController::getOption('fb_engagement_target_level_5'));
+        $this->target = floatval(BaseController::getOption('fb_engagement_target'));
     }
 
     /**
