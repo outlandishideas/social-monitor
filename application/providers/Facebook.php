@@ -209,11 +209,11 @@ class Provider_Facebook extends Provider_Abstract
                 VALUES
                 (:post_id, :presence_id, :message, :created_time, :actor_id, :posted_by_owner, :in_response_to)
             ");
-            while (true) {
 
-                /** @var GraphObject $post */
-                foreach ($postIds as $postId) {
-                    $comments = $responses->getProperty($postId);
+            /** @var GraphObject $post */
+            foreach ($postIds as $postId) {
+                $comments = $responses->getProperty($postId)->getPropertyAsArray('data');
+                foreach ($comments as $post) {
                     $postArray = $post->asArray();
                     $actorId = $postArray['from']->id;
                     $createdTime = date_create_from_format(DateTime::ISO8601, $postArray['created_time']);
@@ -235,10 +235,8 @@ class Provider_Facebook extends Provider_Abstract
 
                     $count++;
                 }
-
-                $responses = $this->facebook->get($responses->getProperty('paging')->getProperty('next'));
-
             }
+
         }
     }
 
