@@ -520,17 +520,6 @@ class Provider_Facebook extends Provider_Abstract
         $presence->image_url = $data->getProperty('pic_square');
     }
 
-    protected function updatePicture(Model_Presence $presence)
-    {
-        try {
-            $data = $this->facebook->pagePicture($presence->handle);
-        } catch (FacebookRequestException $e) {
-            return;
-        }
-
-        $presence->image_url = $data->getProperty('pic_square');
-    }
-
     /**
      * @param Model_Presence $presence
      * @param DateTime $start
