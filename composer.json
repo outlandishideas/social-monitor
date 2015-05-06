@@ -18,6 +18,7 @@
     "symfony/yaml": "~2.6",
     "facebook/php-sdk-v4": "~4.0",
     "guzzlehttp/guzzle": "~5.2",
-    "dompdf/dompdf": "^0.6.1"
+    "dompdf/dompdf": "^0.6.1",
+    "mikehaertl/phpwkhtmltopdf": "^2.0"
 	}
 }
