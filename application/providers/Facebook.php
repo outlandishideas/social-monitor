@@ -93,9 +93,9 @@ class Provider_Facebook extends Provider_Abstract
                     ':likes' => $this->getLikesCount($post->getProperty('id')),
                     ':share_count' => $this->getShareCount($post->getProperty('id')),
                     ':permalink' => isset($postArray['link']) ? $postArray['link'] : null,
-                    ':type' => $postArray['type'],
-                    ':posted_by_owner' => $postedByOwner,
-                    ':needs_response' => !$postedByOwner && $postArray['message'],
+                    ':type' => null,
+                    ':posted_by_owner' => (int)$postedByOwner,
+                    ':needs_response' => (int) (!$postedByOwner && $postArray['message']),
                     ':in_response_to' => null
                 );
                 try {
