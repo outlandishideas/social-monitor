@@ -43,7 +43,8 @@ class Provider_Facebook extends Provider_Abstract
 		$posts = $this->facebook->pageFeed($presence->getUID(), $since);
         $count = 0;
         $this->parseAndInsertStatuses($presence, $posts, $count);
-        $this->updateResponses($presence, $count);
+        //todo: update responses using the new api
+//        $this->updateResponses($presence, $count);
 
         return $count;
 	}
