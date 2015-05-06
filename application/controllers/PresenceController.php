@@ -51,6 +51,16 @@ class PresenceController extends GraphingController
         $this->view->allPresences = $allPresences;
 	}
 
+    public function reportAction()
+    {
+        $this->viewAction();
+
+        $dompdf = new DOMPDF();
+        $html = $this->view->render();
+        $dompdf->load_html($html);
+        $dompdf->render();
+    }
+
 	/**
 	 * Compares multiple presences
 	 * @user-level user
