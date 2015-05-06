@@ -1,10 +1,17 @@
 <?php
 
+use Outlandish\SocialMonitor\FacebookApp;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 class Enum_PresenceType extends Enum_Abstract
 {
 	const TWITTER 		= 'twitter';
 	const FACEBOOK 	= 'facebook';
 	const SINA_WEIBO 	= 'sina_weibo';
+    /**
+     * @var ContainerInterface
+     */
+    protected static $container;
 
     public static function TWITTER() { return self::get(self::TWITTER); }
     public static function FACEBOOK() { return self::get(self::FACEBOOK); }
@@ -85,13 +92,18 @@ class Enum_PresenceType extends Enum_Abstract
     }
 
 
-    public function getProvider(PDO $db) {
+    public function getProvider() {
+        $container = $this->getContainer();
+        /** @var PDO $db */
+        $db = $container->get('pdo');
 		switch ($this->value) {
 			case self::SINA_WEIBO:
 				return new Provider_SinaWeibo($db);
 				break;
 			case self::FACEBOOK:
-				return new Provider_Facebook($db);
+                /** @var FacebookApp $facebookApp */
+				$facebookApp = $container->get('facebook.app');
+                return new Provider_Facebook($db, $facebookApp);
 				break;
 			case self::TWITTER:
 				return new Provider_Twitter($db);
@@ -165,4 +177,31 @@ class Enum_PresenceType extends Enum_Abstract
         }
         return null;
     }
+
+    /**
+     * Sets the container on this class to be used when instantiating a type;
+     *
+     * @param ContainerInterface $container
+     */
+    public static function setContainer(ContainerInterface $container)
+    {
+        static::$container = $container;
+    }
+
+    /**
+     * Gets the container
+     *
+     * @return ContainerInterface
+     * @throws Exception
+     */
+    private function getContainer()
+    {
+        $container = static::$container;
+        if (!($container instanceof ContainerInterface)) {
+            throw new Exception("Container has not been set");
+        }
+
+        return $container;
+    }
+
 }

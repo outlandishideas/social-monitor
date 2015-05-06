@@ -52,10 +52,8 @@ class StandardFacebookEngagementQuery implements Query
                         FROM
                             $presenceHistory
                         WHERE
-                            DATE(datetime) = :now
-                        AND
                             `type` = :popularity
-                    ) AS ph ON f.presence_id = ph.presence_id
+                    ) AS ph ON f.presence_id = ph.presence_id AND ON DATE(f.create_time) = DATE(ph.datetime)
                 WHERE
                     DATE(f.created_time) >= :then
                 AND

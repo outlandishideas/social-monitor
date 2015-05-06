@@ -1,15 +1,24 @@
 <?php
 
 
+use Facebook\FacebookRequestException;
+use Facebook\GraphObject;
+use Outlandish\SocialMonitor\FacebookApp;
+
 class Provider_Facebook extends Provider_Abstract
 {
 	protected $connection = null;
+    /**
+     * @var FacebookApp
+     */
+    private $facebook;
 
-	public function __construct(PDO $db) {
+    public function __construct(PDO $db, FacebookApp $facebook) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::FACEBOOK();
         $this->tableName = 'facebook_stream';
-	}
+        $this->facebook = $facebook;
+    }
 
 	public function fetchStatusData(Model_Presence $presence)
 	{
@@ -27,17 +36,25 @@ class Provider_Facebook extends Provider_Abstract
 		$stmt->execute(array(':id' => $presence->getId()));
 		$since = $stmt->fetchColumn();
 		if ($since) {
-			$since = strtotime($since);
-		}
-		$posts = Util_Facebook::pagePosts($presence->getUID(), $since);
-        $count = $this->parseAndInsertStatuses($presence, $posts);
-
-        $count += $this->updateResponses($presence);
+			$since = date_create_from_format("Y-m-d H:i:s", $since);
+		} else {
+            $since = null;
+        }
+		$posts = $this->facebook->pageFeed($presence->getUID(), $since);
+        $count = 0;
+        $this->parseAndInsertStatuses($presence, $posts, $count);
+        //todo: update responses using the new api
+//        $this->updateResponses($presence, $count);
 
         return $count;
 	}
 
-	protected function parseAndInsertStatuses(Model_Presence $presence, $postData)
+    /**
+     * @param Model_Presence $presence
+     * @param GraphObject $postData
+     * @param $count
+     */
+    protected function parseAndInsertStatuses(Model_Presence $presence, GraphObject $postData, &$count)
 	{
         $insertStmt = $this->db->prepare("
 			INSERT INTO `{$this->tableName}`
@@ -52,82 +69,140 @@ class Provider_Facebook extends Provider_Abstract
 
         $count = 0;
         $links = array();
-        while ($postData) {
-            $post = array_shift($postData);
-            $postedByOwner = $post->actor_id == $presence->getUID();
-            $args = array(
-                ':post_id' => $post->post_id,
-                ':presence_id' => $presence->id,
-                ':message' => $post->message,
-                ':created_time' => gmdate('Y-m-d H:i:s', $post->created_time),
-                ':actor_id' => $post->actor_id,
-                ':comments' => isset($post->comments['count']) ? intval($post->comments['count']) : 0,
-                ':likes' => isset($post->likes['count']) ? intval($post->likes['count']) : 0,
-                ':share_count' => $post->share_count,
-                ':permalink' => $post->permalink,
-                ':type' => $post->type,
-                ':posted_by_owner' => $postedByOwner,
-                ':needs_response' => !$postedByOwner && $post->message,
-                ':in_response_to' => null
-            );
-            try {
-                $insertStmt->execute($args);
-                $id = $this->db->lastInsertId();
-                if ($postedByOwner && $post->message) {
-                    $links[$id] = $this->extractLinks($post->message);
-                }
-                $count++;
-            } catch (Exception $ex) {
-                $x=0;
+        while (true) {
+            /** @var GraphObject $posts */
+            $posts = $postData->getPropertyAsArray('data');
+
+            if (empty($posts)) {
+                break;
             }
+
+            /** @var GraphObject $post */
+            foreach ($posts as $post) {
+                $postArray = $post->asArray();
+                $actorId = $postArray['from']->id;
+                $createdTime = date_create_from_format(DateTime::ISO8601, $postArray['created_time']);
+                $postedByOwner = $actorId == $presence->getUID();
+                $args = array(
+                    ':post_id' => $postArray['id'],
+                    ':presence_id' => $presence->getId(),
+                    ':message' => isset($postArray['message']) ? $postArray['message'] : null,
+                    ':created_time' => gmdate("Y-m-d H:i:s", $createdTime->getTimestamp()),
+                    ':actor_id' => $actorId,
+                    ':comments' => $this->getCommentCount($post->getProperty('id')),
+                    ':likes' => $this->getLikesCount($post->getProperty('id')),
+                    ':share_count' => $this->getShareCount($post->getProperty('id')),
+                    ':permalink' => isset($postArray['link']) ? $postArray['link'] : null,
+                    ':type' => $postArray['type'],
+                    ':posted_by_owner' => $postedByOwner,
+                    ':needs_response' => !$postedByOwner && $postArray['message'],
+                    ':in_response_to' => null
+                );
+                try {
+                    $insertStmt->execute($args);
+                } catch (Exception $ex) {
+                    continue;
+                }
+
+                $id = $this->db->lastInsertId();
+                if ($postedByOwner && isset($postArray['message']) && $postArray['message']) {
+                    $links[$id] = $this->extractLinks($postArray['message']);
+                }
+
+                $count++;
+            }
+
+            $postData = $this->facebook->get($postData->getProperty('paging')->getProperty('next'));
+
         }
 
         $this->saveLinks('facebook', $links);
-
-        return $count;
 	}
 
-    protected function updateResponses(Model_Presence $presence) {
-        $presenceId = $presence->getId();
+    /**
+     * Gets the count of the likes for the post id
+     *
+     * @param $postId
+     * @return int
+     */
+    private function getLikesCount($postId)
+    {
+        try {
+            /** @var GraphObject $likes */
+            $likes = $this->facebook->postLikes($postId);
+        } catch (FacebookRequestException $e) {
+            return 0;
+        }
 
-        // update the responses for any non-page posts that don't have a response yet.
-        // Only get those that explicitly need one, or were posted in the last 3 days
-        $args = array(
-            ':id' => $presenceId,
-            ':necessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days')),
-            ':unnecessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -3 days'))
-        );
-        $stmt = $this->db->prepare("SELECT DISTINCT a.post_id
-            FROM (
-                SELECT *
-                FROM {$this->tableName}
-                WHERE presence_id = :id
-                AND in_response_to IS NULL
-                AND
-                (
-                    (
-                      needs_response = 1
-                      AND created_time > :necessary_since
-                    )
-                    OR
-                    (
-                      posted_by_owner = 0
-                      AND message <> ''
-                      AND message IS NOT NULL
-                      AND created_time > :unnecessary_since
-                    )
-                )
-            ) as a
-            LEFT OUTER JOIN {$this->tableName} AS b
-                ON b.presence_id = a.presence_id
-                AND b.in_response_to = a.post_id
-            WHERE b.id IS NULL");
-        $stmt->execute($args);
-        $postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        return $likes->getProperty('summary')->getProperty('total_count');
+    }
 
+    /**
+     * Gets the comment count of the given post
+     *
+     * @param $postId
+     * @return int
+     */
+    private function getCommentCount($postId)
+    {
+        try {
+            /** @var GraphObject $comments */
+            $comments = $this->facebook->postComments($postId);
+        } catch (FacebookRequestException $e) {
+            return 0;
+        }
+
+        return $comments->getProperty('summary')->getProperty('total_count');
+    }
+
+    /**
+     * Gets the share count for the given post
+     *
+     * @param $postId
+     * @return int
+     */
+    private function getShareCount($postId)
+    {
+        /** @var GraphObject $shares */
+        try {
+            $shares = $this->facebook->postShares($postId);
+        } catch (FacebookRequestException $e) {
+            return 0;
+        }
         $count = 0;
+
+        while(true) {
+            if (empty($shares->getPropertyAsArray('data'))) {
+                break;
+            }
+
+            $count += count($shares->getPropertyAsArray('data'));
+
+            try {
+                $shares = $this->facebook->get($shares->getProperty('paging')->next);
+            } catch (FacebookRequestException $e) {
+                //break out of loop as we have no more shares to count
+                break;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * updates Responses
+     *
+     * @param Model_Presence $presence
+     * @param int $count
+     */
+    protected function updateResponses(Model_Presence $presence, &$count)
+    {
+        $postIds = $this->getUpdateableResponses($presence);
+
+//        $count = 0;
         if ($postIds) {
-            $responses = Util_Facebook::responses($presence->getUID(), $postIds);
+            /** @var GraphObject $responses */
+            $responses = $this->facebook->postResponses($postIds);
 
             $insertStmt = $this->db->prepare("
                 INSERT INTO `{$this->tableName}`
@@ -135,27 +210,35 @@ class Provider_Facebook extends Provider_Abstract
                 VALUES
                 (:post_id, :presence_id, :message, :created_time, :actor_id, :posted_by_owner, :in_response_to)
             ");
-            while ($responses) {
-                $response = array_shift($responses);
-                $args = array(
-                    'post_id' => $response->id,
-                    'presence_id' => $presenceId,
-                    'message' => $response->text,
-                    'created_time' => gmdate('Y-m-d H:i:s', $response->time),
-                    'actor_id' => $response->fromid,
-                    'posted_by_owner' => true,
-                    'in_response_to' => $response->post_id
-                );
-                try {
-                    $insertStmt->execute($args);
+
+            /** @var GraphObject $post */
+            foreach ($postIds as $postId) {
+                $comments = $responses->getProperty($postId)->getPropertyAsArray('data');
+                foreach ($comments as $post) {
+                    $postArray = $post->asArray();
+                    $actorId = $postArray['from']->id;
+                    $createdTime = date_create_from_format(DateTime::ISO8601, $postArray['created_time']);
+                    $args = array(
+                        'post_id' => $postArray['id'],
+                        'presence_id' => $presence->getId(),
+                        'message' => isset($postArray['message']) ? $postArray['message'] : null,
+                        'created_time' => gmdate("Y-m-d H:i:s", $createdTime->getTimestamp()),
+                        'actor_id' => $actorId,
+                        'posted_by_owner' => true,
+                        'in_response_to' => $postArray['to']->data[0]->id
+                    );
+
+                    try {
+                        $insertStmt->execute($args);
+                    } catch (Exception $ex) {
+                        continue;
+                    }
+
                     $count++;
-                } catch (Exception $ex) {
-                    $x=0;
                 }
             }
-        }
 
-        return $count;
+        }
     }
 
 	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
@@ -310,7 +393,8 @@ class Provider_Facebook extends Provider_Abstract
 						AND p.presence_id = :id
                         ".($ownPostsOnly ? 'AND p.posted_by_owner = 1' : '')."
 					GROUP BY
-						DATE_FORMAT(p.created_time, '%Y-%m-%d')
+
+							DATE_FORMAT(p.created_time, '%Y-%m-%d')
 				) AS links ON (posts.date = links.date)
 			ORDER BY
 				`date`
@@ -398,19 +482,31 @@ class Provider_Facebook extends Provider_Abstract
     public function updateMetadata(Model_Presence $presence) {
 
         try {
-            $data = Util_Facebook::pageInfo($presence->handle);
-        } catch (Exception_FacebookNotFound $e) {
+            $data = $this->facebook->pageInfo($presence->handle);
+        } catch (FacebookRequestException $e) {
             $presence->uid = null;
             throw new Exception_FacebookNotFound('Facebook page not found: ' . $presence->handle, $e->getCode(), $e->getFql(), $e->getErrors());
         }
 
         $presence->type = $this->type;
-        $presence->uid = $data['page_id'];
-        $presence->image_url = $data['pic_square'];
-        $presence->name = $data['name'];
-        $presence->page_url = $data['page_url'];
-        $presence->popularity = $data['fan_count'];
+        $presence->uid = $data->getProperty('id');
+        $presence->name = $data->getProperty('name');
+        $presence->page_url = $data->getProperty('link');
+        $presence->popularity = $data->getProperty('likes');
+
+        $this->updatePicture($presence);
 	}
+
+    protected function updatePicture(Model_Presence $presence)
+    {
+        try {
+            $data = $this->facebook->pagePicture($presence->handle);
+        } catch (FacebookRequestException $e) {
+            return;
+        }
+
+        $presence->image_url = $data->getProperty('pic_square');
+    }
 
     /**
      * @param Model_Presence $presence
@@ -448,6 +544,54 @@ class Provider_Facebook extends Provider_Abstract
             }
         }
         return $responseData;
+    }
+
+    /**
+     * get ids of responses that need to be updateable
+     *
+     * @param Model_Presence $presence
+     * @return array
+     */
+    protected function getUpdateableResponses(Model_Presence $presence)
+    {
+        $presenceId = $presence->getId();
+
+        // update the responses for any non-page posts that don't have a response yet.
+        // Only get those that explicitly need one, or were posted in the last 3 days
+        $args = array(
+            ':id' => $presenceId,
+            ':necessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days')),
+            ':unnecessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -3 days'))
+        );
+        $stmt = $this->db->prepare("SELECT DISTINCT a.post_id
+            FROM (
+                SELECT *
+                FROM {$this->tableName}
+                WHERE presence_id = :id
+                AND in_response_to IS NULL
+                AND
+                (
+                    (
+                      needs_response = 1
+                      AND created_time > :necessary_since
+                    )
+                    OR
+                    (
+                      posted_by_owner = 0
+                      AND message <> ''
+                      AND message IS NOT NULL
+                      AND created_time > :unnecessary_since
+                    )
+                )
+            ) as a
+            LEFT OUTER JOIN {$this->tableName} AS b
+                ON b.presence_id = a.presence_id
+                AND b.in_response_to = a.post_id
+            WHERE b.id IS NULL");
+        $stmt->execute($args);
+        $postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        return $postIds;
     }
 
 
