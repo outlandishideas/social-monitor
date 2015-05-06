@@ -1,14 +1,10 @@
-parameters:
-    facebook.app_id: ***REMOVED***
-    facebook.app_secret: ***REMOVED***
-
 services:
     pdo:
         class: PDO
         arguments:
-            dsn: "mysql:host=127.0.0.1;dbname=bcmonitor"
-            user: "root"
-            password: ""
+            dsn: "mysql:host=%db.host%;dbname=%db.name%"
+            user: "%db.username%"
+            password: "%db.password%"
 
     facebook_engagement.query.standard:
         class:     Outlandish\SocialMonitor\FacebookEngagement\Query\StandardFacebookEngagementQuery

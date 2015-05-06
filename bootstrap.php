@@ -80,6 +80,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 $container = new ContainerBuilder();
 $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
+$loader->load('parameters.yml');
 $loader->load('services.yml');
 
 Enum_PresenceType::setContainer($container);
