@@ -172,11 +172,12 @@ class Provider_Facebook extends Provider_Abstract
         $count = 0;
 
         while(true) {
-            if (empty($shares->getPropertyAsArray('data'))) {
+            $shareArray = $shares->getPropertyAsArray('data');
+            if (empty($shareArray)) {
                 break;
             }
 
-            $count += count($shares->getPropertyAsArray('data'));
+            $count += count($shareArray);
 
             try {
                 $shares = $this->facebook->get($shares->getProperty('paging')->next);
@@ -485,7 +486,7 @@ class Provider_Facebook extends Provider_Abstract
             $data = $this->facebook->pageInfo($presence->handle);
         } catch (FacebookRequestException $e) {
             $presence->uid = null;
-            throw new Exception_FacebookNotFound('Facebook page not found: ' . $presence->handle, $e->getCode(), $e->getFql(), $e->getErrors());
+            throw new Exception_FacebookNotFound('Facebook page not found: ' . $presence->handle, $e->getCode(), [], []);
         }
 
         $presence->type = $this->type;
@@ -505,7 +506,8 @@ class Provider_Facebook extends Provider_Abstract
             return;
         }
 
-        $presence->image_url = $data->getProperty('pic_square');
+        $presence->image_url = $data->getProperty('url');
+
     }
 
     /**
