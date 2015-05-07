@@ -93,9 +93,9 @@ class Provider_Facebook extends Provider_Abstract
                     ':likes' => $this->getLikesCount($post->getProperty('id')),
                     ':share_count' => $this->getShareCount($post->getProperty('id')),
                     ':permalink' => isset($postArray['link']) ? $postArray['link'] : null,
-                    ':type' => $postArray['type'],
-                    ':posted_by_owner' => $postedByOwner,
-                    ':needs_response' => !$postedByOwner && $postArray['message'],
+                    ':type' => null,
+                    ':posted_by_owner' => (int)$postedByOwner,
+                    ':needs_response' => (int) (!$postedByOwner && $postArray['message']),
                     ':in_response_to' => null
                 );
                 try {
@@ -172,11 +172,12 @@ class Provider_Facebook extends Provider_Abstract
         $count = 0;
 
         while(true) {
-            if (empty($shares->getPropertyAsArray('data'))) {
+            $shareArray = $shares->getPropertyAsArray('data');
+            if (empty($shareArray)) {
                 break;
             }
 
-            $count += count($shares->getPropertyAsArray('data'));
+            $count += count($shareArray);
 
             try {
                 $shares = $this->facebook->get($shares->getProperty('paging')->next);
@@ -485,7 +486,7 @@ class Provider_Facebook extends Provider_Abstract
             $data = $this->facebook->pageInfo($presence->handle);
         } catch (FacebookRequestException $e) {
             $presence->uid = null;
-            throw new Exception_FacebookNotFound('Facebook page not found: ' . $presence->handle, $e->getCode(), $e->getFql(), $e->getErrors());
+            throw new Exception_FacebookNotFound('Facebook page not found: ' . $presence->handle, $e->getCode(), [], []);
         }
 
         $presence->type = $this->type;
@@ -505,7 +506,8 @@ class Provider_Facebook extends Provider_Abstract
             return;
         }
 
-        $presence->image_url = $data->getProperty('pic_square');
+        $presence->image_url = $data->getProperty('url');
+
     }
 
     /**

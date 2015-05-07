@@ -8,6 +8,7 @@
 
 namespace Outlandish\SocialMonitor\Command;
 
+use Facebook\FacebookSDKException;
 use Model_PresenceFactory;
 use Outlandish\SocialMonitor\FacebookApp;
 use Symfony\Component\Console\Command\Command;
@@ -37,7 +38,23 @@ class UpdatePresencesCommand extends ContainerAwareCommand
 
         foreach ($this->getPresences($id) as $presence) {
             $output->writeln("Updating {$presence->getName()}");
-            $presence->update();
+            try {
+                $presence->update();
+            } catch (\Exception_FacebookNotFound $e) {
+                //do we delete this presence here
+                $output->writeln("Could not find {$presence->getName()}");
+                continue;
+            } catch (\LogicException $e) {
+                $output->writeln("Could not update {$presence->getName()}");
+                continue;
+            } catch (\Exception_TwitterNotFound $e) {
+                $output->writeln("Could not find {$presence->getName()}");
+                continue;
+            } catch (FacebookSDKException $e) {
+                $output->writeln("Could not update {$presence->getName()}");
+                continue;
+            }
+
             $presence->save();
             $output->writeln("{$presence->getName()} updated.");
         }

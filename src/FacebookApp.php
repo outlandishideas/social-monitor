@@ -36,7 +36,7 @@ class FacebookApp
 
     public function pagePicture($pageId)
     {
-        return $this->getRequest("GET", "/{$pageId}/picture")->execute()->getGraphObject();
+        return $this->getRequest("GET", "/{$pageId}/picture", ['redirect' => false])->execute()->getGraphObject();
     }
 
     /**

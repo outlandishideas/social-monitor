@@ -8,6 +8,7 @@
 
 namespace Outlandish\SocialMonitor\Command;
 
+use Facebook\FacebookSDKException;
 use Model_PresenceFactory;
 use Outlandish\SocialMonitor\FacebookApp;
 use Symfony\Component\Console\Command\Command;
@@ -36,8 +37,26 @@ class UpdateStatusesCommand extends ContainerAwareCommand
         $id = $input->getArgument('id');
 
         foreach ($this->getPresences($id) as $presence) {
-            $presence->fetch();
+            $output->writeln("Fetching statuses for {$presence->getName()}");
+            try {
+                $count = $presence->fetch();
+            } catch (FacebookSDKException $e) {
+                $output->writeln("<error>Could not fetch statuses for {$presence->getName()}</error>");
+                $output->writeln("<error>Code: {$e->getCode()} :: {$e->getMessage()}</error>");
+                continue;
+            } catch (\Exception_TwitterNotFound $e) {
+                $output->writeln("<error>{$presence->getName()} could not be found or initialised</error>");
+                continue;
+            } catch (\Exception $e) {
+                if ($e->getMessage() == 'Presence not initialised/found') {
+                    $output->writeln("<error>{$presence->getName()} could not be found or initialised</error>");
+                    continue;
+                }
+                throw $e;
+            }
+
             $presence->save();
+            $output->writeln("Fetched {$count} statuses for {$presence->getName()}");
         }
 
     }
