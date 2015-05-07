@@ -316,9 +316,13 @@ app.home = {
 		var i;
 		var colorArgs = app.home.geochartMetrics[badge];
 
+        var commaNumber = function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
+
 		var updateElement = function($el, d) {
 			var score = d.b[badge][day].s;
-			$el.data('score', Math.round(score));
+			$el.data('score', commaNumber(Math.round(score)));
 			var color = colorArgs.colors[0];
 			for (var j=0; j<colorArgs.colors.length-1; j++) {
 				if (score > colorArgs.range[j] && score <= colorArgs.range[j+1]) {
