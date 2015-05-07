@@ -15,53 +15,54 @@ use DateTime;
 use Enum_Period;
 use Model_Country;
 use Model_PresenceFactory;
+use Model_Region;
 use Outlandish\SocialMonitor\Query\BadgeRankQuerier;
 
-class ReportableCountry implements Reportable
+class ReportableRegion implements Reportable
 {
 
     /**
-     * @var Model_Country
+     * @var Model_Region
      */
-    private $country;
+    private $region;
 
-    public function __construct(Model_Country $country)
+    public function __construct(Model_Region $region)
     {
-        $this->country = $country;
+        $this->region = $region;
     }
 
     public function getType()
     {
-        return "Country";
+        return "Region";
     }
 
     public function getName()
     {
-        return $this->country->getName();
+        return $this->region->name;
     }
 
     public function getIcon()
     {
-        return "fa-flag";
+        return "fa-globe";
     }
 
     public function getColumn()
     {
-        return "campaign_id";
+        return "region_id";
     }
 
     public function getId()
     {
-        return $this->country->id;
+        return $this->region->id;
     }
 
     public function numberOfType()
     {
-        return Model_Country::countAll();
+        return Model_Region::countAll();
     }
 
     public function getCampaignTypes()
     {
-        return [1];
+        return [0,1,2];
     }
 }

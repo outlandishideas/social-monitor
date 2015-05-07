@@ -72,7 +72,12 @@ class BadgeRankDataQuery
     {
         $key = "{$date->format("Ymd")}-{$date->format("Ymd")}";
         if (!array_key_exists($key, $this->cache)) {
-            $data = Badge_Factory::getAllCurrentData(\Enum_Period::MONTH(), $date, $date);
+
+            $clauses = [
+                'c.campaign_type IN ('.implode(',', array_map('intval', $model->getCampaignTypes())).')'
+            ];
+
+            $data = Badge_Factory::getAllCurrentData(\Enum_Period::MONTH(), $date, $date, [], $clauses);
 
             $newData = $this->getGroupedData($model, $data);
 

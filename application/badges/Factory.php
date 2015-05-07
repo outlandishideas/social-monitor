@@ -154,24 +154,26 @@ abstract class Badge_Factory
      * @param DateTime $startDate
      * @param DateTime $endDate
      * @param array $presenceIds
+     * @param array $clauses
+     * @param array $args
      * @return array|null
      */
     public static function getAllCurrentData(
 		Enum_Period $dateRange,
 		\DateTime $startDate,
 		\DateTime $endDate,
-		$presenceIds = array()
+		$presenceIds = array(), $clauses = array(), $args = array()
 	) {
-		$clauses = array(
+		$clauses = array_merge($clauses, array(
 			'h.date >= :start_date',
 			'h.date <= :end_date',
 			'h.daterange = :date_range'
-		);
-		$args = array(
+		));
+		$args = array_merge($args, array(
 			':start_date' => $startDate->format('Y-m-d'),
 			':end_date' => $endDate->format('Y-m-d'),
 			':date_range' => (string) $dateRange
-		);
+		));
 		if (count($presenceIds)) {
 			$clauses[] = 'h.presence_id IN ('.implode(',', array_map('intval', $presenceIds)).')';
 		}

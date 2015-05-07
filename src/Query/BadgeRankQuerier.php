@@ -16,4 +16,6 @@ interface BadgeRankQuerier
 
     public function getId();
 
+    public function getCampaignTypes();
+
 }

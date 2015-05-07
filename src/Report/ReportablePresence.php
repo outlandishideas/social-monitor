@@ -64,4 +64,9 @@ class ReportablePresence implements Reportable
     {
         return count(Model_PresenceFactory::getPresences());
     }
+
+    public function getCampaignTypes()
+    {
+        return [0,1,2];
+    }
 }

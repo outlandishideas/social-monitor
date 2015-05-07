@@ -1,5 +1,9 @@
 <?php
 
+use mikehaertl\wkhtmlto\Pdf;
+use Outlandish\SocialMonitor\Report\ReportableGroup;
+use Outlandish\SocialMonitor\Report\ReportGenerator;
+
 class GroupController extends CampaignController {
 
     protected static $publicActions = array();
@@ -37,6 +41,31 @@ class GroupController extends CampaignController {
         $this->view->title = 'SBU: ' . $group->display_name;
         $this->view->allCampaigns = Model_Group::fetchAll();
 	}
+
+    public function reportAction()
+    {
+        /** @var Model_Group $group */
+        $group = Model_Group::fetchById($this->_request->getParam('id'));
+        $this->validateData($group);
+
+        $from = date_create_from_format('Y-m-d', '2015-03-1');
+        $to = date_create_from_format('Y-m-d', '2015-03-31');
+
+        $report = (new ReportGenerator())->generate(new ReportableGroup($group), $from, $to);
+        $report->generate();
+        $this->view->report = $report;
+
+        $content = $this->view->render('presence/report.phtml');
+
+        $pdf = new Pdf();
+        $pdf->addPage($content);
+
+
+        if(!$pdf->send()) {
+            throw new Exception($pdf->getError());
+        }
+        exit;
+    }
 
     /**
      * Gets all of the graph data for the requested presence
