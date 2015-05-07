@@ -19,8 +19,6 @@ interface Reportable extends BadgeRankQuerier {
 
     public function getIcon();
 
-    public function getPresenceIds();
-
     public function numberOfType();
 
 }
