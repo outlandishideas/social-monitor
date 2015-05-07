@@ -48,8 +48,10 @@ class GroupController extends CampaignController {
         $group = Model_Group::fetchById($this->_request->getParam('id'));
         $this->validateData($group);
 
-        $from = date_create_from_format('Y-m-d', '2015-03-1');
-        $to = date_create_from_format('Y-m-d', '2015-03-31');
+        $to = date_create();
+        $from = clone $to;
+        $to->modify("-1 day");
+        $from->modify("-30 days");
 
         $report = (new ReportGenerator())->generate(new ReportableGroup($group), $from, $to);
         $report->generate();

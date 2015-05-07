@@ -79,6 +79,10 @@ class BadgeRankDataQuery
 
             $data = Badge_Factory::getAllCurrentData(\Enum_Period::MONTH(), $date, $date, [], $clauses);
 
+            if ($data === null) {
+                return null;
+            }
+
             $newData = $this->getGroupedData($model, $data);
 
             foreach($this->badges as $b) {

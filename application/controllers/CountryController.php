@@ -77,8 +77,10 @@ class CountryController extends CampaignController {
         $country = Model_Country::fetchById($this->_request->getParam('id'));
         $this->validateData($country);
 
-        $from = date_create_from_format('Y-m-d', '2015-03-1');
-        $to = date_create_from_format('Y-m-d', '2015-03-31');
+        $to = date_create();
+        $from = clone $to;
+        $to->modify("-1 day");
+        $from->modify("-30 days");
 
         $report = (new ReportGenerator())->generate(new ReportableCountry($country), $from, $to);
         $report->generate();

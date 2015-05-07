@@ -90,12 +90,12 @@ class Report {
         foreach (Badge_Factory::getBadges() as $badge) {
             $score = $this->getBadgeRank($badge);
             $oldScore = $this->getPreviousBadgeRank($badge);
-            $change = ($score - $oldScore);
+            $change = $score !== null ? ($score - $oldScore) : "";
             $ranks[$badge->getName()] = [
                 'title' => "{$badge->getTitle()} Rank",
-                'rank' => $score,
+                'rank' => $score !== null ? $score : "N/A",
                 'denominator' => $this->getRankDenominator(),
-                'ordinal' => $this->getOrdinalIndicator($score),
+                'ordinal' => $score !== null ? $this->getOrdinalIndicator($score) : "",
                 'chart_class' => $this->getChartClass($badge),
                 'change' => [
                     'number' => $change,
