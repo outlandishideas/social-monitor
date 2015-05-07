@@ -1,6 +1,8 @@
 <?php
 
 use mikehaertl\wkhtmlto\Pdf;
+use Outlandish\SocialMonitor\Report\ReportablePresence;
+use Outlandish\SocialMonitor\Report\ReportGenerator;
 
 class PresenceController extends GraphingController
 {
@@ -55,71 +57,19 @@ class PresenceController extends GraphingController
 
     public function reportAction()
     {
-        $this->viewAction();
-
-        /** @var Model_Presence $presence */
-        $presence = $this->view->presence;
+        $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+        $this->validateData($presence);
 
         $from = date_create_from_format('Y-m-d', '2015-03-1');
         $to = date_create_from_format('Y-m-d', '2015-03-31');
 
-        $dateRange = $from->format('j M Y') . " - " . $to->format('j M Y');
-
-        $report = [
-            'type' => 'Presence',
-            'icon' => $presence->getPresenceSign(),
-            'name' => $presence->getHandle(),
-            'daterange' => $dateRange
-        ];
-
+        $report = (new ReportGenerator())->generate(new ReportablePresence($presence), $from, $to);
+        $report->generate();
         $this->view->report = $report;
-
-        $ranks = [
-            'total' => [
-                'title' => 'Overall Rank',
-                'rank' => 70,
-                'denominator' => 116,
-                'change' => [
-                    'number' => (70 - 68),
-                    'class' => 'positive'
-                ]
-            ],
-            'reach' => [
-                'title' => 'Reach Rank',
-                'rank' => 70,
-                'denominator' => 116,
-                'change' => [
-                    'number' => (70 - 68),
-                    'class' => 'positive'
-                ]
-            ],
-            'engagement' => [
-                'title' => 'Engagement Rank',
-                'rank' => 71,
-                'denominator' => 116,
-                'change' => [
-                    'number' => (70 - 70),
-                    'class' => 'no-change'
-                ]
-            ],
-            'quality' => [
-                'title' => 'Quality Rank',
-                'rank' => 73,
-                'denominator' => 116,
-                'change' => [
-                    'number' => (73 - 76),
-                    'class' => 'negative'
-                ]
-            ]
-        ];
-
-        $this->view->ranks = $ranks;
-
 
         $content = $this->view->render('presence/report.phtml');
 
         $pdf = new Pdf();
-        $url = $this->view->serverUrl() . $this->view->baseUrl() . $this->_helper->url->url(array('controller' => 'presence', 'action' => 'view'));
         $pdf->addPage($content);
 
 
