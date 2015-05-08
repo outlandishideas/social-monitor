@@ -416,14 +416,25 @@ class Provider_Facebook extends Provider_Abstract
 
 	protected function calculateFacebookEngagement(Model_Presence $presence)
 	{
-        $now = new DateTime();
-        $then = clone $now;
-        $then->modify("-1 week");
+        $week = new DateInterval('P6D');
+        $end = new DateTime();
+        $start = clone $end;
+        $start = $start->sub($week);
 
-		$query = new Outlandish\SocialMonitor\FacebookEngagement\Query\WeightedFacebookEngagementQuery($this->db);
-        $metric = new Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric($query);
+        $score = null;
 
-        return $metric->get($presence->getId(), $now, $then);
+        $stats = $this->getCommentsSharesLikes($presence, $start, $end);
+
+        // sum comments, likes and shares, and divide by current fan count
+        if(!empty($stats) && $presence->popularity > 0){
+            $total = 0;
+            foreach ($stats as $row) {
+                $total += $row->comment_count + $row->like_count + $row->share_count;
+            }
+
+            $score = ($total / $presence->popularity) * 1000;
+        }
+        return $score;
 	}
 
 	protected function getCommentsSharesLikes(Model_Presence $presence, DateTime $start, DateTime $end)
