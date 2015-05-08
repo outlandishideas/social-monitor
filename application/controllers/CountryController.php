@@ -1,5 +1,9 @@
 <?php
 
+use mikehaertl\wkhtmlto\Pdf;
+use Outlandish\SocialMonitor\Report\ReportableCountry;
+use Outlandish\SocialMonitor\Report\ReportGenerator;
+
 class CountryController extends CampaignController {
 
     protected static $publicActions = array('stats-panel');
@@ -66,6 +70,33 @@ class CountryController extends CampaignController {
         $this->view->title = 'Country: ' . $country->display_name;
         $this->view->allCampaigns = Model_Country::fetchAll();
 	}
+
+    public function reportAction()
+    {
+        /** @var Model_Country $country */
+        $country = Model_Country::fetchById($this->_request->getParam('id'));
+        $this->validateData($country);
+
+        $to = date_create();
+        $from = clone $to;
+        $to->modify("-1 day");
+        $from->modify("-30 days");
+
+        $report = (new ReportGenerator())->generate(new ReportableCountry($country), $from, $to);
+        $report->generate();
+        $this->view->report = $report;
+
+        $content = $this->view->render('presence/report.phtml');
+
+        $pdf = new Pdf();
+        $pdf->addPage($content);
+
+
+        if(!$pdf->send()) {
+            throw new Exception($pdf->getError());
+        }
+        exit;
+    }
 
 	/**
 	 * Creates a new country

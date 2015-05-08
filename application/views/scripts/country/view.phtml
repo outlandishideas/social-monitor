@@ -3,6 +3,7 @@ $this->buttons = $this->gatekeeper()->filterAll(array(
 	'<a class="button-bc button-edit" href="%url%">Edit Country</a>' => array('action'=>'edit', 'id'=>$this->country->id),
 	'<a class="button-bc button-manage" href="%url%">Manage Presences</a>' => array('action'=>'manage', 'id'=>$this->country->id),
 	'<a class="button-bc button-delete" href="%url%">Delete Country</a>' => array('action'=>'delete', 'id'=>$this->country->id),
+    '<a class="button-bc button-download" href="%url%"></span>Download Report</a>' => array('action'=>'report', 'id'=>$this->country->id),
 ));
 $this->campaign = $this->country;
 $this->controllerName = 'country';

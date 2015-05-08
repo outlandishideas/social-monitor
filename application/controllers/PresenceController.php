@@ -1,8 +1,12 @@
 <?php
 
+use mikehaertl\wkhtmlto\Pdf;
+use Outlandish\SocialMonitor\Report\ReportablePresence;
+use Outlandish\SocialMonitor\Report\ReportGenerator;
+
 class PresenceController extends GraphingController
 {
-	protected static $publicActions = array('update-kpi-cache');
+	protected static $publicActions = array('update-kpi-cache', 'view');
 
 	protected function chartOptions() {
         return array(
@@ -50,6 +54,32 @@ class PresenceController extends GraphingController
         }
         $this->view->allPresences = $allPresences;
 	}
+
+    public function reportAction()
+    {
+        $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+        $this->validateData($presence);
+
+        $to = date_create();
+        $from = clone $to;
+        $to->modify("-1 day");
+        $from->modify("-30 days");
+
+        $report = (new ReportGenerator())->generate(new ReportablePresence($presence), $from, $to);
+        $report->generate();
+        $this->view->report = $report;
+
+        $content = $this->view->render('presence/report.phtml');
+
+        $pdf = new Pdf();
+        $pdf->addPage($content);
+
+
+        if(!$pdf->send()) {
+            throw new Exception($pdf->getError());
+        }
+        exit;
+    }
 
 	/**
 	 * Compares multiple presences

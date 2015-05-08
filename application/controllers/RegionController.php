@@ -1,5 +1,9 @@
 <?php
 
+use mikehaertl\wkhtmlto\Pdf;
+use Outlandish\SocialMonitor\Report\ReportableRegion;
+use Outlandish\SocialMonitor\Report\ReportGenerator;
+
 class RegionController extends CampaignController
 {
 
@@ -55,6 +59,33 @@ class RegionController extends CampaignController
         $this->view->region = $region;
         $this->view->title = 'Region: ' . $region->display_name;
         $this->view->allCampaigns = Model_Region::fetchAll();
+    }
+
+    public function reportAction()
+    {
+        /** @var Model_Region $region */
+        $region = Model_Region::fetchById($this->_request->getParam('id'));
+        $this->validateData($region);
+
+        $to = date_create();
+        $from = clone $to;
+        $to->modify("-1 day");
+        $from->modify("-30 days");
+
+        $report = (new ReportGenerator())->generate(new ReportableRegion($region), $from, $to);
+        $report->generate();
+        $this->view->report = $report;
+
+        $content = $this->view->render('presence/report.phtml');
+
+        $pdf = new Pdf();
+        $pdf->addPage($content);
+
+
+        if(!$pdf->send()) {
+            throw new Exception($pdf->getError());
+        }
+        exit;
     }
 
 	/**
