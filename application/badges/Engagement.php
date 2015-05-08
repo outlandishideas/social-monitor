@@ -17,8 +17,8 @@ class Badge_Engagement extends Badge_Abstract
         parent::__construct($db);
         $this->metrics = array(
             Metric_Klout::getInstance(),
-            Metric_FBEngagement::getInstance(),
-            Metric_ResponseTime::getInstance(),
+            Metric_FBEngagementLeveled::getInstance(),
+            Metric_ResponseTimeNew::getInstance(),
             Metric_ResponseRatio::getInstance()
         );
     }
