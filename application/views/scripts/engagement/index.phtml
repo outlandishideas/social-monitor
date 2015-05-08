@@ -1,6 +1,0 @@
-<?php
-    $buttons = $this->gatekeeper()->filterAll(array(
-        '<a class="button-bc" href="%url%">Download CSV</a>' => array('action'=>'download'),
-    ));
-
-echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));

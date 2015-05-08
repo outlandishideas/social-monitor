@@ -24,9 +24,3 @@ config:
   label: Settings
   controller: config
   icon: icon-cog icon-large
-  class: parent
-  pages:
-    engagement:
-      label: Engagement
-      controller: engagement
-      action: index
