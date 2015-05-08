@@ -40,7 +40,7 @@ class Chart_Popularity extends Chart_Abstract {
                 $data = $presence->getPopularityData($start, $end);
                 if ($data) {
                     $dataSets[$presence->getId()] = $data;
-                    $names[$presence->getId()] = $presence->getName();
+                    $names[$presence->getId()] = "[{$presence->getType()->getSign()}]" . $presence->getName();
                 }
             }
         } else {
