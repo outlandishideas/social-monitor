@@ -131,7 +131,7 @@ abstract class Badge_Abstract
 		$data = static::doRanking($data);
 		foreach($data as $row) {
 			$stmt->execute(array(
-				':rank'		=> isset($row['rank']) and !empty($row['rank']) ? $row['rank'] : $defaultRank,
+				':rank'		=> isset($row['rank']) && !empty($row['rank']) ? $row['rank'] : $defaultRank,
 				':id'		=> $row['presence_id'],
 				':date'		=> $date->format('Y-m-d'),
 				':range'	=> $range
