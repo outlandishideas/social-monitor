@@ -13,10 +13,10 @@ abstract class Metric_Factory {
             Metric_SignOff::getName() => "Metric_SignOff",
             Metric_PopularityTime::getName() => "Metric_PopularityTime",
             Metric_Relevance::getName() => "Metric_Relevance",
-            Metric_FBEngagement::getName() => "Metric_FBEngagement",
+            Metric_FBEngagementLeveled::getName() => "Metric_FBEngagementLeveled",
             Metric_Klout::getName() => "Metric_Klout",
             Metric_LikesPerPost::getName() => "Metric_LikesPerPost",
-            Metric_ResponseTime::getName() => "Metric_ResponseTime",
+            Metric_ResponseTimeNew::getName() => "Metric_ResponseTimeNew",
             Metric_ResponseRatio::getName() => "Metric_ResponseRatio"
         );
 

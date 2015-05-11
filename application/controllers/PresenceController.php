@@ -6,7 +6,7 @@ use Outlandish\SocialMonitor\Report\ReportGenerator;
 
 class PresenceController extends GraphingController
 {
-	protected static $publicActions = array('update-kpi-cache', 'view');
+	protected static $publicActions = array('update-kpi-cache');
 
 	protected function chartOptions() {
         return array(
