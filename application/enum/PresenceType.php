@@ -56,10 +56,10 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_PopularityTime::getName(),
                     Metric_Relevance::getName(),
                     Metric_SignOff::getName(),
-                    Metric_FBEngagement::getName(),
+                    Metric_FBEngagementLeveled::getName(),
                     Metric_LikesPerPost::getName(),
                     Metric_ResponseRatio::getName(),
-                    Metric_ResponseTime::getName()
+                    Metric_ResponseTimeNew::getName()
                 );
                 break;
             case self::TWITTER:
@@ -73,7 +73,7 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_PopularityTime::getName(),
                     Metric_Relevance::getName(),
                     Metric_SignOff::getName(),
-                    Metric_ResponseTime::getName(),
+                    Metric_ResponseTimeNew::getName(),
                     Metric_Klout::getName()
                 );
                 break;
