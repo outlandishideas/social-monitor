@@ -38,7 +38,7 @@ class Metric_FBEngagementLeveled extends Metric_FBEngagement {
 
             //if level is more than or == to the target
             //continue to the next level
-            if ($level > $target) {
+            if ($score > $target) {
                 continue;
             }
 
