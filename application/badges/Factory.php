@@ -52,7 +52,8 @@ abstract class Badge_Factory
 		\DateTime $startDate,
 		\DateTime $endDate,
         $log = null,
-		$presenceIds = array()
+		$presenceIds = array(),
+        $force = false
 	) {
         if (!$log) {
             $log = function($message) {};
@@ -106,14 +107,22 @@ abstract class Badge_Factory
             foreach ($presences as $p) {
                 $presenceId = $p->getId();
                 // create the data in the database if it is missing
-                if (array_key_exists($presenceId, $badgeScores)) {
+                if (array_key_exists($presenceId, $badgeScores) && !$force) {
                     $existing = (array)$badgeScores[$presenceId];
                 } else {
-                    $createRow->execute(array(
-                        ':presence_id' => $presenceId,
-                        ':date_range' => $dateRangeString,
-                        ':date' => $formattedDate
-                    ));
+                    try {
+                        $createRow->execute(array(
+                            ':presence_id' => $presenceId,
+                            ':date_range' => $dateRangeString,
+                            ':date' => $formattedDate
+                        ));
+                    } catch (PDOException $e) {
+                        if (!$force && $e->getCode() == 23000) {
+                            //if we have a duplicate don't do rest of loop
+                            continue;
+                        }
+                    }
+
                     $existing = array_merge($emptyRow, array(
                         'id' => self::$db->lastInsertId(),
                         'presence_id' => $presenceId,
@@ -123,7 +132,7 @@ abstract class Badge_Factory
                 }
                 foreach ($badges as $b) {
                     $badgeName = $b->getName();
-                    if (is_null($existing[$badgeName])) {
+                    if (is_null($existing[$badgeName]) || $force) {
                         $missingCount++;
                         $score = $b->calculate($p, $currentDate, $dateRange);
                         if (!is_null($score)) {
