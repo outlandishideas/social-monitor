@@ -184,13 +184,13 @@ class IndexController extends GraphingController
         foreach ($presences as $p) {
             $index++;
             $log('Recalculating KPIs [' . $index . '/' . $presenceCount . '] [' . $p->getId() . ']');
-//            $p->getKpiData($startDate, $endDate, false);
+            $p->getKpiData($startDate, $endDate, false);
         }
 
         $log('Recalculating badges');
 
 		// make sure that the last 60 day's worth of badge_history data exists
-        $force = boolval($this->_request->getParam('force'));
+        $force = (bool)$this->_request->getParam('force');
 
 		Badge_Factory::guaranteeHistoricalData(Enum_Period::MONTH(), new \DateTime('now -60 days'), new \DateTime('now'), $log, [], $force);
 
