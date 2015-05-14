@@ -68,8 +68,9 @@ class Provider_Facebook extends Provider_Abstract
 		");
 
         $count = 0;
+        $duplicate = false;
         $links = array();
-        while (true) {
+        while (!$duplicate) {
             /** @var GraphObject $posts */
             $posts = $postData->getPropertyAsArray('data');
 
@@ -95,11 +96,17 @@ class Provider_Facebook extends Provider_Abstract
                     ':permalink' => isset($postArray['link']) ? $postArray['link'] : null,
                     ':type' => null,
                     ':posted_by_owner' => (int)$postedByOwner,
-                    ':needs_response' => (int) (!$postedByOwner && $postArray['message']),
+                    ':needs_response' => (int) (!$postedByOwner && isset($postArray['message'])),
                     ':in_response_to' => null
                 );
                 try {
                     $insertStmt->execute($args);
+                } catch (PDOException $ex) {
+                    if ($ex->getCode() == 23000) {
+                        $duplicate = true;
+                        break;
+                    }
+                    continue;
                 } catch (Exception $ex) {
                     continue;
                 }
