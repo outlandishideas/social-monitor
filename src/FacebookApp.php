@@ -49,7 +49,9 @@ class FacebookApp
      */
     public function pageFeed($pageId, DateTime $since = null)
     {
-        $parameters = [];
+        $parameters = [
+            'limit' =>  250
+        ];
         if ($since) {
             $parameters['since'] = $since->getTimestamp();
         }

@@ -68,59 +68,48 @@ class Provider_Facebook extends Provider_Abstract
 		");
 
         $count = 0;
-        $duplicate = false;
         $links = array();
-        while (!$duplicate) {
             /** @var GraphObject $posts */
-            $posts = $postData->getPropertyAsArray('data');
+        $posts = $postData->getPropertyAsArray('data');
 
-            if (empty($posts)) {
-                break;
-            }
-
-            /** @var GraphObject $post */
-            foreach ($posts as $post) {
-                $postArray = $post->asArray();
-                $actorId = $postArray['from']->id;
-                $createdTime = date_create_from_format(DateTime::ISO8601, $postArray['created_time']);
-                $postedByOwner = $actorId == $presence->getUID();
-                $args = array(
-                    ':post_id' => $postArray['id'],
-                    ':presence_id' => $presence->getId(),
-                    ':message' => isset($postArray['message']) ? $postArray['message'] : null,
-                    ':created_time' => gmdate("Y-m-d H:i:s", $createdTime->getTimestamp()),
-                    ':actor_id' => $actorId,
-                    ':comments' => $this->getCommentCount($post->getProperty('id')),
-                    ':likes' => $this->getLikesCount($post->getProperty('id')),
-                    ':share_count' => $this->getShareCount($post->getProperty('id')),
-                    ':permalink' => isset($postArray['link']) ? $postArray['link'] : null,
-                    ':type' => null,
-                    ':posted_by_owner' => (int)$postedByOwner,
-                    ':needs_response' => (int) (!$postedByOwner && isset($postArray['message'])),
-                    ':in_response_to' => null
-                );
-                try {
-                    $insertStmt->execute($args);
-                } catch (PDOException $ex) {
-                    if ($ex->getCode() == 23000) {
-                        $duplicate = true;
-                        break;
-                    }
-                    continue;
-                } catch (Exception $ex) {
+        /** @var GraphObject $post */
+        foreach ($posts as $post) {
+            $postArray = $post->asArray();
+            $actorId = $postArray['from']->id;
+            $createdTime = date_create_from_format(DateTime::ISO8601, $postArray['created_time']);
+            $postedByOwner = $actorId == $presence->getUID();
+            $args = array(
+                ':post_id' => $postArray['id'],
+                ':presence_id' => $presence->getId(),
+                ':message' => isset($postArray['message']) ? $postArray['message'] : null,
+                ':created_time' => gmdate("Y-m-d H:i:s", $createdTime->getTimestamp()),
+                ':actor_id' => $actorId,
+                ':comments' => $this->getCommentCount($post->getProperty('id')),
+                ':likes' => $this->getLikesCount($post->getProperty('id')),
+                ':share_count' => $this->getShareCount($post->getProperty('id')),
+                ':permalink' => isset($postArray['link']) ? $postArray['link'] : null,
+                ':type' => null,
+                ':posted_by_owner' => (int)$postedByOwner,
+                ':needs_response' => (int) (!$postedByOwner && isset($postArray['message'])),
+                ':in_response_to' => null
+            );
+            try {
+                $insertStmt->execute($args);
+            } catch (PDOException $ex) {
+                if ($ex->getCode() == 23000) {
                     continue;
                 }
-
-                $id = $this->db->lastInsertId();
-                if ($postedByOwner && isset($postArray['message']) && $postArray['message']) {
-                    $links[$id] = $this->extractLinks($postArray['message']);
-                }
-
-                $count++;
+                continue;
+            } catch (Exception $ex) {
+                continue;
             }
 
-            $postData = $this->facebook->get($postData->getProperty('paging')->getProperty('next'));
+            $id = $this->db->lastInsertId();
+            if ($postedByOwner && isset($postArray['message']) && $postArray['message']) {
+                $links[$id] = $this->extractLinks($postArray['message']);
+            }
 
+            $count++;
         }
 
         $this->saveLinks('facebook', $links);
@@ -138,6 +127,10 @@ class Provider_Facebook extends Provider_Abstract
             /** @var GraphObject $likes */
             $likes = $this->facebook->postLikes($postId);
         } catch (FacebookRequestException $e) {
+            return 0;
+        }
+
+        if (!($likes instanceof GraphObject)) {
             return 0;
         }
 
