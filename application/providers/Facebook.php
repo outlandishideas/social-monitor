@@ -159,6 +159,10 @@ class Provider_Facebook extends Provider_Abstract
             return 0;
         }
 
+        if (!($comments instanceof GraphObject)) {
+            return 0;
+        }
+
         return $comments->getProperty('summary')->getProperty('total_count');
     }
 
