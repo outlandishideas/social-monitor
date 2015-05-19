@@ -49,7 +49,7 @@ class UpdateFacebookEngagementCommand extends ContainerAwareCommand
 
         $presences = \Model_PresenceFactory::getPresencesByType(\Enum_PresenceType::FACEBOOK());
 
-        $db = Zend_Registry::get('db')->getConnection();
+        $db = \Zend_Registry::get('db')->getConnection();
 
         $sql = "INSERT INTO presence_history (`presence_id`, `datetime`, `type`, `value`)
                 VALUES (:id, :datetime, :type, :value)
