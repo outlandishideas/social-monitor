@@ -7,7 +7,7 @@ abstract class Metric_Abstract {
     protected static $icon;
     protected static $gliding = true;
 
-    protected $target = 0;
+    public $target = 0;
 
     /**
      * run the actual calculations
