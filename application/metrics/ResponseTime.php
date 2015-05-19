@@ -8,7 +8,7 @@ class Metric_ResponseTime extends Metric_Abstract {
 
     function __construct()
     {
-        $this->target = floatval(BaseController::getOption('response_time_best'));
+        $this->target = floatval(BaseController::getOption('response_time_bad'));
     }
 
     /**
@@ -45,7 +45,7 @@ class Metric_ResponseTime extends Metric_Abstract {
             return 0;
         }
 
-        $score = round(100 * $this->target / $score );
+        $score = 100 - round(100 * $score / $this->target);
         return self::boundScore($score);
     }
 }
