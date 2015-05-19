@@ -67,7 +67,7 @@ class FacebookEngagementCommand extends ContainerAwareCommand
 
         $engagementScore = $this->getContainer()->get('facebook_engagement.standard')->get($presenceId, $now, $then);
 
-        if ($engagementScore) {
+        if ($engagementScore !== null) {
             $output->writeln("Engagement Score for $presenceId is $engagementScore");
         } else {
             $output->writeln("Could not get Engagement Score for $presenceId");
