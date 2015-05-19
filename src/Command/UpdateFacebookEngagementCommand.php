@@ -60,6 +60,7 @@ class UpdateFacebookEngagementCommand extends ContainerAwareCommand
         /** @var \Model_Presence $presence */
         foreach ($presences as $presence) {
             $score = $provider->calculateFacebookEngagement($presence);
+            if ($score === null) $score = 0;
             $output->writeln("[{$presence->getId()}] {$presence->getName()} has score of {$score}");
             $statement->execute([
                 ':id' => $presence->getId(),
