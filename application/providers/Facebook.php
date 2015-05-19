@@ -418,7 +418,7 @@ class Provider_Facebook extends Provider_Abstract
         $presence->facebook_engagement = $this->calculateFacebookEngagement($presence);
 	}
 
-	protected function calculateFacebookEngagement(Model_Presence $presence)
+	public function calculateFacebookEngagement(Model_Presence $presence)
 	{
         $now = new DateTime();
         $then = clone $now;
