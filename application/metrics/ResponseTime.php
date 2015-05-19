@@ -41,7 +41,7 @@ class Metric_ResponseTime extends Metric_Abstract {
             return 0;
         }
 
-        $score = round(100 * $this->target / $score);
+        $score = round(100 * $score / $this->target);
         return self::boundScore($score);
     }
 }
