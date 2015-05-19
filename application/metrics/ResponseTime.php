@@ -8,7 +8,7 @@ class Metric_ResponseTime extends Metric_Abstract {
 
     function __construct()
     {
-        $this->target = floatval(BaseController::getOption('response_time_bad'));
+        $this->target = BaseController::getOption('response_time_bad');
     }
 
     /**
