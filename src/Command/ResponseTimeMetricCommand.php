@@ -66,7 +66,7 @@ class ResponseTimeMetricCommand extends ContainerAwareCommand
         if (empty($value)) {
             $score =  0;
         } else {
-            $score = 100 - round(100 * $score / $metric->target);
+            $score = 100 - round(100 * $value / $metric->target);
         }
 
         $output->writeln("[{$presenceId}] {$presence->getName()} scored {$score}");
