@@ -49,30 +49,25 @@ class UpdateFacebookEngagementCommand extends ContainerAwareCommand
 
         $presences = \Model_PresenceFactory::getPresencesByType(\Enum_PresenceType::FACEBOOK());
 
+        $db = Zend_Registry::get('db')->getConnection();
+
+        $sql = "INSERT INTO presence_history (`presence_id`, `datetime`, `type`, `value`)
+                VALUES (:id, :datetime, :type, :value)
+        	    ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)";
+
+        $statement = $db->prepare($sql);
+
         /** @var \Model_Presence $presence */
         foreach ($presences as $presence) {
             $score = $provider->calculateFacebookEngagement($presence);
             $output->writeln("[{$presence->getId()}] {$presence->getName()} has score of {$score}");
+            $statement->execute([
+                ':id' => $presence->getId(),
+                ':datetime' => $now->format('Y-m-d H:i:s'),
+                ':type' => 'facebook_engagement',
+                ':value' => $score,
+            ]);
         }
-
-//        $scores = $this->getContainer()->get('facebook_engagement.weighted')->getAll($now, $then);
-//
-//        $db = Zend_Registry::get('db')->getConnection();
-//
-//        $sql = "INSERT INTO presence_history (`presence_id`, `datetime`, `type`, `value`)
-//                VALUES (:id, :datetime, :type, :value)
-//        	    ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)";
-//
-//        $statement = $db->prepare($sql);
-//
-//        foreach ($scores as $presenceId => $value) {
-//            $statement->execute([
-//                ':id' => $presenceId,
-//                ':datetime' => $now->format('Y-m-d H:i:s'),
-//                ':type' => 'facebook_engagement',
-//                ':value' => $value,
-//            ]);
-//        }
 
     }
 
