@@ -6,10 +6,6 @@ class Metric_ResponseTimeNew extends Metric_ResponseTime {
     protected static $title = "Responsiveness";
     protected static $icon = "fa fa-clock-o";
 
-    function __construct()
-    {
-        $this->target = BaseController::getOption('response_time_bad');
-    }
     /**
      * Counts the months between now and estimated date of reaching target audience
      * calculates score based on
