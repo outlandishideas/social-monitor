@@ -252,7 +252,7 @@ class FetchController extends BaseController
 	}
 
 	protected function log($message, $ignoreSilent = false) {
-		$log = date('H:i:s') . " $message\n";
+		$log = date('Y-m-d H:i:s') . " $message\n";
 
 		if (!$this->_request->getParam('silent') || $ignoreSilent) {
 			// todo: disable output buffering. This doesn't work on the beta server
