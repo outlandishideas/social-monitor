@@ -5,7 +5,7 @@ class Metric_FBEngagementLeveled extends Metric_FBEngagement {
     protected static $name = "facebook_engagement";
     protected static $title = "Facebook Engagement Score";
     protected static $icon = "fa fa-facebook-square";
-    protected static $gliding = true;
+    protected static $gliding = false;
 
     function __construct()
     {
