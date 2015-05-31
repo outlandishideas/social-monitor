@@ -14,6 +14,12 @@ use Facebook\FacebookRequestException;
 use Facebook\FacebookSDKException;
 use Facebook\GraphObject;
 
+/**
+ * Class fetches likes for a given facebook object
+ *
+ * Class LikesFetcher
+ * @package Outlandish\SocialMonitor\FacebookFetcher
+ */
 class LikesFetcher
 {
     /**
@@ -60,6 +66,12 @@ class LikesFetcher
         return $likes;
     }
 
+    /**
+     * Gets the likes count from the response and returns 0 if there is missing data
+     *
+     * @param $response
+     * @return int
+     */
     private function getLikesCountFromResponse($response)
     {
         /** @var GraphObject $graphObject */
