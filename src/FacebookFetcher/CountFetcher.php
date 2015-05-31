@@ -15,12 +15,12 @@ use Facebook\FacebookSDKException;
 use Facebook\GraphObject;
 
 /**
- * Class fetches likes for a given facebook object
+ * Class counts things for a given facebook object
  *
- * Class LikesFetcher
+ * Class CountFetcher
  * @package Outlandish\SocialMonitor\FacebookFetcher
  */
-class LikesFetcher
+abstract class CountFetcher
 {
     /**
      * @var RequestFactory
@@ -42,28 +42,49 @@ class LikesFetcher
      */
     public function getCount($id)
     {
-        $parameters = [
-            'summary' => true
-        ];
-        $endpoint = "/{$id}/likes";
+        $response = $this->getResponse($id);
+        $likes = $this->getLikesCountFromResponse($response);
 
+        return $likes;
+    }
+
+    /**
+     * Returns the endpoint string to add to the id to generate the full endpoint
+     *
+     * @return string
+     */
+    protected abstract function getEndpoint();
+
+    /**
+     * Returns the parameters to be sent up with the request
+     *
+     * @return mixed
+     */
+    protected abstract function getParameters();
+
+    /**
+     * Constructs a request object and gets its response
+     *
+     * @param $id
+     * @return int
+     */
+    private function getResponse($id)
+    {
         $request = $this->request->getRequest(
             "GET",
-            $endpoint,
-            $parameters
+            "/{$id}/{$this->getEndpoint()}",
+            $this->getParameters()
         );
 
         try {
             $response = $request->execute();
         } catch (FacebookSDKException $e) {
-            return 0;
+            $response = null;
         } catch (FacebookRequestException $e) {
-            return 0;
+            $response = null;
         }
 
-        $likes = $this->getLikesCountFromResponse($response);
-
-        return $likes;
+        return $response;
     }
 
     /**
@@ -74,9 +95,12 @@ class LikesFetcher
      */
     private function getLikesCountFromResponse($response)
     {
+        if(is_null($response)) {
+            return 0;
+        }
+
         /** @var GraphObject $graphObject */
         $graphObject = $response->getGraphObject();
-
         if(is_null($graphObject)) {
             return 0;
         }
@@ -87,12 +111,12 @@ class LikesFetcher
             return 0;
         }
 
-        $likes = $summary->getProperty('total_count');
+        $count = $summary->getProperty('total_count');
 
-        if(is_null($likes)) {
+        if(is_null($count)) {
             return 0;
         }
 
-        return $likes;
+        return $count;
     }
 }

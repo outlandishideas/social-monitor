@@ -19,7 +19,7 @@ use Outlandish\SocialMonitor\FacebookFetcher\SessionFactory;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class LikesFetcherSpec extends ObjectBehavior
+class LikesCountFetcherSpec extends ObjectBehavior
 {
 
     public function let(RequestFactory $requestFactory)
@@ -31,7 +31,7 @@ class LikesFetcherSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Outlandish\SocialMonitor\FacebookFetcher\LikesFetcher');
+        $this->shouldHaveType('Outlandish\SocialMonitor\FacebookFetcher\LikesCountFetcher');
     }
 
     function it_returns_a_count_of_the_number_of_likes(RequestFactory $requestFactory,
@@ -40,7 +40,11 @@ class LikesFetcherSpec extends ObjectBehavior
                                                        GraphObject $graphObject)
     {
         $id = 'Facebook_Post';
-        $requestFactory->getRequest(Argument::cetera())->willReturn($request);
+        $requestFactory->getRequest(
+            "GET",
+            "/{$id}/likes",
+            Argument::type('array')
+        )->willReturn($request);
 
         $request->execute()->willReturn($response);
         $response->getGraphObject()->willReturn($graphObject);
