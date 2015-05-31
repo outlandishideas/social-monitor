@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Matthew
  * Date: 31/05/2015
- * Time: 20:09
+ * Time: 20:40
  */
 
 namespace spec\Outlandish\SocialMonitor\FacebookFetcher;
@@ -12,15 +12,13 @@ use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookResponse;
 use Facebook\FacebookSDKException;
-use Facebook\FacebookSession;
 use Facebook\GraphObject;
 use Outlandish\SocialMonitor\FacebookFetcher\RequestFactory;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class CommentsCountFetcherSpec extends ObjectBehavior
+class SharesCountFetcherSpec extends ObjectBehavior
 {
-
     public function let(RequestFactory $requestFactory)
     {
         $this->beConstructedWith($requestFactory);
@@ -28,28 +26,59 @@ class CommentsCountFetcherSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Outlandish\SocialMonitor\FacebookFetcher\CommentsCountFetcher');
+        $this->shouldHaveType('Outlandish\SocialMonitor\FacebookFetcher\SharesCountFetcher');
     }
 
-    function it_returns_a_count_of_the_number_of_likes(RequestFactory $requestFactory,
+    function it_returns_a_count_of_the_number_of_shares(RequestFactory $requestFactory,
                                                        FacebookRequest $request,
                                                        FacebookResponse $response,
                                                        GraphObject $graphObject)
     {
+        $count = 100;
         $id = 'Facebook_Post';
         $requestFactory->getRequest(
             "GET",
-            "/{$id}/comments",
+            "/{$id}/shares",
             Argument::type('array')
         )->willReturn($request);
 
         $request->execute()->willReturn($response);
         $response->getGraphObject()->willReturn($graphObject);
-        $graphObject->getProperty('summary')->willReturn($graphObject);
-        $graphObject->getProperty('total_count')->willReturn(100);
+        $graphObject->getProperty('data')->willReturn($graphObject);
+        $graphObject->asArray()->willReturn(array_pad([], $count, $graphObject));
+        $response->getRequestForNextPage()->shouldBeCalled();
 
-        $this->getCount($id)->shouldBeInteger();
+        $this->getCount($id)->shouldBe($count);
     }
+
+    function it_uses_paging_to_get_all_shares(RequestFactory $requestFactory,
+                                              FacebookRequest $request,
+                                              FacebookRequest $request2,
+                                              FacebookResponse $response,
+                                              FacebookResponse $response2,
+                                              GraphObject $graphObject)
+    {
+        $count = 100;
+        $id = 'Facebook_Post';
+        $requestFactory->getRequest(
+            "GET",
+            "/{$id}/shares",
+            Argument::type('array')
+        )->willReturn($request);
+
+        $request->execute()->willReturn($response);
+        $response->getGraphObject()->willReturn($graphObject);
+        $graphObject->getProperty('data')->willReturn($graphObject);
+        $graphObject->asArray()->willReturn(array_pad([], $count, $graphObject));
+        $response->getRequestForNextPage()->willReturn($request2);
+
+        $request2->execute()->willReturn($response2);
+        $response2->getGraphObject()->willReturn($graphObject);
+        $response2->getRequestForNextPage()->willReturn(null);
+
+        $this->getCount($id)->shouldBe($count*2);
+    }
+
 
     function it_should_return_0_if_no_summary_data_is_returned(RequestFactory $requestFactory,
                                                                FacebookRequest $request,
@@ -61,23 +90,7 @@ class CommentsCountFetcherSpec extends ObjectBehavior
 
         $request->execute()->willReturn($response);
         $response->getGraphObject()->willReturn($graphObject);
-        $graphObject->getProperty('summary')->willReturn(null);
-
-        $this->getCount($id)->shouldBe(0);
-    }
-
-    function it_should_return_0_if_total_count_is_not_in_summary(RequestFactory $requestFactory,
-                                                                 FacebookRequest $request,
-                                                                 FacebookResponse $response,
-                                                                 GraphObject $graphObject)
-    {
-        $id = 'Facebook_Post';
-        $requestFactory->getRequest(Argument::cetera())->willReturn($request);
-
-        $request->execute()->willReturn($response);
-        $response->getGraphObject()->willReturn($graphObject);
-        $graphObject->getProperty('summary')->willReturn($graphObject);
-        $graphObject->getProperty('total_count')->willReturn(null);
+        $graphObject->getProperty('data')->willReturn(null);
 
         $this->getCount($id)->shouldBe(0);
     }

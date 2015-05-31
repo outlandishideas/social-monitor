@@ -11,6 +11,7 @@ namespace Outlandish\SocialMonitor\FacebookFetcher;
 
 use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
+use Facebook\FacebookResponse;
 use Facebook\FacebookSDKException;
 use Facebook\GraphObject;
 
@@ -42,8 +43,9 @@ abstract class CountFetcher
      */
     public function getCount($id)
     {
-        $response = $this->getResponse($id);
-        $likes = $this->getLikesCountFromResponse($response);
+        $request = $this->getRequest($id);
+        $response = $this->getResponse($request);
+        $likes = $this->getCountFromResponse($response);
 
         return $likes;
     }
@@ -65,17 +67,11 @@ abstract class CountFetcher
     /**
      * Constructs a request object and gets its response
      *
-     * @param $id
-     * @return int
+     * @param FacebookRequest $request
+     * @return null|FacebookResponse
      */
-    private function getResponse($id)
+    protected function getResponse(FacebookRequest $request)
     {
-        $request = $this->request->getRequest(
-            "GET",
-            "/{$id}/{$this->getEndpoint()}",
-            $this->getParameters()
-        );
-
         try {
             $response = $request->execute();
         } catch (FacebookSDKException $e) {
@@ -90,10 +86,10 @@ abstract class CountFetcher
     /**
      * Gets the likes count from the response and returns 0 if there is missing data
      *
-     * @param $response
+     * @param FacebookResponse|null $response
      * @return int
      */
-    private function getLikesCountFromResponse($response)
+    protected function getCountFromResponse(FacebookResponse $response = null)
     {
         if(is_null($response)) {
             return 0;
@@ -118,5 +114,19 @@ abstract class CountFetcher
         }
 
         return $count;
+    }
+
+    /**
+     * @param $id
+     * @return FacebookRequest
+     */
+    protected function getRequest($id)
+    {
+        $request = $this->request->getRequest(
+            "GET",
+            "/{$id}/{$this->getEndpoint()}",
+            $this->getParameters()
+        );
+        return $request;
     }
 }

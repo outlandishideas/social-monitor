@@ -24,8 +24,6 @@ class LikesCountFetcherSpec extends ObjectBehavior
 
     public function let(RequestFactory $requestFactory)
     {
-        // do this here to make sure that default app has been set for specs below
-        FacebookSession::setDefaultApplication('AppId', 'AppSecrent');
         $this->beConstructedWith($requestFactory);
     }
 
