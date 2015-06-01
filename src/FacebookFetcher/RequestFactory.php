@@ -40,7 +40,7 @@ class RequestFactory {
      *
      * @return FacebookRequest
      */
-    public function getRequest($method, $endpoint, $parameters)
+    public function getRequest($method, $endpoint, $parameters = array())
     {
         return new FacebookRequest(
             $this->session->getSession(),

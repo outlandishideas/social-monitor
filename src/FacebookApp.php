@@ -15,15 +15,12 @@ use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
 use Outlandish\SocialMonitor\FacebookFetcher\CommentsCountFetcher;
 use Outlandish\SocialMonitor\FacebookFetcher\LikesCountFetcher;
+use Outlandish\SocialMonitor\FacebookFetcher\RequestFactory;
 use Outlandish\SocialMonitor\FacebookFetcher\SessionFactory;
 use Outlandish\SocialMonitor\FacebookFetcher\SharesCountFetcher;
 
 class FacebookApp
 {
-    /**
-     * @var SessionFactory
-     */
-    private $session;
     /**
      * @var CommentsCountFetcher
      */
@@ -32,25 +29,29 @@ class FacebookApp
      * @var LikesCountFetcher
      */
     private $likesCounter;
+    /**
+     * @var RequestFactory
+     */
+    private $request;
 
     public function __construct(
-        $session,
+        RequestFactory $request,
         LikesCountFetcher $likesCounter,
         CommentsCountFetcher $commentsCounter)
     {
-        $this->session = $session;
         $this->commentsCounter = $commentsCounter;
         $this->likesCounter = $likesCounter;
+        $this->request = $request;
     }
 
     public function pageInfo($pageId)
     {
-        return $this->getRequest("GET", "/{$pageId}")->execute()->getGraphObject();
+        return $this->request->getRequest("GET", "/{$pageId}")->execute()->getGraphObject();
     }
 
     public function pagePicture($pageId)
     {
-        return $this->getRequest("GET", "/{$pageId}/picture", ['redirect' => false])->execute()->getGraphObject();
+        return $this->request->getRequest("GET", "/{$pageId}/picture", ['redirect' => false])->execute()->getGraphObject();
     }
 
     /**
@@ -70,7 +71,7 @@ class FacebookApp
             $parameters['since'] = $since->getTimestamp();
         }
 
-        $graphObject = $this->getRequest("GET", "/{$pageId}/feed", $parameters)->execute()->getGraphObject();
+        $graphObject = $this->request->getRequest("GET", "/{$pageId}/feed", $parameters)->execute()->getGraphObject();
 
         return $graphObject;
     }
@@ -81,18 +82,13 @@ class FacebookApp
             'ids' => implode(',', $postIds)
         ];
 
-        return $this->getRequest("GET", "/comments", $parameters)->execute()->getGraphObject();
+        return $this->request->getRequest("GET", "/comments", $parameters)->execute()->getGraphObject();
     }
 
     public function get($url)
     {
         $url = str_replace('https://graph.facebook.com/v2.3', '', $url);
-        return $this->getRequest("GET", $url)->execute()->getGraphObject();
-    }
-
-    public function getRequest($method, $endpoint, $parameters = [])
-    {
-        return new FacebookRequest($this->session->getSession(), $method, $endpoint, $parameters);
+        return $this->request->getRequest("GET", $url)->execute()->getGraphObject();
     }
 
     /**
