@@ -38,10 +38,6 @@ services:
         class: Outlandish\SocialMonitor\FacebookFetcher\CommentsCountFetcher
         arguments: ["@facebook.request_factory"]
 
-    facebook.shares_counter:
-        class: Outlandish\SocialMonitor\FacebookFetcher\SharesCountFetcher
-        arguments: ["@facebook.request_factory"]
-
     facebook.app:
         class: Outlandish\SocialMonitor\FacebookApp
-        arguments: ["@facebook.session_factory", "@facebook.likes_counter", "@facebook.shares_counter", "@facebook.comments_counter"]
+        arguments: ["@facebook.session_factory", "@facebook.likes_counter", "@facebook.comments_counter"]

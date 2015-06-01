@@ -32,21 +32,15 @@ class FacebookApp
      * @var LikesCountFetcher
      */
     private $likesCounter;
-    /**
-     * @var SharesCountFetcher
-     */
-    private $sharesCounter;
 
     public function __construct(
         $session,
         LikesCountFetcher $likesCounter,
-        SharesCountFetcher $sharesCounter,
         CommentsCountFetcher $commentsCounter)
     {
         $this->session = $session;
         $this->commentsCounter = $commentsCounter;
         $this->likesCounter = $likesCounter;
-        $this->sharesCounter = $sharesCounter;
     }
 
     public function pageInfo($pageId)
@@ -99,17 +93,6 @@ class FacebookApp
     public function getRequest($method, $endpoint, $parameters = [])
     {
         return new FacebookRequest($this->session->getSession(), $method, $endpoint, $parameters);
-    }
-
-    /**
-     * Gets the shares for a post
-     *
-     * @param $postId
-     * @return int
-     */
-    public function postShareCount($postId)
-    {
-        return $this->sharesCounter->getCount($postId);
     }
 
     /**
