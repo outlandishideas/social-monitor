@@ -86,7 +86,7 @@ class Provider_Facebook extends Provider_Abstract
                 ':actor_id' => $actorId,
                 ':comments' => $this->getCommentCount($post->getProperty('id')),
                 ':likes' => $this->getLikesCount($post->getProperty('id')),
-                ':share_count' => $this->getShareCount($post->getProperty('id')),
+                ':share_count' => $this->getShareCount($post),
                 ':permalink' => isset($postArray['link']) ? $postArray['link'] : null,
                 ':type' => null,
                 ':posted_by_owner' => (int)$postedByOwner,
@@ -123,18 +123,7 @@ class Provider_Facebook extends Provider_Abstract
      */
     private function getLikesCount($postId)
     {
-        try {
-            /** @var GraphObject $likes */
-            $likes = $this->facebook->postLikes($postId);
-        } catch (FacebookRequestException $e) {
-            return 0;
-        }
-
-        if (!($likes instanceof GraphObject)) {
-            return 0;
-        }
-
-        return $likes->getProperty('summary')->getProperty('total_count');
+        return $this->facebook->postLikesCount($postId);
     }
 
     /**
@@ -145,50 +134,25 @@ class Provider_Facebook extends Provider_Abstract
      */
     private function getCommentCount($postId)
     {
-        try {
-            /** @var GraphObject $comments */
-            $comments = $this->facebook->postComments($postId);
-        } catch (FacebookRequestException $e) {
-            return 0;
-        }
-
-        if (!($comments instanceof GraphObject)) {
-            return 0;
-        }
-
-        return $comments->getProperty('summary')->getProperty('total_count');
+        return $this->facebook->postCommentsCount($postId);
     }
 
     /**
      * Gets the share count for the given post
      *
-     * @param $postId
+     * @param GraphObject $post
      * @return int
      */
-    private function getShareCount($postId)
+    private function getShareCount($post)
     {
-        /** @var GraphObject $shares */
-        try {
-            $shares = $this->facebook->postShares($postId);
-        } catch (FacebookRequestException $e) {
+        $shares = $post->getProperty('shares');
+        if (is_null($shares)) {
             return 0;
         }
-        $count = 0;
 
-        while(true) {
-            $shareArray = $shares->getPropertyAsArray('data');
-            if (empty($shareArray)) {
-                break;
-            }
-
-            $count += count($shareArray);
-
-            try {
-                $shares = $this->facebook->get($shares->getProperty('paging')->next);
-            } catch (FacebookRequestException $e) {
-                //break out of loop as we have no more shares to count
-                break;
-            }
+        $count = $shares->getProperty('count');
+        if (is_null($count)) {
+            return 0;
         }
 
         return $count;

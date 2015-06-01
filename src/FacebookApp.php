@@ -13,20 +13,40 @@ use DateTime;
 use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
+use Outlandish\SocialMonitor\FacebookFetcher\CommentsCountFetcher;
+use Outlandish\SocialMonitor\FacebookFetcher\LikesCountFetcher;
+use Outlandish\SocialMonitor\FacebookFetcher\SessionFactory;
+use Outlandish\SocialMonitor\FacebookFetcher\SharesCountFetcher;
 
 class FacebookApp
 {
-    private $id;
-    private $secret;
     /**
-     * @var FacebookSession
+     * @var SessionFactory
      */
     private $session;
+    /**
+     * @var CommentsCountFetcher
+     */
+    private $commentsCounter;
+    /**
+     * @var LikesCountFetcher
+     */
+    private $likesCounter;
+    /**
+     * @var SharesCountFetcher
+     */
+    private $sharesCounter;
 
-    public function __construct($id, $secret)
+    public function __construct(
+        $session,
+        LikesCountFetcher $likesCounter,
+        SharesCountFetcher $sharesCounter,
+        CommentsCountFetcher $commentsCounter)
     {
-        $this->id = $id;
-        $this->secret = $secret;
+        $this->session = $session;
+        $this->commentsCounter = $commentsCounter;
+        $this->likesCounter = $likesCounter;
+        $this->sharesCounter = $sharesCounter;
     }
 
     public function pageInfo($pageId)
@@ -78,65 +98,39 @@ class FacebookApp
 
     public function getRequest($method, $endpoint, $parameters = [])
     {
-        return new FacebookRequest($this->getSession(), $method, $endpoint, $parameters);
-    }
-
-    private function getSession()
-    {
-        if ($this->session === null) {
-            FacebookSession::setDefaultApplication($this->id, $this->secret);
-
-            $this->session = new FacebookSession($this->getAccessToken());
-        }
-
-        return $this->session;
+        return new FacebookRequest($this->session->getSession(), $method, $endpoint, $parameters);
     }
 
     /**
      * Gets the shares for a post
      *
      * @param $postId
-     * @return mixed
-     * @throws FacebookRequestException
+     * @return int
      */
-    public function postShares($postId)
+    public function postShareCount($postId)
     {
-        return $this->getRequest("GET", "/{$postId}/sharedposts")->execute()->getGraphObject();
+        return $this->sharesCounter->getCount($postId);
     }
 
     /**
      * Gets the likes for a post
      *
      * @param $postId
-     * @return mixed
-     * @throws FacebookRequestException
+     * @return int
      */
-    public function postLikes($postId)
+    public function postLikesCount($postId)
     {
-        $parameters = [
-            'summary' => true
-        ];
-        return $this->getRequest("GET", "/{$postId}/likes", $parameters)->execute()->getGraphObject();
+        return $this->likesCounter->getCount($postId);
     }
 
     /**
      * Gets the comments for a post
      *
      * @param $postId
-     * @return mixed
-     * @throws FacebookRequestException
+     * @return int
      */
-    public function postComments($postId)
+    public function postCommentsCount($postId)
     {
-        $parameters = [
-            'summary' => true
-        ];
-        return $this->getRequest("GET", "/{$postId}/comments", $parameters)->execute()->getGraphObject();
+        return $this->commentsCounter->getCount($postId);
     }
-
-    private function getAccessToken()
-    {
-        return "{$this->id}|{$this->secret}";
-    }
-
 }

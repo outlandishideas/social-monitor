@@ -22,6 +22,26 @@ services:
         class:     Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric
         arguments: ["@facebook_engagement.query.weighted"]
 
+    facebook.session_factory:
+        class: Outlandish\SocialMonitor\FacebookFetcher\SessionFactory
+        arguments: ["%facebook.app_id%", "%facebook.app_secret%"]
+
+    facebook.request_factory:
+        class: Outlandish\SocialMonitor\FacebookFetcher\RequestFactory
+        arguments: ["@facebook.session_factory"]
+
+    facebook.likes_counter:
+        class: Outlandish\SocialMonitor\FacebookFetcher\LikesCountFetcher
+        arguments: ["@facebook.request_factory"]
+
+    facebook.comments_counter:
+        class: Outlandish\SocialMonitor\FacebookFetcher\CommentsCountFetcher
+        arguments: ["@facebook.request_factory"]
+
+    facebook.shares_counter:
+        class: Outlandish\SocialMonitor\FacebookFetcher\SharesCountFetcher
+        arguments: ["@facebook.request_factory"]
+
     facebook.app:
         class: Outlandish\SocialMonitor\FacebookApp
-        arguments: ["%facebook.app_id%", "%facebook.app_secret%"]
+        arguments: ["@facebook.session_factory", "@facebook.likes_counter", "@facebook.shares_counter", "@facebook.comments_counter"]
