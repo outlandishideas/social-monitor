@@ -38,6 +38,14 @@ services:
         class: Outlandish\SocialMonitor\FacebookFetcher\CommentsCountFetcher
         arguments: ["@facebook.request_factory"]
 
+    facebook.feed_fetcher:
+        class: Outlandish\SocialMonitor\FacebookFetcher\FeedFetcher
+        arguments: ["@facebook.request_factory", "@facebook.post_parser"]
+
+    facebook.post_parser:
+        class: Outlandish\SocialMonitor\FacebookFetcher\PostParser
+        arguments: ["@facebook.comments_counter", "@facebook.likes_counter"]
+
     facebook.app:
         class: Outlandish\SocialMonitor\FacebookApp
-        arguments: ["@facebook.request_factory", "@facebook.likes_counter", "@facebook.comments_counter"]
+        arguments: ["@facebook.request_factory", "@facebook.likes_counter", "@facebook.comments_counter", "@facebook.feed_fetcher"]

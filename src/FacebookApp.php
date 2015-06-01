@@ -14,6 +14,7 @@ use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
 use Outlandish\SocialMonitor\FacebookFetcher\CommentsCountFetcher;
+use Outlandish\SocialMonitor\FacebookFetcher\FeedFetcher;
 use Outlandish\SocialMonitor\FacebookFetcher\LikesCountFetcher;
 use Outlandish\SocialMonitor\FacebookFetcher\RequestFactory;
 use Outlandish\SocialMonitor\FacebookFetcher\SessionFactory;
@@ -33,15 +34,20 @@ class FacebookApp
      * @var RequestFactory
      */
     private $request;
+    /**
+     * @var FeedFetcher
+     */
+    private $feed;
 
     public function __construct(
         RequestFactory $request,
         LikesCountFetcher $likesCounter,
-        CommentsCountFetcher $commentsCounter)
+        CommentsCountFetcher $commentsCounter,
+        FeedFetcher $feed)
     {
         $this->commentsCounter = $commentsCounter;
-        $this->likesCounter = $likesCounter;
         $this->request = $request;
+        $this->feed = $feed;
     }
 
     public function pageInfo($pageId)
@@ -59,21 +65,11 @@ class FacebookApp
      *
      * @param $pageId
      * @param DateTime $since
-     * @return mixed
-     * @throws FacebookRequestException
+     * @return array
      */
     public function pageFeed($pageId, DateTime $since = null)
     {
-        $parameters = [
-            'limit' =>  250
-        ];
-        if ($since) {
-            $parameters['since'] = $since->getTimestamp();
-        }
-
-        $graphObject = $this->request->getRequest("GET", "/{$pageId}/feed", $parameters)->execute()->getGraphObject();
-
-        return $graphObject;
+        return $this->feed->getFeed($pageId, $since);
     }
 
     public function postResponses(array $postIds)
@@ -91,25 +87,4 @@ class FacebookApp
         return $this->request->getRequest("GET", $url)->execute()->getGraphObject();
     }
 
-    /**
-     * Gets the likes for a post
-     *
-     * @param $postId
-     * @return int
-     */
-    public function postLikesCount($postId)
-    {
-        return $this->likesCounter->getCount($postId);
-    }
-
-    /**
-     * Gets the comments for a post
-     *
-     * @param $postId
-     * @return int
-     */
-    public function postCommentsCount($postId)
-    {
-        return $this->commentsCounter->getCount($postId);
-    }
 }

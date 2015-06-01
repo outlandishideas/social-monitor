@@ -51,10 +51,10 @@ class Provider_Facebook extends Provider_Abstract
 
     /**
      * @param Model_Presence $presence
-     * @param GraphObject $postData
-     * @param $count
+     * @param array          $posts
+     * @param mixed          $count
      */
-    protected function parseAndInsertStatuses(Model_Presence $presence, GraphObject $postData, &$count)
+    protected function parseAndInsertStatuses(Model_Presence $presence, array $posts, &$count)
 	{
         $insertStmt = $this->db->prepare("
 			INSERT INTO `{$this->tableName}`
@@ -69,28 +69,23 @@ class Provider_Facebook extends Provider_Abstract
 
         $count = 0;
         $links = array();
-            /** @var GraphObject $posts */
-        $posts = $postData->getPropertyAsArray('data');
 
-        /** @var GraphObject $post */
+        /** @var array $post */
         foreach ($posts as $post) {
-            $postArray = $post->asArray();
-            $actorId = $postArray['from']->id;
-            $createdTime = date_create_from_format(DateTime::ISO8601, $postArray['created_time']);
-            $postedByOwner = $actorId == $presence->getUID();
+            $postedByOwner = $post['actor_id'] == $presence->getUID();
             $args = array(
-                ':post_id' => $postArray['id'],
+                ':post_id' => $post['post_id'],
                 ':presence_id' => $presence->getId(),
-                ':message' => isset($postArray['message']) ? $postArray['message'] : null,
-                ':created_time' => gmdate("Y-m-d H:i:s", $createdTime->getTimestamp()),
-                ':actor_id' => $actorId,
-                ':comments' => $this->getCommentCount($post->getProperty('id')),
-                ':likes' => $this->getLikesCount($post->getProperty('id')),
-                ':share_count' => $this->getShareCount($post),
-                ':permalink' => isset($postArray['link']) ? $postArray['link'] : null,
-                ':type' => null,
+                ':message' => $post['message'],
+                ':created_time' => $post['created_time'],
+                ':actor_id' => $post['actor_id'],
+                ':comments' => $post['comments'],
+                ':likes' => $post['likes'],
+                ':share_count' => $post['share_count'],
+                ':permalink' => $post['permalink'],
+                ':type' => $post['type'],
                 ':posted_by_owner' => (int)$postedByOwner,
-                ':needs_response' => (int) (!$postedByOwner && isset($postArray['message'])),
+                ':needs_response' => (int) (!$postedByOwner && $post['message']),
                 ':in_response_to' => null
             );
             try {
@@ -114,49 +109,6 @@ class Provider_Facebook extends Provider_Abstract
 
         $this->saveLinks('facebook', $links);
 	}
-
-    /**
-     * Gets the count of the likes for the post id
-     *
-     * @param $postId
-     * @return int
-     */
-    private function getLikesCount($postId)
-    {
-        return $this->facebook->postLikesCount($postId);
-    }
-
-    /**
-     * Gets the comment count of the given post
-     *
-     * @param $postId
-     * @return int
-     */
-    private function getCommentCount($postId)
-    {
-        return $this->facebook->postCommentsCount($postId);
-    }
-
-    /**
-     * Gets the share count for the given post
-     *
-     * @param GraphObject $post
-     * @return int
-     */
-    private function getShareCount($post)
-    {
-        $shares = $post->getProperty('shares');
-        if (is_null($shares)) {
-            return 0;
-        }
-
-        $count = $shares->getProperty('count');
-        if (is_null($count)) {
-            return 0;
-        }
-
-        return $count;
-    }
 
     /**
      * updates Responses
