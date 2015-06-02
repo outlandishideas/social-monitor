@@ -14,17 +14,30 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * This command copies over popularity data to fill in any days with blank data
+ *
+ * This command takes a required date argument, which is the date to fill in the data for.
+ * It gets all the population data from the previous day and inserts it into the database
+ * for the date given.
+ *
+ * If the previous day does not have any data it will not go back further, and will instead
+ * exit with a message informing you of the case.
+ *
+ * Class PopulatePopulationCommand
+ * @package Outlandish\SocialMonitor\Command
+ */
 class PopulatePopulationCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this
             ->setName('sm:fix:popularity')
-            ->setDescription('Greet someone')
+            ->setDescription('Command to fill in the blank popularity data by copying over the previous days data')
             ->addArgument(
                 'date',
                 InputArgument::REQUIRED,
-                'The date to fill in missing results Y-m-d'
+                'The date to fill in missing results (Y-m-d)'
             )
         ;
     }
