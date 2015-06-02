@@ -21,23 +21,29 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
+/**
+ * This command generates a response time metric score for your chosen presence
+ *
+ * Class ResponseTimeMetricCommand
+ * @package Outlandish\SocialMonitor\Command
+ */
 class ResponseTimeMetricCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this
             ->setName('sm:metric:response-time')
-            ->setDescription('Greet someone')
+            ->setDescription('Generates a response time metric score for your chosen presence')
             ->addArgument(
                 'presence-id',
                 InputArgument::REQUIRED,
-                'The id of the presence that you want to view the engagement score for'
+                'The id of the presence that you want to view the response time metric score for'
             )
             ->addOption(
                 'date',
                 'c',
                 InputOption::VALUE_REQUIRED,
-                'Date',
+                'The date to the view of the response time metric score for',
                 date('Y-m-d')
             )
         ;
@@ -70,8 +76,6 @@ class ResponseTimeMetricCommand extends ContainerAwareCommand
         }
 
         $output->writeln("[{$presenceId}] {$presence->getName()} scored {$score}");
-
-
     }
 
 }
