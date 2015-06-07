@@ -41,7 +41,7 @@ class StandardFacebookEngagementQuery implements Query
 
         $sql = "SELECT
                     f.presence_id,
-                    (((SUM(f.comments) + SUM(f.likes) + SUM(f.share_count)) / MAX(ph.popularity))*1000) AS `total`
+                    (((SUM(f.comments) + SUM(f.likes) + SUM(f.share_count)) / MAX(ph.popularity))*100) AS `total`
                 FROM
                     $facebookStream AS f
                 LEFT JOIN

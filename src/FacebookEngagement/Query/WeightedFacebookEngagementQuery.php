@@ -41,7 +41,7 @@ class WeightedFacebookEngagementQuery implements Query
 
         $sql = "SELECT
                     f.presence_id,
-                    (((SUM(f.comments)*4 + SUM(f.likes)*1 + SUM(f.share_count)*7) / MAX(ph.popularity))*1000) AS `total`
+                    (((SUM(f.comments)*4 + SUM(f.likes)*1 + SUM(f.share_count)*7) / MAX(ph.popularity))*100) AS `total`
                 FROM
                     $facebookStream AS f
                 LEFT JOIN
