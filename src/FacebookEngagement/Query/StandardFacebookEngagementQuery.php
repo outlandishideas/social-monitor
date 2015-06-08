@@ -41,33 +41,41 @@ class StandardFacebookEngagementQuery implements Query
 
         $sql = "SELECT
                     f.presence_id,
-                    (((SUM(f.comments) + SUM(f.likes) + SUM(f.share_count)) / MAX(ph.popularity))*100) AS `total`
+					(((f.comments + f.likes + f.share_count) / 3) / ph.popularity) * 1000 AS `total`
                 FROM
-                    $facebookStream AS f
+				    (
+						SELECT
+							presence_id,
+							SUM(comments) AS comments,
+							SUM(likes) AS likes,
+							SUM(share_count) AS share_count
+						FROM
+							$facebookStream
+						WHERE
+							DATE(created_time) >= :then
+						AND
+							DATE(created_time) <= :now
+						GROUP BY
+							presence_id
+					) AS f
                 LEFT JOIN
                     (
                         SELECT
                             presence_id,
-                            `value` AS popularity
+                            MAX(`value`) AS popularity
                         FROM
                             $presenceHistory
                         WHERE
                             DATE(datetime) = :now
                         AND
-                            `type` = :popularity
-                    ) AS ph ON f.presence_id = ph.presence_id
-                WHERE
-                    DATE(f.created_time) >= :then
-                AND
-                    DATE(f.created_time) <= :now
-                GROUP BY
-                    presence_id";
+                            `type` = '$popularity'
+						GROUP BY presence_id
+                    ) AS ph ON f.presence_id = ph.presence_id";
 
         $statement = $this->db->prepare($sql);
         $statement->execute([
             ':now' => $now->format('Y-m-d'),
-            ':then' => $then->format('Y-m-d'),
-            ':popularity' => $popularity
+            ':then' => $then->format('Y-m-d')
         ]);
         return $statement->fetchAll(PDO::FETCH_KEY_PAIR);
     }
