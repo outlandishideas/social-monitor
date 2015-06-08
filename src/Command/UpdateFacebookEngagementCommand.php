@@ -84,34 +84,6 @@ class UpdateFacebookEngagementCommand extends ContainerAwareCommand
 
         } while ($now < $end);
 
-        /** @var \Provider_Facebook $provider */
-        $provider = \Enum_PresenceType::FACEBOOK()->getProvider();
-
-        $presences = \Model_PresenceFactory::getPresencesByType(\Enum_PresenceType::FACEBOOK());
-
-        $db = \Zend_Registry::get('db')->getConnection();
-
-        $sql = "INSERT INTO presence_history (`presence_id`, `datetime`, `type`, `value`)
-                VALUES (:id, :datetime, :type, :value)
-        	    ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)";
-
-        $statement = $db->prepare($sql);
-
-        /** @var \Model_Presence $presence */
-        foreach ($presences as $presence) {
-            $score = $provider->calculateFacebookEngagement($presence);
-            $presence->facebook_engagement = $score;
-            $presence->save();
-            if ($score === null) $score = 0;
-            $output->writeln("[{$presence->getId()}] {$presence->getName()} has score of {$score}");
-            $statement->execute([
-                ':id' => $presence->getId(),
-                ':datetime' => $now->format('Y-m-d H:i:s'),
-                ':type' => 'facebook_engagement',
-                ':value' => $score,
-            ]);
-        }
-
     }
 
 }
