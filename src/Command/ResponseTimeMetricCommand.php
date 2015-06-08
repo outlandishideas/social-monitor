@@ -62,6 +62,12 @@ class ResponseTimeMetricCommand extends ContainerAwareCommand
         /** @var \Model_Presence $presence */
         $presence = \Model_PresenceFactory::getPresenceById($presenceId);
 
+        $data = $presence->getResponseData($then, $now);
+
+        foreach ($data as $row) {
+            $output->writeln("Created Time: {$row->created}. Difference: {$row->diff}.");
+        }
+
         $value = $metric->calculate($presence, $then, $now);
 
         $output->writeln("[{$presenceId}] {$presence->getName()} get a value of {$value}");
