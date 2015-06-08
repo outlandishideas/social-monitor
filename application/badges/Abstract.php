@@ -46,7 +46,7 @@ abstract class Badge_Abstract
 		if ($totalWeight == 0) {
             return null; //apparently we have no metrics to calculate a result with
         }
-		$result = round($totalScore/$totalWeight);
+		$result = floor($totalScore/$totalWeight);
 		$result = max(0, min(100, $result));
 
 		return $result;
