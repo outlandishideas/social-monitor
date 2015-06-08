@@ -25,14 +25,17 @@ class Metric_ResponseTimeNew extends Metric_ResponseTime {
         }, $data);
 
         $total = array_sum($diffs);
+        $count = count($diffs);
 
         //if we have less than 5 values, don't remove min and max values
         //else get min and max values and remove from the total
-        if ($diffs >= 5) {
+        if (count($diffs) >= 5) {
             $total -= min($diffs);
             $total -= max($diffs);
+            //remove two from the count to compensate for removing the max and min values
+            $count -= 2;
         }
 
-        return $total/count($diffs);
+        return $total/$count;
     }
 }
