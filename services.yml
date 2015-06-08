@@ -6,6 +6,9 @@ services:
             user: "%db.username%"
             password: "%db.password%"
 
+    ###################################
+    # facebook engagement services
+    ###################################
     facebook_engagement.query.standard:
         class:     Outlandish\SocialMonitor\FacebookEngagement\Query\StandardFacebookEngagementQuery
         arguments: ["@pdo"]
