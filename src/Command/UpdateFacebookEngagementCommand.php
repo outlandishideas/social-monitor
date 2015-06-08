@@ -43,6 +43,9 @@ class UpdateFacebookEngagementCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        //today's date in Y-m-d format
+        $todayYmd = (new DateTime())->format("Y-m-d");
+
         $start = date_create_from_format('Y-m-d', $input->getArgument('start-date'));
         $end = date_create_from_format('Y-m-d', $input->getArgument('end-date'));
         $now = clone $start;
@@ -52,17 +55,27 @@ class UpdateFacebookEngagementCommand extends ContainerAwareCommand
         /** @var \PDO $db */
         $db = $this->getContainer()->get('pdo');
 
-        $sql = "UPDATE `presence_history`
+        //update presence history data
+        $sqlHistory = "UPDATE `presence_history`
                   SET `value` = :new_value
                   WHERE `type` = 'facebook_engagement'
                   AND `presence_id` = :presence_id
                   AND DATE(`datetime`) = :now";
-        $statement = $db->prepare($sql);
+        $updateHistory = $db->prepare($sqlHistory);
+
+        //update presence data
+        $sqlPresence = "UPDATE `presences`
+                            SET `facebook_engagement` = :new_value
+                            WHERE `id` = :presence_id";
+        $updatePresence = $db->prepare($sqlPresence);
 
         do {
             //we get facebook engagement scores over 7 days so reset $then each time
             $then = clone $now;
             $then->modify("-7 days");
+
+            //$now in Y-m-d format
+            $nowYmd = $now->format("Y-m-d");
 
             $output->writeln($now->format('Y-m-d'));
 
@@ -73,10 +86,20 @@ class UpdateFacebookEngagementCommand extends ContainerAwareCommand
                 $parameters = [
                     ':new_value' => $score,
                     ':presence_id' => $id,
-                    ':now' => $now->format("Y-m-d")
+                    ':now' => $nowYmd
                 ];
-                $statement->execute($parameters);
+                $updateHistory->execute($parameters);
                 $output->writeln("  Updated Facebook Engagement for [{$id}]");
+            }
+
+            if ($nowYmd == $todayYmd) {
+                foreach ($scores as $id => $score) {
+                    $parameters = [
+                        ':new_value' => $score,
+                        ':presence_id' => $id
+                    ];
+                    $updatePresence->execute($parameters);
+                }
             }
 
             //modify by one day and start all over again
