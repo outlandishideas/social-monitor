@@ -43,8 +43,8 @@ class UpdateFacebookEngagementCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $start = date_create_from_format('Y-m-d', $input->getOption('start-date'));
-        $end = date_create_from_format('Y-m-d', $input->getOption('end-date'));
+        $start = date_create_from_format('Y-m-d', $input->getArgument('start-date'));
+        $end = date_create_from_format('Y-m-d', $input->getArgument('end-date'));
         $now = clone $start;
 
         /** @var FacebookEngagementMetric $engagementMetric */
