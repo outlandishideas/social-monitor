@@ -27,22 +27,64 @@ class UpdateFacebookEngagementCommand extends ContainerAwareCommand
     {
         $this
             ->setName('sm:metric:fb-engagement-update')
-            ->setDescription('Greet someone')
+            ->setDescription('Updates historic facebook engagement scores to use new values over a range of days')
             ->addOption(
-                'date',
-                'c',
-                InputOption::VALUE_REQUIRED,
-                'Date',
-                date('Y-m-d')
+                'start-date',
+                InputArgument::REQUIRED,
+                null,
+                'Start Date (Y-m-d)'
+            )
+            ->addOption(
+                'end-date',
+                null,
+                InputArgument::REQUIRED,
+                'End Date (Y-m-d)'
             )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $now = date_create_from_format('Y-m-d', $input->getOption('date'));
-        $then = clone $now;
-        $then->modify("-7 days");
+        $start = date_create_from_format('Y-m-d', $input->getOption('start-date'));
+        $end = date_create_from_format('Y-m-d', $input->getOption('end-date'));
+        $now = clone $start;
+
+        /** @var FacebookEngagementMetric $engagementMetric */
+        $engagementMetric = $this->getContainer()->get('facebook_engagement.weighted');
+        /** @var \PDO $db */
+        $db = $this->getContainer()->get('pdo');
+
+        $sql = "UPDATE `presence_history`
+                  SET `value` = :new_value
+                  WHERE `type` = 'facebook_engagement'
+                  AND `presence_id` = :presence_id
+                  AND DATE(`datetime`) = :now";
+        $statement = $db->prepare($sql);
+
+        do {
+            //we get facebook engagement scores over 7 days so reset $then each time
+            $then = clone $now;
+            $then->modify("-7 days");
+
+            $output->writeln($now->format('Y-m-d'));
+
+            //get the fb engagement scores for this day
+            $scores = $engagementMetric->getAll($now, $then);
+
+            foreach ($scores as $id => $score) {
+                $parameters = [
+                    ':new_value' => $score,
+                    ':presence_id' => $id,
+                    ':now' => $now->format("Y-m-d")
+                ];
+                $statement->execute($parameters);
+                $output->writeln("  Updated Facebook Engagement for [{$id}]");
+            }
+
+            //modify by one day and start all over again
+            $now->modify("+1 day");
+
+        } while ($now < $end);
 
         /** @var \Provider_Facebook $provider */
         $provider = \Enum_PresenceType::FACEBOOK()->getProvider();
