@@ -65,7 +65,7 @@ class FacebookEngagementCommand extends ContainerAwareCommand
         $days = $input->getOption('days');
         $then->modify("-$days days");
 
-        $engagementScore = $this->getContainer()->get('facebook_engagement.standard')->get($presenceId, $now, $then);
+        $engagementScore = $this->getContainer()->get('facebook_engagement.weighted')->get($presenceId, $now, $then);
 
         if ($engagementScore !== null) {
             $output->writeln("Engagement Score for $presenceId is $engagementScore");
