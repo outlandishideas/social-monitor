@@ -28,15 +28,13 @@ class UpdateFacebookEngagementCommand extends ContainerAwareCommand
         $this
             ->setName('sm:metric:fb-engagement-update')
             ->setDescription('Updates historic facebook engagement scores to use new values over a range of days')
-            ->addOption(
+            ->addArgument(
                 'start-date',
                 InputArgument::REQUIRED,
-                null,
                 'Start Date (Y-m-d)'
             )
-            ->addOption(
+            ->addArgument(
                 'end-date',
-                null,
                 InputArgument::REQUIRED,
                 'End Date (Y-m-d)'
             )
