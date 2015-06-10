@@ -24,7 +24,7 @@ abstract class BadgeScore extends Header {
             $value = -1;
             $style = '';
         } else {
-            $style = 'style="color:' . Badge_Abstract::colorize($value) . '"';
+            $style = 'style="color:' . \Badge_Abstract::colorize($value) . '"';
         }
 
         return "<span $style data-value='{$value}'>{$text}</span>";
