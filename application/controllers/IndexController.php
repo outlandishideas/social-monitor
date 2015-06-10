@@ -241,31 +241,58 @@ class IndexController extends GraphingController
 
     public function clearCacheAction()
     {
+        $this->setupConsoleOutput();
+
+
+        $this->log("Updating Presence Index Table Cache");
         /** @var TableIndex $presenceIndexTable */
         $presenceIndexTable = $this->getContainer()->get('table.presence-index');
         $presences = Model_PresenceFactory::getPresences();
         $rows = $presenceIndexTable->getRows($presences);
         $this->setObjectCache('presence-index', $rows);
+        $this->log("Updated Presence Index Table Cache");
 
+
+        $this->log("Updating Country Index Table Cache");
         /** @var TableIndex $countryIndexTable */
         $countryIndexTable = $this->getContainer()->get('table.country-index');
         $countries = Model_Country::fetchAll();
         $rows = $countryIndexTable->getRows($countries);
         $this->setObjectCache('country-index', $rows);
+        $this->log("Updated Country Index Table Cache");
 
+
+        $this->log("Updating Group Index Table Cache");
         /** @var TableIndex $groupIndexTable */
         $groupIndexTable = $this->getContainer()->get('table.group-index');
         $groups = Model_Group::fetchAll();
         $rows = $groupIndexTable->getRows($groups);
         $this->setObjectCache('group-index', $rows);
+        $this->log("Updated Group Index Table Cache");
 
+
+        $this->log("Updating Region Index Table Cache");
         /** @var TableIndex $groupIndexTable */
         $regionIndexTable = $this->getContainer()->get('table.region-index');
         $region = Model_Region::fetchAll();
         $rows = $regionIndexTable->getRows($region);
         $this->setObjectCache('region-index', $rows);
-        exit;
+        $this->log("Updated Region Index Table Cache");
     }
+
+    protected function log($message, $ignoreSilent = false) {
+    $log = date('Y-m-d H:i:s') . " $message\n";
+
+    if (!$this->_request->getParam('silent') || $ignoreSilent) {
+        // todo: disable output buffering. This doesn't work on the beta server
+//			ob_start();
+        echo $log;
+//			while (ob_get_level()) {
+//				ob_end_flush();
+//			}
+//			flush();
+    }
+}
 
 
 }
