@@ -32,14 +32,13 @@ class TableIndex {
     {
         $rows = [];
 
-        foreach ($data as $datum) {
-            $row = [
-                'id' => $datum->id
-            ];
+        foreach ($data as $model) {
+            $row = new \stdClass();
+            $row->id = $model->id;
             foreach ($this->headers as $header) {
-                $row[$header->getName()] = $header->getTableCellValue($datum);
+                $row->{$header->getName()} = $header->getTableCellValue($model);
             }
-            $rows[] = (object)$row;
+            $rows[] = $row;
         }
 
         return $rows;
