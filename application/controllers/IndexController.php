@@ -256,7 +256,7 @@ class IndexController extends GraphingController
         /** @var TableIndex $groupIndexTable */
         $groupIndexTable = $this->getContainer()->get('table.group-index');
         $groups = Model_Group::fetchAll();
-        $rows = $groupIndexTable->getRows($countries);
+        $rows = $groupIndexTable->getRows($groups);
         $this->setObjectCache('group-index', $rows);
 
         /** @var TableIndex $groupIndexTable */
