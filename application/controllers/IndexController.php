@@ -3,6 +3,7 @@
 use Outlandish\SocialMonitor\ObjectCache\FanDataObjectCache;
 use Outlandish\SocialMonitor\Query\PresencePopularityHistoryDataQuery;
 use Outlandish\SocialMonitor\Query\TotalPopularityHistoryDataQuery;
+use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class IndexController extends GraphingController
 {
@@ -237,6 +238,34 @@ class IndexController extends GraphingController
 		unlink($fileName);
 		exit;
 	}
+
+    public function clearCacheAction()
+    {
+        /** @var TableIndex $presenceIndexTable */
+        $presenceIndexTable = $this->getContainer()->get('table.presence-index');
+        $presences = Model_PresenceFactory::getPresences();
+        $rows = $presenceIndexTable->getRows($presences);
+        $this->setObjectCache('presence-index', $rows);
+
+        /** @var TableIndex $countryIndexTable */
+        $countryIndexTable = $this->getContainer()->get('table.country-index');
+        $countries = Model_Country::fetchAll();
+        $rows = $countryIndexTable->getRows($countries);
+        $this->setObjectCache('country-index', $rows);
+
+        /** @var TableIndex $groupIndexTable */
+        $groupIndexTable = $this->getContainer()->get('table.group-index');
+        $groups = Model_Group::fetchAll();
+        $rows = $groupIndexTable->getRows($countries);
+        $this->setObjectCache('group-index', $rows);
+
+        /** @var TableIndex $groupIndexTable */
+        $regionIndexTable = $this->getContainer()->get('table.region-index');
+        $region = Model_Region::fetchAll();
+        $rows = $regionIndexTable->getRows($region);
+        $this->setObjectCache('region-index', $rows);
+        exit;
+    }
 
 
 }

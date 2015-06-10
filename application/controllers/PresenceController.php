@@ -3,6 +3,7 @@
 use mikehaertl\wkhtmlto\Pdf;
 use Outlandish\SocialMonitor\Report\ReportablePresence;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
+use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class PresenceController extends GraphingController
 {
@@ -27,9 +28,14 @@ class PresenceController extends GraphingController
 		Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
 		$presences = Model_PresenceFactory::getPresences();
 
+        /** @var TableIndex $indexTable */
+        $indexTable = $this->getContainer()->get('table.presence-index');
+        $rows = $this->getTableIndex('presence-index', $indexTable, $presences);
+
         $this->view->title = 'Presences';
         $this->view->presences = $presences;
-        $this->view->tableHeaders = $this->tableIndexHeaders();
+        $this->view->rows = $rows;
+        $this->view->tableHeaders = $indexTable->getHeaders();
         $this->view->sortCol = Header_Handle::getName();
 	}
 
@@ -418,4 +424,5 @@ class PresenceController extends GraphingController
             Header_Options::getInstance()
         );
     }
+
 }

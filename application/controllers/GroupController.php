@@ -3,6 +3,7 @@
 use mikehaertl\wkhtmlto\Pdf;
 use Outlandish\SocialMonitor\Report\ReportableGroup;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
+use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class GroupController extends CampaignController {
 
@@ -18,8 +19,15 @@ class GroupController extends CampaignController {
 	 * @user-level user
 	 */
 	public function indexAction() {
-		$this->view->groups = Model_Group::fetchAll();
-        $this->view->tableHeaders = $this->tableIndexHeaders();
+
+        $groups = Model_Group::fetchAll();
+        /** @var TableIndex $indexTable */
+        $indexTable = $this->getContainer()->get('table.group-index');
+        $rows = $this->getTableIndex('group-index', $indexTable, $groups);
+
+		$this->view->groups = $groups;
+		$this->view->rows = $rows;
+        $this->view->tableHeaders = $indexTable->getHeaders();
         $this->view->sortCol = Header_Name::getName();
 	}
 

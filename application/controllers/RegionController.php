@@ -3,6 +3,7 @@
 use mikehaertl\wkhtmlto\Pdf;
 use Outlandish\SocialMonitor\Report\ReportableRegion;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
+use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class RegionController extends CampaignController
 {
@@ -38,9 +39,15 @@ class RegionController extends CampaignController
 	 */
 	public function indexAction()
     {
+        $regions = Model_Region::fetchAll();
+        /** @var TableIndex $indexTable */
+        $indexTable = $this->getContainer()->get('table.region-index');
+        $rows = $this->getTableIndex('region-index', $indexTable, $regions);
+
         $this->view->title = 'Regions';
-		$this->view->regions = Model_Region::fetchAll();
-        $this->view->tableHeaders = $this->tableIndexHeaders();
+		$this->view->regions = $regions;
+		$this->view->rows = $rows;
+        $this->view->tableHeaders = $indexTable->getHeaders();
         $this->view->sortCol = Header_Name::getName();
 	}
 

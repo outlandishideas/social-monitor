@@ -52,3 +52,114 @@ services:
     facebook.app:
         class: Outlandish\SocialMonitor\FacebookApp
         arguments: ["@facebook.request_factory", "@facebook.likes_counter", "@facebook.comments_counter", "@facebook.feed_fetcher"]
+
+    # Headers
+
+    table.header.handle:
+        class: Outlandish\SocialMonitor\TableIndex\Header\Handle
+
+    table.header.branding:
+        class: Outlandish\SocialMonitor\TableIndex\Header\Branding
+
+    table.header.sign_off:
+        class: Outlandish\SocialMonitor\TableIndex\Header\SignOff
+
+    table.header.total_rank:
+        class: Outlandish\SocialMonitor\TableIndex\Header\TotalRank
+
+    table.header.total_score:
+        class: Outlandish\SocialMonitor\TableIndex\Header\TotalScore
+
+    table.header.current_audience:
+        class: Outlandish\SocialMonitor\TableIndex\Header\CurrentAudience
+
+    table.header.target_audience:
+        class: Outlandish\SocialMonitor\TableIndex\Header\TargetAudience
+
+    table.header.actions_per_day:
+        class: Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay
+
+    table.header.response_time:
+        class: Outlandish\SocialMonitor\TableIndex\Header\ResponseTime
+
+    table.header.options:
+        class: Outlandish\SocialMonitor\TableIndex\Header\Options
+
+    table.header.name:
+        class: Outlandish\SocialMonitor\TableIndex\Header\Name
+
+    table.header.digital_population:
+        class: Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulation
+
+    table.header.digital_population_health:
+        class: Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulationHealth
+
+    table.header.presences:
+        class: Outlandish\SocialMonitor\TableIndex\Header\Presences
+
+    table.header.presence_count:
+        class: Outlandish\SocialMonitor\TableIndex\Header\PresenceCount
+
+    table.header.countries:
+        class: Outlandish\SocialMonitor\TableIndex\Header\Countries
+
+    table.header.country_count:
+        class: Outlandish\SocialMonitor\TableIndex\Header\CountryCount
+
+    # Index Tables
+    table.region-index:
+        class: Outlandish\SocialMonitor\TableIndex\TableIndex
+        calls:
+            - [addHeader, ["@table.header.name"]]
+            - [addHeader, ["@table.header.total_rank"]]
+            - [addHeader, ["@table.header.total_score"]]
+            - [addHeader, ["@table.header.target_audience"]]
+            - [addHeader, ["@table.header.actions_per_day"]]
+            - [addHeader, ["@table.header.response_time"]]
+            - [addHeader, ["@table.header.countries"]]
+            - [addHeader, ["@table.header.country_count"]]
+            - [addHeader, ["@table.header.presence_count"]]
+            - [addHeader, ["@table.header.options"]]
+
+    table.group-index:
+        class: Outlandish\SocialMonitor\TableIndex\TableIndex
+        calls:
+            - [addHeader, ["@table.header.name"]]
+            - [addHeader, ["@table.header.total_rank"]]
+            - [addHeader, ["@table.header.total_score"]]
+            - [addHeader, ["@table.header.target_audience"]]
+            - [addHeader, ["@table.header.actions_per_day"]]
+            - [addHeader, ["@table.header.response_time"]]
+            - [addHeader, ["@table.header.presences"]]
+            - [addHeader, ["@table.header.presence_count"]]
+            - [addHeader, ["@table.header.options"]]
+
+    table.country-index:
+        class: Outlandish\SocialMonitor\TableIndex\TableIndex
+        calls:
+            - [addHeader, ["@table.header.name"]]
+            - [addHeader, ["@table.header.total_rank"]]
+            - [addHeader, ["@table.header.total_score"]]
+            - [addHeader, ["@table.header.target_audience"]]
+            - [addHeader, ["@table.header.digital_population"]]
+            - [addHeader, ["@table.header.digital_population_health"]]
+            - [addHeader, ["@table.header.actions_per_day"]]
+            - [addHeader, ["@table.header.response_time"]]
+            - [addHeader, ["@table.header.presences"]]
+            - [addHeader, ["@table.header.presence_count"]]
+            - [addHeader, ["@table.header.options"]]
+
+    table.presence-index:
+        class: Outlandish\SocialMonitor\TableIndex\TableIndex
+        calls:
+            - [addHeader, ["@table.header.handle"]]
+            - [addHeader, ["@table.header.branding"]]
+            - [addHeader, ["@table.header.sign_off"]]
+            - [addHeader, ["@table.header.total_rank"]]
+            - [addHeader, ["@table.header.total_score"]]
+            - [addHeader, ["@table.header.current_audience"]]
+            - [addHeader, ["@table.header.target_audience"]]
+            - [addHeader, ["@table.header.actions_per_day"]]
+            - [addHeader, ["@table.header.response_time"]]
+            - [addHeader, ["@table.header.options"]]
+

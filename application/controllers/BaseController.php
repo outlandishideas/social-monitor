@@ -1,5 +1,8 @@
 <?php
 
+use Outlandish\SocialMonitor\TableIndex\TableIndex;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 class BaseController extends Zend_Controller_Action
 {
 
@@ -11,6 +14,26 @@ class BaseController extends Zend_Controller_Action
     protected $config;
     /** @var Zend_Auth */
     protected $auth;
+    /**
+     * @var ContainerInterface
+     */
+    static protected $container;
+
+    /**
+     * @param ContainerInterface $container
+     */
+    public static function setContainer(ContainerInterface $container)
+    {
+        self::$container = $container;
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getContainer()
+    {
+        return self::$container;
+    }
 
     public function preDispatch()
     {
@@ -486,6 +509,24 @@ class BaseController extends Zend_Controller_Action
 	        }
 	    }
         return false;
+    }
+
+    /**
+     * @param $key
+     * @param TableIndex $table
+     * @param Base_Model[] $data
+     * @return array
+     */
+    protected function getTableIndex($key, TableIndex $table, array $data)
+    {
+        $rows = $this->getObjectCache($key);
+
+        if (!$rows || $this->_request->getParam('force')) {
+            $rows = $table->getRows($data);
+            $this->setObjectCache($key, $rows);
+        }
+
+        return $rows;
     }
 
     protected function flashMessage($message, $type = 'info') {

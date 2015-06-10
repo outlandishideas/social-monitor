@@ -3,6 +3,7 @@
 use mikehaertl\wkhtmlto\Pdf;
 use Outlandish\SocialMonitor\Report\ReportableCountry;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
+use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class CountryController extends CampaignController {
 
@@ -37,8 +38,13 @@ class CountryController extends CampaignController {
 			$country->getPresences($mapping, $presences);
 		}
 
+        /** @var TableIndex $indexTable */
+        $indexTable = $this->getContainer()->get('table.country-index');
+        $rows = $this->getTableIndex('country-index', $indexTable, $countries);
+
 		$this->view->countries = $countries;
-        $this->view->tableHeaders = $this->tableIndexHeaders();
+		$this->view->rows = $rows;
+        $this->view->tableHeaders = $indexTable->getHeaders();
         $this->view->sortCol = Header_Name::getName();
 	}
 
