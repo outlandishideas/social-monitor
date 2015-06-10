@@ -139,7 +139,7 @@ class Zend_View_Helper_Gatekeeper extends Zend_View_Helper_Abstract
 	public function filterAll($list, $name = null, $reset = false, $encode = true) {
 		$filtered = array();
 		foreach ($list as $text => $urlArgs) {
-			$f = $this->filter($text, $urlArgs, $name, $reset, $encode);
+			$f = $this->filter($text, (array)$urlArgs, $name, $reset, $encode);
 			if ($f) {
 				$filtered[] = $f;
 			}

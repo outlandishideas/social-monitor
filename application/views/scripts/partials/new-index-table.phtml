@@ -1,0 +1,107 @@
+<?php
+/**
+ * Need the following params
+ * $tableId = id of the table that is being created
+ * $tableHeaders = an array of Header_Abstract subclasses
+ * $rows = an array of rows to show
+ * $emptyText = Text to show when no rows
+ * $sortCol = Name of column to sort on, by default
+ */
+use Outlandish\SocialMonitor\TableIndex\Header\Countries;
+use Outlandish\SocialMonitor\TableIndex\Header\Handle;
+use Outlandish\SocialMonitor\TableIndex\Header\Header;
+use Outlandish\SocialMonitor\TableIndex\Header\Name;
+use Outlandish\SocialMonitor\TableIndex\Header\Options;
+use Outlandish\SocialMonitor\TableIndex\Header\Presences;
+
+/** @var Header[] $headers */
+$headers = array_filter($this->tableHeaders, function(Header $h) {
+        return $h->isForScreen();
+    });
+/** @var Zend_View_Helper_Gatekeeper $gatekeeper */
+$gatekeeper = $this->gatekeeper();
+?>
+
+<?php if (!$this->rows) : ?>
+<h3><?php echo $this->emptyText; ?></h3>
+<?php else : ?>
+<table class="text dtable" id="<?php echo $this->tableId; ?>" data-sort-col="<?php echo $this->sortCol; ?>">
+    <thead>
+    <tr>
+        <?php
+        foreach($headers as $header){
+            echo $header->getTableHeaderElement();
+        }
+        ?>
+    </tr>
+    </thead>
+    <tbody>
+        <?php foreach($this->rows as $row) : ?>
+            <tr>
+                <?php foreach($headers as $header) : ?>
+                <td class="<?php echo implode(' ', $header->getCellClasses()); ?>">
+                    <?php
+                    $name = $header->getName();
+                    $cellValue = $row->{$name};
+                    switch($name) {
+                        case Options::getName():
+                            $links = $gatekeeper->filterAll((array)$cellValue);
+                            if(count($links) > 0) {
+                                echo "<ul>";
+                                foreach ($links as $link) {
+                                    echo "<li>{$link}</li>";
+                                }
+                                echo "</ul>";
+                            }
+                            break;
+                        case Presences::getName():
+                        case Countries::getName():
+                            $count = count($cellValue);
+                            if ($header->getName() == Countries::getName()) {
+                                $countText = $count . ($count == 1 ? ' country' : ' countries');
+                            } else {
+                                $countText = $count . ' presence' . ($count == 1 ? '' : 's');
+                            }
+                            if($count > 0) {
+                                echo '<span class="entity-list-toggle" title="Click to expand">' . $countText . '</span>';
+                                echo '<ul class="entity-list">';
+                                foreach ($cellValue as $template=>$urlArgs) {
+                                    $link = $gatekeeper->filter($template, (array)$urlArgs);
+                                    if ($link) {
+                                        echo "<li>{$link}</li>";
+                                    } else {
+                                        $text = str_replace(
+                                            array('<a href="' . Zend_View_Helper_Gatekeeper::PLACEHOLDER_URL . '"', '</a>'),
+                                            array('<span', '</span>'),
+                                            $template
+                                        );
+                                        echo "<li>{$text}</li>";
+                                    }
+                                }
+                                echo "</ul>";
+                            } else {
+                                echo '<span>' . $countText . '</span>';
+                            }
+                            break;
+                        case Handle::getName():
+                        case Name::getName():
+                            $url = $gatekeeper->filter('%url%', array("action" => "view", "id" => $row->id));
+                            if ($url) {
+                                echo '<a href="' . $url . '" class="view-link">' . $cellValue . '</a>';
+                            } else {
+                                echo $cellValue;
+                            }
+                            break;
+                        default:
+                            echo $cellValue;
+                            break;
+                    }
+                    ?>
+                </td>
+                <?php endforeach; ?>
+            </tr>
+        <?php endforeach; ?>
+
+    </tbody>
+</table>
+<?php endif; ?>

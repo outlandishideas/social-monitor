@@ -84,6 +84,7 @@ $loader->load('parameters.yml');
 $loader->load('services.yml');
 
 Enum_PresenceType::setContainer($container);
+BaseController::setContainer($container);
 
 
 //set db for PresenceFactory

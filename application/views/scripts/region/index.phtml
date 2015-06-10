@@ -10,10 +10,10 @@ echo '<h2 class="page-title">Regions</h2>';
 
 echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
 
-echo $this->partial("partials/index-table.phtml", array(
+echo $this->partial("partials/new-index-table.phtml", array(
     "tableHeaders" => $this->tableHeaders,
     "tableId" => "all-regions",
-    "rows" => $this->regions,
+    "rows" => $this->rows,
     'emptyText' => 'No regions found',
     'sortCol' => $this->sortCol
 ));
