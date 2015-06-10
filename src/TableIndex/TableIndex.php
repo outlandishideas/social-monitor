@@ -37,8 +37,9 @@ class TableIndex {
             $row->id = $model->id;
             foreach ($this->headers as $header) {
                 $name = $header->getName();
-                echo $name;
+                echo $name . PHP_EOL;
                 $row->{$header->getName()} = $header->getTableCellValue($model);
+                echo $name . PHP_EOL;
             }
             $rows[] = $row;
         }
