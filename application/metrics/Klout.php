@@ -27,8 +27,7 @@ class Metric_Klout extends Metric_Abstract {
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $actual = $presence->getMetricValue($this);
-        $score = ($actual < $this->target) ? 0 : 100 ;
-        return $score;
+        return $actual;
     }
 
 }
