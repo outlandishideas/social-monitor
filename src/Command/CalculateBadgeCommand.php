@@ -21,13 +21,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
-class EngagementBadgeCommand extends ContainerAwareCommand
+class CalculateBadgeCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this
-            ->setName('sm:badge:engagement')
-            ->setDescription('Greet someone')
+            ->setName('sm:badge:calculate')
+            ->setDescription('Get the badge scores for a particular presence')
             ->addArgument(
                 'presence-id',
                 InputArgument::REQUIRED,
@@ -49,30 +49,12 @@ class EngagementBadgeCommand extends ContainerAwareCommand
         $presence = \Model_PresenceFactory::getPresenceById($presenceId);
         $now = date_create_from_format('Y-m-d', $input->getOption('date'));
 
-        $engagementBadge = \Badge_Factory::getBadge(\Badge_Engagement::getName());
+        foreach (\Badge_Factory::getBadges() as $badge) {
+            $badgeName = $badge->getName();
+            $score = $badge->calculate($presence, $now, \Enum_Period::MONTH());
+            $output->writeln("The {$badgeName} badge for {$presenceId} is {$score}");
+        }
 
-        $score = $engagementBadge->calculate($presence, $now);
-
-        $output->writeln("Old Engagement Score for {$presenceId} is {$score}");
-
-        $newMetrics = [
-            \Metric_Klout::getInstance(),
-            \Metric_FBEngagementLeveled::getInstance(),
-            \Metric_ResponseTimeNew::getInstance(),
-            \Metric_ResponseRatio::getInstance()
-        ];
-
-        $weighting = [
-            \Metric_Klout::getName() => '3',
-            \Metric_FBEngagementLeveled::getName() => '7',
-            \Metric_ResponseTimeNew::getName() => '3',
-            \Metric_ResponseRatio::getName() => '2'
-        ];
-
-        $engagementBadge->setMetrics($newMetrics, $weighting);
-
-        $score = $engagementBadge->calculate($presence, $now);
-        $output->writeln("New Engagement Score for {$presenceId} is {$score}");
     }
 
 }
