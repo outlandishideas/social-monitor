@@ -10,7 +10,7 @@
 		"phpunit/dbunit": ">=1.2",
 		"phpunit/phpunit-selenium": ">=1.2",
 		"facebook/webdriver": "dev-master",
-        "phpspec/phpspec": "^2.2"
+        "phpspec/phpspec": "~2.2"
   },
 	"require": {
 		"symfony/console": "~2.6",
