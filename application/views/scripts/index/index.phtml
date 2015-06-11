@@ -166,11 +166,11 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                                                     $sign = $presence->getPresenceSign();
                                                     $handle = $presence->getHandle();
                                                     $value = "<span class='{$sign}'></span> {$handle}";
-                                                    if ($model->isForFacebook()) {
-                                                        $score = $model->getFacebookEngagement();
+                                                    if ($presence->isForFacebook()) {
+                                                        $score = $presence->getFacebookEngagement();
                                                         $value .= " <span class=\"engagement-score facebook\" title=\"Facebook engagement score: $score\">" . round($score) . '</span>';
-                                                    } else if ($model->isForTwitter()) {
-                                                        $score = $model->getKloutScore();
+                                                    } else if ($presence->isForTwitter()) {
+                                                        $score = $presence->getKloutScore();
                                                         $value .= " <span class=\"engagement-score klout\" title=\"Klout score: $score\">" . round($score) . '</span>';
                                                     } ?>
                                                 <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
