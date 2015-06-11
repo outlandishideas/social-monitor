@@ -75,16 +75,16 @@ class PresenceController extends GraphingController
         $report->generate();
         $this->view->report = $report;
 
-        $content = $this->view->render('presence/report.phtml');
-
-        $pdf = new Pdf();
-        $pdf->addPage($content);
-
-
-        if(!$pdf->send()) {
-            throw new Exception($pdf->getError());
-        }
-        exit;
+//        $content = $this->view->render('presence/report.phtml');
+//
+//        $pdf = new Pdf();
+//        $pdf->addPage($content);
+//
+//
+//        if(!$pdf->send()) {
+//            throw new Exception($pdf->getError());
+//        }
+//        exit;
     }
 
 	/**
