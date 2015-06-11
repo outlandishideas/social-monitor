@@ -66,6 +66,8 @@ class PresenceController extends GraphingController
         $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
         $this->validateData($presence);
 
+        $presence->getTargetAudience();
+
         $to = date_create();
         $from = clone $to;
         $to->modify("-1 day");
@@ -74,6 +76,8 @@ class PresenceController extends GraphingController
         $report = (new ReportGenerator())->generate(new ReportablePresence($presence), $from, $to);
         $report->generate();
         $this->view->report = $report;
+        $this->view->presence = $presence;
+        $this->view->owner = $presence->getOwner();
         $this->_helper->layout()->setLayout('report');
 
 //        $content = $this->view->render('presence/report.phtml');

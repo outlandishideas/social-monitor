@@ -2,14 +2,19 @@
     <div class="small-12 columns">
         <section class="border-section info-section">
             <h2>Additional Info</h2>
-            <h3>Countries: 18</h3>
-            <p>Albania  Armenia  Azerbaijan  Bosnia and Herzegovina  Croatia  Estonia  Georgia  Israel  Kazakhstan  Kosovo  Lithuania  Macedonia, the Former Yugoslav Republic of  Montenegro  Russian Federation  Serbia  Turkey  Ukraine  Uzbekistan</p>
-        </section>
-    </div>
-    <div class="small-12 columns">
-        <section class="border-section info-section">
-            <h3>Presences: 32</h3>
-            <p>@alBritish  @amBritish  @azBritish  BritishCouncilAlbania  Brit-ishCouncilArmenia  BritishCouncilAzerbaijan  BritishCouncilBos-niaandHerzegovina  BritishCouncilCroatia  BritishCouncilEstonia  BritishCouncilGeorgia  BritishCouncilIsrael  BritishCouncilKazakhstan  BritishCouncilKosovo  BritishCouncilLithuania  BritishCouncilMacedo-nia  BritishCouncilMontenegro  BritishCouncilRussia  BritishCouncilS-erbia  BritishCouncilTurkey  BritishCouncilUkraine  BritishCouncilUz-bekistan  @eeBritish  @geBritish  @hrBritish  @ilBritish  @ksBritish  @mkBritish  OblaAirTeMesojmeAnglishten  @rsBritish  @ruBritish  @trBritish  @uaBritish</p>
+            <p>This is a <?php echo $presenceType; ?> presence</p>
+            <?php if ($this->presence->isForFacebook()) : ?>
+                <p>Yesterday's Facebook Engagement score: <?php echo $this->presence->facebook_engagement; ?></p>
+                <p>Monthly Average Facebook Engagement score: <?php echo $this->presence->getMetricValue('facebook_engagement'); ?></p>
+            <?php elseif ($this->presence->isForTwitter()) : ?>
+                <p>Yesterday's Klout score: <?php echo $this->presence->klout_score; ?></p>
+                <p>Monthly Average Klout score: <?php echo $this->presence->getMetricValue('klout_score'); ?></p>
+            <?php endif; ?>
+            <?php if ($this->owner) : ?>
+                <p>This presence contributes to the statistics for <?php echo $this->owner->display_name; ?></p>
+                <p>The target audience size is <?php echo number_format($this->presence->getTargetAudience()); ?></p>
+                <p>The current audience size is <?php echo number_format($this->presence->getCurrentAudience()); ?></p>
+            <?php endif; ?>
         </section>
     </div>
 </div>
