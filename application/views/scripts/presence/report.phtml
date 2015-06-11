@@ -121,44 +121,6 @@
 
 <div class="row">
     <div class="small-24 columns">
-        <section class="top-information">
-            <div class="row">
-                <div class="small-6 columns">
-                    <h1>Social Media Monitor Report</h1>
-                </div>
-                <div class="small-12 columns">
-                    <div class="information">
-                        <div><i class="fa fa-fw <?php echo $this->report->getIcon(); ?>"></i> <?php echo $this->report->getType(); ?>: <span class="darker"><?php echo $this->report->getName(); ?></span></div>
-                        <div><i class="fa fa-calendar fa-fw"></i> Date range: <span class="darker"><?php echo $this->report->getDateRange(); ?></span></div>
-                    </div>
-                </div>
-                <div class="small-6 columns">
-                    <img src="<?php echo APP_ROOT_PATH . '/assets/img/BritishCouncil_sm.png';?>"/>
-                </div>
-            </div>
-        </section>
-
-        <?php foreach ($this->report->getRanks() as $type => $rank) : ?>
-            <section class="score-section border-section">
-                <div class="row">
-                    <div class="small-6 columns">
-                        <h2><?php echo $rank['title']; ?></h2>
-
-                        <div class="rank">
-                            <?php $change = $rank['change']; ?>
-                            <?php if ($type == 'total') : ?>
-                                <?php echo $rank['rank']; ?>/<span class="lighter denominator"><?php echo $rank['denominator']; ?></span><span class="change <?php echo $change['class']; ?>"><?php echo $change['number']; ?></span>
-                            <?php else: ?>
-                                <?php echo $rank['rank']; ?><span class="ordinal-indicator"><?php echo $rank['ordinal']; ?></span><span class="change <?php echo $change['class']; ?>"><?php echo $change['number']; ?></span>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <div class="small-18 columns">
-                        <div class="chart <?php echo $rank['chart_class']; ?>"></div>
-                    </div>
-                </div>
-            </section>
-        <?php endforeach; ?>
 
 <!--        <div class="row">-->
 <!--            <div class="small-12 columns">-->

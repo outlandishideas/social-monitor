@@ -74,6 +74,7 @@ class PresenceController extends GraphingController
         $report = (new ReportGenerator())->generate(new ReportablePresence($presence), $from, $to);
         $report->generate();
         $this->view->report = $report;
+        $this->_helper->layout()->setLayout('report');
 
 //        $content = $this->view->render('presence/report.phtml');
 //
