@@ -42,7 +42,8 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_SignOff::getName()
                 );
                 $this->badges = array(
-                    Badge_Reach::getInstance()
+                    Badge_Reach::getInstance(),
+                    Badge_Quality::getInstance()
                 );
                 break;
             case self::FACEBOOK:
