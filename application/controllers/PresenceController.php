@@ -147,7 +147,8 @@ class PresenceController extends GraphingController
                 'type' => null,
                 'handle' => null,
                 'sign_off' => null,
-                'branding' => null
+                'branding' => null,
+				'popularity' => 0
             );
             $this->view->showButtons = false;
 		}

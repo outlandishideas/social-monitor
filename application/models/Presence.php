@@ -22,7 +22,7 @@ class Model_Presence
 	public $uid;
 	public $sign_off;
 	public $branding;
-	public $popularity = 0;
+	public $popularity;
 	public $klout_id;
 	public $klout_score;
 	public $facebook_engagement;
