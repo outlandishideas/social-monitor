@@ -279,7 +279,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 		$presence->image_url = $ret['profile_image_url'];
 		$presence->name = $ret['name'];
 		$presence->page_url = self::BASEURL.$ret['profile_url'];
-		$presence->popularity = $ret['followers_count'];
+		$presence->popularity = $ret['followers_count'] != 0 ? $ret['followers_count'] : $presence->popularity ;
 	}
 
 
