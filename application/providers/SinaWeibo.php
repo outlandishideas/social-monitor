@@ -269,6 +269,8 @@ class Provider_SinaWeibo extends Provider_Abstract
 			switch ($ret['error_code']) {
 				case 20003:
                     throw new Exception('User does not exist: ' . $presence->getHandle());
+				case 10006:
+					throw new Exception("{$ret['error_code']} - {$ret['error']}");
 				default:
 					throw new LogicException("Unknown error code {$ret['error_code']} encountered.");
 			}
