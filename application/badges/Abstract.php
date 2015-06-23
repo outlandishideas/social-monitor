@@ -36,9 +36,11 @@ abstract class Badge_Abstract
                 continue; //only use metrics that are applicable to this presence
             }
 			$score = $metric->getScore($presence, $start, $date);
-            // if we are missing a single metric score, we cannot calculate the badge score
+			//previously we made the total score for the badge null if one of the badges were null
+			//I have changed this as it was leading to misunderstandings when viewing presences
+			//this was particularly true with sina weibo and the quality badge
 			if (is_null($score)) {
-                return null;
+                $score = 0;
             }
 			$totalScore += ($score * $weight);
 			$totalWeight += $weight;
