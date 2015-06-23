@@ -95,7 +95,7 @@ abstract class Model_PresenceFactory
 				INSERT INTO `" . self::TABLE_PRESENCES . "`
 				(`type`, `handle`, `uid`, `image_url`, `name`, `page_url`, `popularity`, `sign_off`, `branding`)
 				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute(array($type->getValue(), $handle, '', '', '', '', '', 0, 0));
+        $stmt->execute(array($type->getValue(), $handle, '', '', '', '', 0, 0, 0));
         $presence = Model_PresenceFactory::getPresenceByHandle($handle, $type);
 
         try {
