@@ -10,7 +10,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 
 	public function __construct(PDO $db) {
 		parent::__construct($db);
-		$this->connection = new SaeTClientV2('1247980630', 'cfcd7c7170b70420d7e1c00628d639c2', '2.00cBChiFjjAm3C216d675d51UwGFRE');
+		$this->connection = new SaeTClientV2('1247980630', 'cfcd7c7170b70420d7e1c00628d639c2', '2.00cBChiFql593B4e223582cb04rzB6');
 		if (!array_key_exists('REMOTE_ADDR', $_SERVER)) {
 			$this->connection->set_remote_ip('127.0.0.1');
 		}
