@@ -2,7 +2,7 @@
     <div class="small-12 columns">
         <section class="border-section info-section">
             <h2>Additional Info</h2>
-            <p>This is a <?php echo $presenceType; ?> presence</p>
+            <p>This is a <?php echo $this->presence->getType()->getTitle(); ?> presence</p>
             <?php if ($this->presence->isForFacebook()) : ?>
                 <p>Yesterday's Facebook Engagement score: <?php echo $this->presence->facebook_engagement; ?></p>
                 <p>Monthly Average Facebook Engagement score: <?php echo $this->presence->getMetricValue('facebook_engagement'); ?></p>
