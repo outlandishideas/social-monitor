@@ -13,7 +13,7 @@
             <?php if ($this->owner) : ?>
                 <p>This presence contributes to the statistics for <?php echo $this->owner->display_name; ?></p>
                 <p>The target audience size is <?php echo number_format($this->presence->getTargetAudience()); ?></p>
-                <p>The current audience size is <?php echo number_format($this->presence->getCurrentAudience()); ?></p>
+                <p>The current audience size is <?php echo number_format($this->presence->getPopularity()); ?></p>
             <?php endif; ?>
         </section>
     </div>
