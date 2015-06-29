@@ -33,6 +33,10 @@ class BadgeRankDataQuery
     {
         $data = $data = $this->getData($start, $end);
 
+        if (!is_array($data)) {
+            return [];
+        }
+
         $groupColumn = $model->getColumn();
 
         $newData = [];
