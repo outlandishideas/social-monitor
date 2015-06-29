@@ -68,29 +68,29 @@ class PresenceController extends GraphingController
 
         //if we don't have a now parameter create a DateTime now
         //else create a date from the now parameter
-        $now = date_create_from_format("Y-m-d", $this->_request->getParam('now'));
-        if (!$now) {
-            $now = new DateTime();
+        $to = date_create_from_format("Y-m-d", $this->_request->getParam('to'));
+        if (!$to) {
+            $to = new DateTime();
         }
 
         //if we don't have a then parameter generate a default then from $now
         //else create a date from the then parameter
-        $then = date_create_from_format("Y-m-d", $this->_request->getParam('then'));
-        if(!$then) {
-            $then = clone $now;
-            $then->modify('-30 days');
+        $from = date_create_from_format("Y-m-d", $this->_request->getParam('from'));
+        if(!$from) {
+            $from = clone $to;
+            $from->modify('-30 days');
         }
 
         //if $now is earlier than $then then reverse them.
-        if ($now->getTimestamp() <= $then->getTimestamp()) {
-            $oldThen = clone $then;
-            $then = clone $now;
-            $now = clone $oldThen;
+        if ($to->getTimestamp() <= $from->getTimestamp()) {
+            $oldThen = clone $from;
+            $from = clone $to;
+            $to = clone $oldThen;
         }
 
         $downloader = $this->getContainer()->get('report.downloader');
 
-        $url = $downloader->getUrl(new ReportablePresence($presence), $then, $now);
+        $url = $downloader->getUrl(new ReportablePresence($presence), $from, $to);
 
         $content = file_get_contents($url);
 		header('Content-type: application/pdf');
@@ -106,10 +106,27 @@ class PresenceController extends GraphingController
 
         $presence->getTargetAudience();
 
-        $to = date_create();
-        $from = clone $to;
-        $to->modify("-1 day");
-        $from->modify("-30 days");
+        //if we don't have a now parameter create a DateTime now
+        //else create a date from the now parameter
+        $to = date_create_from_format("Y-m-d", $this->_request->getParam('to'));
+        if (!$to) {
+            $to = new DateTime();
+        }
+
+        //if we don't have a then parameter generate a default then from $now
+        //else create a date from the then parameter
+        $from = date_create_from_format("Y-m-d", $this->_request->getParam('from'));
+        if(!$from) {
+            $from = clone $to;
+            $from->modify('-30 days');
+        }
+
+        //if $now is earlier than $then then reverse them.
+        if ($to->getTimestamp() <= $from->getTimestamp()) {
+            $oldThen = clone $from;
+            $from = clone $to;
+            $to = clone $oldThen;
+        }
 
         $report = (new ReportGenerator())->generate(new ReportablePresence($presence), $from, $to);
         $report->generate();

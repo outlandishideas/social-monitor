@@ -41,7 +41,7 @@ class ReportDownloader
 
     public function getUrl(Reportable $reportable, \DateTime $then, \DateTime $now)
     {
-        $reportUrl = "{$this->baseUrl}/{$reportable->getBaseType()}/report/id/{$reportable->getId()}/";
+        $reportUrl = "{$this->baseUrl}/{$reportable->getBaseType()}/report/id/{$reportable->getId()}/from/{$then->format('Y-m-d')}/to/{$now->format('Y-m-d')}";
         $url = "{$this->pdfUrl}?urls[]={$reportUrl}";
         $contents = file_get_contents($url);
         $data = json_decode($contents);
