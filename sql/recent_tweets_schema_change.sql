@@ -199,3 +199,7 @@ CREATE TABLE IF NOT EXISTS `twitter_user_relationships` (
 -- only run these after migrating the data from twitter_follows to twitter_user_relationships
 ALTER TABLE twitter_users DROP friends_last_updated, DROP followers_last_updated;
 DROP TABLE twitter_follows;
+
+-- 2015-06-29 add new column for sina weibo engagement
+
+ALTER TABLE `presences` ADD `sina_weibo_engagement` FLOAT NULL DEFAULT NULL AFTER `facebook_engagement`;
