@@ -7,7 +7,7 @@ use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class PresenceController extends GraphingController
 {
-	protected static $publicActions = array('update-kpi-cache');
+	protected static $publicActions = array('update-kpi-cache', 'report');
 
 	protected function chartOptions() {
         return array(
