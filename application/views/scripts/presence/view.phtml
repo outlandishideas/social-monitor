@@ -2,7 +2,7 @@
 $buttons = $this->gatekeeper()->filterAll(array(
     '<a class="button-bc button-edit" href="%url%">Edit Presence</a>' => array('action'=>'edit', 'id'=>$this->presence->id),
     '<a class="button-bc button-delete" href="%url%"></span>Delete Presence</a>' => array('action'=>'delete', 'id'=>$this->presence->id),
-    '<a class="button-bc button-download" href="%url%"></span>Download Report</a>' => array('action'=>'download-report', 'id'=>$this->presence->id),
+    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>Download Report</a>' => array('action'=>'download-report', 'id'=>$this->presence->id),
 ));
 /** @var Model_Presence $presence */
 $presence = $this->presence;

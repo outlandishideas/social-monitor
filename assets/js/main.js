@@ -349,7 +349,32 @@ app.init = {
 			$closeBtn.on('click', function() {
 				$(this).parent('li').remove();
 			})
+		},
+		'#report-download': function($downloadBtn) {
+            $(document)
+                .ready(function() {
+                    updateDownloadButton($downloadBtn);
+                })
+                .on('dateRangeUpdated', function() {
+                updateDownloadButton($downloadBtn);
+
+            });
+            var updateDownloadButton = function(element) {
+                var dateRange = app.state.dateRange.map(function(d){
+                    return $.datepicker.formatDate('yy-mm-dd', Date.parse(d));
+                });
+
+                var href = element.data('href');
+                var from = dateRange[0];
+                var to = dateRange[1];
+
+                href += '/from/' + from;
+                href += '/to/' + to;
+
+                element.attr('href', href);
+            }
 		}
+
 	}
 };
 
@@ -396,9 +421,11 @@ app.date = {
 			//parse input date
 			var dates = $('#date-picker').val().split(' - ').map(Date.parse);
 			//duplicate if only one date
-			if (dates.length == 1) {dates[1] = new Date(dates[0]);}
-			//move second date to end of day
-			dates[1].add(1).days();
+			if (dates.length == 1) {
+                dates[1] = new Date(dates[0]);
+                //move second date to end of day
+                dates[1].add(1).days();
+            }
 
 			var dateRange = dates.map(function(d){ return $.datepicker.formatDate('yy-mm-dd', d);});
 
