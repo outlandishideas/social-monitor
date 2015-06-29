@@ -165,6 +165,7 @@ app.init = {
         },
 
 		'#date-picker': function($item) {
+            var quarter = app.date.lastQuarter();
 			$item.daterangepicker({
 				dateFormat:jsConfig.dateFormat,
 				onClose:app.date.updated,
@@ -198,7 +199,16 @@ app.init = {
 						dateEnd:function () {
 							return Date.today().moveToFirstDayOfMonth().addDays(-1);
 						}
-					}
+					},
+                    {
+                        text: 'Last Quarter',
+                        dateStart: function() {
+                            return quarter[0];
+                        },
+                        dateEnd: function() {
+                            return quarter[1]
+                        }
+                    }
 				],
 				latestDate: 'Today'
 			});
@@ -412,6 +422,27 @@ app.apiStatus = {
 
 
 app.date = {
+    lastQuarter: function() {
+        var month = Date.parse('today').toString('MM');
+        var quarter = Math.floor(((month-1)/3)+1);
+        var lastQuarter = quarter == 0 ? 4 : quarter-1;
+        var quarterMonth = quarter;
+        if (lastQuarter == 0) {
+            quarterMonth = 0
+        } else if (lastQuarter == 1) {
+            quarterMonth = 3;
+        } else if (lastQuarter == 2) {
+            quarterMonth = 6;
+        } else if (lastQuarter == 3) {
+            quarterMonth = 9;
+        }
+        var year = lastQuarter == 4 ? Date.parse('today').add(-1).years().toString('yyyy') : Date.parse('today').toString('yyyy');
+
+        var firstDate = new Date(year, quarterMonth, 1);
+        var lastDate = new Date(year, quarterMonth, 1).add(2).months().moveToLastDayOfMonth();
+
+        return [firstDate, lastDate];
+    },
 	/**
 	 * Parse dates in text box, convert to timestamps and save to server
 	 */
