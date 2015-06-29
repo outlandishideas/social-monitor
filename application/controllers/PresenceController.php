@@ -64,8 +64,8 @@ class PresenceController extends GraphingController
 	public function downloadReportAction()
 	{
 		$content = file_get_contents('https://pdf.sundivenetworks.net/pdfs/outlandish/socialmonitor.test.outlandish.com/presence_report_id7.pdf');
-		header('Content-type: application/pdf');
-		header('Content-Disposition: attachment; filename=report.pdf');
+//		header('Content-type: application/pdf');
+//		header('Content-Disposition: attachment; filename=report.pdf');
 		echo $content;
 		exit;
 	}
