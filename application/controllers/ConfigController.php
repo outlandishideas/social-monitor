@@ -101,6 +101,19 @@ class ConfigController extends BaseController {
                             'fb_engagement_target_level_5'=>array('label'=>'Facebook Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
                         )
                     ),
+                    (object)array(
+                        'title' => 'Sina Weibo Engagement Score (Sina Weibo only)',
+                        'description' => 'The Sina Weibo Engagement Score is based on Social Baker\'s Daily Page Engagement Rate calculation.',
+                        'values' => array(
+                            'sina_weibo_engagement_weighting'=>array('label'=>'Sina Weibo Engagement Score Weighting'),
+                            'sina_weibo_engagement_target'=>array('label'=>'Sina Weibo Engagement Score (For a single level)', 'hint' => 'The presence will score 100% if it reaches this target (and we are using the old calculation)'),
+                            'sina_weibo_engagement_target_level_1'=>array('label'=>'Sina Weibo Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
+                            'sina_weibo_engagement_target_level_2'=>array('label'=>'Sina Weibo Engagement Score Level 2', 'hint' => 'The presence will score 40% if it reaches this target'),
+                            'sina_weibo_engagement_target_level_3'=>array('label'=>'Sina Weibo Engagement Score Level 3', 'hint' => 'The presence will score 60% if it reaches this target'),
+                            'sina_weibo_engagement_target_level_4'=>array('label'=>'Sina Weibo Engagement Score Level 4', 'hint' => 'The presence will score 80% if it reaches this target'),
+                            'sina_weibo_engagement_target_level_5'=>array('label'=>'Sina Weibo Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
+                        )
+                    )
                 )
             ),
             (object)array(
