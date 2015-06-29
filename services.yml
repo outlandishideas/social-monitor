@@ -18,6 +18,17 @@ services:
 
 
     ###################################
+    # sina weibo engagement services
+    ###################################
+    sina_weibo.engagement.query.weighted:
+        class: Outlandish\SocialMonitor\FacebookEngagement\QueryWeightedSinaWeiboEngagementQuery
+        arguments: ["@pdo"]
+
+    sina_weibo.engagement.weighted:
+        class:     Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric
+        arguments: ["@sina_weibo.engagement.query.weighted"]
+
+    ###################################
     # facebook engagement services
     ###################################
     facebook_engagement.query.standard:

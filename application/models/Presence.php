@@ -26,6 +26,7 @@ class Model_Presence
 	public $klout_id;
 	public $klout_score;
 	public $facebook_engagement;
+	public $sina_weibo_engagement;
 	public $page_url;
 	public $image_url;
 	public $owner;
@@ -663,6 +664,7 @@ class Model_Presence
             'klout_id' => $this->getKloutId(),
             'klout_score' => $this->getKloutScore(),
             'facebook_engagement' => $this->getFacebookEngagement(),
+            'sina_weibo_engagement' => $this->getSinaWeiboEngagement(),
             'last_updated' => $this->getLastUpdated(),
             'last_fetched' => $this->getLastFetched(),
             'sign_off' => $this->getSignOff(),
@@ -695,6 +697,11 @@ class Model_Presence
         $this->db->prepare('DELETE FROM '.Model_PresenceFactory::TABLE_PRESENCES.' WHERE id = ?')
             ->execute(array($this->id));
     }
+
+	public function getSinaWeiboEngagement()
+	{
+		return $this->sina_weibo_engagement;
+	}
 
 
 }

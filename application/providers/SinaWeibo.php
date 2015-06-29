@@ -282,6 +282,8 @@ class Provider_SinaWeibo extends Provider_Abstract
 		$presence->name = $ret['name'];
 		$presence->page_url = self::BASEURL.$ret['profile_url'];
 		$presence->popularity = $ret['followers_count'] != 0 ? $ret['followers_count'] : $presence->popularity ;
+
+		$presence->sina_weibo_engagement = $this->calculateSinaWeiboEngagement($presence);
 	}
 
 
@@ -305,6 +307,18 @@ class Provider_SinaWeibo extends Provider_Abstract
     {
         return array();
     }
+
+	private function calculateSinaWeiboEngagement(Model_Presence $presence)
+	{
+		$now = new DateTime();
+		$then = clone $now;
+		$then->modify("-1 week");
+
+		$query = new Outlandish\SocialMonitor\FacebookEngagement\Query\WeightedSinaWeiboEngagementQuery($this->db);
+		$metric = new Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric($query);
+
+		return $metric->get($presence->getId(), $now, $then);
+	}
 
 
 }
