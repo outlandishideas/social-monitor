@@ -424,7 +424,7 @@ app.apiStatus = {
 app.date = {
     lastQuarter: function() {
         var month = Date.parse('today').toString('MM');
-        var quarter = Math.floor(((month-1)/3)+1);
+        var quarter = Math.floor(((month-1)/3));
         var lastQuarter = quarter == 0 ? 4 : quarter-1;
         var quarterMonth = quarter;
         if (lastQuarter == 0) {
