@@ -6,6 +6,17 @@ services:
             user: "%db.username%"
             password: "%db.password%"
 
+    guzzle.client:
+        class: GuzzleHttp\Client
+
+    ###################################
+    # report services
+    ###################################
+    report.downloader:
+        class: Outlandish\SocialMonitor\Report\ReportDownloader
+        arguments: ["%pdf.base_url%", "%report.base_url%"]
+
+
     ###################################
     # facebook engagement services
     ###################################
