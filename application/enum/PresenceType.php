@@ -39,11 +39,8 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_Popularity::getName(),
                     Metric_PopularityTime::getName(),
                     Metric_Relevance::getName(),
-                    Metric_SignOff::getName()
-                );
-                $this->badges = array(
-                    Badge_Reach::getInstance(),
-                    Badge_Quality::getInstance()
+                    Metric_SignOff::getName(),
+                    Metric_SinaWeiboEngagementLeveled::getName()
                 );
                 break;
             case self::FACEBOOK:

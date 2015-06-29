@@ -16,6 +16,7 @@ class Badge_Engagement extends Badge_Abstract
         $this->metrics = array(
             Metric_Klout::getInstance(),
             Metric_FBEngagementLeveled::getInstance(),
+            Metric_SinaWeiboEngagementLeveled::getInstance()
         );
     }
 }

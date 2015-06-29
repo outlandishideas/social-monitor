@@ -17,7 +17,8 @@ abstract class Metric_Factory {
             Metric_Klout::getName() => "Metric_Klout",
             Metric_LikesPerPost::getName() => "Metric_LikesPerPost",
             Metric_ResponseTimeNew::getName() => "Metric_ResponseTimeNew",
-            Metric_ResponseRatio::getName() => "Metric_ResponseRatio"
+            Metric_ResponseRatio::getName() => "Metric_ResponseRatio",
+            Metric_SinaWeiboEngagementLeveled::getName() => "Metric_SinaWeiboEngagementLeveled"
         );
 
         if(!array_key_exists($name, $names)){
