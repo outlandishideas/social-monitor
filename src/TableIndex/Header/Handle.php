@@ -29,6 +29,9 @@ class Handle extends Header {
         } else if ($model->isForTwitter()) {
             $score = $model->getKloutScore();
             $value .= " <span class=\"engagement-score klout\" title=\"Klout score: $score\">" . round($score) . '</span>';
+        } else if ($model->isForSinaWeibo()) {
+            $score = $model->getSinaWeiboEngagement();
+            $value .= " <span class=\"engagement-score sina-weibo\" title=\"Sina Weibo engagement score: $score\">" . round($score) . '</span>';
         }
         if (!$model->getUID()) {
             $value = '<span class="missing" title="Presence not found">' . $value . '</span>';

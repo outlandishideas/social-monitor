@@ -960,7 +960,10 @@ form.management button.add-item {
 	background-image: url(../img/klout.png);
 }
 .engagement-score.facebook {
-    background-image: url(../img/facebook_engagement.png);
+	background-image: url(../img/facebook_engagement.png);
+}
+.engagement-score.sina-weibo {
+	background-image: url(../img/sinaweibo_engagement.png);
 }
 
 /* Slider & Date */
