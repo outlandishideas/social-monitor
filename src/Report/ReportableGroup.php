@@ -65,4 +65,9 @@ class ReportableGroup implements Reportable
     {
         return [0];
     }
+
+    public function getBaseType()
+    {
+        return 'group';
+    }
 }

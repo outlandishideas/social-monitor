@@ -63,9 +63,38 @@ class PresenceController extends GraphingController
 
 	public function downloadReportAction()
 	{
-		$content = file_get_contents('https://pdf.sundivenetworks.net/pdfs/outlandish/socialmonitor.test.outlandish.com/presence_report_id7.pdf');
-//		header('Content-type: application/pdf');
-//		header('Content-Disposition: attachment; filename=report.pdf');
+        $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+        $this->validateData($presence);
+
+        //if we don't have a now parameter create a DateTime now
+        //else create a date from the now parameter
+        $now = date_create_from_format("Y-m-d", $this->_request->getParam('now'));
+        if (!$now) {
+            $now = new DateTime();
+        }
+
+        //if we don't have a then parameter generate a default then from $now
+        //else create a date from the then parameter
+        $then = date_create_from_format("Y-m-d", $this->_request->getParam('then'));
+        if(!$then) {
+            $then = clone $now;
+            $then->modify('-30 days');
+        }
+
+        //if $now is earlier than $then then reverse them.
+        if ($now->getTimestamp() <= $then->getTimestamp()) {
+            $oldThen = clone $then;
+            $then = clone $now;
+            $now = clone $oldThen;
+        }
+
+        $downloader = $this->getContainer()->get('report.downloader');
+
+        $url = $downloader->getUrl(new ReportablePresence($presence), $then, $now);
+
+        $content = file_get_contents($url);
+		header('Content-type: application/pdf');
+		header('Content-Disposition: attachment; filename=report.pdf');
 		echo $content;
 		exit;
 	}

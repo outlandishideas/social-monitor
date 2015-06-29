@@ -69,4 +69,9 @@ class ReportablePresence implements Reportable
     {
         return [0,1,2];
     }
+
+    public function getBaseType()
+    {
+        return 'presence';
+    }
 }

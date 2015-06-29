@@ -64,4 +64,9 @@ class ReportableCountry implements Reportable
     {
         return [1];
     }
+
+    public function getBaseType()
+    {
+        return 'country';
+    }
 }

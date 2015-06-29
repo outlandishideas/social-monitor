@@ -15,6 +15,8 @@ interface Reportable extends BadgeRankQuerier {
 
     public function getType();
 
+    public function getBaseType();
+
     public function getName();
 
     public function getIcon();
