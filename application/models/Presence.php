@@ -9,7 +9,7 @@ class Model_Presence
 	protected $kpiData = array();
 
 	protected $presenceHistoryColumns = array(
-		'popularity', 'klout_score', 'facebook_engagement'
+		'popularity', 'klout_score', 'facebook_engagement', 'sina_weibo_engagement'
 	);
 
 	//these should be public to mimic existing Presence Class
