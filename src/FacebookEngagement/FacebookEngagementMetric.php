@@ -18,6 +18,7 @@ class FacebookEngagementMetric
      * @var Query
      */
     private $query;
+    private $cache = [];
 
     public function __construct(Query $query)
     {
@@ -52,6 +53,10 @@ class FacebookEngagementMetric
 
     public function getAll(DateTime $now, DateTime $then)
     {
-        return $this->query->fetch($now, $then);
+        $key = "{$now->format('Y-m-d')}-{$then->format('Y-m-d')}";
+        if (!array_key_exists($key, $this->cache)) {
+            $this->cache[$key] = $this->query->fetch($now, $then);
+        }
+        return $this->cache[$key];
     }
 }

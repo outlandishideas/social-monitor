@@ -13,6 +13,7 @@ use DateTime;
 use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
+use Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric;
 use Outlandish\SocialMonitor\FacebookFetcher\CommentsCountFetcher;
 use Outlandish\SocialMonitor\FacebookFetcher\FeedFetcher;
 use Outlandish\SocialMonitor\FacebookFetcher\LikesCountFetcher;
@@ -38,16 +39,31 @@ class FacebookApp
      * @var FeedFetcher
      */
     private $feed;
+    /**
+     * @var FacebookEngagementMetric
+     */
+    private $engagementMetric;
+
+    /**
+     * @return FacebookEngagementMetric
+     */
+    public function getEngagementMetric()
+    {
+        return $this->engagementMetric;
+    }
 
     public function __construct(
         RequestFactory $request,
         LikesCountFetcher $likesCounter,
         CommentsCountFetcher $commentsCounter,
-        FeedFetcher $feed)
+        FeedFetcher $feed,
+        FacebookEngagementMetric $engagementMetric)
     {
         $this->commentsCounter = $commentsCounter;
         $this->request = $request;
         $this->feed = $feed;
+        $this->likesCounter = $likesCounter;
+        $this->engagementMetric = $engagementMetric;
     }
 
     public function pageInfo($pageId)

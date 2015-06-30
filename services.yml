@@ -73,7 +73,7 @@ services:
 
     facebook.app:
         class: Outlandish\SocialMonitor\FacebookApp
-        arguments: ["@facebook.request_factory", "@facebook.likes_counter", "@facebook.comments_counter", "@facebook.feed_fetcher"]
+        arguments: ["@facebook.request_factory", "@facebook.likes_counter", "@facebook.comments_counter", "@facebook.feed_fetcher", "@facebook_engagement.weighted"]
 
     # Headers
 

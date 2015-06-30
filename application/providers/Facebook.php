@@ -340,8 +340,7 @@ class Provider_Facebook extends Provider_Abstract
         $then = clone $now;
         $then->modify("-1 week");
 
-		$query = new Outlandish\SocialMonitor\FacebookEngagement\Query\WeightedFacebookEngagementQuery($this->db);
-        $metric = new Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric($query);
+        $metric = $this->facebook->getEngagementMetric();
 
         return $metric->get($presence->getId(), $now, $then);
 	}
