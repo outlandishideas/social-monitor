@@ -7,7 +7,7 @@ use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class CountryController extends CampaignController {
 
-    protected static $publicActions = array('stats-panel');
+    protected static $publicActions = array('stats-panel', 'report');
 
 	public function init() {
 		parent::init();
