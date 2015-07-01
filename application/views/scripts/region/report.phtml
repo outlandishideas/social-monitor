@@ -1,0 +1,28 @@
+<?php
+    $countriesCount = count($this->countries);
+    /** @var Model_Country $c */
+    $countries = array_map(function($c) {
+        return $c->getName();
+    }, $this->countries);
+
+    /** @var Model_Country $c */
+    $presences = array_map(function($c) {
+        return $c->getName();
+    }, $this->region->getPresences());
+    $presenceCount = count($presences);
+?>
+
+<div class="row">
+    <div class="small-12 columns">
+        <section class="border-section info-section">
+            <h2>Countries: <?php echo $countriesCount; ?></h2>
+            <p><?php echo implode(", ", $countries) ?>.</p>
+        </section>
+    </div>
+    <div class="small-12 columns">
+        <section class="border-section info-section">
+            <h2>Presences: <?php echo $presenceCount; ?></h2>
+            <p><?php echo implode(", ", $presences) ?>.</p>
+        </section>
+    </div>
+</div>
