@@ -1,0 +1,18 @@
+<?php
+    /** @var Model_Group $country */
+    $group = $this->group;
+    /** @var Model_Presence $c */
+    $presences = array_map(function($c) {
+        return $c->getName();
+    }, $group->getPresences());
+    $presenceCount = count($presences);
+?>
+
+<div class="row">
+    <div class="small-12 columns">
+        <section class="border-section info-section">
+            <h2>Presences: <?php echo $presenceCount; ?></h2>
+            <p><?php echo implode(", ", $presences) ?>.</p>
+        </section>
+    </div>
+</div>

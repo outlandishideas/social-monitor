@@ -50,31 +50,82 @@ class GroupController extends CampaignController {
         $this->view->allCampaigns = Model_Group::fetchAll();
 	}
 
+    public function downloadReportAction()
+    {
+        /** @var Model_Group $group */
+        $group = Model_Group::fetchById($this->_request->getParam('id'));
+        $this->validateData($group);
+
+        //if we don't have a now parameter create a DateTime now
+        //else create a date from the now parameter
+        $to = date_create_from_format("Y-m-d", $this->_request->getParam('to'));
+        if (!$to) {
+            $to = new DateTime();
+        }
+
+        //if we don't have a then parameter generate a default then from $now
+        //else create a date from the then parameter
+        $from = date_create_from_format("Y-m-d", $this->_request->getParam('from'));
+        if(!$from) {
+            $from = clone $to;
+            $from->modify('-30 days');
+        }
+
+        //if $now is earlier than $then then reverse them.
+        if ($to->getTimestamp() <= $from->getTimestamp()) {
+            $oldThen = clone $from;
+            $from = clone $to;
+            $to = clone $oldThen;
+        }
+
+        $downloader = $this->getContainer()->get('report.downloader');
+
+        $url = $downloader->getUrl(new ReportableGroup($group), $from, $to);
+
+        do {
+            $content = file_get_contents($url);
+        } while(empty($content));
+
+        header('Content-type: application/pdf');
+        header('Content-Disposition: attachment; filename=report.pdf');
+        echo $content;
+        exit;
+    }
+
     public function reportAction()
     {
         /** @var Model_Group $group */
         $group = Model_Group::fetchById($this->_request->getParam('id'));
         $this->validateData($group);
 
-        $to = date_create();
-        $from = clone $to;
-        $to->modify("-1 day");
-        $from->modify("-30 days");
+        //if we don't have a now parameter create a DateTime now
+        //else create a date from the now parameter
+        $to = date_create_from_format("Y-m-d", $this->_request->getParam('to'));
+        if (!$to) {
+            $to = new DateTime();
+        }
+
+        //if we don't have a then parameter generate a default then from $now
+        //else create a date from the then parameter
+        $from = date_create_from_format("Y-m-d", $this->_request->getParam('from'));
+        if(!$from) {
+            $from = clone $to;
+            $from->modify('-30 days');
+        }
+
+        //if $now is earlier than $then then reverse them.
+        if ($to->getTimestamp() <= $from->getTimestamp()) {
+            $oldThen = clone $from;
+            $from = clone $to;
+            $to = clone $oldThen;
+        }
 
         $report = (new ReportGenerator())->generate(new ReportableGroup($group), $from, $to);
         $report->generate();
         $this->view->report = $report;
+        $this->view->group = $group;
+        $this->_helper->layout()->setLayout('report');
 
-        $content = $this->view->render('presence/report.phtml');
-
-        $pdf = new Pdf();
-        $pdf->addPage($content);
-
-
-        if(!$pdf->send()) {
-            throw new Exception($pdf->getError());
-        }
-        exit;
     }
 
     /**
