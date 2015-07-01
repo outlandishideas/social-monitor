@@ -41,7 +41,7 @@ class WeightedSinaWeiboEngagementQuery implements Query
 
         $sql = "SELECT
                     f.presence_id,
-					(((f.comments*4 + f.likes + f.share_count*7) / 12) / ph.popularity) * 1000 AS `total`
+					(((f.comments*4 + f.likes + f.share_count*7) / 12) / IFNULL(ph.popularity>0, 1)) * 1000 AS `total`
                 FROM
 				    (
 						SELECT
@@ -52,9 +52,9 @@ class WeightedSinaWeiboEngagementQuery implements Query
 						FROM
 							$stream
 						WHERE
-							DATE(created_time) >= :then
+							DATE(created_at) >= :then
 						AND
-							DATE(created_time) <= :now
+							DATE(created_at) <= :now
 						GROUP BY
 							presence_id
 					) AS f
