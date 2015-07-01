@@ -100,6 +100,8 @@ class RegionController extends CampaignController
 
         $url = $downloader->getUrl(new ReportableRegion($region), $from, $to);
 
+        sleep(5);
+
         $content = file_get_contents($url);
         header('Content-type: application/pdf');
         header('Content-Disposition: attachment; filename=report.pdf');
