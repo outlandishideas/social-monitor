@@ -77,32 +77,83 @@ class CountryController extends CampaignController {
         $this->view->allCampaigns = Model_Country::fetchAll();
 	}
 
-    public function reportAction()
-    {
-        /** @var Model_Country $country */
-        $country = Model_Country::fetchById($this->_request->getParam('id'));
-        $this->validateData($country);
+	public function downloadReportAction()
+	{
+		/** @var Model_Country $country */
+		$country = Model_Country::fetchById($this->_request->getParam('id'));
+		$this->validateData($country);
 
-        $to = date_create();
-        $from = clone $to;
-        $to->modify("-1 day");
-        $from->modify("-30 days");
+		//if we don't have a now parameter create a DateTime now
+		//else create a date from the now parameter
+		$to = date_create_from_format("Y-m-d", $this->_request->getParam('to'));
+		if (!$to) {
+			$to = new DateTime();
+		}
 
-        $report = (new ReportGenerator())->generate(new ReportableCountry($country), $from, $to);
-        $report->generate();
-        $this->view->report = $report;
+		//if we don't have a then parameter generate a default then from $now
+		//else create a date from the then parameter
+		$from = date_create_from_format("Y-m-d", $this->_request->getParam('from'));
+		if(!$from) {
+			$from = clone $to;
+			$from->modify('-30 days');
+		}
 
-        $content = $this->view->render('presence/report.phtml');
+		//if $now is earlier than $then then reverse them.
+		if ($to->getTimestamp() <= $from->getTimestamp()) {
+			$oldThen = clone $from;
+			$from = clone $to;
+			$to = clone $oldThen;
+		}
 
-        $pdf = new Pdf();
-        $pdf->addPage($content);
+		$downloader = $this->getContainer()->get('report.downloader');
 
+		$url = $downloader->getUrl(new ReportableCountry($country), $from, $to);
 
-        if(!$pdf->send()) {
-            throw new Exception($pdf->getError());
-        }
-        exit;
-    }
+		do {
+			$content = file_get_contents($url);
+		} while(empty($content));
+
+		header('Content-type: application/pdf');
+		header('Content-Disposition: attachment; filename=report.pdf');
+		echo $content;
+		exit;
+	}
+
+	public function reportAction()
+	{
+		/** @var Model_Country $country */
+		$country = Model_Country::fetchById($this->_request->getParam('id'));
+		$this->validateData($country);
+
+		//if we don't have a now parameter create a DateTime now
+		//else create a date from the now parameter
+		$to = date_create_from_format("Y-m-d", $this->_request->getParam('to'));
+		if (!$to) {
+			$to = new DateTime();
+		}
+
+		//if we don't have a then parameter generate a default then from $now
+		//else create a date from the then parameter
+		$from = date_create_from_format("Y-m-d", $this->_request->getParam('from'));
+		if(!$from) {
+			$from = clone $to;
+			$from->modify('-30 days');
+		}
+
+		//if $now is earlier than $then then reverse them.
+		if ($to->getTimestamp() <= $from->getTimestamp()) {
+			$oldThen = clone $from;
+			$from = clone $to;
+			$to = clone $oldThen;
+		}
+
+		$report = (new ReportGenerator())->generate(new ReportableCountry($country), $from, $to);
+		$report->generate();
+		$this->view->report = $report;
+		$this->view->country = $country;
+		$this->_helper->layout()->setLayout('report');
+
+	}
 
 	/**
 	 * Creates a new country

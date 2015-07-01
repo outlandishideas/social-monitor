@@ -1,0 +1,28 @@
+<?php
+    /** @var Model_Country $country */
+    $country = $this->country;
+    /** @var Model_Presence $c */
+    $presences = array_map(function($c) {
+        return $c->getName();
+    }, $country->getPresences());
+    $presenceCount = count($presences);
+    $region = $country->getRegion();
+?>
+
+<div class="row">
+    <div class="small-12 columns">
+        <section class="border-section info-section">
+            <h2>Additonal Info</h2>
+            <p>Part of the <?php echo $region->display_name; ?> region</p>
+            <p>Available audience size: <?php $country->getTargetAudience(); ?></p>
+            <p>Country population: <?php echo number_format($country->population); ?></p>
+            <p>Digital population: <?php echo number_format(round($country->getDigitalPopulation())) . ' (' . $country->penetration . '% penetration)'; ?>
+        </section>
+    </div>
+    <div class="small-12 columns">
+        <section class="border-section info-section">
+            <h2>Presences: <?php echo $presenceCount; ?></h2>
+            <p><?php echo implode(", ", $presences) ?>.</p>
+        </section>
+    </div>
+</div>
