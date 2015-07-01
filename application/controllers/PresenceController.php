@@ -92,7 +92,10 @@ class PresenceController extends GraphingController
 
         $url = $downloader->getUrl(new ReportablePresence($presence), $from, $to);
 
-        $content = file_get_contents($url);
+        do {
+            $content = file_get_contents($url);
+        } while(empty($content));
+
 		header('Content-type: application/pdf');
 		header('Content-Disposition: attachment; filename=report.pdf');
 		echo $content;
