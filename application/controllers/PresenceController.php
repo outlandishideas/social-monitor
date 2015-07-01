@@ -135,16 +135,6 @@ class PresenceController extends GraphingController
         $this->view->owner = $presence->getOwner();
         $this->_helper->layout()->setLayout('report');
 
-//        $content = $this->view->render('presence/report.phtml');
-//
-//        $pdf = new Pdf();
-//        $pdf->addPage($content);
-//
-//
-//        if(!$pdf->send()) {
-//            throw new Exception($pdf->getError());
-//        }
-//        exit;
     }
 
 	/**

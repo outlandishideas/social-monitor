@@ -8,7 +8,7 @@ use Outlandish\SocialMonitor\TableIndex\TableIndex;
 class RegionController extends CampaignController
 {
 
-    protected static $publicActions = array();
+    protected static $publicActions = array('report');
 
     protected function chartOptions() {
         return array(
@@ -68,31 +68,79 @@ class RegionController extends CampaignController
         $this->view->allCampaigns = Model_Region::fetchAll();
     }
 
+    public function downloadReportAction()
+    {
+        $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+        $this->validateData($presence);
+
+        //if we don't have a now parameter create a DateTime now
+        //else create a date from the now parameter
+        $to = date_create_from_format("Y-m-d", $this->_request->getParam('to'));
+        if (!$to) {
+            $to = new DateTime();
+        }
+
+        //if we don't have a then parameter generate a default then from $now
+        //else create a date from the then parameter
+        $from = date_create_from_format("Y-m-d", $this->_request->getParam('from'));
+        if(!$from) {
+            $from = clone $to;
+            $from->modify('-30 days');
+        }
+
+        //if $now is earlier than $then then reverse them.
+        if ($to->getTimestamp() <= $from->getTimestamp()) {
+            $oldThen = clone $from;
+            $from = clone $to;
+            $to = clone $oldThen;
+        }
+
+        $downloader = $this->getContainer()->get('report.downloader');
+
+        $url = $downloader->getUrl(new ReportablePresence($presence), $from, $to);
+
+        $content = file_get_contents($url);
+        header('Content-type: application/pdf');
+        header('Content-Disposition: attachment; filename=report.pdf');
+        echo $content;
+        exit;
+    }
+
     public function reportAction()
     {
         /** @var Model_Region $region */
         $region = Model_Region::fetchById($this->_request->getParam('id'));
         $this->validateData($region);
 
-        $to = date_create();
-        $from = clone $to;
-        $to->modify("-1 day");
-        $from->modify("-30 days");
+        //if we don't have a now parameter create a DateTime now
+        //else create a date from the now parameter
+        $to = date_create_from_format("Y-m-d", $this->_request->getParam('to'));
+        if (!$to) {
+            $to = new DateTime();
+        }
+
+        //if we don't have a then parameter generate a default then from $now
+        //else create a date from the then parameter
+        $from = date_create_from_format("Y-m-d", $this->_request->getParam('from'));
+        if(!$from) {
+            $from = clone $to;
+            $from->modify('-30 days');
+        }
+
+        //if $now is earlier than $then then reverse them.
+        if ($to->getTimestamp() <= $from->getTimestamp()) {
+            $oldThen = clone $from;
+            $from = clone $to;
+            $to = clone $oldThen;
+        }
 
         $report = (new ReportGenerator())->generate(new ReportableRegion($region), $from, $to);
         $report->generate();
         $this->view->report = $report;
+        $this->view->region = $region;
+        $this->view->countries = $region->getCountries();
+        $this->_helper->layout()->setLayout('report');
 
-        $content = $this->view->render('presence/report.phtml');
-
-        $pdf = new Pdf();
-        $pdf->addPage($content);
-
-
-        if(!$pdf->send()) {
-            throw new Exception($pdf->getError());
-        }
-        exit;
     }
 
 	/**
