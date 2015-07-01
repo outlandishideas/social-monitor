@@ -70,8 +70,9 @@ class RegionController extends CampaignController
 
     public function downloadReportAction()
     {
-        $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
-        $this->validateData($presence);
+        /** @var Model_Region $region */
+        $region = Model_Region::fetchById($this->_request->getParam('id'));
+        $this->validateData($region);
 
         //if we don't have a now parameter create a DateTime now
         //else create a date from the now parameter
@@ -97,7 +98,7 @@ class RegionController extends CampaignController
 
         $downloader = $this->getContainer()->get('report.downloader');
 
-        $url = $downloader->getUrl(new ReportablePresence($presence), $from, $to);
+        $url = $downloader->getUrl(new ReportableRegion($region), $from, $to);
 
         $content = file_get_contents($url);
         header('Content-type: application/pdf');
