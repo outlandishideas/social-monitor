@@ -7,7 +7,7 @@ use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class GroupController extends CampaignController {
 
-    protected static $publicActions = array();
+    protected static $publicActions = array('report');
 
 	public function init() {
 		parent::init();
