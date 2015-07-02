@@ -33,18 +33,18 @@ class Metric_SinaWeiboEngagementLeveled extends Metric_Abstract {
      */
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        return 100;
-//        $data = $presence->getHistoricData($start, $end, self::getName());
-//        $total = 0;
-//        $count = 0;
-//        foreach ($data as $d) {
-//            $total += $d['value'];
-//            $count++;
-//        }
-//        if ($count == 0) {
-//            return 0;
-//        }
-//        return $total/$count;
+//        return 100;
+        $data = $presence->getHistoricData($start, $end, self::getName());
+        $total = 0;
+        $count = 0;
+        foreach ($data as $d) {
+            $total += $d['value'];
+            $count++;
+        }
+        if ($count == 0) {
+            return 0;
+        }
+        return $total/$count;
     }
 
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
