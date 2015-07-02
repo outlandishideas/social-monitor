@@ -56,7 +56,7 @@ $gatekeeper = $this->gatekeeper();
                             break;
                         case Presences::getName():
                         case Countries::getName():
-                            $count = count($cellValue);
+                            $count = count((array)$cellValue);
                             if ($header->getName() == Countries::getName()) {
                                 $countText = $count . ($count == 1 ? ' country' : ' countries');
                             } else {
