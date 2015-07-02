@@ -34,7 +34,7 @@ namespace Outlandish\SocialMonitor\Command {
         {
             $now = new \DateTime();
             $then = clone $now;
-            $then->modify('-30 days');
+            $then->modify('-7 days');
 
             /** @var FacebookEngagementMetric $metric */
             $metric = $this->getContainer()->get('sina_weibo.engagement.weighted');
