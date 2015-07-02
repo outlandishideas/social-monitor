@@ -41,7 +41,7 @@ class WeightedSinaWeiboEngagementQuery implements Query
 
         $sql = "SELECT
                     f.presence_id,
-					(((f.comments*4 + f.likes + f.share_count*7) / 12) / IFNULL(ph.popularity>0, 1)) * 1000 AS `total`
+					(((f.comments*4 + f.likes + f.share_count*7) / 12) / IFNULL(ph.popularity>0, 1)) AS `total`
                 FROM
 				    (
 						SELECT
