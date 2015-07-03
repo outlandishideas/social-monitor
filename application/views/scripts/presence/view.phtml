@@ -119,11 +119,14 @@ if ($sizeDiff > 0) {
                 </h4>
                 <p>This is a <a href="<?php echo $presence->page_url; ?>" target="_blank"><?php echo $presenceType; ?> <span class="icon-external-link"></span></a> presence</p>
                 <?php if ($presence->isForFacebook()) : ?>
-                <p>Yesterday's Facebook Engagement score: <?php echo $presence->facebook_engagement; ?></p>
-                <p>Monthly Average Facebook Engagement score: <?php echo $presence->getMetricValue('facebook_engagement'); ?></p>
+                    <p>Yesterday's Facebook Engagement score: <?php echo $presence->facebook_engagement; ?></p>
+                    <p>Monthly Average Facebook Engagement score: <?php echo $presence->getMetricValue('facebook_engagement'); ?></p>
                 <?php elseif ($presence->isForTwitter()) : ?>
                     <p>Yesterday's Klout score: <?php echo $presence->klout_score; ?></p>
                     <p>Monthly Average Klout score: <?php echo $presence->getMetricValue('klout_score'); ?></p>
+                <?php elseif ($presence->isForSinaWeibo()) : ?>
+                    <p>Yesterday's Sina Weibo Engagement score: <?php echo $presence->getSinaWeiboEngagement(); ?></p>
+                    <p>Monthly Average Sina Weibo Engagement score: <?php echo $presence->getMetricValue('sina_weibo_engagement'); ?></p>
                 <?php endif; ?>
                 <?php if ($ownerUrl) : ?>
                     <p>This presence contributes to the statistics for <a href="<?php echo $ownerUrl; ?>"><?php echo $owner->display_name; ?></a></p>
