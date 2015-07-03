@@ -74,6 +74,7 @@ class Model_Presence
         $this->popularity = $internals['popularity'];
         $this->klout_score = $internals['klout_score'];
         $this->facebook_engagement = $internals['facebook_engagement'];
+        $this->sina_weibo_engagement = $internals['sina_weibo_engagement'];
         $this->page_url = $internals['page_url'];
         $this->image_url = $internals['image_url'];
         $this->last_updated = $internals['last_updated'];
