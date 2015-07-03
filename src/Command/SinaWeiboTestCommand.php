@@ -37,8 +37,13 @@ namespace Outlandish\SocialMonitor\Command {
                 $connection->set_remote_ip('127.0.0.1');
             }
 
-            $output->writeln("Testing presence statuses");
+            /** @var \Model_Presence $presence */
+            $presence = \Model_PresenceFactory::getPresenceById('396');
+            $output->writeln("Testing presence details");
+            $response = $connection->show_user_by_name($presence->getHandle());
+            print_r($response);
 
+            $output->writeln("Testing presence statuses");
             $response = $connection->friends_timeline(1, 200, 0);
             print_r($response);
 
