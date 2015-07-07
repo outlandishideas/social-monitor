@@ -2,7 +2,7 @@
 
 class FetchController extends BaseController
 {
-	protected static $publicActions = array('index');
+	protected static $publicActions = array('index', 'populate-presence-history');
 
 	/**
 	 * Fetches all tweets/facebook posts etc
