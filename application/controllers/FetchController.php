@@ -320,10 +320,17 @@ class FetchController extends BaseController
         foreach ($presences as $presence) {
             //forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
             $db->closeConnection();
+            $this->log('closeConnection()');
             $db->getConnection();
+            $this->log('getConnection()');
             $index++;
+            $this->log('index++');
             $now = time();
-            $lastUpdated = strtotime($presence->getLastUpdated());
+            $this->log('time()');
+            $lastUpdatedString = $presence->getLastUpdated();
+            $this->log('lastUpdatedString()');
+            $lastUpdated = strtotime($lastUpdatedString);
+            $this->log('strtotime()');
             if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
                 $this->log('Update info [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
                     '[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . ']');
@@ -336,6 +343,7 @@ class FetchController extends BaseController
                     $this->log("Error updating presence info: " . $e->getMessage());
                 }
                 $this->touchLock($lockName);
+                $this->log('touchLock()');
             }
         }
     }
