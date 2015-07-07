@@ -7,7 +7,7 @@ use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class IndexController extends GraphingController
 {
-	protected static $publicActions = array('index', 'build-badge-data');
+	protected static $publicActions = array('index', 'build-badge-data', 'clear-cache');
 
 	public function indexAction()
 	{
