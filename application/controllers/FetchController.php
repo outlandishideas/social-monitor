@@ -47,7 +47,7 @@ class FetchController extends BaseController
      * Use this at midnight each day to ensure that we have data in the presence history
      * table when calculating metrics etc.
      */
-    public function populatePresenceHistory()
+    public function populatePresenceHistoryAction()
     {
         $db = self::db();
         $this->setupConsoleOutput();
