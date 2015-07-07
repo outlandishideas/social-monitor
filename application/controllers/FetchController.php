@@ -45,6 +45,22 @@ class FetchController extends BaseController
 		$this->releaseLock($lockName);
 	}
 
+    /**
+     * This action populates the presence history
+     * Use this at midnight each day to ensure that we have data in the presence history
+     * table when calculating metrics etc.
+     */
+    public function populatePresenceHistory()
+    {
+        $db = self::db();
+        $this->setupConsoleOutput();
+        $presences = Model_PresenceFactory::getPresences();
+
+        //update presence history again, so we have the latest data
+        $this->updatePresenceHistory($presences, $db);
+
+    }
+
 
 
 	/**
@@ -276,7 +292,7 @@ class FetchController extends BaseController
      * @param $db
      * @param $lockName
      */
-    private function updatePresenceHistory($presences, $db, $lockName)
+    private function updatePresenceHistory($presences, $db, $lockName = null)
     {
         $presenceCount = count($presences);
         $index = 0;
@@ -293,7 +309,9 @@ class FetchController extends BaseController
             } catch (Exception $e) {
                 $this->log("Error: {$e->getMessage()}");
             }
-            $this->touchLock($lockName);
+            if ($lockName) {
+                $this->touchLock($lockName);
+            }
         }
     }
 
