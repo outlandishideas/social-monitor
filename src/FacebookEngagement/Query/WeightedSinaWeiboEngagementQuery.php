@@ -35,6 +35,10 @@ class WeightedSinaWeiboEngagementQuery implements Query
      */
     public function fetch(DateTime $now, DateTime $then)
     {
+        //take one day off as otherwise this calculates without a full day of data
+        //if $now = today
+        $now->modify('-1 day');
+        $then->modify('-1 day');
         $popularity = self::POPULARITY;
         $stream = self::FACEBOOK_STREAM_TABLE;
         $presenceHistory = self::PRESENCE_STREAM_TABLE;
