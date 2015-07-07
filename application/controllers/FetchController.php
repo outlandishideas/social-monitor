@@ -298,8 +298,7 @@ class FetchController extends BaseController
             $db->closeConnection();
             $db->getConnection();
             $index++;
-            $this->log("Updating presence history [{$index}/{$presenceCount}]
-				[{$presence->getType()->getTitle()}] [{$presence->getId()}] [{$presence->getHandle()}] [{$presence->getName()}]");
+            $this->log("Updating presence history [{$index}/{$presenceCount}] [{$presence->getType()->getTitle()}] [{$presence->getId()}] [{$presence->getHandle()}] [{$presence->getName()}]");
             try {
                 // add subset of properties into presence_history table
                 $presence->updateHistory();
