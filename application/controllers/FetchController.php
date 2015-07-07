@@ -21,9 +21,6 @@ class FetchController extends BaseController
 
 		$presences = Model_PresenceFactory::getPresences();
 
-        //ensure that we have data when calculating metrics
-        $this->updatePresenceHistory($presences, $db, $lockName);
-
         //update all presences
         $this->updatePresences($presences, $db, $lockName);
 
