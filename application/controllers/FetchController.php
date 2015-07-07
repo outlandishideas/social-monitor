@@ -20,82 +20,32 @@ class FetchController extends BaseController
 		set_time_limit($this->config->app->fetch_time_limit);
 
 		$presences = Model_PresenceFactory::getPresences();
-		$presenceCount = count($presences);
 
-		$infoInterval = ($this->config->presence->cache_data_hours ?: 4) * 3600;
+        //ensure that we have data when calculating metrics
+        $this->updatePresenceHistory($presences, $db, $lockName);
 
-		//updating presence info
-        usort($presences, function(Model_Presence $a, Model_Presence $b) {
-                $aVal = $a->getLastUpdated() ?: '000000';
-                $bVal = $b->getLastUpdated() ?: '000000';
-                return strcmp($aVal, $bVal);
-            });
-		$index = 0;
-		foreach($presences as $presence) {
-			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
-			$db->closeConnection();
-			$db->getConnection();
-			$index++;
-			$now = time();
-			$lastUpdated = strtotime($presence->getLastUpdated());
-			if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
-				$this->log('Update info [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
-                    '[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . ']');
-				try {
-                    // update using provider
-					$presence->update();
-                    // save to DB
-                    $presence->save();
-                    // add subset of properties into presence_history table
-                    $presence->updateHistory();
-				} catch (Exception $e) {
-					$this->log("Error updating presence info: " . $e->getMessage());
-				}
-				$this->touchLock($lockName);
-			}
-		}
+        //update all presences
+        $this->updatePresences($presences, $db, $lockName);
 
-		//updating presence statuses
-        usort($presences, function(Model_Presence $a, Model_Presence $b) {
-                $aVal = $a->getLastFetched() ?: '000000';
-                $bVal = $b->getLastFetched() ?: '000000';
-                return strcmp($aVal, $bVal);
-            });
-		$index = 0;
-		foreach($presences as $presence) {
-			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
-			$db->closeConnection();
-			$db->getConnection();
-			$index++;
-            $this->log('Fetch statuses [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
-                '[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . ']');
-			try {
-				$count = $presence->fetch();
-                $presence->save();
-                $this->log('Inserted ' . $count);
-			} catch (Exception $e) {
-				$this->log("Error: " . $e->getMessage());
-			}
-			$this->touchLock($lockName);
-		}
+        //fetch the statuses for all presences
+        $this->fetchStatuses($presences, $db, $lockName);
 
-		$this->log('Updating linked domains');
-		$inserted = $this->updateDomains();
-		$this->log('Inserted ' . count($inserted) . ' domains');
+        //update presence history again, so we have the latest data
+        $this->updatePresenceHistory($presences, $db, $lockName);
 
-		$this->log('Updating facebook actors');
-		try {
-			$inserted = $this->updateFacebookActors();
-		} catch (Exception_FacebookApi $ex) {
-			$this->log('Failed to update facebook actors: ' . $ex->getMessage());
-		}
-		$this->log('Updated ' . count($inserted) . ' actors');
+        //update list of domains from the new links added to the database
+		$this->updateDomains();
+
+        //update Facebook actors if they need updating
+        $this->updateFacebookActors();
 
 		$this->touchLock($lockName);
 
 		$this->log('Finished');
 		$this->releaseLock($lockName);
 	}
+
+
 
 	/**
 	 * @user-level user
@@ -106,10 +56,14 @@ class FetchController extends BaseController
 		$this->_helper->redirector->gotoRoute(array('controller'=>'index', 'action'=>'index'));
 	}
 
-	/**
-	 * Fetches any 'actors' (users/groups/events/pages) for records in the facebook stream that don't exist, or are outdated
-	 */
+    /**
+     * Fetches any 'actors' (users/groups/events/pages) for records in the facebook stream that don't exist, or are outdated
+     * @param int $limit
+     * @return array
+     */
 	public function updateFacebookActors($limit = 250) {
+        $this->log('Updating facebook actors');
+
 		$db = self::db();
 		$actorQuery = $db->prepare('SELECT DISTINCT actor_id
 			FROM facebook_stream AS stream
@@ -129,12 +83,18 @@ class FetchController extends BaseController
 				VALUES (:id, :username, :name, :pic_url, :profile_url, :type, :last_fetched)');
 
 			$actorIdsString = ' IN (' . implode(',', $actorIds) . ')';
-			$mq = Util_Facebook::multiquery(array(
-				'user'=>'SELECT uid, username, name, pic_square, profile_url FROM user WHERE uid' . $actorIdsString,
-				'page'=>'SELECT page_id, username, name, pic_square FROM page WHERE page_id' . $actorIdsString,
-				'group'=>'SELECT gid, name, pic_small FROM group WHERE gid' . $actorIdsString,
-				'event'=>'SELECT eid, name, pic_square FROM event WHERE eid' . $actorIdsString
-			));
+
+            try {
+                $mq = Util_Facebook::multiquery(array(
+                    'user'=>'SELECT uid, username, name, pic_square, profile_url FROM user WHERE uid' . $actorIdsString,
+                    'page'=>'SELECT page_id, username, name, pic_square FROM page WHERE page_id' . $actorIdsString,
+                    'group'=>'SELECT gid, name, pic_small FROM group WHERE gid' . $actorIdsString,
+                    'event'=>'SELECT eid, name, pic_square FROM event WHERE eid' . $actorIdsString
+                ));
+            } catch (Exception_FacebookApi $ex) {
+                $this->log('Failed to update facebook actors: ' . $ex->getMessage());
+                return;
+            }
 
 			$now = gmdate('Y-m-d H:i:s');
 			foreach ($mq as $group) {
@@ -199,11 +159,14 @@ class FetchController extends BaseController
 			}
 		}
 
-		return $inserted;
-	}
+        $this->log('Updated ' . count($inserted) . ' actors');
+    }
 
 	public function updateDomains() {
-		$db = self::db();
+
+        $this->log('Updating linked domains');
+
+        $db = self::db();
 		$inserted = array();
 		$stmt = $db->prepare('SELECT DISTINCT l.domain
 			FROM status_links AS l
@@ -222,8 +185,10 @@ class FetchController extends BaseController
 				$inserted[] = $domain;
 			} catch (Exception $ex) {}
 		}
-		return $inserted;
-	}
+
+        $this->log('Inserted ' . count($inserted) . ' domains');
+
+    }
 
 	/**
 	 * @param $message string Send an email to the configured email address
@@ -301,5 +266,106 @@ class FetchController extends BaseController
 	private function touchLock($lockName) {
 		$this->setOption($lockName, time());
 	}
-}
 
+    /**
+     * update presence history regardless of the status of when it was last updated etc
+     * we need to ensure that the presence history has the data required to make calculations
+     * used in the metrics/badges etc, which doesn't happen if the presence didn't update for whatever reason
+     *
+     * @param $presences
+     * @param $db
+     * @param $lockName
+     */
+    private function updatePresenceHistory($presences, $db, $lockName)
+    {
+        $presenceCount = count($presences);
+        $index = 0;
+        foreach ($presences as $presence) {
+            //forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
+            $db->closeConnection();
+            $db->getConnection();
+            $index++;
+            $this->log("Updating presence history [{$index}/{$presenceCount}]
+				[{$presence->getType()->getTitle()}] [{$presence->getId()}] [{$presence->getHandle()}] [{$presence->getName()}]");
+            try {
+                // add subset of properties into presence_history table
+                $presence->updateHistory();
+            } catch (Exception $e) {
+                $this->log("Error: {$e->getMessage()}");
+            }
+            $this->touchLock($lockName);
+        }
+    }
+
+    /**
+     * @param $presences
+     * @param $db
+     * @param $lockName
+     * @return array
+     */
+    protected function updatePresences($presences, $db, $lockName)
+    {
+        $infoInterval = ($this->config->presence->cache_data_hours ?: 4) * 3600;
+        $presenceCount = count($presences);
+
+        //updating presence info
+        usort($presences, function (Model_Presence $a, Model_Presence $b) {
+            $aVal = $a->getLastUpdated() ?: '000000';
+            $bVal = $b->getLastUpdated() ?: '000000';
+            return strcmp($aVal, $bVal);
+        });
+
+        $index = 0;
+        /** @var Model_Presence[] $presences */
+        foreach ($presences as $presence) {
+            //forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
+            $db->closeConnection();
+            $db->getConnection();
+            $index++;
+            $now = time();
+            $lastUpdated = strtotime($presence->getLastUpdated());
+            if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
+                $this->log('Update info [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
+                    '[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . ']');
+                try {
+                    // update using provider
+                    $presence->update();
+                    // save to DB
+                    $presence->save();
+                } catch (Exception $e) {
+                    $this->log("Error updating presence info: " . $e->getMessage());
+                }
+                $this->touchLock($lockName);
+            }
+        }
+    }
+
+    private function fetchStatuses($presences, $db, $lockName)
+    {
+        $presenceCount = count($presences);
+
+        //updating presence statuses
+        usort($presences, function(Model_Presence $a, Model_Presence $b) {
+            $aVal = $a->getLastFetched() ?: '000000';
+            $bVal = $b->getLastFetched() ?: '000000';
+            return strcmp($aVal, $bVal);
+        });
+        $index = 0;
+        foreach($presences as $presence) {
+            //forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
+            $db->closeConnection();
+            $db->getConnection();
+            $index++;
+            $this->log('Fetch statuses [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
+                '[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . ']');
+            try {
+                $count = $presence->fetch();
+                $presence->save();
+                $this->log('Inserted ' . $count);
+            } catch (Exception $e) {
+                $this->log("Error: " . $e->getMessage());
+            }
+            $this->touchLock($lockName);
+        }
+    }
+}
