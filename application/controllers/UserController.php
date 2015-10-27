@@ -252,7 +252,9 @@ class UserController extends BaseController
 				try {
 					$editingUser->save();
                     $this->flashMessage('User saved');
-                    $this->_helper->redirector->gotoSimple('index');
+					if($this->view->user->isManager) {
+						$this->_helper->redirector->gotoSimple('index');
+					}
 				} catch (Exception $ex) {
 					if (strpos($ex->getMessage(), '23000') !== false) {
 						if (strpos($ex->getMessage(), 'email') !== false) {
