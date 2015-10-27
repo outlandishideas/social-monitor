@@ -15,7 +15,7 @@ defined('APP_ROOT_PATH')
 
 // Define application environment
 defined('APPLICATION_ENV')
-|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
+|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'alpha'));
 
 
 //error reporting
