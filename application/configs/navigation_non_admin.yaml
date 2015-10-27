@@ -3,3 +3,12 @@ user:
   controller: user
   action: edit-self
   icon: icon-user icon-large
+  pages:
+    account:
+      label: Account
+      controller: user
+      action: edit-self
+    signout:
+      label: Sign Out
+      controller: user
+      action: logout
