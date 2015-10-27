@@ -1,7 +1,8 @@
 <?php
 
-use Outlandish\SocialMonitor\FacebookApp;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric;
+use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 
 class Enum_PresenceType extends Enum_Abstract
 {
@@ -99,9 +100,11 @@ class Enum_PresenceType extends Enum_Abstract
 				return new Provider_SinaWeibo($db);
 				break;
 			case self::FACEBOOK:
-                /** @var FacebookApp $facebookApp */
-				$facebookApp = $container->get('facebook.app');
-                return new Provider_Facebook($db, $facebookApp);
+                /** @var FacebookEngagementMetric $engagementMetric */
+                $engagementMetric = $container->get('facebook_engagement.weighted');
+                /** @var FacebookAdapter $facebookAdapter */
+                $facebookAdapter = $container->get('adapter.facebook');
+                return new Provider_Facebook($db, $facebookAdapter, $engagementMetric);
 				break;
 			case self::TWITTER:
 				return new Provider_Twitter($db);

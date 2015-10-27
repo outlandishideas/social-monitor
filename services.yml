@@ -16,6 +16,12 @@ services:
         class: Outlandish\SocialMonitor\Report\ReportDownloader
         arguments: ["%pdf.base_url%", "%report.base_url%"]
 
+    ###################################
+    # adapters
+    ###################################
+    adapter.facebook:
+        class: Outlandish\SocialMonitor\Adapter\FacebookAdapter
+        arguments: ["@facebook.app"]
 
     ###################################
     # sina weibo engagement services

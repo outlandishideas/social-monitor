@@ -358,7 +358,10 @@ class FetchController extends BaseController
                 }
                 $this->touchLock($lockName);
                 $this->log('touchLock()');
-            }
+            } else {
+				$this->log('Not updating info [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
+					'[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . '] as last updated '.$lastUpdatedString);
+			}
         }
     }
 
