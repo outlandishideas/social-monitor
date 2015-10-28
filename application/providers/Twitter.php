@@ -1,18 +1,23 @@
 <?php
 
 
+use Outlandish\SocialMonitor\Adapter\TwitterAdapter;
+use Outlandish\SocialMonitor\Models\Tweet;
+
 class Provider_Twitter extends Provider_Abstract
 {
 	protected $connection = null;
 
 	protected $kloutApi = null;
+    protected $adapter;
 
 	const KLOUT_API_ENDPOINT = 'http://api.klout.com/v2/';
 
-	public function __construct(PDO $db) {
+	public function __construct(PDO $db, TwitterAdapter $adapter) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::TWITTER();
         $this->tableName = 'twitter_tweets';
+        $this->adapter = $adapter;
 	}
 
 	public function fetchStatusData(Model_Presence $presence)
@@ -24,21 +29,21 @@ class Provider_Twitter extends Provider_Abstract
         $stmt = $this->db->prepare("SELECT tweet_id FROM {$this->tableName} WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
         $stmt->execute(array(':id'=>$presence->getId()));
         $lastTweetId = $stmt->fetchColumn();
-        $tweets = Util_Twitter::userTweets($presence->getUID(), $lastTweetId);
-        $mentions = Util_Twitter::userMentions($presence->getHandle(), $lastTweetId);
+
+        $tweetsAndMentions = $this->adapter->getStatuses($presence->getUID(),$lastTweetId,$presence->getHandle());
+
+
         $count = 0;
-        $count += $this->parseAndInsertTweets($presence, $tweets);
-        $count += $this->parseAndInsertTweets($presence, $mentions, true);
+        $count += $this->insertTweets($presence, $tweetsAndMentions);
         return $count;
 	}
 
     /**
      * @param Model_Presence $presence
      * @param array $tweetData
-     * @param bool $mentions
      * @return array
      */
-    protected function parseAndInsertTweets($presence, $tweetData, $mentions = false) {
+    protected function insertTweets($presence, $tweetData) {
         $stmt = $this->db->prepare("
             INSERT INTO {$this->tableName}
             (tweet_id, presence_id, text_expanded, created_time, retweet_count, html_tweet,
@@ -54,26 +59,25 @@ class Provider_Twitter extends Provider_Abstract
         $count = 0;
         $links = array();
         while ($tweetData) {
+            /** @var Tweet $tweet */
             $tweet = array_shift($tweetData);
-            $parsedTweet = Util_Twitter::parseTweet($tweet);
-            $isRetweet = isset($tweet->retweeted_status) && $tweet->retweeted_status->user->id == $presenceUID;
             $args = array(
-                ':tweet_id' => $tweet->id_str,
+                ':tweet_id' => $tweet->id,
                 ':presence_id' => $presenceId,
-                ':text_expanded' => $parsedTweet['text_expanded'],
-                ':created_time' => gmdate('Y-m-d H:i:s', strtotime($tweet->created_at)),
-                ':retweet_count' => $tweet->retweet_count,
-                ':html_tweet' => $parsedTweet['html_tweet'],
-                ':responsible_presence' => $mentions ? $presenceId : null,
-                ':needs_response' => $mentions && !$isRetweet ? 1 : 0,
-                ':in_reply_to_user_uid' => $tweet->in_reply_to_user_id_str,
-                ':in_reply_to_status_uid' => $tweet->in_reply_to_status_id_str
+                ':text_expanded' => $tweet->message,
+                ':created_time' => $tweet->created_time,
+                ':retweet_count' => $tweet->share_count,
+                ':html_tweet' => $tweet->html,
+                ':responsible_presence' => $tweet->isMention ? $presenceId : null,
+                ':needs_response' => $tweet->needs_response,
+                ':in_reply_to_user_uid' => $tweet->in_response_to_user_uid,
+                ':in_reply_to_status_uid' => $tweet->in_response_to_status_uid
             );
             try {
                 $stmt->execute($args);
                 $id = $this->db->lastInsertId();
-                if (!empty($tweet->entities->urls) && !$mentions) {
-                    $links[$id] = array_map(function($a) { return $a->expanded_url; }, $tweet->entities->urls);
+                if (!empty($tweet->links)) {
+                    $links[$id] = $tweet->links;
                 }
                 $count++;
             } catch (Exception $ex) {
@@ -153,7 +157,7 @@ class Provider_Twitter extends Provider_Abstract
 						created_time >= :start
 						AND created_time <= :end
 						AND presence_id = :id
-                        ".($ownPostsOnly ? 'AND responsible_presence = presence_id' : '')."
+                        ".($ownPostsOnly ? 'AND responsible_presence IS NULL' : '')."
 					GROUP BY
 						DATE_FORMAT(created_time, '%Y-%m-%d')
 				) AS posts
@@ -170,7 +174,7 @@ class Provider_Twitter extends Provider_Abstract
 						p.created_time >= :start
 						AND p.created_time <= :end
 						AND p.presence_id = :id
-                        ".($ownPostsOnly ? 'AND p.responsible_presence = p.presence_id' : '')."
+                        ".($ownPostsOnly ? 'AND p.responsible_presence IS NULL' : '')."
 					GROUP BY
 						DATE_FORMAT(p.created_time, '%Y-%m-%d')
 				) AS links ON (posts.date = links.date)
@@ -254,18 +258,18 @@ class Provider_Twitter extends Provider_Abstract
 	public function updateMetadata(Model_Presence $presence) {
 
         try {
-            $data = Util_Twitter::userInfo($presence->handle);
+            $data = $this->adapter->getMetadata($presence->handle);
         } catch (Exception_TwitterNotFound $e) {
             $presence->uid = null;
-            throw new Exception_TwitterNotFound('Twitter user not found: ' . $presence->handle, $e->getCode(), $e->getPath(), $e->getErrors());
+            throw $e;
         }
 
         $presence->type = $this->type;
-        $presence->uid = $data->id_str;
-        $presence->image_url = $data->profile_image_url;
+        $presence->uid = $data->uid;
+        $presence->image_url = $data->image_url;
         $presence->name = $data->name;
-        $presence->page_url = 'https://www.twitter.com/' . $data->screen_name;
-        $presence->popularity = $data->followers_count;
+        $presence->page_url = $data->page_url;
+        $presence->popularity = $data->popularity;
 	}
 
     /**

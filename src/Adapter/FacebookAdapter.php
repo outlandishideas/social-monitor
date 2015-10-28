@@ -10,6 +10,7 @@ use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
 use Facebook\FacebookRequestException;
 use Exception_FacebookNotFound;
+use RuntimeException;
 
 class FacebookAdapter extends AbstractAdapter {
 
@@ -54,10 +55,11 @@ class FacebookAdapter extends AbstractAdapter {
 
     /**
      * @param $pageUID
+     * @param $handle - not used, Facebook doesn't let you search posts
      * @param DateTime $since
      * @return Status[]
      */
-    public function getStatuses($pageUID,$since) {
+    public function getStatuses($pageUID,$since,$handle = null) {
 
         $rawStatuses = $this->facebook->pageFeed($pageUID,$since);
 
@@ -107,13 +109,34 @@ class FacebookAdapter extends AbstractAdapter {
                 $parsed->message = isset($postArray['message']) ? $postArray['message'] : null;
                 $parsed->created_time = gmdate("Y-m-d H:i:s", $createdTime->getTimestamp());
                 $parsed->posted_by_owner = true;
-                $parsed->in_response_to = $postArray['to']->data[0]->id;
+                $parsed->in_response_to_status_uid = $postArray['to']->data[0]->id;
+                if($parsed->posted_by_owner && $parsed->message) {
+                    $parsed->links = $this->extractLinks($parsed->message);
+                }
 
                 $parsedResponses[] = $parsed;
             }
         }
 
         return $parsedResponses;
+    }
+
+    private function extractLinks($message) {
+        $links = array();
+        if (preg_match_all('/[^\s]{5,}/', $message, $tokens)) {
+            foreach ($tokens[0] as $token) {
+                $token = trim($token, '.,;!"()');
+                if (filter_var($token, FILTER_VALIDATE_URL)) {
+                    try {
+                        $links[] = $token;
+                    } catch (RuntimeException $ex) {
+                        // ignore failed URLs
+                        $failedLinks[] = $token;
+                    }
+                }
+            }
+        }
+        return $links;
     }
 
 }

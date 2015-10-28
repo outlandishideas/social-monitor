@@ -102,8 +102,8 @@ class Provider_Facebook extends Provider_Abstract
             }
 
             $id = $this->db->lastInsertId();
-            if ($post->posted_by_owner && isset($postArray['message']) && $postArray['message']) {
-                $links[$id] = $this->extractLinks($postArray['message']);
+            if ($post->links && !empty($post->links)) {
+                $links[$id] = $post->links;
             }
 
             $count++;
@@ -374,24 +374,6 @@ class Provider_Facebook extends Provider_Abstract
 		$stmt->execute($args);
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
-
-    private function extractLinks($message) {
-        $links = array();
-        if (preg_match_all('/[^\s]{5,}/', $message, $tokens)) {
-            foreach ($tokens[0] as $token) {
-                $token = trim($token, '.,;!"()');
-                if (filter_var($token, FILTER_VALIDATE_URL)) {
-                    try {
-                        $links[] = $token;
-                    } catch (RuntimeException $ex) {
-                        // ignore failed URLs
-                        $failedLinks[] = $token;
-                    }
-                }
-            }
-        }
-        return $links;
-    }
 
     public function updateMetadata(Model_Presence $presence) {
 

@@ -18,18 +18,22 @@ abstract class AbstractAdapter {
 
     /**
      *
-     * Here we take a UID i.e. the 3rd party id of a presence
+     * Return all statuses posted by the presence with 3rd party ID $pageUID.
+     * Also, additionally include statuses mentioning $handle.
+     *
+     * Since is either a DateTime or a status id, depending on implementation
      *
      * @param $pageUID
-     * @param DateTime $since
+     * @param string $handle
+     * @param mixed $since
      * @return Status[]
      */
-    abstract public function getStatuses($pageUID,$since);
+    abstract public function getStatuses($pageUID,$since,$handle);
 
     /**
-     * @param array $pageUIDs
+     * @param array $postUIDs
      * @return mixed
      */
-    abstract public function getResponses($pageUIDs);
+    abstract public function getResponses($postUIDs);
 
 }

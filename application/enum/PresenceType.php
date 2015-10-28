@@ -107,7 +107,7 @@ class Enum_PresenceType extends Enum_Abstract
                 return new Provider_Facebook($db, $facebookAdapter, $engagementMetric);
 				break;
 			case self::TWITTER:
-				return new Provider_Twitter($db);
+				return new Provider_Twitter($db, new \Outlandish\SocialMonitor\Adapter\TwitterAdapter());
 				break;
 			default:
 				throw new \LogicException("Not implemented yet.");
