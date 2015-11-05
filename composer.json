@@ -19,6 +19,7 @@
     "symfony/yaml": "~2.6",
     "facebook/php-sdk-v4": "~4.0",
     "guzzlehttp/guzzle": "~5.2",
-    "mikehaertl/phpwkhtmltopdf": "~2.0"
+    "mikehaertl/phpwkhtmltopdf": "~2.0",
+    "cosenary/instagram": "^2.3"
 	}
 }

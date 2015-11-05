@@ -2,8 +2,9 @@
 
 namespace Outlandish\SocialMonitor\Models;
 
-class InstagramStatus {
+class InstagramStatus extends Status {
 
     public $image_url;
+    public $comments;
 
 }

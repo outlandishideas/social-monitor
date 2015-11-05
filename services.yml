@@ -23,6 +23,17 @@ services:
         class: Outlandish\SocialMonitor\Adapter\FacebookAdapter
         arguments: ["@facebook.app"]
 
+    adapter.instagram:
+        class: Outlandish\SocialMonitor\Adapter\InstagramAdapter
+        arguments: ["@instagram.app"]
+
+    ###################################
+    # instagram engagement services
+    ###################################
+    instagram.app:
+        class: Outlandish\SocialMonitor\InstagramApp
+        arguments: ["150bc7bece934ecf98d821fd000c9376"]
+
     ###################################
     # sina weibo engagement services
     ###################################

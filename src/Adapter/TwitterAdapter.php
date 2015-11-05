@@ -78,7 +78,7 @@ class TwitterAdapter extends AbstractAdapter {
                 return $a->expanded_url;
             }, $raw->entities->urls);
         }
-        return $parsedTweet;
+        return $tweet;
     }
 
     /**

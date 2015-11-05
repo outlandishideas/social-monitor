@@ -9,6 +9,7 @@ class Enum_PresenceType extends Enum_Abstract
 	const TWITTER 		= 'twitter';
 	const FACEBOOK 	= 'facebook';
 	const SINA_WEIBO 	= 'sina_weibo';
+    const INSTAGRAM = 'instagram';
     /**
      * @var ContainerInterface
      */
@@ -17,6 +18,7 @@ class Enum_PresenceType extends Enum_Abstract
     public static function TWITTER() { return self::get(self::TWITTER); }
     public static function FACEBOOK() { return self::get(self::FACEBOOK); }
     public static function SINA_WEIBO() { return self::get(self::SINA_WEIBO); }
+    public static function INSTAGRAM() { return self::get(self::INSTAGRAM); }
 
     protected $sign = '';
     protected $title = '';
@@ -76,6 +78,15 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_Klout::getName()
                 );
                 break;
+            case self::INSTAGRAM:
+                $this->sign = "fa fa-instagram";
+                $this->title = "Instagram";
+                $this->relevancePercentage = BaseController::getOption('instagram_relevance_percentage');
+                $this->applicableMetrics = array(
+                    Metric_Popularity::getName(),
+                    Metric_PopularityTime::getName(),
+                );
+                break;
             default:
                 throw new \LogicException("Not implemented yet.");
         }
@@ -109,6 +120,9 @@ class Enum_PresenceType extends Enum_Abstract
 			case self::TWITTER:
 				return new Provider_Twitter($db, new \Outlandish\SocialMonitor\Adapter\TwitterAdapter());
 				break;
+            case self::INSTAGRAM:
+                $instagramAdapter = $container->get('adapter.instagram');
+                return new Provider_Instagram($db, $instagramAdapter);
 			default:
 				throw new \LogicException("Not implemented yet.");
 		}

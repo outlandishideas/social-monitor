@@ -124,7 +124,7 @@ class Provider_Facebook extends Provider_Abstract
 
 //        $count = 0;
         if ($postIds) {
-            /** @var GraphObject $responses */
+
             $responses = $this->adapter->getResponses($postIds);
 
             $insertStmt = $this->db->prepare("
@@ -143,7 +143,7 @@ class Provider_Facebook extends Provider_Abstract
                     'created_time' => $response->created_time,
                     'actor_id' => $response->actor_id,
                     'posted_by_owner' => $response->posted_by_owner,
-                    'in_response_to' => $response->in_response_to
+                    'in_response_to' => $response->in_response_to_status_uid
                 );
 
                 try {

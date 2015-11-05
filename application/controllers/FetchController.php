@@ -19,7 +19,12 @@ class FetchController extends BaseController
 		$lockName = $this->acquireLock();
 		set_time_limit($this->config->app->fetch_time_limit);
 
-		$presences = Model_PresenceFactory::getPresences();
+		$id = $this->_request->getParam('id');
+		if($id) {
+			$presences = [Model_PresenceFactory::getPresenceById($id)];
+		} else {
+			$presences = Model_PresenceFactory::getPresences();
+		}
 
         //update all presences
         $this->updatePresences($presences, $db, $lockName);
@@ -376,7 +381,8 @@ class FetchController extends BaseController
             return strcmp($aVal, $bVal);
         });
         $index = 0;
-        foreach($presences as $presence) {
+		/** @var Model_Presence $presence */
+		foreach($presences as $presence) {
             //forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
             $db->closeConnection();
             $db->getConnection();

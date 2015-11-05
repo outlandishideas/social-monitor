@@ -246,6 +246,11 @@ class Model_Presence
 		return $this->getType()->getValue() == Enum_PresenceType::SINA_WEIBO;
 	}
 
+	public function isForInstagram()
+	{
+		return $this->getType()->getValue() == Enum_PresenceType::INSTAGRAM;
+	}
+
     /**
      * @return Model_Campaign|null
      */
@@ -295,6 +300,9 @@ class Model_Presence
 						break;
 					case Enum_PresenceType::TWITTER:
 						$percent = BaseController::getOption('tw_min');
+						break;
+					case Enum_PresenceType::INSTAGRAM:
+						$percent = BaseController::getOption('ig_min');
 						break;
 				}
 				$target *= $percent;

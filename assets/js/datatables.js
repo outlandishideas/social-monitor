@@ -264,6 +264,21 @@ app.datatables = {
 				app.datatables.dateColumn()
 			]);
 		},
+		'#statuses .instagram': function($div) {
+			app.datatables.initStatusList($div, 'post', [
+				{
+					mDataProp:'message',
+					fnRender:function (o) {
+						return parseTemplate(app.templates.igpost, o.aData);
+					},
+					sClass: 'message',
+					bSortable:false,
+					bUseRendered:false
+				},
+				app.datatables.linksColumn(),
+				app.datatables.dateColumn()
+			]);
+		},
 		'#statuses .sina_weibo': function($div) {
 			app.datatables.initStatusList($div, 'post', [
 				{

@@ -100,8 +100,8 @@ abstract class Model_PresenceFactory
 
         try {
             $presence->update();
-            $presence->sign_off = !!$signed_off;
-            $presence->branding = !!$branding;
+            $presence->sign_off = (int)!!$signed_off;
+            $presence->branding = (int)!!$branding;
             $presence->save();
         } catch (Exception $ex) {
             $stmt = self::$db->prepare('DELETE FROM ' . self::TABLE_PRESENCES . ' WHERE ID = ?');
