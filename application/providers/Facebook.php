@@ -4,7 +4,7 @@
 use Facebook\GraphObject;
 use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 use Outlandish\SocialMonitor\Models\FacebookStatus;
-use Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric;
+use Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric;
 
 class Provider_Facebook extends Provider_Abstract
 {
@@ -47,7 +47,7 @@ class Provider_Facebook extends Provider_Abstract
 
         $this->insertStatuses($presence, $posts, $count);
         //todo: update responses using the new api
-//        $this->updateResponses($presence, $count);
+        $this->updateResponses($presence, $count);
 
         return $count;
 	}
@@ -134,7 +134,7 @@ class Provider_Facebook extends Provider_Abstract
                 (:post_id, :presence_id, :message, :created_time, :actor_id, :posted_by_owner, :in_response_to)
             ");
 
-            /** @var FacebookStatus $post */
+            /** @var FacebookStatus $response */
             foreach($responses as $response) {
                 $args = array(
                     'post_id' => $response->id,

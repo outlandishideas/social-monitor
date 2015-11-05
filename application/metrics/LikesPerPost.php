@@ -20,7 +20,7 @@ class Metric_LikesPerPost extends Metric_Abstract {
      */
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        if (!$presence->isForFacebook()) {
+        if (!$presence->isForFacebook() && !$presence->isForInstagram()) {
             return null;
         }
         $data = $presence->getHistoricStream($start, $end)->stream;
@@ -31,7 +31,8 @@ class Metric_LikesPerPost extends Metric_Abstract {
             $actual = 0;
             $count = 0;
             foreach ($data as $row) {
-                if ($row['posted_by_owner']) {
+                //instagram => posted_by_owner can only be true
+                if ($presence->isForInstagram() || $row['posted_by_owner']) {
                     $actual += $row['likes'];
                     $count++;
                 }
@@ -49,7 +50,7 @@ class Metric_LikesPerPost extends Metric_Abstract {
 
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        if ($this->target == 0 || !$presence->isForFacebook()) {
+        if ($this->target == 0 || (!$presence->isForFacebook() && !$presence->isForInstagram())) {
             return null;
         }
 

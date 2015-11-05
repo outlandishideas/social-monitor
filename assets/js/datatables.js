@@ -275,7 +275,6 @@ app.datatables = {
 					bSortable:false,
 					bUseRendered:false
 				},
-				app.datatables.linksColumn(),
 				app.datatables.dateColumn()
 			]);
 		},

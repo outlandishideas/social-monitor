@@ -13,7 +13,8 @@ use DateTime;
 use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
-use Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric;
+use Facebook\GraphObject;
+use Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric;
 use Outlandish\SocialMonitor\FacebookFetcher\CommentsCountFetcher;
 use Outlandish\SocialMonitor\FacebookFetcher\FeedFetcher;
 use Outlandish\SocialMonitor\FacebookFetcher\LikesCountFetcher;
@@ -88,6 +89,11 @@ class FacebookApp
         return $this->feed->getFeed($pageId, $since);
     }
 
+    /**
+     * @param array $postIds
+     * @return GraphObject
+     * @throws FacebookRequestException
+     */
     public function postResponses(array $postIds)
     {
         $parameters = [

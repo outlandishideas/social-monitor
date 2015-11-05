@@ -15,12 +15,14 @@ class Provider_Instagram extends Provider_Abstract
      * @var InstagramAdapter
      */
     private $adapter;
+    private $engagementMetric;
 
     public function __construct(PDO $db, InstagramAdapter $adapter) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::INSTAGRAM();
         $this->tableName = 'instagram_stream';
         $this->adapter = $adapter;
+        $this->engagementMetric = Metric_InstagramEngagementLeveled::getInstance();
     }
 
 	public function fetchStatusData(Model_Presence $presence)
@@ -140,7 +142,6 @@ class Provider_Instagram extends Provider_Abstract
 						created_time >= :start
 						AND created_time <= :end
 						AND presence_id = :id
-                        ".($ownPostsOnly ? 'AND posted_by_owner = 1' : '')."
 					GROUP BY
 						DATE_FORMAT(created_time, '%Y-%m-%d')
 				) AS posts
@@ -158,7 +159,17 @@ class Provider_Instagram extends Provider_Abstract
 	public function update(Model_Presence $presence)
 	{
 		parent::update($presence);
-	}
+        $presence->instagram_engagement = $this->calculateInstagramEngagement($presence);
+    }
+
+    public function calculateInstagramEngagement(Model_Presence $presence)
+    {
+        $now = new DateTime();
+        $then = clone $now;
+        $then->modify("-1 week");
+
+        return $this->engagementMetric->get($presence->getId(), $now, $then);
+    }
 
     public function updateMetadata(Model_Presence $presence) {
 

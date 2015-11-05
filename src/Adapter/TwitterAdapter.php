@@ -80,13 +80,4 @@ class TwitterAdapter extends AbstractAdapter {
         }
         return $tweet;
     }
-
-    /**
-     * @param array $postUIDs
-     * @return Status[]
-     */
-    public function getResponses($postUIDs) {
-        throw new RuntimeException('Not implemented');
-    }
-
 }

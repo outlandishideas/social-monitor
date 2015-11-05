@@ -19,13 +19,23 @@ class InstagramAdapter extends AbstractAdapter
 
     public function getMetadata($handle)
     {
-        $users = $this->instagram->searchUser($handle, 2);
-        if (count($users->data) > 1) {
-            throw new \Exception_InstagramApi('Multiple users found for instagram name ' . $handle, 404);
-        } else if (count($users->data) === 0) {
+        $user = null;
+        $users = $this->instagram->searchUser($handle, 10);
+        if (count($users->data) === 1) {
+            $user = $users->data[0];
+        } else if (count($users->data) > 1) {
+            foreach($users->data as $u) {
+                if($u->username===$handle) {
+                    $user = $u;
+                    break;
+                }
+            }
+            if(!$user) {
+                throw new \Exception_InstagramApi('Multiple users found for instagram name ' . $handle, 404);
+            }
+        } else {
             throw new Exception_InstagramNotFound('Instagram user not found ' . $handle, 404);
         }
-        $user = $users->data[0];
         $inflated = $this->instagram->getUser($user->id)->data;
         if (!$inflated) {
             throw new Exception_InstagramNotFound('Instagram user not found ' . $handle, 404);
@@ -47,7 +57,7 @@ class InstagramAdapter extends AbstractAdapter
         foreach ($media as $m) {
             $status = new InstagramStatus();
             $status->id = $m->id;
-            $status->message = $m->caption->text;
+            $status->message = $m->caption ? $m->caption->text : null;
             $status->created_time = $m->created_time;
             $status->posted_by_owner = true;
             $status->permalink = $m->link;
@@ -58,10 +68,5 @@ class InstagramAdapter extends AbstractAdapter
             $posts[] = $status;
         }
         return $posts;
-    }
-
-    public function getResponses($postUIDs)
-    {
-
     }
 }

@@ -38,30 +38,30 @@ services:
     # sina weibo engagement services
     ###################################
     sina_weibo.engagement.query.weighted:
-        class: Outlandish\SocialMonitor\FacebookEngagement\Query\WeightedSinaWeiboEngagementQuery
+        class: Outlandish\SocialMonitor\Engagement\Query\WeightedSinaWeiboEngagementQuery
         arguments: ["@pdo"]
 
     sina_weibo.engagement.weighted:
-        class:     Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric
+        class:     Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric
         arguments: ["@sina_weibo.engagement.query.weighted"]
 
     ###################################
     # facebook engagement services
     ###################################
     facebook_engagement.query.standard:
-        class:     Outlandish\SocialMonitor\FacebookEngagement\Query\StandardFacebookEngagementQuery
+        class:     Outlandish\SocialMonitor\Engagement\Query\StandardFacebookEngagementQuery
         arguments: ["@pdo"]
 
     facebook_engagement.query.weighted:
-        class:     Outlandish\SocialMonitor\FacebookEngagement\Query\WeightedFacebookEngagementQuery
+        class:     Outlandish\SocialMonitor\Engagement\Query\WeightedFacebookEngagementQuery
         arguments: ["@pdo"]
 
     facebook_engagement.standard:
-        class:     Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric
+        class:     Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric
         arguments: ["@facebook_engagement.query.standard"]
 
     facebook_engagement.weighted:
-        class:     Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric
+        class:     Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric
         arguments: ["@facebook_engagement.query.weighted"]
 
     facebook.session_factory:

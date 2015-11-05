@@ -13,7 +13,7 @@ namespace {
 namespace Outlandish\SocialMonitor\Command {
 
 
-    use Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric;
+    use Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric;
     use Symfony\Component\Console\Command\Command;
     use Symfony\Component\Console\Input\InputArgument;
     use Symfony\Component\Console\Input\InputInterface;

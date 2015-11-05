@@ -12,9 +12,11 @@ use Facebook\FacebookRequestException;
 use Exception_FacebookNotFound;
 use RuntimeException;
 
-class FacebookAdapter extends AbstractAdapter {
+class FacebookAdapter extends AbstractAdapter
+{
 
-    public function __construct(FacebookApp $facebook) {
+    public function __construct(FacebookApp $facebook)
+    {
         $this->facebook = $facebook;
     }
 
@@ -23,7 +25,8 @@ class FacebookAdapter extends AbstractAdapter {
      * @return PresenceMetadata
      * @throws Exception_FacebookNotFound
      */
-    public function getMetadata($handle) {
+    public function getMetadata($handle)
+    {
 
         try {
             $data = $this->facebook->pageInfo($handle);
@@ -59,13 +62,14 @@ class FacebookAdapter extends AbstractAdapter {
      * @param DateTime $since
      * @return Status[]
      */
-    public function getStatuses($pageUID,$since,$handle = null) {
+    public function getStatuses($pageUID, $since, $handle = null)
+    {
 
-        $rawStatuses = $this->facebook->pageFeed($pageUID,$since);
+        $rawStatuses = $this->facebook->pageFeed($pageUID, $since);
 
         $parsedStatuses = array();
 
-        foreach($rawStatuses as $raw) {
+        foreach ($rawStatuses as $raw) {
             $postedByOwner = ($raw['actor_id'] == $pageUID);
             $parsed = new FacebookStatus();
             $parsed->id = $raw['post_id'];
@@ -79,6 +83,9 @@ class FacebookAdapter extends AbstractAdapter {
             $parsed->type = $raw['type'];
             $parsed->posted_by_owner = $postedByOwner;
             $parsed->needs_response = !$postedByOwner && $raw['message'];
+            if ($parsed->posted_by_owner && $parsed->message) {
+                $parsed->links = $this->extractLinks($parsed->message);
+            }
             $parsedStatuses[] = $parsed;
         }
 
@@ -89,39 +96,49 @@ class FacebookAdapter extends AbstractAdapter {
      * @param array $postUIDs
      * @return Status[]
      */
-    public function getResponses($postUIDs) {
+    public function getResponses($postUIDs)
+    {
         $parsedResponses = array();
 
-        $responses = $this->facebook->postResponses($postUIDs);
+        $chunks = array_chunk($postUIDs, 50); //facebook limit number of posts ids to 50
+        foreach ($chunks as $chunk) {
+            $responses = $this->facebook->postResponses($chunk);
 
-        foreach($postUIDs as $postId) {
-            $comments = $responses->getProperty($postId)->getPropertyAsArray('data');
+            foreach ($chunk as $postId) {
+                $post = $responses->getProperty($postId);
+                if ($post) {
 
-            /** @var GraphObject $post */
-            foreach ($comments as $post) {
-                $parsed = new FacebookStatus();
-                $postArray = $post->asArray();
-                $actorId = $postArray['from']->id;
-                $createdTime = date_create_from_format(DateTime::ISO8601, $postArray['created_time']);
+                    $comments = $post->getPropertyAsArray('data');
 
-                $parsed->id = $postArray['id'];
-                $parsed->actor_id = $actorId;
-                $parsed->message = isset($postArray['message']) ? $postArray['message'] : null;
-                $parsed->created_time = gmdate("Y-m-d H:i:s", $createdTime->getTimestamp());
-                $parsed->posted_by_owner = true;
-                $parsed->in_response_to_status_uid = $postArray['to']->data[0]->id;
-                if($parsed->posted_by_owner && $parsed->message) {
-                    $parsed->links = $this->extractLinks($parsed->message);
+                    if ($comments) {
+                        /** @var GraphObject $comment */
+                        foreach ($comments as $comment) {
+                            $parsed = new FacebookStatus();
+                            $postArray = $comment->asArray();
+                            $actorId = $postArray['from']->id;
+                            $createdTime = date_create_from_format(DateTime::ISO8601, $postArray['created_time']);
+
+                            $parsed->id = $postArray['id'];
+                            $parsed->actor_id = $actorId;
+                            $parsed->message = isset($postArray['message']) ? $postArray['message'] : null;
+                            $parsed->created_time = gmdate("Y-m-d H:i:s", $createdTime->getTimestamp());
+                            $parsed->posted_by_owner = true;
+                            $parsed->in_response_to_status_uid = $postId;
+                            if ($parsed->posted_by_owner && $parsed->message) {
+                                $parsed->links = $this->extractLinks($parsed->message);
+                            }
+                            $parsedResponses[] = $parsed;
+                        }
+                    }
                 }
-
-                $parsedResponses[] = $parsed;
             }
-        }
 
+        }
         return $parsedResponses;
     }
 
-    private function extractLinks($message) {
+    private function extractLinks($message)
+    {
         $links = array();
         if (preg_match_all('/[^\s]{5,}/', $message, $tokens)) {
             foreach ($tokens[0] as $token) {

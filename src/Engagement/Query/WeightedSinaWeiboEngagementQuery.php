@@ -6,16 +6,16 @@
  * Time: 13:57
  */
 
-namespace Outlandish\SocialMonitor\FacebookEngagement\Query;
+namespace Outlandish\SocialMonitor\Engagement\Query;
 
 
 use DateTime;
 use PDO;
 
-class StandardFacebookEngagementQuery implements Query
+class WeightedSinaWeiboEngagementQuery implements Query
 {
     const POPULARITY = 'popularity';
-    const FACEBOOK_STREAM_TABLE = 'facebook_stream';
+    const FACEBOOK_STREAM_TABLE = 'sina_weibo_posts';
     const PRESENCE_STREAM_TABLE = 'presence_history';
     /**
      * @var
@@ -40,25 +40,25 @@ class StandardFacebookEngagementQuery implements Query
         $now->modify('-1 day');
         $then->modify('-1 day');
         $popularity = self::POPULARITY;
-        $facebookStream = self::FACEBOOK_STREAM_TABLE;
+        $stream = self::FACEBOOK_STREAM_TABLE;
         $presenceHistory = self::PRESENCE_STREAM_TABLE;
 
         $sql = "SELECT
                     f.presence_id,
-					(((f.comments + f.likes + f.share_count) / 3) / ph.popularity) * 1000 AS `total`
+					(((f.comments*4 + f.likes + f.share_count*7) / 12) / IFNULL(ph.popularity>0, 1)) AS `total`
                 FROM
 				    (
 						SELECT
 							presence_id,
-							SUM(comments) AS comments,
-							SUM(likes) AS likes,
-							SUM(share_count) AS share_count
+							SUM(comment_count) AS comments,
+							SUM(attitude_count) AS likes,
+							SUM(repost_count) AS share_count
 						FROM
-							$facebookStream
+							$stream
 						WHERE
-							DATE(created_time) >= :then
+							DATE(created_at) >= :then
 						AND
-							DATE(created_time) <= :now
+							DATE(created_at) <= :now
 						GROUP BY
 							presence_id
 					) AS f
@@ -66,7 +66,7 @@ class StandardFacebookEngagementQuery implements Query
                     (
                         SELECT
                             presence_id,
-                            MAX(`value`) AS popularity
+                            IF(MAX(`value`)>0,MAX(`value`),1) AS popularity
                         FROM
                             $presenceHistory
                         WHERE
@@ -83,5 +83,4 @@ class StandardFacebookEngagementQuery implements Query
         ]);
         return $statement->fetchAll(PDO::FETCH_KEY_PAIR);
     }
-
 }

@@ -1,7 +1,7 @@
 <?php
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric;
+use Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric;
 use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 
 class Enum_PresenceType extends Enum_Abstract
@@ -85,6 +85,11 @@ class Enum_PresenceType extends Enum_Abstract
                 $this->applicableMetrics = array(
                     Metric_Popularity::getName(),
                     Metric_PopularityTime::getName(),
+                    Metric_ActionsPerDay::getName(),
+                    Metric_Branding::getName(),
+                    Metric_SignOff::getName(),
+                    Metric_LikesPerPost::getName(),
+                    Metric_InstagramEngagementLeveled::getName()
                 );
                 break;
             default:

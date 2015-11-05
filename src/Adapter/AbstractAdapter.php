@@ -29,11 +29,4 @@ abstract class AbstractAdapter {
      * @return Status[]
      */
     abstract public function getStatuses($pageUID,$since,$handle);
-
-    /**
-     * @param array $postUIDs
-     * @return mixed
-     */
-    abstract public function getResponses($postUIDs);
-
 }

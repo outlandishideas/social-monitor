@@ -10,11 +10,7 @@ namespace Outlandish\SocialMonitor\Command;
 
 use DateTime;
 use Exception;
-use Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric;
-use Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetricFactory;
-use Outlandish\SocialMonitor\FacebookEngagement\Query\Query;
-use Outlandish\SocialMonitor\FacebookEngagement\Query\StandardFacebookEngagementQuery;
-use Symfony\Component\Console\Command\Command;
+use Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

@@ -6,7 +6,7 @@
  * Time: 13:57
  */
 
-namespace Outlandish\SocialMonitor\FacebookEngagement\Query;
+namespace Outlandish\SocialMonitor\Engagement\Query;
 
 
 use DateTime;

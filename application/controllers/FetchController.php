@@ -97,15 +97,15 @@ class FetchController extends BaseController
 		$inserted = array();
 
 		if ($actorIds) {
-			$insertActor = $db->prepare('REPLACE INTO facebook_actors (id, username, name, pic_url, profile_url, type, last_fetched)
-				VALUES (:id, :username, :name, :pic_url, :profile_url, :type, :last_fetched)');
+			$insertActor = $db->prepare('REPLACE INTO facebook_actors (id, name, pic_url, profile_url, type, last_fetched)
+				VALUES (:id, :name, :pic_url, :profile_url, :type, :last_fetched)');
 
 			$actorIdsString = ' IN (' . implode(',', $actorIds) . ')';
 
             try {
                 $mq = Util_Facebook::multiquery(array(
-                    'user'=>'SELECT uid, username, name, pic_square, profile_url FROM user WHERE uid' . $actorIdsString,
-                    'page'=>'SELECT page_id, username, name, pic_square FROM page WHERE page_id' . $actorIdsString,
+                    'user'=>'SELECT uid, name, pic_square, profile_url FROM user WHERE uid' . $actorIdsString,
+                    'page'=>'SELECT page_id, name, pic_square FROM page WHERE page_id' . $actorIdsString,
                     'group'=>'SELECT gid, name, pic_small FROM group WHERE gid' . $actorIdsString,
                     'event'=>'SELECT eid, name, pic_square FROM event WHERE eid' . $actorIdsString
                 ));
@@ -120,7 +120,6 @@ class FetchController extends BaseController
 				foreach ($group['fql_result_set'] as $item) {
 					$args = array(
 						':id'=>null,
-						':username'=>null,
 						':name'=>null,
 						':pic_url'=>null,
 						':profile_url'=>null,
@@ -131,14 +130,12 @@ class FetchController extends BaseController
 					switch ($type) {
 						case 'user':
 							$args[':id'] = $item['uid'];
-							$args[':username'] = $item['username'];
 							$args[':name'] = $item['name'];
 							$args[':pic_url'] = $item['pic_square'];
 							$args[':profile_url'] = $item['profile_url'];
 							break;
 						case 'page':
 							$args[':id'] = $item['page_id'];
-							$args[':username'] = $item['username'];
 							$args[':name'] = $item['name'];
 							$args[':pic_url'] = $item['pic_square'];
 							break;
@@ -298,7 +295,8 @@ class FetchController extends BaseController
     {
         $presenceCount = count($presences);
         $index = 0;
-        foreach ($presences as $presence) {
+		/** @var Model_Presence $presence */
+		foreach ($presences as $presence) {
             //forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
             $db->closeConnection();
             $db->getConnection();

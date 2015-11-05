@@ -59,7 +59,9 @@ class Chart_ActionsPerDay extends Chart_Abstract {
                 foreach ($dataSet as $row) {
                     $date = date('Y-m-d', strtotime($row['date']));
                     $actions[$date] = $row['number_of_actions'] ? $row['number_of_actions'] : 0;
-                    $relevant[$date] = $row['number_of_bc_links'] ? $row['number_of_bc_links'] : 0;
+                    if(isset($row['number_of_bc_links'])) {
+                        $relevant[$date] = $row['number_of_bc_links'] ? $row['number_of_bc_links'] : 0;
+                    }
                 }
                 $actions = array_values($actions);
                 $relevant = array_values($relevant);

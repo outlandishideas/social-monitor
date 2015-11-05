@@ -8,7 +8,7 @@
 
 namespace Outlandish\SocialMonitor\Command;
 
-use Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric;
+use Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric;
 use PDO;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
