@@ -168,7 +168,10 @@ class Provider_Instagram extends Provider_Abstract
         $then = clone $now;
         $then->modify("-1 week");
 
-        return $this->engagementMetric->get($presence->getId(), $now, $then);
+        $query = new Outlandish\SocialMonitor\Engagement\Query\WeightedInstagramEngagementQuery($this->db);
+        $metric = new Outlandish\SocialMonitor\Engagement\EngagementMetric($query);
+
+        return $metric->get($presence->getId(), $now, $then);
     }
 
     public function updateMetadata(Model_Presence $presence) {

@@ -8,7 +8,7 @@
 
 namespace Outlandish\SocialMonitor\Command;
 
-use Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric;
+use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 use PDO;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -48,7 +48,7 @@ class PopulateSinaWeiboEngagementCommand extends ContainerAwareCommand
         $end = date_create_from_format('Y-m-d', $input->getArgument('end-date'));
         $current = clone $start;
 
-        /** @var FacebookEngagementMetric $metric */
+        /** @var EngagementMetric $metric */
         $metric = $this->getContainer()->get('sina_weibo.engagement.weighted');
 
         /** @var PDO $db */

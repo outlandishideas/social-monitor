@@ -10,7 +10,7 @@ namespace Outlandish\SocialMonitor\Command;
 
 use DateTime;
 use Exception;
-use Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric;
+use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -46,7 +46,7 @@ class UpdateFacebookEngagementCommand extends ContainerAwareCommand
         $end = date_create_from_format('Y-m-d', $input->getArgument('end-date'));
         $now = clone $start;
 
-        /** @var FacebookEngagementMetric $engagementMetric */
+        /** @var EngagementMetric $engagementMetric */
         $engagementMetric = $this->getContainer()->get('facebook_engagement.weighted');
         /** @var \PDO $db */
         $db = $this->getContainer()->get('pdo');

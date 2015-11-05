@@ -37,6 +37,6 @@ class FacebookEngagementMetricFactory
             return null;
         }
 
-        return new FacebookEngagementMetric($query);
+        return new EngagementMetric($query);
     }
 }

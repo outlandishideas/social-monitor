@@ -13,7 +13,7 @@ namespace {
 namespace Outlandish\SocialMonitor\Command {
 
 
-    use Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric;
+    use Outlandish\SocialMonitor\Engagement\EngagementMetric;
     use Symfony\Component\Console\Command\Command;
     use Symfony\Component\Console\Input\InputArgument;
     use Symfony\Component\Console\Input\InputInterface;
@@ -36,7 +36,7 @@ namespace Outlandish\SocialMonitor\Command {
             $then = clone $now;
             $then->modify('-7 days');
 
-            /** @var FacebookEngagementMetric $metric */
+            /** @var EngagementMetric $metric */
             $metric = $this->getContainer()->get('sina_weibo.engagement.weighted');
             $scores = $metric->getAll($now, $then);
 

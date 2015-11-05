@@ -4,7 +4,7 @@
 use Facebook\GraphObject;
 use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 use Outlandish\SocialMonitor\Models\FacebookStatus;
-use Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric;
+use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 
 class Provider_Facebook extends Provider_Abstract
 {
@@ -14,7 +14,7 @@ class Provider_Facebook extends Provider_Abstract
      */
     private $adapter;
 
-    public function __construct(PDO $db, FacebookAdapter $adapter, FacebookEngagementMetric $metric) {
+    public function __construct(PDO $db, FacebookAdapter $adapter, EngagementMetric $metric) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::FACEBOOK();
         $this->tableName = 'facebook_stream';

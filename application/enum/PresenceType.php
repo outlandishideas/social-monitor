@@ -1,7 +1,7 @@
 <?php
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric;
+use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 
 class Enum_PresenceType extends Enum_Abstract
@@ -116,7 +116,7 @@ class Enum_PresenceType extends Enum_Abstract
 				return new Provider_SinaWeibo($db);
 				break;
 			case self::FACEBOOK:
-                /** @var FacebookEngagementMetric $engagementMetric */
+                /** @var EngagementMetric $engagementMetric */
                 $engagementMetric = $container->get('facebook_engagement.weighted');
                 /** @var FacebookAdapter $facebookAdapter */
                 $facebookAdapter = $container->get('adapter.facebook');

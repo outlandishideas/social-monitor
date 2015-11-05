@@ -34,6 +34,10 @@ services:
         class: Outlandish\SocialMonitor\InstagramApp
         arguments: ["150bc7bece934ecf98d821fd000c9376"]
 
+    instagram.query.weighted:
+        class:     Outlandish\SocialMonitor\Engagement\Query\WeightedInstagramEngagementQuery
+        arguments: ["@pdo"]
+
     ###################################
     # sina weibo engagement services
     ###################################
@@ -42,7 +46,7 @@ services:
         arguments: ["@pdo"]
 
     sina_weibo.engagement.weighted:
-        class:     Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric
+        class:     Outlandish\SocialMonitor\Engagement\EngagementMetric
         arguments: ["@sina_weibo.engagement.query.weighted"]
 
     ###################################
@@ -57,11 +61,11 @@ services:
         arguments: ["@pdo"]
 
     facebook_engagement.standard:
-        class:     Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric
+        class:     Outlandish\SocialMonitor\Engagement\EngagementMetric
         arguments: ["@facebook_engagement.query.standard"]
 
     facebook_engagement.weighted:
-        class:     Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric
+        class:     Outlandish\SocialMonitor\Engagement\EngagementMetric
         arguments: ["@facebook_engagement.query.weighted"]
 
     facebook.session_factory:

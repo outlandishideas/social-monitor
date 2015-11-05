@@ -12,7 +12,7 @@ namespace Outlandish\SocialMonitor\Engagement;
 use DateTime;
 use Outlandish\SocialMonitor\Engagement\Query\Query;
 
-class FacebookEngagementMetric
+class EngagementMetric
 {
     /**
      * @var Query

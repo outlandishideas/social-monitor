@@ -315,7 +315,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 		$then->modify("-1 week");
 
 		$query = new Outlandish\SocialMonitor\Engagement\Query\WeightedSinaWeiboEngagementQuery($this->db);
-		$metric = new Outlandish\SocialMonitor\Engagement\FacebookEngagementMetric($query);
+		$metric = new Outlandish\SocialMonitor\Engagement\EngagementMetric($query);
 
 		return $metric->get($presence->getId(), $now, $then);
 	}
