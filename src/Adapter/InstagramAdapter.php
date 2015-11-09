@@ -53,7 +53,14 @@ class InstagramAdapter extends AbstractAdapter
     public function getStatuses($pageUID, $since, $handle)
     {
         $posts = array();
-        $media = $this->instagram->getUserMediaFromId($pageUID, $since)->data;
+        $media = null;
+        if(!$since) {
+            $now = new DateTime();
+            $fromDate = $now->modify('-2 months');
+            $media = $this->instagram->getUserMediaFromDate($pageUID, $fromDate)->data;
+        } else {
+            $media = $this->instagram->getUserMediaFromId($pageUID, $since)->data;
+        }
         foreach ($media as $m) {
             $status = new InstagramStatus();
             $status->id = $m->id;

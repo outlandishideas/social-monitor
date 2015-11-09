@@ -71,7 +71,7 @@ class TwitterAdapter extends AbstractAdapter {
         $tweet->html = $parsedTweet['html_tweet'];
         $tweet->in_response_to_user_uid = $raw->in_reply_to_user_id_str;
         $tweet->in_response_to_status_uid = $raw->in_reply_to_status_id_str;
-        $tweet->isMention = $mention;
+        $tweet->posted_by_owner = !$mention;
         $tweet->needs_response = $mention && !$isRetweet ? 1 : 0;
         if (!empty($raw->entities->urls) && !$mention) {
             $tweet->links = array_map(function ($a) {

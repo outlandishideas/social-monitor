@@ -33,11 +33,16 @@ class Provider_Instagram extends Provider_Abstract
 		}
 
         // get all posts since the last time we fetched
-        $stmt = $this->db->prepare("SELECT post_id FROM {$this->tableName} WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
+        $stmt = $this->db->prepare("SELECT post_id
+		    FROM {$this->tableName}
+		    WHERE presence_id = :id
+            AND created_time <= DATE_SUB(NOW(), INTERVAL 7 DAY)
+		    ORDER BY created_time DESC
+		    LIMIT 1");
         $stmt->execute(array(':id'=>$presence->getId()));
         $lastPostId = $stmt->fetchColumn();
 
-        $posts = $this->adapter->getStatuses($presence->getUID(), (int)$lastPostId, null);
+        $posts = $this->adapter->getStatuses($presence->getUID(), $lastPostId, null);
 
         $this->insertStatuses($presence, $posts, $count);
 

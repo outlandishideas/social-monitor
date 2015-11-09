@@ -57,6 +57,7 @@ class Provider_Twitter extends Provider_Abstract
         $presenceId = $presence->getId();
         $presenceUID = $presence->getUID();
         $count = 0;
+        $total = count($tweetData);
         $links = array();
         while ($tweetData) {
             /** @var Tweet $tweet */
@@ -68,7 +69,7 @@ class Provider_Twitter extends Provider_Abstract
                 ':created_time' => $tweet->created_time,
                 ':retweet_count' => $tweet->share_count,
                 ':html_tweet' => $tweet->html,
-                ':responsible_presence' => $tweet->isMention ? $presenceId : null,
+                ':responsible_presence' => $tweet->posted_by_owner ? null : $presenceId,
                 ':needs_response' => $tweet->needs_response,
                 ':in_reply_to_user_uid' => $tweet->in_response_to_user_uid,
                 ':in_reply_to_status_uid' => $tweet->in_response_to_status_uid
