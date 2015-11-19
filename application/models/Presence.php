@@ -9,7 +9,7 @@ class Model_Presence
 	protected $kpiData = array();
 
 	protected $presenceHistoryColumns = array(
-		'popularity', 'klout_score', 'facebook_engagement', 'sina_weibo_engagement'
+		'popularity', 'klout_score', 'facebook_engagement', 'sina_weibo_engagement', 'instagram_engagement'
 	);
 
 	//these should be public to mimic existing Presence Class
@@ -26,6 +26,7 @@ class Model_Presence
 	public $klout_id;
 	public $klout_score;
 	public $facebook_engagement;
+	public $instagram_engagement;
 	public $sina_weibo_engagement;
 	public $page_url;
 	public $image_url;
@@ -246,6 +247,11 @@ class Model_Presence
 		return $this->getType()->getValue() == Enum_PresenceType::SINA_WEIBO;
 	}
 
+	public function isForInstagram()
+	{
+		return $this->getType()->getValue() == Enum_PresenceType::INSTAGRAM;
+	}
+
     /**
      * @return Model_Campaign|null
      */
@@ -295,6 +301,9 @@ class Model_Presence
 						break;
 					case Enum_PresenceType::TWITTER:
 						$percent = BaseController::getOption('tw_min');
+						break;
+					case Enum_PresenceType::INSTAGRAM:
+						$percent = BaseController::getOption('ig_min');
 						break;
 				}
 				$target *= $percent;

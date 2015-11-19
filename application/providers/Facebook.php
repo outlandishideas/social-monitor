@@ -1,23 +1,25 @@
 <?php
 
 
-use Facebook\FacebookRequestException;
 use Facebook\GraphObject;
-use Outlandish\SocialMonitor\FacebookApp;
+use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
+use Outlandish\SocialMonitor\Models\FacebookStatus;
+use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 
 class Provider_Facebook extends Provider_Abstract
 {
 	protected $connection = null;
     /**
-     * @var FacebookApp
+     * @var FacebookAdapter
      */
-    private $facebook;
+    private $adapter;
 
-    public function __construct(PDO $db, FacebookApp $facebook) {
+    public function __construct(PDO $db, FacebookAdapter $adapter, EngagementMetric $metric) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::FACEBOOK();
         $this->tableName = 'facebook_stream';
-        $this->facebook = $facebook;
+        $this->adapter = $adapter;
+        $this->engagementMetric = $metric;
     }
 
 	public function fetchStatusData(Model_Presence $presence)
@@ -40,11 +42,12 @@ class Provider_Facebook extends Provider_Abstract
 		} else {
             $since = null;
         }
-		$posts = $this->facebook->pageFeed($presence->getUID(), $since);
-        $count = 0;
-        $this->parseAndInsertStatuses($presence, $posts, $count);
+
+        $posts = $this->adapter->getStatuses($presence->getUID(), $since);
+
+        $this->insertStatuses($presence, $posts, $count);
         //todo: update responses using the new api
-//        $this->updateResponses($presence, $count);
+        $this->updateResponses($presence, $count);
 
         return $count;
 	}
@@ -54,7 +57,7 @@ class Provider_Facebook extends Provider_Abstract
      * @param array          $posts
      * @param mixed          $count
      */
-    protected function parseAndInsertStatuses(Model_Presence $presence, array $posts, &$count)
+    protected function insertStatuses(Model_Presence $presence, array $posts, &$count)
 	{
         $insertStmt = $this->db->prepare("
 			INSERT INTO `{$this->tableName}`
@@ -70,22 +73,21 @@ class Provider_Facebook extends Provider_Abstract
         $count = 0;
         $links = array();
 
-        /** @var array $post */
+        /** @var FacebookStatus $post */
         foreach ($posts as $post) {
-            $postedByOwner = $post['actor_id'] == $presence->getUID();
             $args = array(
-                ':post_id' => $post['post_id'],
+                ':post_id' => $post->id,
                 ':presence_id' => $presence->getId(),
-                ':message' => $post['message'],
-                ':created_time' => $post['created_time'],
-                ':actor_id' => $post['actor_id'],
-                ':comments' => $post['comments'],
-                ':likes' => $post['likes'],
-                ':share_count' => $post['share_count'],
-                ':permalink' => $post['permalink'],
-                ':type' => $post['type'],
-                ':posted_by_owner' => (int)$postedByOwner,
-                ':needs_response' => (int) (!$postedByOwner && $post['message']),
+                ':message' => $post->message,
+                ':created_time' => $post->created_time,
+                ':actor_id' => $post->actor_id,
+                ':comments' => $post->comments,
+                ':likes' => $post->likes,
+                ':share_count' => $post->share_count,
+                ':permalink' => $post->permalink,
+                ':type' => $post->type,
+                ':posted_by_owner' => (int) $post->posted_by_owner,
+                ':needs_response' => (int) $post->needs_response,
                 ':in_response_to' => null
             );
             try {
@@ -100,8 +102,8 @@ class Provider_Facebook extends Provider_Abstract
             }
 
             $id = $this->db->lastInsertId();
-            if ($postedByOwner && isset($postArray['message']) && $postArray['message']) {
-                $links[$id] = $this->extractLinks($postArray['message']);
+            if ($post->links && !empty($post->links)) {
+                $links[$id] = $post->links;
             }
 
             $count++;
@@ -122,8 +124,8 @@ class Provider_Facebook extends Provider_Abstract
 
 //        $count = 0;
         if ($postIds) {
-            /** @var GraphObject $responses */
-            $responses = $this->facebook->postResponses($postIds);
+
+            $responses = $this->adapter->getResponses($postIds);
 
             $insertStmt = $this->db->prepare("
                 INSERT INTO `{$this->tableName}`
@@ -132,31 +134,25 @@ class Provider_Facebook extends Provider_Abstract
                 (:post_id, :presence_id, :message, :created_time, :actor_id, :posted_by_owner, :in_response_to)
             ");
 
-            /** @var GraphObject $post */
-            foreach ($postIds as $postId) {
-                $comments = $responses->getProperty($postId)->getPropertyAsArray('data');
-                foreach ($comments as $post) {
-                    $postArray = $post->asArray();
-                    $actorId = $postArray['from']->id;
-                    $createdTime = date_create_from_format(DateTime::ISO8601, $postArray['created_time']);
-                    $args = array(
-                        'post_id' => $postArray['id'],
-                        'presence_id' => $presence->getId(),
-                        'message' => isset($postArray['message']) ? $postArray['message'] : null,
-                        'created_time' => gmdate("Y-m-d H:i:s", $createdTime->getTimestamp()),
-                        'actor_id' => $actorId,
-                        'posted_by_owner' => true,
-                        'in_response_to' => $postArray['to']->data[0]->id
-                    );
+            /** @var FacebookStatus $response */
+            foreach($responses as $response) {
+                $args = array(
+                    'post_id' => $response->id,
+                    'presence_id' => $presence->getId(),
+                    'message' => $response->message,
+                    'created_time' => $response->created_time,
+                    'actor_id' => $response->actor_id,
+                    'posted_by_owner' => $response->posted_by_owner,
+                    'in_response_to' => $response->in_response_to_status_uid
+                );
 
-                    try {
-                        $insertStmt->execute($args);
-                    } catch (Exception $ex) {
-                        continue;
-                    }
-
-                    $count++;
+                try {
+                    $insertStmt->execute($args);
+                } catch (Exception $ex) {
+                    continue;
                 }
+
+                $count++;
             }
 
         }
@@ -340,9 +336,7 @@ class Provider_Facebook extends Provider_Abstract
         $then = clone $now;
         $then->modify("-1 week");
 
-        $metric = $this->facebook->getEngagementMetric();
-
-        return $metric->get($presence->getId(), $now, $then);
+        return $this->engagementMetric->get($presence->getId(), $now, $then);
 	}
 
 	protected function getCommentsSharesLikes(Model_Presence $presence, DateTime $start, DateTime $end)
@@ -381,53 +375,22 @@ class Provider_Facebook extends Provider_Abstract
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
 
-    private function extractLinks($message) {
-        $links = array();
-        if (preg_match_all('/[^\s]{5,}/', $message, $tokens)) {
-            foreach ($tokens[0] as $token) {
-                $token = trim($token, '.,;!"()');
-                if (filter_var($token, FILTER_VALIDATE_URL)) {
-                    try {
-                        $links[] = $token;
-                    } catch (RuntimeException $ex) {
-                        // ignore failed URLs
-                        $failedLinks[] = $token;
-                    }
-                }
-            }
-        }
-        return $links;
-    }
-
     public function updateMetadata(Model_Presence $presence) {
 
         try {
-            $data = $this->facebook->pageInfo($presence->handle);
-        } catch (FacebookRequestException $e) {
+            $metadata = $this->adapter->getMetadata($presence->handle);
+        } catch (Exception_FacebookNotFound $e) {
             $presence->uid = null;
-            throw new Exception_FacebookNotFound('Facebook page not found: ' . $presence->handle, $e->getCode(), [], []);
+            throw $e;
         }
 
         $presence->type = $this->type;
-        $presence->uid = $data->getProperty('id');
-        $presence->name = $data->getProperty('name');
-        $presence->page_url = $data->getProperty('link');
-        $presence->popularity = $data->getProperty('likes');
-
-        $this->updatePicture($presence);
+        $presence->uid = $metadata->uid;
+        $presence->name = $metadata->name;
+        $presence->page_url = $metadata->page_url;
+        $presence->popularity = $metadata->popularity;
+        $presence->image_url = $metadata->image_url;
 	}
-
-    protected function updatePicture(Model_Presence $presence)
-    {
-        try {
-            $data = $this->facebook->pagePicture($presence->handle);
-        } catch (FacebookRequestException $e) {
-            return;
-        }
-
-        $presence->image_url = $data->getProperty('url');
-
-    }
 
     /**
      * @param Model_Presence $presence

@@ -6,13 +6,13 @@
  * Time: 13:57
  */
 
-namespace Outlandish\SocialMonitor\FacebookEngagement\Query;
+namespace Outlandish\SocialMonitor\Engagement\Query;
 
 
 use DateTime;
 use PDO;
 
-class StandardFacebookEngagementQuery implements Query
+class WeightedFacebookEngagementQuery implements Query
 {
     const POPULARITY = 'popularity';
     const FACEBOOK_STREAM_TABLE = 'facebook_stream';
@@ -45,7 +45,7 @@ class StandardFacebookEngagementQuery implements Query
 
         $sql = "SELECT
                     f.presence_id,
-					(((f.comments + f.likes + f.share_count) / 3) / ph.popularity) * 1000 AS `total`
+					(((f.comments*4 + f.likes + f.share_count*7) / 12) / ph.popularity) * 1000 AS `total`
                 FROM
 				    (
 						SELECT
@@ -83,5 +83,4 @@ class StandardFacebookEngagementQuery implements Query
         ]);
         return $statement->fetchAll(PDO::FETCH_KEY_PAIR);
     }
-
 }

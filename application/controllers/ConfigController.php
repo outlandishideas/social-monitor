@@ -30,6 +30,9 @@ class ConfigController extends BaseController {
                             'sw_min'=>array('label'=>'Sina Weibo Minimum Audience (% of total)'),
                             'sw_opt'=>array('label'=>'Sina Weibo Optimum Audience (% of total)'),
 
+                            'ig_min'=>array('label'=>'Instagram Minimum Audience (% of total)'),
+                            'ig_opt'=>array('label'=>'Instagram Optimum Audience (% of total)'),
+
                             'size_2_presences'=>array('label'=>'% of owner Target Audience that is shared amongst large presences'),
                             'size_1_presences'=>array('label'=>'% of owner Target Audience that is shared amongst medium presences'),
                             'size_0_presences'=>array('label'=>'% of owner Target Audience that is shared amongst small presences'),
@@ -112,6 +115,19 @@ class ConfigController extends BaseController {
                             'sina_weibo_engagement_target_level_3'=>array('label'=>'Sina Weibo Engagement Score Level 3', 'hint' => 'The presence will score 60% if it reaches this target'),
                             'sina_weibo_engagement_target_level_4'=>array('label'=>'Sina Weibo Engagement Score Level 4', 'hint' => 'The presence will score 80% if it reaches this target'),
                             'sina_weibo_engagement_target_level_5'=>array('label'=>'Sina Weibo Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
+                        )
+                    ),
+                    (object)array(
+                        'title' => 'Instagram Engagement Score (Instagram only)',
+                        'description' => 'The Instagram Engagement Score is based on Social Baker\'s Daily Page Engagement Rate calculation.',
+                        'values' => array(
+                            'instagram_engagement_weighting'=>array('label'=>'Instagram Engagement Score Weighting'),
+                            'ig_engagement_target'=>array('label'=>'Instagram Engagement Score (For a single level)', 'hint' => 'The presence will score 100% if it reaches this target (and we are using the old calculation)'),
+                            'ig_engagement_target_level_1'=>array('label'=>'Instagram Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
+                            'ig_engagement_target_level_2'=>array('label'=>'Instagram Engagement Score Level 2', 'hint' => 'The presence will score 40% if it reaches this target'),
+                            'ig_engagement_target_level_3'=>array('label'=>'Instagram Engagement Score Level 3', 'hint' => 'The presence will score 60% if it reaches this target'),
+                            'ig_engagement_target_level_4'=>array('label'=>'Instagram Engagement Score Level 4', 'hint' => 'The presence will score 80% if it reaches this target'),
+                            'ig_engagement_target_level_5'=>array('label'=>'Instagram Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
                         )
                     )
                 )

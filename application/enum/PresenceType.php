@@ -1,13 +1,15 @@
 <?php
 
-use Outlandish\SocialMonitor\FacebookApp;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Outlandish\SocialMonitor\Engagement\EngagementMetric;
+use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 
 class Enum_PresenceType extends Enum_Abstract
 {
 	const TWITTER 		= 'twitter';
 	const FACEBOOK 	= 'facebook';
 	const SINA_WEIBO 	= 'sina_weibo';
+    const INSTAGRAM = 'instagram';
     /**
      * @var ContainerInterface
      */
@@ -16,6 +18,7 @@ class Enum_PresenceType extends Enum_Abstract
     public static function TWITTER() { return self::get(self::TWITTER); }
     public static function FACEBOOK() { return self::get(self::FACEBOOK); }
     public static function SINA_WEIBO() { return self::get(self::SINA_WEIBO); }
+    public static function INSTAGRAM() { return self::get(self::INSTAGRAM); }
 
     protected $sign = '';
     protected $title = '';
@@ -75,6 +78,20 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_Klout::getName()
                 );
                 break;
+            case self::INSTAGRAM:
+                $this->sign = "fa fa-instagram";
+                $this->title = "Instagram";
+                $this->relevancePercentage = BaseController::getOption('instagram_relevance_percentage');
+                $this->applicableMetrics = array(
+                    Metric_Popularity::getName(),
+                    Metric_PopularityTime::getName(),
+                    Metric_ActionsPerDay::getName(),
+                    Metric_Branding::getName(),
+                    Metric_SignOff::getName(),
+                    Metric_LikesPerPost::getName(),
+                    Metric_InstagramEngagementLeveled::getName()
+                );
+                break;
             default:
                 throw new \LogicException("Not implemented yet.");
         }
@@ -99,13 +116,18 @@ class Enum_PresenceType extends Enum_Abstract
 				return new Provider_SinaWeibo($db);
 				break;
 			case self::FACEBOOK:
-                /** @var FacebookApp $facebookApp */
-				$facebookApp = $container->get('facebook.app');
-                return new Provider_Facebook($db, $facebookApp);
+                /** @var EngagementMetric $engagementMetric */
+                $engagementMetric = $container->get('facebook_engagement.weighted');
+                /** @var FacebookAdapter $facebookAdapter */
+                $facebookAdapter = $container->get('adapter.facebook');
+                return new Provider_Facebook($db, $facebookAdapter, $engagementMetric);
 				break;
 			case self::TWITTER:
-				return new Provider_Twitter($db);
+				return new Provider_Twitter($db, new \Outlandish\SocialMonitor\Adapter\TwitterAdapter());
 				break;
+            case self::INSTAGRAM:
+                $instagramAdapter = $container->get('adapter.instagram');
+                return new Provider_Instagram($db, $instagramAdapter);
 			default:
 				throw new \LogicException("Not implemented yet.");
 		}

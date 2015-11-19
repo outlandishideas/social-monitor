@@ -13,7 +13,8 @@ use DateTime;
 use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
-use Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric;
+use Facebook\GraphObject;
+use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 use Outlandish\SocialMonitor\FacebookFetcher\CommentsCountFetcher;
 use Outlandish\SocialMonitor\FacebookFetcher\FeedFetcher;
 use Outlandish\SocialMonitor\FacebookFetcher\LikesCountFetcher;
@@ -40,12 +41,12 @@ class FacebookApp
      */
     private $feed;
     /**
-     * @var FacebookEngagementMetric
+     * @var EngagementMetric
      */
     private $engagementMetric;
 
     /**
-     * @return FacebookEngagementMetric
+     * @return EngagementMetric
      */
     public function getEngagementMetric()
     {
@@ -57,7 +58,7 @@ class FacebookApp
         LikesCountFetcher $likesCounter,
         CommentsCountFetcher $commentsCounter,
         FeedFetcher $feed,
-        FacebookEngagementMetric $engagementMetric)
+        EngagementMetric $engagementMetric)
     {
         $this->commentsCounter = $commentsCounter;
         $this->request = $request;
@@ -88,6 +89,11 @@ class FacebookApp
         return $this->feed->getFeed($pageId, $since);
     }
 
+    /**
+     * @param array $postIds
+     * @return GraphObject
+     * @throws FacebookRequestException
+     */
     public function postResponses(array $postIds)
     {
         $parameters = [

@@ -19,6 +19,7 @@ class Badge_Engagement extends Badge_Abstract
             Metric_Klout::getInstance(),
             Metric_FBEngagementLeveled::getInstance(),
             Metric_SinaWeiboEngagementLeveled::getInstance(),
+            Metric_InstagramEngagementLeveled::getInstance(),
             Metric_ResponseTimeNew::getInstance()
         );
     }

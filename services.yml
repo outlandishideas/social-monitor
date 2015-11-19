@@ -16,35 +16,56 @@ services:
         class: Outlandish\SocialMonitor\Report\ReportDownloader
         arguments: ["%pdf.base_url%", "%report.base_url%"]
 
+    ###################################
+    # adapters
+    ###################################
+    adapter.facebook:
+        class: Outlandish\SocialMonitor\Adapter\FacebookAdapter
+        arguments: ["@facebook.app"]
+
+    adapter.instagram:
+        class: Outlandish\SocialMonitor\Adapter\InstagramAdapter
+        arguments: ["@instagram.app"]
+
+    ###################################
+    # instagram engagement services
+    ###################################
+    instagram.app:
+        class: Outlandish\SocialMonitor\InstagramApp
+        arguments: ["150bc7bece934ecf98d821fd000c9376"]
+
+    instagram.query.weighted:
+        class:     Outlandish\SocialMonitor\Engagement\Query\WeightedInstagramEngagementQuery
+        arguments: ["@pdo"]
 
     ###################################
     # sina weibo engagement services
     ###################################
     sina_weibo.engagement.query.weighted:
-        class: Outlandish\SocialMonitor\FacebookEngagement\Query\WeightedSinaWeiboEngagementQuery
+        class: Outlandish\SocialMonitor\Engagement\Query\WeightedSinaWeiboEngagementQuery
         arguments: ["@pdo"]
 
     sina_weibo.engagement.weighted:
-        class:     Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric
+        class:     Outlandish\SocialMonitor\Engagement\EngagementMetric
         arguments: ["@sina_weibo.engagement.query.weighted"]
 
     ###################################
     # facebook engagement services
     ###################################
     facebook_engagement.query.standard:
-        class:     Outlandish\SocialMonitor\FacebookEngagement\Query\StandardFacebookEngagementQuery
+        class:     Outlandish\SocialMonitor\Engagement\Query\StandardFacebookEngagementQuery
         arguments: ["@pdo"]
 
     facebook_engagement.query.weighted:
-        class:     Outlandish\SocialMonitor\FacebookEngagement\Query\WeightedFacebookEngagementQuery
+        class:     Outlandish\SocialMonitor\Engagement\Query\WeightedFacebookEngagementQuery
         arguments: ["@pdo"]
 
     facebook_engagement.standard:
-        class:     Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric
+        class:     Outlandish\SocialMonitor\Engagement\EngagementMetric
         arguments: ["@facebook_engagement.query.standard"]
 
     facebook_engagement.weighted:
-        class:     Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric
+        class:     Outlandish\SocialMonitor\Engagement\EngagementMetric
         arguments: ["@facebook_engagement.query.weighted"]
 
     facebook.session_factory:

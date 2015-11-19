@@ -6,7 +6,7 @@
  * Time: 18:06
  */
 
-namespace Outlandish\SocialMonitor\FacebookEngagement;
+namespace Outlandish\SocialMonitor\Engagement;
 
 
 class FacebookEngagementMetricFactory
@@ -14,8 +14,8 @@ class FacebookEngagementMetricFactory
     private function getQueries()
     {
         return [
-            'standard' => 'Outlandish\SocialMonitor\FacebookEngagement\Query\StandardFacebookEngagementQuery',
-            'weighted' => 'Outlandish\SocialMonitor\FacebookEngagement\Query\WeightedFacebookEngagementQuery'
+            'standard' => 'Outlandish\SocialMonitor\Engagement\Query\StandardFacebookEngagementQuery',
+            'weighted' => 'Outlandish\SocialMonitor\Engagement\Query\WeightedFacebookEngagementQuery'
         ];
     }
 
@@ -37,6 +37,6 @@ class FacebookEngagementMetricFactory
             return null;
         }
 
-        return new FacebookEngagementMetric($query);
+        return new EngagementMetric($query);
     }
 }

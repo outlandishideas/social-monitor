@@ -6,13 +6,13 @@
  * Time: 14:22
  */
 
-namespace Outlandish\SocialMonitor\FacebookEngagement;
+namespace Outlandish\SocialMonitor\Engagement;
 
 
 use DateTime;
-use Outlandish\SocialMonitor\FacebookEngagement\Query\Query;
+use Outlandish\SocialMonitor\Engagement\Query\Query;
 
-class FacebookEngagementMetric
+class EngagementMetric
 {
     /**
      * @var Query
