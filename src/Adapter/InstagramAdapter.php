@@ -64,7 +64,7 @@ class InstagramAdapter extends AbstractAdapter
         foreach ($media as $m) {
             $status = new InstagramStatus();
             $status->id = $m->id;
-            $status->message = $m->caption ? $m->caption->text : null;
+            $status->message = $m->caption ? $m->caption->text : '';
             $status->created_time = $m->created_time;
             $status->posted_by_owner = true;
             $status->permalink = $m->link;

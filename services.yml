@@ -32,7 +32,7 @@ services:
     ###################################
     instagram.app:
         class: Outlandish\SocialMonitor\InstagramApp
-        arguments: ["150bc7bece934ecf98d821fd000c9376"]
+        arguments: ["%instagram.app_token%"]
 
     instagram.query.weighted:
         class:     Outlandish\SocialMonitor\Engagement\Query\WeightedInstagramEngagementQuery

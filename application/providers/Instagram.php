@@ -80,7 +80,11 @@ class Provider_Instagram extends Provider_Abstract
                 ':image_url' => $post->image_url
             );
             try {
-                $insertStmt->execute($args);
+                $result = $insertStmt->execute($args);
+                if(!$result) {
+                    $error = $insertStmt->errorInfo();
+                    error_log('Error inserting instagram status: '.$error[2]);
+                }
             } catch (PDOException $ex) {
                 if ($ex->getCode() == 23000) {
                     continue;
