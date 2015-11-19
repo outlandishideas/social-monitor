@@ -15,14 +15,12 @@ class Provider_Instagram extends Provider_Abstract
      * @var InstagramAdapter
      */
     private $adapter;
-    private $engagementMetric;
 
     public function __construct(PDO $db, InstagramAdapter $adapter) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::INSTAGRAM();
         $this->tableName = 'instagram_stream';
         $this->adapter = $adapter;
-        $this->engagementMetric = Metric_InstagramEngagementLeveled::getInstance();
     }
 
 	public function fetchStatusData(Model_Presence $presence)

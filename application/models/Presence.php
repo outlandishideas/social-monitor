@@ -76,7 +76,8 @@ class Model_Presence
         $this->klout_score = $internals['klout_score'];
         $this->facebook_engagement = $internals['facebook_engagement'];
         $this->sina_weibo_engagement = $internals['sina_weibo_engagement'];
-        $this->page_url = $internals['page_url'];
+		$this->instagram_engagement = $internals['instagram_engagement'];
+		$this->page_url = $internals['page_url'];
         $this->image_url = $internals['image_url'];
         $this->last_updated = $internals['last_updated'];
         $this->last_fetched = $internals['last_fetched'];
@@ -226,6 +227,15 @@ class Model_Presence
 	{
 		return $this->facebook_engagement;
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getInstagramEngagement()
+	{
+		return $this->instagram_engagement;
+	}
+
 
 	public function getPresenceSign()
 	{
@@ -675,7 +685,8 @@ class Model_Presence
             'klout_score' => $this->getKloutScore(),
             'facebook_engagement' => $this->getFacebookEngagement(),
             'sina_weibo_engagement' => $this->getSinaWeiboEngagement(),
-            'last_updated' => $this->getLastUpdated(),
+			'instagram_engagement' => $this->getInstagramEngagement(),
+			'last_updated' => $this->getLastUpdated(),
             'last_fetched' => $this->getLastFetched(),
             'sign_off' => $this->getSignOff(),
             'branding' => $this->getBranding(),
