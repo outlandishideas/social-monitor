@@ -15,14 +15,12 @@ class Provider_Instagram extends Provider_Abstract
      * @var InstagramAdapter
      */
     private $adapter;
-    private $engagementMetric;
 
     public function __construct(PDO $db, InstagramAdapter $adapter) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::INSTAGRAM();
         $this->tableName = 'instagram_stream';
         $this->adapter = $adapter;
-        $this->engagementMetric = Metric_InstagramEngagementLeveled::getInstance();
     }
 
 	public function fetchStatusData(Model_Presence $presence)
@@ -82,7 +80,11 @@ class Provider_Instagram extends Provider_Abstract
                 ':image_url' => $post->image_url
             );
             try {
-                $insertStmt->execute($args);
+                $result = $insertStmt->execute($args);
+                if(!$result) {
+                    $error = $insertStmt->errorInfo();
+                    error_log('Error inserting instagram status: '.$error[2]);
+                }
             } catch (PDOException $ex) {
                 if ($ex->getCode() == 23000) {
                     continue;

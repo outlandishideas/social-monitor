@@ -1,6 +1,7 @@
 parameters:
     facebook.app_id:
     facebook.app_secret:
+    instagram.app_token:
     db.name:
     db.host:
     db.username:
