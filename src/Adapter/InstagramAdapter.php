@@ -43,7 +43,7 @@ class InstagramAdapter extends AbstractAdapter
         $metadata = new PresenceMetadata();
         $metadata->uid = $inflated->id;
         $metadata->image_url = $inflated->profile_picture;
-        $metadata->page_url = 'https://instagram.com/jwdsouza/' . $handle;
+        $metadata->page_url = 'https://instagram.com/' . $handle;
         $metadata->name = $handle;
         $metadata->popularity = $inflated->counts->followed_by;
 
