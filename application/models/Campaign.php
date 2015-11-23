@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @property int audience
+ */
 class Model_Campaign extends Model_Base {
 	protected static $tableName = 'campaigns';
 	protected static $sortColumn = 'display_name';
