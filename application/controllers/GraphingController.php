@@ -212,8 +212,8 @@ abstract class GraphingController extends BaseController {
 							$m['color'] = '#84af5b';
 						}
 					}
+					$metrics[] = $m;
 				}
-				$metrics[] = $m;
 			}
 			$badgeArr['metrics'] = $metrics;
 		}
