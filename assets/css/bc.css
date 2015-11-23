@@ -1873,6 +1873,10 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	color: #e6162d;
 }
 
+.fa.fa-white {
+	color: #fff;
+}
+
 /* bc buttons */
 
 .button-bc {
