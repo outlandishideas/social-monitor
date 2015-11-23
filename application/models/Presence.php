@@ -294,7 +294,7 @@ class Model_Presence
 		$owner = $this->getOwner();
 		if($owner){
 			$target = $owner->getTargetAudience();
-			if(is_numeric($target) && $target > 0){
+			if($target > 0){
 
 				if($owner instanceof Model_Group){
 					$target = $this->updateTargetBasedOnSize($owner, $target);
