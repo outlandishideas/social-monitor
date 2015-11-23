@@ -2,6 +2,8 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Model_Presence;
+
 class Handle extends Header {
 
     protected static $name = "handle";
@@ -32,6 +34,9 @@ class Handle extends Header {
         } else if ($model->isForSinaWeibo()) {
             $score = $model->getSinaWeiboEngagement();
             $value .= " <span class=\"engagement-score sina-weibo\" title=\"Sina Weibo engagement score: $score\">" . round($score) . '</span>';
+        } else if ($model->isForInstagram()) {
+            $score = $model->getInstagramEngagement();
+            $value .= " <span class=\"engagement-score instagram\" title=\"Instagram engagement score: $score\">" . round($score) . '</span>';
         }
         if (!$model->getUID()) {
             $value = '<span class="missing" title="Presence not found">' . $value . '</span>';

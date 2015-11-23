@@ -965,6 +965,9 @@ form.management button.add-item {
 .engagement-score.sina-weibo {
 	background-image: url(../img/sinaweibo_engagement.png);
 }
+.engagement-score.instagram {
+	background-image: url(../img/instagram_engagement.png);
+}
 
 /* Slider & Date */
 
