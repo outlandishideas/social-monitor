@@ -174,7 +174,6 @@ class PresenceController extends GraphingController
         $this->view->editType = true;
 		$this->view->title = 'New presence';
 		$this->view->titleIcon = 'icon-plus-sign';
-		$this->view->isNew = true;
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -189,6 +188,7 @@ class PresenceController extends GraphingController
 		if ($this->_request->getActionName() == 'edit') {
             $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
             $this->view->showButtons = true;
+			$this->view->isNew = false;
 		} else {
 			$presence = (object)array(
                 'id' => null,
@@ -198,6 +198,7 @@ class PresenceController extends GraphingController
                 'branding' => null
             );
             $this->view->showButtons = false;
+			$this->view->isNew = true;
 		}
 
 		$this->validateData($presence);
@@ -252,6 +253,12 @@ class PresenceController extends GraphingController
 				}
 			} else {
                 $this->flashMessage('Presence saved');
+
+				//if new presence created, update presence index cache so that it will appear in the presence index page
+				if ($this->view->isNew) {
+					$this->updatePresenceIndexCache();
+				}
+
 				$this->_helper->redirector->gotoRoute(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id));
 			}
 		}
@@ -263,7 +270,6 @@ class PresenceController extends GraphingController
 		$this->view->presence = $presence;
 		$this->view->title = 'Edit Presence';
 		$this->view->titleIcon = 'icon-edit';
-		$this->view->isNew = false;
 	}
 
 	/**

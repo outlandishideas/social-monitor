@@ -554,4 +554,19 @@ class BaseController extends Zend_Controller_Action
         ob_implicit_flush(true);
     }
 
+    /**
+     * Updates the presence index cache
+     *
+     * The presence index table is very large and was performing very badly. This method calculates the needed
+     * values for this table and stores it as json in the object cache table to be used when rendering that
+     * particular page.
+     */
+    protected function updatePresenceIndexCache()
+    {
+        $presenceIndexTable = $this->getContainer()->get('table.presence-index');
+        $presences = Model_PresenceFactory::getPresences();
+        $rows = $presenceIndexTable->getRows($presences);
+        BaseController::setObjectCache('presence-index', $rows);
+    }
+
 }
