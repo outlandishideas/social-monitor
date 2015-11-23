@@ -39,7 +39,8 @@ class FetchController extends BaseController
 		$this->updateDomains();
 
         //update Facebook actors if they need updating
-        $this->updateFacebookActors();
+		//todo: fix bug with column `name` being too short for data
+//        $this->updateFacebookActors();
 
 		$this->touchLock($lockName);
 
