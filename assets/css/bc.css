@@ -1877,6 +1877,10 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	color: #fff;
 }
 
+.badge-metrics > li > span.fa {
+	color: inherit;
+}
+
 /* bc buttons */
 
 .button-bc {
