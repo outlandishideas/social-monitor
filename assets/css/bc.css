@@ -965,6 +965,9 @@ form.management button.add-item {
 .engagement-score.sina-weibo {
 	background-image: url(../img/sinaweibo_engagement.png);
 }
+.engagement-score.instagram {
+	background-image: url(../img/instagram_engagement.png);
+}
 
 /* Slider & Date */
 
@@ -1108,6 +1111,7 @@ body .compare.list li {
 /* presences */
 
 .entity.twitter .icon-large { color: #4099FF; }
+.entity.instagram .icon-large { color: #3f729b; }
 .entity.facebook .icon-large { color: #3B5998; }
 .entity.sina_weibo .icon-large { color: #e6162d; }
 .entity.country .icon-large { color: #009600; }
@@ -1116,6 +1120,12 @@ body .compare.list li {
 a.presence.twitter .icon-large,
 .icon-twitter-sign {
 	/*color: #4099FF;*/
+	color: #FFF;
+}
+
+a.presence.instagram .icon-large,
+.icon-instagram-sign {
+	/*color: #3f729b;*/
 	color: #FFF;
 }
 
@@ -1187,6 +1197,15 @@ li.link.box {
 .link.box.twitter a:hover,
 .link.box.twitter a:focus {
     background-color: #4099FF;
+}
+
+.link.box.instagram a {
+    background-color: #3f729b;
+}
+
+.link.box.instagram a:hover,
+.link.box.instagram a:focus {
+    background-color: #386589;
 }
 
 .link.box.sina_weibo a {
@@ -1843,11 +1862,23 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	color: #4099FF;
 }
 
+.fa.fa-instagram {
+	color: #3f729b;
+}
+
 .fa.fa-facebook {
 	color: #335795;
 }
 .fa.fa-weibo {
 	color: #e6162d;
+}
+
+.fa.fa-white {
+	color: #fff;
+}
+
+.badge-metrics > li > span.fa {
+	color: inherit;
 }
 
 /* bc buttons */

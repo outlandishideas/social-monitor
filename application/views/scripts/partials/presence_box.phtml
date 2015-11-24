@@ -7,7 +7,7 @@ $forForm = !empty($this->varname);
 	<input type="hidden" value="<?php echo $this->presence->id;?>" name="<?php echo $this->varname; ?>">
     <?php endif; ?>
 	<a href="<?php echo ($url ?: '#'); ?>" title="<?php echo $this->presence->getLabel(); ?>" class="first <?php if (!$forForm) { echo 'last'; } ?>">
-		<span class="icon-<?php echo $this->presence->type; ?>-sign icon-large"></span>
+		<span class="<?php echo $this->presence->getPresenceSign();?> fa-lg fa-white"></span>
 		<?php echo ($this->presence->isForTwitter() ? '@' : '') . $this->presence->handle; ?>
 	</a><?php if ($forForm) : ?><a href="#" class="remove-item last">
 		<span class="icon-remove"></span>
