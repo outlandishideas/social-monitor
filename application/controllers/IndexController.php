@@ -247,10 +247,7 @@ class IndexController extends GraphingController
 
         /** @var TableIndex $presenceIndexTable */
 		$this->log("Updating Presence Index Table Cache");
-		$presenceIndexTable = $this->getContainer()->get('table.presence-index');
-		$presences = Model_PresenceFactory::getPresences();
-		$rows = $presenceIndexTable->getRows($presences);
-        $this->setObjectCache('presence-index', $rows);
+		$this->updatePresenceIndexCache();
         $this->log("Updated Presence Index Table Cache");
 
 
