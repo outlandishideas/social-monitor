@@ -51,6 +51,9 @@ class Metric_PopularityTime extends Metric_Abstract {
 
         $target = $presence->getTargetAudience();
         $popularity = $presence->getPopularity();
+
+
+
         if(is_numeric($target) && $target > 0 && $popularity < $target) {
 
             $data = $presence->getHistoricData($start, $end, Metric_Popularity::getName());

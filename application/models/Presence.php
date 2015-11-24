@@ -274,33 +274,32 @@ class Model_Presence
 		return $this->owner;
 	}
 
+	/**
+	 * This method gets the target audience figure from the owner of this presence
+	 *
+	 * If the presence has no owner the target returned is null.
+	 *
+	 * If the presence has an owner the presence will use the target audience figure provided by that owner. Additionally
+	 * the target audience will be a percentage of the owner's target with the actual percentage being based on the type
+	 * of presence in question. These values are defined in the config and are saved to the database.
+	 *
+	 * Furthermore, if the presence is a Group/SBU, then the target audience will be further split based on the size of the presence
+	 * in question. Large presences will take a larger proportion of the target audience from the owner, then small presences.
+	 *
+	 * @return int|null
+	 */
 	public function getTargetAudience()
 	{
 		$target = null;
 		$owner = $this->getOwner();
 		if($owner){
 			$target = $owner->getTargetAudience();
-			if(is_numeric($target) && $target > 0){
+			if($target > 0){
 
-				// if Model_Group is the owner then we divide up the target population amongst the presences
-				// we use the size of the presence to calculate how much of the target population should be
-				// used by them.
-				// eg. SBU has two large / six medium / eight small presences. the two large presences take 50%/2
-				// of the target population as their target, the medium take 30%/6 of the target population as their target, etc.
 				if($owner instanceof Model_Group){
-
-					$size = $this->getSize();
-					// get the number of presences of the same size as $this
-					$presenceCount = count(array_filter($owner->getPresences(), function($presence) use ($size) {
-						/** @var Model_Presence $presence */
-						return $presence->getSize() == $size;
-					}));
-
-					$sizePercent = BaseController::getOption("size_{$size}_presences");
-
-					$target *= $sizePercent/100 / $presenceCount;
-
+					$target = $this->updateTargetBasedOnSize($owner, $target);
 				}
+
 				$percent = 0;
 				switch ($this->getType()->getValue()) {
 					case Enum_PresenceType::SINA_WEIBO:
@@ -722,6 +721,36 @@ class Model_Presence
 	public function getSinaWeiboEngagement()
 	{
 		return $this->sina_weibo_engagement;
+	}
+
+	/**
+	 * Split the target of the owner by the size of the presence in question
+	 *
+	 * If Model_Group is the owner then we divide up the target population amongst the presences
+	 * we use the size of the presence to calculate how much of the target population should be
+	 * used by them.
+	 *
+	 * eg. SBU has two large / six medium / eight small presences. the two large presences take 50%/2
+	 * of the target population as their target, the medium take 30%/6 of the target population as their target, etc.
+	 *
+	 * @param $owner
+	 * @param $target
+	 * @return float
+	 */
+	private function updateTargetBasedOnSize($owner, $target)
+	{
+		$size = $this->getSize();
+		// get the number of presences of the same size as $this
+		$presenceCount = count(array_filter($owner->getPresences(), function ($presence) use ($size) {
+			/** @var Model_Presence $presence */
+			return $presence->getSize() == $size;
+		}));
+
+		$sizePercent = BaseController::getOption("size_{$size}_presences");
+
+		$target *= $sizePercent / 100 / $presenceCount;
+
+		return $target;
 	}
 
 

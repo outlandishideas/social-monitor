@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @property int audience
+ */
 class Model_Campaign extends Model_Base {
 	protected static $tableName = 'campaigns';
 	protected static $sortColumn = 'display_name';
@@ -52,8 +55,22 @@ class Model_Campaign extends Model_Base {
 		return $objects;
 	}
 
+	/**
+	 * Get the target audience value for this campaign
+	 *
+	 * A campaign can be given a target audience value. This value is used to determine
+	 * the target audience for a presence.
+	 *
+	 * @return int
+	 */
     public function getTargetAudience() {
-        return $this->audience;
+		$target = $this->audience;
+
+        if (!is_numeric($target)) {
+			$target = 0;
+		}
+
+		return intval($target);
     }
 
 	protected function count($clause = null, $args = array()) {
