@@ -1967,6 +1967,7 @@ form select:hover {
 
 form select:hover,
 form input[type="text"]:focus,
+form input[type="email"]:focus,
 form input[type="password"]:focus {
 	background-color: #000;
 	background-color: rgba(0,0,0,0.5);
