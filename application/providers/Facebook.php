@@ -452,7 +452,6 @@ class Provider_Facebook extends Provider_Abstract
                 SELECT *
                 FROM {$this->tableName}
                 WHERE presence_id = :id
-                AND in_response_to IS NULL
                 AND
                 (
                     (
@@ -461,7 +460,6 @@ class Provider_Facebook extends Provider_Abstract
                     )
                     OR
                     (
-                      posted_by_owner = 0
                       AND message <> ''
                       AND message IS NOT NULL
                       AND created_time > :unnecessary_since
