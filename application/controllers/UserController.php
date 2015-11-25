@@ -2,7 +2,7 @@
 
 class UserController extends BaseController
 {
-	protected static $publicActions = array('login', 'forgotten', 'reset-password');
+	protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register');
 
 	public function init() {
 		parent::init();
@@ -162,6 +162,16 @@ class UserController extends BaseController
 		$this->auth->clearIdentity();
         $this->flashMessage('Logged out');
 		$this->_helper->redirector->gotoSimple('index', 'index');
+	}
+
+	/**
+	 * Registers a new user if the new user is using a british council email address
+	 *
+	 */
+	public function registerAction()
+	{
+		$this->view->title = 'Register User';
+		$this->view->titleIcon = 'fa-group';
 	}
 
 	/**
