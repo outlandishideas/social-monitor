@@ -393,6 +393,14 @@ class Provider_Facebook extends Provider_Abstract
 	}
 
     /**
+     * Get response time data for all British Council statuses that are a response to another status
+     *
+     * Statuses represent both Facebook posts and Facebook comments. This method gets response time
+     * data for all statuses belonging to the $presence and occurring between $start and $end.
+     *
+     * The data returned is array of stdClass objects that hold the created time for the response and the
+     * number of seconds between the original status and the response.
+     *
      * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
