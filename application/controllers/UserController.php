@@ -172,6 +172,7 @@ class UserController extends BaseController
 	{
 		$this->view->title = 'Register User';
 		$this->view->titleIcon = 'fa-group';
+		$this->_helper->layout()->setLayout('notabs');
 	}
 
 	/**

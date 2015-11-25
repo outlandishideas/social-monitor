@@ -1,11 +1,31 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 25/11/2015
- * Time: 10:33
- */
-
+$buttons = array(
+    '<a href="' . $this->url(array('controller'=>'user', 'action'=>'login'), null, true) . '">Already have an account?</a>',
+    '<input type="submit" class="button-bc primary" value="Register" />'
+);
 ?>
 
-<h2><?php echo $this->title; ?></h2>
+<h2 class="page-title">Register</h2>
+<form method="post" action="<?php echo $this->url(array('controller'=>'user', 'action'=>'login')); ?>">
+    <fieldset>
+        <div>
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" size="26">
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" size="26">
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" size="26">
+        </div>
+        <div>
+            <label for="password2">Confirm Password</label>
+            <input id="password2" name="password2" type="password" size="26">
+        </div>
+    </fieldset>
+
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
+</form>
+
