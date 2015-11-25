@@ -1,7 +1,5 @@
 <?php
 
-
-use Facebook\GraphObject;
 use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 use Outlandish\SocialMonitor\Models\FacebookStatus;
 use Outlandish\SocialMonitor\Engagement\EngagementMetric;
@@ -176,10 +174,12 @@ class Provider_Facebook extends Provider_Abstract
         $clauses = array_merge($clauses, $searchArgs['clauses']);
         $args = array_merge($args, $searchArgs['args']);
 
+        $clauseString = implode(' AND ', $clauses);
+
 		$sql = "
 			SELECT SQL_CALC_FOUND_ROWS p.*
 			FROM {$this->tableName} AS p
-			WHERE " . implode(' AND ', $clauses);
+			WHERE {$clauseString}";
         $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
         $sql .= $this->getLimitSql($limit, $offset);
 
