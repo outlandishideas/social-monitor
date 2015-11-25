@@ -411,11 +411,20 @@ class Provider_Facebook extends Provider_Abstract
             ':start_date' => $start->format('Y-m-d'),
             ':end_date' => $end->format('Y-m-d')
         );
-        $stmt = $this->db->prepare("
-          SELECT t.post_id as id, t.created_time as created, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
-          FROM {$this->tableName} AS t
-            INNER JOIN {$this->tableName} AS r ON t.post_id = r.in_response_to
-            WHERE " . implode(' AND ', $clauses) ."");
+
+        $clauseString = implode(' AND ', $clauses);
+
+        $sql = "
+          SELECT
+            t.post_id as id,
+            t.created_time as created,
+            TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS `time`
+          FROM
+            {$this->tableName} AS t
+          INNER JOIN
+            {$this->tableName} AS r ON t.post_id = r.in_response_to
+          WHERE {$clauseString};";
+        $stmt = $this->db->prepare($sql);
         $stmt->execute($args);
         foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
             $key = $r->id;
