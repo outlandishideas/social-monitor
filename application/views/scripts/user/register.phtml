@@ -6,11 +6,11 @@ $buttons = array(
 ?>
 
 <h2 class="page-title">Register</h2>
-<form method="post" action="<?php echo $this->url(array('controller'=>'user', 'action'=>'login')); ?>">
+<form method="post" action="<?php echo $this->url(array('controller'=>'user', 'action'=>'register')); ?>">
     <fieldset>
         <div>
-            <label for="username">User name*</label>
-            <input id="username" name="username" type="text" size="26" required>
+            <label for="name">User name*</label>
+            <input id="name" name="name" type="text" size="26" required>
         </div>
         <div>
             <label for="email">Email*</label>
@@ -21,8 +21,8 @@ $buttons = array(
             <input id="password" name="password" type="password" size="26" required>
         </div>
         <div>
-            <label for="password2">Password (again)*</label>
-            <input id="password2" name="password2" type="password" size="26" required>
+            <label for="password_confirm">Password (again)*</label>
+            <input id="password_confirm" name="password_confirm" type="password" size="26" required>
         </div>
     </fieldset>
 

@@ -170,9 +170,9 @@ class UserController extends BaseController
 	 */
 	public function registerAction()
 	{
+		$this->editAction();
 		$this->view->title = 'Register User';
-		$this->view->titleIcon = 'fa-group';
-		$this->_helper->layout()->setLayout('notabs');
+ 		$this->_helper->layout()->setLayout('notabs');
 	}
 
 	/**
@@ -206,9 +206,15 @@ class UserController extends BaseController
 	 */
 	public function editAction()
 	{
+		$messageOnSave = 'User saved';
 		switch ($this->_request->getActionName()) {
 			case 'new':
 				$editingUser = new Model_User(array());
+				$messageOnSave = 'User created';
+				break;
+			case 'register':
+				$editingUser = new Model_User(array());
+				$messageOnSave = 'User registered';
 				break;
 			case 'edit-self':
 				$editingUser = new Model_User($this->view->user->toArray(), true);
@@ -220,7 +226,7 @@ class UserController extends BaseController
 		}
 
 		$this->validateData($editingUser);
-		$this->view->canChangeLevel = $this->view->user->isManager;
+		$this->view->canChangeLevel = isset($this->view->user) ? $this->view->user->isManager : false;
 
 		if ($this->_request->isPost()) {
 			// prevent hackers upgrading their own user level
@@ -262,9 +268,11 @@ class UserController extends BaseController
 			} else {
 				try {
 					$editingUser->save();
-                    $this->flashMessage('User saved');
+                    $this->flashMessage($messageOnSave);
 					if($this->view->user->isManager) {
 						$this->_helper->redirector->gotoSimple('index');
+					} else if ($this->_request->getActionName() === 'register') {
+						$this->_helper->redirector->gotoRoute(['action' => 'register', 'result' => 'success']);
 					}
 				} catch (Exception $ex) {
 					if (strpos($ex->getMessage(), '23000') !== false) {
