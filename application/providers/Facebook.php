@@ -464,30 +464,28 @@ class Provider_Facebook extends Provider_Abstract
             ':necessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days')),
             ':unnecessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -3 days'))
         );
-        $stmt = $this->db->prepare("SELECT DISTINCT a.post_id
-            FROM (
-                SELECT *
-                FROM {$this->tableName}
-                WHERE presence_id = :id
-                AND
-                (
-                    (
-                      needs_response = 1
-                      AND created_time > :necessary_since
-                    )
-                    OR
-                    (
-                      AND message <> ''
-                      AND message IS NOT NULL
-                      AND created_time > :unnecessary_since
-                    )
-                )
-            ) as a
-            LEFT OUTER JOIN {$this->tableName} AS b
-                ON b.presence_id = a.presence_id
-                AND b.in_response_to = a.post_id
-            WHERE b.id IS NULL");
+
+        $sql = "SELECT
+                  DISTINCT a.post_id
+                  FROM (
+                    SELECT *
+                    FROM {$this->tableName}
+                    WHERE presence_id = :id
+                    AND
+                      (
+                        ( needs_response = 1 AND created_time > :necessary_since )
+                        OR
+                        ( message <> '' AND message IS NOT NULL AND created_time > :unnecessary_since )
+                      )
+                  ) as a
+                  LEFT OUTER JOIN {$this->tableName} AS b
+                  ON b.presence_id = a.presence_id
+                  AND b.in_response_to = a.post_id
+                  WHERE b.id IS NULL;";
+
+        $stmt = $this->db->prepare($sql);
         $stmt->execute($args);
+
         $postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
         return $postIds;
