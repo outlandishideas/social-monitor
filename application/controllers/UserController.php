@@ -171,7 +171,13 @@ class UserController extends BaseController
 	public function registerAction()
 	{
 		$this->editAction();
-		$this->view->title = 'Register User';
+		$registerSuccessful = $this->_request->getParam('result') === 'success';
+		if ($registerSuccessful) {
+			$this->view->title = 'Registration success';
+		} else {
+			$this->view->title = 'Register user';
+		}
+		$this->view->registerSuccessful = $registerSuccessful;
  		$this->_helper->layout()->setLayout('notabs');
 	}
 

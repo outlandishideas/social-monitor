@@ -54,6 +54,10 @@ abbr {
 	color: #999;
 }
 
+#loginWrapper h2.page-title {
+	margin-top: 40px;
+}
+
 #api-status {
 	float: right;
 	clear: right;

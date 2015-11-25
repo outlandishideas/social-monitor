@@ -5,7 +5,11 @@ $buttons = array(
 );
 ?>
 
-<h2 class="page-title">Register</h2>
+<h2 class="page-title"><?php echo $this->title; ?></h2>
+<?php if ($this->registerSuccessful) : ?>
+    <p>Your registration was successful. In order to log into your account, you will first need to verify your email.</p>
+    <p>An email was sent to the email address that you provided, and this will include instructions to complete user registration.</p>
+<?php else : ?>
 <form method="post" action="<?php echo $this->url(array('controller'=>'user', 'action'=>'register')); ?>">
     <fieldset>
         <div>
@@ -28,4 +32,4 @@ $buttons = array(
 
     <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
 </form>
-
+<?php endif; ?>
