@@ -1951,6 +1951,7 @@ table .cell-handle .missing {
 #search-table input,
 form input[type="text"],
 form input[type="password"],
+form input[type="email"],
 form select,
 form select:hover {
 	margin: 0;
