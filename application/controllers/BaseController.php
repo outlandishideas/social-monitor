@@ -439,29 +439,13 @@ class BaseController extends Zend_Controller_Action
      */
     protected function sendEmail($message, $fromEmail, $fromName, $toEmail, $subject)
     {
-        //if on windows, send using gmail
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $config = array(
-                'ssl' => 'tls',
-                'port' => 587,
-                'auth' => 'login',
-                'username' => 'tamlynrhodes',
-                'password' => 'ztkvjliiueqbtdlf'
-            );
-            $transport = new Zend_Mail_Transport_Smtp('smtp.gmail.com', $config);
-            Zend_Mail::setDefaultTransport($transport);
-        }
+        $message = Swift_Message::newInstance($subject, $message);
+        $message->setFrom([$fromEmail => $fromName]);
+        $message->setTo([$toEmail]);
 
-        $mail = new Zend_Mail();
-        if (preg_match('/<.+?>/', $message)) {
-            $mail->setBodyHtml($message);
-        } else {
-            $mail->setBodyText($message);
-        }
-        $mail->setFrom($fromEmail, $fromName);
-        $mail->addTo($toEmail);
-        $mail->setSubject($subject);
-        $mail->send();
+        $transport = Swift_MailTransport::newInstance();
+        $mailer = Swift_Mailer::newInstance($transport);
+        $result = $mailer->send($message);
     }
 
     protected function lockName($name = null)
