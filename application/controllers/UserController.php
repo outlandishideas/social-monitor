@@ -1,5 +1,7 @@
 <?php
 
+use Outlandish\SocialMonitor\Exception\SocialMonitorException;
+
 class UserController extends BaseController
 {
 	protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register');
@@ -78,24 +80,12 @@ class UserController extends BaseController
 				if (!$user) {
                     $this->flashMessage('User not found', 'error');
 				} else {
-					$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-					$user->reset_key = substr( str_shuffle( $chars ), 0, 16);
+					$code = $this->generateCode();
+					$user->reset_key = $code;
 					$user->save();
 
 					try {
-						$resetLink = $this->_request->getScheme() . '://' . $this->_request->getHttpHost() . $this->view->url(array('action'=>'reset-password')) . '?name=' . urlencode($user->name) . '&reset_key=' . $user->reset_key;
-						$message = '<p>Hi ' . $user->name . ',</p>
-							<p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p>
-							<p>If you did not request a reset, please ignore this email.</p>
-							<p>Otherwise, click this link to reset your password <a href="' . $resetLink . '">Reset password</a></p>
-							<p>Thanks,<br />the British Council Social Media Monitor team</p>';
-						$this->sendEmail(
-							$message,
-							'do.not.reply@example.com',
-							'The British Council Social Media Monitor team',
-							$user->email,
-							'Password reset'
-						);
+						$this->sendResetPasswordEmail($user);
                         $this->flashMessage('You should receive an email shortly with a password reset link');
 					} catch (Exception $ex) {
                         $this->flashMessage('Failed to send reset email.<br />Please ask an admin user to reset your password', 'error');
@@ -352,5 +342,40 @@ class UserController extends BaseController
 		$fromName = 'The British Council Social Media Monitor team';
 
 		$this->sendEmail($message, $fromEmail, $fromName, $toEmail, $subject);
+	}
+
+	/**
+	 * Send a password reset email to the given Model_User
+	 *
+	 * @param Model_User $user
+	 * @throws SocialMonitorException
+	 */
+	private function sendResetPasswordEmail(Model_User $user)
+	{
+		$resetLink = $this->_request->getScheme() . '://' . $this->_request->getHttpHost() . $this->view->url(array('action' => 'reset-password')) . '?name=' . urlencode($user->name) . '&reset_key=' . $user->reset_key;
+		$message = '<p>Hi ' . $user->name . ',</p>
+					<p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p>
+					<p>If you did not request a reset, please ignore this email.</p>
+					<p>Otherwise, click this link to reset your password <a href="' . $resetLink . '">Reset password</a></p>
+					<p>Thanks,<br />the British Council Social Media Monitor team</p>';
+		$this->sendEmail(
+			$message,
+			'do.not.reply@example.com',
+			'The British Council Social Media Monitor team',
+			$user->email,
+			'Password reset'
+		);
+	}
+
+	/**
+	 * Generate a random code for use with resettng password and confirming emails
+	 *
+	 * @return string
+	 */
+	private function generateCode()
+	{
+		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		$code = substr(str_shuffle($chars), 0, 16);
+		return $code;
 	}
 }
