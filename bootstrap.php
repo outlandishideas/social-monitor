@@ -55,7 +55,6 @@ $resourceLoader->addResourceType('util', 'util/', 'Util');
 $resourceLoader->addResourceType('metric', 'metrics/', 'Metric');
 $resourceLoader->addResourceType('badge', 'badges/', 'Badge');
 $resourceLoader->addResourceType('chart', 'charts/', 'Chart');
-$resourceLoader->addResourceType('header', 'table_headers/', 'Header');
 $resourceLoader->addResourceType('provider', 'providers/', 'Provider');
 $resourceLoader->addResourceType('enum', 'enum/', 'Enum');
 

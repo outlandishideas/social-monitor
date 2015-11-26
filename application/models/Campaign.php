@@ -402,4 +402,17 @@ class Model_Campaign extends Model_Base {
     static function campaignClasses() {
         return array('Model_Country', 'Model_Group', 'Model_Region');
     }
+
+	/**
+	 * Returns the summed popularity of all the presences for this campaign
+	 *
+	 * @return int
+	 */
+	public function getPopularity()
+	{
+		return array_reduce($this->getPresences(), function($carry, Model_Presence $presence) {
+			$carry += $presence->getPopularity();
+			return $carry;
+		}, 0);
+	}
 }

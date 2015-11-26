@@ -184,6 +184,7 @@ services:
             - [addHeader, ["@table.header.total_rank"]]
             - [addHeader, ["@table.header.total_score"]]
             - [addHeader, ["@table.header.target_audience"]]
+            - [addHeader, ["@table.header.current_audience"]]
             - [addHeader, ["@table.header.digital_population"]]
             - [addHeader, ["@table.header.digital_population_health"]]
             - [addHeader, ["@table.header.actions_per_day"]]
