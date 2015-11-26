@@ -252,8 +252,6 @@ class UserController extends BaseController
 				$errorMessages[] = 'Please enter an email address';
 			} else if (preg_match('/.*@.*/', $this->_request->getParam('email')) === 0) {
 				$errorMessages[] = 'Please enter a valid email address';
-			} else if ($this->_request->getActionName() === 'register' && preg_match('/.*@britishcouncil\..*/', $this->_request->getParam('email')) === 0) {
-				$errorMessages[] = 'You must register with a British Council email address';
 			}
 
 			if (!$errorMessages) {
