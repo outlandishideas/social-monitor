@@ -2,6 +2,9 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Model_Campaign;
+use Model_Presence;
+
 class CurrentAudience extends Header {
 
     protected static $name = "current-audience";
@@ -14,7 +17,7 @@ class CurrentAudience extends Header {
     }
 
     /**
-     * @param Model_Presence $model
+     * @param Model_Presence|Model_Campaign $model
      * @return string
      */
     function getValue($model = null)
