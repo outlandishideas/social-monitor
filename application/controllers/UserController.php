@@ -280,6 +280,7 @@ class UserController extends BaseController
 					if($this->view->user->isManager) {
 						$this->_helper->redirector->gotoSimple('index');
 					} else if ($this->_request->getActionName() === 'register') {
+						$this->sendRegisterEmail();
 						$this->_helper->redirector->gotoRoute(['action' => 'register', 'result' => 'success']);
 					}
 				} catch (Exception $ex) {
@@ -342,5 +343,16 @@ class UserController extends BaseController
 		$this->view->facebookPresences = Model_PresenceFactory::getPresencesByType(Enum_PresenceType::FACEBOOK());
 		$this->view->countries = Model_Country::fetchAll();
 		$this->view->groups = Model_Group::fetchAll();
+	}
+
+	private function sendRegisterEmail(Model_User $registeredUser)
+	{
+		$message = "Hello World";
+		$subject = "You have successfully registered";
+		$toEmail = $registeredUser->email;
+		$fromEmail = 'do.not.reply@example.com';
+		$fromName = 'The British Council Social Media Monitor team';
+
+		$this->sendEmail($message, $fromEmail, $fromName, $toEmail, $subject);
 	}
 }
