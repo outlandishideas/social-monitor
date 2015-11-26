@@ -278,7 +278,7 @@ class UserController extends BaseController
 					if($this->view->user->isManager) {
 						$this->_helper->redirector->gotoSimple('index');
 					} else if ($this->_request->getActionName() === 'register') {
-						$this->sendRegisterEmail();
+						$this->sendRegisterEmail($editingUser);
 						$this->_helper->redirector->gotoRoute(['action' => 'register', 'result' => 'success']);
 					}
 				} catch (Exception $ex) {
