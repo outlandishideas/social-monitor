@@ -4,6 +4,7 @@
  * @property string|null email
  * @property string|null name
  * @property int|null id
+ * @property string confirm_email_key
  */
 class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	protected static $tableName = 'users';

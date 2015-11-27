@@ -203,6 +203,7 @@ class UserController extends BaseController
 	public function editAction()
 	{
 		$messageOnSave = 'User saved';
+		/** @var Model_User $editingUser */
 		switch ($this->_request->getActionName()) {
 			case 'new':
 				$editingUser = new Model_User(array());
@@ -257,6 +258,11 @@ class UserController extends BaseController
 				}
 			}
 
+			if ($this->isRegistration()) {
+				$code = $this->generateCode();
+				$editingUser->confirm_email_key = $code;
+			}
+
 			if ($errorMessages) {
 				foreach ($errorMessages as $message) {
                     $this->flashMessage($message, 'error');
@@ -267,7 +273,7 @@ class UserController extends BaseController
                     $this->flashMessage($messageOnSave);
 					if($this->view->user->isManager) {
 						$this->_helper->redirector->gotoSimple('index');
-					} else if ($this->_request->getActionName() === 'register') {
+					} else if ($this->isRegistration()) {
 						$this->sendRegisterEmail($editingUser);
 						$this->_helper->redirector->gotoRoute(['action' => 'register', 'result' => 'success']);
 					}
@@ -333,13 +339,47 @@ class UserController extends BaseController
 		$this->view->groups = Model_Group::fetchAll();
 	}
 
+	/**
+	 * Confirm email action
+	 */
+	public function confirmEmailAction()
+	{
+		/** @var Model_User $user */
+		if ($this->_request->getParam('name') && $this->_request->getParam('confirm_email_key')) {
+			$user = Model_User::fetchAll('name=? AND confirm_email_key=?', array($this->_request->getParam('name'), $this->_request->getParam('confirm_email_key')));
+			if ($user) {
+				$user = $user[0];
+			}
+		} else {
+			$user = null;
+		}
+
+		if ($user) {
+			$this->flashMessage('Thank you for confirming your email. You can now login.', 'info');
+			$this->_helper->redirector->gotoSimple('user', 'login');
+		} else {
+			$this->flashMessage('Incorrect user/key combination for password reset', 'error');
+			$this->_helper->redirector->gotoSimple('index', 'index');
+		}
+	}
+
+	/**
+	 * Send an email when a user has registered so that they can confirm their email
+	 *
+	 * @param Model_User $registeredUser
+	 */
 	private function sendRegisterEmail(Model_User $registeredUser)
 	{
-		$message = "Hello World";
 		$subject = "You have successfully registered";
 		$toEmail = $registeredUser->email;
 		$fromEmail = 'do.not.reply@example.com';
 		$fromName = 'The British Council Social Media Monitor team';
+		$resetLink = $this->getResetLink($registeredUser, 'confirm-email');
+		$message = '<p>Hi ' . $registeredUser->name . ',</p>
+					<p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p>
+					<p>If you did not request a reset, please ignore this email.</p>
+					<p>Otherwise, click this link to reset your password <a href="' . $resetLink . '">Reset password</a></p>
+					<p>Thanks,<br />the British Council Social Media Monitor team</p>';
 
 		$this->sendEmail($message, $fromEmail, $fromName, $toEmail, $subject);
 	}
@@ -352,7 +392,7 @@ class UserController extends BaseController
 	 */
 	private function sendResetPasswordEmail(Model_User $user)
 	{
-		$resetLink = $this->_request->getScheme() . '://' . $this->_request->getHttpHost() . $this->view->url(array('action' => 'reset-password')) . '?name=' . urlencode($user->name) . '&reset_key=' . $user->reset_key;
+		$resetLink = $this->getResetLink($user, 'reset-password');
 		$message = '<p>Hi ' . $user->name . ',</p>
 					<p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p>
 					<p>If you did not request a reset, please ignore this email.</p>
@@ -377,5 +417,32 @@ class UserController extends BaseController
 		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		$code = substr(str_shuffle($chars), 0, 16);
 		return $code;
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function isRegistration()
+	{
+		return $this->_request->getActionName() === 'register';
+	}
+
+	/**
+	 * Generate a reset link for a user and a particular action
+	 *
+	 * @param Model_User $user
+	 * @param string $action
+	 * @return string
+	 */
+	private function getResetLink(Model_User $user, $action)
+	{
+		$scheme = $this->_request->getScheme();
+		$host = $this->_request->getHttpHost();
+		$url = $this->view->url(['action' => $action]);
+		$paramString = http_build_query([
+			'name' => $user->name,
+			'confirm_email_key' => $user->confirm_email_key
+		]);
+		return "{$scheme}://{$host}{$url}?{$paramString}";
 	}
 }
