@@ -4,7 +4,7 @@ use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 
 class UserController extends BaseController
 {
-	protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register');
+	protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register', 'confirm-email');
 
 	public function init() {
 		parent::init();
@@ -355,8 +355,15 @@ class UserController extends BaseController
 		}
 
 		if ($user) {
+			try {
+				$user->confirm_email_key = null;
+				$user->save();
+			} catch (Exception $ex) {
+				$this->flashMessage('Something went wrong and we could\'nt confirm your email address.', 'error');
+				$this->_helper->redirector->gotoSimple('index', 'index');
+			}
 			$this->flashMessage('Thank you for confirming your email. You can now login.', 'info');
-			$this->_helper->redirector->gotoSimple('user', 'login');
+			$this->_helper->redirector->gotoSimple('login', 'user');
 		} else {
 			$this->flashMessage('Incorrect user/key combination for password reset', 'error');
 			$this->_helper->redirector->gotoSimple('index', 'index');
