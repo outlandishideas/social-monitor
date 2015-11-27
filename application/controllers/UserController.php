@@ -243,6 +243,9 @@ class UserController extends BaseController
 				$errorMessages[] = 'Please enter an email address';
 			} else if (preg_match('/.*@.*/', $this->_request->getParam('email')) === 0) {
 				$errorMessages[] = 'Please enter a valid email address';
+			} else if ($this->isRegistration() &&
+				!$this->isBritishCouncilEmailAddress($this->_request->getParam('email'))) {
+				$errorMessages[] = 'To register, you must use a valid British Council email address';
 			}
 
 			if (!$errorMessages) {
@@ -451,5 +454,18 @@ class UserController extends BaseController
 			'confirm_email_key' => $user->confirm_email_key
 		]);
 		return "{$scheme}://{$host}{$url}?{$paramString}";
+	}
+
+	/**
+	 * Tests whether email is a british council email address
+	 *
+	 * For testing purposes it also passes if the email address is @outlandish.com
+	 *
+	 * @param $email
+	 * @return bool
+	 */
+	private function isBritishCouncilEmailAddress($email)
+	{
+		return (preg_match('/@britishcouncil\.[\.a-z]{2,5}$/i', $email) === 1) || (preg_match('/@outlandish.com$/i', $email) === 1);
 	}
 }
