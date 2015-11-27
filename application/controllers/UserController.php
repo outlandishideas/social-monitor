@@ -49,7 +49,7 @@ class UserController extends BaseController
 				$this->redirect($redirect);
 			} else {
 				$this->view->redirect_to = $redirect;
-                $this->flashMessage('Incorrect username/password', 'error');
+                $this->flashMessage('Incorrect username/password or email has not been confirmed', 'error');
 			}
 		} else {
 			$this->view->redirect_to = $this->_request->getPathInfo();
