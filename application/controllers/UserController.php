@@ -383,9 +383,9 @@ class UserController extends BaseController
 		$fromName = 'The British Council Social Media Monitor team';
 		$resetLink = $this->getResetLink($registeredUser, 'confirm-email');
 		$message = '<p>Hi ' . $registeredUser->name . ',</p>
-					<p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p>
-					<p>If you did not request a reset, please ignore this email.</p>
-					<p>Otherwise, click this link to reset your password <a href="' . $resetLink . '">Reset password</a></p>
+					<p>Thank you for registering with the British Council Social Monitor</p>
+					<p>If you did not register for this service, please ignore this email.</p>
+					<p>Otherwise, click this link to confirm your email so that you can login with your new account <a href="' . $resetLink . '">Confirm email</a></p>
 					<p>Thanks,<br />the British Council Social Media Monitor team</p>';
 
 		$this->sendEmail($message, $fromEmail, $fromName, $toEmail, $subject);
