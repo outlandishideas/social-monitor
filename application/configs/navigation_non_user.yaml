@@ -3,3 +3,8 @@ user:
   controller: user
   action: login
   icon: icon-user icon-large
+register:
+  label: Register
+  controller: user
+  action: register
+  icon: icon-user icon-large

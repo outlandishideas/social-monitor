@@ -74,6 +74,13 @@ array_unshift($buttons, '<div id="search-table">Loading data...</div>');
 					if (!$user->isManager) {
 						$links['<a href="%url%" class="button-bc">Access Rights</a>'] = array('controller'=>'user', 'action'=>'manage', 'id'=>$user->id);
 					}
+					if ($user->confirm_email_key !== null) {
+						$queryString = http_build_query([
+							'name' => $user->name,
+							'confirm_email_key' => $user->confirm_email_key
+						]);
+						$links['<a href="%url%?'. $queryString .'" class="button-bc">Confirm Email</a>'] = array('controller'=>'user', 'action'=>'confirm-email');
+					}
 					$links['<a href="%url%" class="autoConfirm button-bc">Delete</a>'] = array('controller'=>'user', 'action'=>'delete', 'id'=>$user->id);
 				}
 				$links = $this->gatekeeper()->filterAll($links);

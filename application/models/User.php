@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @property string|null email
+ * @property string|null name
+ * @property int|null id
+ * @property string confirm_email_key
+ */
 class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	protected static $tableName = 'users';
 	protected static $sortColumn = 'name';
@@ -51,7 +57,7 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	// required by Zend_Auth_Adapter_Interface. Used by Zend for authenticating users
 	function authenticate()
 	{
-		$statement = $this->_db->prepare('SELECT id FROM users WHERE (name = :name OR email = :name) AND password_hash = :hash');
+		$statement = $this->_db->prepare('SELECT id FROM users WHERE (name = :name OR email = :name) AND password_hash = :hash AND confirm_email_key IS NULL');
 		$statement->execute(array(':name'=>$this->_authName, ':hash'=>sha1(self::PASSWORD_SALT.$this->_authPassword)));
 		$id = $statement->fetchColumn();
 		$code = ($id ? Zend_Auth_Result::SUCCESS : Zend_Auth_Result::FAILURE);
