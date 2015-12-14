@@ -143,6 +143,8 @@ class Provider_Facebook extends Provider_Abstract
                 (:post_id, :presence_id, :message, :created_time, :actor_id, :posted_by_owner, :in_response_to)
             ");
 
+            echo "Insert Statement: " . $insertStmt . PHP_EOL;
+
             /** @var FacebookStatus $response */
             foreach($responses as $response) {
                 $args = array(
@@ -155,11 +157,14 @@ class Provider_Facebook extends Provider_Abstract
                     'in_response_to' => $response->in_response_to_status_uid
                 );
 
+                echo "Inserting Response: " . json_encode($args) . PHP_EOL;
+
                 try {
                     $insertStmt->execute($args);
                     $count++;
                 } catch (Exception $ex) {
                     //do nothing
+                    echo "Could not insert response: " . json_encode($args) . PHP_EOL;
                 }
 
             }
