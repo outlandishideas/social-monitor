@@ -123,7 +123,6 @@ class Provider_Facebook extends Provider_Abstract
         $currentCount = $count;
         $postIds = $this->getUpdateableResponses($presence);
         $countPostIds = count($postIds);
-        echo "Updateable Responses to fetch comments for: {$countPostIds}" . PHP_EOL;
 
 //        $count = 0;
         if ($postIds) {
@@ -134,7 +133,6 @@ class Provider_Facebook extends Provider_Abstract
             $responseIds = array_map(function(FacebookStatus $response) {
                 return $response->id;
             }, $responses);
-            echo "Found {$countResponses} Responses: " . implode(", ", $responseIds) . PHP_EOL;
 
             $insertStmt = $this->db->prepare("
                 INSERT INTO `{$this->tableName}`
@@ -142,8 +140,6 @@ class Provider_Facebook extends Provider_Abstract
                 VALUES
                 (:post_id, :presence_id, :message, :created_time, :actor_id, :posted_by_owner, :in_response_to)
             ");
-
-            echo "Insert Statement: " . $insertStmt->queryString . PHP_EOL;
 
             /** @var FacebookStatus $response */
             foreach($responses as $response) {
@@ -156,8 +152,6 @@ class Provider_Facebook extends Provider_Abstract
                     'posted_by_owner' => $response->posted_by_owner,
                     'in_response_to' => $response->in_response_to_status_uid
                 );
-
-                echo "Inserting Response: " . json_encode($args) . PHP_EOL;
 
                 try {
                     $inserted = $insertStmt->execute($args);
