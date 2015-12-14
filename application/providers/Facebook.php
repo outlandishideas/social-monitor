@@ -120,6 +120,7 @@ class Provider_Facebook extends Provider_Abstract
      */
     protected function updateResponses(Model_Presence $presence, &$count)
     {
+        $currentCount = $count;
         $postIds = $this->getUpdateableResponses($presence);
         $countPostIds = count($postIds);
         echo "Updateable Responses to fetch comments for: {$countPostIds}" . PHP_EOL;
@@ -162,6 +163,8 @@ class Provider_Facebook extends Provider_Abstract
                 }
 
             }
+
+            echo "inserted {($count - $currentCount)} Responses" . PHP_EOL;
 
         }
     }
