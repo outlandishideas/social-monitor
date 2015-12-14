@@ -120,19 +120,12 @@ class Provider_Facebook extends Provider_Abstract
      */
     protected function updateResponses(Model_Presence $presence, &$count)
     {
-        $currentCount = $count;
         $postIds = $this->getUpdateableResponses($presence);
-        $countPostIds = count($postIds);
 
-//        $count = 0;
         if ($postIds) {
 
             /** @var FacebookStatus[] $responses */
             $responses = $this->adapter->getResponses($postIds);
-            $countResponses = count($responses);
-            $responseIds = array_map(function(FacebookStatus $response) {
-                return $response->id;
-            }, $responses);
 
             $insertStmt = $this->db->prepare("
                 INSERT INTO `{$this->tableName}`
@@ -155,19 +148,16 @@ class Provider_Facebook extends Provider_Abstract
 
                 try {
                     $inserted = $insertStmt->execute($args);
-                    if (!$inserted) {
-                        echo "Insert failed: " . json_encode($insertStmt->errorInfo()) . PHP_EOL;
+                    if ($inserted) {
+                        $count++;
                     }
-                    $count++;
+
                 } catch (Exception $ex) {
                     //do nothing
                     echo "Could not insert response: " . json_encode($args) . PHP_EOL;
                 }
 
             }
-
-            echo "inserted {($count - $currentCount)} Responses" . PHP_EOL;
-
         }
     }
 
