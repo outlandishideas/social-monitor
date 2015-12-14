@@ -156,11 +156,11 @@ class Provider_Facebook extends Provider_Abstract
 
                 try {
                     $insertStmt->execute($args);
+                    $count++;
                 } catch (Exception $ex) {
                     throw $ex;
                 }
 
-                $count++;
             }
 
         }
