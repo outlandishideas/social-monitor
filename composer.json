@@ -20,6 +20,8 @@
     "facebook/php-sdk-v4": "~4.0",
     "guzzlehttp/guzzle": "~5.2",
     "mikehaertl/phpwkhtmltopdf": "~2.0",
-    "cosenary/instagram": "^2.3"
+    "cosenary/instagram": "^2.3",
+      "swiftmailer/swiftmailer": "5.4.1",
+      "robmorgan/phinx": "0.4.2"
 	}
 }

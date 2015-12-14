@@ -54,6 +54,10 @@ abbr {
 	color: #999;
 }
 
+#loginWrapper h2.page-title {
+	margin-top: 40px;
+}
+
 #api-status {
 	float: right;
 	clear: right;
@@ -1951,6 +1955,7 @@ table .cell-handle .missing {
 #search-table input,
 form input[type="text"],
 form input[type="password"],
+form input[type="email"],
 form select,
 form select:hover {
 	margin: 0;
@@ -1966,6 +1971,7 @@ form select:hover {
 
 form select:hover,
 form input[type="text"]:focus,
+form input[type="email"]:focus,
 form input[type="password"]:focus {
 	background-color: #000;
 	background-color: rgba(0,0,0,0.5);

@@ -1,8 +1,10 @@
 <?php
 
+use Outlandish\SocialMonitor\Exception\SocialMonitorException;
+
 class UserController extends BaseController
 {
-	protected static $publicActions = array('login', 'forgotten', 'reset-password');
+	protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register', 'confirm-email');
 
 	public function init() {
 		parent::init();
@@ -47,7 +49,7 @@ class UserController extends BaseController
 				$this->redirect($redirect);
 			} else {
 				$this->view->redirect_to = $redirect;
-                $this->flashMessage('Incorrect username/password', 'error');
+                $this->flashMessage('Incorrect username/password or email has not been confirmed', 'error');
 			}
 		} else {
 			$this->view->redirect_to = $this->_request->getPathInfo();
@@ -78,24 +80,12 @@ class UserController extends BaseController
 				if (!$user) {
                     $this->flashMessage('User not found', 'error');
 				} else {
-					$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-					$user->reset_key = substr( str_shuffle( $chars ), 0, 16);
+					$code = $this->generateCode();
+					$user->reset_key = $code;
 					$user->save();
 
 					try {
-						$resetLink = $this->_request->getScheme() . '://' . $this->_request->getHttpHost() . $this->view->url(array('action'=>'reset-password')) . '?name=' . urlencode($user->name) . '&reset_key=' . $user->reset_key;
-						$message = '<p>Hi ' . $user->name . ',</p>
-							<p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p>
-							<p>If you did not request a reset, please ignore this email.</p>
-							<p>Otherwise, click this link to reset your password <a href="' . $resetLink . '">Reset password</a></p>
-							<p>Thanks,<br />the British Council Social Media Monitor team</p>';
-						$this->sendEmail(
-							$message,
-							'do.not.reply@example.com',
-							'The British Council Social Media Monitor team',
-							$user->email,
-							'Password reset'
-						);
+						$this->sendResetPasswordEmail($user);
                         $this->flashMessage('You should receive an email shortly with a password reset link');
 					} catch (Exception $ex) {
                         $this->flashMessage('Failed to send reset email.<br />Please ask an admin user to reset your password', 'error');
@@ -165,6 +155,23 @@ class UserController extends BaseController
 	}
 
 	/**
+	 * Registers a new user if the new user is using a british council email address
+	 *
+	 */
+	public function registerAction()
+	{
+		$this->editAction();
+		$registerSuccessful = $this->_request->getParam('result') === 'success';
+		if ($registerSuccessful) {
+			$this->view->title = 'Registration success';
+		} else {
+			$this->view->title = 'Register user';
+		}
+		$this->view->registerSuccessful = $registerSuccessful;
+ 		$this->_helper->layout()->setLayout('notabs');
+	}
+
+	/**
 	 * Prompts to create a new dashboard user
 	 * @user-level manager
 	 */
@@ -195,9 +202,16 @@ class UserController extends BaseController
 	 */
 	public function editAction()
 	{
+		$messageOnSave = 'User saved';
+		/** @var Model_User $editingUser */
 		switch ($this->_request->getActionName()) {
 			case 'new':
 				$editingUser = new Model_User(array());
+				$messageOnSave = 'User created';
+				break;
+			case 'register':
+				$editingUser = new Model_User(array());
+				$messageOnSave = 'User registered';
 				break;
 			case 'edit-self':
 				$editingUser = new Model_User($this->view->user->toArray(), true);
@@ -209,7 +223,7 @@ class UserController extends BaseController
 		}
 
 		$this->validateData($editingUser);
-		$this->view->canChangeLevel = $this->view->user->isManager;
+		$this->view->canChangeLevel = isset($this->view->user) ? $this->view->user->isManager : false;
 
 		if ($this->_request->isPost()) {
 			// prevent hackers upgrading their own user level
@@ -229,6 +243,9 @@ class UserController extends BaseController
 				$errorMessages[] = 'Please enter an email address';
 			} else if (preg_match('/.*@.*/', $this->_request->getParam('email')) === 0) {
 				$errorMessages[] = 'Please enter a valid email address';
+			} else if ($this->isRegistration() &&
+				!$this->isBritishCouncilEmailAddress($this->_request->getParam('email'))) {
+				$errorMessages[] = 'To register, you must use a valid British Council email address';
 			}
 
 			if (!$errorMessages) {
@@ -244,6 +261,11 @@ class UserController extends BaseController
 				}
 			}
 
+			if ($this->isRegistration()) {
+				$code = $this->generateCode();
+				$editingUser->confirm_email_key = $code;
+			}
+
 			if ($errorMessages) {
 				foreach ($errorMessages as $message) {
                     $this->flashMessage($message, 'error');
@@ -251,9 +273,12 @@ class UserController extends BaseController
 			} else {
 				try {
 					$editingUser->save();
-                    $this->flashMessage('User saved');
+                    $this->flashMessage($messageOnSave);
 					if($this->view->user->isManager) {
 						$this->_helper->redirector->gotoSimple('index');
+					} else if ($this->isRegistration()) {
+						$this->sendRegisterEmail($editingUser);
+						$this->_helper->redirector->gotoRoute(['action' => 'register', 'result' => 'success']);
 					}
 				} catch (Exception $ex) {
 					if (strpos($ex->getMessage(), '23000') !== false) {
@@ -315,5 +340,132 @@ class UserController extends BaseController
 		$this->view->facebookPresences = Model_PresenceFactory::getPresencesByType(Enum_PresenceType::FACEBOOK());
 		$this->view->countries = Model_Country::fetchAll();
 		$this->view->groups = Model_Group::fetchAll();
+	}
+
+	/**
+	 * Confirm email action
+	 */
+	public function confirmEmailAction()
+	{
+		/** @var Model_User $user */
+		if ($this->_request->getParam('name') && $this->_request->getParam('confirm_email_key')) {
+			$user = Model_User::fetchAll('name=? AND confirm_email_key=?', array($this->_request->getParam('name'), $this->_request->getParam('confirm_email_key')));
+			if ($user) {
+				$user = $user[0];
+			}
+		} else {
+			$user = null;
+		}
+
+		if ($user) {
+			try {
+				$user->confirm_email_key = null;
+				$user->save();
+			} catch (Exception $ex) {
+				$this->flashMessage('Something went wrong and we could\'nt confirm your email address.', 'error');
+				$this->_helper->redirector->gotoSimple('index', 'index');
+			}
+			$this->flashMessage('Thank you for confirming your email. You can now login.', 'info');
+			$this->_helper->redirector->gotoSimple('login', 'user');
+		} else {
+			$this->flashMessage('Incorrect user/key combination for email confirmation', 'error');
+			$this->_helper->redirector->gotoSimple('index', 'index');
+		}
+	}
+
+	/**
+	 * Send an email when a user has registered so that they can confirm their email
+	 *
+	 * @param Model_User $registeredUser
+	 */
+	private function sendRegisterEmail(Model_User $registeredUser)
+	{
+		$subject = "You have successfully registered";
+		$toEmail = $registeredUser->email;
+		$fromEmail = 'do.not.reply@example.com';
+		$fromName = 'The British Council Social Media Monitor team';
+		$resetLink = $this->getResetLink($registeredUser, 'confirm-email');
+		$message = '<p>Hi ' . $registeredUser->name . ',</p>
+					<p>Thank you for registering with the British Council Social Monitor</p>
+					<p>If you did not register for this service, please ignore this email.</p>
+					<p>Otherwise, click this link to confirm your email so that you can login with your new account <a href="' . $resetLink . '">Confirm email</a></p>
+					<p>Thanks,<br />the British Council Social Media Monitor team</p>';
+
+		$this->sendEmail($message, $fromEmail, $fromName, $toEmail, $subject);
+	}
+
+	/**
+	 * Send a password reset email to the given Model_User
+	 *
+	 * @param Model_User $user
+	 * @throws SocialMonitorException
+	 */
+	private function sendResetPasswordEmail(Model_User $user)
+	{
+		$resetLink = $this->getResetLink($user, 'reset-password');
+		$message = '<p>Hi ' . $user->name . ',</p>
+					<p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p>
+					<p>If you did not request a reset, please ignore this email.</p>
+					<p>Otherwise, click this link to reset your password <a href="' . $resetLink . '">Reset password</a></p>
+					<p>Thanks,<br />the British Council Social Media Monitor team</p>';
+		$this->sendEmail(
+			$message,
+			'do.not.reply@example.com',
+			'The British Council Social Media Monitor team',
+			$user->email,
+			'Password reset'
+		);
+	}
+
+	/**
+	 * Generate a random code for use with resettng password and confirming emails
+	 *
+	 * @return string
+	 */
+	private function generateCode()
+	{
+		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		$code = substr(str_shuffle($chars), 0, 16);
+		return $code;
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function isRegistration()
+	{
+		return $this->_request->getActionName() === 'register';
+	}
+
+	/**
+	 * Generate a reset link for a user and a particular action
+	 *
+	 * @param Model_User $user
+	 * @param string $action
+	 * @return string
+	 */
+	private function getResetLink(Model_User $user, $action)
+	{
+		$scheme = $this->_request->getScheme();
+		$host = $this->_request->getHttpHost();
+		$url = $this->view->url(['action' => $action]);
+		$paramString = http_build_query([
+			'name' => $user->name,
+			'confirm_email_key' => $user->confirm_email_key
+		]);
+		return "{$scheme}://{$host}{$url}?{$paramString}";
+	}
+
+	/**
+	 * Tests whether email is a british council email address
+	 *
+	 * For testing purposes it also passes if the email address is @outlandish.com
+	 *
+	 * @param $email
+	 * @return bool
+	 */
+	private function isBritishCouncilEmailAddress($email)
+	{
+		return (preg_match('/@britishcouncil\.[\.a-z]{2,5}$/i', $email) === 1) || (preg_match('/@outlandish.com$/i', $email) === 1);
 	}
 }
