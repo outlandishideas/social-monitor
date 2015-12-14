@@ -27,6 +27,7 @@ class Provider_Facebook extends Provider_Abstract
 		}
 
         // get all posts since the last time we fetched
+        // todo: this isn't right. It should get the last one from seven days ago, or the last one ever
 		$stmt = $this->db->prepare("SELECT created_time
 		    FROM {$this->tableName}
 		    WHERE presence_id = :id
@@ -147,7 +148,7 @@ class Provider_Facebook extends Provider_Abstract
                 try {
                     $insertStmt->execute($args);
                 } catch (Exception $ex) {
-                    continue;
+                    throw $ex;
                 }
 
                 $count++;
