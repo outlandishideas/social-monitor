@@ -59,6 +59,8 @@ class StandardFacebookEngagementQuery implements Query
 							DATE(created_time) >= :then
 						AND
 							DATE(created_time) <= :now
+						AND
+						    in_response_to IS NULL
 						GROUP BY
 							presence_id
 					) AS f
