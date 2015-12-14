@@ -462,7 +462,7 @@ class Provider_Facebook extends Provider_Abstract
         $args = array(
             ':id' => $presenceId,
             ':necessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days')),
-            ':unnecessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -3 days'))
+            ':unnecessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -7 days'))
         );
 
         $sql = "SELECT
