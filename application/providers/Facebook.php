@@ -160,7 +160,10 @@ class Provider_Facebook extends Provider_Abstract
                 echo "Inserting Response: " . json_encode($args) . PHP_EOL;
 
                 try {
-                    $insertStmt->execute($args);
+                    $inserted = $insertStmt->execute($args);
+                    if (!$inserted) {
+                        echo "Insert failed: " . json_encode($insertStmt->errorInfo());
+                    }
                     $count++;
                 } catch (Exception $ex) {
                     //do nothing
