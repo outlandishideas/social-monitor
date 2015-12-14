@@ -463,11 +463,11 @@ class Provider_Facebook extends Provider_Abstract
         $presenceId = $presence->getId();
 
         // update the responses for any non-page posts that don't have a response yet.
-        // Only get those that explicitly need one, or were posted in the last 7 days
+        // Only get those that explicitly need one, or were posted in the last 3 days
         $args = array(
             ':id' => $presenceId,
             ':necessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days')),
-            ':unnecessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days'))
+            ':unnecessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -3 days'))
         );
 
         $sql = "SELECT
