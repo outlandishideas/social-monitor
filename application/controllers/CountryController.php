@@ -3,6 +3,18 @@
 use mikehaertl\wkhtmlto\Pdf;
 use Outlandish\SocialMonitor\Report\ReportableCountry;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
+use Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay;
+use Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulation;
+use Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulationHealth;
+use Outlandish\SocialMonitor\TableIndex\Header\Header;
+use Outlandish\SocialMonitor\TableIndex\Header\Name;
+use Outlandish\SocialMonitor\TableIndex\Header\Options;
+use Outlandish\SocialMonitor\TableIndex\Header\PresenceCount;
+use Outlandish\SocialMonitor\TableIndex\Header\Presences;
+use Outlandish\SocialMonitor\TableIndex\Header\ResponseTime;
+use Outlandish\SocialMonitor\TableIndex\Header\TargetAudience;
+use Outlandish\SocialMonitor\TableIndex\Header\TotalRank;
+use Outlandish\SocialMonitor\TableIndex\Header\TotalScore;
 use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class CountryController extends CampaignController {
@@ -45,7 +57,7 @@ class CountryController extends CampaignController {
 		$this->view->countries = $countries;
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $indexTable->getHeaders();
-        $this->view->sortCol = Header_Name::getName();
+        $this->view->sortCol = Name::getName();
 	}
 
     public function statsPanelAction()
@@ -412,23 +424,23 @@ class CountryController extends CampaignController {
 	}
 
     /**
-     * @return Header_Abstract[]
+     * @return Header[]
      */
     protected function tableIndexHeaders() {
 
         return array(
-            Header_Name::getInstance(),
+            Name::getInstance(),
             //Header_Country::getInstance(),
-            Header_TotalRank::getInstance(),
-            Header_TotalScore::getInstance(),
-            Header_TargetAudience::getInstance(),
-            Header_DigitalPopulation::getInstance(),
-            Header_DigitalPopulationHealth::getInstance(),
-            Header_ActionsPerDay::getInstance(),
-            Header_ResponseTime::getInstance(),
-            Header_Presences::getInstance(),
-            Header_PresenceCount::getInstance(),
-            Header_Options::getInstance()
+            TotalRank::getInstance(),
+            TotalScore::getInstance(),
+            TargetAudience::getInstance(),
+            DigitalPopulation::getInstance(),
+            DigitalPopulationHealth::getInstance(),
+            ActionsPerDay::getInstance(),
+            ResponseTime::getInstance(),
+            Presences::getInstance(),
+            PresenceCount::getInstance(),
+            Options::getInstance()
         );
     }
 

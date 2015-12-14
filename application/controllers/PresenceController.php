@@ -3,6 +3,17 @@
 use mikehaertl\wkhtmlto\Pdf;
 use Outlandish\SocialMonitor\Report\ReportablePresence;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
+use Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay;
+use Outlandish\SocialMonitor\TableIndex\Header\Branding;
+use Outlandish\SocialMonitor\TableIndex\Header\CurrentAudience;
+use Outlandish\SocialMonitor\TableIndex\Header\Handle;
+use Outlandish\SocialMonitor\TableIndex\Header\Header;
+use Outlandish\SocialMonitor\TableIndex\Header\Options;
+use Outlandish\SocialMonitor\TableIndex\Header\ResponseTime;
+use Outlandish\SocialMonitor\TableIndex\Header\SignOff;
+use Outlandish\SocialMonitor\TableIndex\Header\TargetAudience;
+use Outlandish\SocialMonitor\TableIndex\Header\TotalRank;
+use Outlandish\SocialMonitor\TableIndex\Header\TotalScore;
 use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class PresenceController extends GraphingController
@@ -36,7 +47,7 @@ class PresenceController extends GraphingController
         $this->view->presences = $presences;
         $this->view->rows = $rows;
         $this->view->tableHeaders = $indexTable->getHeaders();
-        $this->view->sortCol = Header_Handle::getName();
+        $this->view->sortCol = Handle::getName();
 	}
 
 	/**
@@ -478,21 +489,21 @@ class PresenceController extends GraphingController
     }
 
     /**
-     * @return Header_Abstract[]
+     * @return Header[]
      */
     protected function tableIndexHeaders() {
         return array(
 //            Header_Compare::getInstance(),//todo: reinstate when compare functionality is restored
-            Header_Handle::getInstance(),
-            Header_SignOff::getInstance(),
-            Header_Branding::getInstance(),
-            Header_TotalRank::getInstance(),
-            Header_TotalScore::getInstance(),
-            Header_CurrentAudience::getInstance(),
-            Header_TargetAudience::getInstance(),
-            Header_ActionsPerDay::getInstance(),
-            Header_ResponseTime::getInstance(),
-            Header_Options::getInstance()
+            Handle::getInstance(),
+            SignOff::getInstance(),
+            Branding::getInstance(),
+            TotalRank::getInstance(),
+            TotalScore::getInstance(),
+            CurrentAudience::getInstance(),
+            TargetAudience::getInstance(),
+            ActionsPerDay::getInstance(),
+            ResponseTime::getInstance(),
+            Options::getInstance()
         );
     }
 

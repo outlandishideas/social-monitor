@@ -3,6 +3,15 @@
 use mikehaertl\wkhtmlto\Pdf;
 use Outlandish\SocialMonitor\Report\ReportableGroup;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
+use Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay;
+use Outlandish\SocialMonitor\TableIndex\Header\Name;
+use Outlandish\SocialMonitor\TableIndex\Header\Options;
+use Outlandish\SocialMonitor\TableIndex\Header\PresenceCount;
+use Outlandish\SocialMonitor\TableIndex\Header\Presences;
+use Outlandish\SocialMonitor\TableIndex\Header\ResponseTime;
+use Outlandish\SocialMonitor\TableIndex\Header\TargetAudience;
+use Outlandish\SocialMonitor\TableIndex\Header\TotalRank;
+use Outlandish\SocialMonitor\TableIndex\Header\TotalScore;
 use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class GroupController extends CampaignController {
@@ -28,7 +37,7 @@ class GroupController extends CampaignController {
 		$this->view->groups = $groups;
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $indexTable->getHeaders();
-        $this->view->sortCol = Header_Name::getName();
+        $this->view->sortCol = Name::getName();
 	}
 
 	/**
@@ -353,15 +362,15 @@ class GroupController extends CampaignController {
     protected function tableIndexHeaders()
     {
         return array(
-            Header_Name::getInstance(),
-            Header_TotalRank::getInstance(),
-            Header_TotalScore::getInstance(),
-            Header_TargetAudience::getInstance(),
-            Header_ActionsPerDay::getInstance(),
-            Header_ResponseTime::getInstance(),
-            Header_Presences::getInstance(),
-            Header_PresenceCount::getInstance(),
-            Header_Options::getInstance()
+            Name::getInstance(),
+            TotalRank::getInstance(),
+            TotalScore::getInstance(),
+            TargetAudience::getInstance(),
+            ActionsPerDay::getInstance(),
+            ResponseTime::getInstance(),
+            Presences::getInstance(),
+            PresenceCount::getInstance(),
+            Options::getInstance()
         );
     }
 

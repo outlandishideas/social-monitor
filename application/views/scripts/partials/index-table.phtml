@@ -7,9 +7,15 @@
  * $emptyText = Text to show when no rows
  * $sortCol = Name of column to sort on, by default
  */
+use Outlandish\SocialMonitor\TableIndex\Header\Countries;
+use Outlandish\SocialMonitor\TableIndex\Header\Handle;
+use Outlandish\SocialMonitor\TableIndex\Header\Header;
+use Outlandish\SocialMonitor\TableIndex\Header\Name;
+use Outlandish\SocialMonitor\TableIndex\Header\Options;
+use Outlandish\SocialMonitor\TableIndex\Header\Presences;
 
-/** @var Header_Abstract[] $headers */
-$headers = array_filter($this->tableHeaders, function(Header_Abstract $h) {
+/** @var Header[] $headers */
+$headers = array_filter($this->tableHeaders, function(Header $h) {
         return $h->isForScreen();
     });
 /** @var Zend_View_Helper_Gatekeeper $gatekeeper */
@@ -37,7 +43,7 @@ $gatekeeper = $this->gatekeeper();
                     <?php
                     $cellValue = $header->getTableCellValue($row);
                     switch($header->getName()) {
-                        case Header_Options::getName():
+                        case Options::getName():
                             $links = $gatekeeper->filterAll($cellValue);
                             if(count($links) > 0) {
                                 echo "<ul>";
@@ -47,10 +53,10 @@ $gatekeeper = $this->gatekeeper();
                                 echo "</ul>";
                             }
                             break;
-                        case Header_Presences::getName():
-                        case Header_Countries::getName():
+                        case Presences::getName():
+                        case Countries::getName():
                             $count = count($cellValue);
-                            if ($header->getName() == Header_Countries::getName()) {
+                            if ($header->getName() == Countries::getName()) {
                                 $countText = $count . ($count == 1 ? ' country' : ' countries');
                             } else {
                                 $countText = $count . ' presence' . ($count == 1 ? '' : 's');
@@ -76,8 +82,8 @@ $gatekeeper = $this->gatekeeper();
                                 echo '<span>' . $countText . '</span>';
                             }
                             break;
-                        case Header_Handle::getName():
-                        case Header_Name::getName():
+                        case Handle::getName():
+                        case Name::getName():
                             $url = $gatekeeper->filter('%url%', array("action" => "view", "id" => $row->id));
                             if ($url) {
                                 echo '<a href="' . $url . '" class="view-link">' . $cellValue . '</a>';

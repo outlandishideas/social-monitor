@@ -1,9 +1,11 @@
 <?php
 
+use Outlandish\SocialMonitor\TableIndex\Header\Header;
+
 class Util_Csv {
     /**
      * @param Model_Presence[]|Model_Campaign[] $models
-     * @param Header_Abstract[] $headers
+     * @param Header[] $headers
      * @return array
      */
     static function generateCsvData($models, $headers) {
@@ -18,7 +20,7 @@ class Util_Csv {
             array()
         );
 
-        /** @var Header_Abstract[] $columns */
+        /** @var Header[] $columns */
         $columns = array();
         foreach ($headers as $column) {
             if ($column->isForCsv()) {
@@ -31,16 +33,16 @@ class Util_Csv {
         foreach($models as $model){
             $dataTypes = array();
             if ($model instanceof Model_Campaign) {
-                $dataTypes[] = Header_Abstract::MODEL_TYPE_CAMPAIGN;
+                $dataTypes[] = Header::MODEL_TYPE_CAMPAIGN;
                 if ($model instanceof Model_Country) {
-                    $dataTypes[] = Header_Abstract::MODEL_TYPE_COUNTRY;
+                    $dataTypes[] = Header::MODEL_TYPE_COUNTRY;
                 } else if ($model instanceof Model_Group) {
-                    $dataTypes[] = Header_Abstract::MODEL_TYPE_GROUP;
+                    $dataTypes[] = Header::MODEL_TYPE_GROUP;
                 } else if ($model instanceof Model_Region) {
-                    $dataTypes[] = Header_Abstract::MODEL_TYPE_REGION;
+                    $dataTypes[] = Header::MODEL_TYPE_REGION;
                 }
             } else if ($model instanceof Model_Presence) {
-                $dataTypes[] = Header_Abstract::MODEL_TYPE_PRESENCE;
+                $dataTypes[] = Header::MODEL_TYPE_PRESENCE;
             }
 
             $row = array();
