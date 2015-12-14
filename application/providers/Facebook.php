@@ -116,15 +116,24 @@ class Provider_Facebook extends Provider_Abstract
      *
      * @param Model_Presence $presence
      * @param int $count
+     * @throws Exception
      */
     protected function updateResponses(Model_Presence $presence, &$count)
     {
         $postIds = $this->getUpdateableResponses($presence);
+        $countPostIds = count($postIds);
+        echo "Updateable Responses to fetch comments for: {$countPostIds}" . PHP_EOL;
 
 //        $count = 0;
         if ($postIds) {
 
+            /** @var FacebookStatus[] $responses */
             $responses = $this->adapter->getResponses($postIds);
+            $countResponses = count($responses);
+            $responseIds = array_map(function(FacebookStatus $response) {
+                return $response->id;
+            }, $responses);
+            echo "Found {$countResponses} Responses: " . implode(", ", $responseIds) . PHP_EOL;
 
             $insertStmt = $this->db->prepare("
                 INSERT INTO `{$this->tableName}`
@@ -459,11 +468,11 @@ class Provider_Facebook extends Provider_Abstract
         $presenceId = $presence->getId();
 
         // update the responses for any non-page posts that don't have a response yet.
-        // Only get those that explicitly need one, or were posted in the last 3 days
+        // Only get those that explicitly need one, or were posted in the last 7 days
         $args = array(
             ':id' => $presenceId,
             ':necessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days')),
-            ':unnecessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -7 days'))
+            ':unnecessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days'))
         );
 
         $sql = "SELECT
