@@ -156,7 +156,7 @@ class Provider_Facebook extends Provider_Abstract
                 try {
                     $inserted = $insertStmt->execute($args);
                     if (!$inserted) {
-                        echo "Insert failed: " . json_encode($insertStmt->errorInfo());
+                        echo "Insert failed: " . json_encode($insertStmt->errorInfo()) . PHP_EOL;
                     }
                     $count++;
                 } catch (Exception $ex) {
