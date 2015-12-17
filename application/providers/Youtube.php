@@ -45,8 +45,8 @@ class Provider_Youtube extends Provider_Abstract
 	{
         $insertStmt = $this->db->prepare("
 			INSERT INTO `{$this->tableName}`
-			(`presence_id`, ``video_id`, `title`, `description`, `created_time`, `permalink`,
-				`views`, `likes`, `dislikes`, `comments`)
+			(`presence_id`, `video_id`, `title`, `description`, `created_time`, `permalink`,
+			`views`, `likes`, `dislikes`, `comments`)
 			VALUES
 			(:presence_id, :video_id, :title, :description, :created_time,
 				:permalink, :views, :likes, :dislikes, :comments)

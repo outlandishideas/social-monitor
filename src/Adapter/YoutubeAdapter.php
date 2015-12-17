@@ -53,21 +53,24 @@ class YoutubeAdapter extends AbstractAdapter
         $channels = $this->youtube->channels->listChannels('contentDetails',['forUsername' => $handle])->getItems();
         if($channels && count($channels)) {
             $playlistId = $channels[0]->contentDetails->relatedPlaylists->uploads;
-            $media = $this->youtube->playlistItems->listPlaylistItems('id', ['playlistId' => $playlistId])->getItems();
-            $videoIds = array_map(function($m) {
-                return $m->id;
-            },$media);
+            $media = $this->youtube->playlistItems->listPlaylistItems('snippet', ['playlistId' => $playlistId])->getItems();
+            $videoIds = array();
+            foreach($media as $m) {
+                if($m->snippet->resourceId->kind === 'youtube#video') {
+                    $videoIds[] = $m->snippet->resourceId->videoId;
+                }
+            }
             $q = ['id'=>implode(',',$videoIds)];
             $details = $this->youtube->videos->listVideos('snippet,statistics', $q)->getItems();
 
             foreach ($details as $m) {
                 $video = new YoutubeVideo();
                 $video->id = $m->id;
-                $video->comments = $m->statistics->commentCount;
-                $video->likes = $m->statistics->likeCount;
-                $video->dislikes = $m->statistics->dislikeCount;
-                $video->views = $m->statistics->viewCount;
-                $video->created_time = $m->snippet->publishedAt;
+                $video->comments = $m->statistics->commentCount ? $m->statistics->commentCount : 0;
+                $video->likes = $m->statistics->likeCount ? $m->statistics->likeCount : 0;
+                $video->dislikes = $m->statistics->dislikeCount ? $m->statistics->dislikeCount : 0;
+                $video->views = $m->statistics->viewCount ? $m->statistics->viewCount : 0;
+                $video->created_time = strtotime($m->snippet->publishedAt);
                 $video->posted_by_owner = true;
                 $video->permalink = 'https://www.youtube.com/watch?v=' . $video->id;
                 $video->title = $m->snippet->title;
