@@ -57,29 +57,45 @@ class YoutubeAdapter extends AbstractAdapter
         $videos = array();
         $channels = $this->youtube->channels->listChannels('contentDetails',['forUsername' => $handle])->getItems();
         if($channels && count($channels)) {
+            $videoDetails = array();
             $playlistId = $channels[0]->contentDetails->relatedPlaylists->uploads;
-            $media = $this->youtube->playlistItems->listPlaylistItems('snippet', ['playlistId' => $playlistId])->getItems();
-            $videoIds = array();
-            foreach($media as $m) {
-                if($m->snippet->resourceId->kind === 'youtube#video') {
-                    $videoIds[] = $m->snippet->resourceId->videoId;
+            $args = ['playlistId' => $playlistId, 'maxResults' => 50];
+            $complete = false;
+            while(!$complete) {
+                $playlistItemResponse = $this->youtube->playlistItems
+                    ->listPlaylistItems('snippet',$args);
+                $playlistItems = $playlistItemResponse->getItems();
+
+                $videoIds = array();
+                foreach ($playlistItems as $p) {
+                    if ($p->snippet->resourceId->kind === 'youtube#video') {
+                        $videoIds[] = $p->snippet->resourceId->videoId;
+                    }
+                }
+
+                $q = ['id'=>implode(',',$videoIds)];
+                $details = $this->youtube->videos->listVideos('snippet,statistics', $q)->getItems();
+                $videoDetails = array_merge($videoDetails,$details);
+
+                if(!$playlistItemResponse->nextPageToken) {
+                    $complete = true;
+                } else {
+                    $args['pageToken'] = $playlistItemResponse->nextPageToken;
                 }
             }
-            $q = ['id'=>implode(',',$videoIds)];
-            $details = $this->youtube->videos->listVideos('snippet,statistics', $q)->getItems();
 
-            foreach ($details as $m) {
+            foreach ($videoDetails as $d) {
                 $video = new YoutubeVideo();
-                $video->id = $m->id;
-                $video->comments = $m->statistics->commentCount ? $m->statistics->commentCount : 0;
-                $video->likes = $m->statistics->likeCount ? $m->statistics->likeCount : 0;
-                $video->dislikes = $m->statistics->dislikeCount ? $m->statistics->dislikeCount : 0;
-                $video->views = $m->statistics->viewCount ? $m->statistics->viewCount : 0;
-                $video->created_time = strtotime($m->snippet->publishedAt);
+                $video->id = $d->id;
+                $video->comments = $d->statistics->commentCount ? $d->statistics->commentCount : 0;
+                $video->likes = $d->statistics->likeCount ? $d->statistics->likeCount : 0;
+                $video->dislikes = $d->statistics->dislikeCount ? $d->statistics->dislikeCount : 0;
+                $video->views = $d->statistics->viewCount ? $d->statistics->viewCount : 0;
+                $video->created_time = strtotime($d->snippet->publishedAt);
                 $video->posted_by_owner = true;
                 $video->permalink = 'https://www.youtube.com/watch?v=' . $video->id;
-                $video->title = $m->snippet->title;
-                $video->description = $m->snippet->description;
+                $video->title = $d->snippet->title;
+                $video->description = $d->snippet->description;
 
                 $videos[] = $video;
             }
