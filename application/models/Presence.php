@@ -314,6 +314,9 @@ class Model_Presence
 					case Enum_PresenceType::INSTAGRAM:
 						$percent = BaseController::getOption('ig_min');
 						break;
+					case Enum_PresenceType::YOUTUBE:
+						$percent = BaseController::getOption('yt_min');
+						break;
 				}
 				$target *= $percent;
 				$target /= 100;
