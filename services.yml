@@ -27,6 +27,10 @@ services:
         class: Outlandish\SocialMonitor\Adapter\InstagramAdapter
         arguments: ["@instagram.app"]
 
+    adapter.youtube:
+        class: Outlandish\SocialMonitor\Adapter\YoutubeAdapter
+        arguments: ["@google.youtube"]
+
     ###################################
     # instagram engagement services
     ###################################
@@ -37,6 +41,21 @@ services:
     instagram.query.weighted:
         class:     Outlandish\SocialMonitor\Engagement\Query\WeightedInstagramEngagementQuery
         arguments: ["@pdo"]
+
+
+    ###################################
+    # google api services
+    ###################################
+
+    google.client:
+        class: Google_Client
+        calls:
+            - [setApplicationName, ["Social_Monitor"]]
+            - [setDeveloperKey, ["%youtube.api_key%"]]
+
+    google.youtube:
+        class: Google_Service_YouTube
+        arguments: ["@google.client"]
 
     ###################################
     # sina weibo engagement services

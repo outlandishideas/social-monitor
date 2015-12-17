@@ -2,6 +2,7 @@ parameters:
     facebook.app_id:
     facebook.app_secret:
     instagram.app_token:
+    youtube.api_key:
     db.name:
     db.host:
     db.username:

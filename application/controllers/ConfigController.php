@@ -33,6 +33,9 @@ class ConfigController extends BaseController {
                             'ig_min'=>array('label'=>'Instagram Minimum Audience (% of total)'),
                             'ig_opt'=>array('label'=>'Instagram Optimum Audience (% of total)'),
 
+                            'yt_min'=>array('label'=>'Youtube Minimum Audience (% of total)'),
+                            'yt_opt'=>array('label'=>'Youtube Optimum Audience (% of total)'),
+
                             'size_2_presences'=>array('label'=>'% of owner Target Audience that is shared amongst large presences'),
                             'size_1_presences'=>array('label'=>'% of owner Target Audience that is shared amongst medium presences'),
                             'size_0_presences'=>array('label'=>'% of owner Target Audience that is shared amongst small presences'),
