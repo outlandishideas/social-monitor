@@ -57,7 +57,7 @@ class YoutubeAdapter extends AbstractAdapter
         $videos = array();
         $channels = $this->youtube->channels->listChannels('contentDetails',['forUsername' => $handle])->getItems();
         if($channels && count($channels)) {
-            $media = array();
+            $videoDetails = array();
             $playlistId = $channels[0]->contentDetails->relatedPlaylists->uploads;
             $args = ['playlistId' => $playlistId, 'maxResults' => 50];
             $complete = false;
@@ -75,7 +75,7 @@ class YoutubeAdapter extends AbstractAdapter
 
                 $q = ['id'=>implode(',',$videoIds)];
                 $details = $this->youtube->videos->listVideos('snippet,statistics', $q)->getItems();
-                $media = array_merge($media,$details);
+                $videoDetails = array_merge($videoDetails,$details);
 
                 if(!$playlistItemResponse->nextPageToken) {
                     $complete = true;
@@ -84,18 +84,18 @@ class YoutubeAdapter extends AbstractAdapter
                 }
             }
 
-            foreach ($media as $v) {
+            foreach ($videoDetails as $d) {
                 $video = new YoutubeVideo();
-                $video->id = $v->id;
-                $video->comments = $v->statistics->commentCount ? $v->statistics->commentCount : 0;
-                $video->likes = $v->statistics->likeCount ? $v->statistics->likeCount : 0;
-                $video->dislikes = $v->statistics->dislikeCount ? $v->statistics->dislikeCount : 0;
-                $video->views = $v->statistics->viewCount ? $v->statistics->viewCount : 0;
-                $video->created_time = strtotime($v->snippet->publishedAt);
+                $video->id = $d->id;
+                $video->comments = $d->statistics->commentCount ? $d->statistics->commentCount : 0;
+                $video->likes = $d->statistics->likeCount ? $d->statistics->likeCount : 0;
+                $video->dislikes = $d->statistics->dislikeCount ? $d->statistics->dislikeCount : 0;
+                $video->views = $d->statistics->viewCount ? $d->statistics->viewCount : 0;
+                $video->created_time = strtotime($d->snippet->publishedAt);
                 $video->posted_by_owner = true;
                 $video->permalink = 'https://www.youtube.com/watch?v=' . $video->id;
-                $video->title = $v->snippet->title;
-                $video->description = $v->snippet->description;
+                $video->title = $d->snippet->title;
+                $video->description = $d->snippet->description;
 
                 $videos[] = $video;
             }
