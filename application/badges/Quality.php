@@ -12,6 +12,7 @@ class Badge_Quality extends Badge_Abstract
 							<li>The Sign Off status of the presence.</li>
 							<li>The Branding status of the presence.</li>
 							<li>The number of relevant posts made each day.</li>
+							<li>The Average Response Time to comments for this presence.</li>
 						</ul>';
 
     public function __construct(PDO $db = null)
@@ -22,6 +23,7 @@ class Badge_Quality extends Badge_Abstract
             Metric_Relevance::getInstance(),
             Metric_Branding::getInstance(),
             Metric_ActionsPerDay::getInstance(),
+            Metric_ResponseTimeNew::getInstance(),
             Metric_LikesPerPost::getInstance()
         );
     }

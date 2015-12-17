@@ -1,7 +1,5 @@
 <?php
 
-
-use Facebook\GraphObject;
 use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 use Outlandish\SocialMonitor\Models\FacebookStatus;
 use Outlandish\SocialMonitor\Engagement\EngagementMetric;
@@ -29,6 +27,7 @@ class Provider_Facebook extends Provider_Abstract
 		}
 
         // get all posts since the last time we fetched
+        // todo: this isn't right. It should get the last one from seven days ago, or the last one ever
 		$stmt = $this->db->prepare("SELECT created_time
 		    FROM {$this->tableName}
 		    WHERE presence_id = :id
@@ -117,14 +116,15 @@ class Provider_Facebook extends Provider_Abstract
      *
      * @param Model_Presence $presence
      * @param int $count
+     * @throws Exception
      */
     protected function updateResponses(Model_Presence $presence, &$count)
     {
         $postIds = $this->getUpdateableResponses($presence);
 
-//        $count = 0;
         if ($postIds) {
 
+            /** @var FacebookStatus[] $responses */
             $responses = $this->adapter->getResponses($postIds);
 
             $insertStmt = $this->db->prepare("
@@ -147,14 +147,17 @@ class Provider_Facebook extends Provider_Abstract
                 );
 
                 try {
-                    $insertStmt->execute($args);
+                    $inserted = $insertStmt->execute($args);
+                    if ($inserted) {
+                        $count++;
+                    }
+
                 } catch (Exception $ex) {
-                    continue;
+                    //do nothing
+                    echo "Could not insert response: " . json_encode($args) . PHP_EOL;
                 }
 
-                $count++;
             }
-
         }
     }
 
@@ -176,10 +179,12 @@ class Provider_Facebook extends Provider_Abstract
         $clauses = array_merge($clauses, $searchArgs['clauses']);
         $args = array_merge($args, $searchArgs['args']);
 
+        $clauseString = implode(' AND ', $clauses);
+
 		$sql = "
 			SELECT SQL_CALC_FOUND_ROWS p.*
 			FROM {$this->tableName} AS p
-			WHERE " . implode(' AND ', $clauses);
+			WHERE {$clauseString}";
         $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
         $sql .= $this->getLimitSql($limit, $offset);
 
@@ -393,6 +398,14 @@ class Provider_Facebook extends Provider_Abstract
 	}
 
     /**
+     * Get response time data for all British Council statuses that are a response to another status
+     *
+     * Statuses represent both Facebook posts and Facebook comments. This method gets response time
+     * data for all statuses belonging to the $presence and occurring between $start and $end.
+     *
+     * The data returned is array of stdClass objects that hold the created time for the response and the
+     * number of seconds between the original status and the response.
+     *
      * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
@@ -411,11 +424,20 @@ class Provider_Facebook extends Provider_Abstract
             ':start_date' => $start->format('Y-m-d'),
             ':end_date' => $end->format('Y-m-d')
         );
-        $stmt = $this->db->prepare("
-          SELECT t.post_id as id, t.created_time as created, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
-          FROM {$this->tableName} AS t
-            INNER JOIN {$this->tableName} AS r ON t.post_id = r.in_response_to
-            WHERE " . implode(' AND ', $clauses) ."");
+
+        $clauseString = implode(' AND ', $clauses);
+
+        $sql = "
+          SELECT
+            t.post_id as id,
+            t.created_time as created,
+            TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS `time`
+          FROM
+            {$this->tableName} AS t
+          INNER JOIN
+            {$this->tableName} AS r ON t.post_id = r.in_response_to
+          WHERE {$clauseString};";
+        $stmt = $this->db->prepare($sql);
         $stmt->execute($args);
         foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
             $key = $r->id;
@@ -447,32 +469,28 @@ class Provider_Facebook extends Provider_Abstract
             ':necessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -30 days')),
             ':unnecessary_since' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s') . ' -3 days'))
         );
-        $stmt = $this->db->prepare("SELECT DISTINCT a.post_id
-            FROM (
-                SELECT *
-                FROM {$this->tableName}
-                WHERE presence_id = :id
-                AND in_response_to IS NULL
-                AND
-                (
-                    (
-                      needs_response = 1
-                      AND created_time > :necessary_since
-                    )
-                    OR
-                    (
-                      posted_by_owner = 0
-                      AND message <> ''
-                      AND message IS NOT NULL
-                      AND created_time > :unnecessary_since
-                    )
-                )
-            ) as a
-            LEFT OUTER JOIN {$this->tableName} AS b
-                ON b.presence_id = a.presence_id
-                AND b.in_response_to = a.post_id
-            WHERE b.id IS NULL");
+
+        $sql = "SELECT
+                  DISTINCT a.post_id
+                  FROM (
+                    SELECT *
+                    FROM {$this->tableName}
+                    WHERE presence_id = :id
+                    AND
+                      (
+                        ( needs_response = 1 AND created_time > :necessary_since )
+                        OR
+                        ( message <> '' AND message IS NOT NULL AND created_time > :unnecessary_since )
+                      )
+                  ) as a
+                  LEFT OUTER JOIN {$this->tableName} AS b
+                  ON b.presence_id = a.presence_id
+                  AND b.in_response_to = a.post_id
+                  WHERE b.id IS NULL;";
+
+        $stmt = $this->db->prepare($sql);
         $stmt->execute($args);
+
         $postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
         return $postIds;

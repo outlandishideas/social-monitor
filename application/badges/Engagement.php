@@ -9,7 +9,6 @@ class Badge_Engagement extends Badge_Abstract
 							<li>The Klout Score for this presence (Twitter Only).</li>
 							<li>The Facebook Engagement score for this presence (Facebook Only).</li>
 							<li>The Sina Weibo Engagement score for this presence (Sina Weibo Only).</li>
-							<li>The Average Response Time to comments for this presence.</li>
 						</ul>';
 
     public function __construct(PDO $db = null)
