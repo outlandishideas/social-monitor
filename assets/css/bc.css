@@ -1116,6 +1116,7 @@ body .compare.list li {
 
 .entity.twitter .icon-large { color: #4099FF; }
 .entity.instagram .icon-large { color: #3f729b; }
+.entity.youtube .icon-large { color: #e52d27; }
 .entity.facebook .icon-large { color: #3B5998; }
 .entity.sina_weibo .icon-large { color: #e6162d; }
 .entity.country .icon-large { color: #009600; }
@@ -1129,6 +1130,12 @@ a.presence.twitter .icon-large,
 
 a.presence.instagram .icon-large,
 .icon-instagram-sign {
+	/*color: #3f729b;*/
+	color: #FFF;
+}
+
+a.presence.youtube .icon-large,
+.icon-youtube-sign {
 	/*color: #3f729b;*/
 	color: #FFF;
 }
@@ -1210,6 +1217,15 @@ li.link.box {
 .link.box.instagram a:hover,
 .link.box.instagram a:focus {
     background-color: #386589;
+}
+
+.link.box.youtube a {
+	background-color: #e52d27;
+}
+
+.link.box.youtube a:hover,
+.link.box.youtube a:focus {
+	background-color: #b31217;
 }
 
 .link.box.sina_weibo a {
@@ -1868,6 +1884,10 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 
 .fa.fa-instagram {
 	color: #3f729b;
+}
+
+.fa.fa-youtube {
+	color: #e52d27;
 }
 
 .fa.fa-facebook {
