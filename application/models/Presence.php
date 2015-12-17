@@ -28,6 +28,7 @@ class Model_Presence
 	public $facebook_engagement;
 	public $instagram_engagement;
 	public $sina_weibo_engagement;
+	public $youtube_engagement;
 	public $page_url;
 	public $image_url;
 	public $owner;
