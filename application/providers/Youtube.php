@@ -103,7 +103,7 @@ class Provider_Youtube extends Provider_Abstract
             ':end'   => $end->format('Y-m-d H:i:s'),
             ':id'    => $presence->getId()
         );
-        $searchArgs = $this->getSearchClauses($search, array('p.message'));
+        $searchArgs = $this->getSearchClauses($search, array('p.title','p.description'));
         $clauses = array_merge($clauses, $searchArgs['clauses']);
         $args = array_merge($args, $searchArgs['args']);
 
