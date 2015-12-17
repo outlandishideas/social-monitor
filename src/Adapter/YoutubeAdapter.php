@@ -27,6 +27,11 @@ class YoutubeAdapter extends AbstractAdapter
         $response = $this->youtube->channels->listChannels('id,snippet,statistics', ['forUsername' => $handle]);
 
         $items = $response->getItems();
+
+        if (empty($items)) {
+            throw new \Exception("Youtube Channel \"{$handle}\" not found.");
+        }
+
         /** @var Google_Service_Youtube_Channel $channel */
         $channel = $items[0];
         /** @var Google_Service_Youtube_ChannelSnippet $snippet */
