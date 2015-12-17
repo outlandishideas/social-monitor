@@ -3,6 +3,7 @@
 
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
+use Outlandish\SocialMonitor\Models\YoutubeVideo;
 
 class Provider_Youtube extends Provider_Abstract
 {
@@ -22,64 +23,59 @@ class Provider_Youtube extends Provider_Abstract
 	public function fetchStatusData(Model_Presence $presence)
 	{
         $count = 0;
-		if (!$presence->getUID()) {
-			throw new Exception('Presence not initialised/found');
-		}
+        if (!$presence->getUID()) {
+            throw new Exception('Presence not initialised/found');
+        }
 
-        // get all posts since the last time we fetched
-        $stmt = $this->db->prepare("SELECT post_id
-		    FROM {$this->tableName}
-		    WHERE presence_id = :id
-            AND created_time <= DATE_SUB(NOW(), INTERVAL 7 DAY)
-		    ORDER BY created_time DESC
-		    LIMIT 1");
-        $stmt->execute(array(':id'=>$presence->getId()));
-        $lastPostId = $stmt->fetchColumn();
+        // get all videos - there aren't very many so we can update them all
 
-        $posts = $this->adapter->getStatuses($presence->getUID(), $lastPostId, null);
+        $videos = $this->adapter->getStatuses($presence->getUID(),null,$presence->handle);
 
-        $this->insertStatuses($presence, $posts, $count);
+        $this->insertStatuses($presence, $videos, $count);
 
         return $count;
-	}
+    }
 
     /**
      * @param Model_Presence $presence
-     * @param array          $posts
+     * @param array          $videos
      * @param mixed          $count
      */
-    protected function insertStatuses(Model_Presence $presence, array $posts, &$count)
+    protected function insertStatuses(Model_Presence $presence, array $videos, &$count)
 	{
         $insertStmt = $this->db->prepare("
 			INSERT INTO `{$this->tableName}`
-			(`post_id`, `presence_id`, `message`, `created_time`, `comments`,
-				`likes`, `permalink`, `image_url`)
+			(`presence_id`, ``video_id`, `title`, `description`, `created_time`, `permalink`,
+				`views`, `likes`, `dislikes`, `comments`)
 			VALUES
-			(:post_id, :presence_id, :message, :created_time, :comments,
-				:likes, :permalink, :image_url)
+			(:presence_id, :video_id, :title, :description, :created_time,
+				:permalink, :views, :likes, :dislikes, :comments)
             ON DUPLICATE KEY UPDATE
-                `likes` = VALUES(`likes`), `share_count` = VALUES(`share_count`), `comments` = VALUES(`comments`)
+                `likes` = VALUES(`likes`), `dislikes` = VALUES(`dislikes`),
+                `comments` = VALUES(`comments`), `views` = VALUES(`views`)
 		");
 
         $count = 0;
 
-        /** @var InstagramStatus $post */
-        foreach ($posts as $post) {
+        /** @var YoutubeVideo $video */
+        foreach ($videos as $video) {
             $args = array(
-                ':post_id' => $post->id,
                 ':presence_id' => $presence->getId(),
-                ':message' => $post->message,
-                ':created_time' => gmdate('Y-m-d H:i:s', $post->created_time),
-                ':comments' => $post->comments,
-                ':likes' => $post->likes,
-                ':permalink' => $post->permalink,
-                ':image_url' => $post->image_url
+                ':video_id' => $video->id,
+                ':title' => $video->title,
+                ':description' => $video->description,
+                ':created_time' => gmdate('Y-m-d H:i:s', $video->created_time),
+                ':permalink' => $video->permalink,
+                ':views' => $video->views,
+                ':likes' => $video->likes,
+                ':dislikes' => $video->dislikes,
+                ':comments' => $video->comments,
             );
             try {
                 $result = $insertStmt->execute($args);
                 if(!$result) {
                     $error = $insertStmt->errorInfo();
-                    error_log('Error inserting instagram status: '.$error[2]);
+                    error_log('Error inserting youtube video: '.$error[2]);
                 }
             } catch (PDOException $ex) {
                 if ($ex->getCode() == 23000) {
@@ -91,7 +87,8 @@ class Provider_Youtube extends Provider_Abstract
             }
             $count++;
         }
-	}
+
+    }
 
 	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null)
@@ -162,10 +159,10 @@ class Provider_Youtube extends Provider_Abstract
 	public function update(Model_Presence $presence)
 	{
 		parent::update($presence);
-        $presence->instagram_engagement = $this->calculateInstagramEngagement($presence);
+        $presence->youtube_engagement = $this->calculateYoutubeEngagement($presence);
     }
 
-    public function calculateInstagramEngagement(Model_Presence $presence)
+    public function calculateYoutubeEngagement(Model_Presence $presence)
     {
         return 0;
     }

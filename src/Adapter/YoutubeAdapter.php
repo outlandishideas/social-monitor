@@ -12,6 +12,7 @@ use Outlandish\SocialMonitor\InstagramApp;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
 use Outlandish\SocialMonitor\Models\Status;
+use Outlandish\SocialMonitor\Models\YoutubeVideo;
 
 class YoutubeAdapter extends AbstractAdapter
 {
@@ -48,7 +49,33 @@ class YoutubeAdapter extends AbstractAdapter
 
     public function getStatuses($pageUID, $since, $handle)
     {
-        $videos = [];
+        $videos = array();
+        $channels = $this->youtube->channels->listChannels('contentDetails',['forUsername' => $handle])->getItems();
+        if($channels && count($channels)) {
+            $playlistId = $channels[0]->contentDetails->relatedPlaylists->uploads;
+            $media = $this->youtube->playlistItems->listPlaylistItems('id', ['playlistId' => $playlistId])->getItems();
+            $videoIds = array_map(function($m) {
+                return $m->id;
+            },$media);
+            $q = ['id'=>implode(',',$videoIds)];
+            $details = $this->youtube->videos->listVideos('snippet,statistics', $q)->getItems();
+
+            foreach ($details as $m) {
+                $video = new YoutubeVideo();
+                $video->id = $m->id;
+                $video->comments = $m->statistics->commentCount;
+                $video->likes = $m->statistics->likeCount;
+                $video->dislikes = $m->statistics->dislikeCount;
+                $video->views = $m->statistics->viewCount;
+                $video->created_time = $m->snippet->publishedAt;
+                $video->posted_by_owner = true;
+                $video->permalink = 'https://www.youtube.com/watch?v=' . $video->id;
+                $video->title = $m->snippet->title;
+                $video->description = $m->snippet->description;
+
+                $videos[] = $video;
+            }
+        }
         return $videos;
     }
 }
