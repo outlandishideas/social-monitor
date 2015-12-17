@@ -14,7 +14,7 @@ class Provider_Youtube extends Provider_Abstract
 
     public function __construct(PDO $db, YoutubeAdapter $adapter) {
 		parent::__construct($db);
-		$this->type = Enum_PresenceType::INSTAGRAM();
+		$this->type = Enum_PresenceType::YOUTUBE();
         $this->tableName = 'youtube_video_stream';
         $this->adapter = $adapter;
     }
