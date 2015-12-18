@@ -169,6 +169,15 @@ class ConfigController extends BaseController {
                         )
                     ),
                     (object)array(
+                        'title' => 'Likes Per View',
+                        'description' => 'Measures the average number of likes from users for each video view',
+                        'values' => array(
+                            'likes_per_view_weighting'=>array('label'=>'Likes per View Weighting'),
+                            'likes_per_view_best'=>array('label'=>'Best likes Per View','hint'=>'The presence will get the best score if the average likes per view is equal to or more than this'),
+                            'likes_per_view_good'=>array('label'=>'Good likes Per View', 'hint'=>'The presence will get a good score if the average likes per view is equal to or more than this'),
+                        )
+                    ),
+                    (object)array(
                         'title' => 'Sign Off',
                         'description' => 'The presence has been signed off by key stakeholders',
                         'values' => array(

@@ -60,7 +60,7 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_Relevance::getName(),
                     Metric_SignOff::getName(),
                     Metric_FBEngagementLeveled::getName(),
-                    Metric_LikesPerPost::getName(),
+                    Metric_LikesPerView::getName(),
                     Metric_ResponseRatio::getName(),
                     Metric_ResponseTimeNew::getName()
                 );
@@ -103,6 +103,7 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_PopularityTime::getName(),
                     Metric_Branding::getName(),
                     Metric_SignOff::getName(),
+                    Metric_LikesPerPost::getName()
                 );
                 break;
             default:

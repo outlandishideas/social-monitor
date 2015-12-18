@@ -16,6 +16,7 @@ abstract class Metric_Factory {
             Metric_FBEngagementLeveled::getName() => "Metric_FBEngagementLeveled",
             Metric_Klout::getName() => "Metric_Klout",
             Metric_LikesPerPost::getName() => "Metric_LikesPerPost",
+            Metric_LikesPerView::getName() => "Metric_LikesPerView",
             Metric_ResponseTimeNew::getName() => "Metric_ResponseTimeNew",
             Metric_ResponseRatio::getName() => "Metric_ResponseRatio",
             Metric_SinaWeiboEngagementLeveled::getName() => "Metric_SinaWeiboEngagementLeveled",
