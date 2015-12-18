@@ -63,15 +63,16 @@ class YoutubeAdapter extends AbstractAdapter
         return $items[0];
     }
 
-    public function getComments($handle)
+    public function getComments($videos)
     {
+        $this->youtube->comments->listComments();
     }
 
     public function getStatuses($pageUID, $since, $handle)
     {
         $videos = array();
         $channel = $this->getChannel($handle);
-        $playlistId = $channel->contentDetails->relatedPlaylists->uploads;
+        $playlistId = $channel->getContentDetails()->getRelatedPlaylists()->getUploads();
         $media = $this->youtube->playlistItems->listPlaylistItems('snippet', ['playlistId' => $playlistId])->getItems();
         $videoIds = array();
         foreach($media as $m) {
