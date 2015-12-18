@@ -71,30 +71,49 @@ class YoutubeAdapter extends AbstractAdapter
     public function getStatuses($pageUID, $since, $handle)
     {
         $videos = array();
-        $channel = $this->getChannel($handle);
-        $playlistId = $channel->getContentDetails()->getRelatedPlaylists()->getUploads();
-        $media = $this->youtube->playlistItems->listPlaylistItems('snippet', ['playlistId' => $playlistId])->getItems();
-        $videoIds = array();
-        foreach($media as $m) {
-            if($m->snippet->resourceId->kind === 'youtube#video') {
-                $videoIds[] = $m->snippet->resourceId->videoId;
-            }
-        }
-        $q = ['id'=>implode(',',$videoIds)];
-        $details = $this->youtube->videos->listVideos('snippet,statistics', $q)->getItems();
+        $channels = $this->youtube->channels->listChannels('contentDetails',['forUsername' => $handle])->getItems();
+        if($channels && count($channels)) {
+            $videoDetails = array();
+            $playlistId = $channels[0]->contentDetails->relatedPlaylists->uploads;
+            $args = ['playlistId' => $playlistId, 'maxResults' => 50];
+            $complete = false;
+            while(!$complete) {
+                $playlistItemResponse = $this->youtube->playlistItems
+                    ->listPlaylistItems('snippet',$args);
+                $playlistItems = $playlistItemResponse->getItems();
 
-        foreach ($details as $m) {
-            $video = new YoutubeVideo();
-            $video->id = $m->id;
-            $video->comments = $m->statistics->commentCount ? $m->statistics->commentCount : 0;
-            $video->likes = $m->statistics->likeCount ? $m->statistics->likeCount : 0;
-            $video->dislikes = $m->statistics->dislikeCount ? $m->statistics->dislikeCount : 0;
-            $video->views = $m->statistics->viewCount ? $m->statistics->viewCount : 0;
-            $video->created_time = strtotime($m->snippet->publishedAt);
-            $video->posted_by_owner = true;
-            $video->permalink = 'https://www.youtube.com/watch?v=' . $video->id;
-            $video->title = $m->snippet->title;
-            $video->description = $m->snippet->description;
+                $videoIds = array();
+                foreach ($playlistItems as $p) {
+                    if ($p->snippet->resourceId->kind === 'youtube#video') {
+                        $videoIds[] = $p->snippet->resourceId->videoId;
+                    }
+                }
+
+                $q = ['id'=>implode(',',$videoIds)];
+                $details = $this->youtube->videos->listVideos('snippet,statistics', $q)->getItems();
+                $videoDetails = array_merge($videoDetails,$details);
+
+                if(!$playlistItemResponse->nextPageToken) {
+                    $complete = true;
+                } else {
+                    $args['pageToken'] = $playlistItemResponse->nextPageToken;
+                }
+            }
+            $q = ['id'=>implode(',',$videoIds)];
+            $details = $this->youtube->videos->listVideos('snippet,statistics', $q)->getItems();
+
+            foreach ($details as $m) {
+                $video = new YoutubeVideo();
+                $video->id = $m->id;
+                $video->comments = $m->statistics->commentCount ? $m->statistics->commentCount : 0;
+                $video->likes = $m->statistics->likeCount ? $m->statistics->likeCount : 0;
+                $video->dislikes = $m->statistics->dislikeCount ? $m->statistics->dislikeCount : 0;
+                $video->views = $m->statistics->viewCount ? $m->statistics->viewCount : 0;
+                $video->created_time = strtotime($m->snippet->publishedAt);
+                $video->posted_by_owner = true;
+                $video->permalink = 'https://www.youtube.com/watch?v=' . $video->id;
+                $video->title = $m->snippet->title;
+                $video->description = $m->snippet->description;
 
             $videos[] = $video;
         }

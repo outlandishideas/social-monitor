@@ -13,6 +13,8 @@ class Provider_Youtube extends Provider_Abstract
      */
     private $adapter;
 
+    private $videoHistoryColumns = ['views','likes','dislikes','comments'];
+
     public function __construct(PDO $db, YoutubeAdapter $adapter) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::YOUTUBE();
@@ -27,11 +29,13 @@ class Provider_Youtube extends Provider_Abstract
             throw new Exception('Presence not initialised/found');
         }
 
-        // get all videos - there aren't very many so we can update them all
+        // get all videos - we need to update all of them as they are all potentially contributing to engagement
 
         $videos = $this->adapter->getStatuses($presence->getUID(),null,$presence->handle);
 
-        $this->insertStatuses($presence, $videos, $count);
+        $this->insertVideos($presence, $videos, $count);
+
+        $this->updateVideoHistory($presence);
 
         return $count;
     }
@@ -41,7 +45,7 @@ class Provider_Youtube extends Provider_Abstract
      * @param array          $videos
      * @param mixed          $count
      */
-    protected function insertStatuses(Model_Presence $presence, array $videos, &$count)
+    protected function insertVideos(Model_Presence $presence, array $videos, &$count)
 	{
         $insertStmt = $this->db->prepare("
 			INSERT INTO `{$this->tableName}`
@@ -88,6 +92,47 @@ class Provider_Youtube extends Provider_Abstract
             $count++;
         }
 
+    }
+
+    /**
+     *
+     * Store a snapshot of the YoutubeVideo data, so we can track how views, likes, dislikes and comments change over
+     * time.
+     *
+     * @param Model_Presence $presence
+     */
+    private function updateVideoHistory($presence) {
+        $query = $this->db->prepare("SELECT * FROM `youtube_video_stream` WHERE `presence_id`=" . $presence->getId());
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        $insertStmt = $this->db->prepare("
+        	INSERT INTO `youtube_video_history`
+        	(`video_id`, `datetime`, `type`, `value`)
+        	VALUES
+        	(:id, :datetime, :type, :value)
+        	ON DUPLICATE KEY UPDATE
+        	`value` = VALUES(`value`)
+        ");
+        $date = gmdate('Y-m-d H:i:s');
+
+        foreach($result as $row) {
+            foreach ($this->videoHistoryColumns as $type) {
+                $value = $row[$type];
+                if (!is_null($value)) {
+                    $result = $insertStmt->execute(array(
+                        ':id' => $row['id'],
+                        ':datetime' => $date,
+                        ':type' => $type,
+                        ':value' => $value
+                    ));
+                    if(!$result) {
+                        $error = $insertStmt->errorInfo();
+                        error_log('Error saving youtube video history: '.$error[2]);
+                    }
+                }
+            }
+        }
     }
 
 	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
