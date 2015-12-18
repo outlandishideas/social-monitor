@@ -17,7 +17,7 @@ class WeightedYoutubeEngagementQuery implements Query
     const VIDEO_HISTORY_TABLE = 'youtube_video_history';
     const VIDEO_STREAM_TABLE = 'youtube_video_stream';
     const PRESENCE_STREAM_TABLE = 'presence_history';
-    private $videoHistoryColumns = ['views','likes','dislikes','comments'];
+    private $typeWeightMap = ['views' => 1,'likes' => 4,'dislikes' => 4,'comments' => 7];
 
     /**
      * @var
@@ -45,58 +45,98 @@ class WeightedYoutubeEngagementQuery implements Query
         $videoStream = self::VIDEO_STREAM_TABLE;
         $presenceHistory = self::PRESENCE_STREAM_TABLE;
         $popularity = 'popularity';
+        $presenceEngagementMap = array();
 
-        $changeQuery = "
-                    SELECT p.presence_id,SUM(data.change) FROM (
-                        SELECT
-                        t2.video_id,
-                        t2.type,
-                        (CASE t2.type
-                          WHEN 'views' THEN t2.change
-                          WHEN 'likes' THEN t2.change * 2
-                          WHEN 'dislikes' THEN t2.change * 2
-                          WHEN 'comments' THEN t2.change * 3 END) as `change`
-                         FROM
-                        (SELECT
-					      (last.video_id) as `video_id`,
-					      last.type as `type`,
-					      (MIN(first.datetime)) as `start`,
-					      (MAX(last.datetime)) as `end`
-				        FROM
-					      (
-                            (SELECT * FROM $videoHistory WHERE DATE(datetime) >= :then) AS first
-                            INNER JOIN
-                            (SELECT * FROM $videoHistory WHERE DATE(datetime) <= :now) AS last
-                            ON first.video_id = last.video_id AND first.type = last.type
-					      )
-                        GROUP BY video_id,type)
-                        AS t1
-                        INNER JOIN
-                        (SELECT
-                          last.video_id as `video_id`,
-                          last.type as `type`,
-                          (last.value - first.value) as `change`,
-                          first.datetime as `start`,
-                          last.datetime as `end`
-                        FROM
-                          (
-                            (SELECT * FROM $videoHistory) AS first
-                            INNER JOIN
-                            (SELECT * FROM $videoHistory) AS last
-                            ON first.video_id = last.video_id AND first.type = last.type
-					      )
-					    ) AS t2 ON t1.video_id = t2.video_id AND t1.type = t2.type
-					    AND t1.start = t2.start AND t1.end = t2.end
-					    ) AS data
-					    INNER JOIN
-					    (SELECT presence_id,video_id FROM $videoStream) AS p ON data.video_id = p.video_id";
+        /**
+         * This query returns the popularity we stored for each presence at time $now (or as close to $now as we can
+         * get).
+         *
+         * It does this using two sub-queries joined together: the first gets the date closest to $now that data
+         * exists for, the second gets the values we have between $now and $then, and the join means we get just the
+         * value for the date closest to $now.
+         *
+         * @var $presencePopularityQuery */
+        $presencePopularityQuery = "
+            SELECT t1.presence_id,
+                   t2.value
+            FROM
+              (SELECT presence_id,
+                      (MAX(datetime)) AS `datetime`
+              FROM $presenceHistory
+              WHERE DATE(datetime) <= :now
+                AND DATE(datetime) >= :then
+              GROUP BY presence_id) AS t1
+            INNER JOIN
+              (SELECT presence_id,
+                      value,
+                      datetime
+              FROM $presenceHistory
+              WHERE type='$popularity'
+                AND DATE(datetime) <= :now
+                AND DATE(datetime) >= :then) AS t2
+            ON t1.presence_id = t2.presence_id AND t1.datetime = t2.datetime";
 
-        $statement = $this->db->prepare($changeQuery);
-        $success = $statement->execute([
+        $statement = $this->db->prepare($presencePopularityQuery);
+        $statement->execute([
             ':now' => $now->format('Y-m-d'),
             ':then' => $then->format('Y-m-d')
         ]);
-        $value = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-        return $value;
+        $presencePopularityMap = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
+
+        $videoHistoryQuery = "
+        SELECT video_id,type,value
+        FROM $videoHistory
+        WHERE DATE(datetime) = :now
+        ORDER BY video_id";
+
+        $statement = $this->db->prepare($videoHistoryQuery);
+        $statement->execute([
+            ':now' => $now->format('Y-m-d')
+        ]);
+        $videoEndValues = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        $videoStartQuery = "
+        SELECT value
+        FROM $videoHistory
+        WHERE DATE(datetime) = :then
+        AND video_id = :video_id
+        AND type = :type
+        ";
+        $statement = $this->db->prepare($videoStartQuery);
+
+        $presenceIdQuery = "
+        SELECT presence_id
+        FROM $videoStream
+        WHERE id = :id";
+
+        $presenceIdStatement = $this->db->prepare($presenceIdQuery);
+
+        foreach($videoEndValues as $videoEndValue) {
+            $type = $videoEndValue['type'];
+            $statement->execute([
+                ':then' => $then->format('Y-m-d'),
+                ':type' => $videoEndValue['type'],
+                ':video_id' => $videoEndValue['video_id']
+            ]);
+            $videoStartValue = $statement->fetchColumn();
+            $videoStartValue = $videoStartValue ? $videoStartValue : 0;
+            $change = $videoEndValue['value'] - $videoStartValue;
+
+            $presenceIdStatement->execute([
+                ':id' => $videoEndValue['video_id']
+            ]);
+            $presenceId = $presenceIdStatement->fetchColumn();
+            if(array_key_exists($presenceId,$presenceEngagementMap)) {
+                $presenceEngagementMap[$presenceId] += $change * $this->typeWeightMap[$type];
+            } else {
+                $presenceEngagementMap[$presenceId] = $change * $this->typeWeightMap[$type];
+            }
+        }
+
+        foreach($presenceEngagementMap as $presenceId => &$value) {
+            $scale = array_key_exists($presenceId, $presencePopularityMap) ? $presencePopularityMap[$presenceId] : 1;
+            $value = round($value / ($scale));
+        }
+        return $presenceEngagementMap;
     }
 }

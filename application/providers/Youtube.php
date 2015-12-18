@@ -204,7 +204,7 @@ class Provider_Youtube extends Provider_Abstract
 	public function update(Model_Presence $presence)
 	{
 		parent::update($presence);
-        //$presence->youtube_engagement = $this->calculateYoutubeEngagement($presence);
+        $presence->youtube_engagement = $this->calculateYoutubeEngagement($presence);
     }
 
     public function calculateYoutubeEngagement(Model_Presence $presence)
