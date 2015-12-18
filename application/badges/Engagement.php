@@ -19,8 +19,7 @@ class Badge_Engagement extends Badge_Abstract
             Metric_FBEngagementLeveled::getInstance(),
             Metric_SinaWeiboEngagementLeveled::getInstance(),
             Metric_InstagramEngagementLeveled::getInstance(),
-            Metric_YoutubeEngagementLeveled::getInstance(),
-            Metric_ResponseTimeNew::getInstance()
+            Metric_YoutubeEngagementLeveled::getInstance()
         );
     }
 }
