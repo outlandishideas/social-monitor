@@ -262,6 +262,11 @@ class Model_Presence
 		return $this->getType()->getValue() == Enum_PresenceType::INSTAGRAM;
 	}
 
+	public function isForYoutube()
+	{
+		return $this->getType()->getValue() == Enum_PresenceType::YOUTUBE;
+	}
+
     /**
      * @return Model_Campaign|null
      */
