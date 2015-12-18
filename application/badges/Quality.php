@@ -8,7 +8,7 @@ class Badge_Quality extends Badge_Abstract
 						<ul>
 							<li>The average number of posts / tweets per day.</li>
 							<li>The average number of links per day.</li>
-							<li>The average number of likes / retweets per post / tweet.</li>
+							<li>The average number of likes / retweets per post / tweet / video view.</li>
 							<li>The Sign Off status of the presence.</li>
 							<li>The Branding status of the presence.</li>
 							<li>The number of relevant posts made each day.</li>
@@ -24,7 +24,8 @@ class Badge_Quality extends Badge_Abstract
             Metric_Branding::getInstance(),
             Metric_ActionsPerDay::getInstance(),
             Metric_ResponseTimeNew::getInstance(),
-            Metric_LikesPerPost::getInstance()
+            Metric_LikesPerPost::getInstance(),
+            Metric_LikesPerView::getInstance()
         );
     }
 }

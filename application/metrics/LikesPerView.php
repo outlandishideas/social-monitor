@@ -13,6 +13,9 @@ class Metric_LikesPerView extends Metric_Abstract {
 
     /**
      * Calculates average number of likes per view
+     *
+     * todo: this currently looks at the total likes and views over all time. Change to use the video history table when there is more data
+     *
      * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
