@@ -466,6 +466,6 @@ class UserController extends BaseController
 	 */
 	private function isBritishCouncilEmailAddress($email)
 	{
-		return (preg_match('/@britishcouncil\.[\.a-z]{2,5}$/i', $email) === 1) || (preg_match('/@outlandish.com$/i', $email) === 1);
+		return (preg_match('/@outlandish\.[\.a-z]{2,5}$/i', $email) === 1) || (preg_match('/@outlandish.com$/i', $email) === 1);
 	}
 }
