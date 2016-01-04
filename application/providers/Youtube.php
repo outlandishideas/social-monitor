@@ -216,7 +216,14 @@ class Provider_Youtube extends Provider_Abstract
 
     public function calculateYoutubeEngagement(Model_Presence $presence)
     {
-        return 0;
+        $now = new DateTime();
+        $then = clone $now;
+        $then->modify("-1 week");
+
+        $query = new Outlandish\SocialMonitor\Engagement\Query\WeightedYoutubeEngagementQuery($this->db);
+        $metric = new Outlandish\SocialMonitor\Engagement\EngagementMetric($query);
+
+        return $metric->get($presence->getId(), $now, $then);
     }
 
     public function updateMetadata(Model_Presence $presence) {

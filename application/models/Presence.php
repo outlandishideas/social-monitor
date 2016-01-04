@@ -9,7 +9,8 @@ class Model_Presence
 	protected $kpiData = array();
 
 	protected $presenceHistoryColumns = array(
-		'popularity', 'klout_score', 'facebook_engagement', 'sina_weibo_engagement', 'instagram_engagement'
+		'popularity', 'klout_score', 'facebook_engagement', 'sina_weibo_engagement',
+		'instagram_engagement', 'youtube_engagement'
 	);
 
 	//these should be public to mimic existing Presence Class
@@ -28,6 +29,7 @@ class Model_Presence
 	public $facebook_engagement;
 	public $instagram_engagement;
 	public $sina_weibo_engagement;
+	public $youtube_engagement;
 	public $page_url;
 	public $image_url;
 	public $owner;
@@ -76,8 +78,12 @@ class Model_Presence
         $this->klout_score = $internals['klout_score'];
         $this->facebook_engagement = $internals['facebook_engagement'];
         $this->sina_weibo_engagement = $internals['sina_weibo_engagement'];
-        $this->instagram_engagement = $internals['instagram_engagement'];
-        $this->page_url = $internals['page_url'];
+		if($this->type === Enum_PresenceType::INSTAGRAM) {
+			$this->instagram_engagement = $internals['instagram_engagement'];
+		} else {
+			$this->youtube_engagement = $internals['instagram_engagement'];
+		}
+		$this->page_url = $internals['page_url'];
         $this->image_url = $internals['image_url'];
         $this->last_updated = $internals['last_updated'];
         $this->last_fetched = $internals['last_fetched'];
@@ -236,6 +242,13 @@ class Model_Presence
 		return $this->instagram_engagement;
 	}
 
+	/**
+	 * @return mixed
+	 */
+	public function getYoutubeEngagement()
+	{
+		return $this->youtube_engagement;
+	}
 
 	public function getPresenceSign()
 	{
@@ -260,6 +273,11 @@ class Model_Presence
 	public function isForInstagram()
 	{
 		return $this->getType()->getValue() == Enum_PresenceType::INSTAGRAM;
+	}
+
+	public function isForYoutube()
+	{
+		return $this->getType()->getValue() == Enum_PresenceType::YOUTUBE;
 	}
 
     /**
@@ -675,6 +693,9 @@ class Model_Presence
             return;
         }
 
+		$instagramEngagement = $this->type === Enum_PresenceType::INSTAGRAM ?
+			$this->getInstagramEngagement() : $this->getYoutubeEngagement();
+
         $data = array(
             'type' => $this->getType()->getValue(),
             'handle' => $this->getHandle(),
@@ -687,7 +708,7 @@ class Model_Presence
             'klout_score' => $this->getKloutScore(),
             'facebook_engagement' => $this->getFacebookEngagement(),
             'sina_weibo_engagement' => $this->getSinaWeiboEngagement(),
-			'instagram_engagement' => $this->getInstagramEngagement(),
+			'instagram_engagement' => $instagramEngagement,
 			'last_updated' => $this->getLastUpdated(),
             'last_fetched' => $this->getLastFetched(),
             'sign_off' => $this->getSignOff(),

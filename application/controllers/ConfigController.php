@@ -132,6 +132,18 @@ class ConfigController extends BaseController {
                             'ig_engagement_target_level_4'=>array('label'=>'Instagram Engagement Score Level 4', 'hint' => 'The presence will score 80% if it reaches this target'),
                             'ig_engagement_target_level_5'=>array('label'=>'Instagram Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
                         )
+                    ),
+                    (object)array(
+                        'title' => 'Youtube Engagement Score (Youtube only)',
+                        'description' => 'The Youtube Engagement Score is not yet fully decided.',
+                        'values' => array(
+                            'youtube_engagement_weighting'=>array('label'=>'Youtube Engagement Score Weighting'),
+                            'yt_engagement_target_level_1'=>array('label'=>'Youtube Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
+                            'yt_engagement_target_level_2'=>array('label'=>'Youtube Engagement Score Level 2', 'hint' => 'The presence will score 40% if it reaches this target'),
+                            'yt_engagement_target_level_3'=>array('label'=>'Youtube Engagement Score Level 3', 'hint' => 'The presence will score 60% if it reaches this target'),
+                            'yt_engagement_target_level_4'=>array('label'=>'Youtube Engagement Score Level 4', 'hint' => 'The presence will score 80% if it reaches this target'),
+                            'yt_engagement_target_level_5'=>array('label'=>'Youtube Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
+                        )
                     )
                 )
             ),
@@ -166,6 +178,15 @@ class ConfigController extends BaseController {
                             'likes_per_post_weighting'=>array('label'=>'Likes per Post Weighting'),
                             'likes_per_post_best'=>array('label'=>'Best likes Per Post','hint'=>'The presence will get the best score if the average likes per post is equal to or more than this'),
                             'likes_per_post_good'=>array('label'=>'Good likes Per Post', 'hint'=>'The presence will get a good score if the average likes per post is equal to or more than this'),
+                        )
+                    ),
+                    (object)array(
+                        'title' => 'Likes Per View',
+                        'description' => 'Measures the average number of likes from users for each video view',
+                        'values' => array(
+                            'likes_per_view_weighting'=>array('label'=>'Likes per View Weighting'),
+                            'likes_per_view_best'=>array('label'=>'Best likes Per View','hint'=>'The presence will get the best score if the average likes per view is equal to or more than this'),
+                            'likes_per_view_good'=>array('label'=>'Good likes Per View', 'hint'=>'The presence will get a good score if the average likes per view is equal to or more than this'),
                         )
                     ),
                     (object)array(
