@@ -3,6 +3,7 @@
 
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
+use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
 
 class Provider_Youtube extends Provider_Abstract
@@ -14,11 +15,13 @@ class Provider_Youtube extends Provider_Abstract
     private $adapter;
 
     private $videoHistoryColumns = ['views','likes','dislikes','comments'];
+    private $commentTableName;
 
     public function __construct(PDO $db, YoutubeAdapter $adapter) {
 		parent::__construct($db);
 		$this->type = Enum_PresenceType::YOUTUBE();
         $this->tableName = 'youtube_video_stream';
+        $this->commentTableName = 'youtube_comment_stream';
         $this->adapter = $adapter;
     }
 
@@ -31,11 +34,15 @@ class Provider_Youtube extends Provider_Abstract
 
         // get all videos - we need to update all of them as they are all potentially contributing to engagement
 
-        $videos = $this->adapter->getStatuses($presence->getUID(),null,$presence->handle);
+//        $videos = $this->adapter->getStatuses($presence->getUID(),null,$presence->handle);
+//
+//        $this->insertVideos($presence, $videos, $count);
+//
+//        $this->updateVideoHistory($presence);
 
-        $this->insertVideos($presence, $videos, $count);
+        $comments = $this->adapter->getComments($presence->handle);
 
-        $this->updateVideoHistory($presence);
+        $this->insertComments($presence, $comments);
 
         return $count;
     }
@@ -313,6 +320,58 @@ class Provider_Youtube extends Provider_Abstract
         $postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
         return $postIds;
+    }
+
+    /**
+     * @param Model_Presence $presence
+     * @param YoutubeComment[] $comments
+     */
+    private function insertComments(Model_Presence $presence, array $comments)
+    {
+        $insertStmt = $this->db->prepare("
+			INSERT INTO `{$this->commentTableName}`
+			(`id`, `presence_id`, `video_id`, `message`, `created_time`,
+			`likes`, `number_of_replies`, `in_response_to`, `posted_by_owner`, `rating`, `author_channel_id`)
+			VALUES
+			(:id, :presence_id, :video_id, :message, :created_time, :likes,
+				:number_of_replies, :in_response_to, :posted_by_owner, :rating, :author_channel_id)
+            ON DUPLICATE KEY UPDATE
+                `likes` = VALUES(`likes`), `rating` = VALUES(`rating`);
+		");
+
+        $count = 0;
+
+        foreach ($comments as $comment) {
+            $args = array(
+                ':id' => $comment->id,
+                ':presence_id' => $presence->getId(),
+                ':video_id' => $comment->videoId,
+                ':message' => $comment->message,
+                ':created_time' => gmdate('Y-m-d H:i:s', $comment->created_time),
+                ':likes' => $comment->likes,
+                ':number_of_replies' => $comment->numberOfReplies,
+                ':in_response_to' => $comment->in_response_to_status_uid,
+                ':posted_by_owner' => $comment->posted_by_owner,
+                ':rating' => $comment->rating,
+                ':author_channel_id' => $comment->authorChannelId,
+            );
+            try {
+                $result = $insertStmt->execute($args);
+                if(!$result) {
+                    $error = $insertStmt->errorInfo();
+                    error_log('Error inserting youtube comment: '.$error[2]);
+                }
+            } catch (PDOException $ex) {
+                if ($ex->getCode() == 23000) {
+                    continue;
+                }
+                continue;
+            } catch (Exception $ex) {
+                continue;
+            }
+            $count++;
+        }
+
     }
 
 

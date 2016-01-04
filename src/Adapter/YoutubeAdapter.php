@@ -7,15 +7,24 @@ use Exception_InstagramNotFound;
 use Google_Service_YouTube_Channel;
 use Google_Service_YouTube_ChannelSnippet;
 use Google_Service_YouTube_ChannelStatistics;
+use Google_Service_YouTube_Comment;
+use Google_Service_YouTube_CommentSnippet;
+use Google_Service_YouTube_CommentThread;
+use Google_Service_YouTube_CommentThreadListResponse;
+use Google_Service_YouTube_CommentThreadReplies;
+use Google_Service_YouTube_CommentThreadSnippet;
 use Google_Service_YouTube_ThumbnailDetails;
 use Outlandish\SocialMonitor\InstagramApp;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
 use Outlandish\SocialMonitor\Models\Status;
+use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
 
 class YoutubeAdapter extends AbstractAdapter
 {
+
+    private $channels = [];
 
     public function __construct(\Google_Service_YouTube $youtube)
     {
@@ -45,27 +54,54 @@ class YoutubeAdapter extends AbstractAdapter
     }
 
     /**
+     * Get the channel from the api, or from the $channels property if already fetched
+     *
      * @param string $handle
      * @return Google_Service_YouTube_Channel
      * @throws \Exception
      */
     private function getChannel($handle)
     {
-        $response = $this->youtube->channels->listChannels('id,snippet,statistics', ['forUsername' => $handle]);
+        if (!array_key_exists($handle, $this->channels)) {
+            $response = $this->youtube->channels->listChannels('id,snippet,statistics', ['forUsername' => $handle]);
 
-        /** @var Google_Service_Youtube_Channel[] $items */
-        $items = $response->getItems();
+            /** @var Google_Service_Youtube_Channel[] $items */
+            $items = $response->getItems();
 
-        if (empty($items)) {
-            throw new \Exception("Youtube Channel \"{$handle}\" not found.");
+            if (empty($items)) {
+                throw new \Exception("Youtube Channel \"{$handle}\" not found.");
+            }
+
+            $this->channels[$handle] = $items[0];
         }
 
-        return $items[0];
+        return $this->channels[$handle];
     }
 
-    public function getComments($videos)
+    public function getComments($handle)
     {
-        $this->youtube->comments->listComments();
+        $comments = [];
+        $channel = $this->getChannel($handle);
+        $args = [
+            'order' => 'time',
+            'allThreadsRelatedToChannelId' => $channel->id,
+            'maxResults' => 100
+        ];
+
+        $complete = false;
+
+        do {
+            $response = $this->youtube->commentThreads->listCommentThreads('id,replies,snippet', $args);
+            $comments = array_merge($comments, $this->parseCommentResponse($response, $channel));
+
+            if (!$response->nextPageToken) {
+                $complete = true;
+            } else {
+                $args['pageToken'] = $response->nextPageToken;
+            }
+        } while(!$complete);
+
+        return $comments;
     }
 
     public function getStatuses($pageUID, $since, $handle)
@@ -77,9 +113,9 @@ class YoutubeAdapter extends AbstractAdapter
             $playlistId = $channels[0]->contentDetails->relatedPlaylists->uploads;
             $args = ['playlistId' => $playlistId, 'maxResults' => 50];
             $complete = false;
-            while(!$complete) {
+            while (!$complete) {
                 $playlistItemResponse = $this->youtube->playlistItems
-                    ->listPlaylistItems('snippet',$args);
+                    ->listPlaylistItems('snippet', $args);
                 $playlistItems = $playlistItemResponse->getItems();
 
                 $videoIds = array();
@@ -89,17 +125,17 @@ class YoutubeAdapter extends AbstractAdapter
                     }
                 }
 
-                $q = ['id'=>implode(',',$videoIds)];
+                $q = ['id' => implode(',', $videoIds)];
                 $details = $this->youtube->videos->listVideos('snippet,statistics', $q)->getItems();
-                $videoDetails = array_merge($videoDetails,$details);
+                $videoDetails = array_merge($videoDetails, $details);
 
-                if(!$playlistItemResponse->nextPageToken) {
+                if (!$playlistItemResponse->nextPageToken) {
                     $complete = true;
                 } else {
                     $args['pageToken'] = $playlistItemResponse->nextPageToken;
                 }
             }
-            $q = ['id'=>implode(',',$videoIds)];
+            $q = ['id' => implode(',', $videoIds)];
             $details = $this->youtube->videos->listVideos('snippet,statistics', $q)->getItems();
 
             foreach ($details as $m) {
@@ -115,8 +151,86 @@ class YoutubeAdapter extends AbstractAdapter
                 $video->title = $m->snippet->title;
                 $video->description = $m->snippet->description;
 
-            $videos[] = $video;
+                $videos[] = $video;
+            }
         }
         return $videos;
+    }
+
+    /**
+     * @param Google_Service_YouTube_CommentThreadListResponse $response
+     * @param Google_Service_YouTube_Channel $channel
+     * @return array
+     */
+    protected function parseCommentResponse(Google_Service_YouTube_CommentThreadListResponse $response, Google_Service_YouTube_Channel $channel)
+    {
+        $comments = [];
+
+        /** @var Google_Service_YouTube_CommentThread $thread */
+        foreach ($response->getItems() as $thread) {
+            $comments[] = $this->parseCommentThread($channel, $thread);
+
+            /** @var Google_Service_YouTube_CommentThreadReplies $replies */
+            $replies = $thread->getReplies();
+
+            if ($replies) {
+                foreach ($replies->getComments() as $reply) {
+                    $comments[] = $this->parseCommentReply($channel, $reply);
+                }
+            }
+        }
+
+        return $comments;
+    }
+
+    /**
+     * @param Google_Service_YouTube_Channel $channel
+     * @param $thread
+     * @return YoutubeComment
+     */
+    protected function parseCommentThread(Google_Service_YouTube_Channel $channel, $thread)
+    {
+        /** @var Google_Service_YouTube_CommentThreadSnippet $snippet */
+        $snippet = $thread->getSnippet();
+        /** @var Google_Service_YouTube_Comment $topLevelComment */
+        $topLevelComment = $snippet->getTopLevelComment();
+        /** @var Google_Service_YouTube_CommentSnippet $commentSnippet */
+        $commentSnippet = $topLevelComment->getSnippet();
+
+        $comment = new YoutubeComment;
+        $comment->id = $topLevelComment->getId();
+        $comment->created_time = date_create_from_format('Y-m-d\TH:i:s.u\Z', $commentSnippet->getPublishedAt())->getTimestamp();
+        $comment->likes = $commentSnippet->getLikeCount();
+        $comment->numberOfReplies = $snippet->getTotalReplyCount();
+        $comment->authorChannelId = $commentSnippet->getAuthorChannelId() ? $commentSnippet->getAuthorChannelId()->value : null;
+        $comment->in_response_to_status_uid = null;
+        $comment->posted_by_owner = $comment->authorChannelId === $channel->getId() ? 1 : 0;
+        $comment->rating = $commentSnippet->getViewerRating();
+        $comment->message = $commentSnippet->getTextDisplay();
+        return $comment;
+    }
+
+    /**
+     * @param Google_Service_YouTube_Channel $channel
+     * @param $reply
+     * @return YoutubeComment
+     */
+    protected function parseCommentReply(Google_Service_YouTube_Channel $channel, $reply)
+    {
+        /** @var Google_Service_YouTube_Comment $reply */
+        /** @var Google_Service_YouTube_CommentSnippet $replySnippet */
+        $replySnippet = $reply->getSnippet();
+
+        $comment = new YoutubeComment;
+        $comment->id = $reply->getId();
+        $comment->created_time = date_create_from_format('Y-m-d\TH:i:s.u\Z', $replySnippet->getPublishedAt())->getTimestamp();
+        $comment->likes = $replySnippet->getLikeCount();
+        $comment->numberOfReplies = null;
+        $comment->authorChannelId = $replySnippet->getAuthorChannelId()->value;
+        $comment->in_response_to_status_uid = $replySnippet->getParentId();
+        $comment->posted_by_owner = $replySnippet->getAuthorChannelId()->value === $channel->getId() ? 1 : 0;
+        $comment->rating = $replySnippet->getViewerRating();
+        $comment->message = $replySnippet->getTextDisplay();
+        return $comment;
     }
 }
