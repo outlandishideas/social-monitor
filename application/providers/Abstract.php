@@ -210,4 +210,16 @@ abstract class Provider_Abstract
         }
         return $links;
     }
+
+    /**
+     * @param Model_Presence $presence  the presence to fetch the data for
+     * @param DateTime $start  the date from which to fetch historic data from (inclusive)
+     * @param DateTime $end  the date from which to fetch historic data to (inclusive)
+     * @param array $types  the types of data to be returned from the history table (if empty all types will be returned)
+     * @return array
+     */
+    public function getHistoryData(Model_Presence $presence, \DateTime $start, \DateTime $end, $types = [])
+    {
+        return [];
+    }
 }

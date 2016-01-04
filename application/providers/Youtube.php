@@ -16,6 +16,7 @@ class Provider_Youtube extends Provider_Abstract
 
     private $videoHistoryColumns = ['views','likes','dislikes','comments'];
     private $commentTableName;
+    public static $historyTableName = 'youtube_video_history';
 
     public function __construct(PDO $db, YoutubeAdapter $adapter) {
 		parent::__construct($db);
@@ -414,6 +415,45 @@ class Provider_Youtube extends Provider_Abstract
             'stream' => count($ret) ? $ret : null,
             'total' => $total
         );
+    }
+
+    /**
+     * @param Model_Presence $presence  the presence to fetch the data for
+     * @param DateTime $start  the date from which to fetch historic data from (inclusive)
+     * @param DateTime $end  the date from which to fetch historic data to (inclusive)
+     * @param array $types  the types of data to be returned from the history table (if empty all types will be returned)
+     * @return array
+     */
+    public function getHistoryData(Model_Presence $presence, \DateTime $start, \DateTime $end, $types = [])
+    {
+        if (empty($types)) {
+            $types = $this->videoHistoryColumns;
+        }
+
+        $arguments = [
+            ':presence_id' => $presence->getId(),
+            ':start' => $start->format("Y-m-d"),
+            ':end' => $end->format("Y-m-d"),
+            ':types' => "('" .implode("','", $types) . "')"
+        ];
+
+        $tableName = self::$historyTableName;
+        $sql = "SELECT `datetime`, `type`, SUM(`value`) AS `value` FROM {$tableName}
+                WHERE `video_id` IN (SELECT id FROM youtube_video_stream WHERE `presence_id` = :presence_id)
+                AND `datetime` <= :end
+                AND `datetime` >= :start
+                AND type IN :types
+                GROUP BY `type`, `datetime`;";
+
+        $statement = $this->db->prepare($sql);
+        $result = $statement->execute($arguments);
+        if ($result) {
+            $data = $statement->fetchAll(PDO::FETCH_OBJ);
+        } else {
+            $data = [];
+        }
+
+        return $data;
     }
 
 
