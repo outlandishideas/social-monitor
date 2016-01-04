@@ -381,5 +381,40 @@ class Provider_Youtube extends Provider_Abstract
 
     }
 
+    public function getStatusStream(Model_Presence $presence, $start, $end, $search, $order, $limit, $offset)
+    {
+
+        $clauses = array(
+            'p.created_time >= :start',
+            'p.created_time <= :end',
+            'p.presence_id = :id'
+        );
+        $args = array(
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end'   => $end->format('Y-m-d H:i:s'),
+            ':id'    => $presence->getId()
+        );
+        $searchArgs = $this->getSearchClauses($search, array('p.message'));
+        $clauses = array_merge($clauses, $searchArgs['clauses']);
+        $args = array_merge($args, $searchArgs['args']);
+
+        $sql = "
+			SELECT SQL_CALC_FOUND_ROWS p.*
+			FROM {$this->commentTableName} AS p
+			WHERE " . implode(' AND ', $clauses);
+        $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
+        $sql .= $this->getLimitSql($limit, $offset);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($args);
+        $ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
+
+        return (object)array(
+            'stream' => count($ret) ? $ret : null,
+            'total' => $total
+        );
+    }
+
 
 }

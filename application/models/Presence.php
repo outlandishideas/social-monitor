@@ -777,5 +777,10 @@ class Model_Presence
 		return $target;
 	}
 
+	public function getStatusStream(\DateTime $start, \DateTime $end, $search = null, $order = null, $limit = null, $offset = null)
+	{
+		return $this->provider->getStatusStream($this, $start, $end, $search, $order, $limit, $offset);
+	}
+
 
 }
