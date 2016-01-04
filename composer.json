@@ -23,6 +23,6 @@
     "cosenary/instagram": "^2.3",
 	"swiftmailer/swiftmailer": "5.4.1",
     "robmorgan/phinx": "0.4.2",
-    "google/apiclient": "1.0.*@beta"
+    "google/apiclient": "1.1.6"
   }
 }
