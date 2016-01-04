@@ -349,13 +349,14 @@ class PresenceController extends GraphingController
 			$this->apiError('Missing date range');
 		}
 
+		/** @var Model_Presence $presence */
 		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		if (!$presence) {
 			$this->apiError('Presence not found');
 		}
         $format = $this->_request->getParam('format');
 
-		$data = $presence->getHistoricStream(
+		$data = $presence->getStatusStream(
 			$dateRange[0],
 			$dateRange[1],
 			$this->getRequestSearchQuery(),
@@ -447,6 +448,18 @@ class PresenceController extends GraphingController
 				$tableData[] = array(
 					'id'	=> $post->id,
 					'url'	=> $post->permalink,
+					'message' => $post->message,
+					'links' => array(),
+					'date' => Model_Base::localeDate($post->created_time)
+				);
+			}
+			$count = count($stream);
+		} else if ($presence->isForYoutube()) {
+			foreach ($stream as $post) {
+				$post = (object)$post;
+				$tableData[] = array(
+					'id'	=> $post->id,
+					'url'	=> '', //messages don't have a direct link
 					'message' => $post->message,
 					'links' => array(),
 					'date' => Model_Base::localeDate($post->created_time)

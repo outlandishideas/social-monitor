@@ -86,6 +86,11 @@ abstract class Provider_Abstract
      */
     public abstract function getResponseData(Model_Presence $presence, DateTime $start, DateTime $end);
 
+    public function getStatusStream(Model_Presence $presence, $start, $end, $search, $order, $limit, $offset)
+    {
+        return $this->getHistoricStream($presence, $start, $end, $search, $order, $limit, $offset);
+    }
+
     /**
      * @param string $type
      * @param array $links map of status_id=>links

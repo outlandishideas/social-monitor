@@ -32,6 +32,8 @@ $.extend(app, {
 				'<p><%=message.replace(/\\n/g, "<br />")%></p>',
 		igpost:'<p class="more"><a href="<%=url%>" target="_blank" title="View on Instagram"><span class="icon-external-link icon-large"></span></a></p>' +
 		'<p><%=message.replace(/\\n/g, "<br />")%></p>',
+		ytpost:'<p class="more"></p>' +
+		'<p><%=message.replace(/\\n/g, "<br />")%></p>',
 		post:'<p class="more"><a href="<%=facebook_url%>" target="_blank" title="View on Facebook"><span class="icon-external-link icon-large"></span></a></p>' +
 			'<%if(actor_name){%>' +
 				'<h4><%if(profile_url){%><a href="<%=profile_url%>" target="_blank"><%=actor_name%></a><%}else{%><%=actor_name%><%}%></h4>' +
