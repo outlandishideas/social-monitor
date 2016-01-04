@@ -34,11 +34,11 @@ class Provider_Youtube extends Provider_Abstract
 
         // get all videos - we need to update all of them as they are all potentially contributing to engagement
 
-//        $videos = $this->adapter->getStatuses($presence->getUID(),null,$presence->handle);
-//
-//        $this->insertVideos($presence, $videos, $count);
-//
-//        $this->updateVideoHistory($presence);
+        $videos = $this->adapter->getStatuses($presence->getUID(),null,$presence->handle);
+
+        $this->insertVideos($presence, $videos, $count);
+
+        $this->updateVideoHistory($presence);
 
         $comments = $this->adapter->getComments($presence->handle);
 
