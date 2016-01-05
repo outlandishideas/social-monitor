@@ -22,7 +22,7 @@ class Metric_ActionsPerDay extends Metric_Abstract {
     {
         list($actions, $days) = array_values($this->getData($presence, $start, $end));
 
-        if ($days > 0) {
+        if ($days < 1) {
             return $actions;
         }
 
