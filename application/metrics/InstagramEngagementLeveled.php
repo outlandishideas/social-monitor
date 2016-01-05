@@ -75,4 +75,11 @@ class Metric_InstagramEngagementLeveled extends Metric_Abstract {
         return $level * 20;
     }
 
+    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        // TODO: Implement getData() method.
+        return [];
+    }
+
+
 }

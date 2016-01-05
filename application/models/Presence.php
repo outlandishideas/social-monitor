@@ -789,9 +789,9 @@ class Model_Presence
 	 * @param array $types  the types of data to be returned from the history table (if empty all types will be returned)
 	 * @return array
 	 */
-	public function getHistoryData(Model_Presence $presence, \DateTime $start, \DateTime $end, $types = [])
+	public function getHistoryData(\DateTime $start, \DateTime $end, $types = [])
 	{
-		return $this->provider->getHistoryData($presence, $start, $end, $types);
+		return $this->provider->getHistoryData($this, $start, $end, $types);
 	}
 
 

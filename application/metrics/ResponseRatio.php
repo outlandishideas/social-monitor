@@ -33,4 +33,11 @@ class Metric_ResponseRatio extends Metric_Abstract {
         $score = round(100 * $score / $this->target);
         return self::boundScore($score);
     }
+
+    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        // TODO: Implement getData() method.
+    }
+
+
 }

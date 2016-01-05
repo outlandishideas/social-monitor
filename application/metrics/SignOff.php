@@ -24,4 +24,10 @@ class Metric_SignOff extends Metric_Abstract {
         return $presence->getSignOff() == 1 ? 100 : 0;
     }
 
+    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        // TODO: Implement getData() method.
+    }
+
+
 }

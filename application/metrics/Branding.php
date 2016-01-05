@@ -24,4 +24,9 @@ class Metric_Branding extends Metric_Abstract {
         return $presence->getBranding() == 1 ? 100 : 0;
     }
 
+    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        return ['branding' => $presence->getBranding() == 1 ? 'yes' : 'no'];
+    }
+
 }

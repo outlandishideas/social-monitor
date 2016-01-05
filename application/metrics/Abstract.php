@@ -27,6 +27,16 @@ abstract class Metric_Abstract {
      */
     abstract public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end);
 
+    /**
+     * Gets the data that is used to calculate the score. Produces into a named array so it can be used for other purposes
+     *
+     * @param Model_Presence $presence
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
+    abstract public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end);
+
     public static function getName()
     {
         return static::$name;
