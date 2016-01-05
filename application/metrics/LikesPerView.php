@@ -59,8 +59,13 @@ class Metric_LikesPerView extends Metric_Abstract {
             $combinedData[$row->type][] = $row->value;
         }
 
-        $views = max($combinedData['views']) - min($combinedData['views']);
-        $likes = max($combinedData['likes']) - min($combinedData['likes']);
+        if (empty($combinedData)) {
+            $views = 0;
+            $likes = 0;
+        } else {
+            $views = max($combinedData['views']) - min($combinedData['views']);
+            $likes = max($combinedData['likes']) - min($combinedData['likes']);
+        }
 
         return ['views' => $views, 'likes' => $likes];
     }
