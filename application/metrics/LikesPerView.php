@@ -23,7 +23,7 @@ class Metric_LikesPerView extends Metric_Abstract {
      */
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        list($views, $likes) = $this->getData($presence, $start, $end);
+        list($views, $likes) = array_values($this->getData($presence, $start, $end));
 
         if ($views > 0) {
             $actual = $likes / $views;
@@ -52,7 +52,7 @@ class Metric_LikesPerView extends Metric_Abstract {
         $combinedData = [];
 
         foreach ( $rows as $row ) {
-            if (array_key_exists($row->type, $combinedData)) {
+            if (!array_key_exists($row->type, $combinedData)) {
                 $combinedData[$row->type] = [];
             }
 

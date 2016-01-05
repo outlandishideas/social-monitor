@@ -430,19 +430,27 @@ class Provider_Youtube extends Provider_Abstract
             $types = $this->videoHistoryColumns;
         }
 
+        $sql = "SELECT id FROM youtube_video_stream WHERE `presence_id` = :presence_id";
+        $statement = $this->db->prepare($sql);
+        $result = $statement->execute([':presence_id' => $presence->getId()]);
+
+        if (!$result) {
+            return [];
+        }
+
+        $videoIds = $statement->fetchAll(PDO::FETCH_COLUMN);
+
         $arguments = [
-            ':presence_id' => $presence->getId(),
-            ':start' => $start->format("Y-m-d"),
-            ':end' => $end->format("Y-m-d"),
-            ':types' => "('" .implode("','", $types) . "')"
+            ':start_date' => $start->format("Y-m-d"),
+            ':end_date' => $end->format("Y-m-d"),
         ];
 
         $tableName = self::$historyTableName;
         $sql = "SELECT `datetime`, `type`, SUM(`value`) AS `value` FROM {$tableName}
-                WHERE `video_id` IN (SELECT id FROM youtube_video_stream WHERE `presence_id` = :presence_id)
-                AND `datetime` <= :end
-                AND `datetime` >= :start
-                AND type IN :types
+                WHERE `video_id` IN ('" .implode("','", $videoIds) . "')
+                AND `datetime` <= :end_date
+                AND `datetime` >= :start_date
+                AND type IN ('" .implode("','", $types) . "')
                 GROUP BY `type`, `datetime`;";
 
         $statement = $this->db->prepare($sql);

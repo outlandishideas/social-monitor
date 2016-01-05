@@ -20,13 +20,13 @@ class Metric_ActionsPerDay extends Metric_Abstract {
      */
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $data = $this->getData($presence, $start, $end);
+        list($actions, $days) = array_values($this->getData($presence, $start, $end));
 
-        if ($data['days'] > 0) {
-            return $data['actions'];
+        if ($days > 0) {
+            return $actions;
         }
 
-        return $data['actions'] / $data['days'];
+        return $actions / $days;
     }
 
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)

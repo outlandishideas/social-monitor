@@ -77,6 +77,7 @@ class ReportMetricCommand extends ContainerAwareCommand
                 'presence' => $presence->getHandle()
             ];
             $row = array_merge($row, $metric->getData($presence, $then, $now));
+            $row['metric_value'] = $metric->calculate($presence, $then, $now);
             $row['score'] = $metric->getScore($presence, $then, $now);
 
             $rows[] = $row;
