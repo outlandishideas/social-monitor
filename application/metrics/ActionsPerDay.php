@@ -18,21 +18,15 @@ class Metric_ActionsPerDay extends Metric_Abstract {
      * @param DateTime $end
      * @return int
      */
-    public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end){
-        $data = $presence->getHistoricStreamMeta($start, $end, true);
+    public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        $data = $this->getData($presence, $start, $end);
 
-        $actual = null;
-
-        if(count($data) > 0){
-            $actual = 0;
-            foreach ($data as $row) {
-                $actual += $row['number_of_actions'];
-            }
-            $actual /= count($data);
+        if ($data['days'] > 0) {
+            return $data['actions'];
         }
 
-        return $actual;
-
+        return $data['actions'] / $data['days'];
     }
 
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
@@ -44,5 +38,21 @@ class Metric_ActionsPerDay extends Metric_Abstract {
         $score = round(100 * $score/$this->target);
         return self::boundScore($score);
     }
+
+    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        $rawData = $presence->getHistoricStreamMeta($start, $end, true);
+
+        $data = ['actions' => 0, 'days' => count($rawData)];
+
+        if(count($rawData) > 0){
+            foreach ($rawData as $row) {
+                $data['actions'] += $row['number_of_actions'];
+            }
+        }
+
+        return $data;
+    }
+
 
 }

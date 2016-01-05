@@ -23,20 +23,7 @@ class Metric_LikesPerView extends Metric_Abstract {
      */
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $data = $presence->getHistoryData($start, $end, ['views', 'likes']);
-
-        $combinedData = [];
-
-        foreach ( $data as $row ) {
-            if (array_key_exists($row->type, $combinedData)) {
-                $combinedData[$row->type] = [];
-            }
-
-            $combinedData[$row->type][] = $row->value;
-        }
-
-        $views = max($combinedData['views']) - min($combinedData['views']);
-        $likes = max($combinedData['likes']) - min($combinedData['likes']);
+        list($views, $likes) = $this->getData($presence, $start, $end);
 
         if ($views > 0) {
             $actual = $likes / $views;
@@ -57,5 +44,26 @@ class Metric_LikesPerView extends Metric_Abstract {
         $score = round(100 * $score/$this->target);
         return self::boundScore($score);
     }
+
+    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        $rows = $presence->getHistoryData($start, $end, ['views', 'likes']);
+
+        $combinedData = [];
+
+        foreach ( $rows as $row ) {
+            if (array_key_exists($row->type, $combinedData)) {
+                $combinedData[$row->type] = [];
+            }
+
+            $combinedData[$row->type][] = $row->value;
+        }
+
+        $views = max($combinedData['views']) - min($combinedData['views']);
+        $likes = max($combinedData['likes']) - min($combinedData['likes']);
+
+        return ['views' => $views, 'likes' => $likes];
+    }
+
 
 }

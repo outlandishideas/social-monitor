@@ -38,4 +38,6 @@ class Metric_ResponseTimeNew extends Metric_ResponseTime {
 
         return $total/$count;
     }
+
+
 }

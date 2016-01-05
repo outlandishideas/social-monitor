@@ -41,4 +41,11 @@ class Metric_FBEngagement extends Metric_Abstract {
         return $score;
     }
 
+    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        // TODO: Implement getData() method.
+        return [];
+    }
+
+
 }

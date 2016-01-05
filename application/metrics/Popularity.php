@@ -31,4 +31,11 @@ class Metric_Popularity extends Metric_Abstract {
         $score = round(100 * $current / $target);
         return self::boundScore($score);
     }
+
+    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        // TODO: Implement getData() method.
+    }
+
+
 }
