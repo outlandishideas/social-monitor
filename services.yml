@@ -44,6 +44,14 @@ services:
 
 
     ###################################
+    # linked in api services
+    ###################################
+
+    linkedin.client:
+        class: LinkedIn\LinkedIn
+        arguments: ["%linkedin.client_id%", "%linkedin.client_secret%", "%linkedin.redirect_url%"]
+
+    ###################################
     # google api services
     ###################################
 
