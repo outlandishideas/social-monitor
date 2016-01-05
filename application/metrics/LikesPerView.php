@@ -23,26 +23,28 @@ class Metric_LikesPerView extends Metric_Abstract {
      */
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $data = $presence->getHistoricStream($start, $end)->stream;
+        $data = $presence->getHistoryData($start, $end, ['views', 'likes']);
 
-        $actual = null;
+        $combinedData = [];
 
-        if(count($data) > 0){
-            $actual = 0;
-            $count = 0;
-            foreach ($data as $row) {
-                $actual += $row['likes'];
-                $count += $row['views'];
+        foreach ( $data as $row ) {
+            if (array_key_exists($row->type, $combinedData)) {
+                $combinedData[$row->type] = [];
             }
-            if ($count == 0) {
-                $actual = 0;
-            } else {
-                $actual /= $count;
-            }
+
+            $combinedData[$row->type][] = $row->value;
+        }
+
+        $views = max($combinedData['views']) - min($combinedData['views']);
+        $likes = max($combinedData['likes']) - min($combinedData['likes']);
+
+        if ($views > 0) {
+            $actual = $likes / $views;
+        } else {
+            $actual = $likes;
         }
 
         return $actual;
-
     }
 
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
