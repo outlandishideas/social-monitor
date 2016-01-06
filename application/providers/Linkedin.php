@@ -16,7 +16,7 @@ class Provider_Linkedin extends Provider_Abstract
 
     public function __construct(PDO $db, LinkedinAdapter $adapter) {
 		parent::__construct($db);
-		$this->type = Enum_PresenceType::YOUTUBE();
+		$this->type = Enum_PresenceType::LINKEDIN();
         $this->tableName = 'linkedin_stream';
         $this->adapter = $adapter;
     }
