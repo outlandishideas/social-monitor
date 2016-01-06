@@ -972,6 +972,9 @@ form.management button.add-item {
 .engagement-score.instagram {
 	background-image: url(../img/instagram_engagement.png);
 }
+.engagement-score.linkedin {
+	background-image: url(../img/linkedin_engagement.png);
+}
 
 /* Slider & Date */
 
@@ -1116,6 +1119,7 @@ body .compare.list li {
 
 .entity.twitter .icon-large { color: #4099FF; }
 .entity.instagram .icon-large { color: #3f729b; }
+.entity.linkedin .icon-large { color: #007bb5; }
 .entity.youtube .icon-large { color: #e52d27; }
 .entity.facebook .icon-large { color: #3B5998; }
 .entity.sina_weibo .icon-large { color: #e6162d; }
@@ -1130,6 +1134,11 @@ a.presence.twitter .icon-large,
 
 a.presence.instagram .icon-large,
 .icon-instagram-sign {
+	/*color: #3f729b;*/
+	color: #FFF;
+}
+
+a.presence.linkedin .icon-large {
 	/*color: #3f729b;*/
 	color: #FFF;
 }
@@ -1217,6 +1226,15 @@ li.link.box {
 .link.box.instagram a:hover,
 .link.box.instagram a:focus {
     background-color: #386589;
+}
+
+.link.box.linkedin a {
+	background-color: #007bb5;
+}
+
+.link.box.linkedin a:hover,
+.link.box.linkedin a:focus {
+	background-color: #005882;
 }
 
 .link.box.youtube a {
@@ -1884,6 +1902,10 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 
 .fa.fa-instagram {
 	color: #3f729b;
+}
+
+.fa.fa-linkedin {
+	color: #007bb5;
 }
 
 .fa.fa-youtube {
