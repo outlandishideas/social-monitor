@@ -1,5 +1,6 @@
 <?php
 
+use LinkedIn\LinkedIn;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 
 class UserController extends BaseController
@@ -9,6 +10,20 @@ class UserController extends BaseController
 	public function init() {
 		parent::init();
 		$this->view->titleIcon = 'icon-group';
+	}
+
+	public function linkedin()
+	{
+		/** @var LinkedIn $linkedin */
+		$linkedin = $this->getContainer()->get('linkedin.client');
+
+		$token = $linkedin->getAccessToken($_REQUEST['code']);
+
+		$user = $this->view->user;
+
+
+
+		$linkedin->getLoginUrl([LinkedIn::SCOPE_BASIC_PROFILE, LinkedIn::SCOPE_FULL_PROFILE]);
 	}
 
 	/**
