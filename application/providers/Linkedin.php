@@ -3,6 +3,7 @@
 use Outlandish\SocialMonitor\Adapter\LinkedinAdapter;
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
+use Outlandish\SocialMonitor\Models\LinkedinStatus;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
 
@@ -30,15 +31,9 @@ class Provider_Linkedin extends Provider_Abstract
 
         // get all videos - we need to update all of them as they are all potentially contributing to engagement
 
-        $videos = $this->adapter->getStatuses($presence->getUID(),null,$presence->handle);
+        $statuses = $this->adapter->getStatusesWithAccessToken($presence->getUID(), null, $presence->handle, 'token');
 
-        $this->insertVideos($presence, $videos, $count);
-
-        $this->updateVideoHistory($presence);
-
-        $comments = $this->adapter->getComments($presence->handle);
-
-        $this->insertComments($presence, $comments);
+        $this->insertStatuses($presence, $statuses, $count);
 
         return $count;
     }
@@ -273,36 +268,33 @@ class Provider_Linkedin extends Provider_Abstract
 
     /**
      * @param Model_Presence $presence
-     * @param YoutubeComment[] $comments
+     * @param LinkedinStatus[] $statuses
+     * @param $count
+     * @internal param \Outlandish\SocialMonitor\Models\YoutubeComment[] $comments
      */
-    private function insertComments(Model_Presence $presence, array $comments)
+    private function insertStatuses(Model_Presence $presence, array $statuses, &$count)
     {
         $insertStmt = $this->db->prepare("
-			INSERT INTO `{$this->commentTableName}`
-			(`id`, `presence_id`, `video_id`, `message`, `created_time`,
-			`likes`, `number_of_replies`, `in_response_to`, `posted_by_owner`, `rating`, `author_channel_id`)
+			INSERT INTO `{$this->tableName}`
+			(`post_id`, `presence_id`, `message`, `created_time`,
+			`likes`, `comments`)
 			VALUES
-			(:id, :presence_id, :video_id, :message, :created_time, :likes,
-				:number_of_replies, :in_response_to, :posted_by_owner, :rating, :author_channel_id)
+			(:post_id, :presence_id, :message, :created_time, :likes,
+				:comments)
             ON DUPLICATE KEY UPDATE
-                `likes` = VALUES(`likes`), `rating` = VALUES(`rating`);
+                `likes` = VALUES(`likes`), `comments` = VALUES(`comments`);
 		");
 
         $count = 0;
 
-        foreach ($comments as $comment) {
+        foreach ($statuses as $status) {
             $args = array(
-                ':id' => $comment->id,
+                ':post_id' => $status->postId,
                 ':presence_id' => $presence->getId(),
-                ':video_id' => $comment->videoId,
-                ':message' => $comment->message,
-                ':created_time' => gmdate('Y-m-d H:i:s', $comment->created_time),
-                ':likes' => $comment->likes,
-                ':number_of_replies' => $comment->numberOfReplies,
-                ':in_response_to' => $comment->in_response_to_status_uid,
-                ':posted_by_owner' => $comment->posted_by_owner,
-                ':rating' => $comment->rating,
-                ':author_channel_id' => $comment->authorChannelId,
+                ':message' => $status->message,
+                ':created_time' => gmdate('Y-m-d H:i:s', $status->created_time),
+                ':likes' => $status->likes,
+                ':comments' => $status->comments,
             );
             try {
                 $result = $insertStmt->execute($args);
@@ -404,6 +396,5 @@ class Provider_Linkedin extends Provider_Abstract
 
         return $data;
     }
-
 
 }

@@ -91,10 +91,10 @@ class LinkedinAdapter extends AbstractAdapter
                 $postContent = $post['updateContent']['companyStatusUpdate'];
 
                 $status->comments = $post['updateComments']['_total'];
-                $status->likes = $post['likes']['_total'];
+                $status->likes = $post['numLikes'];
                 $status->message = $postContent['share']['comment'];
-                $status->post_id = $postContent['share']['id'];
-                $status->created_time = new \DateTime($postContent['timestamp']);
+                $status->postId = $postContent['share']['id'];
+                $status->created_time = $postContent['share']['timestamp']/1000;
 
                 $statuses[] = $status;
             }
