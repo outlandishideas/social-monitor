@@ -12,18 +12,26 @@ class UserController extends BaseController
 		$this->view->titleIcon = 'icon-group';
 	}
 
-	public function linkedin()
+	public function linkedinAction()
 	{
 		/** @var LinkedIn $linkedin */
-		$linkedin = $this->getContainer()->get('linkedin.client');
+//		$linkedin = $this->getContainer()->get('linkedin.client');
 
-		$token = $linkedin->getAccessToken($_REQUEST['code']);
+		$linkedin = new LinkedIn([
+			'api_key' => '77412v04nudx5x',
+    		'api_secret' => 'SpOZEGPlW0wi1FwO',
+    		'callback_url' => 'http://socialmonitor.local/user/linkedin'
+		]);
 
-		$user = $this->view->user;
+		if (isset($_REQUEST['code'])) {
+			$token = $linkedin->getAccessToken($_REQUEST['code']);
+		} else {
+			$token = "No token created";
+		}
 
-
-
-		$linkedin->getLoginUrl([LinkedIn::SCOPE_BASIC_PROFILE, LinkedIn::SCOPE_FULL_PROFILE]);
+		$this->_helper->layout()->setLayout('notabs');
+		$this->view->token = $token;
+		$this->view->loginUrl = $linkedin->getLoginUrl([LinkedIn::SCOPE_BASIC_PROFILE, 'rw_company_admin']);
 	}
 
 	/**

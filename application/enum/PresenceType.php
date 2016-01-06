@@ -11,6 +11,7 @@ class Enum_PresenceType extends Enum_Abstract
 	const SINA_WEIBO 	= 'sina_weibo';
     const INSTAGRAM = 'instagram';
     const YOUTUBE = 'youtube';
+    const LINKEDIN = 'linkedin';
     /**
      * @var ContainerInterface
      */
@@ -21,6 +22,7 @@ class Enum_PresenceType extends Enum_Abstract
     public static function SINA_WEIBO() { return self::get(self::SINA_WEIBO); }
     public static function INSTAGRAM() { return self::get(self::INSTAGRAM); }
     public static function YOUTUBE() { return self::get(self::YOUTUBE); }
+    public static function LINKEDIN() { return self::get(self::LINKEDIN); }
 
     protected $sign = '';
     protected $title = '';
@@ -107,6 +109,17 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_LikesPerView::getName()
                 );
                 break;
+            case self::LINKEDIN:
+                $this->sign = "fa fa-linkedin";
+                $this->title = "LinkedIn";
+                $this->relevancePercentage = 10;
+                $this->applicableMetrics = array(
+                    Metric_Popularity::getName(),
+                    Metric_PopularityTime::getName(),
+                    Metric_Branding::getName(),
+                    Metric_SignOff::getName(),
+                );
+                break;
             default:
                 throw new \LogicException("Not implemented yet.");
         }
@@ -146,6 +159,9 @@ class Enum_PresenceType extends Enum_Abstract
             case self::YOUTUBE:
                 $youtubeAdapter = $container->get('adapter.youtube');
                 return new Provider_Youtube($db, $youtubeAdapter);
+            case self::LINKEDIN:
+                $adapter = $container->get('adapter.linkedin');
+                return new Provider_Linkedin($db, $adapter);
 			default:
 				throw new \LogicException("Not implemented yet.");
 		}

@@ -31,6 +31,10 @@ services:
         class: Outlandish\SocialMonitor\Adapter\YoutubeAdapter
         arguments: ["@google.youtube"]
 
+    adapter.linkedin:
+        class: Outlandish\SocialMonitor\Adapter\LinkedinAdapter
+        arguments: ["@linkedin.client"]
+
     ###################################
     # instagram engagement services
     ###################################
@@ -49,7 +53,11 @@ services:
 
     linkedin.client:
         class: LinkedIn\LinkedIn
-        arguments: ["%linkedin.client_id%", "%linkedin.client_secret%", "%linkedin.redirect_url%"]
+        arguments:
+            -
+                api_key: "%linkedin.client_id%"
+                api_secret: "%linkedin.client_secret%"
+                callback_url: "%linkedin.redirect_url%"
 
     ###################################
     # google api services
