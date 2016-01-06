@@ -11,6 +11,7 @@ namespace Outlandish\SocialMonitor\Adapter;
 
 use LinkedIn\LinkedIn;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
+use Outlandish\SocialMonitor\Models\LinkedinStatus;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
 use Outlandish\SocialMonitor\Models\Status;
 
@@ -80,7 +81,27 @@ class LinkedinAdapter extends AbstractAdapter
      */
     public function getStatuses($pageUID, $since, $handle)
     {
-        // TODO: Implement getStatuses() method.
+        $statuses = [];
+
+        $response = $this->linkedIn->get("/companies/{$pageUID}/updates", ['count' => 100]);
+
+        if (!empty($response['values'])) {
+            foreach ($response['values'] as $post) {
+                $status = new LinkedinStatus();
+                $postContent = $post['updateContent']['companyStatusUpdate'];
+
+                $status->comments = $post['updateComments']['_total'];
+                $status->likes = $post['likes']['_total'];
+                $status->message = $postContent['share']['comment'];
+                $status->post_id = $postContent['share']['id'];
+                $status->created_time = new \DateTime($postContent['timestamp']);
+
+                $statuses[] = $status;
+            }
+        }
+
+        return $statuses;
+
     }
 
     /**
