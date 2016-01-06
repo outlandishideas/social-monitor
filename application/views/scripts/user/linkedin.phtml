@@ -1,0 +1,11 @@
+<?php
+$buttons = [
+    "<a href=\"{$this->loginUrl}\" class=\"button\">Login to LinkedIn</a>",
+];
+?>
+
+<h2 class="page-title">Login to LinkedIn</h2>
+
+<p>Token: <?php echo $this->token; ?></p>
+
+<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>

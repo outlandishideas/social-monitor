@@ -3,6 +3,9 @@ parameters:
     facebook.app_secret:
     instagram.app_token:
     youtube.api_key:
+    linkedin.client_id:
+    linkedin.client_secret:
+    linkedin.redirect_url:
     db.name:
     db.host:
     db.username:

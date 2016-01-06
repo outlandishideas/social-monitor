@@ -1,5 +1,6 @@
 <?php
 
+use LinkedIn\LinkedIn;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 
 class UserController extends BaseController
@@ -9,6 +10,28 @@ class UserController extends BaseController
 	public function init() {
 		parent::init();
 		$this->view->titleIcon = 'icon-group';
+	}
+
+	public function linkedinAction()
+	{
+		/** @var LinkedIn $linkedin */
+//		$linkedin = $this->getContainer()->get('linkedin.client');
+
+		$linkedin = new LinkedIn([
+			'api_key' => '77412v04nudx5x',
+    		'api_secret' => 'SpOZEGPlW0wi1FwO',
+    		'callback_url' => 'http://socialmonitor.local/user/linkedin'
+		]);
+
+		if (isset($_REQUEST['code'])) {
+			$token = $linkedin->getAccessToken($_REQUEST['code']);
+		} else {
+			$token = "No token created";
+		}
+
+		$this->_helper->layout()->setLayout('notabs');
+		$this->view->token = $token;
+		$this->view->loginUrl = $linkedin->getLoginUrl([LinkedIn::SCOPE_BASIC_PROFILE, 'rw_company_admin']);
 	}
 
 	/**
