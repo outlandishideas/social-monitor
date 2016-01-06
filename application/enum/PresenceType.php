@@ -118,6 +118,7 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_PopularityTime::getName(),
                     Metric_Branding::getName(),
                     Metric_SignOff::getName(),
+                    Metric_ActionsPerDay::getName()
                 );
                 break;
             default:
