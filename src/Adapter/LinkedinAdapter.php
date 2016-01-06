@@ -105,6 +105,24 @@ class LinkedinAdapter extends AbstractAdapter
     }
 
     /**
+     * Linkedin needs an access token so we need to pass it through before calling the getStatuses method
+     *
+     * @param $pageUID
+     * @param $since
+     * @param $handle
+     * @param $accessToken
+     * @return PresenceMetadata
+     */
+    public function getStatusesWithAccessToken($pageUID, $since, $handle, $accessToken)
+    {
+//        $this->linkedIn->setAccessToken($accessToken);
+        $this->linkedIn->setAccessToken($this->token);
+        $metadata = $this->getStatuses($pageUID, $since, $handle);
+
+        return $metadata;
+    }
+
+    /**
      * @param $handle
      * @return array|null
      * @throws SocialMonitorException
