@@ -242,6 +242,46 @@ app.datatables = {
 					});
 			});
 		},
+		'#statuses .linkedin': function($div) {
+			app.datatables.initStatusList($div, 'post', [
+				{
+					mDataProp:'message',
+					fnRender:function (o) {
+						if (typeof o.aData.message != 'string') {
+							o.aData.message = '';
+						}
+						var message = parseTemplate(app.templates.inpost, o.aData);
+						var response = o.aData.first_response;
+						var rTitle, rMessage, rIcon;
+						if (o.aData.needs_response == '1') {
+							rTitle = 'Does not require a response';
+							rMessage = 'Awaiting response (' + response.date_diff + ')...';
+							rIcon = 'icon-comment-alt';
+						} else {
+							rTitle = 'Requires a response';
+							rMessage = 'No response required';
+							rIcon = 'icon-comments';
+						}
+						message += '<p class="more"><a href="#" class="require-response" title="' + rTitle + '"><span class="' + rIcon + ' icon-large"></span></a></p>' +
+							'<p class="no-response">' + rMessage + '</p>';
+						return message;
+					},
+					sClass: 'message',
+					bSortable:false,
+					bUseRendered:false
+				},
+				app.datatables.linksColumn(),
+				app.datatables.dateColumn()
+			]);
+
+			$div.on('click', '.require-response', function(e) {
+				e.preventDefault();
+				app.api.post('presence/toggle-response-needed', { id: $(this).closest('tr').data('id') })
+					.always(function() {
+						$(document).trigger('dataChanged');
+					});
+			});
+		},
 		'#statuses .facebook': function($div) {
 			app.datatables.initStatusList($div, 'post', [
 				{

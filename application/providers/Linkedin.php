@@ -69,7 +69,7 @@ class Provider_Linkedin extends Provider_Abstract
         $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
 
 		return (object)array(
-            'stream' => count($ret) ? $ret : null,
+            'stream' => count($ret) ? $ret : [],
             'total' => $total
         );
 	}
@@ -176,4 +176,14 @@ class Provider_Linkedin extends Provider_Abstract
 
     }
 
+    /**
+     * @param Model_Presence $presence
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
+    public function getResponseData(Model_Presence $presence, DateTime $start, DateTime $end)
+    {
+        // TODO: Implement getResponseData() method.
+    }
 }
