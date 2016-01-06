@@ -797,5 +797,10 @@ class Model_Presence
 		return $this->provider->getHistoryData($this, $start, $end, $types);
 	}
 
+	public function isForLinkedin()
+	{
+		return $this->getType()->getValue() == Enum_PresenceType::LINKEDIN;
+	}
+
 
 }

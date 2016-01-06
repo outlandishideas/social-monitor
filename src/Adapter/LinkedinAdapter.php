@@ -11,6 +11,7 @@ namespace Outlandish\SocialMonitor\Adapter;
 
 use LinkedIn\LinkedIn;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
+use Outlandish\SocialMonitor\Models\LinkedinStatus;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
 use Outlandish\SocialMonitor\Models\Status;
 
@@ -80,7 +81,45 @@ class LinkedinAdapter extends AbstractAdapter
      */
     public function getStatuses($pageUID, $since, $handle)
     {
-        // TODO: Implement getStatuses() method.
+        $statuses = [];
+
+        $response = $this->linkedIn->get("/companies/{$pageUID}/updates", ['count' => 100]);
+
+        if (!empty($response['values'])) {
+            foreach ($response['values'] as $post) {
+                $status = new LinkedinStatus();
+                $postContent = $post['updateContent']['companyStatusUpdate'];
+
+                $status->comments = $post['updateComments']['_total'];
+                $status->likes = $post['numLikes'];
+                $status->message = $postContent['share']['comment'];
+                $status->postId = $postContent['share']['id'];
+                $status->created_time = $postContent['share']['timestamp']/1000;
+
+                $statuses[] = $status;
+            }
+        }
+
+        return $statuses;
+
+    }
+
+    /**
+     * Linkedin needs an access token so we need to pass it through before calling the getStatuses method
+     *
+     * @param $pageUID
+     * @param $since
+     * @param $handle
+     * @param $accessToken
+     * @return PresenceMetadata
+     */
+    public function getStatusesWithAccessToken($pageUID, $since, $handle, $accessToken)
+    {
+//        $this->linkedIn->setAccessToken($accessToken);
+        $this->linkedIn->setAccessToken($this->token);
+        $metadata = $this->getStatuses($pageUID, $since, $handle);
+
+        return $metadata;
     }
 
     /**

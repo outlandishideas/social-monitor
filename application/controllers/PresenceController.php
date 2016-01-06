@@ -466,6 +466,18 @@ class PresenceController extends GraphingController
 				);
 			}
 			$count = count($stream);
+		} else if ($presence->isForLinkedin()) {
+			foreach ($stream as $post) {
+				$post = (object)$post;
+				$tableData[] = array(
+					'id'	=> $post->id,
+					'url'	=> '', //messages don't have a direct link
+					'message' => $post->message,
+					'links' => array(),
+					'date' => Model_Base::localeDate($post->created_time)
+				);
+			}
+			$count = count($stream);
 		}
 
 		//return CSV or JSON?
