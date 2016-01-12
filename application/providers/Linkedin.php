@@ -165,9 +165,10 @@ class Provider_Linkedin extends Provider_Abstract
                     error_log('Error inserting youtube comment: '.$error[2]);
                     continue;
                 }
-
-                if (!empty($status->links)) {
-                    $id = $this->db->lastInsertId();
+                $id = $this->db->lastInsertId();
+                //only inset status links if we have one, and the lastInsertId is not 0
+                //lastInsertId will be 0 if we have just saved a status that has already been saved
+                if (!empty($status->links) && $id != 0) {
                     $links[$id] = $status->links;
                 }
 
