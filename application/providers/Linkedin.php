@@ -138,10 +138,10 @@ class Provider_Linkedin extends Provider_Abstract
         $insertStmt = $this->db->prepare("
 			INSERT INTO `{$this->tableName}`
 			(`post_id`, `presence_id`, `message`, `created_time`,
-			`likes`, `comments`)
+			`likes`, `comments`, `type`)
 			VALUES
 			(:post_id, :presence_id, :message, :created_time, :likes,
-				:comments)
+				:comments, :type)
             ON DUPLICATE KEY UPDATE
                 `likes` = VALUES(`likes`), `comments` = VALUES(`comments`);
 		");
@@ -157,6 +157,7 @@ class Provider_Linkedin extends Provider_Abstract
                 ':created_time' => gmdate('Y-m-d H:i:s', $status->created_time),
                 ':likes' => $status->likes,
                 ':comments' => $status->comments,
+                ':type' => $status->type
             );
             try {
                 $result = $insertStmt->execute($args);
