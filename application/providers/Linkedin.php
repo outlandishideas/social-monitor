@@ -153,7 +153,7 @@ class Provider_Linkedin extends Provider_Abstract
             $args = array(
                 ':post_id' => $status->postId,
                 ':presence_id' => $presence->getId(),
-                ':message' => $status->message,
+                ':message' => substr($status->message, 0, 2000),
                 ':created_time' => gmdate('Y-m-d H:i:s', $status->created_time),
                 ':likes' => $status->likes,
                 ':comments' => $status->comments,
