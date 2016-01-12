@@ -22,19 +22,13 @@ class Metric_Relevance extends Metric_Abstract {
      * @return int
      */
     public function calculate(Model_Presence $presence, DateTime $start, DateTime $end){
-        $data = $presence->getHistoricStreamMeta($start, $end);
+        list($actual, $count) = array_values($this->getData($presence, $start, $end));
 
-        $actual = null;
-
-        if(!empty($data)){
-            $actual = 0;
-            foreach ($data as $row) {
-                $actual += $row['number_of_bc_links'];
-            }
-            $actual /= count($data);
+        if ($count < 1) {
+            return $actual;
         }
 
-        return $actual;
+        return $actual / $count;
     }
 
 
@@ -65,7 +59,17 @@ class Metric_Relevance extends Metric_Abstract {
 
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        // TODO: Implement getData() method.
+        $rawData = $presence->getHistoricStreamMeta($start, $end);
+
+        $data = ['relevant_actions' => 0, 'days' => count($rawData)];
+
+        if(!empty($rawData)){
+            foreach ($rawData as $row) {
+                $data['relevant_actions'] += $row['number_of_bc_links'];
+            }
+        }
+
+        return $data;
     }
 
 
