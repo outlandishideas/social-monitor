@@ -87,18 +87,20 @@ class LinkedinAdapter extends AbstractAdapter
 
         if (!empty($response['values'])) {
             foreach ($response['values'] as $post) {
-                $status = new LinkedinStatus();
-                $postContent = $post['updateContent']['companyStatusUpdate'];
 
-                $status->comments = $post['updateComments']['_total'];
-                $status->likes = $post['numLikes'];
-                $status->message = $postContent['share']['comment'];
-                $status->postId = $postContent['share']['id'];
-                $status->created_time = $postContent['share']['timestamp']/1000;
 
-                $submittedLink = !empty($postContent['share']['content']['submittedUrl']) ? [$postContent['share']['content']['submittedUrl']] : [];
-                $messageLinks = $status->message ? $this->extractLinks($status->message) : [];
-                $status->links = array_merge($submittedLink, $messageLinks);
+                if (isset($post['updateContent']['companyStatusUpdate'])) {
+                    $status = $this->parseCompanyUpdate($post);
+                } else if (isset($post['updateContent']['companyJobUpdate'])) {
+                    $status = $this->parseCompanyJob($post);
+                } else if (isset($post['updateContent'][''])) {
+                    continue;
+                } else {
+                    //unknown post type
+                    continue;
+                }
+
+
 
                 $statuses[] = $status;
             }
@@ -168,5 +170,45 @@ class LinkedinAdapter extends AbstractAdapter
             }
         }
         return $links;
+    }
+
+    private function parseCompanyUpdate($post)
+    {
+        $postContent = $post['updateContent']['companyStatusUpdate'];
+
+        $status = new LinkedinStatus();
+
+        $status->comments = $post['updateComments']['_total'];
+        $status->likes = $post['numLikes'];
+        $status->message = $postContent['share']['comment'];
+        $status->postId = $postContent['share']['id'];
+        $status->created_time = $postContent['share']['timestamp']/1000;
+        $status->type = 'status-update';
+
+        $submittedLink = !empty($postContent['share']['content']['submittedUrl']) ? [$postContent['share']['content']['submittedUrl']] : [];
+        $messageLinks = $status->message ? $this->extractLinks($status->message) : [];
+        $status->links = array_merge($submittedLink, $messageLinks);
+
+        return $status;
+    }
+
+    private function parseCompanyJob($post)
+    {
+        $postContent = $post['updateContent']['companyJobUpdate'];
+
+        $status = new LinkedinStatus();
+
+        $status->comments = $post['isCommentable'] ? $post['updateComments']['_total'] : 0;
+        $status->likes = $post['isLikable'] ? $post['numLikes'] : 0;
+        $status->message = $postContent['job']['description'];
+        $status->postId = $postContent['job']['id'];
+        $status->created_time = $post['timestamp']/1000;
+        $status->type = 'job-posting';
+
+        $submittedLink = !empty($postContent['job']['siteJobRequest']['url']) ? [$postContent['job']['siteJobRequest']['url']] : [];
+        $messageLinks = $status->message ? $this->extractLinks($status->message) : [];
+        $status->links = array_merge($submittedLink, $messageLinks);
+
+        return $status;
     }
 }
