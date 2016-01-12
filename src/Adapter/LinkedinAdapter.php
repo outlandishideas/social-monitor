@@ -96,6 +96,10 @@ class LinkedinAdapter extends AbstractAdapter
                 $status->postId = $postContent['share']['id'];
                 $status->created_time = $postContent['share']['timestamp']/1000;
 
+                $submittedLink = !empty($postContent['share']['content']['submittedUrl']) ? [$postContent['share']['content']['submittedUrl']] : [];
+                $messageLinks = $status->message ? $this->extractLinks($status->message) : [];
+                $status->links = array_merge($submittedLink, $messageLinks);
+
                 $statuses[] = $status;
             }
         }
@@ -145,5 +149,24 @@ class LinkedinAdapter extends AbstractAdapter
         }
 
         return (object)$company[0];
+    }
+
+    private function extractLinks($message)
+    {
+        $links = array();
+        if (preg_match_all('/[^\s]{5,}/', $message, $tokens)) {
+            foreach ($tokens[0] as $token) {
+                $token = trim($token, '.,;!"()');
+                if (filter_var($token, FILTER_VALIDATE_URL)) {
+                    try {
+                        $links[] = $token;
+                    } catch (RuntimeException $ex) {
+                        // ignore failed URLs
+                        $failedLinks[] = $token;
+                    }
+                }
+            }
+        }
+        return $links;
     }
 }
