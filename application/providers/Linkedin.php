@@ -147,6 +147,7 @@ class Provider_Linkedin extends Provider_Abstract
 		");
 
         $count = 0;
+        $links = [];
 
         foreach ($statuses as $status) {
             $args = array(
@@ -162,7 +163,15 @@ class Provider_Linkedin extends Provider_Abstract
                 if(!$result) {
                     $error = $insertStmt->errorInfo();
                     error_log('Error inserting youtube comment: '.$error[2]);
+                    continue;
                 }
+                $id = $this->db->lastInsertId();
+                //only inset status links if we have one, and the lastInsertId is not 0
+                //lastInsertId will be 0 if we have just saved a status that has already been saved
+                if (!empty($status->links) && $id != 0) {
+                    $links[$id] = $status->links;
+                }
+
             } catch (PDOException $ex) {
                 if ($ex->getCode() == 23000) {
                     continue;
@@ -171,8 +180,11 @@ class Provider_Linkedin extends Provider_Abstract
             } catch (Exception $ex) {
                 continue;
             }
+
             $count++;
         }
+
+        $this->saveLinks('linkedin', $links);
 
     }
 
