@@ -148,7 +148,7 @@ class LinkedinAdapter extends AbstractAdapter
             throw new SocialMonitorException("No companies for logged in user");
         }
 
-        return (object)$company[0];
+        return (object)array_values($company)[0];
     }
 
     private function extractLinks($message)
