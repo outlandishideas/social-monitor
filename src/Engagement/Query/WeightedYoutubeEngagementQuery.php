@@ -104,25 +104,26 @@ class WeightedYoutubeEngagementQuery implements Query
                   INNER JOIN (
                   SELECT video_id,type,value
                   FROM $videoHistory
-                  WHERE DATE(datetime) = :now)
+                  WHERE DATE(datetime) = :date)
                   AS `history`
                   ON stream.id = history.video_id
                 GROUP BY history.type";
 
             $statement = $this->db->prepare($videoHistoryQuery);
             $statement->execute([
-                ':now' => $nowStr
+                ':date' => $nowStr
             ]);
 
             $videoEndValues = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
 
             $statement = $this->db->prepare($videoHistoryQuery);
             $statement->execute([
-                ':now' => $thenStr
+                ':date' => $thenStr
             ]);
 
             $videoStartValues = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
 
+            // in this loop we calculate the change in each type of engagement and save in $presenceEngagementMap
             foreach(array_keys($this->typeWeightMap) as $type) {
                 $endValue = array_key_exists($type,$videoEndValues) ? $videoEndValues[$type] : 0;
                 $startValue = array_key_exists($type,$videoStartValues) ? $videoStartValues[$type] : 0;
@@ -130,10 +131,12 @@ class WeightedYoutubeEngagementQuery implements Query
                 $presenceEngagementMap[$type] = $change;
             }
 
+            // here we calculate the weighted engagement by doing a weighted sum of the different types
             $weightedTotalEngagement = 0;
             foreach($this->typeWeightMap as $type=>$weight) {
                 $weightedTotalEngagement += $presenceEngagementMap[$type]*$weight;
             }
+            // we then scale by the popularity of the presence
             $scale = $presenceEngagementMap['popularity'] ? $presenceEngagementMap['popularity'] : 1;
             $presenceEngagementMap['weighted_engagement'] = $weightedTotalEngagement / $scale;
             $allPresencesEngagement[$presenceId] = $presenceEngagementMap;
