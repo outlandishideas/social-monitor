@@ -176,7 +176,7 @@ class Model_Presence
 
 	public function getKloutScore()
 	{
-		return $this->klout_score;
+		return floatval($this->klout_score);
 	}
 
 	public function getPopularity()
@@ -231,7 +231,7 @@ class Model_Presence
 	 */
 	public function getFacebookEngagement()
 	{
-		return $this->facebook_engagement;
+		return floatval($this->facebook_engagement);
 	}
 
 	/**
@@ -239,7 +239,7 @@ class Model_Presence
 	 */
 	public function getInstagramEngagement()
 	{
-		return $this->instagram_engagement;
+		return floatval($this->instagram_engagement);
 	}
 
 	/**
@@ -247,7 +247,7 @@ class Model_Presence
 	 */
 	public function getYoutubeEngagement()
 	{
-		return $this->youtube_engagement;
+		return floatval($this->youtube_engagement);
 	}
 
 	public function getPresenceSign()
@@ -747,7 +747,7 @@ class Model_Presence
 
 	public function getSinaWeiboEngagement()
 	{
-		return $this->sina_weibo_engagement;
+		return floatval($this->sina_weibo_engagement);
 	}
 
 	/**
