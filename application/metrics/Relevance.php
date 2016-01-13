@@ -61,11 +61,13 @@ class Metric_Relevance extends Metric_Abstract {
     {
         $rawData = $presence->getHistoricStreamMeta($start, $end);
 
-        $data = ['relevant_actions' => 0, 'days' => count($rawData)];
+        $data = ['actions' => 0, 'actions_with_links' => 0, 'actions_with_relevant_links' => 0, 'days' => count($rawData)];
 
         if(!empty($rawData)){
             foreach ($rawData as $row) {
-                $data['relevant_actions'] += $row['number_of_bc_links'];
+                $data['actions'] += $row['number_of_actions'];
+                $data['actions_with_links'] += $row['number_of_links'];
+                $data['actions_with_relevant_links'] += $row['number_of_bc_links'];
             }
         }
 
