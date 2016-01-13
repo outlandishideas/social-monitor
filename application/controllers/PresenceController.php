@@ -449,7 +449,7 @@ class PresenceController extends GraphingController
 				$tableData[] = array(
 					'id'	=> $post->id,
 					'url'	=> $post->permalink,
-					'message' => $post->message,
+					'message' => $post->message . ' <img src="' . $post->image_url . '">',
 					'links' => array(),
 					'date' => Model_Base::localeDate($post->created_time)
 				);
