@@ -35,6 +35,14 @@ class Metric_ActionsPerDay extends Metric_Abstract {
         return self::boundScore($score);
     }
 
+    /**
+     * Returns an array: [min => __ , median => __ ,max => __]
+     *
+     * @param Model_Presence $presence
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $rawData = $presence->getHistoricStreamMeta($start, $end, true);
