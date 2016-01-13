@@ -134,8 +134,8 @@ if ($sizeDiff > 0) {
                     <p>Yesterday's Youtube Engagement score: <?php echo $presence->getYoutubeEngagement(); ?></p>
                     <p>Monthly Average Youtube Engagement score: <?php echo $presence->getMetricValue('youtube_engagement'); ?></p>
                 <?php elseif ($presence->isForLinkedin()) : ?>
-                    <p>Yesterday's Linkedin Engagement score: <?php echo $presence->getLinkedinEngagement(); ?></p>
-                    <p>Monthly Average Youtube Engagement score: <?php echo $presence->getMetricValue('youtube_engagement'); ?></p>
+                    <p>Yesterday's Linkedin Engagement score: <?php // echo $presence->getLinkedinEngagement(); ?></p>
+                    <p>Monthly Average Linkedin Engagement score: <?php // echo $presence->getMetricValue('linkedin_engagement'); ?></p>
                 <?php endif; ?>
                 <?php if ($ownerUrl) : ?>
                     <p>This presence contributes to the statistics for <a href="<?php echo $ownerUrl; ?>"><?php echo $owner->display_name; ?></a></p>
