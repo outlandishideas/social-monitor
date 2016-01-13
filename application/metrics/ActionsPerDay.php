@@ -20,13 +20,9 @@ class Metric_ActionsPerDay extends Metric_Abstract {
      */
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        list($actions, $days) = array_values($this->getData($presence, $start, $end));
+        $data = $this->getData($presence, $start, $end);
 
-        if ($days < 1) {
-            return $actions;
-        }
-
-        return $actions / $days;
+        return $data['median'];
     }
 
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
@@ -39,19 +35,49 @@ class Metric_ActionsPerDay extends Metric_Abstract {
         return self::boundScore($score);
     }
 
+    /**
+     * Returns an array: [min => __ , median => __ ,max => __]
+     *
+     * @param Model_Presence $presence
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return array
+     */
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $rawData = $presence->getHistoricStreamMeta($start, $end, true);
+        $min = $max = $median = 0;
 
-        $data = ['actions' => 0, 'days' => count($rawData)];
+        if($rawData && count($rawData)) {
 
-        if(count($rawData) > 0){
-            foreach ($rawData as $row) {
-                $data['actions'] += $row['number_of_actions'];
+            $actionsList = array_map(function ($row) {
+                return $row['number_of_actions'];
+            }, $rawData);
+
+            sort($actionsList);
+
+            if (count($actionsList)) {
+                $min = $actionsList[0];
+                $max = $actionsList[count($actionsList) - 1];
+                $median = $this->calculate_median($actionsList);
             }
         }
 
-        return $data;
+        return ['min'=>$min,'median'=>$median,'max'=>$max];
+
+    }
+
+    function calculate_median($arr) {
+        $count = count($arr); //total numbers in array
+        $middleIndex = intval(floor(($count-1)/2)); // find the middle index
+        if($count % 2) { // odd number, middle is the median
+            $median = $arr[$middleIndex];
+        } else { // even number, calculate avg of 2 medians
+            $low = $arr[$middleIndex];
+            $high = $arr[$middleIndex+1];
+            $median = (($low+$high)/2);
+        }
+        return $median;
     }
 
 
