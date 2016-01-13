@@ -6,10 +6,16 @@ class Metric_LinkedinEngagementLeveled extends Metric_Abstract {
     protected static $title = "Linkedin Engagement Score";
     protected static $icon = "fa fa-linkedin";
     protected static $gliding = false;
+    private $query;
+    private $cache;
 
     function __construct()
     {
         $this->target = $this->getTargets();
+
+        $pdo = Zend_Registry::get('db')->getConnection();
+        $this->query = new \Outlandish\SocialMonitor\Engagement\Query\WeightedLinkedinEngagementQuery($pdo);
+        $this->cache = [];
     }
 
     private function getTargets()
@@ -77,9 +83,18 @@ class Metric_LinkedinEngagementLeveled extends Metric_Abstract {
 
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        // TODO: Implement getData() method.
-        return [];
+        $key = $start->format('Y-m-d') . $end->format('Y-m-d');
+        if (!array_key_exists($key, $this->cache)) {
+            $rows = $this->query->getData($end, $start);
+            $this->cache[$key] = $rows;
+        }
+
+        $rows = $this->cache[$key];
+
+        if (!array_key_exists($presence->getId(), $rows)) {
+            return [];
+        }
+
+        return $rows[$presence->getId()];
     }
-
-
 }
