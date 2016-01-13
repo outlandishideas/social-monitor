@@ -119,7 +119,8 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_Branding::getName(),
                     Metric_SignOff::getName(),
                     Metric_ActionsPerDay::getName(),
-                    Metric_Relevance::getName()
+                    Metric_Relevance::getName(),
+                    Metric_LinkedinEngagementLeveled::getName()
                 );
                 break;
             default:

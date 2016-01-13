@@ -10,13 +10,13 @@ class Model_Presence
 
 	protected $presenceHistoryColumns = array(
 		'popularity', 'klout_score', 'facebook_engagement', 'sina_weibo_engagement',
-		'instagram_engagement', 'youtube_engagement'
+		'instagram_engagement', 'youtube_engagement', 'linkedin_engagement'
 	);
 
 	//these should be public to mimic existing Presence Class
 	public $id;
 	public $handle;
-    /** @var Enum_PresenceType */
+	/** @var Enum_PresenceType */
 	public $type;
 	public $name;
 	public $label;
@@ -30,6 +30,7 @@ class Model_Presence
 	public $instagram_engagement;
 	public $sina_weibo_engagement;
 	public $youtube_engagement;
+	public $linkedin_engagement;
 	public $page_url;
 	public $image_url;
 	public $owner;
@@ -43,18 +44,17 @@ class Model_Presence
 		2 => "Large"
 	);
 
-    /**
-     * Creates a new presence
-     * Provider, metrics and badges are passed in so that they can be mocked out for testing
-     * todo: only pass in a (mockable) type instead?
-     * @param PDO $db
-     * @param array $internals
-     * @param Provider_Abstract $provider
-     * @param array $metrics
-     * @param array $badges
-     * @throws InvalidArgumentException
-     */
-    public function __construct(PDO $db, array $internals, Provider_Abstract $provider, array $metrics = array(), array $badges = array())
+	/**
+	 * Creates a new presence
+	 * Provider, metrics and badges are passed in so that they can be mocked out for testing
+	 * @param PDO $db
+	 * @param array $internals
+	 * @param Provider_Abstract $provider
+	 * @param array $metrics
+	 * @param array $badges
+	 * @throws InvalidArgumentException
+	 */
+	public function __construct(PDO $db, array $internals, Provider_Abstract $provider, array $metrics = array(), array $badges = array())
 	{
 		$this->db = $db;
 		$this->provider = $provider;
@@ -68,27 +68,29 @@ class Model_Presence
 			throw new \InvalidArgumentException('Missing handle for Presence');
 		}
 		$this->id = $internals['id'];
-        $this->handle = $internals['handle'];
-        $this->setType($internals['type']);
-        $this->name = $internals['name'];
-        $this->uid = $internals['uid'];
-        $this->sign_off = $internals['sign_off'];
-        $this->branding = $internals['branding'];
-        $this->popularity = $internals['popularity'];
-        $this->klout_score = $internals['klout_score'];
-        $this->facebook_engagement = $internals['facebook_engagement'];
-        $this->sina_weibo_engagement = $internals['sina_weibo_engagement'];
+		$this->handle = $internals['handle'];
+		$this->setType($internals['type']);
+		$this->name = $internals['name'];
+		$this->uid = $internals['uid'];
+		$this->sign_off = $internals['sign_off'];
+		$this->branding = $internals['branding'];
+		$this->popularity = $internals['popularity'];
+		$this->klout_score = $internals['klout_score'];
+		$this->facebook_engagement = $internals['facebook_engagement'];
+		$this->sina_weibo_engagement = $internals['sina_weibo_engagement'];
 		if($this->type === Enum_PresenceType::INSTAGRAM) {
 			$this->instagram_engagement = $internals['instagram_engagement'];
-		} else {
+		} else if ($this->type === Enum_PresenceType::YOUTUBE) {
 			$this->youtube_engagement = $internals['instagram_engagement'];
+		} else  if ($this->type === Enum_PresenceType::LINKEDIN) {
+			$this->linkedin_engagement = $internals['instagram_engagement'];
 		}
 		$this->page_url = $internals['page_url'];
-        $this->image_url = $internals['image_url'];
-        $this->last_updated = $internals['last_updated'];
-        $this->last_fetched = $internals['last_fetched'];
-        if (array_key_exists('size', $internals)) $this->size = $internals['size'];
-    }
+		$this->image_url = $internals['image_url'];
+		$this->last_updated = $internals['last_updated'];
+		$this->last_fetched = $internals['last_fetched'];
+		if (array_key_exists('size', $internals)) $this->size = $internals['size'];
+	}
 
 	public function getId()
 	{
@@ -132,7 +134,7 @@ class Model_Presence
 
 	public function setType($typeName)
 	{
-        $this->type = Enum_PresenceType::get($typeName);
+		$this->type = Enum_PresenceType::get($typeName);
 	}
 
 	public function getName()
@@ -245,6 +247,14 @@ class Model_Presence
 	/**
 	 * @return mixed
 	 */
+	public function getLinkedinEngagement()
+	{
+		return $this->linkedin_engagement;
+	}
+
+	/**
+	 * @return mixed
+	 */
 	public function getYoutubeEngagement()
 	{
 		return floatval($this->youtube_engagement);
@@ -280,14 +290,19 @@ class Model_Presence
 		return $this->getType()->getValue() == Enum_PresenceType::YOUTUBE;
 	}
 
-    /**
-     * @return Model_Campaign|null
-     */
-    public function getOwner()
+	public function isForLinkedin()
+	{
+		return $this->getType()->getValue() == Enum_PresenceType::LINKEDIN;
+	}
+
+	/**
+	 * @return Model_Campaign|null
+	 */
+	public function getOwner()
 	{
 		if(!$this->owner){
-            Model_Base::setDb($this->db);
-            $this->owner = Model_Campaign::fetchOwner($this->getId());
+			Model_Base::setDb($this->db);
+			$this->owner = Model_Campaign::fetchOwner($this->getId());
 		}
 		return $this->owner;
 	}
@@ -346,24 +361,24 @@ class Model_Presence
 		return $target;
 	}
 
-    public function getMetricValue($metric) {
-        if ($metric instanceof Metric_Abstract) {
-            $metric = $metric->getName();
-        }
-        $kpiData = $this->getKpiData();
-        if ($kpiData && isset($kpiData[$metric])) {
-            return $kpiData[$metric];
-        }
-        return null;
-    }
+	public function getMetricValue($metric) {
+		if ($metric instanceof Metric_Abstract) {
+			$metric = $metric->getName();
+		}
+		$kpiData = $this->getKpiData();
+		if ($kpiData && isset($kpiData[$metric])) {
+			return $kpiData[$metric];
+		}
+		return null;
+	}
 
-    public function getTargetAudienceDate() {
-        $score = $this->getMetricValue(Metric_PopularityTime::getName());
-        if ($score) {
-            return new DateTime('now +' . round($score) . ' months');
-        }
-        return null;
-    }
+	public function getTargetAudienceDate() {
+		$score = $this->getMetricValue(Metric_PopularityTime::getName());
+		if ($score) {
+			return new DateTime('now +' . round($score) . ' months');
+		}
+		return null;
+	}
 
 	public function getRatioRepliesToOthersPosts(\DateTime $startDate, \DateTime $endDate)
 	{
@@ -371,29 +386,30 @@ class Model_Presence
 			return null;
 		}
 
-        $clauses = array(
-            'presence_id = :pid',
-            'created_time >= :start_date',
-            'created_time <= :end_date'
-        );
+		$clauses = array(
+			'presence_id = :pid',
+			'created_time >= :start_date',
+			'created_time <= :end_date'
+		);
 
-        $tableName = $this->provider->getTableName();
-		$sql = '
+		$tableName = $this->provider->getTableName();
+		$clauseString = implode(' AND ', $clauses);
+		$sql = "
 		SELECT t1.replies/t2.posts as replies_to_others_posts FROM
 		(
 			SELECT presence_id, COUNT(*) as replies
-			FROM ' . $tableName . '
-			WHERE ' . implode(' AND ', $clauses) .'
+			FROM {$tableName}
+			WHERE {$clauseString}
 			AND in_response_to IS NOT NULL
 			GROUP BY presence_id
 		) as t1,
 		(
 			SELECT presence_id, COUNT(*) as posts
-			FROM ' . $tableName . '
-			WHERE ' . implode(' AND ', $clauses) .'
+			FROM {$tableName}
+			WHERE {$clauseString}
 			AND posted_by_owner = 0
 			GROUP BY presence_id
-		) as t2';
+		) as t2";
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute(array(
 			':pid'			=> $this->id,
@@ -416,7 +432,7 @@ class Model_Presence
 		$key = $startString . $endString;
 
 		if(!array_key_exists($key, $this->kpiData) || !$useCache) {
-            $stmt = $this->db->prepare("
+			$stmt = $this->db->prepare("
                 INSERT INTO `kpi_cache`
                     (`presence_id`, `metric`, `start_date`, `end_date`, `value`)
                 VALUES
@@ -425,23 +441,23 @@ class Model_Presence
                     `value` = VALUES(`value`)
             ");
 
-            //start (re)calculation when data not available, or when indicated not to use cache
+			//start (re)calculation when data not available, or when indicated not to use cache
 			$cachedValues = array();
 			if ($useCache) {
 				$cachedValues = $this->getCachedKpiData($start, $end);
 			}
 
 			foreach($this->getMetrics() as $metric) {
-                $metricName = $metric->getName();
+				$metricName = $metric->getName();
 				if(!array_key_exists($metricName, $cachedValues)) {
 					$result = $metric->calculate($this, $start, $end);
-                    $stmt->execute(array(
-                            ':id' => $this->getId(),
-                            ':metric' => $metricName,
-                            ':start' => $startString,
-                            ':end' => $endString,
-                            ':value' => $result
-                        ));
+					$stmt->execute(array(
+						':id' => $this->getId(),
+						':metric' => $metricName,
+						':start' => $startString,
+						':end' => $endString,
+						':value' => $result
+					));
 					$cachedValues[$metricName] = $result;
 				}
 			}
@@ -459,11 +475,11 @@ class Model_Presence
 				WHERE `presence_id` = :pid
 				AND `start_date` = :start
 				AND `end_date` = :end");
-        $args = array(
-            ':pid' => $this->getId(),
-            ':start' => $start->format("Y-m-d"),
-            ':end' => $end->format("Y-m-d")
-        );
+		$args = array(
+			':pid' => $this->getId(),
+			':start' => $start->format("Y-m-d"),
+			':end' => $end->format("Y-m-d")
+		);
 		$stmt->execute($args);
 		$kpis = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 		return $kpis;
@@ -492,26 +508,26 @@ class Model_Presence
 	public function fetch()
 	{
 		$count = $this->provider->fetchStatusData($this);
-        $this->last_fetched = gmdate('Y-m-d H:i:s');
-        return $count;
+		$this->last_fetched = gmdate('Y-m-d H:i:s');
+		return $count;
 	}
 
-    /**
-     * method for updating a presence's info
-     * if successful we also update the presence_history table with the latest info
-     *
-     * @return array|null
-     */
+	/**
+	 * method for updating a presence's info
+	 * if successful we also update the presence_history table with the latest info
+	 *
+	 * @return array|null
+	 */
 	public function update()
 	{
-        $this->provider->update($this);
-        $this->last_updated = gmdate('Y-m-d H:i:s');
+		$this->provider->update($this);
+		$this->last_updated = gmdate('Y-m-d H:i:s');
 	}
 
-    public function updateHistory() {
-        $date = gmdate('Y-m-d H:i:s');
-        //if the presence was updated, update presence_history
-        $stmt = $this->db->prepare("
+	public function updateHistory() {
+		$date = gmdate('Y-m-d H:i:s');
+		//if the presence was updated, update presence_history
+		$stmt = $this->db->prepare("
         	INSERT INTO `presence_history`
         	(`presence_id`, `datetime`, `type`, `value`)
         	VALUES
@@ -519,44 +535,44 @@ class Model_Presence
         	ON DUPLICATE KEY UPDATE
         	`value` = VALUES(`value`)
         ");
-        foreach($this->presenceHistoryColumns as $type){
-            $value = $this->$type;
-            if (!is_null($value)) {
-                $stmt->execute(array(
-                        ':id' => $this->getId(),
-                        ':datetime' => $date,
-                        ':type'	=> $type,
-                        ':value' => $value
-                    ));
-            }
-        }
-    }
+		foreach($this->presenceHistoryColumns as $type){
+			$value = $this->$type;
+			if (!is_null($value)) {
+				$stmt->execute(array(
+					':id' => $this->getId(),
+					':datetime' => $date,
+					':type'	=> $type,
+					':value' => $value
+				));
+			}
+		}
+	}
 
-    public function getBadgeScores(DateTime $date, Enum_Period $range) {
-        if (!$date || !$range) {
-            throw new LogicException('date cannot be null');
-        }
-        $args = array(
-            'id' => $this->getId(),
-            'date' => $date->format('Y-m-d'),
-            'range' => (string)$range
-        );
-        $stmt = $this->db->prepare("SELECT * FROM `badge_history` WHERE `presence_id` = :id AND `date` = :date AND `daterange` = :range");
-        $stmt->execute($args);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if ($results) {
-            return $results[0];
-        }
-        return null;
-    }
+	public function getBadgeScores(DateTime $date, Enum_Period $range) {
+		if (!$date || !$range) {
+			throw new LogicException('date cannot be null');
+		}
+		$args = array(
+			'id' => $this->getId(),
+			'date' => $date->format('Y-m-d'),
+			'range' => (string)$range
+		);
+		$stmt = $this->db->prepare("SELECT * FROM `badge_history` WHERE `presence_id` = :id AND `date` = :date AND `daterange` = :range");
+		$stmt->execute($args);
+		$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		if ($results) {
+			return $results[0];
+		}
+		return null;
+	}
 
 	public function getBadges()
 	{
 		$badges = static::getAllBadges();
-        if (isset($badges[$this->getId()])) {
-            return $badges[$this->getId()];
-        }
-        return null;
+		if (isset($badges[$this->getId()])) {
+			return $badges[$this->getId()];
+		}
+		return null;
 	}
 
 	public function getBadgeHistory(DateTime $start, DateTime $end)
@@ -570,20 +586,20 @@ class Model_Presence
 			$badgeData = Badge_Factory::badgesData();
 			$badgeNames = Badge_Factory::getBadgeNames();
 
-            $totalBadgeName = Badge_Total::getName();
-            $keyedData = array();
+			$totalBadgeName = Badge_Total::getName();
+			$keyedData = array();
 			foreach($badgeData as $presenceData){
 				$presenceData->$totalBadgeName = 0;
 				foreach($badgeNames as $name){
 					if($name != $totalBadgeName) {
-                        //add average to total score
-                        $presenceData->$totalBadgeName += $presenceData->$name;
-                    }
+						//add average to total score
+						$presenceData->$totalBadgeName += $presenceData->$name;
+					}
 				}
 				//divide the total score by the number of badges (-1 for the totalbadge)
 				$presenceData->$totalBadgeName /= count($badgeNames) - 1;
 				$presenceData->denominator = count($badgeData);
-                $keyedData[$presenceData->presence_id] = (array)$presenceData;
+				$keyedData[$presenceData->presence_id] = (array)$presenceData;
 			}
 
 			Badge_Abstract::doRanking($keyedData, $totalBadgeName, $totalBadgeName . '_rank');
@@ -592,6 +608,7 @@ class Model_Presence
 		}
 		return static::$badges;
 	}
+
 
 	/**
 	 * DEPRECATED: Use getHistoricData()
@@ -609,141 +626,81 @@ class Model_Presence
 	}
 
 	/**
-     * Unused
-	 * @param DateTime $start
-	 * @param DateTime $end
-	 * @return mixed
-	 */
-//	public function getPostsPerDayData(DateTime $start, DateTime $end)
-//	{
-//        $clauses = array(
-//            'presence_id = :pid',
-//            'created_time >= :start_date',
-//            'created_time <= :end_date'
-//        );
-//
-//        $tableName = $this->statusTable();
-//        if ($this->isForFacebook()) {
-//            $clauses[] = 'posted_by_owner = 1';
-//            $clauses[] = 'in_response_to IS NULL';
-//        } else {
-//            $clauses[] = 'responsible_presence IS NULL';
-//        }
-//
-//        $sql = 'SELECT date, COUNT(date) AS value
-//			FROM (
-//				SELECT DATE(created_time) AS date
-//				FROM ' . $tableName . '
-//				WHERE ' . implode(' AND ', $clauses) . '
-//			) AS tmp GROUP BY date';
-//        $stmt = $this->_db->prepare($sql);
-//        $stmt->execute(array(':pid'=>$this->id, ':start_date'=>$startDate, ':end_date'=>$endDate));
-//        $counts = array();
-//        $date = gmdate('Y-m-d', strtotime($startDate));
-//        while ($date <= $endDate) {
-//            $counts[$date] = (object)array('date'=>$date, 'value'=>0);
-//            $date = gmdate('Y-m-d', strtotime($date . '+1 day'));
-//        }
-//        foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
-//            $counts[$row->date] = $row;
-//        }
-//        return $counts;
-//	}
-
-	/**
-     * unused
-	 * @param DateTime $start
-	 * @param DateTime $end
-	 * @return mixed
-	 */
-//	public function getRelevanceData(DateTime $start, DateTime $end)
-//	{
-//        $args = array(
-//            ':pid' => $this->id,
-//            ':start_time' => $start->format('Y-m-d'),
-//            ':end_time' => $end->format('Y-m-d')
-//        );
-//
-//        $sql ="
-//            SELECT DATE(fs.created_time) as created_time, COUNT(fs.id) as total, COUNT(sl.domain) as total_links, IFNULL(SUM(IF(d.is_bc=1,1,NULL)), 0) as total_bc_links
-//            FROM facebook_stream as fs
-//            LEFT JOIN status_links as sl ON fs.id = sl.status_id
-//            LEFT JOIN domains as d ON sl.domain = d.domain
-//            WHERE presence_id = :pid
-//                AND posted_by_owner = 1
-//                AND DATE(fs.created_time) >= :start_time
-//                AND DATE(fs.created_time) <= :end_time
-//            GROUP BY DATE(fs.created_time)";
-//
-//        $stmt = $this->db->prepare($sql);
-//        $stmt->execute($args);
-//        return $stmt->fetchAll(PDO::FETCH_OBJ);
-//	}
-
-	/**
 	 * @param DateTime $start
 	 * @param DateTime $end
 	 * @return mixed
 	 */
 	public function getResponseData(DateTime $start, DateTime $end)
 	{
-        return $this->provider->getResponseData($this, $start, $end);
+		return $this->provider->getResponseData($this, $start, $end);
 	}
 
 	public function save()
 	{
-        if (!$this->id) {
-            return;
-        }
+		if (!$this->id) {
+			return;
+		}
 
-		$instagramEngagement = $this->type === Enum_PresenceType::INSTAGRAM ?
-			$this->getInstagramEngagement() : $this->getYoutubeEngagement();
+		switch ($this->type) {
+			case Enum_PresenceType::INSTAGRAM:
+				$instagramEngagement = $this->getInstagramEngagement();
+				break;
+			case Enum_PresenceType::YOUTUBE:
+				$instagramEngagement = $this->getYoutubeEngagement();
+				break;
+			case Enum_PresenceType::LINKEDIN:
+				$instagramEngagement = $this->getLinkedinEngagement();
+				break;
+			default:
+				$instagramEngagement = null;
+		}
 
-        $data = array(
-            'type' => $this->getType()->getValue(),
-            'handle' => $this->getHandle(),
-            'uid' => $this->getUID(),
-            'image_url' => $this->getImageUrl(),
-            'name' => $this->getName(),
-            'page_url' => $this->getPageUrl(),
-            'popularity' => $this->getPopularity(),
-            'klout_id' => $this->getKloutId(),
-            'klout_score' => $this->getKloutScore(),
-            'facebook_engagement' => $this->getFacebookEngagement(),
-            'sina_weibo_engagement' => $this->getSinaWeiboEngagement(),
+		$data = array(
+			'type' => $this->getType()->getValue(),
+			'handle' => $this->getHandle(),
+			'uid' => $this->getUID(),
+			'image_url' => $this->getImageUrl(),
+			'name' => $this->getName(),
+			'page_url' => $this->getPageUrl(),
+			'popularity' => $this->getPopularity(),
+			'klout_id' => $this->getKloutId(),
+			'klout_score' => $this->getKloutScore(),
+			'facebook_engagement' => $this->getFacebookEngagement(),
+			'sina_weibo_engagement' => $this->getSinaWeiboEngagement(),
 			'instagram_engagement' => $instagramEngagement,
 			'last_updated' => $this->getLastUpdated(),
-            'last_fetched' => $this->getLastFetched(),
-            'sign_off' => $this->getSignOff(),
-            'branding' => $this->getBranding(),
+			'last_fetched' => $this->getLastFetched(),
+			'sign_off' => $this->getSignOff(),
+			'branding' => $this->getBranding(),
 			'size' => $this->getSize()
-        );
+		);
 
-        $query = 'UPDATE '.Model_PresenceFactory::TABLE_PRESENCES.' '.
-            'SET '.implode('=?, ', array_keys($data)).'=? '.
-            'WHERE id=?';
-        //add id to fill last placeholder
-        $data[] = $this->getId();
+		$query = 'UPDATE '.Model_PresenceFactory::TABLE_PRESENCES.' '.
+			'SET '.implode('=?, ', array_keys($data)).'=? '.
+			'WHERE id=?';
+		//add id to fill last placeholder
+		$data[] = $this->getId();
 
-        $statement = $this->db->prepare($query);
-        $statement->execute(array_values($data));
+		$statement = $this->db->prepare($query);
+		$statement->execute(array_values($data));
 	}
 
-    public function delete() {
-        $tables = array(
-            'badge_history',
-            'kpi_cache',
-            'campaign_presences',
-            'presence_history',
-            $this->provider->getTableName()
-        );
-        foreach ($tables as $table) {
-            $this->db->prepare("DELETE FROM $table WHERE presence_id = :pid")
-                ->execute(array(':pid'=>$this->id));
-        }
-        $this->db->prepare('DELETE FROM '.Model_PresenceFactory::TABLE_PRESENCES.' WHERE id = ?')
-            ->execute(array($this->id));
-    }
+	public function delete() {
+		$tables = array(
+			'badge_history',
+			'kpi_cache',
+			'campaign_presences',
+			'presence_history',
+			$this->provider->getTableName()
+		);
+		foreach ($tables as $table) {
+			$this->db->prepare("DELETE FROM $table WHERE presence_id = :pid")
+				->execute(array(':pid'=>$this->id));
+		}
+		$tableName = Model_PresenceFactory::TABLE_PRESENCES;
+		$this->db->prepare("DELETE FROM {$tableName} WHERE id = ?")
+			->execute(array($this->id));
+	}
 
 	public function getSinaWeiboEngagement()
 	{
@@ -760,7 +717,7 @@ class Model_Presence
 	 * eg. SBU has two large / six medium / eight small presences. the two large presences take 50%/2
 	 * of the target population as their target, the medium take 30%/6 of the target population as their target, etc.
 	 *
-	 * @param $owner
+	 * @param Model_Campaign $owner
 	 * @param $target
 	 * @return float
 	 */
@@ -786,7 +743,6 @@ class Model_Presence
 	}
 
 	/**
-	 * @param Model_Presence $presence  the presence to fetch the data for
 	 * @param DateTime $start  the date from which to fetch historic data from (inclusive)
 	 * @param DateTime $end  the date from which to fetch historic data to (inclusive)
 	 * @param array $types  the types of data to be returned from the history table (if empty all types will be returned)
@@ -795,11 +751,6 @@ class Model_Presence
 	public function getHistoryData(\DateTime $start, \DateTime $end, $types = [])
 	{
 		return $this->provider->getHistoryData($this, $start, $end, $types);
-	}
-
-	public function isForLinkedin()
-	{
-		return $this->getType()->getValue() == Enum_PresenceType::LINKEDIN;
 	}
 
 

@@ -21,7 +21,8 @@ abstract class Metric_Factory {
             Metric_ResponseRatio::getName() => "Metric_ResponseRatio",
             Metric_SinaWeiboEngagementLeveled::getName() => "Metric_SinaWeiboEngagementLeveled",
             Metric_InstagramEngagementLeveled::getName() => "Metric_InstagramEngagementLeveled",
-            Metric_YoutubeEngagementLeveled::getName() => "Metric_YoutubeEngagementLeveled"
+            Metric_YoutubeEngagementLeveled::getName() => "Metric_YoutubeEngagementLeveled",
+            Metric_LinkedinEngagementLeveled::getName() => "Metric_LinkedinEngagementLeveled"
         );
 
         if(!array_key_exists($name, $names)){
