@@ -8,6 +8,7 @@
 
 namespace Outlandish\SocialMonitor\Command;
 
+use Enum_PresenceType;
 use Facebook\FacebookSDKException;
 use Model_PresenceFactory;
 use Outlandish\SocialMonitor\FacebookApp;
@@ -29,14 +30,29 @@ class UpdateStatusesCommand extends ContainerAwareCommand
                 InputArgument::OPTIONAL,
                 'The id of the presence'
             )
+            ->addOption(
+                'type',
+                't',
+                InputOption::VALUE_REQUIRED,
+                'The type of presences'
+            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $id = $input->getArgument('id');
+        $type = $input->getOption('type');
 
-        foreach ($this->getPresences($id) as $presence) {
+        if($id) {
+            $presences = $this->getPresences($id);
+        } else if($type) {
+            $presences = $this->getPresencesByType($type);
+        } else {
+            $presences = $this->getAllPresences();
+        }
+
+        foreach ($presences as $presence) {
             $output->writeln("Fetching statuses for {$presence->getName()}");
             try {
                 $count = $presence->fetch();
@@ -72,5 +88,15 @@ class UpdateStatusesCommand extends ContainerAwareCommand
     protected function getPresences($id)
     {
         return $id ? [Model_PresenceFactory::getPresenceById($id)] : Model_PresenceFactory::getPresences();
+    }
+
+    protected function getPresencesByType($type)
+    {
+        return $type ? Model_PresenceFactory::getPresencesByType(Enum_PresenceType::get($type)) : Model_PresenceFactory::getPresences();
+    }
+
+    protected function getAllPresences()
+    {
+        return Model_PresenceFactory::getPresences();
     }
 }
