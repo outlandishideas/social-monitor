@@ -138,7 +138,8 @@ class WeightedYoutubeEngagementQuery implements Query
             }
             // we then scale by the popularity of the presence
             $scale = $presenceEngagementMap['popularity'] ? $presenceEngagementMap['popularity'] : 1;
-            $presenceEngagementMap['weighted_engagement'] = $weightedTotalEngagement / $scale;
+            $presenceEngagementMap['weighted_engagement'] = $weightedTotalEngagement;
+            $presenceEngagementMap['scaled_engagement'] = $weightedTotalEngagement / $scale;
             $allPresencesEngagement[$presenceId] = $presenceEngagementMap;
         }
         return $allPresencesEngagement;
