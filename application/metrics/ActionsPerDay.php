@@ -61,7 +61,7 @@ class Metric_ActionsPerDay extends Metric_Abstract {
 
     function calculate_median($arr) {
         $count = count($arr); //total numbers in array
-        $middleIndex = intval(floor(($count-1)/2)); // find the middle value, or the lowest middle value
+        $middleIndex = intval(floor(($count-1)/2)); // find the middle index
         if($count % 2) { // odd number, middle is the median
             $median = $arr[$middleIndex];
         } else { // even number, calculate avg of 2 medians
