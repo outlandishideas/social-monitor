@@ -43,8 +43,8 @@ class WeightedYoutubeEngagementQuery implements Query
         $now->modify('-1 day');
         $then->modify('-1 day');
 
-        $now = $now->format('Y-m-d');
-        $then = $then->format('Y-m-d');
+        $nowStr = $now->format('Y-m-d');
+        $thenStr = $then->format('Y-m-d');
 
         $videoHistory = self::VIDEO_HISTORY_TABLE;
         $videoStream = self::VIDEO_STREAM_TABLE;
@@ -70,7 +70,7 @@ class WeightedYoutubeEngagementQuery implements Query
 
             $statement = $this->db->prepare($presencePopularityQuery);
             $statement->execute([
-                ':now' => $now
+                ':now' => $nowStr
             ]);
 
             $presencePopularity = $statement->fetchAll(PDO::FETCH_COLUMN);
@@ -96,14 +96,14 @@ class WeightedYoutubeEngagementQuery implements Query
 
             $statement = $this->db->prepare($videoHistoryQuery);
             $statement->execute([
-                ':now' => $now
+                ':now' => $nowStr
             ]);
 
             $videoEndValues = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
 
             $statement = $this->db->prepare($videoHistoryQuery);
             $statement->execute([
-                ':now' => $then
+                ':now' => $thenStr
             ]);
 
             $videoStartValues = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
