@@ -29,6 +29,12 @@ class UpdatePresencesCommand extends ContainerAwareCommand
                 InputArgument::OPTIONAL,
                 'The id of the presence'
             )
+            ->addOption(
+                'history',
+                null,
+                InputOption::VALUE_NONE,
+                'Should the presence history table be updated'
+            )
         ;
     }
 
@@ -40,7 +46,9 @@ class UpdatePresencesCommand extends ContainerAwareCommand
             $output->writeln("Updating {$presence->getName()}");
             try {
                 $presence->update();
-                $presence->updateHistory();
+                if($input->getOption('history')) {
+                    $presence->updateHistory();
+                }
             } catch (\Exception_FacebookNotFound $e) {
                 //do we delete this presence here
                 $output->writeln("Could not find {$presence->getName()}");
