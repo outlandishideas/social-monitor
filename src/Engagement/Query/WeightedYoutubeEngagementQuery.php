@@ -51,14 +51,26 @@ class WeightedYoutubeEngagementQuery implements Query
         $presenceHistory = self::PRESENCE_STREAM_TABLE;
         $presenceTable = self::PRESENCE_TABLE;
         $popularity = 'popularity';
-        $presenceEngagementMap = array();
 
+        // this array stores the data for each presence
+        $allPresencesEngagement = array();
+
+        /*
+         * First find the presence ids for youtube presences
+         */
         $presenceIdQuery = "SELECT id FROM $presenceTable WHERE type='youtube'";
         $statement = $this->db->prepare($presenceIdQuery);
         $statement->execute();
         $presenceIds = $statement->fetchAll(PDO::FETCH_COLUMN);
 
         foreach($presenceIds as $presenceId) {
+
+            // this stores the values of different engagement types for the presence
+            $presenceEngagementMap = array();
+
+            /*
+             * Find the current popularity of each presence - this is used to scale the engagement
+             */
             $presencePopularityQuery = "
             SELECT value
               FROM $presenceHistory
@@ -72,13 +84,16 @@ class WeightedYoutubeEngagementQuery implements Query
             $statement->execute([
                 ':now' => $nowStr
             ]);
-
             $presencePopularity = $statement->fetchAll(PDO::FETCH_COLUMN);
-
             $presencePopularity = array_key_exists(0,$presencePopularity) ? $presencePopularity[0] : 0;
 
-            $presenceEngagementMap[$presenceId] = ['popularity'=>intval($presencePopularity,10)];
+            $presenceEngagementMap['popularity'] = intval($presencePopularity,10);
 
+            /**
+             * Get the total views,likes,dislikes,comments on all videos from this presence at time $now.
+             * Then get the same for time $then. The difference between the totals gives us the engagement
+             * over the time period $then -> $now.
+             */
             $videoHistoryQuery = "
                 SELECT history.type,SUM(history.value)
                 FROM (
@@ -112,15 +127,17 @@ class WeightedYoutubeEngagementQuery implements Query
                 $endValue = array_key_exists($type,$videoEndValues) ? $videoEndValues[$type] : 0;
                 $startValue = array_key_exists($type,$videoStartValues) ? $videoStartValues[$type] : 0;
                 $change = $endValue - $startValue;
-                $presenceEngagementMap[$presenceId][$type] = $change;
+                $presenceEngagementMap[$type] = $change;
             }
 
             $weightedTotalEngagement = 0;
             foreach($this->typeWeightMap as $type=>$weight) {
-                $weightedTotalEngagement += $presenceEngagementMap[$presenceId][$type]*$weight;
+                $weightedTotalEngagement += $presenceEngagementMap[$type]*$weight;
             }
-            $presenceEngagementMap[$presenceId]['weighted_engagement'] = $weightedTotalEngagement;
+            $scale = $presenceEngagementMap['popularity'] ? $presenceEngagementMap['popularity'] : 1;
+            $presenceEngagementMap['weighted_engagement'] = $weightedTotalEngagement / $scale;
+            $allPresencesEngagement[$presenceId] = $presenceEngagementMap;
         }
-        return $presenceEngagementMap;
+        return $allPresencesEngagement;
     }
 }
