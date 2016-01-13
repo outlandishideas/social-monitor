@@ -346,11 +346,11 @@ class Model_Presence
 		return $target;
 	}
 
-    public function getMetricValue($metric) {
+    public function getMetricValue($metric,\DateTime $startDate = null, \DateTime $endDate = null) {
         if ($metric instanceof Metric_Abstract) {
             $metric = $metric->getName();
         }
-        $kpiData = $this->getKpiData();
+        $kpiData = $this->getKpiData($startDate,$endDate);
         if ($kpiData && isset($kpiData[$metric])) {
             return $kpiData[$metric];
         }

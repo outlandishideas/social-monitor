@@ -48,7 +48,7 @@ class Metric_YoutubeEngagementLeveled extends Metric_Abstract {
 
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $score = $presence->getMetricValue($this);
+        $score = $presence->getMetricValue($this,$start,$end);
         $level = 0;
 
         foreach($this->target as $level => $target) {
@@ -78,7 +78,18 @@ class Metric_YoutubeEngagementLeveled extends Metric_Abstract {
 
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        // TODO: Implement getData() method.
+        $now = $end;
+        $then = clone $now;
+        $then->modify("-1 week");
+
+        $db = Zend_Registry::get('db')->getConnection();
+
+        $query = new Outlandish\SocialMonitor\Engagement\Query\WeightedYoutubeEngagementQuery($db);
+        $metric = new Outlandish\SocialMonitor\Engagement\EngagementMetric($query);
+
+        $score = $metric->get($presence->getId(), $now, $then);
+
+        return $score;
     }
 
 

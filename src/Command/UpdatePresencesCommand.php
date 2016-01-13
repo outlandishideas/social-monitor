@@ -40,6 +40,7 @@ class UpdatePresencesCommand extends ContainerAwareCommand
             $output->writeln("Updating {$presence->getName()}");
             try {
                 $presence->update();
+                $presence->updateHistory();
             } catch (\Exception_FacebookNotFound $e) {
                 //do we delete this presence here
                 $output->writeln("Could not find {$presence->getName()}");
