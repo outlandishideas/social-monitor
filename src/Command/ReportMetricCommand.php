@@ -56,7 +56,7 @@ class ReportMetricCommand extends ContainerAwareCommand
         if ($input->hasOption('type') && $input->getOption('type')) {
             /** @var Enum_PresenceType $type */
             $type = Enum_PresenceType::get($input->getOption('type'));
-            if ($type->isMetricApplicable($metric)) {
+            if (!$type->isMetricApplicable($metric)) {
                 $output->writeln('metric is not applicable for this presence type');
                 return;
             }

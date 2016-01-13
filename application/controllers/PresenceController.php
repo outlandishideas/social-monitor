@@ -267,7 +267,8 @@ class PresenceController extends GraphingController
 
 				//if new presence created, update presence index cache so that it will appear in the presence index page
 				if ($this->view->isNew) {
-					$this->updatePresenceIndexCache();
+					//this takes too long when adding presences
+					//$this->updatePresenceIndexCache();
 				}
 
 				$this->_helper->redirector->gotoRoute(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id));
