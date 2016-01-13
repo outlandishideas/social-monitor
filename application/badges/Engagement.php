@@ -11,6 +11,7 @@ class Badge_Engagement extends Badge_Abstract
 							<li>The Sina Weibo Engagement score for this presence (Sina Weibo Only).</li>
 							<li>The Instagram Engagement score for this presence (Instagram Only).</li>
 							<li>The Youtube Engagement score for this presence (Youtube Only).</li>
+							<li>The Linkedin Engagement score for this presence (Linkedin Only).</li>
 						</ul>';
 
     public function __construct(PDO $db = null)
@@ -21,7 +22,8 @@ class Badge_Engagement extends Badge_Abstract
             Metric_FBEngagementLeveled::getInstance(),
             Metric_SinaWeiboEngagementLeveled::getInstance(),
             Metric_InstagramEngagementLeveled::getInstance(),
-            Metric_YoutubeEngagementLeveled::getInstance()
+            Metric_YoutubeEngagementLeveled::getInstance(),
+            Metric_LinkedinEngagementLeveled::getInstance()
         );
     }
 }

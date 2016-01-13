@@ -147,6 +147,18 @@ class ConfigController extends BaseController {
                             'yt_engagement_target_level_4'=>array('label'=>'Youtube Engagement Score Level 4', 'hint' => 'The presence will score 80% if it reaches this target'),
                             'yt_engagement_target_level_5'=>array('label'=>'Youtube Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
                         )
+                    ),
+                    (object)array(
+                        'title' => 'Linkedin Engagement Score (Youtube only)',
+                        'description' => 'The Linkedin Engagement Score is not yet fully decided.',
+                        'values' => array(
+                            'linkedin_engagement_weighting'=>array('label'=>'Linkedin Engagement Score Weighting'),
+                            'in_engagement_target_level_1'=>array('label'=>'Linkedin Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
+                            'in_engagement_target_level_2'=>array('label'=>'Linkedin Engagement Score Level 2', 'hint' => 'The presence will score 40% if it reaches this target'),
+                            'in_engagement_target_level_3'=>array('label'=>'Linkedin Engagement Score Level 3', 'hint' => 'The presence will score 60% if it reaches this target'),
+                            'in_engagement_target_level_4'=>array('label'=>'Linkedin Engagement Score Level 4', 'hint' => 'The presence will score 80% if it reaches this target'),
+                            'in_engagement_target_level_5'=>array('label'=>'Linkedin Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
+                        )
                     )
                 )
             ),
