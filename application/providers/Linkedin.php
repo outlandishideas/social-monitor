@@ -79,7 +79,9 @@ class Provider_Linkedin extends Provider_Abstract
 		$stmt = $this->db->prepare("
 			SELECT
 				posts.date AS date,
-				posts.number_of_posts AS number_of_actions
+				posts.number_of_posts AS number_of_actions,
+				links.number_of_links,
+				links.number_of_bc_links
 			FROM
 				(
 					SELECT
@@ -94,6 +96,23 @@ class Provider_Linkedin extends Provider_Abstract
 					GROUP BY
 						DATE_FORMAT(created_time, '%Y-%m-%d')
 				) AS posts
+				LEFT JOIN (
+					SELECT
+						DATE_FORMAT(p.created_time, '%Y-%m-%d') AS `date`,
+						COUNT(sl.id) AS `number_of_links`,
+						SUM(d.is_bc) AS `number_of_bc_links`
+					FROM
+						{$this->tableName} AS p
+						LEFT JOIN status_links AS sl ON (p.id = sl.status_id AND sl.type = 'linkedin')
+						LEFT JOIN domains AS d ON (sl.domain = d.domain)
+					WHERE
+						p.created_time >= :start
+						AND p.created_time <= :end
+						AND p.presence_id = :id
+					GROUP BY
+
+							DATE_FORMAT(p.created_time, '%Y-%m-%d')
+				) AS links ON (posts.date = links.date)
 			ORDER BY
 				`date`
 		");
