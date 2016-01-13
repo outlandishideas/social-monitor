@@ -108,6 +108,7 @@ class Provider_Linkedin extends Provider_Abstract
 	public function update(Model_Presence $presence)
 	{
 		parent::update($presence);
+        $presence->instagram_engagement = $this->calculateEngagement($presence);
     }
 
     public function updateMetadata(Model_Presence $presence) {
@@ -198,5 +199,17 @@ class Provider_Linkedin extends Provider_Abstract
     public function getResponseData(Model_Presence $presence, DateTime $start, DateTime $end)
     {
         // TODO: Implement getResponseData() method.
+    }
+
+    private function calculateEngagement($presence)
+    {
+        $now = new DateTime();
+        $then = clone $now;
+        $then->modify("-1 week");
+
+        $query = new Outlandish\SocialMonitor\Engagement\Query\WeightedLinkedinEngagementQuery($this->db);
+        $metric = new Outlandish\SocialMonitor\Engagement\EngagementMetric($query);
+
+        return $metric->get($presence->getId(), $now, $then);
     }
 }
