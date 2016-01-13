@@ -10,7 +10,7 @@ class Model_Presence
 
 	protected $presenceHistoryColumns = array(
 		'popularity', 'klout_score', 'facebook_engagement', 'sina_weibo_engagement',
-		'instagram_engagement', 'youtube_engagement'
+		'instagram_engagement', 'youtube_engagement', 'linkedin_engagement'
 	);
 
 	//these should be public to mimic existing Presence Class
@@ -47,7 +47,6 @@ class Model_Presence
 	/**
 	 * Creates a new presence
 	 * Provider, metrics and badges are passed in so that they can be mocked out for testing
-	 * todo: only pass in a (mockable) type instead?
 	 * @param PDO $db
 	 * @param array $internals
 	 * @param Provider_Abstract $provider
@@ -394,22 +393,23 @@ class Model_Presence
 		);
 
 		$tableName = $this->provider->getTableName();
-		$sql = '
+		$clauseString = implode(' AND ', $clauses);
+		$sql = "
 		SELECT t1.replies/t2.posts as replies_to_others_posts FROM
 		(
 			SELECT presence_id, COUNT(*) as replies
-			FROM ' . $tableName . '
-			WHERE ' . implode(' AND ', $clauses) .'
+			FROM {$tableName}
+			WHERE {$clauseString}
 			AND in_response_to IS NOT NULL
 			GROUP BY presence_id
 		) as t1,
 		(
 			SELECT presence_id, COUNT(*) as posts
-			FROM ' . $tableName . '
-			WHERE ' . implode(' AND ', $clauses) .'
+			FROM {$tableName}
+			WHERE {$clauseString}
 			AND posted_by_owner = 0
 			GROUP BY presence_id
-		) as t2';
+		) as t2";
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute(array(
 			':pid'			=> $this->id,
@@ -697,7 +697,8 @@ class Model_Presence
 			$this->db->prepare("DELETE FROM $table WHERE presence_id = :pid")
 				->execute(array(':pid'=>$this->id));
 		}
-		$this->db->prepare('DELETE FROM '.Model_PresenceFactory::TABLE_PRESENCES.' WHERE id = ?')
+		$tableName = Model_PresenceFactory::TABLE_PRESENCES;
+		$this->db->prepare("DELETE FROM {$tableName} WHERE id = ?")
 			->execute(array($this->id));
 	}
 
@@ -716,7 +717,7 @@ class Model_Presence
 	 * eg. SBU has two large / six medium / eight small presences. the two large presences take 50%/2
 	 * of the target population as their target, the medium take 30%/6 of the target population as their target, etc.
 	 *
-	 * @param $owner
+	 * @param Model_Campaign $owner
 	 * @param $target
 	 * @return float
 	 */
