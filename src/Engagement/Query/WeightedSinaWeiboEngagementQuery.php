@@ -105,7 +105,8 @@ class WeightedSinaWeiboEngagementQuery implements Query
         $scores = array();
         // create key => value array, scaling by the active user proportion
         foreach($data as $d) {
-            $scores[$d['presence_id']] = $d['total'] / $this->activeUserProportion[$d['size']];
+            $scale = $this->activeUserProportion[$d['size']] ? $this->activeUserProportion[$d['size']] : 1;
+            $scores[$d['presence_id']] = $d['total'] / $scale;
         }
         return $scores;
     }

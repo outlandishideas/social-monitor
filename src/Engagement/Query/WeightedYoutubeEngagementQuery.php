@@ -93,7 +93,8 @@ class WeightedYoutubeEngagementQuery implements Query
             $presencePopularity = array_key_exists(0,$presencePopularity) ? $presencePopularity[0] : 0;
 
             $presenceEngagementMap['popularity'] = intval($presencePopularity,10);
-            $presenceEngagementMap['active_users'] = $presenceEngagementMap['popularity']*$this->activeUserProportion[$size];
+            $activeUserProportion = $this->activeUserProportion[$size] ? $this->activeUserProportion[$size] : 1;
+            $presenceEngagementMap['active_users'] = $presenceEngagementMap['popularity']*$activeUserProportion;
 
             /**
              * Get the total views,likes,dislikes,comments on all videos from this presence at time $now.
