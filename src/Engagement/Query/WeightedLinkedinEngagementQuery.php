@@ -35,7 +35,7 @@ class WeightedLinkedinEngagementQuery implements Query
      */
     public function fetch(DateTime $now, DateTime $then)
     {
-        $rows = $this->getRows($now, $then);
+        $rows = $this->getData($now, $then);
 
         $scores = [];
 
