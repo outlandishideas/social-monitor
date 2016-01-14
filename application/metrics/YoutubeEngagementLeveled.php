@@ -89,6 +89,15 @@ class Metric_YoutubeEngagementLeveled extends Metric_Abstract {
 
         $score = $metric->get($presence->getId(), $now, $then);
 
+        $prevMonthStart = clone $then;
+        $prevMonthStart->modify("-30 days");
+        $prevMonthEnd = clone $prevMonthStart;
+        $prevMonthEnd->modify("+1 week");
+
+        $prevScore = $metric->get($presence->getId(), $prevMonthStart, $prevMonthEnd);
+
+        $score['scaled_engagement_for_previous_month'] = $prevScore['scaled_engagement'];
+
         return $score;
     }
 
