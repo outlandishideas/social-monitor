@@ -5,6 +5,7 @@ class Metric_ActionsPerDay extends Metric_Abstract {
     protected static $name = "posts_per_day";
     protected static $title = "Actions Per Day";
     protected static $icon = "fa fa-tachometer";
+    protected static $gliding = false;
 
     function __construct()
     {
