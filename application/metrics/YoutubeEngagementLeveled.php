@@ -96,10 +96,10 @@ class Metric_YoutubeEngagementLeveled extends Metric_Abstract {
         $min = $max = null;
         if(count($prevScore)) {
             foreach ($prevScore as $d) {
-                if(!$min || $d['value'] < $min) {
+                if($min === null || $d['value'] < $min) {
                     $min = $d['value'];
                 }
-                if(!$max || $d['value'] > $max) {
+                if($max === null || $d['value'] > $max) {
                     $max = $d['value'];
                 }
             }
