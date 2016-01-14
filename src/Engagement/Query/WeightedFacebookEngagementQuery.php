@@ -53,6 +53,7 @@ class WeightedFacebookEngagementQuery implements Query
 
         $sql = "SELECT
                     f.presence_id,
+                    ph.size,
 					(((f.comments*4 + f.likes + f.share_count*7) / 12) / ph.popularity) * 1000 AS `total`
                 FROM
 				    (
