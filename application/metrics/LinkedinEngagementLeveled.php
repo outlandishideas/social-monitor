@@ -83,9 +83,13 @@ class Metric_LinkedinEngagementLeveled extends Metric_Abstract {
 
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $key = $start->format('Y-m-d') . $end->format('Y-m-d');
+        $then = clone $start;
+        $now = clone $start;
+        $then->modify('-1 week');
+
+        $key = $now->format('Y-m-d') . $then->format('Y-m-d');
         if (!array_key_exists($key, $this->cache)) {
-            $rows = $this->query->getData($end, $start);
+            $rows = $this->query->getData($then, $now);
             $this->cache[$key] = $rows;
         }
 
