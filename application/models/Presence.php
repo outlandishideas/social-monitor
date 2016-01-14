@@ -249,7 +249,7 @@ class Model_Presence
 	 */
 	public function getLinkedinEngagement()
 	{
-		return $this->linkedin_engagement;
+		return floatval($this->linkedin_engagement);
 	}
 
 	/**
