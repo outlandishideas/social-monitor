@@ -90,11 +90,10 @@ class Metric_LinkedinEngagementLeveled extends Metric_Abstract {
         }
 
         $rows = $this->cache[$key];
+        $presenceId = $presence->getId();
 
-        if (!array_key_exists($presence->getId(), $rows)) {
-            return [];
-        }
-
-        return $rows[$presence->getId()];
+        return array_filter($rows, function($row) use ($presenceId) {
+            return $row['presence'] == $presenceId;
+        });
     }
 }
