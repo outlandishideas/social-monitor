@@ -753,5 +753,30 @@ class Model_Presence
 		return $this->provider->getHistoryData($this, $start, $end, $types);
 	}
 
+	public function chartOptions() {
+		switch($this->getType()) {
+			case Enum_PresenceType::INSTAGRAM:
+			case Enum_PresenceType::YOUTUBE:
+			case Enum_PresenceType::LINKEDIN:
+			case Enum_PresenceType::SINA_WEIBO:
+				return array(
+					Chart_Compare::getInstance(),
+				    Chart_Popularity::getInstance(),
+				    Chart_PopularityTrend::getInstance(),
+				    Chart_ActionsPerDay::getInstance(),
+    			);
+			case Enum_PresenceType::TWITTER:
+			case Enum_PresenceType::FACEBOOK:
+			default:
+				return array(
+					Chart_Compare::getInstance(),
+					Chart_Popularity::getInstance(),
+					Chart_PopularityTrend::getInstance(),
+					Chart_ActionsPerDay::getInstance(),
+					Chart_ResponseTime::getInstance()
+				);
+		}
+	}
+
 
 }
