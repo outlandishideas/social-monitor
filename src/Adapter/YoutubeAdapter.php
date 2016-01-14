@@ -107,7 +107,7 @@ class YoutubeAdapter extends AbstractAdapter
     public function getStatuses($pageUID, $since, $handle)
     {
         $videos = array();
-        $channels = $this->youtube->channels->listChannels('contentDetails',['forUsername' => $handle])->getItems();
+        $channels = $this->youtube->channels->listChannels('contentDetails',['id' => $pageUID])->getItems();
         if($channels && count($channels)) {
             $videoDetails = array();
             $playlistId = $channels[0]->contentDetails->relatedPlaylists->uploads;
@@ -135,10 +135,8 @@ class YoutubeAdapter extends AbstractAdapter
                     $args['pageToken'] = $playlistItemResponse->nextPageToken;
                 }
             }
-            $q = ['id' => implode(',', $videoIds)];
-            $details = $this->youtube->videos->listVideos('snippet,statistics', $q)->getItems();
 
-            foreach ($details as $m) {
+            foreach ($videoDetails as $m) {
                 $video = new YoutubeVideo();
                 $video->id = $m->id;
                 $video->comments = $m->statistics->commentCount ? $m->statistics->commentCount : 0;
