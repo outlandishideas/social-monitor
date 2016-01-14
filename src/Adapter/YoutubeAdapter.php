@@ -54,7 +54,9 @@ class YoutubeAdapter extends AbstractAdapter
     }
 
     /**
-     * Get the channel from the api, or from the $channels property if already fetched
+     * Get the channel from the api, or from the $channels property if already fetched.
+     * $handle might be a name, e.g. 'britishcouncil', or an id, e.g. 'UCRyQuDpPzXIHxB4BTM3uKiQ'.
+     * We first assume its an id, then assume its a name.
      *
      * @param string $handle
      * @return Google_Service_YouTube_Channel
@@ -62,6 +64,35 @@ class YoutubeAdapter extends AbstractAdapter
      */
     private function getChannel($handle)
     {
+        $channel = $this->getChannelById($handle);
+        if(!$channel) {
+            $channel = $this->getChannelByName($handle);
+            if(!$channel) {
+                throw new \Exception("Youtube Channel \"{$handle}\" not found.");
+            }
+        }
+
+        return $channel;
+    }
+
+    private function getChannelById($handle) {
+        if (!array_key_exists($handle, $this->channels)) {
+            $response = $this->youtube->channels->listChannels('id,snippet,statistics', ['id' => $handle]);
+
+            /** @var Google_Service_Youtube_Channel[] $items */
+            $items = $response->getItems();
+
+            if (empty($items)) {
+                return null;
+            }
+
+            $this->channels[$handle] = $items[0];
+        }
+
+        return $this->channels[$handle];
+    }
+
+    private function getChannelByName($handle) {
         if (!array_key_exists($handle, $this->channels)) {
             $response = $this->youtube->channels->listChannels('id,snippet,statistics', ['forUsername' => $handle]);
 
@@ -69,7 +100,7 @@ class YoutubeAdapter extends AbstractAdapter
             $items = $response->getItems();
 
             if (empty($items)) {
-                throw new \Exception("Youtube Channel \"{$handle}\" not found.");
+                return null;
             }
 
             $this->channels[$handle] = $items[0];
