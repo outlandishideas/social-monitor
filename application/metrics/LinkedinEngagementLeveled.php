@@ -83,7 +83,7 @@ class Metric_LinkedinEngagementLeveled extends Metric_Abstract {
 
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $now = clone $start;
+        $now = clone $end;
         $then = clone $now;
         $then->modify('-1 week');
 
