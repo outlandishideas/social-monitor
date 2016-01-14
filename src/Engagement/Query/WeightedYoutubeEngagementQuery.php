@@ -17,6 +17,7 @@ class WeightedYoutubeEngagementQuery implements Query
     const VIDEO_HISTORY_TABLE = 'youtube_video_history';
     const VIDEO_STREAM_TABLE = 'youtube_video_stream';
     const PRESENCE_STREAM_TABLE = 'presence_history';
+    const PRESENCE_TABLE = 'presences';
     private $typeWeightMap = ['views' => 1,'likes' => 4,'dislikes' => 4,'comments' => 7];
 
     /**
@@ -41,102 +42,106 @@ class WeightedYoutubeEngagementQuery implements Query
         //if $now = today
         $now->modify('-1 day');
         $then->modify('-1 day');
+
+        $nowStr = $now->format('Y-m-d');
+        $thenStr = $then->format('Y-m-d');
+
         $videoHistory = self::VIDEO_HISTORY_TABLE;
         $videoStream = self::VIDEO_STREAM_TABLE;
         $presenceHistory = self::PRESENCE_STREAM_TABLE;
+        $presenceTable = self::PRESENCE_TABLE;
         $popularity = 'popularity';
-        $presenceEngagementMap = array();
 
-        /**
-         * This query returns the popularity we stored for each presence at time $now (or as close to $now as we can
-         * get).
-         *
-         * It does this using two sub-queries joined together: the first gets the date closest to $now that data
-         * exists for, the second gets the values we have between $now and $then, and the join means we get just the
-         * value for the date closest to $now.
-         *
-         * @var $presencePopularityQuery */
-        $presencePopularityQuery = "
-            SELECT t1.presence_id,
-                   t2.value
-            FROM
-              (SELECT presence_id,
-                      (MAX(datetime)) AS `datetime`
+        // this array stores the data for each presence
+        $allPresencesEngagement = array();
+
+        /*
+         * First find the presence ids for youtube presences
+         */
+        $presenceIdQuery = "SELECT id FROM $presenceTable WHERE type='youtube'";
+        $statement = $this->db->prepare($presenceIdQuery);
+        $statement->execute();
+        $presenceIds = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+        foreach($presenceIds as $presenceId) {
+
+            // this stores the values of different engagement types for the presence
+            $presenceEngagementMap = array();
+
+            /*
+             * Find the current popularity of each presence - this is used to scale the engagement
+             */
+            $presencePopularityQuery = "
+            SELECT value
               FROM $presenceHistory
-              WHERE DATE(datetime) <= :now
-                AND DATE(datetime) >= :then
-              GROUP BY presence_id) AS t1
-            INNER JOIN
-              (SELECT presence_id,
-                      value,
-                      datetime
-              FROM $presenceHistory
-              WHERE type='$popularity'
-                AND DATE(datetime) <= :now
-                AND DATE(datetime) >= :then) AS t2
-            ON t1.presence_id = t2.presence_id AND t1.datetime = t2.datetime";
+              WHERE presence_id=$presenceId
+                AND type='$popularity'
+                AND DATE(datetime) = :now
+                ORDER BY datetime
+                LIMIT 1";
 
-        $statement = $this->db->prepare($presencePopularityQuery);
-        $statement->execute([
-            ':now' => $now->format('Y-m-d'),
-            ':then' => $then->format('Y-m-d')
-        ]);
-        $presencePopularityMap = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
-
-        $videoHistoryQuery = "
-        SELECT video_id,type,value
-        FROM $videoHistory
-        WHERE DATE(datetime) = :now
-        ORDER BY video_id";
-
-        $statement = $this->db->prepare($videoHistoryQuery);
-        $statement->execute([
-            ':now' => $now->format('Y-m-d')
-        ]);
-        $videoEndValues = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-        $videoStartQuery = "
-        SELECT value
-        FROM $videoHistory
-        WHERE DATE(datetime) = :then
-        AND video_id = :video_id
-        AND type = :type
-        ";
-        $statement = $this->db->prepare($videoStartQuery);
-
-        $presenceIdQuery = "
-        SELECT presence_id
-        FROM $videoStream
-        WHERE id = :id";
-
-        $presenceIdStatement = $this->db->prepare($presenceIdQuery);
-
-        foreach($videoEndValues as $videoEndValue) {
-            $type = $videoEndValue['type'];
+            $statement = $this->db->prepare($presencePopularityQuery);
             $statement->execute([
-                ':then' => $then->format('Y-m-d'),
-                ':type' => $videoEndValue['type'],
-                ':video_id' => $videoEndValue['video_id']
+                ':now' => $nowStr
             ]);
-            $videoStartValue = $statement->fetchColumn();
-            $videoStartValue = $videoStartValue ? $videoStartValue : 0;
-            $change = $videoEndValue['value'] - $videoStartValue;
+            $presencePopularity = $statement->fetchAll(PDO::FETCH_COLUMN);
+            $presencePopularity = array_key_exists(0,$presencePopularity) ? $presencePopularity[0] : 0;
 
-            $presenceIdStatement->execute([
-                ':id' => $videoEndValue['video_id']
+            $presenceEngagementMap['popularity'] = intval($presencePopularity,10);
+
+            /**
+             * Get the total views,likes,dislikes,comments on all videos from this presence at time $now.
+             * Then get the same for time $then. The difference between the totals gives us the engagement
+             * over the time period $then -> $now.
+             */
+            $videoHistoryQuery = "
+                SELECT history.type,SUM(history.value)
+                FROM (
+                  SELECT id
+                  FROM $videoStream
+                  WHERE presence_id = $presenceId)
+                  AS `stream`
+                  INNER JOIN (
+                  SELECT video_id,type,value
+                  FROM $videoHistory
+                  WHERE DATE(datetime) = :date)
+                  AS `history`
+                  ON stream.id = history.video_id
+                GROUP BY history.type";
+
+            $statement = $this->db->prepare($videoHistoryQuery);
+            $statement->execute([
+                ':date' => $nowStr
             ]);
-            $presenceId = $presenceIdStatement->fetchColumn();
-            if(array_key_exists($presenceId,$presenceEngagementMap)) {
-                $presenceEngagementMap[$presenceId] += $change * $this->typeWeightMap[$type];
-            } else {
-                $presenceEngagementMap[$presenceId] = $change * $this->typeWeightMap[$type];
+
+            $videoEndValues = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
+
+            $statement = $this->db->prepare($videoHistoryQuery);
+            $statement->execute([
+                ':date' => $thenStr
+            ]);
+
+            $videoStartValues = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
+
+            // in this loop we calculate the change in each type of engagement and save in $presenceEngagementMap
+            foreach(array_keys($this->typeWeightMap) as $type) {
+                $endValue = array_key_exists($type,$videoEndValues) ? $videoEndValues[$type] : 0;
+                $startValue = array_key_exists($type,$videoStartValues) ? $videoStartValues[$type] : 0;
+                $change = $endValue - $startValue;
+                $presenceEngagementMap[$type] = $change;
             }
-        }
 
-        foreach($presenceEngagementMap as $presenceId => &$value) {
-            $scale = array_key_exists($presenceId, $presencePopularityMap) ? $presencePopularityMap[$presenceId] : 1;
-            $value = round($value / ($scale));
+            // here we calculate the weighted engagement by doing a weighted sum of the different types
+            $weightedTotalEngagement = 0;
+            foreach($this->typeWeightMap as $type=>$weight) {
+                $weightedTotalEngagement += $presenceEngagementMap[$type]*$weight;
+            }
+            // we then scale by the popularity of the presence
+            $scale = $presenceEngagementMap['popularity'] ? $presenceEngagementMap['popularity'] : 1;
+            $presenceEngagementMap['weighted_engagement'] = $weightedTotalEngagement;
+            $presenceEngagementMap['scaled_engagement'] = $weightedTotalEngagement / $scale;
+            $allPresencesEngagement[$presenceId] = $presenceEngagementMap;
         }
-        return $presenceEngagementMap;
+        return $allPresencesEngagement;
     }
 }
