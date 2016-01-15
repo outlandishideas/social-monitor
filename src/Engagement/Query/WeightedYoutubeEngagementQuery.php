@@ -43,6 +43,25 @@ class WeightedYoutubeEngagementQuery implements Query
      */
     public function fetch(DateTime $now, DateTime $then)
     {
+        $rows = $this->getData($now, $then);
+
+        $scores = [];
+
+        foreach ($rows as $presenceId => $data) {
+            $scores[$presenceId] = $data['scaled_engagement'];
+        }
+
+        return $scores;
+    }
+
+    /**
+     * @param DateTime $now
+     * @param DateTime $then
+     *
+     * @return array|null
+     */
+    public function getData(DateTime $now, DateTime $then)
+    {
         //take one day off as otherwise this calculates without a full day of data
         //if $now = today
         $now->modify('-1 day');

@@ -10,6 +10,10 @@ class Metric_YoutubeEngagementLeveled extends Metric_Abstract {
     function __construct()
     {
         $this->target = $this->getTargets();
+
+        $pdo = Zend_Registry::get('db')->getConnection();
+        $this->query = new \Outlandish\SocialMonitor\Engagement\Query\WeightedYoutubeEngagementQuery($pdo);
+        $this->cache = [];
     }
 
     private function getTargets()
@@ -78,16 +82,20 @@ class Metric_YoutubeEngagementLeveled extends Metric_Abstract {
 
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $now = $end;
+        $now = clone $end;
         $then = clone $now;
         $then->modify("-1 week");
 
-        $db = Zend_Registry::get('db')->getConnection();
+        $key = $now->format('Y-m-d') . $then->format('Y-m-d');
+        if (!array_key_exists($key, $this->cache)) {
+            $rows = $this->query->getData($now, $then);
+            $this->cache[$key] = $rows;
+        }
 
-        $query = new Outlandish\SocialMonitor\Engagement\Query\WeightedYoutubeEngagementQuery($db);
-        $metric = new Outlandish\SocialMonitor\Engagement\EngagementMetric($query);
+        $rows = $this->cache[$key];
+        $presenceId = $presence->getId();
 
-        $score = $metric->get($presence->getId(), $now, $then);
+        $score = $rows[$presenceId];
 
         $prevMonthStart = clone $then;
         $prevMonthStart->modify("-30 days");

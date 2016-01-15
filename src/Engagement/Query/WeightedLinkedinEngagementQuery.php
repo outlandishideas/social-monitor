@@ -47,7 +47,7 @@ class WeightedLinkedinEngagementQuery implements Query
         $scores = [];
 
         foreach ($rows as $row) {
-            $scores[$row['presence']] = $row['total'];
+            $scores[$row['presence']] = $row['scaled_engagement'];
         }
 
         return $scores;
@@ -70,13 +70,13 @@ class WeightedLinkedinEngagementQuery implements Query
         $presencesTable = self::PRESENCES_TABLE;
 
         $sql = "SELECT
-                    f.presence_id AS `presence`,
+                    ph.presence_id AS `presence`,
                     f.likes AS `likes`,
                     f.comments AS `comments`,
                     f.likes AS `weighted_likes`,
                     (f.comments*4) AS `weighted_comments`,
                     ph.popularity AS `popularity`,
-					(((f.comments*4 + f.likes) / 5) / ph.popularity) * 1000 AS `total`
+                    ph.size AS `size`
                 FROM
 				    (
 						SELECT
@@ -92,7 +92,7 @@ class WeightedLinkedinEngagementQuery implements Query
 						GROUP BY
 							presence_id
 					) AS f
-                LEFT JOIN
+                RIGHT JOIN
                     (
                         SELECT
                             p.id as presence_id,
@@ -122,12 +122,14 @@ class WeightedLinkedinEngagementQuery implements Query
             ':then' => $then->format('Y-m-d')
         ]);
         $data = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $scores = array();
+
         // create key => value array, scaling by the active user proportion
-        foreach($data as $d) {
+        foreach($data as &$d) {
             $scale = $this->activeUserProportion[$d['size']] ? $this->activeUserProportion[$d['size']] : 1;
-            $scores[$d['presence_id']] = $d['total'] / $scale;
+            $d['active_users'] = $scale * $d['popularity'];
+            $d['weighted_engagement'] = ($d['weighted_likes'] + $d['weighted_comments']) / 5;
+            $d['scaled_engagement'] = $d['active_users'] ? (($d['weighted_engagement'] / $d['active_users']) * 1000) : null;
         }
-        return $scores;
+        return $data;
     }
 }

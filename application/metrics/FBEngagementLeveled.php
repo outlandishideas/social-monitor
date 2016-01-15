@@ -10,6 +10,9 @@ class Metric_FBEngagementLeveled extends Metric_FBEngagement {
     function __construct()
     {
         $this->target = $this->getTargets();
+        $db = Zend_Registry::get('db')->getConnection();
+        $this->cache = array();
+        $this->query = new Outlandish\SocialMonitor\Engagement\Query\WeightedFacebookEngagementQuery($db);
     }
 
     private function getTargets()
@@ -55,16 +58,28 @@ class Metric_FBEngagementLeveled extends Metric_FBEngagement {
 
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $now = $end;
+        $now = clone $end;
         $then = clone $now;
         $then->modify("-1 week");
 
-        $db = Zend_Registry::get('db')->getConnection();
+        $key = $now->format('Y-m-d') . $then->format('Y-m-d');
+        if (!array_key_exists($key, $this->cache)) {
+            $rows = $this->query->getData($now, $then);
+            $this->cache[$key] = $rows;
+        }
 
-        $query = new Outlandish\SocialMonitor\Engagement\Query\WeightedFacebookEngagementQuery($db);
-        $metric = new Outlandish\SocialMonitor\Engagement\EngagementMetric($query);
+        $rows = $this->cache[$key];
+        $presenceId = $presence->getId();
 
-        $score = $metric->get($presence->getId(), $now, $then);
+        $presences = array_filter($rows, function($row) use ($presenceId) {
+            return $row['presence'] == $presenceId;
+        });
+
+        if (empty($presences)) {
+            return [];
+        }
+
+        $score = array_values($presences)[0];
 
         $prevMonthStart = clone $then;
         $prevMonthStart->modify("-30 days");

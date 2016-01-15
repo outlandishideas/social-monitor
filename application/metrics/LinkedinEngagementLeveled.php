@@ -104,6 +104,6 @@ class Metric_LinkedinEngagementLeveled extends Metric_Abstract {
             return [];
         }
 
-        return $presences[0];
+        return array_values($presences)[0];
     }
 }
