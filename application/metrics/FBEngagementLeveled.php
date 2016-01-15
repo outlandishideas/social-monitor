@@ -84,7 +84,7 @@ class Metric_FBEngagementLeveled extends Metric_FBEngagement {
         $prevMonthStart = clone $then;
         $prevMonthStart->modify("-30 days");
 
-        $prevScore = $presence->getHistoricData($prevMonthStart,$now,self::$name);
+        $prevScore = $presence->getHistoricData($prevMonthStart,$end,self::$name);
         $min = $max = null;
         if(count($prevScore)) {
             foreach ($prevScore as $d) {
