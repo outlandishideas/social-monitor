@@ -53,6 +53,39 @@ class Metric_FBEngagementLeveled extends Metric_FBEngagement {
         return $level * 20;
     }
 
+    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
+    {
+        $now = $end;
+        $then = clone $now;
+        $then->modify("-1 week");
 
+        $db = Zend_Registry::get('db')->getConnection();
+
+        $query = new Outlandish\SocialMonitor\Engagement\Query\WeightedFacebookEngagementQuery($db);
+        $metric = new Outlandish\SocialMonitor\Engagement\EngagementMetric($query);
+
+        $score = $metric->get($presence->getId(), $now, $then);
+
+        $prevMonthStart = clone $then;
+        $prevMonthStart->modify("-30 days");
+
+        $prevScore = $presence->getHistoricData($prevMonthStart,$now,self::$name);
+        $min = $max = null;
+        if(count($prevScore)) {
+            foreach ($prevScore as $d) {
+                if($min === null || $d['value'] < $min) {
+                    $min = $d['value'];
+                }
+                if($max === null || $d['value'] > $max) {
+                    $max = $d['value'];
+                }
+            }
+        }
+
+        $score['previous_value_min'] = $min;
+        $score['previous_value_max'] = $max;
+
+        return $score;
+    }
 
 }

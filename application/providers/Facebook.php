@@ -341,7 +341,7 @@ class Provider_Facebook extends Provider_Abstract
         $then = clone $now;
         $then->modify("-1 week");
 
-        return $this->engagementMetric->get($presence->getId(), $now, $then);
+        return $this->engagementMetric->get($presence->getId(), $now, $then)['scaled_engagement'];
 	}
 
 	protected function getCommentsSharesLikes(Model_Presence $presence, DateTime $start, DateTime $end)

@@ -54,7 +54,10 @@ class WeightedFacebookEngagementQuery implements Query
         $sql = "SELECT
                     f.presence_id,
                     ph.size,
-					(((f.comments*4 + f.likes + f.share_count*7) / 12) / ph.popularity) * 1000 AS `total`
+					f.comments,
+					f.likes,
+					f.share_count,
+					ph.popularity
                 FROM
 				    (
 						SELECT
@@ -106,8 +109,19 @@ class WeightedFacebookEngagementQuery implements Query
         $scores = array();
         // create key => value array, scaling by the active user proportion
         foreach($data as $d) {
-            $scale = $this->activeUserProportion[$d['size']] ? $this->activeUserProportion[$d['size']] : 1;
-            $scores[$d['presence_id']] = $d['total'] / $scale;
+            $activeUserProportion = $this->activeUserProportion[$d['size']] ?
+                $this->activeUserProportion[$d['size']] : 1;
+            $activeUsers = $d['popularity']*$activeUserProportion;
+            $score = ($d['likes'] + $d['comments'] * 4 + $d['share_count'] * 7) / 12;
+            $scores[$d['presence_id']] = [
+                'popularity' => $d['popularity'],
+                'active_users' => $activeUsers,
+                'likes' => $d['likes'],
+                'comments' => $d['comments'],
+                'shares' => $d['share_count'],
+                'weighted_engagement' => $score,
+                'scaled_engagement' => $score / $activeUsers
+            ];
         }
         return $scores;
     }
