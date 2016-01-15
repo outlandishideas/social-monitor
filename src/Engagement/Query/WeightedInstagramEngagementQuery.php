@@ -34,13 +34,26 @@ class WeightedInstagramEngagementQuery implements Query
         $this->activeUserProportion[2] = BaseController::getOption('ig_active_user_percentage_large') / 100;
     }
 
+    public function fetch(DateTime $now, DateTime $then)
+    {
+        $rows = $this->getData($now, $then);
+
+        $scores = [];
+
+        foreach ($rows as $row) {
+            $scores[$row['presence_id']] = $row['scaled_engagement'];
+        }
+
+        return $scores;
+    }
+
     /**
      * @param DateTime $now
      * @param DateTime $then
      *
      * @return array|null
      */
-    public function fetch(DateTime $now, DateTime $then)
+    public function getData(DateTime $now, DateTime $then)
     {
         //take one day off as otherwise this calculates without a full day of data
         //if $now = today
@@ -52,9 +65,13 @@ class WeightedInstagramEngagementQuery implements Query
         $presencesTable = self::PRESENCES_TABLE;
 
         $sql = "SELECT
-                    f.presence_id,
+                    ph.presence_id AS `presence_id`,
                     ph.size,
-					(((f.comment_count*4 + f.like_count) / 5) / IFNULL(ph.popularity>0, 1)) AS `total`
+      				f.like_count,
+					f.comment_count,
+					f.like_count AS `weighted_likes`,
+                    (f.comment_count*4) AS `weighted_comments`,
+					ph.popularity
                 FROM
 				    (
 						SELECT
@@ -70,7 +87,7 @@ class WeightedInstagramEngagementQuery implements Query
 						GROUP BY
 							presence_id
 					) AS f
-                LEFT JOIN
+                RIGHT JOIN
                     (
                         SELECT
                             p.id as presence_id,
@@ -101,12 +118,13 @@ class WeightedInstagramEngagementQuery implements Query
             ':then' => $then->format('Y-m-d')
         ]);
         $data = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $scores = array();
         // create key => value array, scaling by the active user proportion
-        foreach($data as $d) {
+        foreach($data as &$d) {
             $scale = $this->activeUserProportion[$d['size']] ? $this->activeUserProportion[$d['size']] : 1;
-            $scores[$d['presence_id']] = $d['total'] / $scale;
+            $d['active_users'] = $scale * $d['popularity'];
+            $d['weighted_engagement'] = ($d['weighted_likes'] + $d['weighted_comments']) / 5;
+            $d['scaled_engagement'] = $d['active_users'] ? ($d['weighted_engagement'] / $d['active_users']) * 1000 : null;
         }
-        return $scores;
+        return $data;
     }
 }
