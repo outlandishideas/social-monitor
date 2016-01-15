@@ -47,7 +47,7 @@ class WeightedFacebookEngagementQuery implements Query
         $scores = [];
 
         foreach ($rows as $row) {
-            $scores[$row['presence']] = $row['scaled_engagement'];
+            $scores[$row['presence_id']] = $row['scaled_engagement'];
         }
 
         return $scores;
@@ -71,7 +71,7 @@ class WeightedFacebookEngagementQuery implements Query
         $presencesTable = self::PRESENCES_TABLE;
 
         $sql = "SELECT
-                    ph.presence_id AS `presence`,
+                    ph.presence_id AS `presence_id`,
                     ph.size,
       				f.likes,
 					f.comments,

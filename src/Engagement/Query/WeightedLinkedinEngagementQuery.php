@@ -47,7 +47,7 @@ class WeightedLinkedinEngagementQuery implements Query
         $scores = [];
 
         foreach ($rows as $row) {
-            $scores[$row['presence']] = $row['scaled_engagement'];
+            $scores[$row['presence_id']] = $row['scaled_engagement'];
         }
 
         return $scores;
@@ -70,7 +70,7 @@ class WeightedLinkedinEngagementQuery implements Query
         $presencesTable = self::PRESENCES_TABLE;
 
         $sql = "SELECT
-                    ph.presence_id AS `presence`,
+                    ph.presence_id AS `presence_id`,
                     f.likes AS `likes`,
                     f.comments AS `comments`,
                     f.likes AS `weighted_likes`,
