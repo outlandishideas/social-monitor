@@ -80,9 +80,9 @@ class Metric_YoutubeEngagementLeveled extends Metric_Abstract {
         return $level * 20;
     }
 
-    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
+    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end_read_only)
     {
-        $now = clone $end;
+        $now = clone $end_read_only;
         $then = clone $now;
         $then->modify("-1 week");
 
@@ -100,7 +100,7 @@ class Metric_YoutubeEngagementLeveled extends Metric_Abstract {
         $prevMonthStart = clone $then;
         $prevMonthStart->modify("-30 days");
 
-        $prevScore = $presence->getHistoricData($prevMonthStart,$end,self::$name);
+        $prevScore = $presence->getHistoricData($prevMonthStart,$end_read_only,self::$name);
         $min = $max = null;
         if(count($prevScore)) {
             foreach ($prevScore as $d) {

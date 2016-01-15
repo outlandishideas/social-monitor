@@ -10,6 +10,9 @@ class Metric_SinaWeiboEngagementLeveled extends Metric_Abstract {
     function __construct()
     {
         $this->target = $this->getTargets();
+        $db = Zend_Registry::get('db')->getConnection();
+        $this->cache = array();
+        $this->query = new Outlandish\SocialMonitor\Engagement\Query\WeightedSinaWeiboEngagementQuery($db);
     }
 
     private function getTargets()
@@ -76,9 +79,51 @@ class Metric_SinaWeiboEngagementLeveled extends Metric_Abstract {
         return $level * 20;
     }
 
-    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
+    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end_read_only)
     {
-        // TODO: Implement getData() method.
+        $now = clone $end_read_only;
+        $then = clone $now;
+        $then->modify("-1 week");
+
+        $key = $now->format('Y-m-d') . $then->format('Y-m-d');
+        if (!array_key_exists($key, $this->cache)) {
+            $rows = $this->query->getData($now, $then);
+            $this->cache[$key] = $rows;
+        }
+
+        $rows = $this->cache[$key];
+        $presenceId = $presence->getId();
+
+        $presences = array_filter($rows, function($row) use ($presenceId) {
+            return $row['presence_id'] == $presenceId;
+        });
+
+        if (empty($presences)) {
+            return [];
+        }
+
+        $score = array_values($presences)[0];
+
+        $prevMonthStart = clone $then;
+        $prevMonthStart->modify("-30 days");
+
+        $prevScore = $presence->getHistoricData($prevMonthStart,$end_read_only,self::$name);
+        $min = $max = null;
+        if(count($prevScore)) {
+            foreach ($prevScore as $d) {
+                if($min === null || $d['value'] < $min) {
+                    $min = $d['value'];
+                }
+                if($max === null || $d['value'] > $max) {
+                    $max = $d['value'];
+                }
+            }
+        }
+
+        $score['previous_value_min'] = $min;
+        $score['previous_value_max'] = $max;
+
+        return $score;
     }
 
 
