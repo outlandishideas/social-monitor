@@ -73,7 +73,6 @@ abstract class Provider_Abstract
 			FROM `presence_history`
 			WHERE " . implode(' AND ', $clauses));
 		$stmt->execute($args);
-        error_log($stmt->queryString . ' ' . $start->format('Y-m-d H:i:s') . ' ' . $end->format('Y-m-d H:i:s') . ' ' . $presence->getId());
 		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		return $ret;
