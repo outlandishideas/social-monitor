@@ -42,7 +42,25 @@ class WeightedLinkedinEngagementQuery implements Query
      */
     public function fetch(DateTime $now, DateTime $then)
     {
-        //take one day off as otherwise this calculates without a full day of data
+        $rows = $this->getData($now, $then);
+
+        $scores = [];
+
+        foreach ($rows as $row) {
+            $scores[$row['presence']] = $row['total'];
+        }
+
+        return $scores;
+    }
+
+    /**
+     * @param DateTime $now
+     * @param DateTime $then
+     * @return array
+     */
+    public function getData(DateTime $now, DateTime $then)
+    {
+//take one day off as otherwise this calculates without a full day of data
         //if $now = today
         $now->modify('-1 day');
         $then->modify('-1 day');
@@ -52,8 +70,12 @@ class WeightedLinkedinEngagementQuery implements Query
         $presencesTable = self::PRESENCES_TABLE;
 
         $sql = "SELECT
-                    f.presence_id,
-                    ph.size,
+                    f.presence_id AS `presence`,
+                    f.likes AS `likes`,
+                    f.comments AS `comments`,
+                    f.likes AS `weighted_likes`,
+                    (f.comments*4) AS `weighted_comments`,
+                    ph.popularity AS `popularity`,
 					(((f.comments*4 + f.likes) / 5) / ph.popularity) * 1000 AS `total`
                 FROM
 				    (
@@ -62,7 +84,7 @@ class WeightedLinkedinEngagementQuery implements Query
 							SUM(comments) AS comments,
 							SUM(likes) AS likes
 						FROM
-							$facebookStream
+							{$facebookStream}
 						WHERE
 							DATE(created_time) >= :then
 						AND
@@ -95,7 +117,7 @@ class WeightedLinkedinEngagementQuery implements Query
                     ) AS ph ON f.presence_id = ph.presence_id";
 
         $statement = $this->db->prepare($sql);
-        $statement->execute([
+        $result = $statement->execute([
             ':now' => $now->format('Y-m-d'),
             ':then' => $then->format('Y-m-d')
         ]);
