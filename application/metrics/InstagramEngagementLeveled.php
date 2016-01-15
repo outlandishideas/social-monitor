@@ -108,8 +108,10 @@ class Metric_InstagramEngagementLeveled extends Metric_Abstract {
 
         $prevScore = $presence->getHistoricData($prevMonthStart,$now,self::$name);
         $min = $max = null;
+        error_log('there are '.count($prevScore).' prev scores for '.$presence->getHandle());
         if(count($prevScore)) {
             foreach ($prevScore as $d) {
+                error_log('--'.$d['value']);
                 if($min === null || $d['value'] < $min) {
                     $min = $d['value'];
                 }
