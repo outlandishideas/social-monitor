@@ -90,7 +90,10 @@ class Provider_Facebook extends Provider_Abstract
                 ':in_response_to' => null
             );
             try {
-                $insertStmt->execute($args);
+                $result = $insertStmt->execute($args);
+                if(!$result) {
+                    error_log(join(',',$insertStmt->errorInfo()));
+                }
             } catch (PDOException $ex) {
                 if ($ex->getCode() == 23000) {
                     continue;
@@ -125,7 +128,7 @@ class Provider_Facebook extends Provider_Abstract
         if ($postIds) {
 
             /** @var FacebookStatus[] $responses */
-            $responses = $this->adapter->getResponses($postIds);
+            $responses = $this->adapter->getResponses($postIds,$presence->getUID());
 
             $insertStmt = $this->db->prepare("
                 INSERT INTO `{$this->tableName}`
@@ -417,7 +420,8 @@ class Provider_Facebook extends Provider_Abstract
         $clauses = array(
             'r.presence_id = :pid',
             't.created_time >= :start_date',
-            't.created_time <= :end_date'
+            't.created_time <= :end_date',
+            'r.posted_by_owner = 1' // ensures that only british council posts are returned
         );
         $args = array(
             ':pid'=>$presence->getId(),

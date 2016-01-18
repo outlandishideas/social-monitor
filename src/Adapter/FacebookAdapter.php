@@ -73,7 +73,7 @@ class FacebookAdapter extends AbstractAdapter
             $postedByOwner = ($raw['actor_id'] == $pageUID);
             $parsed = new FacebookStatus();
             $parsed->id = $raw['post_id'];
-            $parsed->message = $raw['message'];
+            $parsed->message = isset($raw['message']) ? $raw['message'] : '';
             $parsed->created_time = $raw['created_time'];
             $parsed->actor_id = $raw['actor_id'];
             $parsed->comments = $raw['comments'];
@@ -96,7 +96,7 @@ class FacebookAdapter extends AbstractAdapter
      * @param array $postUIDs
      * @return Status[]
      */
-    public function getResponses($postUIDs)
+    public function getResponses($postUIDs,$presenceUID)
     {
         $parsedResponses = array();
 
@@ -120,9 +120,9 @@ class FacebookAdapter extends AbstractAdapter
 
                             $parsed->id = $postArray['id'];
                             $parsed->actor_id = $actorId;
-                            $parsed->message = isset($postArray['message']) ? $postArray['message'] : null;
+                            $parsed->message = isset($postArray['message']) ? $postArray['message'] : '';
                             $parsed->created_time = gmdate("Y-m-d H:i:s", $createdTime->getTimestamp());
-                            $parsed->posted_by_owner = true;
+                            $parsed->posted_by_owner = ($presenceUID() == $actorId);
                             $parsed->in_response_to_status_uid = $postId;
                             if ($parsed->posted_by_owner && $parsed->message) {
                                 $parsed->links = $this->extractLinks($parsed->message);
