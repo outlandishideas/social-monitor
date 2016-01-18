@@ -149,7 +149,7 @@ class ConfigController extends BaseController {
                         )
                     ),
                     (object)array(
-                        'title' => 'Linkedin Engagement Score (Youtube only)',
+                        'title' => 'Linkedin Engagement Score (Linked In only)',
                         'description' => 'The Linkedin Engagement Score is not yet fully decided.',
                         'values' => array(
                             'linkedin_engagement_weighting'=>array('label'=>'Linkedin Engagement Score Weighting'),
