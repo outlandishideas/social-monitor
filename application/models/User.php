@@ -74,10 +74,11 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	/**
 	 * @param $levelName
 	 * @param $controller
+	 * @param $action
 	 * @param $id
 	 * @return bool
 	 */
-	function canPerform($levelName, $controller, $id) {
+	function canPerform($levelName, $controller, $action, $id) {
 		if ($this->isManager || !$levelName) {
 			return true;
 		}
@@ -85,8 +86,8 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 		$levels = self::$userLevels;
 		foreach ($levels as $l=>$label) {
 			if (strtolower($label) == $levelName && $this->user_level >= $l) {
-				// only check specific entities if an id given
-				if (!$id) {
+				// only check specific entities if an id given and action not view
+				if (!$id || $action === 'view') {
 					return true;
 				}
 				$entities = $this->getAccessEntities();
