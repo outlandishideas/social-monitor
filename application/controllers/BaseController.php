@@ -439,7 +439,7 @@ class BaseController extends Zend_Controller_Action
      */
     protected function sendEmail($message, $fromEmail, $fromName, $toEmail, $subject)
     {
-        $message = Swift_Message::newInstance($subject, $message);
+        $message = Swift_Message::newInstance($subject, $message, 'text/html');
         $message->setFrom([$fromEmail => $fromName]);
         $message->setTo([$toEmail]);
 
