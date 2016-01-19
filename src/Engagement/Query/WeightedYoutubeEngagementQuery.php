@@ -13,7 +13,7 @@ use BaseController;
 use DateTime;
 use PDO;
 
-class WeightedYoutubeEngagementQuery implements Query
+class WeightedYoutubeEngagementQuery extends Query
 {
     const VIDEO_HISTORY_TABLE = 'youtube_video_history';
     const VIDEO_STREAM_TABLE = 'youtube_video_stream';
@@ -21,10 +21,6 @@ class WeightedYoutubeEngagementQuery implements Query
     const PRESENCE_TABLE = 'presences';
     private $typeWeightMap = ['views' => 1,'likes' => 4,'dislikes' => 4,'comments' => 7];
 
-    /**
-     * @var
-     */
-    private $db;
 
     public function __construct(PDO $db)
     {
@@ -33,25 +29,6 @@ class WeightedYoutubeEngagementQuery implements Query
         $this->activeUserProportion[0] = BaseController::getOption('yt_active_user_percentage_small') / 100;
         $this->activeUserProportion[1] = BaseController::getOption('yt_active_user_percentage_medium') / 100;
         $this->activeUserProportion[2] = BaseController::getOption('yt_active_user_percentage_large') / 100;
-    }
-
-    /**
-     * @param DateTime $now
-     * @param DateTime $then
-     *
-     * @return array|null
-     */
-    public function fetch(DateTime $now, DateTime $then)
-    {
-        $rows = $this->getData($now, $then);
-
-        $scores = [];
-
-        foreach ($rows as $presenceId => $data) {
-            $scores[$presenceId] = $data['scaled_engagement'];
-        }
-
-        return $scores;
     }
 
     /**
@@ -90,7 +67,7 @@ class WeightedYoutubeEngagementQuery implements Query
         foreach($presenceSizes as $presenceId=>$size) {
 
             // this stores the values of different engagement types for the presence
-            $presenceEngagementMap = array();
+            $presenceEngagementMap = ["presence_id"=>$presenceId];
 
             /*
              * Find the current popularity of each presence - this is used to scale the engagement
@@ -166,7 +143,7 @@ class WeightedYoutubeEngagementQuery implements Query
             $scale = $presenceEngagementMap['active_users'] ? $presenceEngagementMap['active_users'] : 1;
             $presenceEngagementMap['weighted_engagement'] = $weightedTotalEngagement;
             $presenceEngagementMap['scaled_engagement'] = $weightedTotalEngagement / $scale;
-            $allPresencesEngagement[$presenceId] = $presenceEngagementMap;
+            $allPresencesEngagement[] = $presenceEngagementMap;
         }
         return $allPresencesEngagement;
     }
