@@ -124,7 +124,7 @@ abstract class Query {
 
         $whereClauses = $this->statusTableWhereClauses();
         $whereClausesStr = implode(' AND ', $whereClauses);
-        
+
         return "SELECT
                       {$selectClausesStr}
 						FROM

@@ -112,7 +112,7 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
         $prevMonthStart = clone $then;
         $prevMonthStart->modify("-30 days");
 
-        $prevScore = $presence->getHistoricData($prevMonthStart,$end_read_only,self::$name);
+        $prevScore = $presence->getHistoricData($prevMonthStart,$end_read_only,static::$name);
         $min = $max = null;
         if(count($prevScore)) {
             foreach ($prevScore as $d) {
