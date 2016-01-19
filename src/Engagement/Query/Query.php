@@ -155,7 +155,7 @@ abstract class Query {
             $weightedEngagement[] = "f.$key*$weight";
             $weightSum += $weight;
         }
-        $weightedEngagementStr = "(" . implode('+', $weightedEngagement) . ") / $weightSum AS `weighted_engagement`";
+        $weightedEngagementStr = "(IFNULL(" . implode('+', $weightedEngagement) . ",0) / $weightSum AS `weighted_engagement`";
 
         $clauses[] = $weightedEngagementStr;
         return implode(',', $clauses);
