@@ -474,7 +474,7 @@ class UserController extends BaseController
 		$url = $this->view->url(['action' => $action]);
 		$paramString = http_build_query([
 			'name' => $user->name,
-			'confirm_email_key' => $user->confirm_email_key
+			'reset_key' => $user->reset_key
 		]);
 		return "{$scheme}://{$host}{$url}?{$paramString}";
 	}
