@@ -624,8 +624,42 @@ app.modal = {
 	},
 	hide: function() {
 		$('#modal-container,#modal-backdrop').fadeOut();
+	}
+};
+
+app.feedbackForm = {
+	clear: function() {
+		var form = $('#feedback-form');
+
+		var name = form.find('#name').val('');
+		var from = form.find('#from').val('');
+		var body = form.find('#body').val('');
+	},
+	validate: function() {
+		var form = $('#feedback-form');
+
+		var name = form.find('#name').val();
+		var from = form.find('#from').val();
+		var body = form.find('#body').val();
+
+		if(!name) {
+			return 'Please enter your name';
+		}
+		if(!from) {
+			return 'Please enter your email address';
+		}
+		if(!body) {
+			return 'Please enter your message';
+		}
+		return null;
 	},
 	send: function() {
+		var error = app.feedbackForm.validate();
+		if(error) {
+			app.flashMessenger.show(error,'error');
+			return;
+		}
+
 		var form = $('#feedback-form');
 
 		var name = form.find('#name').val();
@@ -636,9 +670,7 @@ app.modal = {
 		$.post(url, {name: name, body: body, from: from}, function(response) {
 			if(response.data.success) {
 				app.flashMessenger.show('Feedback sent. Thanks!');
-				form.find('#name').val('');
-				form.find('#from').val('');
-				form.find('#body').val('');
+				app.feedbackForm.clear();
 				app.modal.hide();
 			} else {
 				app.flashMessenger.show(response.data.error || 'Error sending feedback, please try again','error');
