@@ -73,6 +73,10 @@ body {
 	float: none;
 }
 
+#feedback-form .button-group button {
+	border: 1px solid #fff;
+}
+
 abbr {
 	border-bottom: 1px dashed #999;
 }
