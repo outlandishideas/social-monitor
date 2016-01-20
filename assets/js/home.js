@@ -121,7 +121,9 @@ app.home = {
 	    	$(this).find('.help-text').toggleClass('open');
 	    });
 
-    },
+		app.home.loadCampaignStats(); // initialise the stats with the global stats
+
+	},
     currentBadge: function(){
 	    return $('#homepage-tabs').find('.active').data('badge');
     },
@@ -195,13 +197,19 @@ app.home = {
 	 */
 	loadCampaignStats: function(id) {
 		var $countryStats = $('#country-stats');
-		$countryStats.addClass('loading');
-		$countryStats.load('country/stats-panel/id/' + id, function(event){
-            $countryStats.removeClass('global');
-			$countryStats.removeClass('loading');
-			$('[data-badge-title]').text($('#homepage-tabs').find('dd.active').data('title'));
+		if(id) {
+			$countryStats.addClass('loading');
+			$countryStats.load('country/stats-panel/id/' + id, function () {
+				$countryStats.removeClass('global');
+				$countryStats.removeClass('loading');
+				$('[data-badge-title]').text($('#homepage-tabs').find('dd.active').data('title'));
+				app.home.updateAll();
+			});
+		} else {
+			$countryStats.addClass('global');
+			$countryStats.html(app.templates.globalScore);
 			app.home.updateAll();
-		});
+		}
 	},
 
 	/**
@@ -359,7 +367,16 @@ app.home = {
 				$list.append($el);
 			});
 		}
+	},
 
+	selectCountry: function() {
+		var topResult = $('.find-country .country-list li').first();
+		if(topResult) {
+			app.home.loadCampaignStats(topResult.data('id'));
+		} else {
+			app.home.loadCampaignStats();
+		}
+		return false;
 	}
 };
 
