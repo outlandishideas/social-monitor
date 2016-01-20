@@ -13,6 +13,19 @@ class ConfigController extends BaseController {
 		$values = array(
 
             (object)array(
+                'title' => 'General',
+                'description' => '',
+                'kpis' => array(
+                    (object)array(
+                        'title' => 'Feedback',
+                        'description' => 'What email address should feedback be sent to?',
+                        'values' => array(
+                            'email-feedback-to-address'=>array('label'=>'Email address','type'=>'email')
+                        )
+                    )
+                )
+            ),
+            (object)array(
                 'title' => Badge_Reach::getTitle(),
                 'description' => Badge_Reach::getDescription(),
                 'kpis' => array(
@@ -268,6 +281,12 @@ class ConfigController extends BaseController {
                             case 'numeric':
                                 if (!is_numeric($args->value)) {
                                     $args->error = 'Value must be numeric';
+                                    $valid = false;
+                                }
+                                break;
+                            case 'email':
+                                if (!filter_var($args->value, FILTER_VALIDATE_EMAIL)) {
+                                    $args->error = "This ($args->value) email address is considered invalid.";
                                     $valid = false;
                                 }
                                 break;
