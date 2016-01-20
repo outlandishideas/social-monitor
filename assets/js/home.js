@@ -298,8 +298,18 @@ app.home = {
 	updateDataAttributes: function() {
 		var i;
 
-		//country popout
+		//find country list
 		var data = app.home.countryData;
+		$('.country-list li').each(function() {
+			var $el = $(this);
+			var id = $el.data('id');
+			var c = _.find(data,function(c) {
+				return c.id === id;
+			});
+			updateElement($el, c);
+		});
+
+		//country popout
 		var $countryStats = $('#country-stats');
 		var $div = $countryStats.find('[data-badge]');
 		if ($div.length > 0) {
