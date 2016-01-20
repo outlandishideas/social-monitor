@@ -7,7 +7,7 @@ var app = app || {};
 app.home = {
 	map: null,
 	mapData: null,
-	smallCountryData: [],
+	countryData: [],
 	groupData: [],
 	fanData: [],
 	metrics: {},
@@ -56,7 +56,6 @@ app.home = {
     setup: function(){
 
 	    var mapArgs = window.mapArgs;
-	    app.home.smallCountryData = mapArgs.smallMapData;
 	    app.home.groupData = mapArgs.groupData;
 	    app.home.countryData = mapArgs.mapData;
 	    app.home.geochartMetrics = mapArgs.geochartMetrics;
@@ -84,7 +83,7 @@ app.home = {
 		    app.home.refreshMap();
 	    });
 
-        $('.small-country-list')
+        $('.country-list')
             .on('click', 'li a', function(event){
                 event.preventDefault();
                 var id = $(this).parent('li').data('id');
@@ -128,22 +127,8 @@ app.home = {
     },
 	updateAll: function() {
 		app.home.updateDataAttributes();
-		var badge = app.home.currentBadge();
-		$('[data-badge]').each(function(){
-			var $this = $(this);
-			var score = $this.data('score');
-			var color = $this.data('color');
-			if (!color) {
-				color = '#d2d2d2';
-			}
-			var $score = $this.find('[data-badge-score]');
-			var $bar = $this.find('[data-badge-bar]');
-
-			$score.text(score + $score.data('badge-score')).css('color', color);
-			$bar.css({
-				'width': score + '%',
-				'background-color': color
-			});
+		$('[data-badge]').each(function() {
+			convertToBadge($(this));
 		});
 		app.home.refreshMap();
 	},
@@ -311,57 +296,10 @@ app.home = {
 	},
 
 	updateDataAttributes: function() {
-		var badge = $('#homepage-tabs').find('dd.active').data('badge');
-		var day = app.home.currentDay();
 		var i;
-		var colorArgs = app.home.geochartMetrics[badge];
-
-        var numberWithCommas = function(x) {
-            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        };
-
-		var updateElement = function($el, d) {
-			var score = d.b[badge][day].s;
-			$el.data('score', numberWithCommas(Math.round(score)));
-			var color = colorArgs.colors[0];
-			for (var j=0; j<colorArgs.colors.length-1; j++) {
-				if (score > colorArgs.range[j] && score <= colorArgs.range[j+1]) {
-					var lowColor = colorArgs.colors[j];
-					var highColor = colorArgs.colors[j+1];
-					if (score == lowColor || lowColor == highColor) {
-						// score equals lower bound, or lower colour == upper colour
-						color = lowColor;
-					} else if (score == highColor) {
-						// score equals upper bound
-						color = highColor;
-					} else {
-						// score somewhere in the middle, so interpolate the colours
-						lowColor = [lowColor.substring(1,3), lowColor.substring(3,5), lowColor.substring(5,7)];
-						highColor = [highColor.substring(1,3), highColor.substring(3,5), highColor.substring(5,7)];
-						lowColor = lowColor.map(function(e) {return parseInt(e, 16);});
-						highColor = highColor.map(function(e) {return parseInt(e, 16);});
-						var fraction = (score - colorArgs.range[j])/(colorArgs.range[j+1] - colorArgs.range[j]);
-						color = '#';
-						for (var k=0; k<lowColor.length; k++) {
-							color += Math.floor(lowColor[k] + (fraction * (highColor[k] - lowColor[k]))).toString(16);
-						}
-					}
-					break;
-				}
-			}
-			$el.data('color', color);
-		};
-
-		//small countries
-		var data = app.home.smallCountryData;
-		for (i = 0; i < data.length; i++) {
-			var c = data[i];
-			var $li = $('.small-country-list').find('[data-id="'+c.id+'"]');
-			updateElement($li, c);
-		}
 
 		//country popout
-		data = app.home.countryData;
+		var data = app.home.countryData;
 		var $countryStats = $('#country-stats');
 		var $div = $countryStats.find('[data-badge]');
 		if ($div.length > 0) {
@@ -384,12 +322,89 @@ app.home = {
 
         //totalscore
         var score = app.home.totalScore();
-        $div = $('#country-stats.global #overall-score[data-badge]');
-        updateElement($div, score)
+		var stats = $('#country-stats.global');
+        $div = stats.find('#overall-score[data-badge]');
+        updateElement($div, score);
 
         //totalscore
-        var score = app.home.fanData;
-        $div = $('#country-stats.global #overall-fans[data-badge]');
+        score = app.home.fanData;
+        $div = stats.find('#overall-fans[data-badge]');
         updateElement($div, score)
+	},
+
+	searchCountries: function() {
+		var search = $('.find-country #search-countries').val();
+		var $list = $('.find-country .country-list');
+		$list.empty();
+
+		if(search) {
+			var foundCountries = _.filter(app.home.countryData, function(c) {
+				return c.n.substring(0,search.length).toLowerCase() === search.toLowerCase();
+			}).slice(0,3);
+
+			_.forEach(foundCountries, function(c) {
+				var $el = $(_.template(app.templates.countryListItem, c));
+				updateElement($el, c);
+				convertToBadge($el);
+				$list.append($el);
+			});
+		}
+
 	}
 };
+
+function updateElement($el, d) {
+	var day = app.home.currentDay();
+	var badge = $('#homepage-tabs').find('dd.active').data('badge');
+	var colorArgs = app.home.geochartMetrics[badge];
+
+	var score = d.b[badge][day].s;
+	$el.data('score', numberWithCommas(Math.round(score)));
+	var color = colorArgs.colors[0];
+	for (var j=0; j<colorArgs.colors.length-1; j++) {
+		if (score > colorArgs.range[j] && score <= colorArgs.range[j+1]) {
+			var lowColor = colorArgs.colors[j];
+			var highColor = colorArgs.colors[j+1];
+			if (score == lowColor || lowColor == highColor) {
+				// score equals lower bound, or lower colour == upper colour
+				color = lowColor;
+			} else if (score == highColor) {
+				// score equals upper bound
+				color = highColor;
+			} else {
+				// score somewhere in the middle, so interpolate the colours
+				lowColor = [lowColor.substring(1,3), lowColor.substring(3,5), lowColor.substring(5,7)];
+				highColor = [highColor.substring(1,3), highColor.substring(3,5), highColor.substring(5,7)];
+				lowColor = lowColor.map(function(e) {return parseInt(e, 16);});
+				highColor = highColor.map(function(e) {return parseInt(e, 16);});
+				var fraction = (score - colorArgs.range[j])/(colorArgs.range[j+1] - colorArgs.range[j]);
+				color = '#';
+				for (var k=0; k<lowColor.length; k++) {
+					color += Math.floor(lowColor[k] + (fraction * (highColor[k] - lowColor[k]))).toString(16);
+				}
+			}
+			break;
+		}
+	}
+	$el.data('color', color);
+}
+
+function numberWithCommas(x) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function convertToBadge($el) {
+	var score = $el.data('score');
+	var color = $el.data('color');
+	if (!color) {
+		color = '#d2d2d2';
+	}
+	var $score = $el.find('[data-badge-score]');
+	var $bar = $el.find('[data-badge-bar]');
+
+	$score.text(score + $score.data('badge-score')).css('color', color);
+	$bar.css({
+		'width': score + '%',
+		'background-color': color
+	});
+}

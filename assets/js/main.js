@@ -85,7 +85,11 @@ $.extend(app, {
 			'<table>\
 				<tr><th>Target date</th><% _.each(requiredRates, function(r){ %><td><%=r.date%></td><%})%></tr>\
 				<tr><th>Required gain<br />per day</th><% _.each(requiredRates, function(r){ %><td><%=app.utils.numberFixedDecimal(r.rate)%></td><%})%></tr>\
-			</table>'
+			</table>',
+		countryListItem:
+			'<li data-id="<%= id %>" data-badge>\
+				<a href="#"><%= n %> <span data-badge-score="%"></span></a>\
+			</li>'
 	}
 
 });
