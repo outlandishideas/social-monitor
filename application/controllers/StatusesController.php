@@ -38,7 +38,7 @@ class StatusesController extends GraphingController
         $presences = Model_PresenceFactory::getPresences();
 
         /** @var TableIndex $indexTable */
-        $indexTable = $this->getContainer()->get('table.presence-index');
+        $indexTable = $this->getContainer()->get('table.statuses-index');
         $rows = $this->getTableIndex('presence-index', $indexTable, $presences);
 
         $this->view->title = 'Statuses';

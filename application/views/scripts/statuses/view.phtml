@@ -1,0 +1,15 @@
+<?php
+$buttons = array();
+array_unshift($buttons, '<div id="search-table">Loading data...</div>');
+
+echo '<h2 class="page-title">Statuses</h2>';
+
+echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+
+echo $this->partial("partials/new-index-table.phtml", array(
+    "tableHeaders" => $this->tableHeaders,
+    "tableId" => "all-statuses",
+    "rows" => $this->rows,
+    'emptyText' => 'No statuses found',
+    'sortCol' => $this->sortCol
+));
