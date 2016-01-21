@@ -396,7 +396,7 @@ app.datatables = {
 		var start = d.toString('yyyy-MM-dd');
 
 		var args = {
-			sAjaxSource:jsConfig.apiEndpoint + "presence/statuses",
+			sAjaxSource:jsConfig.apiEndpoint + "statuses/list",
 			fnServerParams: function(aoData) {
 				aoData.push({ name:"dateRange", value:[start, end] });
 				aoData.push({ name:"id", value:$container.data('presence-id') });

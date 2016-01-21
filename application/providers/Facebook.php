@@ -164,6 +164,7 @@ class Provider_Facebook extends Provider_Abstract
 	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null)
 	{
+        $presenceId = $presence ? $presence->getId() : null;
         $clauses = array(
             'p.created_time >= :start',
             'p.created_time <= :end',
@@ -172,9 +173,11 @@ class Provider_Facebook extends Provider_Abstract
         );
         $args = array(
             ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s'),
-            ':id'    => $presence->getId()
+            ':end'   => $end->format('Y-m-d H:i:s')
         );
+        if($presenceId) {
+            $args[':id'] = $presenceId;
+        }
         $searchArgs = $this->getSearchClauses($search, array('p.message'));
         $clauses = array_merge($clauses, $searchArgs['clauses']);
         $args = array_merge($args, $searchArgs['args']);
@@ -205,7 +208,7 @@ class Provider_Facebook extends Provider_Abstract
 
         $links = $this->getLinks($postIds, 'facebook');
         $actors = $this->getActors($actorIds);
-        $responses = $this->getResponses($presence->getId(), $facebookIds);
+        $responses = $this->getResponses($presenceId, $facebookIds);
 
 		foreach ($ret as &$r) {
             $id = $r['id'];
@@ -236,7 +239,12 @@ class Provider_Facebook extends Provider_Abstract
         if ($facebookIds) {
             $idString = array_map(function($a) { return "'" . $a . "'"; }, $facebookIds);
             $idString = implode(',', $idString);
-            $stmt = $this->db->prepare("SELECT * FROM facebook_stream WHERE presence_id = :pid AND in_response_to IN ($idString)");
+            if($presenceId) {
+                $stmt = $this->db->prepare("SELECT * FROM facebook_stream WHERE presence_id = :pid AND in_response_to IN ($idString)");
+            } else {
+                // TODO: should this check posted_by_owner is true, so we only get responses from british council?
+                $stmt = $this->db->prepare("SELECT * FROM facebook_stream WHERE in_response_to IN ($idString)");
+            }
             $stmt->execute(array(':pid'=>$presenceId));
             foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $response) {
                 $key = $response->in_response_to;

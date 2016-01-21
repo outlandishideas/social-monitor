@@ -12,6 +12,10 @@ abstract class Provider_Abstract
 		$this->db = $db;
 	}
 
+    public function getType() {
+        return $this->type;
+    }
+
 	/**
 	 * Fetch data for a certain handle (twitter handle, facebook name, sina weibo name etc)
 	 * @param Model_Presence $presence  The handle to fetch data for

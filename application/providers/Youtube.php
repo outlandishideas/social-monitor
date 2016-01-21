@@ -146,6 +146,7 @@ class Provider_Youtube extends Provider_Abstract
 	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null)
 	{
+        $presenceId = $presence ? $presence->getId() : null;
         $clauses = array(
             'p.created_time >= :start',
             'p.created_time <= :end',
@@ -153,9 +154,11 @@ class Provider_Youtube extends Provider_Abstract
         );
         $args = array(
             ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s'),
-            ':id'    => $presence->getId()
+            ':end'   => $end->format('Y-m-d H:i:s')
         );
+        if($presenceId) {
+            $args[':id'] = $presenceId;
+        }
         $searchArgs = $this->getSearchClauses($search, array('p.title','p.description'));
         $clauses = array_merge($clauses, $searchArgs['clauses']);
         $args = array_merge($args, $searchArgs['args']);

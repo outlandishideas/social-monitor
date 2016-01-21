@@ -52,7 +52,8 @@ class Provider_SinaWeibo extends Provider_Abstract
 	public function getHistoricStream (Model_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null
 	) {
-        $clauses = array(
+		$presenceId = $presence ? $presence->getId() : null;
+		$clauses = array(
             'p.created_at >= :start',
             'p.created_at <= :end',
             'p.presence_id = :id'
@@ -60,8 +61,10 @@ class Provider_SinaWeibo extends Provider_Abstract
         $args = array(
             ':start' => $start->format('Y-m-d H:i:s'),
             ':end'   => $end->format('Y-m-d H:i:s'),
-            ':id'    => $presence->getId()
         );
+		if($presenceId) {
+			$args[':id'] = $presenceId;
+		}
         $searchArgs = $this->getSearchClauses($search, array('p.text'));
         $clauses = array_merge($clauses, $searchArgs['clauses']);
         $args = array_merge($args, $searchArgs['args']);
