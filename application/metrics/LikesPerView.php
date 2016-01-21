@@ -3,7 +3,7 @@
 class Metric_LikesPerView extends Metric_Abstract {
 
     protected static $name = "likes_per_view";
-    protected static $title = "Likes per view";
+    protected static $title = "Actions per view";
     protected static $icon = "fa fa-thumbs-o-up";
 
     function __construct()
@@ -23,12 +23,12 @@ class Metric_LikesPerView extends Metric_Abstract {
      */
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        list($views, $likes) = array_values($this->getData($presence, $start, $end));
+        list($views, $likes, $comments) = array_values($this->getData($presence, $start, $end));
 
         if ($views > 0) {
-            $actual = $likes / $views;
+            $actual = ($likes+$comments) / $views;
         } else {
-            $actual = $likes;
+            $actual = $likes+$comments;
         }
 
         return $actual;
@@ -47,7 +47,7 @@ class Metric_LikesPerView extends Metric_Abstract {
 
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $rows = $presence->getHistoryData($start, $end, ['views', 'likes']);
+        $rows = $presence->getHistoryData($start, $end, ['views', 'likes', 'comments']);
 
         $combinedData = [];
 
@@ -62,12 +62,14 @@ class Metric_LikesPerView extends Metric_Abstract {
         if (empty($combinedData)) {
             $views = 0;
             $likes = 0;
+            $comments = 0;
         } else {
             $views = max($combinedData['views']) - min($combinedData['views']);
             $likes = max($combinedData['likes']) - min($combinedData['likes']);
+            $comments = max($combinedData['comments']) - min($combinedData['comments']);
         }
 
-        return ['views' => $views, 'likes' => $likes];
+        return ['views' => $views, 'likes' => $likes, 'comments' => $comments];
     }
 
 
