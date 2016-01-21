@@ -232,7 +232,5 @@ services:
             - [addHeader, ["@table.header.total_score"]]
             - [addHeader, ["@table.header.current_audience"]]
             - [addHeader, ["@table.header.target_audience"]]
-            - [addHeader, ["@table.header.actions_per_day"]]
-            - [addHeader, ["@table.header.response_time"]]
             - [addHeader, ["@table.header.options"]]
 
