@@ -184,6 +184,9 @@ services:
     table.header.country_count:
         class: Outlandish\SocialMonitor\TableIndex\Header\CountryCount
 
+    table.header.parent:
+        class: Outlandish\SocialMonitor\TableIndex\Header\ParentName
+
     # Index Tables
     table.region-index:
         class: Outlandish\SocialMonitor\TableIndex\TableIndex
@@ -226,6 +229,7 @@ services:
         class: Outlandish\SocialMonitor\TableIndex\TableIndex
         calls:
             - [addHeader, ["@table.header.handle"]]
+            - [addHeader, ["@table.header.parent"]]
             - [addHeader, ["@table.header.branding"]]
             - [addHeader, ["@table.header.sign_off"]]
             - [addHeader, ["@table.header.total_rank"]]
