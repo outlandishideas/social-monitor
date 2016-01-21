@@ -23,16 +23,21 @@ class ParentName extends Header {
     public function getValue($model = null)
     {
         if (!($model instanceof Model_Presence)) {
-            return "";
+            return null;
         }
 
         $owner = $model->getOwner();
 
         if (!$owner) {
-            return "N/A";
+            return null;
         }
 
-        return $owner->display_name;
+        $value = new \stdClass();
+        $value->controller = $owner instanceof \Model_Country ? 'country' : 'group';
+        $value->name = $owner->display_name;
+        $value->id = $owner->id;
+
+        return $value;
     }
 
 
