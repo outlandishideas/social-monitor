@@ -47,7 +47,8 @@ class Metric_PopularityTime extends Metric_Abstract {
      */
     protected function getTargetAudienceDate(Model_Presence $presence, DateTime $start, DateTime $end)
     {
-        $date = new DateTime; //the return value
+
+        $date = null;
 
         $target = $presence->getTargetAudience();
         $popularity = $presence->getPopularity();
@@ -55,6 +56,7 @@ class Metric_PopularityTime extends Metric_Abstract {
 
 
         if(is_numeric($target) && $target > 0 && $popularity < $target) {
+            $date = new DateTime; //the return value
 
             $data = $presence->getHistoricData($start, $end, Metric_Popularity::getName());
             $count = count($data);
