@@ -222,8 +222,6 @@ services:
             - [addHeader, ["@table.header.current_audience"]]
             - [addHeader, ["@table.header.digital_population"]]
             - [addHeader, ["@table.header.digital_population_health"]]
-            - [addHeader, ["@table.header.actions_per_day"]]
-            - [addHeader, ["@table.header.response_time"]]
             - [addHeader, ["@table.header.presences"]]
             - [addHeader, ["@table.header.presence_count"]]
             - [addHeader, ["@table.header.options"]]
