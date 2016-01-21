@@ -9,10 +9,11 @@
 namespace Outlandish\SocialMonitor\Engagement\Query;
 
 
+use BaseController;
 use DateTime;
 use PDO;
 
-class WeightedYoutubeEngagementQuery implements Query
+class WeightedYoutubeEngagementQuery extends Query
 {
     const VIDEO_HISTORY_TABLE = 'youtube_video_history';
     const VIDEO_STREAM_TABLE = 'youtube_video_stream';
@@ -20,14 +21,14 @@ class WeightedYoutubeEngagementQuery implements Query
     const PRESENCE_TABLE = 'presences';
     private $typeWeightMap = ['views' => 1,'likes' => 4,'dislikes' => 4,'comments' => 7];
 
-    /**
-     * @var
-     */
-    private $db;
 
     public function __construct(PDO $db)
     {
         $this->db = $db;
+        $this->activeUserProportion = array();
+        $this->activeUserProportion[0] = BaseController::getOption('yt_active_user_percentage_small') / 100;
+        $this->activeUserProportion[1] = BaseController::getOption('yt_active_user_percentage_medium') / 100;
+        $this->activeUserProportion[2] = BaseController::getOption('yt_active_user_percentage_large') / 100;
     }
 
     /**
@@ -36,7 +37,7 @@ class WeightedYoutubeEngagementQuery implements Query
      *
      * @return array|null
      */
-    public function fetch(DateTime $now, DateTime $then)
+    public function getData(DateTime $now, DateTime $then)
     {
         //take one day off as otherwise this calculates without a full day of data
         //if $now = today
@@ -58,15 +59,15 @@ class WeightedYoutubeEngagementQuery implements Query
         /*
          * First find the presence ids for youtube presences
          */
-        $presenceIdQuery = "SELECT id FROM $presenceTable WHERE type='youtube'";
+        $presenceIdQuery = "SELECT id,size FROM $presenceTable WHERE type='youtube'";
         $statement = $this->db->prepare($presenceIdQuery);
         $statement->execute();
-        $presenceIds = $statement->fetchAll(PDO::FETCH_COLUMN);
+        $presenceSizes = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
 
-        foreach($presenceIds as $presenceId) {
+        foreach($presenceSizes as $presenceId=>$size) {
 
             // this stores the values of different engagement types for the presence
-            $presenceEngagementMap = array();
+            $presenceEngagementMap = ["presence_id"=>$presenceId];
 
             /*
              * Find the current popularity of each presence - this is used to scale the engagement
@@ -88,6 +89,8 @@ class WeightedYoutubeEngagementQuery implements Query
             $presencePopularity = array_key_exists(0,$presencePopularity) ? $presencePopularity[0] : 0;
 
             $presenceEngagementMap['popularity'] = intval($presencePopularity,10);
+            $activeUserProportion = $this->activeUserProportion[$size] ? $this->activeUserProportion[$size] : 1;
+            $presenceEngagementMap['active_users'] = $presenceEngagementMap['popularity']*$activeUserProportion;
 
             /**
              * Get the total views,likes,dislikes,comments on all videos from this presence at time $now.
@@ -137,10 +140,10 @@ class WeightedYoutubeEngagementQuery implements Query
                 $weightedTotalEngagement += $presenceEngagementMap[$type]*$weight;
             }
             // we then scale by the popularity of the presence
-            $scale = $presenceEngagementMap['popularity'] ? $presenceEngagementMap['popularity'] : 1;
+            $scale = $presenceEngagementMap['active_users'] ? $presenceEngagementMap['active_users'] : 1;
             $presenceEngagementMap['weighted_engagement'] = $weightedTotalEngagement;
             $presenceEngagementMap['scaled_engagement'] = $weightedTotalEngagement / $scale;
-            $allPresencesEngagement[$presenceId] = $presenceEngagementMap;
+            $allPresencesEngagement[] = $presenceEngagementMap;
         }
         return $allPresencesEngagement;
     }
