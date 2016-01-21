@@ -97,14 +97,13 @@ class Provider_Instagram extends Provider_Abstract
         }
 	}
 
-	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
+	public function getHistoricStream(Model_Presence $presence = null, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null)
 	{
         $presenceId = $presence ? $presence->getId() : null;
         $clauses = array(
             'p.created_time >= :start',
-            'p.created_time <= :end',
-            'p.presence_id = :id'
+            'p.created_time <= :end'
         );
         $args = array(
             ':start' => $start->format('Y-m-d H:i:s'),
@@ -112,6 +111,7 @@ class Provider_Instagram extends Provider_Abstract
         );
         if($presenceId) {
             $args[':id'] = $presenceId;
+            $clauses[] = 'p.presence_id = :id';
         }
         $searchArgs = $this->getSearchClauses($search, array('p.message'));
         $clauses = array_merge($clauses, $searchArgs['clauses']);

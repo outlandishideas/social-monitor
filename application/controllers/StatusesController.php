@@ -84,9 +84,14 @@ class StatusesController extends GraphingController
         /** @var Model_Presence $presence */
         $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
         $format = $this->_request->getParam('format');
+        $type = null;
+        if($this->_request->getParam('type')) {
+            $type = Enum_PresenceType::get($this->_request->getParam('type'));
+        }
 
         $streams = $this->getStatusStream(
             $presence,
+            $type,
             $dateRange[0],
             $dateRange[1],
             $this->getRequestSearchQuery(),
@@ -115,7 +120,7 @@ class StatusesController extends GraphingController
                             'message' => $format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
                             'date' => Model_Base::localeDate($tweet->created_time),
                             'links' => $tweet->links,
-                            'twitter_url' => Model_TwitterTweet::getTwitterUrl($presence->handle, $tweet->tweet_id)
+                            'twitter_url' => $tweet->permalink
                         );
                     }
                     break;
@@ -223,7 +228,8 @@ class StatusesController extends GraphingController
 
         //return CSV or JSON?
         if ($this->_request->getParam('format') == 'csv') {
-            $this->returnCsv($tableData, $presence->type.'s.csv');
+            $type = $presence ? $presence->type : 'all-presence';
+            $this->returnCsv($tableData, $type.'s.csv');
         } else {
             $apiResult = array(
                 'sEcho' => $this->_request->getParam('sEcho'),
@@ -236,7 +242,7 @@ class StatusesController extends GraphingController
 
     }
 
-    private function getStatusStream(Model_Presence $presence = null, \DateTime $start, \DateTime $end, $search = null,
+    private function getStatusStream(Model_Presence $presence = null, Enum_PresenceType $type = null, \DateTime $start, \DateTime $end, $search = null,
                                      $order = null, $limit = null, $offset = null)
     {
         if($presence) {
@@ -248,9 +254,11 @@ class StatusesController extends GraphingController
         $statuses = array();
         /** @var Provider_Abstract $provider */
         foreach($this->providers as $provider) {
-            $data = $provider->getStatusStream(null,$start,$end,$search,$order,$limit,$offset);
-            $data->type = $provider->getType();
-            $statuses[] = $data;
+            if(!$type || $type === $provider->getType()) {
+                $data = $provider->getStatusStream(null, $start, $end, $search, $order, $limit, $offset);
+                $data->type = $provider->getType();
+                $statuses[] = $data;
+            }
         }
 
         return $statuses;

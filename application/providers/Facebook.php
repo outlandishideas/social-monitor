@@ -161,14 +161,13 @@ class Provider_Facebook extends Provider_Abstract
         }
     }
 
-	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
+	public function getHistoricStream(Model_Presence $presence = null, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null)
 	{
         $presenceId = $presence ? $presence->getId() : null;
         $clauses = array(
             'p.created_time >= :start',
             'p.created_time <= :end',
-            'p.presence_id = :id',
             'p.in_response_to IS NULL' // response data are merged into the original posts
         );
         $args = array(
@@ -176,6 +175,7 @@ class Provider_Facebook extends Provider_Abstract
             ':end'   => $end->format('Y-m-d H:i:s')
         );
         if($presenceId) {
+            $clauses[] = 'p.presence_id = :id';
             $args[':id'] = $presenceId;
         }
         $searchArgs = $this->getSearchClauses($search, array('p.message'));

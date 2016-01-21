@@ -46,22 +46,21 @@ class Provider_Twitter extends Provider_Abstract
     protected function insertTweets($presence, $tweetData) {
         $stmt = $this->db->prepare("
             INSERT INTO {$this->tableName}
-            (tweet_id, presence_id, text_expanded, created_time, retweet_count, html_tweet,
+            (tweet_id, presence_id, text_expanded, created_time, retweet_count, html_tweet, permalink,
                 responsible_presence, needs_response, in_reply_to_user_uid, in_reply_to_status_uid)
             VALUES
-            (:tweet_id, :presence_id, :text_expanded, :created_time, :retweet_count, :html_tweet,
+            (:tweet_id, :presence_id, :text_expanded, :created_time, :retweet_count, :html_tweet, :permalink,
                 :responsible_presence, :needs_response, :in_reply_to_user_uid, :in_reply_to_status_uid)
             ON DUPLICATE KEY UPDATE
             retweet_count = VALUES(retweet_count)");
 
         $presenceId = $presence->getId();
-        $presenceUID = $presence->getUID();
         $count = 0;
-        $total = count($tweetData);
         $links = array();
         while ($tweetData) {
             /** @var Tweet $tweet */
             $tweet = array_shift($tweetData);
+            $permalink = Model_TwitterTweet::getTwitterUrl($presence->handle,$tweet->id);
             $args = array(
                 ':tweet_id' => $tweet->id,
                 ':presence_id' => $presenceId,
@@ -69,13 +68,17 @@ class Provider_Twitter extends Provider_Abstract
                 ':created_time' => $tweet->created_time,
                 ':retweet_count' => $tweet->share_count,
                 ':html_tweet' => $tweet->html,
+                ':permalink' => $permalink,
                 ':responsible_presence' => $tweet->posted_by_owner ? null : $presenceId,
                 ':needs_response' => $tweet->needs_response,
                 ':in_reply_to_user_uid' => $tweet->in_response_to_user_uid,
                 ':in_reply_to_status_uid' => $tweet->in_response_to_status_uid
             );
             try {
-                $stmt->execute($args);
+                $result = $stmt->execute($args);
+                if(!$result) {
+                    error_log('error inserting tweet:'.$stmt->errorInfo()[1]);
+                }
                 $id = $this->db->lastInsertId();
                 if (!empty($tweet->links)) {
                     $links[$id] = $tweet->links;
@@ -91,14 +94,13 @@ class Provider_Twitter extends Provider_Abstract
         return $count;
     }
 
-	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
+	public function getHistoricStream(Model_Presence $presence = null, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null)
 	{
         $presenceId = $presence ? $presence->getId() : null;
         $clauses = array(
             'p.created_time >= :start',
             'p.created_time <= :end',
-            'p.presence_id = :id',
             'p.responsible_presence IS NULL'
         );
         $args = array(
@@ -107,6 +109,7 @@ class Provider_Twitter extends Provider_Abstract
         );
         if($presenceId) {
             $args[':id'] = $presenceId;
+            $clauses[] = 'p.presence_id = :id';
         }
         $searchArgs = $this->getSearchClauses($search, array('p.html_tweet'));
         $clauses = array_merge($clauses, $searchArgs['clauses']);
