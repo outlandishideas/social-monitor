@@ -77,7 +77,7 @@ class Provider_Twitter extends Provider_Abstract
             try {
                 $result = $stmt->execute($args);
                 if(!$result) {
-                    error_log('error inserting tweet:'.$stmt->errorInfo()[1]);
+                    error_log('error inserting tweet:'.implode(',',$stmt->errorInfo()));
                 }
                 $id = $this->db->lastInsertId();
                 if (!empty($tweet->links)) {

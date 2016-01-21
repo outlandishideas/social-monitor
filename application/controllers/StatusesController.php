@@ -82,15 +82,21 @@ class StatusesController extends GraphingController
         }
 
         /** @var Model_Presence $presence */
-        $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
         $format = $this->_request->getParam('format');
-        $type = null;
+        $type = $presences = null;
+
+        if($this->_request->getParam('id')) {
+            $presences = [Model_PresenceFactory::getPresenceById($this->_request->getParam('id'))];
+        } else if($this->_request->getParam('country')) {
+            $presences = Model_PresenceFactory::getPresencesByCampaign($this->_request->getParam('country'));
+        }
+
         if($this->_request->getParam('type')) {
             $type = Enum_PresenceType::get($this->_request->getParam('type'));
         }
 
         $streams = $this->getStatusStream(
-            $presence,
+            $presences,
             $type,
             $dateRange[0],
             $dateRange[1],
@@ -242,16 +248,22 @@ class StatusesController extends GraphingController
 
     }
 
-    private function getStatusStream(Model_Presence $presence = null, Enum_PresenceType $type = null, \DateTime $start, \DateTime $end, $search = null,
+    private function getStatusStream($presences = null, Enum_PresenceType $type = null, \DateTime $start, \DateTime $end, $search = null,
                                      $order = null, $limit = null, $offset = null)
     {
-        if($presence) {
-            $data = $presence->getStatusStream($start,$end,$search,$order,$limit,$offset);
-            $data->type = $presence->getType();
-            return [$data];
+        $statuses = array();
+        if($presences && count($presences)) {
+            /** @var Model_Presence $presence */
+            foreach($presences as $presence) {
+                if(!$type || $type === $presence->getType()) {
+                    $data = $presence->getStatusStream($start, $end, $search, $order, $limit, $offset);
+                    $data->type = $presence->getType();
+                    $statuses[] = $data;
+                }
+            }
+            return $statuses;
         }
 
-        $statuses = array();
         /** @var Provider_Abstract $provider */
         foreach($this->providers as $provider) {
             if(!$type || $type === $provider->getType()) {
