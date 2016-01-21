@@ -195,7 +195,7 @@ class BaseController extends Zend_Controller_Action
     protected function rejectIfNotAllowed($controller, $action, $id)
     {
         $level = $this->view->gatekeeper()->getRequiredUserLevel($controller, $action);
-        if ($this->view->user && !$this->view->user->canPerform($level, $controller, $id)) {
+        if ($this->view->user && !$this->view->user->canPerform($level, $controller, $action, $id)) {
             $message = 'Not allowed: Insufficient access rights';
             if (APPLICATION_ENV != 'live') {
                 $message .= ' (' . implode('/', array_filter(array($controller, $action, $id))) . ')';
