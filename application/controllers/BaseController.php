@@ -436,16 +436,20 @@ class BaseController extends Zend_Controller_Action
      * @param $fromName
      * @param $toEmail
      * @param $subject
+     * @param $plainText - set this to true if the message is plain text
+     * @return int - number of recipients message delivered to
      */
-    protected function sendEmail($message, $fromEmail, $fromName, $toEmail, $subject)
+    protected function sendEmail($message, $fromEmail, $fromName, $toEmail, $subject, $plainText = false)
     {
-        $message = Swift_Message::newInstance($subject, $message, 'text/html');
+        $contentType = $plainText ? 'text/plain' : 'text/html';
+
+        $message = Swift_Message::newInstance($subject, $message, $contentType);
         $message->setFrom([$fromEmail => $fromName]);
         $message->setTo([$toEmail]);
 
         $transport = Swift_MailTransport::newInstance();
         $mailer = Swift_Mailer::newInstance($transport);
-        $result = $mailer->send($message);
+        return $mailer->send($message);
     }
 
     protected function lockName($name = null)
