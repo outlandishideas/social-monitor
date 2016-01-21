@@ -83,9 +83,6 @@ class StatusesController extends GraphingController
 
         /** @var Model_Presence $presence */
         $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
-        if (!$presence) {
-            $this->apiError('Presence not found');
-        }
         $format = $this->_request->getParam('format');
 
         $streams = $this->getStatusStream(
@@ -239,7 +236,7 @@ class StatusesController extends GraphingController
 
     }
 
-    private function getStatusStream(Model_Presence $presence, \DateTime $start, \DateTime $end, $search = null,
+    private function getStatusStream(Model_Presence $presence = null, \DateTime $start, \DateTime $end, $search = null,
                                      $order = null, $limit = null, $offset = null)
     {
         if($presence) {

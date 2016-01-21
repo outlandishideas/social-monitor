@@ -24,7 +24,7 @@ abstract class Provider_Abstract
 
     /**
      * Get all posts/tweets/streamdata for a specific presence between 2 dates
-     * @param Model_Presence $presence The presence to get the data for
+     * @param Model_Presence $presence The presence to get the data for. If null, return statuses from all presences
      * @param \DateTime $start The first day to fetch the data for (inclusive)
      * @param \DateTime $end The last day to fetch the data for (inclusive)
      * @param null $search
@@ -33,7 +33,7 @@ abstract class Provider_Abstract
      * @param null $offset
      * @return object   The historic streamdata and the total count
      */
-	abstract public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
+	abstract public function getHistoricStream(Model_Presence $presence = null, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null);
 
 	/**
@@ -90,7 +90,7 @@ abstract class Provider_Abstract
      */
     public abstract function getResponseData(Model_Presence $presence, DateTime $start, DateTime $end);
 
-    public function getStatusStream(Model_Presence $presence, $start, $end, $search, $order, $limit, $offset)
+    public function getStatusStream(Model_Presence $presence = null, $start, $end, $search, $order, $limit, $offset)
     {
         return $this->getHistoricStream($presence, $start, $end, $search, $order, $limit, $offset);
     }
