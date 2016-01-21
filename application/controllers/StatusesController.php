@@ -113,6 +113,10 @@ class StatusesController extends GraphingController
             $type = $data->type;
             $stream = $data->stream;
 
+            if(!$stream) {
+                continue;
+            }
+
             // aren't these going to be the same?
             $count = $count + $data->total;
             $display = $display + count($stream);
@@ -267,7 +271,7 @@ class StatusesController extends GraphingController
         /** @var Provider_Abstract $provider */
         foreach($this->providers as $provider) {
             if(!$type || $type === $provider->getType()) {
-                $data = $provider->getStatusStream(null, $start, $end, $search, $order, $limit, $offset);
+                $data = $provider->getStatusStreamMulti(array(), $start, $end, $search, $order, $limit, $offset);
                 $data->type = $provider->getType();
                 $statuses[] = $data;
             }

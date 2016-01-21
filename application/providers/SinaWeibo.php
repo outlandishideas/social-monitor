@@ -49,62 +49,63 @@ class Provider_SinaWeibo extends Provider_Abstract
         return $count;
 	}
 
-	public function getHistoricStream (Model_Presence $presence = null, \DateTime $start, \DateTime $end,
-        $search = null, $order = null, $limit = null, $offset = null
-	) {
-		$presenceId = $presence ? $presence->getId() : null;
+	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
+									  $search = null, $order = null, $limit = null, $offset = null)
+	{
+		$presenceId = $presence->getId();
 		$clauses = array(
-            'p.created_at >= :start',
-            'p.created_at <= :end',
-        );
-        $args = array(
-            ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s'),
-        );
-		if($presenceId) {
-			$args[':id'] = $presenceId;
-			$clauses[] = 'p.presence_id = :id';
+			'p.created_at >= :start',
+			'p.created_at <= :end',
+			'p.presence_id = :id'
+		);
+		$args = array(
+			':start' => $start->format('Y-m-d H:i:s'),
+			':end'   => $end->format('Y-m-d H:i:s'),
+			':id' => $presenceId
+		);
+		return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
+	}
+
+	public function getHistoricStreamMulti($presences, \DateTime $start, \DateTime $end,
+										   $search = null, $order = null, $limit = null, $offset = null)
+	{
+		$clauses = array(
+			'p.created_at >= :start',
+			'p.created_at <= :end'
+		);
+		$args = array(
+			':start' => $start->format('Y-m-d H:i:s'),
+			':end'   => $end->format('Y-m-d H:i:s'),
+		);
+		if($presences && count($presences)) {
+			$clauses[] = 'p.presence_id IN :ids';
+			$args[':ids'] = '(' . implode($presences,',') . ')';
 		}
-        $searchArgs = $this->getSearchClauses($search, array('p.text'));
-        $clauses = array_merge($clauses, $searchArgs['clauses']);
-        $args = array_merge($args, $searchArgs['args']);
-        $sql = "
-			SELECT SQL_CALC_FOUND_ROWS p.*
-			FROM {$this->tableName} AS p
-			WHERE " . implode(' AND ', $clauses);
-        $sql .= $this->getOrderSql($order, array('date'=>'created_at'));
-        $sql .= $this->getLimitSql($limit, $offset);
 
-		$stmt = $this->db->prepare($sql);
-		$stmt->execute($args);
-		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
+		return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
+	}
 
+	protected function decorateStreamData(&$posts) {
 		//add retweets and links to posts
-        $postIds = array();
-        $remoteIds = array();
-        foreach ($ret as $post) {
-            $postIds[] = $post['id'];
-            $remoteIds[] = $post['remote_id'];
-        }
+		$postIds = array();
+		$remoteIds = array();
+		foreach ($posts as $post) {
+			$postIds[] = $post['id'];
+			$remoteIds[] = $post['remote_id'];
+		}
 
-        $retweets = $this->getRetweets($remoteIds);
-        $links = $this->getLinks($postIds, 'sina_weibo');
+		$retweets = $this->getRetweets($remoteIds);
+		$links = $this->getLinks($postIds, 'sina_weibo');
 
-        foreach ($ret as &$r) {
-            $id = $r['id'];
-            $r['links'] = isset($links[$id]) ? $links[$id] : array();
+		foreach ($posts as &$r) {
+			$id = $r['id'];
+			$r['links'] = isset($links[$id]) ? $links[$id] : array();
 
-            $retweet = $r['included_retweet'];
+			$retweet = $r['included_retweet'];
 			if (!$retweet && array_key_exists($retweet, $retweets)) {
 				$r['included_retweet'] = $retweets[$retweet];
 			}
 		}
-
-        return (object)array(
-            'stream' => count($ret) ? $ret : null,
-            'total' => $total
-        );
 	}
 
     protected function getRetweets($postIds) {

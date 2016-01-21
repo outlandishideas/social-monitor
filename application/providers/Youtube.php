@@ -143,22 +143,20 @@ class Provider_Youtube extends Provider_Abstract
         }
     }
 
-	public function getHistoricStream(Model_Presence $presence = null, \DateTime $start, \DateTime $end,
+	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null)
 	{
-        $presenceId = $presence ? $presence->getId() : null;
+        $presenceId = $presence->getId();
         $clauses = array(
             'p.created_time >= :start',
             'p.created_time <= :end',
+            'p.presence_id = :id'
         );
         $args = array(
             ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s')
+            ':end'   => $end->format('Y-m-d H:i:s'),
+            ':id' => $presenceId
         );
-        if($presenceId) {
-            $clauses[] = 'p.presence_id = :id';
-            $args[':id'] = $presenceId;
-        }
         $searchArgs = $this->getSearchClauses($search, array('p.title','p.description'));
         $clauses = array_merge($clauses, $searchArgs['clauses']);
         $args = array_merge($args, $searchArgs['args']);
@@ -180,6 +178,11 @@ class Provider_Youtube extends Provider_Abstract
             'total' => $total
         );
 	}
+
+    public function getHistoricStreamMulti($presences, \DateTime $start, \DateTime $end,
+                                      $search = null, $order = null, $limit = null, $offset = null) {
+
+    }
 
 	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false)
 	{
@@ -385,20 +388,54 @@ class Provider_Youtube extends Provider_Abstract
 
     }
 
-    public function getStatusStream(Model_Presence $presence = null, $start, $end, $search, $order, $limit, $offset)
+    public function getStatusStream(Model_Presence $presence, $start, $end, $search, $order, $limit, $offset)
     {
-        $presenceId = $presence ? $presence->getId() : null;
+        $presenceId = $presence->getId();
+        $clauses = array(
+            'p.created_time >= :start',
+            'p.created_time <= :end',
+            'p.presence_id = :id'
+        );
+        $args = array(
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end'   => $end->format('Y-m-d H:i:s'),
+            ':id' => $presenceId
+        );
+        $searchArgs = $this->getSearchClauses($search, array('p.message'));
+        $clauses = array_merge($clauses, $searchArgs['clauses']);
+        $args = array_merge($args, $searchArgs['args']);
+
+        $sql = "
+			SELECT SQL_CALC_FOUND_ROWS p.*
+			FROM {$this->commentTableName} AS p
+			WHERE " . implode(' AND ', $clauses);
+        $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
+        $sql .= $this->getLimitSql($limit, $offset);
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($args);
+        $ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
+
+        return (object)array(
+            'stream' => count($ret) ? $ret : null,
+            'total' => $total
+        );
+    }
+
+    public function getStatusStreamMulti($presences, $start, $end, $search, $order, $limit, $offset)
+    {
         $clauses = array(
             'p.created_time >= :start',
             'p.created_time <= :end',
         );
         $args = array(
             ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s')
+            ':end'   => $end->format('Y-m-d H:i:s'),
         );
-        if($presence) {
-            $clauses[] = 'p.presence_id = :id';
-            $args[':id'] = $presenceId;
+        if($presences && count($presences)) {
+            $clauses[] = 'p.presence_id IN :ids';
+            $args[':ids'] = '(' . implode($presences,',') . ')';
         }
         $searchArgs = $this->getSearchClauses($search, array('p.message'));
         $clauses = array_merge($clauses, $searchArgs['clauses']);
