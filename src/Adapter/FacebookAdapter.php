@@ -122,7 +122,7 @@ class FacebookAdapter extends AbstractAdapter
                             $parsed->actor_id = $actorId;
                             $parsed->message = isset($postArray['message']) ? $postArray['message'] : '';
                             $parsed->created_time = gmdate("Y-m-d H:i:s", $createdTime->getTimestamp());
-                            $parsed->posted_by_owner = ($presenceUID() == $actorId);
+                            $parsed->posted_by_owner = ($presenceUID == $actorId);
                             $parsed->in_response_to_status_uid = $postId;
                             if ($parsed->posted_by_owner && $parsed->message) {
                                 $parsed->links = $this->extractLinks($parsed->message);
