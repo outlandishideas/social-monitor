@@ -69,8 +69,8 @@ abstract class Provider_Abstract
                                            $search = null, $order = null, $limit = null, $offset = null)
     {
         $clauses = array(
-            'p.created_time >= :start',
-            'p.created_time <= :end'
+            "p.$this->createdTimeColumn >= :start",
+            "p.$this->createdTimeColumn <= :end",
         );
         $args = array(
             ':start' => $start->format('Y-m-d H:i:s'),
@@ -80,8 +80,8 @@ abstract class Provider_Abstract
             $ids = array_map(function($p) {
                 return $p->getId();
             },$presences);
-            $clauses[] = 'p.presence_id IN :ids';
-            $args[':ids'] = '(' . implode($ids,',') . ')';
+            $clauses[] = 'p.presence_id IN (:ids)';
+            $args[':ids'] = implode($ids,',');
         }
 
         return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
@@ -100,7 +100,11 @@ abstract class Provider_Abstract
         $sql .= $this->getLimitSql($limit, $offset);
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute($args);
+        $success = $stmt->execute($args);
+        if(!$success) {
+            error_log('class'.get_class($this));
+            error_log('error fetching statuses:'.implode(',',$stmt->errorInfo()));
+        }
         $ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
 

@@ -210,21 +210,6 @@ class Provider_Facebook extends Provider_Abstract
         }
     }
 
-    public function getHistoricStreamMulti($presences, \DateTime $start, \DateTime $end,
-                                           $search = null, $order = null, $limit = null, $offset = null) {
-        $clauses = array(
-            'p.created_time >= :start',
-            'p.created_time <= :end',
-            'p.in_response_to IS NULL' // response data are merged into the original posts
-        );
-        $args = array(
-            ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s'),
-        );
-        return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
-
-    }
-
     /**
      * Gets (object) data for the first response (if any) to the given posts, keyed by the originating post
      * @param $presenceId
