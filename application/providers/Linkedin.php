@@ -91,7 +91,7 @@ class Provider_Linkedin extends Provider_Abstract
 	public function update(Model_Presence $presence)
 	{
 		parent::update($presence);
-        $presence->instagram_engagement = $this->calculateEngagement($presence);
+        $presence->linkedin_engagement = $this->calculateEngagement($presence);
     }
 
     public function updateMetadata(Model_Presence $presence) {

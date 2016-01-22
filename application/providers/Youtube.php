@@ -189,7 +189,7 @@ class Provider_Youtube extends Provider_Abstract
         $query = new Outlandish\SocialMonitor\Engagement\Query\WeightedYoutubeEngagementQuery($this->db);
         $metric = new Outlandish\SocialMonitor\Engagement\EngagementMetric($query);
 
-        return $metric->get($presence->getId(), $now, $then)['scaled_engagement'];
+        return $metric->get($presence->getId(), $now, $then);
     }
 
     public function updateMetadata(Model_Presence $presence) {

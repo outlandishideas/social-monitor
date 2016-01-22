@@ -65,6 +65,7 @@
 			</ul>
 		</section>
 	</nav>
+	<div id="feedback"><button>Feedback</button></div>
 	<div id="content" class="clearfix">
 		<div class="row">
 			<div class="small-24 columns">
@@ -73,6 +74,7 @@
 			</div>
 		</div>
 	</div>
+	<?php echo $this->partial('partials/feedback-modal.phtml'); ?>
 	<div id="footer">
 		<?php echo $this->navigation()->menu()->setPartial('partials/footer-menu.phtml')->render(); ?>
 	</div>

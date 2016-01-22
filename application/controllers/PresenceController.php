@@ -56,6 +56,7 @@ class PresenceController extends GraphingController
 
 	/**
 	 * Views a specific presence
+	 * @user-level user
 	 */
 	public function viewAction()
 	{
