@@ -37,14 +37,9 @@ class StatusesController extends GraphingController
         Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
         $presences = Model_PresenceFactory::getPresences();
 
-        /** @var TableIndex $indexTable */
-        $indexTable = $this->getContainer()->get('table.statuses-index');
-        $rows = $this->getTableIndex('presence-index', $indexTable, $presences);
 
         $this->view->title = 'Statuses';
         $this->view->presences = $presences;
-        $this->view->rows = $rows;
-        $this->view->tableHeaders = $indexTable->getHeaders();
         $this->view->sortCol = Handle::getName();
     }
 
@@ -95,6 +90,8 @@ class StatusesController extends GraphingController
             $type = Enum_PresenceType::get($this->_request->getParam('type'));
         }
 
+        $limit = $this->getRequestLimit();
+
         $streams = $this->getStatusStream(
             $presences,
             $type,
@@ -102,7 +99,7 @@ class StatusesController extends GraphingController
             $dateRange[1],
             $this->getRequestSearchQuery(),
             $this->getRequestOrdering(),
-            $this->getRequestLimit(),
+            $limit,
             $this->getRequestOffset()
         );
 
@@ -241,37 +238,29 @@ class StatusesController extends GraphingController
             $type = $presence ? $presence->type : 'all-presence';
             $this->returnCsv($tableData, $type.'s.csv');
         } else {
+            usort($tableData, function($a,$b) {
+                $aAfterB = $a['date'] > $b['date'];
+                return $aAfterB ? -1 : 1;
+            });
             $apiResult = array(
                 'sEcho' => $this->_request->getParam('sEcho'),
                 'iTotalRecords' => $count,
-                'iTotalDisplayRecords' => $display,
-                'aaData' => $tableData
+                'iTotalDisplayRecords' => min($display,$limit),
+                'aaData' => array_slice($tableData,0,$limit)
             );
             $this->apiSuccess($apiResult);
         }
 
     }
 
-    private function getStatusStream($presences = null, Enum_PresenceType $type = null, \DateTime $start, \DateTime $end, $search = null,
+    private function getStatusStream($presences, Enum_PresenceType $type = null, \DateTime $start, \DateTime $end, $search = null,
                                      $order = null, $limit = null, $offset = null)
     {
         $statuses = array();
-        if($presences && count($presences)) {
-            /** @var Model_Presence $presence */
-            foreach($presences as $presence) {
-                if(!$type || $type === $presence->getType()) {
-                    $data = $presence->getStatusStream($start, $end, $search, $order, $limit, $offset);
-                    $data->type = $presence->getType();
-                    $statuses[] = $data;
-                }
-            }
-            return $statuses;
-        }
-
         /** @var Provider_Abstract $provider */
         foreach($this->providers as $provider) {
             if(!$type || $type === $provider->getType()) {
-                $data = $provider->getStatusStreamMulti(array(), $start, $end, $search, $order, $limit, $offset);
+                $data = $provider->getStatusStreamMulti($presences, $start, $end, $search, $order, $limit, $offset);
                 $data->type = $provider->getType();
                 $statuses[] = $data;
             }

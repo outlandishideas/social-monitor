@@ -393,8 +393,11 @@ class Provider_Youtube extends Provider_Abstract
             ':end'   => $end->format('Y-m-d H:i:s'),
         );
         if($presences && count($presences)) {
+            $ids = array_map(function($p) {
+                return $p->getId();
+            },$presences);
             $clauses[] = 'p.presence_id IN :ids';
-            $args[':ids'] = '(' . implode($presences,',') . ')';
+            $args[':ids'] = '(' . implode($ids,',') . ')';
         }
         $searchArgs = $this->getSearchClauses($search, array('p.message'));
         $clauses = array_merge($clauses, $searchArgs['clauses']);

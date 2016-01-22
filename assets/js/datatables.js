@@ -202,6 +202,21 @@ app.datatables = {
 
 			app.datatables.moveSearchBox();
 		},
+		'#statuses .all': function($div) {
+			app.datatables.initStatusList($div, 'post', [
+				{
+					mDataProp:'message',
+					fnRender:function (o) {
+						return parseTemplate(app.templates.post, o.aData);
+					},
+					sClass: 'message',
+					bSortable:false,
+					bUseRendered:false
+				},
+				app.datatables.linksColumn(),
+				app.datatables.dateColumn()
+			]);
+		},
 		'#statuses .youtube': function($div) {
 			app.datatables.initStatusList($div, 'post', [
 				{
@@ -290,7 +305,7 @@ app.datatables = {
 						if (typeof o.aData.message != 'string') {
 							o.aData.message = '';
 						}
-						var message = parseTemplate(app.templates.post, o.aData);
+						var message = parseTemplate(app.templates.fbPost, o.aData);
 						var response = o.aData.first_response;
 						if (response.message != null) {
 							message += '<div class="first-response">' +
@@ -399,7 +414,9 @@ app.datatables = {
 			sAjaxSource:jsConfig.apiEndpoint + "statuses/list",
 			fnServerParams: function(aoData) {
 				aoData.push({ name:"dateRange", value:[start, end] });
-				aoData.push({ name:"id", value:$container.data('presence-id') });
+				if($container.data('presence-id')) {
+					aoData.push({name: "id", value: $container.data('presence-id')});
+				}
 			},
 			aaSorting:[
 				[sortColumnIndex, 'desc']
