@@ -16,6 +16,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 		}
 		$this->type = Enum_PresenceType::SINA_WEIBO();
         $this->tableName = 'sina_weibo_posts';
+		$this->createdTimeColumn = 'created_at';
 	}
 
 	public function fetchStatusData(Model_Presence $presence)
@@ -47,42 +48,6 @@ class Provider_SinaWeibo extends Provider_Abstract
             $presence->popularity = $popularity;
         }
         return $count;
-	}
-
-	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
-									  $search = null, $order = null, $limit = null, $offset = null)
-	{
-		$presenceId = $presence->getId();
-		$clauses = array(
-			'p.created_at >= :start',
-			'p.created_at <= :end',
-			'p.presence_id = :id'
-		);
-		$args = array(
-			':start' => $start->format('Y-m-d H:i:s'),
-			':end'   => $end->format('Y-m-d H:i:s'),
-			':id' => $presenceId
-		);
-		return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
-	}
-
-	public function getHistoricStreamMulti($presences, \DateTime $start, \DateTime $end,
-										   $search = null, $order = null, $limit = null, $offset = null)
-	{
-		$clauses = array(
-			'p.created_at >= :start',
-			'p.created_at <= :end'
-		);
-		$args = array(
-			':start' => $start->format('Y-m-d H:i:s'),
-			':end'   => $end->format('Y-m-d H:i:s'),
-		);
-		if($presences && count($presences)) {
-			$clauses[] = 'p.presence_id IN :ids';
-			$args[':ids'] = '(' . implode($presences,',') . ')';
-		}
-
-		return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
 	}
 
 	protected function decorateStreamData(&$posts) {

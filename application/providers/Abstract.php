@@ -6,6 +6,7 @@ abstract class Provider_Abstract
 	protected $tableName;
     /** @var Enum_PresenceType */
     protected $type = null;
+    protected $createdTimeColumn = 'created_time';
 
 	public function __construct(PDO $db)
 	{
@@ -33,11 +34,58 @@ abstract class Provider_Abstract
      * @param null $offset
      * @return object   The historic streamdata and the total count
      */
-	abstract public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
-        $search = null, $order = null, $limit = null, $offset = null);
 
-    abstract public function getHistoricStreamMulti($presences, \DateTime $start, \DateTime $end,
-                                               $search = null, $order = null, $limit = null, $offset = null);
+    public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
+                                      $search = null, $order = null, $limit = null, $offset = null)
+    {
+        $presenceId = $presence->getId();
+        $clauses = array(
+            "p.$this->createdTimeColumn >= :start",
+            "p.$this->createdTimeColumn <= :end",
+            'p.presence_id = :id'
+        );
+        $args = array(
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end'   => $end->format('Y-m-d H:i:s'),
+            ':id' => $presenceId
+        );
+        return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
+    }
+
+    /**
+     *
+     * Get all statuses for the provided $presences, or all presences if $presences null or empty
+     *
+     * @param Model_Presence[] $presences
+     * @param DateTime $start
+     * @param DateTime $end
+     * @param null $search
+     * @param null $order
+     * @param null $limit
+     * @param null $offset
+     * @return object
+     */
+    public function getHistoricStreamMulti($presences, \DateTime $start, \DateTime $end,
+                                           $search = null, $order = null, $limit = null, $offset = null)
+    {
+        $clauses = array(
+            'p.created_time >= :start',
+            'p.created_time <= :end'
+        );
+        $args = array(
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end'   => $end->format('Y-m-d H:i:s'),
+        );
+        if($presences && count($presences)) {
+            $ids = array_map(function($p) {
+                return $p->getId();
+            },$presences);
+            $clauses[] = 'p.presence_id IN :ids';
+            $args[':ids'] = '(' . implode($ids,',') . ')';
+        }
+
+        return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
+    }
 
     public function getHistoricStreamData($clauses, $args, $search = null, $order = null, $limit = null, $offset = null) {
         $searchArgs = $this->getSearchClauses($search, array('p.message'));

@@ -5,7 +5,6 @@ use Facebook\GraphObject;
 use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 use Outlandish\SocialMonitor\Adapter\InstagramAdapter;
 use Outlandish\SocialMonitor\Models\FacebookStatus;
-use Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
 
 class Provider_Instagram extends Provider_Abstract
@@ -96,42 +95,6 @@ class Provider_Instagram extends Provider_Abstract
             $count++;
         }
 	}
-
-	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
-        $search = null, $order = null, $limit = null, $offset = null)
-	{
-        $presenceId = $presence->getId();
-        $clauses = array(
-            'p.created_time >= :start',
-            'p.created_time <= :end',
-            'p.presence_id = :id'
-        );
-        $args = array(
-            ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s'),
-            ':id' => $presenceId
-        );
-        return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
-    }
-
-    public function getHistoricStreamMulti($presences, \DateTime $start, \DateTime $end,
-                                      $search = null, $order = null, $limit = null, $offset = null)
-    {
-        $clauses = array(
-            'p.created_time >= :start',
-            'p.created_time <= :end'
-        );
-        $args = array(
-            ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s'),
-        );
-        if($presences && count($presences)) {
-            $clauses[] = 'p.presence_id IN :ids';
-            $args[':ids'] = '(' . implode($presences,',') . ')';
-        }
-
-        return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
-    }
 
 	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false)
 	{
