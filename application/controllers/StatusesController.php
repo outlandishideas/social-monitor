@@ -105,7 +105,6 @@ class StatusesController extends GraphingController
 
         $tableData = array();
         $count = 0;
-        $display = 0;
         foreach($streams as $data) {
             $type = $data->type;
             $stream = $data->stream;
@@ -116,7 +115,6 @@ class StatusesController extends GraphingController
 
             // aren't these going to be the same?
             $count = $count + $data->total;
-            $display = $display + count($stream);
 
             switch($type) {
                 case Enum_PresenceType::TWITTER:
@@ -242,11 +240,12 @@ class StatusesController extends GraphingController
                 $aAfterB = $a['date'] > $b['date'];
                 return $aAfterB ? -1 : 1;
             });
+            $displayRows = array_slice($tableData,0,$limit);
             $apiResult = array(
                 'sEcho' => $this->_request->getParam('sEcho'),
-                'iTotalRecords' => $count,
-                'iTotalDisplayRecords' => min($display,$limit),
-                'aaData' => array_slice($tableData,0,$limit)
+                'iTotalRecords' => $count, // total rows before filtering
+                'iTotalDisplayRecords' => $count, // total rows after filtering. these are the same as we don't filter
+                'aaData' => $displayRows
             );
             $this->apiSuccess($apiResult);
         }

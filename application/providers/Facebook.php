@@ -182,6 +182,29 @@ class Provider_Facebook extends Provider_Abstract
         return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
 	}
 
+    public function getHistoricStreamMulti($presences, \DateTime $start, \DateTime $end,
+                                           $search = null, $order = null, $limit = null, $offset = null)
+    {
+        $clauses = array(
+            "p.$this->createdTimeColumn >= :start",
+            "p.$this->createdTimeColumn <= :end",
+            'p.in_response_to IS NULL' // response data are merged into the original posts
+        );
+        $args = array(
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end'   => $end->format('Y-m-d H:i:s'),
+        );
+        if($presences && count($presences)) {
+            $ids = array_map(function($p) {
+                return $p->getId();
+            },$presences);
+            $clauses[] = 'p.presence_id IN (:ids)';
+            $args[':ids'] = implode($ids,',');
+        }
+
+        return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
+    }
+
     protected function decorateStreamData(&$ret) {
         // decorate the posts with actors, links and responses
         $postIds = array();
