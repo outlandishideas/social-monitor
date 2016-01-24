@@ -778,5 +778,11 @@ class Model_Presence
 		}
 	}
 
+	public function getRegion()
+	{
+		$parent = $this->getOwner();
+		return $parent ? $parent->getRegion() : null;
+	}
+
 
 }

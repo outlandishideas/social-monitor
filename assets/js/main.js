@@ -125,6 +125,32 @@ app.init = {
 			app.home.setup()
 		},
 
+		'#filter-region': function ($item) {
+			$item.on('change', function() {
+				var $self = $(this);
+				var region_id = $self.val();
+
+				console.log(region_id);
+
+				var $table = $('table');
+
+				var $rows = $table.find('tbody tr');
+
+				$rows.show();
+
+				if (region_id) {
+					$rows.hide();
+					$rows.filter('[data-region="' + region_id +'"]').show();
+				}
+
+				$rows
+					.removeClass('odd').removeClass('even')
+					.filter(':visible')
+					.filter(':odd').addClass('odd').end()
+					.filter(':even').addClass('even');
+			});
+		},
+
         '.button.compare': function ($button) {
 	        var updateComparison = function() {
 		        var $list = $('.compare.list');
