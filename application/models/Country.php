@@ -343,4 +343,8 @@ class Model_Country extends Model_Campaign {
 			'ZW' => 'Zimbabwe'
 		);
 	}
+
+	public static function getCountriesByRegion($id) {
+		return static::fetchAll('parent = ?', array($id));
+	}
 }

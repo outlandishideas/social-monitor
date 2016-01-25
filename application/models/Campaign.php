@@ -415,4 +415,9 @@ class Model_Campaign extends Model_Base {
 			return $carry;
 		}, 0);
 	}
+
+	public function getName() {
+		return $this->display_name;
+	}
+
 }

@@ -1,0 +1,18 @@
+<div class="social-monitor-multi-select-box picker">
+	<label for="<?php echo $this->queryParamName ?>"><?php echo $this->label ?></label>
+	<select multiple="multiple" id="<?php echo $this->queryParamName ?>" class="social-monitor-multi-select">
+		<?php foreach($this->options as $option) {
+			switch($this->queryParamName) {
+				case 'type':
+					$title = $option->getTitle();
+					$value = $option->getValue();
+					break;
+				default:
+					$title = $option->getName();
+					$value = $option->id;
+					break;
+			}
+			echo "<option value=\"$value\">$title</option>";
+		} ?>
+	</select>
+</div>

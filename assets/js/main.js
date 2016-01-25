@@ -189,6 +189,26 @@ app.init = {
             });
         },
 
+		'.social-monitor-multi-select': function($items) {
+			$items.each(function() {
+				var $item = $(this);
+				$item.multipleSelect({
+					placeholder: 'None selected',
+					//selectAll: false
+				});
+				$item.multipleSelect('checkAll');
+				var $button = $(document.createElement('button'));
+				$button.text('Done');
+				$button.click(function() {
+					app.statuses.search($item.attr('id'), $item.val());
+					$item.multipleSelect('close');
+				});
+				var $component = $item.parent().find('.ms-drop');
+
+				$component.append($button);
+			})
+		},
+
 		'#date-picker': function($item) {
             var quarter = app.date.lastQuarter();
 			$item.daterangepicker({
@@ -491,7 +511,11 @@ app.date = {
 			//update chart(s)
 			app.state.dateRange = dateRange;
 			$(document).trigger('dateRangeUpdated');
-		}, 1);
+
+            // update statuses table
+            app.statuses.search('dateRange',dateRange);
+
+        }, 1);
 	},
 
 	/**
@@ -616,6 +640,14 @@ app.utils = {
 	    }
         var p = Math.pow(10,n);
         return parseFloat(Math.round(x * p) / p).toFixed(n);
+    }
+};
+
+app.statuses = {
+	search: function(queryParam, value) {
+        app.datatables.query[queryParam] = value;
+        console.log('searching with',app.datatables.query);
+        $(document).trigger('dataChanged');
     }
 };
 

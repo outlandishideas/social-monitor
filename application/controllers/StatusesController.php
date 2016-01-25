@@ -21,9 +21,10 @@ class StatusesController extends GraphingController
     protected static $publicActions = array();
     protected $providers = array();
 
-    public function init() {
+    public function init()
+    {
         parent::init();
-        foreach(Enum_PresenceType::enumValues() as $type) {
+        foreach (Enum_PresenceType::enumValues() as $type) {
             $this->providers[] = $type->getProvider();
         }
     }
@@ -37,10 +38,16 @@ class StatusesController extends GraphingController
         Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
         $presences = Model_PresenceFactory::getPresences();
 
-
         $this->view->title = 'Statuses';
         $this->view->presences = $presences;
         $this->view->sortCol = Handle::getName();
+        $this->view->queryOptions = [
+            ['name' => 'type', 'label' => 'Social Media', 'options' => Enum_PresenceType::enumValues()],
+            ['name' => 'country', 'label' => 'Country', 'options' => Model_Country::fetchAll()],
+            ['name' => 'region', 'label' => 'Region', 'options' => Model_Region::fetchAll()],
+            ['name' => 'sbu', 'label' => 'SBU', 'options' => Model_Group::fetchAll()],
+            ['name' => 'sort', 'label' => 'Sort', 'options' => []]
+        ];
     }
 
     /**
@@ -68,7 +75,8 @@ class StatusesController extends GraphingController
     /**
      * AJAX function for fetching the statuses
      */
-    public function listAction() {
+    public function listAction()
+    {
         Zend_Session::writeClose(); //release session on long running actions
 
         $dateRange = $this->getRequestDateRange();
@@ -78,23 +86,85 @@ class StatusesController extends GraphingController
 
         /** @var Model_Presence $presence */
         $format = $this->_request->getParam('format');
-        $type = $presences = null;
+        $types = $presences = array();
 
-        if($this->_request->getParam('id')) {
+        /** If id is set, we only want statuses for this presence */
+        if ($this->_request->getParam('id')) {
             $presences = [Model_PresenceFactory::getPresenceById($this->_request->getParam('id'))];
-        } else if($this->_request->getParam('country')) {
-            $presences = Model_PresenceFactory::getPresencesByCampaign($this->_request->getParam('country'));
-        }
+        } else {
+            /** Otherwise we build an array of presence Ids */
 
-        if($this->_request->getParam('type')) {
-            $type = Enum_PresenceType::get($this->_request->getParam('type'));
+            $countryParamString = $this->_request->getParam('country');
+            $regionParamString = $this->_request->getParam('region');
+            $sbuParamString = $this->_request->getParam('sbu');
+
+            /** Update $presences to include all presences in specified countries */
+            if (isset($countryParamString)) {
+                $countryParams = explode(',', $countryParamString);
+            } else {
+                $countries = Model_Country::fetchAll();
+                $countryParams = array_map(function ($c) {
+                    return $c->id;
+                }, $countries);
+
+            }
+            foreach ($countryParams as $cid) {
+                if ($cid) {
+                    $countryPresences = Model_PresenceFactory::getPresencesByCampaign($cid);
+                    $presences = array_merge($presences, $countryPresences);
+                }
+            }
+
+            /** Add presences in specified regions */
+            if (isset($regionParamString)) {
+                $regionParams = explode(',', $regionParamString);
+            } else {
+                $regions = Model_Region::fetchAll();
+                $regionParams = array_map(function ($c) {
+                    return $c->id;
+                }, $regions);
+            }
+            foreach ($regionParams as $rid) {
+                $countries = Model_Country::getCountriesByRegion($rid);
+                foreach ($countries as $c) {
+                    $countryPresences = Model_PresenceFactory::getPresencesByCampaign($c->id);
+                    $presences = array_merge($presences, $countryPresences);
+                }
+            }
+
+            /** Add presences in SBUs */
+            if (isset($sbuParamString)) {
+                $sbuParams = explode(',', $sbuParamString);
+            } else {
+                $sbus = Model_Group::fetchAll();
+                $sbuParams = array_map(function ($c) {
+                    return $c->id;
+                }, $sbus);
+            }
+            foreach ($sbuParams as $sid) {
+                if ($sid) {
+                    $sbuPresences = Model_PresenceFactory::getPresencesByCampaign($sid);
+                    $presences = array_merge($presences, $sbuPresences);
+                }
+            }
+
+            /** Filter presences by type */
+            if ($this->_request->getParam('type')) {
+                $typeParamString = $this->_request->getParam('type');
+                if ($typeParamString) {
+                    $typeParams = explode(',', $typeParamString);
+                    foreach ($typeParams as $type) {
+                        $types[] = Enum_PresenceType::get($type);
+                    }
+                }
+            }
         }
 
         $limit = $this->getRequestLimit();
 
         $streams = $this->getStatusStream(
             $presences,
-            $type,
+            $types,
             $dateRange[0],
             $dateRange[1],
             $this->getRequestSearchQuery(),
@@ -105,20 +175,20 @@ class StatusesController extends GraphingController
 
         $tableData = array();
         $count = 0;
-        foreach($streams as $data) {
+        foreach ($streams as $data) {
             $type = $data->type;
             $stream = $data->stream;
 
-            if(!$stream) {
+            if (!$stream) {
                 continue;
             }
 
             // aren't these going to be the same?
             $count = $count + $data->total;
 
-            switch($type) {
+            switch ($type) {
                 case Enum_PresenceType::TWITTER:
-                    foreach($stream as $status) {
+                    foreach ($stream as $status) {
                         $tweet = (object)$status;
                         $tableData[] = array(
                             'id' => $tweet->id,
@@ -130,7 +200,7 @@ class StatusesController extends GraphingController
                     }
                     break;
                 case Enum_PresenceType::FACEBOOK:
-                    foreach($stream as $status) {
+                    foreach ($stream as $status) {
                         $post = (object)$status;
                         if ($post->message) {
                             if ($post->first_response) {
@@ -179,7 +249,7 @@ class StatusesController extends GraphingController
                     }
                     break;
                 case Enum_PresenceType::SINA_WEIBO:
-                    foreach($stream as $status) {
+                    foreach ($stream as $status) {
                         $post = (object)$status;
                         $tableData[] = array(
                             'id' => $post->id,
@@ -191,7 +261,7 @@ class StatusesController extends GraphingController
                     }
                     break;
                 case Enum_PresenceType::INSTAGRAM:
-                    foreach($stream as $status) {
+                    foreach ($stream as $status) {
                         $post = (object)$status;
                         $tableData[] = array(
                             'id' => $post->id,
@@ -203,7 +273,7 @@ class StatusesController extends GraphingController
                     }
                     break;
                 case Enum_PresenceType::YOUTUBE:
-                    foreach($stream as $status) {
+                    foreach ($stream as $status) {
                         $post = (object)$status;
                         $tableData[] = array(
                             'id' => $post->id,
@@ -215,7 +285,7 @@ class StatusesController extends GraphingController
                     }
                     break;
                 case Enum_PresenceType::LINKEDIN:
-                    foreach($stream as $status) {
+                    foreach ($stream as $status) {
                         $post = (object)$status;
                         $tableData[] = array(
                             'id' => $post->id,
@@ -234,13 +304,13 @@ class StatusesController extends GraphingController
         //return CSV or JSON?
         if ($this->_request->getParam('format') == 'csv') {
             $type = $presence ? $presence->type : 'all-presence';
-            $this->returnCsv($tableData, $type.'s.csv');
+            $this->returnCsv($tableData, $type . 's.csv');
         } else {
-            usort($tableData, function($a,$b) {
+            usort($tableData, function ($a, $b) {
                 $aAfterB = $a['date'] > $b['date'];
                 return $aAfterB ? -1 : 1;
             });
-            $displayRows = array_slice($tableData,0,$limit);
+            $displayRows = array_slice($tableData, 0, $limit);
             $apiResult = array(
                 'sEcho' => $this->_request->getParam('sEcho'),
                 'iTotalRecords' => $count, // total rows before filtering
@@ -252,13 +322,13 @@ class StatusesController extends GraphingController
 
     }
 
-    private function getStatusStream($presences, Enum_PresenceType $type = null, \DateTime $start, \DateTime $end, $search = null,
+    private function getStatusStream($presences, $types = null, \DateTime $start, \DateTime $end, $search = null,
                                      $order = null, $limit = null, $offset = null)
     {
         $statuses = array();
         /** @var Provider_Abstract $provider */
-        foreach($this->providers as $provider) {
-            if(!$type || $type === $provider->getType()) {
+        foreach ($this->providers as $provider) {
+            if (!$types || !count($types) || in_array($provider->getType(), $types)) {
                 $data = $provider->getStatusStreamMulti($presences, $start, $end, $search, $order, $limit, $offset);
                 $data->type = $provider->getType();
                 $statuses[] = $data;
@@ -267,10 +337,12 @@ class StatusesController extends GraphingController
 
         return $statuses;
     }
+
     /**
      * @return Header[]
      */
-    protected function tableIndexHeaders() {
+    protected function tableIndexHeaders()
+    {
         return array(
 //            Header_Compare::getInstance(),//todo: reinstate when compare functionality is restored
             Handle::getInstance(),

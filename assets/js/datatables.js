@@ -6,6 +6,7 @@ var app = app || {};
  */
 app.datatables = {
 	statusesTable: null,
+	query: {},
 	init:function () {
         // add a 'fuzzy numeric' sort type, which just ignores all non-numeric characters
         app.datatables.addSortFunction('fuzzy-numeric', function ( a ) {
@@ -213,7 +214,6 @@ app.datatables = {
 					bSortable:false,
 					bUseRendered:false
 				},
-				app.datatables.linksColumn(),
 				app.datatables.dateColumn()
 			]);
 		},
@@ -404,18 +404,31 @@ app.datatables = {
 			}
 		}
 
-		// limit the date range to the last 2 months
-		var d = new Date();
-		var end = d.toString('yyyy-MM-dd');
-		d.setDate(d.getDate() - 60);
-		var start = d.toString('yyyy-MM-dd');
+		// initially limit the date range to the last month
+		// matches the default dateRangeString in the datepicker
+		var $datePicker = $('#date-picker');
+		var dates = $datePicker.val();
+		var start,end = '';
+		if(dates) {
+			start = new Date(dates.split('-')[0]).toString('yyyy-MM-dd');
+			end = new Date(dates.split('-')[1]).toString('yyyy-MM-dd');;
+		} else {
+			start = d.toString('yyyy-MM-dd');
+			end = d.toString('yyyy-MM-dd');
+		}
 
 		var args = {
 			sAjaxSource:jsConfig.apiEndpoint + "statuses/list",
 			fnServerParams: function(aoData) {
-				aoData.push({ name:"dateRange", value:[start, end] });
 				if($container.data('presence-id')) {
 					aoData.push({name: "id", value: $container.data('presence-id')});
+				}
+				var queryParams = _.keys(app.datatables.query);
+				if(!app.datatables.query.dateRange) {
+					aoData.push({ name:"dateRange", value:[start, end] });
+				}
+				for(var i=0; i<queryParams.length; ++i) {
+					aoData.push({name: queryParams[i], value: app.datatables.query[queryParams[i]]});
 				}
 			},
 			aaSorting:[
@@ -432,6 +445,8 @@ app.datatables = {
 		app.datatables.statusesTable = $container.find('table')
 			.dataTable(args)
 			.fnSetFilteringDelay(250);
+
+		console.log('statuses table',app.datatables.statusesTable);
 
 		app.datatables.moveSearchBox();
 

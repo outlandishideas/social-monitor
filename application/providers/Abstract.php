@@ -80,8 +80,8 @@ abstract class Provider_Abstract
             $ids = array_map(function($p) {
                 return $p->getId();
             },$presences);
-            $clauses[] = 'p.presence_id IN (:ids)';
-            $args[':ids'] = implode($ids,',');
+            $ids = array_unique($ids);
+            $clauses[] = 'p.presence_id IN (' . implode($ids,',') . ')';
         }
 
         return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
@@ -96,7 +96,7 @@ abstract class Provider_Abstract
 			SELECT SQL_CALC_FOUND_ROWS p.*
 			FROM {$this->tableName} AS p
 			WHERE " . implode(' AND ', $clauses);
-        $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
+        $sql .= $this->getOrderSql($order, array('date'=>$this->createdTimeColumn));
         $sql .= $this->getLimitSql($limit, $offset);
 
         $stmt = $this->db->prepare($sql);

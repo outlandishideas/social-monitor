@@ -1,24 +1,38 @@
 <div class="content" id="statuses">
-    <?php
-    $buttons = array();
-    array_unshift($buttons, '<div id="search-table">Loading data...</div>');
+    <h2 class="page-title">Statuses</h2>
 
-    echo '<h2 class="page-title">Statuses</h2>';
-
-    echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
-
-    ?>
     <div class="statusesDisplay all">
-        <table>
-            <thead>
-            <tr>
-                <th class="message">Message</th>
-                <th class="links">Links</th>
-                <th class="date">Date</th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        <?php
+        $buttons = array();
+        array_unshift($buttons, '<div id="search-table">Loading data...</div>');
+
+        echo $this->partial('partials/button-bar.phtml', array('buttons' => $buttons, 'dark' => true));
+
+        echo $this->partial('partials/daterange.phtml', array('dateRangeString' => $this->dateRangeString));
+
+        foreach($this->queryOptions as $option) {
+            echo $this->partial(
+                'partials/multi-select-box.phtml',
+                array(
+                    'label' => $option['label'],
+                    'queryParamName' => $option['name'],
+                    'options' => $option['options']
+                )
+            );
+        }
+
+        ?>
+        <div>
+            <table>
+                <thead>
+                <tr>
+                    <th class="message">Message</th>
+                    <th class="date">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
