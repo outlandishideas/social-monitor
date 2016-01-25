@@ -135,5 +135,27 @@ if ($topBar && $this->showButtons) {
 
 	</fieldset>
 
+    <?php if (!$this->editType && $presence->getType()->requiresAccessToken()) : ?>
+    <fieldset>
+        <div clas="row">
+            <div class="columns small-24">
+                <h2>Access Token</h2>
+                <p>This type of presence requires an access token to fetch data.</p>
+                <?php if ($presence->getUser()) : ?>
+                    <p>This presence is currently using the access token from the following user: <strong><?php $presence->getUser()->name; ?></strong></p>
+                <?php else : ?>
+                    <p>This presence does not currently have an access token and so cannot be fetched.</p>
+                <?php endif; ?>
+
+                <?php if ($user->getAccessToken($presence->getType())) :
+                    $accessButton = $this->gatekeeper()->filter('<a href="%url%" class="button-bc inline">Use your access token</a>', array('controller'=>'presence', 'action'=>'assign', 'id'=>$presence->id), null, true);?>
+                    <p><?php echo $accessButton; ?></p>
+                <?php endif; ?>
+
+            </div>
+        </div>
+    </fieldset>
+    <?php endif; ?>
+
     <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$bottomBar, 'dark'=>true)); ?>
 </form>
