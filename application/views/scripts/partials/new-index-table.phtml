@@ -38,7 +38,7 @@ $gatekeeper = $this->gatekeeper();
     </thead>
     <tbody>
         <?php foreach($this->rows as $row) : ?>
-            <tr>
+            <tr data-region="<?php echo $row->region_id; ?>">
                 <?php foreach($headers as $header) : ?>
                 <td class="<?php echo implode(' ', $header->getCellClasses()); ?>">
                     <?php

@@ -2062,6 +2062,17 @@ table .cell-handle .missing {
 	float: none;
 }
 
+.button-bc-bar .button-group > li > select {
+	background: transparent;
+	border-color: white;
+	color: white;
+	padding-right: 1rem;
+}
+
+.button-bc-bar .button-group > li > select option {
+	background-color: #051b21;
+}
+
 /* forms */
 #search-table input,
 form input[type="text"],
@@ -2155,9 +2166,12 @@ table tbody tr td.left-align {
 	text-align: left;
 }
 
-table tr.even,
-table tr.alt,
 table tr:nth-of-type(even) {
+	background: inherit;
+}
+
+table tr.even,
+table tr.alt {
 	background: #000;
 	background: rgba(255,255,255,0.1);
 }
