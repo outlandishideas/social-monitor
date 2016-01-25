@@ -3,6 +3,8 @@
 $presence = $this->presence;
 /** @var Enum_PresenceType[] $types */
 $types = $this->types;
+/** @var Model_User $user */
+$user = $this->user;
 
 $topBar = $this->gatekeeper()->filterAll(array(
     '<a href="%url%" class="button-bc button-view">View</a>' => array('action'=>'view', 'id'=>$presence->id),
@@ -33,12 +35,15 @@ if ($topBar && $this->showButtons) {
             </div>
             <div class="small-24 medium-18 large-20 end columns">
                 <ul class="blockLabels">
-                    <?php foreach ($types as $val) : ?>
+                    <?php foreach ($types as $val) :
+                        $requiresAccessToken = $val->requiresAccessToken() && !$user->getAccessToken($val);
+                        $title = $val->getTitle(); ?>
                     <li>
-                        <label class="radio"><input name="type" type="radio" value="<?php echo $val->getValue(); ?>"
+                        <label class="radio withFormHint"><input name="type" type="radio" value="<?php echo $val->getValue(); ?>"
                             <?php if ($presence->type == $val) echo 'checked'; ?>
-                            <?php if (!$this->editType) echo 'disabled'; ?>> <?php echo $val->getTitle(); ?>
-                        </label>
+                            <?php if (!$this->editType || $requiresAccessToken) echo 'disabled'; ?>>
+                            <?php echo $title; ?>
+                        </label><span class="formHint"><?php echo $requiresAccessToken ? "(Please connect your account to {$title})": ""; ?></span>
                         <?php if (!$this->editType && ($presence->type == $val)) : ?>
                             <input type="hidden" value="<?php echo $val->getValue(); ?>" name="type">
                         <?php endif; ?>
