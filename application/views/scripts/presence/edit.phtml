@@ -142,7 +142,7 @@ if ($topBar && $this->showButtons) {
                 <h2>Access Token</h2>
                 <p>This type of presence requires an access token to fetch data.</p>
                 <?php if ($presence->getUser()) : ?>
-                    <p>This presence is currently using the access token from the following user: <strong><?php $presence->getUser()->name; ?></strong></p>
+                    <p>This presence is currently using the access token from the following user: <strong><?php echo $presence->getUser()->name; ?></strong></p>
                 <?php else : ?>
                     <p>This presence does not currently have an access token and so cannot be fetched.</p>
                 <?php endif; ?>

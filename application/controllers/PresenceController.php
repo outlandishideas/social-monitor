@@ -55,6 +55,31 @@ class PresenceController extends GraphingController
 	}
 
 	/**
+	 * Lists all presences
+	 * @user-level user
+	 */
+	public function assignAction()
+	{
+		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+		$this->validateData($presence);
+
+		/** @var Model_User $user */
+		$user = $this->view->user;
+
+		$accessToken = $user->getAccessToken($presence->getType());
+
+		if ($accessToken) {
+			$presence->user = $user;
+			$presence->save();
+			$this->flashMessage("Presence was assigned to user.");
+		} else {
+			$this->flashMessage("Presence could not be assigned to user");
+		}
+
+		$this->_helper->redirector->gotoRoute(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id));
+	}
+
+	/**
 	 * Views a specific presence
 	 */
 	public function viewAction()
