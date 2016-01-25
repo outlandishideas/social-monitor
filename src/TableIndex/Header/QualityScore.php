@@ -18,7 +18,7 @@ class QualityScore extends BadgeScore {
      */
     public function getBadgeName()
     {
-        return Badge_Quality::getName();
+        return \Badge_Quality::getName();
     }
 
 }
