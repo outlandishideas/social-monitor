@@ -1,4 +1,6 @@
 <?php
+use Carbon\Carbon;
+use Outlandish\SocialMonitor\Models\AccessToken;
 
 /**
  * @property string|null email
@@ -182,5 +184,34 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 		$stmt = $this->_db->prepare('DELETE FROM user_access WHERE user_id = :id');
 		$stmt->execute(array(':id'=>$this->id));
 		$this->insertData('user_access', $rows);
+	}
+
+	public function getAccessToken(Enum_PresenceType $type)
+	{
+		$stmt = $this->_db->prepare('SELECT token, expires FROM access_tokens WHERE user_id = :user_id AND `presence_type` = :presence_type');
+		$result = $stmt->execute(array(':user_id'=>$this->id, ':presence_type' => $type->getValue()));
+
+		if ($result) {
+			list($token, $expires) = $stmt->fetch(PDO::FETCH_NUM);
+			return new AccessToken($token, $expires);
+		} else {
+			return null;
+		}
+	}
+
+	public function saveAccessToken(Enum_PresenceType $type, $token, Carbon $expires)
+	{
+		$stmt = $this->_db->prepare('
+							INSERT INTO access_tokens (`user_id`, `presence_type`, `token`, `expires`)
+							VALUES(:user_id, :presence_type, :token, :expires)
+							ON DUPLICATE KEY UPDATE
+							token = VALUES(token),
+							expires = VALUES(expires)');
+		return $stmt->execute([
+			':user_id' => $this->id,
+			':presence_type' => $type->getValue(),
+			':token' => $token,
+			':expires' => $expires->timestamp
+		]);
 	}
 }
