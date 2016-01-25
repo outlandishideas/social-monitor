@@ -31,7 +31,7 @@ class Provider_Linkedin extends Provider_Abstract
 
         // get all videos - we need to update all of them as they are all potentially contributing to engagement
 
-        $statuses = $this->adapter->getStatusesWithAccessToken($presence->getUID(), null, $presence->handle, 'token');
+        $statuses = $this->adapter->getStatusesWithAccessToken($presence->getUID(), null, $presence->handle, $presence->getAccessToken());
 
         $this->insertStatuses($presence, $statuses, $count);
 
@@ -133,7 +133,7 @@ class Provider_Linkedin extends Provider_Abstract
     public function updateMetadata(Model_Presence $presence) {
 
         try {
-            $metadata = $this->adapter->getMetadataWithAccessToken($presence->handle, 'token');
+            $metadata = $this->adapter->getMetadataWithAccessToken($presence->handle, $presence->getAccessToken());
         } catch (Exception_FacebookNotFound $e) {
             $presence->uid = null;
             throw $e;

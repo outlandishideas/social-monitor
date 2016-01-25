@@ -226,6 +226,7 @@ class PresenceController extends GraphingController
             $signOff = $this->_request->getParam('sign_off');
             $branding = $this->_request->getParam('branding');
             $size = $this->_request->getParam('size');
+			$userId = $this->_request->getParam('user_id');
 			if (!$type) {
 				$errorMessages[] = 'Please choose a type';
 			}
@@ -247,9 +248,16 @@ class PresenceController extends GraphingController
                         $type = Enum_PresenceType::get($type);
                         $presence = Model_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
                         $presence->setSize($size);
+						if ($presence->getType()->requiresAccessToken()) {
+							$presence->setUser($this->view->user);
+						}
                         $presence->save();
                     } else {
                     	$presence->setSize($size);
+						if ($presence->getType()->requiresAccessToken() && $userId) {
+							$user = Model_User::fetchById($userId);
+							$presence->setUser($user);
+						}
                         $presence->update();
                         $presence->save();
                     }
