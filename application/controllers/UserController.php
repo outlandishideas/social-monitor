@@ -28,7 +28,7 @@ class UserController extends BaseController
         if (isset($_REQUEST['code'])) {
             $token = $this->linkedin->getAccessToken($_REQUEST['code']);
 
-            $this->flashMessage("Token Generated: {$token}");
+            $this->flashMessage("Linkedin Account connected");
             /** @var Model_User $user */
             $user = Model_User::fetchById($this->auth->getIdentity());
             $expires = (new Carbon())->addSeconds($this->linkedin->getAccessTokenExpiration());
