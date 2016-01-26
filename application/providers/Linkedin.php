@@ -2,6 +2,7 @@
 
 use Outlandish\SocialMonitor\Adapter\LinkedinAdapter;
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
+use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
@@ -232,6 +233,13 @@ class Provider_Linkedin extends Provider_Abstract
         return $metric->get($presence->getId(), $now, $then);
     }
 
+    /**
+     * Run a simple test on the adapter to see if we can fetch the presence
+     *
+     * @param Model_Presence $presence
+     * @throws SocialMonitorException
+     * @return null
+     */
     public function testAdapter(Model_Presence $presence)
     {
         $this->adapter->getChannelWithAccessToken($presence->getHandle(), $presence->getAccessToken($presence->getType()));
