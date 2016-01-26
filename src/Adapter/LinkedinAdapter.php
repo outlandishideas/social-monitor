@@ -147,7 +147,7 @@ class LinkedinAdapter extends AbstractAdapter
         }
 
         if (empty($company)) {
-            throw new SocialMonitorException("No companies for logged in user");
+            throw new SocialMonitorException("The company \"{$handle}\" is not owned by you and cannot be fetched.");
         }
 
         return (object)array_values($company)[0];
@@ -210,5 +210,11 @@ class LinkedinAdapter extends AbstractAdapter
         $status->links = array_merge($submittedLink, $messageLinks);
 
         return $status;
+    }
+
+    public function getChannelWithAccessToken($handle, $accessToken)
+    {
+        $this->linkedIn->setAccessToken($accessToken);
+        $this->getCompanyFromHandle($handle);
     }
 }

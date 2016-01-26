@@ -231,4 +231,11 @@ class Provider_Linkedin extends Provider_Abstract
 
         return $metric->get($presence->getId(), $now, $then);
     }
+
+    public function testAdapter(Model_Presence $presence)
+    {
+        $this->adapter->getChannelWithAccessToken($presence->getHandle(), $presence->getAccessToken($presence->getType()));
+    }
+
+
 }

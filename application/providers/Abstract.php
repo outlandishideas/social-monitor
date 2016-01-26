@@ -91,6 +91,11 @@ abstract class Provider_Abstract
         return $this->getHistoricStream($presence, $start, $end, $search, $order, $limit, $offset);
     }
 
+    public function testAdapter(Model_Presence $presence)
+    {
+        return null;
+    }
+
     /**
      * @param string $type
      * @param array $links map of status_id=>links

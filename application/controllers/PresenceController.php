@@ -1,6 +1,7 @@
 <?php
 
 use mikehaertl\wkhtmlto\Pdf;
+use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\Report\ReportablePresence;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
 use Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay;
@@ -276,8 +277,9 @@ class PresenceController extends GraphingController
                         $presence = Model_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
                         $presence->setSize($size);
 						if ($presence->getType()->requiresAccessToken()) {
-							$presence->setUser($this->view->user);
+							$presence->user = $this->view->user;
 						}
+						$presence->testUpdate();
                         $presence->save();
                     } else {
                     	$presence->setSize($size);
@@ -288,7 +290,9 @@ class PresenceController extends GraphingController
                         $presence->update();
                         $presence->save();
                     }
-                } catch (Exception $ex) {
+                } catch (SocialMonitorException $ex) {
+					$errorMessages[] = $ex->getMessage();
+				} catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
                         $errorMessages[] = 'Presence already exists';
                     } else {

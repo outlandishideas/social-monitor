@@ -846,5 +846,14 @@ class Model_Presence
 		return $parent ? $parent->getRegion() : null;
 	}
 
+    /**
+     *
+     * @return null
+     */
+    public function testUpdate()
+    {
+        $this->provider->testAdapter($this);
+    }
+
 
 }
