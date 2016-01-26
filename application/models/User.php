@@ -200,6 +200,12 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 		}
 	}
 
+    public function deleteAccessToken(Enum_PresenceType $type)
+    {
+        $stmt = $this->_db->prepare('DELETE FROM access_tokens WHERE user_id = :user_id AND presence_type = :presence_type');
+        $stmt->execute([':user_id' => $this->id, ':presence_type' => $type->getValue()]);
+    }
+
 	public function saveAccessToken(Enum_PresenceType $type, $token, Carbon $expires)
 	{
 		$stmt = $this->_db->prepare('

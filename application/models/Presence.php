@@ -669,6 +669,13 @@ class Model_Presence
                 $instagramEngagement = null;
         }
 
+        if ($this->getType()->requiresAccessToken() && $this->user) {
+            $token = $this->user->getAccessToken($this->getType());
+            if ($token && $token->isExpired()) {
+                $this->user->deleteAccessToken($this->getType());
+            }
+        }
+
         $data = array(
             'type' => $this->getType()->getValue(),
             'handle' => $this->getHandle(),

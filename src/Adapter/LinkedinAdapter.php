@@ -11,6 +11,7 @@ namespace Outlandish\SocialMonitor\Adapter;
 
 use LinkedIn\LinkedIn;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
+use Outlandish\SocialMonitor\Models\AccessToken;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
 use Outlandish\SocialMonitor\Models\Status;
@@ -212,9 +213,9 @@ class LinkedinAdapter extends AbstractAdapter
         return $status;
     }
 
-    public function getChannelWithAccessToken($handle, $accessToken)
+    public function getChannelWithAccessToken($handle, AccessToken $accessToken)
     {
-        $this->linkedIn->setAccessToken($accessToken);
+        $this->linkedIn->setAccessToken($accessToken->getToken());
         $this->getCompanyFromHandle($handle);
     }
 }
