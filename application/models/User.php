@@ -215,4 +215,18 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 			':expires' => $expires->timestamp
 		]);
 	}
+
+	public function hasAccessTokensNeedRefreshing()
+	{
+		foreach (Enum_PresenceType::enumValues() as $type) {
+			if ($type->requiresAccessToken()) {
+				$accessToken = $this->getAccessToken($type);
+				if ($accessToken->expiresSoon()) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
 }

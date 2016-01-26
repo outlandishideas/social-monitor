@@ -604,10 +604,14 @@ class BaseController extends Zend_Controller_Action
 
     private function showAccessTokenNeedsRefreshMessage()
     {
-        $urlArgs = ['controller' => 'user', 'action' => 'edit-self'];
-        $url = $this->view->gatekeeper()->filter('%url%', $urlArgs);
-        $message = "One or more of your access tokens are set to expire soon. <a href=\"{$url}\">Click here</a> to refresh these tokens.";
-        $this->flashMessage($message, 'inaction');
+        /** @var Model_User $user */
+        $user = $this->view->user;
+        if ($user && $user->hasAccessTokensNeedRefreshing()) {
+            $urlArgs = ['controller' => 'user', 'action' => 'edit-self'];
+            $url = $this->view->gatekeeper()->filter('%url%', $urlArgs);
+            $message = "One or more of your access tokens are set to expire soon. <a href=\"{$url}\">Click here</a> to refresh these tokens.";
+            $this->flashMessage($message, 'inaction');
+        }
     }
 
 }
