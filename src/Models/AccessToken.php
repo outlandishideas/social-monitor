@@ -28,6 +28,15 @@ class AccessToken
         }
     }
 
+    public function expiresSoon()
+    {
+        try {
+            return Carbon::now()->diff($this->expires)->days < 7;
+        } catch (\Exception $e) {
+            return true;
+        }
+    }
+
     public function getExpires()
     {
         return $this->expires;
