@@ -261,14 +261,6 @@ class Model_Presence
         return $this->linkedin_engagement;
     }
 
-	/**
-	 * @return mixed
-	 */
-	public function getLinkedinEngagement()
-	{
-		return floatval($this->linkedin_engagement);
-	}
-
     /**
      * @return mixed
      */
