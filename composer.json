@@ -25,6 +25,7 @@
     "robmorgan/phinx": "0.4.2",
     "google/apiclient": "1.1.6",
     "linkedinapi/linkedin": "1.1.0",
-    "nesbot/carbon": "1.9.0"
+    "nesbot/carbon": "1.9.0",
+    "zendframework/zendframework1": "1.12.17"
   }
 }
