@@ -192,9 +192,7 @@ abstract class GraphingController extends BaseController {
 				);
 				if ($model instanceof Model_Presence && $model->getType()->isMetricApplicable($metric)) {
 					$metricScore = $metric->getScore($model, new \DateTime('-30 days'), new \DateTime());
-					if (is_null($metricScore)) {
-                        $metricScore = 0;
-                    }
+
 					$metricColor = $colors->colors[0];
 					foreach($colors->range as $i => $value){
 						if($metricScore >= $value) {
@@ -205,11 +203,19 @@ abstract class GraphingController extends BaseController {
 					$m['color'] = $metricColor;
 					$m['gliding'] = $metric::isGliding();
 
-					if (!$m['gliding']) {
+					/**
+					 *  We set the colour to grey if the score is null or 0.
+					 *  If gliding, 0 and null imply no data, so we leave it grey.
+					 *  If not gliding:
+					 *   - null implies no data
+					 *   - 0 implies a score of 0%, so we change to red
+					 */
+
+					if (!$m['gliding'] && $m['score'] !== null) {
 						if ($m['score'] == 0) {
-							$m['color'] = '#D06959';
+							$m['color'] = '#D06959';	// red for score of 0%
 						} else {
-							$m['color'] = '#84af5b';
+							$m['color'] = '#84af5b';    // green
 						}
 					}
 					$metrics[] = $m;

@@ -16,9 +16,13 @@ class Metric_ResponseTimeNew extends Metric_ResponseTime {
      */
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
+        return $this->getData($presence,$start,$end)['average_response_time'];
+    }
+
+    public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end) {
         $data = $presence->getResponseData($start, $end);
-        if (is_null($data)) return null;
-        if (!$data || empty($data)) return 0;
+        if (is_null($data)) return ['average_response_time' => null];
+        if (!$data || empty($data)) return ['average_response_time' => 0];
 
         $diffs = array_map(function($row) {
             return $row->diff;
@@ -36,8 +40,7 @@ class Metric_ResponseTimeNew extends Metric_ResponseTime {
             $count -= 2;
         }
 
-        return $total/$count;
+        return ['average_response_time' => $total/$count];
     }
-
 
 }

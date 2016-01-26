@@ -13,6 +13,19 @@ class ConfigController extends BaseController {
 		$values = array(
 
             (object)array(
+                'title' => 'General',
+                'description' => '',
+                'kpis' => array(
+                    (object)array(
+                        'title' => 'Feedback',
+                        'description' => 'What email address should feedback be sent to?',
+                        'values' => array(
+                            'email-feedback-to-address'=>array('label'=>'Email address','type'=>'email')
+                        )
+                    )
+                )
+            ),
+            (object)array(
                 'title' => Badge_Reach::getTitle(),
                 'description' => Badge_Reach::getDescription(),
                 'kpis' => array(
@@ -101,6 +114,9 @@ class ConfigController extends BaseController {
                         'title' => 'Facebook Engagement Score (Facebook only)',
                         'description' => 'The Facebook Engagement Score is based on Social Baker\'s Daily Page Engagement Rate calculation.',
                         'values' => array(
+                            'fb_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
+                            'fb_active_user_percentage_medium'=>array('label'=>'...medium presences'),
+                            'fb_active_user_percentage_large'=>array('label'=>'...and large presences'),
                             'facebook_engagement_weighting'=>array('label'=>'Facebook Engagement Score Weighting'),
                             'fb_engagement_target'=>array('label'=>'Facebook Engagement Score (For a single level)', 'hint' => 'The presence will score 100% if it reaches this target (and we are using the old calculation)'),
                             'fb_engagement_target_level_1'=>array('label'=>'Facebook Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
@@ -114,6 +130,9 @@ class ConfigController extends BaseController {
                         'title' => 'Sina Weibo Engagement Score (Sina Weibo only)',
                         'description' => 'The Sina Weibo Engagement Score is based on Social Baker\'s Daily Page Engagement Rate calculation.',
                         'values' => array(
+                            'sw_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
+                            'sw_active_user_percentage_medium'=>array('label'=>'...medium presences'),
+                            'sw_active_user_percentage_large'=>array('label'=>'...and large presences'),
                             'sina_weibo_engagement_weighting'=>array('label'=>'Sina Weibo Engagement Score Weighting'),
                             'sina_weibo_engagement_target'=>array('label'=>'Sina Weibo Engagement Score (For a single level)', 'hint' => 'The presence will score 100% if it reaches this target (and we are using the old calculation)'),
                             'sina_weibo_engagement_target_level_1'=>array('label'=>'Sina Weibo Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
@@ -127,6 +146,9 @@ class ConfigController extends BaseController {
                         'title' => 'Instagram Engagement Score (Instagram only)',
                         'description' => 'The Instagram Engagement Score is based on Social Baker\'s Daily Page Engagement Rate calculation.',
                         'values' => array(
+                            'ig_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
+                            'ig_active_user_percentage_medium'=>array('label'=>'...medium presences'),
+                            'ig_active_user_percentage_large'=>array('label'=>'...and large presences'),
                             'instagram_engagement_weighting'=>array('label'=>'Instagram Engagement Score Weighting'),
                             'ig_engagement_target'=>array('label'=>'Instagram Engagement Score (For a single level)', 'hint' => 'The presence will score 100% if it reaches this target (and we are using the old calculation)'),
                             'ig_engagement_target_level_1'=>array('label'=>'Instagram Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
@@ -140,6 +162,9 @@ class ConfigController extends BaseController {
                         'title' => 'Youtube Engagement Score (Youtube only)',
                         'description' => 'The Youtube Engagement Score is not yet fully decided.',
                         'values' => array(
+                            'yt_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
+                            'yt_active_user_percentage_medium'=>array('label'=>'...medium presences'),
+                            'yt_active_user_percentage_large'=>array('label'=>'...and large presences'),
                             'youtube_engagement_weighting'=>array('label'=>'Youtube Engagement Score Weighting'),
                             'yt_engagement_target_level_1'=>array('label'=>'Youtube Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
                             'yt_engagement_target_level_2'=>array('label'=>'Youtube Engagement Score Level 2', 'hint' => 'The presence will score 40% if it reaches this target'),
@@ -149,9 +174,12 @@ class ConfigController extends BaseController {
                         )
                     ),
                     (object)array(
-                        'title' => 'Linkedin Engagement Score (Youtube only)',
+                        'title' => 'Linkedin Engagement Score (Linked In only)',
                         'description' => 'The Linkedin Engagement Score is not yet fully decided.',
                         'values' => array(
+                            'in_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
+                            'in_active_user_percentage_medium'=>array('label'=>'...medium presences'),
+                            'in_active_user_percentage_large'=>array('label'=>'...and large presences'),
                             'linkedin_engagement_weighting'=>array('label'=>'Linkedin Engagement Score Weighting'),
                             'in_engagement_target_level_1'=>array('label'=>'Linkedin Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
                             'in_engagement_target_level_2'=>array('label'=>'Linkedin Engagement Score Level 2', 'hint' => 'The presence will score 40% if it reaches this target'),
@@ -268,6 +296,12 @@ class ConfigController extends BaseController {
                             case 'numeric':
                                 if (!is_numeric($args->value)) {
                                     $args->error = 'Value must be numeric';
+                                    $valid = false;
+                                }
+                                break;
+                            case 'email':
+                                if (!filter_var($args->value, FILTER_VALIDATE_EMAIL)) {
+                                    $args->error = "This ($args->value) email address is considered invalid.";
                                     $valid = false;
                                 }
                                 break;

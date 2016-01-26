@@ -8,6 +8,75 @@ body {
     letter-spacing: 0.03rem;
 }
 
+#feedback {
+	position: fixed;
+	right: 0;
+	transform: rotate(90deg);
+	transform-origin: right top 0;
+	top: 150px;
+	border-right: 1px solid white;
+	border-bottom: 1px solid white;
+	border-left: 1px solid white;
+	z-index: 100;
+}
+
+#feedback button {
+	margin-bottom: 0;
+	background-color: #0071bc;
+	padding: 10px;
+	font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+	font-size: 0.8125rem;
+	font-weight: bold;
+	z-index: 1001;
+}
+
+#modal-container {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1000;
+}
+
+#modal-backdrop {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: black;
+	opacity: 0.5;
+	z-index: 999;
+}
+
+#feedback-form {
+	position: relative;
+	width: 800px;
+	margin: 100px auto;
+	background-color: #0a3542;
+	padding: 15px;
+}
+
+#feedback-form h2 {
+	color: white;
+	border-color: white;
+}
+
+#feedback-form textarea {
+	height: 200px;
+	margin-bottom: 15px;
+}
+
+#feedback-form .button-group > li {
+	margin: 0;
+	float: none;
+}
+
+#feedback-form .button-group button {
+	border: 1px solid #fff;
+}
+
 abbr {
 	border-bottom: 1px dashed #999;
 }
@@ -1993,11 +2062,23 @@ table .cell-handle .missing {
 	float: none;
 }
 
+.button-bc-bar .button-group > li > select {
+	background: transparent;
+	border-color: white;
+	color: white;
+	padding-right: 1rem;
+}
+
+.button-bc-bar .button-group > li > select option {
+	background-color: #051b21;
+}
+
 /* forms */
 #search-table input,
 form input[type="text"],
 form input[type="password"],
 form input[type="email"],
+form textarea,
 form select,
 form select:hover {
 	margin: 0;
@@ -2014,7 +2095,8 @@ form select:hover {
 form select:hover,
 form input[type="text"]:focus,
 form input[type="email"]:focus,
-form input[type="password"]:focus {
+form input[type="password"]:focus,
+form textarea:focus {
 	background-color: #000;
 	background-color: rgba(0,0,0,0.5);
 }
@@ -2084,9 +2166,12 @@ table tbody tr td.left-align {
 	text-align: left;
 }
 
-table tr.even,
-table tr.alt,
 table tr:nth-of-type(even) {
+	background: inherit;
+}
+
+table tr.even,
+table tr.alt {
 	background: #000;
 	background: rgba(255,255,255,0.1);
 }
@@ -2342,7 +2427,7 @@ ol.messages {
 	top: 10px;
 	right: 10px;
 	width: 30%;
-	z-index: 999;
+	z-index: 1002;
 }
 ol.messages li {
 	padding: 8px 35px 8px 14px;

@@ -261,6 +261,14 @@ class Model_Presence
         return $this->linkedin_engagement;
     }
 
+	/**
+	 * @return mixed
+	 */
+	public function getLinkedinEngagement()
+	{
+		return floatval($this->linkedin_engagement);
+	}
+
     /**
      * @return mixed
      */
@@ -839,6 +847,12 @@ class Model_Presence
     {
         $this->user = Model_User::fetchById($userId);
     }
+
+	public function getRegion()
+	{
+		$parent = $this->getOwner();
+		return $parent ? $parent->getRegion() : null;
+	}
 
 
 }

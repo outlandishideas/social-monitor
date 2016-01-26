@@ -12,7 +12,7 @@ namespace Outlandish\SocialMonitor\Engagement\Query;
 use DateTime;
 use PDO;
 
-class StandardFacebookEngagementQuery implements Query
+class StandardFacebookEngagementQuery extends Query
 {
     const POPULARITY = 'popularity';
     const FACEBOOK_STREAM_TABLE = 'facebook_stream';

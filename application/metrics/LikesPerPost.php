@@ -5,6 +5,7 @@ class Metric_LikesPerPost extends Metric_Abstract {
     protected static $name = "likes_per_post";
     protected static $title = "Likes per post";
     protected static $icon = "fa fa-thumbs-o-up";
+    protected static $gliding = false;
 
     function __construct()
     {
@@ -38,7 +39,7 @@ class Metric_LikesPerPost extends Metric_Abstract {
                 }
             }
             if ($count == 0) {
-                $actual = 0;
+                $actual = null;
             } else {
                 $actual /= $count;
             }
@@ -55,6 +56,9 @@ class Metric_LikesPerPost extends Metric_Abstract {
         }
 
         $score = $presence->getMetricValue($this);
+        if($score === null) {
+            return null;
+        }
         $score = round(100 * $score/$this->target);
         return self::boundScore($score);
     }

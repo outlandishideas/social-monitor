@@ -58,7 +58,7 @@ $.extend(app, {
 							<p class="error-message"><%=message%></p>\
 						</div>\
 					</div>',
-		message: '<li class="<%=type%>"><%=msg%></li>',
+		message: '<li class="<%=type%>"><%=msg%><span class="close icon-remove-circle icon-large"></span></li>',
 		linkBox:
 			'<li class="link box <%=type%> split">\
 				<input type="hidden" value="<%=id%>" name="<%=name%>" />\
@@ -117,12 +117,56 @@ app.init = {
 	//selector-based init functions, called from bootstrap
 	selectors: {
 
+		// hide modal when click outside the feedback form
+		'body': function($item) {
+			$item.mouseup(function (e)
+			{
+				var container = $("#feedback-form,ol.messages");
+
+				if (!container.is(e.target) // if the target of the click isn't the container...
+					&& container.has(e.target).length === 0) // ... nor a descendant of the container
+				{
+					app.modal.hide();
+				}
+			});
+		},
+
+		'#feedback button': function($item) {
+		    $item.on('click', app.modal.show);
+		},
+
 		'.downloadChart': function($item) {
 			$item.on('click', '.link', app.charts.grabSvgElement);
 		},
 
 		'#homepage-tabs': function ($item) {
 			app.home.setup()
+		},
+
+		'#filter-region': function ($item) {
+			$item.on('change', function() {
+				var $self = $(this);
+				var region_id = $self.val();
+
+				console.log(region_id);
+
+				var $table = $('table');
+
+				var $rows = $table.find('tbody tr');
+
+				$rows.show();
+
+				if (region_id) {
+					$rows.hide();
+					$rows.filter('[data-region="' + region_id +'"]').show();
+				}
+
+				$rows
+					.removeClass('odd').removeClass('even')
+					.filter(':visible')
+					.filter(':odd').addClass('odd').end()
+					.filter(':even').addClass('even');
+			});
 		},
 
         '.button.compare': function ($button) {
@@ -573,7 +617,12 @@ app.flashMessenger = {
 		} else {
 			$container.empty();
 		}
-		$(_.template(app.templates.message, {type: type, msg: msg})).appendTo($container).hide().fadeIn();
+		var $el = $(_.template(app.templates.message, {type: type, msg: msg}));
+		var $closeBtn = $el.find('.close');
+		$closeBtn.on('click', function() {
+			$(this).parent('li').remove();
+		});
+		$el.appendTo($container).hide().fadeIn();
 	}
 };
 
@@ -593,6 +642,67 @@ app.utils = {
         var p = Math.pow(10,n);
         return parseFloat(Math.round(x * p) / p).toFixed(n);
     }
+};
+
+app.modal = {
+	show: function() {
+		$('#modal-container,#modal-backdrop').fadeIn();
+	},
+	hide: function() {
+		$('#modal-container,#modal-backdrop').fadeOut();
+	}
+};
+
+app.feedbackForm = {
+	clear: function() {
+		var form = $('#feedback-form');
+
+		var name = form.find('#name').val('');
+		var from = form.find('#from').val('');
+		var body = form.find('#body').val('');
+	},
+	validate: function() {
+		var form = $('#feedback-form');
+
+		var name = form.find('#name').val();
+		var from = form.find('#from').val();
+		var body = form.find('#body').val();
+
+		if(!name) {
+			return 'Please enter your name';
+		}
+		if(!from) {
+			return 'Please enter your email address';
+		}
+		if(!body) {
+			return 'Please enter your message';
+		}
+		return null;
+	},
+	send: function() {
+		var error = app.feedbackForm.validate();
+		if(error) {
+			app.flashMessenger.show(error,'error');
+			return;
+		}
+
+		var form = $('#feedback-form');
+
+		var name = form.find('#name').val();
+		var from = form.find('#from').val();
+		var body = form.find('#body').val();
+		var url = form.find('#url').val();
+
+		$.post(url, {name: name, body: body, from: from}, function(response) {
+			if(response.data.success) {
+				app.flashMessenger.show('Feedback sent. Thanks!');
+				app.feedbackForm.clear();
+				app.modal.hide();
+			} else {
+				app.flashMessenger.show(response.data.error || 'Error sending feedback, please try again','error');
+			}
+		});
+	}
 };
 
 //start it up

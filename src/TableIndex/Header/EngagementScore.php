@@ -18,7 +18,7 @@ class EngagementScore extends BadgeScore {
      */
     public function getBadgeName()
     {
-        return Badge_Engagement::getName();
+        return \Badge_Engagement::getName();
     }
 
 }
