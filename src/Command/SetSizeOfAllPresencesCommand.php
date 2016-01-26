@@ -52,7 +52,7 @@ class SetSizeOfAllPresencesCommand extends ContainerAwareCommand
      *
      */
     private $sizeMap = [
-        'facebook' => [5000,100000],
+        'facebook' => [5000,500000],
         'twitter' => [1000,50000],
         'instagram' => [1000,50000],
         'sina_weibo' => [1000,50000],
