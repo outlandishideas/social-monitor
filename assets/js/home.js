@@ -194,7 +194,7 @@ app.home = {
 	/**
 	 * Fetches the country summary over ajax, and appends it to the map.
 	 * @param id
-	 * @param name
+	 * @param name - used locally in the template if we don't have data for this country
 	 */
 	loadCampaignStats: function(id,name) {
 		var $countryStats = $('#country-stats');
@@ -312,8 +312,6 @@ app.home = {
 	},
 
 	updateDataAttributes: function() {
-		var i;
-
 		//find country list
 		var data = app.home.countryData;
 		$('.country-list li').each(function() {
@@ -328,6 +326,7 @@ app.home = {
 		//country popout
 		var $countryStats = $('#country-stats');
 		var $div = $countryStats.find('[data-badge]');
+		var i;
 		if ($div.length > 0) {
 			var countryId = parseInt($div.data('country-id'));
 			for (i = 0; i < data.length; i++) {
