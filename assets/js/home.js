@@ -214,6 +214,7 @@ app.home = {
 				$('[data-badge-title]').text($('#homepage-tabs').find('dd.active').data('title'));
 			}
 		} else {
+			// no id specified, show overall data
 			$countryStats.addClass('global');
 			$countryStats.html(app.templates.globalScore);
 			app.home.updateAll();
