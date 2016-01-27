@@ -199,12 +199,7 @@ app.home = {
 	loadCampaignStats: function(id,name) {
 		var $countryStats = $('#country-stats');
 		if(id) {
-			if(id === -1) {
-				// we don't have this country stored, put in dummy info
-				$countryStats.removeClass('global');
-				$countryStats.html(_.template(app.templates.emptyCountryBadge,{name: name}));
-				$('[data-badge-title]').text($('#homepage-tabs').find('dd.active').data('title'));
-			} else {
+			if(id > -1) {
 				$countryStats.addClass('loading');
 				$countryStats.load('country/stats-panel/id/' + id, function () {
 					$countryStats.removeClass('global');
@@ -212,6 +207,11 @@ app.home = {
 					$('[data-badge-title]').text($('#homepage-tabs').find('dd.active').data('title'));
 					app.home.updateAll();
 				});
+			} else {
+				// we don't have this country stored, put in dummy info
+				$countryStats.removeClass('global');
+				$countryStats.html(_.template(app.templates.emptyCountryBadge,{name: name}));
+				$('[data-badge-title]').text($('#homepage-tabs').find('dd.active').data('title'));
 			}
 		} else {
 			$countryStats.addClass('global');
@@ -357,6 +357,10 @@ app.home = {
         updateElement($div, score)
 	},
 
+	/**
+	 *  Called when the user types into the find country text input.
+	 *  Appends elements created from the countryListItem template to the find country list.
+	 */
 	searchCountries: function() {
 		var search = $('.find-country #search-countries').val();
 		var $list = $('.find-country .country-list');
@@ -376,6 +380,11 @@ app.home = {
 		}
 	},
 
+	/**
+	 * Called when either an element in the find country list is clicked or if the user hits enter in the
+	 * find country text input.
+	 * @returns {boolean}
+	 */
 	selectCountry: function() {
 		var topResult = $('.find-country .country-list li').first();
 		var name = topResult.find('.name').text();
