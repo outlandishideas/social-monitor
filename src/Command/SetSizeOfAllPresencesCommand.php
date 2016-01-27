@@ -21,43 +21,43 @@ class SetSizeOfAllPresencesCommand extends ContainerAwareCommand
     /**
      *
      * Facebook:
-     *     Small  : p < 5000          :
-     *     Medium : 5000 < p < 100000 :
-     *     Large  : 100000 < p        :
+     *     Small  : p < 5000          : 48
+     *     Medium : 5000 < p < 100000 : 90
+     *     Large  : 100000 < p        : 39
      *
      * Twitter:
-     *     Small  : p < 1000          :
-     *     Medium : 1000 < p < 50000  :
-     *     Large  : 50000 < p         :
+     *     Small  : p < 2500          : 63
+     *     Medium : 2500 < p < 50000  : 56
+     *     Large  : 50000 < p         : 4
      *
      * Instagram:
-     *     Small  : p < 1000          :
-     *     Medium : 1000 < p < 50000  :
-     *     Large  : 50000 < p         :
+     *     Small  : p < 2500          : 15
+     *     Medium : 2500 < p < 50000  : 3
+     *     Large  : 50000 < p         : 0
      *
      * Sina Weibo:
-     *     Small  : p < 1000          :
-     *     Medium : 1000 < p < 50000  :
-     *     Large  : 50000 < p         :
+     *     Small  : p < 2500          : 2
+     *     Medium : 2500 < p < 50000  : 3
+     *     Large  : 50000 < p         : 4
      *
      * LinkedIn:
-     *     Small  : p < 1000          :
-     *     Medium : 1000 < p < 50000  :
-     *     Large  : 50000 < p         :
+     *     Small  : p < 2500          : 0
+     *     Medium : 2500 < p < 50000  : 0
+     *     Large  : 50000 < p         : 1
      *
      * Youtube:
-     *     Small  : p < 1000          :
-     *     Medium : 1000 < p < 50000  :
-     *     Large  : 50000 < p         :
+     *     Small  : p < 2500          : 45
+     *     Medium : 2500 < p < 50000  : 9
+     *     Large  : 50000 < p         : 2
      *
      */
     private $sizeMap = [
-        'facebook' => [5000,500000],
-        'twitter' => [1000,50000],
-        'instagram' => [1000,50000],
-        'sina_weibo' => [1000,50000],
-        'linkedin' => [1000,50000],
-        'youtube' => [1000,50000]
+        'facebook' => [5000,100000],
+        'twitter' => [2500,50000],
+        'instagram' => [2500,50000],
+        'sina_weibo' => [2500,50000],
+        'linkedin' => [2500,50000],
+        'youtube' => [2500,50000]
     ];
 
     protected function configure()
