@@ -1,18 +1,25 @@
-<div class="social-monitor-multi-select-box picker">
+<div class="social-monitor-multi-select-box">
 	<label for="<?php echo $this->queryParamName ?>"><?php echo $this->label ?></label>
 	<select multiple="multiple" id="<?php echo $this->queryParamName ?>" class="social-monitor-multi-select">
 		<?php foreach($this->options as $option) {
+			$selected = false;
 			switch($this->queryParamName) {
 				case 'type':
 					$title = $option->getTitle();
 					$value = $option->getValue();
+					break;
+				case 'sort':
+					$title = $option['title'];
+					$value = $option['value'];
+					$selected = ($value === 'date');
 					break;
 				default:
 					$title = $option->getName();
 					$value = $option->id;
 					break;
 			}
-			echo "<option value=\"$value\">$title</option>";
+			echo "<option value=\"$value\" " . ($selected ? "selected=\"selected\"" : '') . " >$title</option>";
 		} ?>
 	</select>
+	<div class="selected-summary"></div>
 </div>

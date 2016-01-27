@@ -46,30 +46,13 @@ class StatusesController extends GraphingController
             ['name' => 'country', 'label' => 'Country', 'options' => Model_Country::fetchAll()],
             ['name' => 'region', 'label' => 'Region', 'options' => Model_Region::fetchAll()],
             ['name' => 'sbu', 'label' => 'SBU', 'options' => Model_Group::fetchAll()],
-            ['name' => 'sort', 'label' => 'Sort', 'options' => []]
+            ['name' => 'sort', 'label' => 'Sort', 'options' =>
+                [
+                    ['value' => 'date', 'title' => 'Date'],
+                    ['value' => 'popularity', 'title' => 'Popularity']
+                ]
+            ]
         ];
-    }
-
-    /**
-     * Views a specific status
-     */
-    public function viewAction()
-    {
-        $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
-        $this->validateData($presence);
-
-        $this->view->presence = $presence;
-        $this->view->badgePartial = $this->badgeDetails($presence);
-        $this->view->chartOptions = $this->chartOptions($presence);
-        $allPresences = array();
-        foreach (Model_PresenceFactory::getPresences() as $p) {
-            $group = $p->getType()->getTitle();
-            if (!isset($allPresences[$group])) {
-                $allPresences[$group] = array();
-            }
-            $allPresences[$group][] = $p;
-        }
-        $this->view->allPresences = $allPresences;
     }
 
     /**
@@ -168,7 +151,7 @@ class StatusesController extends GraphingController
             $dateRange[0],
             $dateRange[1],
             $this->getRequestSearchQuery(),
-            $this->getRequestOrdering(),
+            ['date' => 'desc'],
             $limit,
             $this->getRequestOffset()
         );
@@ -193,9 +176,12 @@ class StatusesController extends GraphingController
                         $tableData[] = array(
                             'id' => $tweet->id,
                             'message' => $format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
-                            'date' => Model_Base::localeDate($tweet->created_time),
+                            'date' => Model_Base::shortDate($tweet->created_time),
                             'links' => $tweet->links,
-                            'twitter_url' => $tweet->permalink
+                            'twitter_url' => $tweet->permalink,
+                            'presence_id' => $tweet->presence_id,
+                            'engagement' => ['shares' => $tweet->retweet_count],
+                            'icon' => Enum_PresenceType::TWITTER()->getSign()
                         );
                     }
                     break;
@@ -237,13 +223,20 @@ class StatusesController extends GraphingController
                                 'profile_url' => $post->actor->profile_url,
                                 'message' => $post->message,
                                 'links' => $post->links,
-                                'date' => Model_Base::localeDate($post->created_time),
+                                'date' => Model_Base::shortDate($post->created_time),
                                 'needs_response' => $post->needs_response,
                                 'first_response' => array(
                                     'message' => $response,
-                                    'date' => Model_Base::localeDate($responseDate),
+                                    'date' => Model_Base::shortDate($responseDate),
                                     'date_diff' => implode(', ', $components),
-                                )
+                                ),
+                                'presence_id' => $post->presence_id,
+                                'engagement' => [
+                                    'shares' => $post->share_count,
+                                    'likes' => $post->likes,
+                                    'comments' => $post->comments
+                                ],
+                                'icon' => Enum_PresenceType::FACEBOOK()->getSign()
                             );
                         }
                     }
@@ -256,7 +249,14 @@ class StatusesController extends GraphingController
                             'url' => Provider_SinaWeibo::BASEURL . $post->remote_user_id . '/' . Provider_SinaWeibo::getMidForPostId($post->remote_id),
                             'message' => $post->text,
                             'links' => $post->links,
-                            'date' => Model_Base::localeDate($post->created_at)
+                            'date' => Model_Base::shortDate($post->created_at),
+                            'presence_id' => $post->presence_id,
+                            'engagement' => [
+                                'shares' => $post->repost_count,
+                                'likes' => $post->attitude_count,
+                                'comments' => $post->comment_count
+                            ],
+                            'icon' => Enum_PresenceType::SINA_WEIBO()->getSign()
                         );
                     }
                     break;
@@ -268,7 +268,13 @@ class StatusesController extends GraphingController
                             'url' => $post->permalink,
                             'message' => $post->message . ' <img src="' . $post->image_url . '">',
                             'links' => array(),
-                            'date' => Model_Base::localeDate($post->created_time)
+                            'date' => Model_Base::shortDate($post->created_time),
+                            'presence_id' => $post->presence_id,
+                            'engagement' => [
+                                'shares' => $post->share_count,
+                                'likes' => $post->likes
+                            ],
+                            'icon' => Enum_PresenceType::INSTAGRAM()->getSign()
                         );
                     }
                     break;
@@ -280,7 +286,13 @@ class StatusesController extends GraphingController
                             'url' => '', //messages don't have a direct link
                             'message' => $post->message,
                             'links' => array(),
-                            'date' => Model_Base::localeDate($post->created_time)
+                            'date' => Model_Base::shortDate($post->created_time),
+                            'presence_id' => $post->presence_id,
+                            'engagement' => [
+                                'shares' => $post->number_of_replies,
+                                'likes' => $post->likes
+                            ],
+                            'icon' => Enum_PresenceType::YOUTUBE()->getSign()
                         );
                     }
                     break;
@@ -292,7 +304,13 @@ class StatusesController extends GraphingController
                             'url' => '', //messages don't have a direct link
                             'message' => $post->message,
                             'links' => array(),
-                            'date' => Model_Base::localeDate($post->created_time)
+                            'date' => Model_Base::shortDate($post->created_time),
+                            'presence_id' => $post->presence_id,
+                            'engagement' => [
+                                'comments' => $post->comments,
+                                'likes' => $post->likes
+                            ],
+                            'icon' => Enum_PresenceType::LINKEDIN()->getSign()
                         );
                     }
                     break;

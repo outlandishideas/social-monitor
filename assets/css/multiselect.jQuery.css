@@ -96,6 +96,10 @@
     padding: 10px;
 }
 
+.ms-drop input[type=radio] {
+    margin-right:5px;
+}
+
 .ms-drop button:focus , .ms-drop button:hover {
     background: rgb(0,0,0);
 }

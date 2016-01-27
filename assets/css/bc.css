@@ -676,6 +676,20 @@ form .formError {
 	float: none;
 }
 
+.statusesDisplay.all .picker input {
+	background-color: #000;
+	border: 1px solid #fff;
+	height: 40px;
+}
+
+.statusesDisplay.all .picker {
+	margin-right: 20px;
+}
+
+.statusesDisplay.all .filters {
+	text-align:center;
+}
+
 .statusesDisplay .icon-large {
 	font-size: 20px;
 }
@@ -698,15 +712,42 @@ form .formError {
 	vertical-align: top;
 }
 .statusesDisplay td.message {
-	/*width: 10000px;*/
 	vertical-align: top;
+}
+.statusesDisplay td.message .fa {
+	vertical-align: top;
+	padding: 3px 3px 3px 4px;
+	background-color: #fff;
+	margin-right: 5px;
+	margin-top: 5px;
 }
 .statusesDisplay td.message h4 {
 	margin-top: 0;
 	margin-bottom: 10px;
+	color:#fff;
+	text-transform: none;
 }
 .statusesDisplay td.message p {
 	margin: 0;
+}
+.statusesDisplay td.message img {
+	display: block;
+}
+.statusesDisplay td.message .content {
+	display: inline-block;
+	width: 75%;
+}
+.statusesDisplay td.message .engagement {
+	display: inline-block;
+	width: 15%;
+	float: right;
+	vertical-align: top;
+	text-align:right;
+}
+.statusesDisplay td.message .date {
+	color:rgba(255,255,255, 0.5);
+	margin-top:15px;
+	margin-bottom:10px;
 }
 .statusesDisplay td.message .first-response {
 	margin-top: 15px;
@@ -755,6 +796,11 @@ form .formError {
 
 .statusesDisplay td.statusPic img.facebook-actor {
 	background: url(../img/facebook-placeholder.png) no-repeat center center;
+}
+
+.statusesDisplay.all .dataTables_wrapper {
+	width:80%;
+	margin:1rem auto;
 }
 
 /* DataTables */
@@ -1779,8 +1825,41 @@ h4 {
     vertical-align: top;
 }
 
-.picker.social-monitor-multi-select-box select {
-	width:20%;
+.social-monitor-multi-select-box {
+	width:200px;
+	text-align: left;
+	margin-right: 0;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.social-monitor-multi-select-box label {
+	font-size: 0.8rem;
+	font-weight: 300;
+	color: #fff;
+	color: rgba(255,255,255, 0.5);
+	text-align: left;
+}
+
+.social-monitor-multi-select-box select {
+	width:200px;
+}
+
+.social-monitor-multi-select-box button {
+	font-weight:300;
+}
+
+.social-monitor-multi-select-box .ms-drop button:hover {
+	background-color:#0872BA;
+}
+
+.social-monitor-multi-select-box .selected-summary {
+	padding-right:10px;
+}
+
+.statusesController .ui-daterangepickercontain .ui-daterangepicker {
+	background-color: #000;
+	border: 1px solid #fff;
 }
 
 .model-header .page-icon {
@@ -2336,7 +2415,6 @@ td.countries a {
 
 .dataTable th {
 	font-weight: normal;
-	text-transform: uppercase;
 }
 
 .dataTables_scrollHead table {

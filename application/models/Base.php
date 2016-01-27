@@ -320,6 +320,12 @@ abstract class Model_Base
 		return $date->format('Y-m-d H:i:s');
 	}
 
+	public static function shortDate($datetime) {
+		$date = DateTime::createFromFormat('Y-m-d H:i:s', $datetime, new DateTimeZone('UTC'));
+		$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+		return $date->format('d M | H:i');
+	}
+
 	public static function setDb(PDO $db)
 	{
 		self::$db = $db;

@@ -213,8 +213,7 @@ app.datatables = {
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
-				},
-				app.datatables.dateColumn()
+				}
 			]);
 		},
 		'#statuses .youtube': function($div) {
@@ -435,7 +434,16 @@ app.datatables = {
 				[sortColumnIndex, 'desc']
 			],
 			fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-				$(nRow).data('id', aData.id);
+				var $el = $(nRow);
+				$el.data('id', aData.id);
+				var $name = $el.find('.presence-name');
+				var id = $name.data('presence');
+				var presence = _.find(window.presences,function(p) {
+					return p.id == id;
+				});
+				if(presence) {
+					$name.text(presence.name);
+				}
 			},
 			aoColumns:columns,
 			oLanguage:app.datatables.generateLanguage(statusType)
@@ -445,8 +453,6 @@ app.datatables = {
 		app.datatables.statusesTable = $container.find('table')
 			.dataTable(args)
 			.fnSetFilteringDelay(250);
-
-		console.log('statuses table',app.datatables.statusesTable);
 
 		app.datatables.moveSearchBox();
 

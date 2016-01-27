@@ -259,7 +259,9 @@ abstract class Provider_Abstract
                     $ordering[] = $validColumns[$column] . ' ' . $dir;
                 }
             }
-            return ' ORDER BY '.implode(',', $ordering);
+            if (!is_null($ordering) && count($ordering) > 0) {
+                return ' ORDER BY ' . implode(',', $ordering);
+            }
         }
         return '';
     }

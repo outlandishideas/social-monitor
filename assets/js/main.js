@@ -36,7 +36,20 @@ $.extend(app, {
 		'<p><%=message.replace(/\\n/g, "<br />")%></p>',
 		inpost:'<p class="more"></p>' +
 		'<p><%=message.replace(/\\n/g, "<br />")%></p>',
-		post:'<p><%=message.replace(/\\n/g, "<br />")%></p>',
+		post: '\
+			<div>\
+				<div class="<%=icon%>"></div>\
+				<div class="content">\
+					<h4 class="presence-name" data-presence="<%=presence_id%>"></h4>\
+					<%=message.replace(/\\n/g, "<br />")%>\
+					<p class="date"><%=date%></p>\
+				</div>\
+				<div class="engagement">\
+					<% if(!_.isUndefined(engagement.likes)) { %><p>Likes: <%=engagement.likes%></p><% } %>\
+					<% if(!_.isUndefined(engagement.comments)) { %><p>Comments: <%=engagement.comments%></p><% } %>\
+					<% if(!_.isUndefined(engagement.shares)) { %><p>Shares: <%=engagement.shares%></p><% } %>\
+				</div>\
+			</div>',
 		fbPost:'<p class="more"><a href="<%=facebook_url%>" target="_blank" title="View on Facebook"><span class="icon-external-link icon-large"></span></a></p>' +
 		'<%if(actor_name){%>' +
 		'<h4><%if(profile_url){%><a href="<%=profile_url%>" target="_blank"><%=actor_name%></a><%}else{%><%=actor_name%><%}%></h4>' +
@@ -192,20 +205,32 @@ app.init = {
 		'.social-monitor-multi-select': function($items) {
 			$items.each(function() {
 				var $item = $(this);
+				var single = ($item.attr('id') === 'sort'); // sort isn't multi select
 				$item.multipleSelect({
 					placeholder: 'None selected',
-					//selectAll: false
+					single: single,
+					onClose: function() {
+						var summary = app.utils.summariseSelectedOptions($item);
+						if(single) { // we don't need to show the summary for single value selects
+							setTimeout(function() { // bug with multi-select component
+								app.statuses.search($item.attr('id'), $item.val());
+							},1);
+						} else {
+							$item.parent().find('.selected-summary').html(summary);
+							app.statuses.search($item.attr('id'), $item.val());
+						}
+					}
 				});
-				$item.multipleSelect('checkAll');
-				var $button = $(document.createElement('button'));
-				$button.text('Done');
-				$button.click(function() {
-					app.statuses.search($item.attr('id'), $item.val());
-					$item.multipleSelect('close');
-				});
-				var $component = $item.parent().find('.ms-drop');
-
-				$component.append($button);
+				if(!single) {
+					$item.multipleSelect('checkAll');
+					var $button = $(document.createElement('button'));
+					$button.text('Done');
+					$button.click(function() {
+						$item.multipleSelect('close');
+					});
+					var $component = $item.parent().find('.ms-drop');
+					$component.append($button);
+				}
 			})
 		},
 
@@ -640,7 +665,60 @@ app.utils = {
 	    }
         var p = Math.pow(10,n);
         return parseFloat(Math.round(x * p) / p).toFixed(n);
-    }
+    },
+	summariseSelectedOptions: function($select) {
+		var texts = $select.multipleSelect('getSelects', 'text');
+		var summary = $(document.createElement('div'));
+		var total = $select.find('option').length;
+		if(texts && texts.length > 1 && texts.length < total) { // don't show a summary when all selected
+			// if we have selected options, we know that the summary starts with the first option
+			var summaryText = texts[0];
+			var summaryAnchor = '';
+			var hiddenText = ''; // hidden behind <a>
+
+			// we have this many texts left to add, which is coincidentally the index of the last element
+			var lastIndex = texts.length - 1;
+
+			// set this to 1 so we don't repeat the first album
+			var i = 1;
+			var hidden = 0;
+
+			// this adds on all texts up to and NOT including the last text. limit to 3.
+			while(i < lastIndex && i<3) {
+				summaryText += ', ' + texts[i];
+				i++;
+			}
+
+			// this puts the rest of the texts in the hidden span revealed by clicking the <a>
+			while(i < lastIndex) {
+				hiddenText += ', ' + texts[i];
+				i++;
+				hidden++;
+			}
+
+			// finally, if the last index is not 0 we add the last text on (if it is 0, it means we only have one text)
+			if(lastIndex > 0) {
+				// don't show more for just one item
+				if(hidden === 0) {
+					summaryText += ' and ' + texts[lastIndex];
+				} else {
+					hiddenText += ' and ' + texts[lastIndex];
+					hidden++; // we have one more hidden item: texts[lastIndex]
+					summaryAnchor = $(document.createElement('span'));
+					var showMore = $(document.createElement('a'));
+					showMore.attr('href','#');
+					showMore.text(' and '+(hidden)+' more');
+					showMore.click(function() {
+						summaryAnchor.text(hiddenText);
+					});
+					summaryAnchor.append(showMore);
+				}
+			}
+			summary.append(summaryText);
+			summary.append(summaryAnchor);
+		}
+		return summary;
+	}
 };
 
 app.statuses = {
