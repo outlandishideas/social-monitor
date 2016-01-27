@@ -52,10 +52,12 @@ class PresenceController extends GraphingController
         $this->view->rows = $rows;
         $this->view->tableHeaders = $indexTable->getHeaders();
         $this->view->sortCol = Handle::getName();
+		$this->view->regions = Model_Region::fetchAll();
 	}
 
 	/**
 	 * Views a specific presence
+	 * @user-level user
 	 */
 	public function viewAction()
 	{

@@ -12,6 +12,7 @@ use Outlandish\SocialMonitor\TableIndex\Header\Handle;
 use Outlandish\SocialMonitor\TableIndex\Header\Header;
 use Outlandish\SocialMonitor\TableIndex\Header\Name;
 use Outlandish\SocialMonitor\TableIndex\Header\Options;
+use Outlandish\SocialMonitor\TableIndex\Header\ParentName;
 use Outlandish\SocialMonitor\TableIndex\Header\Presences;
 
 /** @var Header[] $headers */
@@ -37,7 +38,7 @@ $gatekeeper = $this->gatekeeper();
     </thead>
     <tbody>
         <?php foreach($this->rows as $row) : ?>
-            <tr>
+            <tr data-region="<?php echo $row->region_id; ?>">
                 <?php foreach($headers as $header) : ?>
                 <td class="<?php echo implode(' ', $header->getCellClasses()); ?>">
                     <?php
@@ -92,6 +93,18 @@ $gatekeeper = $this->gatekeeper();
                                 echo $cellValue;
                             }
                             break;
+                        case ParentName::getName():
+                            if (!$cellValue) {
+                                echo "N/A";
+                                break;
+                            }
+                            $url = $gatekeeper->filter('%url%', array("controller" => $cellValue->controller, "action" => "view", "id" => $cellValue->id));
+                            if ($url) {
+                                echo "<a href=\"{$url}\" class=\"view-link\">{$cellValue->name}</a>";
+                            } else {
+                                echo $cellValue->name;
+                            }
+                        break;
                         default:
                             echo $cellValue;
                             break;

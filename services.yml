@@ -148,6 +148,15 @@ services:
     table.header.total_score:
         class: Outlandish\SocialMonitor\TableIndex\Header\TotalScore
 
+    table.header.reach_score:
+        class: Outlandish\SocialMonitor\TableIndex\Header\ReachScore
+
+    table.header.engagement_score:
+        class: Outlandish\SocialMonitor\TableIndex\Header\EngagementScore
+
+    table.header.quality_score:
+        class: Outlandish\SocialMonitor\TableIndex\Header\QualityScore
+
     table.header.current_audience:
         class: Outlandish\SocialMonitor\TableIndex\Header\CurrentAudience
 
@@ -184,6 +193,9 @@ services:
     table.header.country_count:
         class: Outlandish\SocialMonitor\TableIndex\Header\CountryCount
 
+    table.header.parent:
+        class: Outlandish\SocialMonitor\TableIndex\Header\ParentName
+
     # Index Tables
     table.region-index:
         class: Outlandish\SocialMonitor\TableIndex\TableIndex
@@ -191,9 +203,11 @@ services:
             - [addHeader, ["@table.header.name"]]
             - [addHeader, ["@table.header.total_rank"]]
             - [addHeader, ["@table.header.total_score"]]
+            - [addHeader, ["@table.header.reach_score"]]
+            - [addHeader, ["@table.header.engagement_score"]]
+            - [addHeader, ["@table.header.quality_score"]]
             - [addHeader, ["@table.header.target_audience"]]
-            - [addHeader, ["@table.header.actions_per_day"]]
-            - [addHeader, ["@table.header.response_time"]]
+            - [addHeader, ["@table.header.current_audience"]]
             - [addHeader, ["@table.header.countries"]]
             - [addHeader, ["@table.header.country_count"]]
             - [addHeader, ["@table.header.presence_count"]]
@@ -205,9 +219,11 @@ services:
             - [addHeader, ["@table.header.name"]]
             - [addHeader, ["@table.header.total_rank"]]
             - [addHeader, ["@table.header.total_score"]]
+            - [addHeader, ["@table.header.reach_score"]]
+            - [addHeader, ["@table.header.engagement_score"]]
+            - [addHeader, ["@table.header.quality_score"]]
             - [addHeader, ["@table.header.target_audience"]]
-            - [addHeader, ["@table.header.actions_per_day"]]
-            - [addHeader, ["@table.header.response_time"]]
+            - [addHeader, ["@table.header.current_audience"]]
             - [addHeader, ["@table.header.presences"]]
             - [addHeader, ["@table.header.presence_count"]]
             - [addHeader, ["@table.header.options"]]
@@ -218,12 +234,12 @@ services:
             - [addHeader, ["@table.header.name"]]
             - [addHeader, ["@table.header.total_rank"]]
             - [addHeader, ["@table.header.total_score"]]
+            - [addHeader, ["@table.header.reach_score"]]
+            - [addHeader, ["@table.header.engagement_score"]]
+            - [addHeader, ["@table.header.quality_score"]]
             - [addHeader, ["@table.header.target_audience"]]
             - [addHeader, ["@table.header.current_audience"]]
             - [addHeader, ["@table.header.digital_population"]]
-            - [addHeader, ["@table.header.digital_population_health"]]
-            - [addHeader, ["@table.header.actions_per_day"]]
-            - [addHeader, ["@table.header.response_time"]]
             - [addHeader, ["@table.header.presences"]]
             - [addHeader, ["@table.header.presence_count"]]
             - [addHeader, ["@table.header.options"]]
@@ -232,13 +248,15 @@ services:
         class: Outlandish\SocialMonitor\TableIndex\TableIndex
         calls:
             - [addHeader, ["@table.header.handle"]]
+            - [addHeader, ["@table.header.parent"]]
             - [addHeader, ["@table.header.branding"]]
             - [addHeader, ["@table.header.sign_off"]]
             - [addHeader, ["@table.header.total_rank"]]
             - [addHeader, ["@table.header.total_score"]]
+            - [addHeader, ["@table.header.reach_score"]]
+            - [addHeader, ["@table.header.engagement_score"]]
+            - [addHeader, ["@table.header.quality_score"]]
             - [addHeader, ["@table.header.current_audience"]]
             - [addHeader, ["@table.header.target_audience"]]
-            - [addHeader, ["@table.header.actions_per_day"]]
-            - [addHeader, ["@table.header.response_time"]]
             - [addHeader, ["@table.header.options"]]
 

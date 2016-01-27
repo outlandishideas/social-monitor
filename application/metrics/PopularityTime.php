@@ -5,6 +5,7 @@ class Metric_PopularityTime extends Metric_Abstract {
     protected static $name = "popularity_time";
     protected static $title = "Popularity Trend";
     protected static $icon = "fa fa-line-chart";
+    protected static $gliding = false;
 
     function __construct()
     {
@@ -23,6 +24,7 @@ class Metric_PopularityTime extends Metric_Abstract {
     {
         $estimate = $this->getTargetAudienceDate($presence, $start, $end);
         $actualMonths = null;
+        // if we don't have an estimate then return null, to display 'no data'
         if ($estimate instanceof \DateTime) {
             $now = new DateTime('now');
             $now->setTime(0,0,0);
@@ -34,7 +36,8 @@ class Metric_PopularityTime extends Metric_Abstract {
 
     /**
      * Gets the date at which the target audience size will be reached, based on the trend over the given time period.
-     * If the target is already reached, or there is no target, this will return null.
+     * If the target is already reached, this will return the current day.
+     * If there is no target, this will return null.
      * If any of these conditions are met, this will return the maximum date possible:
      * - popularity has never varied
      * - the calculated date is in the past
@@ -47,62 +50,68 @@ class Metric_PopularityTime extends Metric_Abstract {
      */
     protected function getTargetAudienceDate(Model_Presence $presence, DateTime $start, DateTime $end)
     {
-        $date = new DateTime; //the return value
+
+        $date = null;
 
         $target = $presence->getTargetAudience();
         $popularity = $presence->getPopularity();
 
+        // if $popularity is null then we return null for 'no data'
+        if(is_numeric($target) && $target > 0 && is_numeric($popularity)) {
+            // if we are above the target already then return today as the target date, which gives us 100%
+            if($popularity < $target) {
+                $data = $presence->getHistoricData($start, $end, Metric_Popularity::getName());
+                $count = count($data);
 
+                if ($count > 1) {
+                    // calculate line of best fit (see http://www.endmemo.com/statistics/lr.php)
+                    $meanX = $meanY = $sumXY = $sumXX = 0;
 
-        if(is_numeric($target) && $target > 0 && $popularity < $target) {
+                    $factor = 1;
+                    foreach ($data as $row) {
+                        // scale x down by a large factor, to avoid large number issues
+                        $rowDate = strtotime($row['datetime']) / $factor;
+                        $meanX += $rowDate;
+                        $meanY += $row['value'];
+                        $sumXY += $rowDate * $row['value'];
+                        $sumXX += $rowDate * $rowDate;
+                    }
 
-            $data = $presence->getHistoricData($start, $end, Metric_Popularity::getName());
-            $count = count($data);
+                    $meanX /= $count;
+                    $meanY /= $count;
 
-            if ($count > 1) {
-                // calculate line of best fit (see http://www.endmemo.com/statistics/lr.php)
-                $meanX = $meanY = $sumXY = $sumXX = 0;
+                    $denominator = ($sumXX - $count * $meanX * $meanX);
+                    $numerator = ($sumXY - $count * $meanX * $meanY);
 
-                $factor = 1;
-                foreach ($data as $row) {
-                    // scale x down by a large factor, to avoid large number issues
-                    $rowDate = strtotime($row['datetime'])/$factor;
-                    $meanX += $rowDate;
-                    $meanY += $row['value'];
-                    $sumXY += $rowDate*$row['value'];
-                    $sumXX += $rowDate*$rowDate;
-                }
-
-                $meanX /= $count;
-                $meanY /= $count;
-
-                $denominator = ($sumXX - $count*$meanX*$meanX);
-                $numerator = ($sumXY - $count*$meanX*$meanY);
-
-                if ($denominator != 0 && $numerator/$denominator > 0) {
-                    $gradient = $factor * $numerator/$denominator;
-                    $intersect = $meanY - $factor * $gradient * $meanX;
-                    $timestamp = ($target - $intersect)/$gradient;
-                    if ($timestamp < PHP_INT_MAX) {
-                        //we've been having some difficulties with DateTime and
-                        //large numbers. Try to run a DateTime construct to see if it works
-                        //if not nullify $date so that we can create a DateTime from PHP_INI_MAX
-                        try {
-                            $date = new DateTime();
-                            $date->setTimestamp(round($timestamp));
-                        } catch (Exception $e) {
-                            $date = null;
+                    // numerator / denominator is gradient, want to return maximum datetime if gradient will be 0
+                    if ($denominator != 0 && $numerator / $denominator > 0) {
+                        $gradient = $factor * $numerator / $denominator;
+                        $intersect = $meanY - $factor * $gradient * $meanX;
+                        $timestamp = ($target - $intersect) / $gradient;
+                        if ($timestamp < PHP_INT_MAX) {
+                            //we've been having some difficulties with DateTime and
+                            //large numbers. Try to run a DateTime construct to see if it works
+                            //if not nullify $date so that we can create a DateTime from PHP_INI_MAX
+                            try {
+                                $date = new DateTime();
+                                $date->setTimestamp(round($timestamp));
+                            } catch (Exception $e) {
+                                $date = null;
+                            }
                         }
                     }
                 }
-            }
 
-            if (!($date instanceof DateTime) || $date->getTimestamp() < time()) {
-                try {
-                    $date = new DateTime(PHP_INT_MAX);
-                } catch (Exception $e) {
-                    $date = null;
+                if (!($date instanceof DateTime) || $date->getTimestamp() < time()) {
+                    try {
+                        $date = new DateTime('1st January 2999');
+                    } catch (Exception $e) {
+                        $date = null;
+                    }
                 }
+            } else {
+                // we have already reached the target
+                $date = new DateTime; //the return value
             }
         }
 
