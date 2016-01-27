@@ -2227,14 +2227,12 @@ table td ul li a:hover {
 	color: #fff;
 }
 
-.small-country-list {
-	margin-top: 1rem;
-	margin-bottom: 2rem;
-}
-
-.small-country-list h4 {
-	margin-bottom: 1rem;
-
+.find-country label {
+	font-size: 1rem;
+	font-weight: 300;
+	margin: 0;
+	padding: 0.25rem 0;
+	text-transform: uppercase;
 }
 
 .country-list {
@@ -2252,9 +2250,11 @@ table td ul li a:hover {
 
 .country-list li a {
 	color: #fff;
+	display: inline-block;
+	width: 80%;
 }
 
-.country-list li span {
+.country-list li .score {
 	font-size: 1.5rem;
 	position: absolute;
 	right: 0;
