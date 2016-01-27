@@ -5,6 +5,7 @@ class Metric_YoutubeEngagementLeveled extends Metric_AbstractEngagement {
     protected static $name = "youtube_engagement";
     protected static $title = "Youtube Engagement Score";
     protected static $icon = "fa fa-youtube";
+    public $target = 0.08;
     protected static $gliding = false;
     protected static $targetOptions = [
         'yt_engagement_target_level_1',

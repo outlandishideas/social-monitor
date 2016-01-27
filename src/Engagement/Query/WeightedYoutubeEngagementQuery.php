@@ -136,13 +136,26 @@ class WeightedYoutubeEngagementQuery extends Query
 
             // here we calculate the weighted engagement by doing a weighted sum of the different types
             $weightedTotalEngagement = 0;
+            $weightedIncludingViews = 0;
             foreach($this->typeWeightMap as $type=>$weight) {
-                $weightedTotalEngagement += $presenceEngagementMap[$type]*$weight;
+                if($type !== 'views') {
+                    $weightedTotalEngagement += $presenceEngagementMap[$type]*$weight;
+                }
+                $weightedIncludingViews += $presenceEngagementMap[$type]*$weight;
             }
             // we then scale by the popularity of the presence
-            $scale = $presenceEngagementMap['active_users'] ? $presenceEngagementMap['active_users'] : 1;
+            $scale = $presenceEngagementMap['views'] ? $presenceEngagementMap['views'] : 1;
+            $followersScale = $presenceEngagementMap['active_users'] ? $presenceEngagementMap['active_users'] : 1;
+
             $presenceEngagementMap['weighted_engagement'] = $weightedTotalEngagement;
+            $presenceEngagementMap['weighted_engagement_including_views'] = $weightedIncludingViews;
             $presenceEngagementMap['scaled_engagement'] = $weightedTotalEngagement / $scale;
+            $presenceEngagementMap['scaled_engagement_by_followers'] = $weightedIncludingViews / $followersScale;
+            $newScore = ($weightedTotalEngagement / $scale) * 100 / 0.08;
+            if($newScore > 100) {
+                $newScore = 100;
+            }
+            $presenceEngagementMap['new_score'] = $newScore;
             $allPresencesEngagement[] = $presenceEngagementMap;
         }
         return $allPresencesEngagement;
