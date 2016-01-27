@@ -2063,10 +2063,7 @@ table .cell-handle .missing {
 }
 
 .button-bc-bar .button-group > li > select {
-	background: transparent;
-	border-color: white;
-	color: white;
-	padding-right: 1rem;
+	height: 35px;
 }
 
 .button-bc-bar .button-group > li > select option {
