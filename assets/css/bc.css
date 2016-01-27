@@ -199,6 +199,7 @@ fieldset {
 	top: 16px;
 	border-radius: 10px;
 	border-top-left-radius: 0px;
+	font-family: 'Open Sans', sans-serif;
 }
 
 .help-text p {
