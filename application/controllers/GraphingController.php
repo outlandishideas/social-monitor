@@ -214,8 +214,6 @@ abstract class GraphingController extends BaseController {
 					if (!$m['gliding'] && $m['score'] !== null) {
 						if ($m['score'] == 0) {
 							$m['color'] = '#D06959';	// red for score of 0%
-						} else {
-							$m['color'] = '#84af5b';    // green
 						}
 					}
 					$metrics[] = $m;
