@@ -2253,7 +2253,7 @@ table td ul li a:hover {
 	width: 80%;
 }
 
-.country-list li span {
+.country-list li .score {
 	font-size: 1.5rem;
 	position: absolute;
 	right: 0;

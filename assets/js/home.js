@@ -87,7 +87,8 @@ app.home = {
             .on('click', 'li a', function(event){
                 event.preventDefault();
                 var id = $(this).parent('li').data('id');
-                app.home.loadCampaignStats(id);
+				var name = $(this).find('.name').text();
+                app.home.loadCampaignStats(id,name);
             });
 
         $('.badge-presences-buttons')
@@ -186,25 +187,32 @@ app.home = {
 		var data = app.home.mapData;
 		if (selection.length > 0) {
 			var id = data.getValue(selection[0].row, 3);
-			if(id != -1){
-				app.home.loadCampaignStats(id);
-			}
+			var name = data.getValue(selection[0].row, 1);
+			app.home.loadCampaignStats(id,name);
 		}
 	},
 	/**
 	 * Fetches the country summary over ajax, and appends it to the map.
 	 * @param id
+	 * @param name
 	 */
-	loadCampaignStats: function(id) {
+	loadCampaignStats: function(id,name) {
 		var $countryStats = $('#country-stats');
 		if(id) {
-			$countryStats.addClass('loading');
-			$countryStats.load('country/stats-panel/id/' + id, function () {
+			if(id === -1) {
+				// we don't have this country stored, put in dummy info
 				$countryStats.removeClass('global');
-				$countryStats.removeClass('loading');
+				$countryStats.html(_.template(app.templates.emptyCountryBadge,{name: name}));
 				$('[data-badge-title]').text($('#homepage-tabs').find('dd.active').data('title'));
-				app.home.updateAll();
-			});
+			} else {
+				$countryStats.addClass('loading');
+				$countryStats.load('country/stats-panel/id/' + id, function () {
+					$countryStats.removeClass('global');
+					$countryStats.removeClass('loading');
+					$('[data-badge-title]').text($('#homepage-tabs').find('dd.active').data('title'));
+					app.home.updateAll();
+				});
+			}
 		} else {
 			$countryStats.addClass('global');
 			$countryStats.html(app.templates.globalScore);
@@ -371,8 +379,9 @@ app.home = {
 
 	selectCountry: function() {
 		var topResult = $('.find-country .country-list li').first();
+		var name = topResult.find('.name').text();
 		if(topResult) {
-			app.home.loadCampaignStats(topResult.data('id'));
+			app.home.loadCampaignStats(topResult.data('id'),name);
 		} else {
 			app.home.loadCampaignStats();
 		}

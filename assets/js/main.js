@@ -88,8 +88,21 @@ $.extend(app, {
 			</table>',
 		countryListItem:
 			'<li data-id="<%= id %>" data-badge>\
-				<a href="#"><%= n %> <span data-badge-score="%"></span></a>\
+				<a href="#"><span class="name"><%= n %></span> <span class="score" data-badge-score="%"></span></a>\
 			</li>',
+		emptyCountryBadge:
+			'<div class="badge-small" data-badge>\
+			    <h3><%= name %></h3>\
+                <div class="badge-score bd-btm">\
+	                <h4><span data-badge-title></span> Score</h4>\
+                    <div class="score-value">0</div>\
+                        <div class="score-bar"></div>\
+                    </div>\
+                    <div class="bd-btm">\
+	                <h4>Presences</h4>\
+	                <div class="score-value">0</div>\
+                </div>\
+            </div>',
 		globalScore:
 			'<div id="overall-score" class="badge-small" data-country-id="0" data-badge data-score="0" data-color="#fff">\
 				<h3>British Council around the web</h3>\
