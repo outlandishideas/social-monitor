@@ -12,12 +12,12 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
     protected static $queryClassName = 'Outlandish\SocialMonitor\Engagement\Query\ChangeThisQuery';
     /** @var Query */
     protected $query;
-    public $target = array();
+    public $target = 0.25;
     protected $cache = array();
 
     function __construct()
     {
-        $this->target = $this->getTargets();
+        //$this->target = $this->getTargets();
         $db = Zend_Registry::get('db')->getConnection();
         $this->query = new static::$queryClassName($db);
     }
@@ -43,45 +43,23 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $data = $presence->getHistoricData($start, $end, self::getName());
-        $total = 0;
-        $count = 0;
-        foreach ($data as $d) {
-            $total += $d['value'];
-            $count++;
-        }
-        if ($count == 0) {
+        if($data and count($data)) {
+            $score = $data[0]['value'];
+            return $score;
+        } else {
             return 0;
         }
-        return $total/$count;
     }
 
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $score = $presence->getMetricValue($this);
-
-        foreach($this->target as $level => $target) {
-            //if we haven't reached level 1 yet, then
-            //set the level as 0 and break out
-            if ($level == 1 && $score < $target) {
-                $level = 0;
-                break;
-            }
-
-            //if level is more than or == to the target
-            //continue to the next level
-            if ($score >= $target) {
-                continue;
-            }
-
-            //if level is less than or = to the target
-            //break and use the current $level to calculate
-            $level = $level-1;
-            break;
-
+        $likesPerUsers = $presence->getMetricValue($this);
+        $score = $likesPerUsers / $this->target;
+        if($score > 1) {
+            return 100;
+        } else {
+            return $score * 100;
         }
-
-        //Each level is worth 20% so level 5 is 100%
-        return $level * 20;
     }
 
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end_read_only)
@@ -108,25 +86,6 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
         }
 
         $score = array_values($presences)[0];
-
-        $prevMonthStart = clone $then;
-        $prevMonthStart->modify("-30 days");
-
-        $prevScore = $presence->getHistoricData($prevMonthStart,$end_read_only,static::$name);
-        $min = $max = null;
-        if(count($prevScore)) {
-            foreach ($prevScore as $d) {
-                if($min === null || $d['value'] < $min) {
-                    $min = $d['value'];
-                }
-                if($max === null || $d['value'] > $max) {
-                    $max = $d['value'];
-                }
-            }
-        }
-
-        $score['previous_value_min'] = $min;
-        $score['previous_value_max'] = $max;
 
         return $score;
     }

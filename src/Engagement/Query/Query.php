@@ -79,7 +79,7 @@ abstract class Query {
         foreach ($data as &$d) {
             $scale = $this->activeUserProportion[$d['size']] ? $this->activeUserProportion[$d['size']] : 1;
             $d['active_users'] = $scale * $d['popularity'];
-            $d['scaled_engagement'] = $d['active_users'] ? ($d['weighted_engagement'] / $d['active_users']) * 1000 : 0;
+            $d['scaled_engagement'] = $d['active_users'] ? ($d['weighted_engagement'] / $d['active_users']) : 0;
         }
         return $data;
     }
@@ -147,15 +147,13 @@ abstract class Query {
     protected function selectStatement()
     {
         $weightedEngagement = array();
-        $weightSum = 0;
         $clauses = ['ph.presence_id AS `presence_id`', 'ph.size', 'ph.popularity'];
         foreach ($this->engagementWeighting as $key => $weight) {
             $clauses[] = "IFNULL(f.$key,0) AS $key";
             $clauses[] = "IFNULL(f.$key,0)*$weight AS weighted_$key";
             $weightedEngagement[] = "f.$key*$weight";
-            $weightSum += $weight;
         }
-        $weightedEngagementStr = "IFNULL(((" . implode('+', $weightedEngagement) . ") / $weightSum),0) AS `weighted_engagement`";
+        $weightedEngagementStr = "IFNULL((" . implode('+', $weightedEngagement) . "),0) AS `weighted_engagement`";
         
         $clauses[] = $weightedEngagementStr;
         return implode(',', $clauses);
