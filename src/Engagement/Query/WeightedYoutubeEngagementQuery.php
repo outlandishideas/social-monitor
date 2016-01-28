@@ -20,7 +20,7 @@ class WeightedYoutubeEngagementQuery extends Query
     const PRESENCE_STREAM_TABLE = 'presence_history';
     const PRESENCE_TABLE = 'presences';
     private $typeWeightMap = ['views' => 1,'likes' => 4,'dislikes' => 4,'comments' => 7];
-
+    private $newTypeWeightMap = ['likes' => 1,'dislikes' => 1,'comments' => 4];
 
     public function __construct(PDO $db)
     {
@@ -29,6 +29,19 @@ class WeightedYoutubeEngagementQuery extends Query
         $this->activeUserProportion[0] = BaseController::getOption('yt_active_user_percentage_small') / 100;
         $this->activeUserProportion[1] = BaseController::getOption('yt_active_user_percentage_medium') / 100;
         $this->activeUserProportion[2] = BaseController::getOption('yt_active_user_percentage_large') / 100;
+    }
+
+    public function fetch(DateTime $now, DateTime $then)
+    {
+        $rows = $this->getData($now, $then);
+
+        $scores = [];
+
+        foreach ($rows as $row) {
+            $scores[$row['presence_id']] = $row['engagement_as_likes_per_view'];
+        }
+
+        return $scores;
     }
 
     /**
@@ -67,7 +80,8 @@ class WeightedYoutubeEngagementQuery extends Query
         foreach($presenceSizes as $presenceId=>$size) {
 
             // this stores the values of different engagement types for the presence
-            $presenceEngagementMap = ["presence_id"=>$presenceId];
+            $presenceData = ["presence_id"=>$presenceId];
+            $engagementChange = array();
 
             /*
              * Find the current popularity of each presence - this is used to scale the engagement
@@ -88,9 +102,9 @@ class WeightedYoutubeEngagementQuery extends Query
             $presencePopularity = $statement->fetchAll(PDO::FETCH_COLUMN);
             $presencePopularity = array_key_exists(0,$presencePopularity) ? $presencePopularity[0] : 0;
 
-            $presenceEngagementMap['popularity'] = intval($presencePopularity,10);
+            $presenceData['popularity'] = intval($presencePopularity,10);
             $activeUserProportion = $this->activeUserProportion[$size] ? $this->activeUserProportion[$size] : 1;
-            $presenceEngagementMap['active_users'] = $presenceEngagementMap['popularity']*$activeUserProportion;
+            $presenceData['active_users'] = $presenceData['popularity']*$activeUserProportion;
 
             /**
              * Get the total views,likes,dislikes,comments on all videos from this presence at time $now.
@@ -131,32 +145,40 @@ class WeightedYoutubeEngagementQuery extends Query
                 $endValue = array_key_exists($type,$videoEndValues) ? $videoEndValues[$type] : 0;
                 $startValue = array_key_exists($type,$videoStartValues) ? $videoStartValues[$type] : 0;
                 $change = $endValue - $startValue;
-                $presenceEngagementMap[$type] = $change;
+                $engagementChange[$type] = $change;
             }
 
             // here we calculate the weighted engagement by doing a weighted sum of the different types
             $weightedTotalEngagement = 0;
             $weightedIncludingViews = 0;
             foreach($this->typeWeightMap as $type=>$weight) {
-                if($type !== 'views') {
-                    $weightedTotalEngagement += $presenceEngagementMap[$type]*$weight;
-                }
-                $weightedIncludingViews += $presenceEngagementMap[$type]*$weight;
+                $weightedIncludingViews += $engagementChange[$type]*$weight;
             }
-            // we then scale by the popularity of the presence
-            $scale = $presenceEngagementMap['views'] ? $presenceEngagementMap['views'] : 1;
-            $followersScale = $presenceEngagementMap['active_users'] ? $presenceEngagementMap['active_users'] : 1;
+            foreach($this->newTypeWeightMap as $type=>$weight) {
+                $weightedTotalEngagement += $engagementChange[$type]*$weight;
+            }
+                // we then scale by the popularity of the presence
+            $scale = $engagementChange['views'] ? $engagementChange['views'] : 1;
+            $followersScale = $presenceData['active_users'] ? $presenceData['active_users'] : 1;
 
-            $presenceEngagementMap['weighted_engagement'] = $weightedTotalEngagement;
-            $presenceEngagementMap['weighted_engagement_including_views'] = $weightedIncludingViews;
-            $presenceEngagementMap['scaled_engagement'] = $weightedTotalEngagement / $scale;
-            $presenceEngagementMap['scaled_engagement_by_followers'] = $weightedIncludingViews / $followersScale;
-            $newScore = ($weightedTotalEngagement / $scale) * 100 / 0.08;
-            if($newScore > 100) {
-                $newScore = 100;
+            $presenceData['views'] = $engagementChange['views'];
+            $presenceData['likes_equivalent'] = $weightedTotalEngagement;
+            $presenceData['engagement_as_likes_per_view'] = $weightedTotalEngagement / $scale;
+            $score = $presenceData['engagement_as_likes_per_view'] * 100 / 0.08;
+            if($score > 100) {
+                $score = 100;
             }
-            $presenceEngagementMap['new_score'] = $newScore;
-            $allPresencesEngagement[] = $presenceEngagementMap;
+            $presenceData['score_as_likes_per_view'] = $score;
+
+            $presenceData['views_equivalent'] = $weightedIncludingViews;
+            $presenceData['engagement_as_views_per_follower'] = $weightedIncludingViews / $followersScale;
+            $oldScore = $presenceData['engagement_as_views_per_follower'] / 10;
+            if($oldScore > 100) {
+                $oldScore = 100;
+            }
+            $presenceData['score_as_views_per_follower'] = $oldScore;
+
+            $allPresencesEngagement[] = $presenceData;
         }
         return $allPresencesEngagement;
     }
