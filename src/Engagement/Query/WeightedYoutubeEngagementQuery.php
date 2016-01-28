@@ -19,7 +19,7 @@ class WeightedYoutubeEngagementQuery extends Query
     const VIDEO_STREAM_TABLE = 'youtube_video_stream';
     const PRESENCE_STREAM_TABLE = 'presence_history';
     const PRESENCE_TABLE = 'presences';
-    private $typeWeightMap = ['views' => 1,'likes' => 4,'dislikes' => 4,'comments' => 7];
+    private $oldTypeWeightMap = ['views' => 1,'likes' => 4,'dislikes' => 4,'comments' => 7];
     private $newTypeWeightMap = ['likes' => 1,'dislikes' => 1,'comments' => 4];
 
     public function __construct(PDO $db)
@@ -142,7 +142,7 @@ class WeightedYoutubeEngagementQuery extends Query
             $videoStartValues = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
 
             // in this loop we calculate the change in each type of engagement and save in $presenceEngagementMap
-            foreach(array_keys($this->typeWeightMap) as $type) {
+            foreach(array_keys($this->oldTypeWeightMap) as $type) {
                 $endValue = array_key_exists($type,$videoEndValues) ? $videoEndValues[$type] : 0;
                 $startValue = array_key_exists($type,$videoStartValues) ? $videoStartValues[$type] : 0;
                 $change = $endValue - $startValue;
@@ -150,21 +150,21 @@ class WeightedYoutubeEngagementQuery extends Query
             }
 
             // here we calculate the weighted engagement by doing a weighted sum of the different types
-            $weightedTotalEngagement = 0;
+            $weightedExcludingViews = 0;
             $weightedIncludingViews = 0;
-            foreach($this->typeWeightMap as $type=>$weight) {
+            foreach($this->oldTypeWeightMap as $type=>$weight) {
                 $weightedIncludingViews += $engagementChange[$type]*$weight;
             }
             foreach($this->newTypeWeightMap as $type=>$weight) {
-                $weightedTotalEngagement += $engagementChange[$type]*$weight;
+                $weightedExcludingViews += $engagementChange[$type]*$weight;
             }
-                // we then scale by the popularity of the presence
+                // we then scale by the views
             $scale = $engagementChange['views'] ? $engagementChange['views'] : 1;
             $followersScale = $presenceData['active_users'] ? $presenceData['active_users'] : 1;
 
             $presenceData['views'] = $engagementChange['views'];
-            $presenceData['likes_equivalent'] = $weightedTotalEngagement;
-            $presenceData['engagement_as_likes_per_view'] = $weightedTotalEngagement / $scale;
+            $presenceData['likes_equivalent'] = $weightedExcludingViews;
+            $presenceData['engagement_as_likes_per_view'] = $weightedExcludingViews / $scale;
             $score = $presenceData['engagement_as_likes_per_view'] * 100 / 0.08;
             if($score > 100) {
                 $score = 100;
@@ -173,7 +173,7 @@ class WeightedYoutubeEngagementQuery extends Query
 
             $presenceData['views_equivalent'] = $weightedIncludingViews;
             $presenceData['engagement_as_views_per_follower'] = $weightedIncludingViews / $followersScale;
-            $oldScore = $presenceData['engagement_as_views_per_follower'] / 10;
+            $oldScore = $presenceData['engagement_as_views_per_follower'];
             if($oldScore > 100) {
                 $oldScore = 100;
             }
