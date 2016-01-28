@@ -29,6 +29,7 @@ class WeightedYoutubeEngagementQuery extends Query
         $this->activeUserProportion[0] = BaseController::getOption('yt_active_user_percentage_small') / 100;
         $this->activeUserProportion[1] = BaseController::getOption('yt_active_user_percentage_medium') / 100;
         $this->activeUserProportion[2] = BaseController::getOption('yt_active_user_percentage_large') / 100;
+        $this->activeUserProportion[3] = BaseController::getOption('yt_active_user_percentage_large') / 100;
     }
 
     public function fetch(DateTime $now, DateTime $then)

@@ -41,7 +41,8 @@ class Model_Presence
 	protected static $sizes = array(
 		0 => "Small",
 		1 => "Medium",
-		2 => "Large"
+		2 => "Large",
+		3 => "Extra large"
 	);
 
 	/**

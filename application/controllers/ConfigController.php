@@ -116,7 +116,8 @@ class ConfigController extends BaseController {
                         'values' => array(
                             'fb_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
                             'fb_active_user_percentage_medium'=>array('label'=>'...medium presences'),
-                            'fb_active_user_percentage_large'=>array('label'=>'...and large presences'),
+                            'fb_active_user_percentage_large'=>array('label'=>'...large presences'),
+                            'fb_active_user_percentage_xlarge'=>array('label'=>'...and extra large presences'),
                             'facebook_engagement_weighting'=>array('label'=>'Facebook Engagement Score Weighting'),
                             'fb_engagement_target'=>array('label'=>'Facebook Engagement Score (For a single level)', 'hint' => 'The presence will score 100% if it reaches this target (and we are using the old calculation)'),
                             'fb_engagement_target_level_1'=>array('label'=>'Facebook Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
