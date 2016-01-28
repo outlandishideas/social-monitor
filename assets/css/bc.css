@@ -31,7 +31,7 @@ body {
 }
 
 #modal-container {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	right: 0;
 	bottom: 0;
@@ -64,7 +64,7 @@ body {
 }
 
 #feedback-form textarea {
-	height: 200px;
+	height: 100px;
 	margin-bottom: 15px;
 }
 
