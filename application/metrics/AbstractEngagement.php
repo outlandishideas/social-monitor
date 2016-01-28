@@ -8,7 +8,6 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
     protected static $title = "ChangeThis Engagement Score";
     protected static $icon = "fa fa_change_this";
     protected static $gliding = false;
-    protected static $targetOptions = array();
     protected static $queryClassName = 'Outlandish\SocialMonitor\Engagement\Query\ChangeThisQuery';
     /** @var Query */
     protected $query;
