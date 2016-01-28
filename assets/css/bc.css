@@ -2061,6 +2061,12 @@ table .cell-handle .missing {
 .button-bc-bar .button-group > li {
 	margin: 0 0.5rem;
 	float: none;
+	vertical-align: middle;
+}
+
+.button-bc-bar .button-group > li > * {
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 .button-bc-bar .button-group > li > select {
