@@ -7,6 +7,7 @@ abstract class Provider_Abstract
     /** @var Enum_PresenceType */
     protected $type = null;
     protected $createdTimeColumn = 'created_time';
+    protected $engagementStatement = '(likes + comments * 4)';
 
 	public function __construct(PDO $db)
 	{
@@ -96,7 +97,7 @@ abstract class Provider_Abstract
 			SELECT SQL_CALC_FOUND_ROWS p.*
 			FROM {$this->tableName} AS p
 			WHERE " . implode(' AND ', $clauses);
-        $sql .= $this->getOrderSql($order, array('date'=>$this->createdTimeColumn));
+        $sql .= $this->getOrderSql($order, array('date'=>$this->createdTimeColumn, 'engagement'=>$this->engagementStatement));
         $sql .= $this->getLimitSql($limit, $offset);
 
         $stmt = $this->db->prepare($sql);
@@ -156,6 +157,10 @@ abstract class Provider_Abstract
             $clauses[] = '`type` = :type';
             $args[':type'] = $type;
         }
+        $sql = "
+			SELECT *
+			FROM `presence_history`
+			WHERE " . implode(' AND ', $clauses);
 		$stmt = $this->db->prepare("
 			SELECT *
 			FROM `presence_history`

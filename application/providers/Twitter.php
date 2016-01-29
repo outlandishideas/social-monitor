@@ -18,7 +18,8 @@ class Provider_Twitter extends Provider_Abstract
 		$this->type = Enum_PresenceType::TWITTER();
         $this->tableName = 'twitter_tweets';
         $this->adapter = $adapter;
-	}
+        $this->engagementStatement = '(retweet_count)';
+    }
 
 	public function fetchStatusData(Model_Presence $presence)
 	{

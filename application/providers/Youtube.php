@@ -24,6 +24,7 @@ class Provider_Youtube extends Provider_Abstract
         $this->tableName = 'youtube_video_stream';
         $this->commentTableName = 'youtube_comment_stream';
         $this->adapter = $adapter;
+        $this->engagementStatement = '(likes + number_of_replies * 4)';
     }
 
 	public function fetchStatusData(Model_Presence $presence)
@@ -407,7 +408,7 @@ class Provider_Youtube extends Provider_Abstract
 			SELECT SQL_CALC_FOUND_ROWS p.*
 			FROM {$this->commentTableName} AS p
 			WHERE " . implode(' AND ', $clauses);
-        $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
+        $sql .= $this->getOrderSql($order, array('date'=>'created_time', 'engagement'=>$this->engagementStatement));
         $sql .= $this->getLimitSql($limit, $offset);
 
         $stmt = $this->db->prepare($sql);

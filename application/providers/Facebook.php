@@ -18,6 +18,7 @@ class Provider_Facebook extends Provider_Abstract
         $this->tableName = 'facebook_stream';
         $this->adapter = $adapter;
         $this->engagementMetric = $metric;
+        $this->engagementStatement = '(likes + comments * 4 + share_count * 7)';
     }
 
 	public function fetchStatusData(Model_Presence $presence)

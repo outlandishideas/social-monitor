@@ -49,7 +49,7 @@ class StatusesController extends GraphingController
             ['name' => 'sort', 'label' => 'Sort', 'options' =>
                 [
                     ['value' => 'date', 'title' => 'Date'],
-                    ['value' => 'popularity', 'title' => 'Popularity']
+                    ['value' => 'engagement', 'title' => 'Engagement']
                 ]
             ]
         ];
@@ -151,7 +151,7 @@ class StatusesController extends GraphingController
             $dateRange[0],
             $dateRange[1],
             $this->getRequestSearchQuery(),
-            ['date' => 'desc'],
+            $this->getRequestOrdering(),
             $limit,
             $this->getRequestOffset()
         );
@@ -180,7 +180,10 @@ class StatusesController extends GraphingController
                             'links' => $tweet->links,
                             'twitter_url' => $tweet->permalink,
                             'presence_id' => $tweet->presence_id,
-                            'engagement' => ['shares' => $tweet->retweet_count],
+                            'engagement' => [
+                                'shares' => $tweet->retweet_count,
+                                'comparable' => $tweet->retweet_count
+                            ],
                             'icon' => Enum_PresenceType::TWITTER()->getSign()
                         );
                     }
@@ -234,7 +237,8 @@ class StatusesController extends GraphingController
                                 'engagement' => [
                                     'shares' => $post->share_count,
                                     'likes' => $post->likes,
-                                    'comments' => $post->comments
+                                    'comments' => $post->comments,
+                                    'comparable' => (($post->likes + $post->comments * 4 + $post->share_count * 7) / 12)
                                 ],
                                 'icon' => Enum_PresenceType::FACEBOOK()->getSign()
                             );
@@ -254,7 +258,8 @@ class StatusesController extends GraphingController
                             'engagement' => [
                                 'shares' => $post->repost_count,
                                 'likes' => $post->attitude_count,
-                                'comments' => $post->comment_count
+                                'comments' => $post->comment_count,
+                                'comparable' => (($post->attitude_count + $post->comment_count * 4 + $post->repost_count * 7) / 12)
                             ],
                             'icon' => Enum_PresenceType::SINA_WEIBO()->getSign()
                         );
@@ -271,8 +276,9 @@ class StatusesController extends GraphingController
                             'date' => Model_Base::shortDate($post->created_time),
                             'presence_id' => $post->presence_id,
                             'engagement' => [
-                                'shares' => $post->share_count,
-                                'likes' => $post->likes
+                                'comments' => $post->comments,
+                                'likes' => $post->likes,
+                                'comparable' => (($post->likes + $post->comments * 4) / 5)
                             ],
                             'icon' => Enum_PresenceType::INSTAGRAM()->getSign()
                         );
@@ -289,8 +295,9 @@ class StatusesController extends GraphingController
                             'date' => Model_Base::shortDate($post->created_time),
                             'presence_id' => $post->presence_id,
                             'engagement' => [
-                                'shares' => $post->number_of_replies,
-                                'likes' => $post->likes
+                                'comments' => $post->number_of_replies,
+                                'likes' => $post->likes,
+                                'comparable' => (($post->likes + $post->number_of_replies * 4) / 5)
                             ],
                             'icon' => Enum_PresenceType::YOUTUBE()->getSign()
                         );
@@ -308,7 +315,8 @@ class StatusesController extends GraphingController
                             'presence_id' => $post->presence_id,
                             'engagement' => [
                                 'comments' => $post->comments,
-                                'likes' => $post->likes
+                                'likes' => $post->likes,
+                                'comparable' => (($post->likes + $post->comments * 4) / 5)
                             ],
                             'icon' => Enum_PresenceType::LINKEDIN()->getSign()
                         );
@@ -324,10 +332,18 @@ class StatusesController extends GraphingController
             $type = $presence ? $presence->type : 'all-presence';
             $this->returnCsv($tableData, $type . 's.csv');
         } else {
-            usort($tableData, function ($a, $b) {
-                $aAfterB = $a['date'] > $b['date'];
-                return $aAfterB ? -1 : 1;
-            });
+            // sort according to request param
+            if($this->_request->getParam('sort') === 'engagement') {
+                usort($tableData, function ($a, $b) {
+                    $aAfterB = $a['engagement']['comparable'] > $b['engagement']['comparable'];
+                    return $aAfterB ? -1 : 1;
+                });
+            } else {
+                usort($tableData, function ($a, $b) {
+                    $aAfterB = $a['date'] > $b['date'];
+                    return $aAfterB ? -1 : 1;
+                });
+            }
             $displayRows = array_slice($tableData, 0, $limit);
             $apiResult = array(
                 'sEcho' => $this->_request->getParam('sEcho'),
@@ -354,6 +370,16 @@ class StatusesController extends GraphingController
         }
 
         return $statuses;
+    }
+
+    // creates an array of ordering arguments (propName=>direction) from the datatables request args
+    protected function getRequestOrdering()
+    {
+        $sort = $this->_request->getParam('sort');
+        if(!$sort) {
+            $sort = 'date';
+        }
+        return [ $sort => 'desc' ];
     }
 
     /**
