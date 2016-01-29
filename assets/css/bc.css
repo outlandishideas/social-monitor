@@ -64,7 +64,7 @@ body {
 }
 
 #feedback-form textarea {
-	height: 200px;
+	height: 100px;
 	margin-bottom: 15px;
 }
 
@@ -2061,13 +2061,16 @@ table .cell-handle .missing {
 .button-bc-bar .button-group > li {
 	margin: 0 0.5rem;
 	float: none;
+	vertical-align: middle;
+}
+
+.button-bc-bar .button-group > li > * {
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 .button-bc-bar .button-group > li > select {
-	background: transparent;
-	border-color: white;
-	color: white;
-	padding-right: 1rem;
+	height: 35px;
 }
 
 .button-bc-bar .button-group > li > select option {
