@@ -13,16 +13,16 @@ abstract class Metric_Factory {
             Metric_SignOff::getName() => "Metric_SignOff",
             Metric_PopularityTime::getName() => "Metric_PopularityTime",
             Metric_Relevance::getName() => "Metric_Relevance",
-            Metric_FBEngagementLeveled::getName() => "Metric_FBEngagementLeveled",
+            Metric_FBEngagement::getName() => "Metric_FBEngagement",
             Metric_Klout::getName() => "Metric_Klout",
             Metric_LikesPerPost::getName() => "Metric_LikesPerPost",
             Metric_LikesPerView::getName() => "Metric_LikesPerView",
             Metric_ResponseTimeNew::getName() => "Metric_ResponseTimeNew",
             Metric_ResponseRatio::getName() => "Metric_ResponseRatio",
-            Metric_SinaWeiboEngagementLeveled::getName() => "Metric_SinaWeiboEngagementLeveled",
-            Metric_InstagramEngagementLeveled::getName() => "Metric_InstagramEngagementLeveled",
-            Metric_YoutubeEngagementLeveled::getName() => "Metric_YoutubeEngagementLeveled",
-            Metric_LinkedinEngagementLeveled::getName() => "Metric_LinkedinEngagementLeveled"
+            Metric_SinaWeiboEngagement::getName() => "Metric_SinaWeiboEngagement",
+            Metric_InstagramEngagement::getName() => "Metric_InstagramEngagement",
+            Metric_YoutubeEngagement::getName() => "Metric_YoutubeEngagement",
+            Metric_LinkedinEngagement::getName() => "Metric_LinkedinEngagement"
         );
 
         if(!array_key_exists($name, $names)){
