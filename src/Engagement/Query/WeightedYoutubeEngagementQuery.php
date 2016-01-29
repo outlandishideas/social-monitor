@@ -105,7 +105,7 @@ class WeightedYoutubeEngagementQuery extends Query
                 ':now' => $thenStr
             ]);
             $prevPopularity = $statement->fetchAll(PDO::FETCH_COLUMN);
-            $prevPopularity = array_key_exists(0,$prevPopularity) ? $prevPopularity : $presencePopularity;
+            $prevPopularity = array_key_exists(0,$prevPopularity) ? $prevPopularity[0] : $presencePopularity;
 
             $presenceData['popularity'] = intval($presencePopularity,10);
             $activeUserProportion = $this->activeUserProportion[$size] ? $this->activeUserProportion[$size] : 1;
