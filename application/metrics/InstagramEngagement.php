@@ -1,6 +1,6 @@
 <?php
 
-class Metric_InstagramEngagementLeveled extends Metric_AbstractEngagement {
+class Metric_InstagramEngagement extends Metric_AbstractEngagement {
 
     protected static $name = "instagram_engagement";
     protected static $title = "Instagram Engagement Score";

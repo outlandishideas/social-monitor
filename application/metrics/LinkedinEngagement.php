@@ -1,6 +1,6 @@
 <?php
 
-class Metric_LinkedinEngagementLeveled extends Metric_AbstractEngagement {
+class Metric_LinkedinEngagement extends Metric_AbstractEngagement {
 
     protected static $name = "linkedin_engagement";
     protected static $title = "LinkedIn Engagement Score";
