@@ -83,7 +83,7 @@ class WeightedYoutubeEngagementQuery extends Query
             $presenceData = ["presence_id"=>$presenceId];
 
             /*
-             * Find the current popularity of each presence - this is used to scale the engagement
+             * Find the change in subscribers for this presence - as increased subscribers is an engagement
              */
             $presencePopularityQuery = "
             SELECT value
@@ -101,12 +101,11 @@ class WeightedYoutubeEngagementQuery extends Query
             $presencePopularity = $statement->fetchAll(PDO::FETCH_COLUMN);
             $presencePopularity = array_key_exists(0,$presencePopularity) ? $presencePopularity[0] : 0;
 
-            /** Get the previous popularity, as increased subscribers is an engagement */
             $statement->execute([
                 ':now' => $thenStr
             ]);
             $prevPopularity = $statement->fetchAll(PDO::FETCH_COLUMN);
-            $prevPopularity = array_key_exists(0,$prevPopularity) ? $presencePopularity[0] : 0;
+            $prevPopularity = array_key_exists(0,$prevPopularity) ? $prevPopularity : $presencePopularity;
 
             $presenceData['popularity'] = intval($presencePopularity,10);
             $activeUserProportion = $this->activeUserProportion[$size] ? $this->activeUserProportion[$size] : 1;
