@@ -199,8 +199,7 @@ class Provider_Facebook extends Provider_Abstract
             $ids = array_map(function($p) {
                 return $p->getId();
             },$presences);
-            $clauses[] = 'p.presence_id IN (:ids)';
-            $args[':ids'] = implode($ids,',');
+            $clauses[] = 'p.presence_id IN ('.implode($ids,',') .')';
         }
 
         return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);

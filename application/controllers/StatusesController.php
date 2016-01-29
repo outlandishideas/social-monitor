@@ -69,7 +69,8 @@ class StatusesController extends GraphingController
 
         /** @var Model_Presence $presence */
         $format = $this->_request->getParam('format');
-        $types = $presences = array();
+        $types = null;
+        $presences = array();
 
         /** If id is set, we only want statuses for this presence */
         if ($this->_request->getParam('id')) {
@@ -134,6 +135,7 @@ class StatusesController extends GraphingController
             /** Filter presences by type */
             if ($this->_request->getParam('type')) {
                 $typeParamString = $this->_request->getParam('type');
+                $types = array();
                 if ($typeParamString) {
                     $typeParams = explode(',', $typeParamString);
                     foreach ($typeParams as $type) {
@@ -177,6 +179,7 @@ class StatusesController extends GraphingController
                             'id' => $tweet->id,
                             'message' => $format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
                             'date' => Model_Base::shortDate($tweet->created_time),
+                            'isodate' => $tweet->created_time,
                             'links' => $tweet->links,
                             'twitter_url' => $tweet->permalink,
                             'presence_id' => $tweet->presence_id,
@@ -227,6 +230,7 @@ class StatusesController extends GraphingController
                                 'message' => $post->message,
                                 'links' => $post->links,
                                 'date' => Model_Base::shortDate($post->created_time),
+                                'isodate' => $post->created_time,
                                 'needs_response' => $post->needs_response,
                                 'first_response' => array(
                                     'message' => $response,
@@ -255,6 +259,7 @@ class StatusesController extends GraphingController
                             'links' => $post->links,
                             'date' => Model_Base::shortDate($post->created_at),
                             'presence_id' => $post->presence_id,
+                            'isodate' => $post->created_at,
                             'engagement' => [
                                 'shares' => $post->repost_count,
                                 'likes' => $post->attitude_count,
@@ -274,6 +279,7 @@ class StatusesController extends GraphingController
                             'message' => $post->message . ' <img src="' . $post->image_url . '">',
                             'links' => array(),
                             'date' => Model_Base::shortDate($post->created_time),
+                            'isodate' => $post->created_time,
                             'presence_id' => $post->presence_id,
                             'engagement' => [
                                 'comments' => $post->comments,
@@ -293,6 +299,7 @@ class StatusesController extends GraphingController
                             'message' => $post->message,
                             'links' => array(),
                             'date' => Model_Base::shortDate($post->created_time),
+                            'isodate' => $post->created_time,
                             'presence_id' => $post->presence_id,
                             'engagement' => [
                                 'comments' => $post->number_of_replies,
@@ -312,6 +319,7 @@ class StatusesController extends GraphingController
                             'message' => $post->message,
                             'links' => array(),
                             'date' => Model_Base::shortDate($post->created_time),
+                            'isodate' => $post->created_time,
                             'presence_id' => $post->presence_id,
                             'engagement' => [
                                 'comments' => $post->comments,
@@ -340,7 +348,7 @@ class StatusesController extends GraphingController
                 });
             } else {
                 usort($tableData, function ($a, $b) {
-                    $aAfterB = $a['date'] > $b['date'];
+                    $aAfterB = $a['isodate'] > $b['isodate'];
                     return $aAfterB ? -1 : 1;
                 });
             }
@@ -362,7 +370,7 @@ class StatusesController extends GraphingController
         $statuses = array();
         /** @var Provider_Abstract $provider */
         foreach ($this->providers as $provider) {
-            if (!$types || !count($types) || in_array($provider->getType(), $types)) {
+            if ($types && count($types) && in_array($provider->getType(), $types)) {
                 $data = $provider->getStatusStreamMulti($presences, $start, $end, $search, $order, $limit, $offset);
                 $data->type = $provider->getType();
                 $statuses[] = $data;

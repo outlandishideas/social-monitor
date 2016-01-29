@@ -204,6 +204,11 @@ app.datatables = {
 			app.datatables.moveSearchBox();
 		},
 		'#statuses .all': function($div) {
+			// setup query
+			var types = $div.find('select#type').val();
+			if(types) {
+				app.datatables.query.type = types.join();
+			}
 			app.datatables.initStatusList($div, 'post', [
 				{
 					mDataProp:'message',
@@ -498,7 +503,7 @@ app.datatables = {
 	},
 	moveSearchBox: function() {
 		var $search = $('div.dataTables_filter');
-		$search.find('input').first().attr('placeholder', 'Search');
+		$search.find('input').first().attr('placeholder', 'Search by content');
 		$('#search-table').empty().append($search);
 
 		var $filters = $('.statusesDisplay .filters');

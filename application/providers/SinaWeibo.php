@@ -18,6 +18,7 @@ class Provider_SinaWeibo extends Provider_Abstract
         $this->tableName = 'sina_weibo_posts';
 		$this->createdTimeColumn = 'created_at';
 		$this->engagementStatement = '(attitude_count + comment_count * 4 + repost_count * 7)';
+		$this->contentColumn = 'text';
 	}
 
 	public function fetchStatusData(Model_Presence $presence)

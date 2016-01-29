@@ -11,8 +11,12 @@
         ?>
 
         <div class="filters" style="display:none;"> <!-- show when data is returned -->
+            <div class="date-filter-container">
+                <?php
+                echo $this->partial('partials/daterange.phtml', array('dateRangeString' => $this->dateRangeString));
+                echo '<label>You are viewing:</label>'; ?>
+            </div>
             <?php
-            echo $this->partial('partials/daterange.phtml', array('dateRangeString' => $this->dateRangeString));
             foreach ($this->queryOptions as $option) {
                 echo $this->partial(
                     'partials/multi-select-box.phtml',

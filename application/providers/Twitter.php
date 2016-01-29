@@ -19,6 +19,7 @@ class Provider_Twitter extends Provider_Abstract
         $this->tableName = 'twitter_tweets';
         $this->adapter = $adapter;
         $this->engagementStatement = '(retweet_count)';
+        $this->contentColumn = 'text_expanded';
     }
 
 	public function fetchStatusData(Model_Presence $presence)

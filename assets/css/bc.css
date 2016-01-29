@@ -679,7 +679,6 @@ form .formError {
 }
 
 .statusesDisplay.all .picker {
-	margin-right: 20px;
 }
 
 .statusesDisplay.all .filters {
@@ -1829,6 +1828,17 @@ h4 {
     vertical-align: top;
 }
 
+.date-filter-container {
+	display: inline-block;
+	margin-right: 20px;
+}
+
+.date-filter-container label {
+	text-align: right;
+	color: white;
+	font-weight: bold;
+}
+
 .social-monitor-multi-select-box {
 	width:200px;
 	text-align: left;
@@ -1858,6 +1868,7 @@ h4 {
 }
 
 .social-monitor-multi-select-box .selected-summary {
+	margin-top:16px;
 	padding-right:10px;
 }
 

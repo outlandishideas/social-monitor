@@ -215,7 +215,7 @@ app.init = {
 								app.statuses.search($item.attr('id'), $item.val());
 							},1);
 						} else {
-							var summary = app.utils.summariseSelectedOptions($item);
+							var summary = app.utils.summariseSelectedOptions($item,'Any '+$item.parent().find('label').first().text());
 							$item.parent().find('.selected-summary').html(summary);
 							app.statuses.search($item.attr('id'), $item.val());
 						}
@@ -230,6 +230,9 @@ app.init = {
 					});
 					var $component = $item.parent().find('.ms-drop');
 					$component.append($button);
+
+					var summary = app.utils.summariseSelectedOptions($item,'Any '+$item.parent().find('label').first().text());
+					$item.parent().find('.selected-summary').html(summary);
 				}
 			})
 		},
@@ -666,7 +669,7 @@ app.utils = {
         var p = Math.pow(10,n);
         return parseFloat(Math.round(x * p) / p).toFixed(n);
     },
-	summariseSelectedOptions: function($select) {
+	summariseSelectedOptions: function($select,placeholder) {
 		var texts = $select.multipleSelect('getSelects', 'text');
 		var summary = $(document.createElement('div'));
 		var total = $select.find('option').length;
@@ -716,6 +719,8 @@ app.utils = {
 			}
 			summary.append(summaryText);
 			summary.append(summaryAnchor);
+		} else {
+			summary = placeholder || '';
 		}
 		return summary;
 	}
@@ -724,7 +729,6 @@ app.utils = {
 app.statuses = {
 	search: function(queryParam, value) {
         app.datatables.query[queryParam] = value;
-        console.log('searching with',app.datatables.query);
         $(document).trigger('dataChanged');
     }
 };

@@ -7,6 +7,7 @@ abstract class Provider_Abstract
     /** @var Enum_PresenceType */
     protected $type = null;
     protected $createdTimeColumn = 'created_time';
+    protected $contentColumn = 'message';
     protected $engagementStatement = '(likes + comments * 4)';
 
 	public function __construct(PDO $db)
@@ -89,7 +90,7 @@ abstract class Provider_Abstract
     }
 
     public function getHistoricStreamData($clauses, $args, $search = null, $order = null, $limit = null, $offset = null) {
-        $searchArgs = $this->getSearchClauses($search, array('p.message'));
+        $searchArgs = $this->getSearchClauses($search, array("p.{$this->contentColumn}"));
         $clauses = array_merge($clauses, $searchArgs['clauses']);
         $args = array_merge($args, $searchArgs['args']);
 
@@ -99,6 +100,9 @@ abstract class Provider_Abstract
 			WHERE " . implode(' AND ', $clauses);
         $sql .= $this->getOrderSql($order, array('date'=>$this->createdTimeColumn, 'engagement'=>$this->engagementStatement));
         $sql .= $this->getLimitSql($limit, $offset);
+
+        error_log('sql '.$sql);
+        error_log('search '.implode(',',$searchArgs['args']));
 
         $stmt = $this->db->prepare($sql);
         $success = $stmt->execute($args);

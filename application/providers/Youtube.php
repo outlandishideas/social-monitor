@@ -397,8 +397,7 @@ class Provider_Youtube extends Provider_Abstract
             $ids = array_map(function($p) {
                 return $p->getId();
             },$presences);
-            $clauses[] = 'p.presence_id IN :ids';
-            $args[':ids'] = '(' . implode($ids,',') . ')';
+            $clauses[] = 'p.presence_id IN (' . implode($ids,',') . ')';
         }
         $searchArgs = $this->getSearchClauses($search, array('p.message'));
         $clauses = array_merge($clauses, $searchArgs['clauses']);
