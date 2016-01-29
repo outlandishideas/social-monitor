@@ -155,13 +155,9 @@ abbr {
 	border-radius: 25px;
 	background-color: black;
 	background-color: rgba(0, 0, 0, 0.6);
-	position: absolute;
 	width: 50px;
 	height: 50px;
-	top: 50%;
-	left: 50%;
-	margin-top: -25px;
-	margin-left: -25px;
+	margin: 1rem auto;
 }
 .loader-shield.dead,
 .loader.dead {
@@ -690,8 +686,20 @@ form .formError {
 	text-align:center;
 }
 
+.statusesDisplay.all .filters > div:last-child {
+	margin-right:0;
+}
+
 .statusesDisplay .icon-large {
 	font-size: 20px;
+}
+
+.statusesDisplay table {
+	width:100% ! important;
+}
+
+.statusesDisplay .dataTables_scrollHeadInner {
+	width:100% ! important;
 }
 
 .statusesDisplay td.date {
@@ -780,10 +788,6 @@ form .formError {
 	visibility: visible;
 }
 
-.statusesDisplay .dataTable thead th {
-	border-bottom: 1px solid black;
-}
-
 .statusesDisplay td.statusPic img {
 	width: 50px;
 	height: 50px;
@@ -798,7 +802,7 @@ form .formError {
 	background: url(../img/facebook-placeholder.png) no-repeat center center;
 }
 
-.statusesDisplay.all .dataTables_wrapper {
+.statusesDisplay.all .table-container {
 	width:80%;
 	margin:1rem auto;
 }
@@ -1828,7 +1832,7 @@ h4 {
 .social-monitor-multi-select-box {
 	width:200px;
 	text-align: left;
-	margin-right: 0;
+	margin-right: 20px;
 	display: inline-block;
 	vertical-align: top;
 }

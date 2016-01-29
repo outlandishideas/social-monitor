@@ -17,26 +17,19 @@
 	$.fn.showLoader = function(settings) {
 		return this.each(function () {
 			var $toCover = $(this);
-			var offset = $toCover.offset();
+			var $parent = $toCover.parent();
+			$toCover.hide();
 
 			var id = $toCover.getLoaderId();
 			var $spinner = $('div#' + id);
-			var $shield = $('div#shield-' + id);
 
 			if ($spinner.length == 0) {
-				$shield = $('<div />')
-					.attr('id', 'shield-' + id)
-					.addClass('loader-shield')
-					.width($toCover.outerWidth())
-					.height($toCover.outerHeight())
-					.offset(offset)
-					.appendTo('body');
 
 				$spinner = $('<div />')
 					.attr('id', id)
 					.addClass('loader')
-					.appendTo($shield)
-					.spinner({ 
+					.insertBefore($toCover)
+					.spinner({
 						colour : '255,255,255',
 						spokeCount : 10,
 						spokeWidth : 3,
@@ -48,26 +41,16 @@
 						centered : false
 					});
 			}
-
-			$shield
-				.removeClass('dead')
-				.width($toCover.outerWidth())
-				.height($toCover.outerHeight())
-				.offset(offset);
 		});
 	};
 
 	$.fn.hideLoader = function(skip) {
 
 		return this.each(function () {
-			var $shield = $('div#shield-' + $(this).getLoaderId());
-
-			if ($shield.length > 0) {
-				var delay = (typeof skip != 'undefined') ? 800 : 0;
-				setTimeout(function () {
-					$shield.addClass('dead');
-				}, delay);
-			}
+			var id = $(this).getLoaderId();
+			var $spinner = $('div#' + id);
+			$(this).show();
+			$spinner.remove();
 		});
 
 	}

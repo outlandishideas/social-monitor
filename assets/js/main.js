@@ -210,12 +210,12 @@ app.init = {
 					placeholder: 'None selected',
 					single: single,
 					onClose: function() {
-						var summary = app.utils.summariseSelectedOptions($item);
 						if(single) { // we don't need to show the summary for single value selects
-							setTimeout(function() { // bug with multi-select component
+							setTimeout(function() { // bug with multi-select component – wait for $item.val() to update
 								app.statuses.search($item.attr('id'), $item.val());
 							},1);
 						} else {
+							var summary = app.utils.summariseSelectedOptions($item);
 							$item.parent().find('.selected-summary').html(summary);
 							app.statuses.search($item.attr('id'), $item.val());
 						}

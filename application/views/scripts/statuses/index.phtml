@@ -10,7 +10,7 @@
 
         ?>
 
-        <div class="filters">
+        <div class="filters" style="display:none;"> <!-- show when data is returned -->
             <?php
             echo $this->partial('partials/daterange.phtml', array('dateRangeString' => $this->dateRangeString));
             foreach ($this->queryOptions as $option) {
@@ -25,7 +25,7 @@
             }
             ?>
         </div>
-        <div>
+        <div class="table-container">
             <table>
                 <thead>
                 <tr>

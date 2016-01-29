@@ -497,9 +497,12 @@ app.datatables = {
 		};
 	},
 	moveSearchBox: function() {
-		var $filter = $('div.dataTables_filter');
-		$filter.find('input').first().attr('placeholder', 'Search');
-		$('#search-table').empty().append($filter);
+		var $search = $('div.dataTables_filter');
+		$search.find('input').first().attr('placeholder', 'Search');
+		$('#search-table').empty().append($search);
+
+		var $filters = $('.statusesDisplay .filters');
+		$filters.show();
 	},
 	generateLanguage: function(type) {
 		return {
@@ -517,7 +520,7 @@ app.datatables = {
 			bServerSide:true,
 			bAutoWidth:false,
 			fnServerData:function (sSource, aoData, fnCallback) {
-				var $wrapper = $(this).closest('.inner');
+				var $wrapper = $(this).parent();
 				$wrapper.showLoader();
 				$.getJSON(sSource, aoData,
 					function (e) {
