@@ -261,7 +261,7 @@ services:
             - [addHeader, ["@table.header.options"]]
 
     object-cache-manager:
-        class: Outlandish\SocialMonitor\ObjectCache\ObjectCacheManager
+        class: Outlandish\SocialMonitor\Cache\ObjectCacheManager
         calls:
             - [setPresencesTable, ["@table.presence-index"]]
             - [setCountriesTable, ["@table.country-index"]]

@@ -4,7 +4,6 @@ namespace Outlandish\SocialMonitor\Command;
 
 use Outlandish\SocialMonitor\Command\Output\DatestampFormatter;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ClearCacheCommand extends ContainerAwareCommand
@@ -15,9 +14,8 @@ class ClearCacheCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('sm:cache:clear')
-            ->setDescription('Clears the object caches')
-            ->addOption('silent', null, InputOption::VALUE_OPTIONAL, 'Only shows essential output', false)
+            ->setName('sm:object-cache:refresh')
+            ->setDescription('Refreshes the object caches')
         ;
     }
 

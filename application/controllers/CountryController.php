@@ -50,13 +50,12 @@ class CountryController extends CampaignController {
 			$country->getPresences($mapping, $presences);
 		}
 
-        /** @var TableIndex $indexTable */
-        $indexTable = $this->getContainer()->get('table.country-index');
-        $rows = $this->getTableIndex('country-index', $indexTable, $countries);
+		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
+		$rows = $objectCacheManager->getCountryIndex($countries, $this->_request->getParam('force'));
 
 		$this->view->countries = $countries;
 		$this->view->rows = $rows;
-        $this->view->tableHeaders = $indexTable->getHeaders();
+        $this->view->tableHeaders = $objectCacheManager->getCountriesTable()->getHeaders();
         $this->view->sortCol = Name::getName();
 		$this->view->regions = Model_Region::fetchAll();
 	}

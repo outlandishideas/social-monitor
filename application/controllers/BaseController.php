@@ -484,24 +484,6 @@ class BaseController extends Zend_Controller_Action
         return $cacheManager->getObjectCache($key, $allowTemp, $expires);
     }
 
-    /**
-     * @param $key
-     * @param TableIndex $table
-     * @param Base_Model[] $data
-     * @return array
-     */
-    protected function getTableIndex($key, TableIndex $table, array $data)
-    {
-        $rows = $this->getObjectCache($key);
-
-        if (!$rows || $this->_request->getParam('force')) {
-            $rows = $table->getRows($data);
-            $this->setObjectCache($key, $rows);
-        }
-
-        return $rows;
-    }
-
     protected function flashMessage($message, $type = 'info') {
         $this->_helper->FlashMessenger(array($type => $message));
     }

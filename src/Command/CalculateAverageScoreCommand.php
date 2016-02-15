@@ -35,10 +35,11 @@ class CalculateAverageScoreCommand extends ContainerAwareCommand
         $totalScore = 0;
         $count = 0;
 
+        $objectCacheManager = $this->getContainer()->get('object-cache-manager');
         if ( $input->hasOption('by-groups') && $input->getOption('by-groups') ) {
-            $countries = \BaseController::getObjectCache('map_data_30', true);
-            $smallCountries = \BaseController::getObjectCache('small_country_data_30', true);
-            $groups = \BaseController::getObjectCache('group_data_30', true);
+            $countries = $objectCacheManager->getObjectCache('map_data_30', true);
+            $smallCountries = $objectCacheManager->getObjectCache('small_country_data_30', true);
+            $groups = $objectCacheManager->getObjectCache('group_data_30', true);
 
             foreach ([$countries, $smallCountries, $groups] as $source) {
                 foreach($source as $item) {

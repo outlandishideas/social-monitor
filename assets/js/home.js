@@ -352,10 +352,9 @@ app.home = {
         $div = stats.find('#overall-score[data-badge]');
         updateElement($div, score);
 
-        //totalscore
-        score = app.home.fanData;
+        //fans
         $div = stats.find('#overall-fans[data-badge]');
-        updateElement($div, score)
+        updateElement($div, app.home.fanData)
 	},
 
 	/**

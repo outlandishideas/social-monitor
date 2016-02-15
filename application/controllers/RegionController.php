@@ -51,14 +51,14 @@ class RegionController extends CampaignController
 	public function indexAction()
     {
         $regions = Model_Region::fetchAll();
-        /** @var TableIndex $indexTable */
-        $indexTable = $this->getContainer()->get('table.region-index');
-        $rows = $this->getTableIndex('region-index', $indexTable, $regions);
+
+        $objectCacheManager = $this->getContainer()->get('object-cache-manager');
+        $rows = $objectCacheManager->getRegionIndex($regions, $this->_request->getParam('force'));
 
         $this->view->title = 'Regions';
 		$this->view->regions = $regions;
 		$this->view->rows = $rows;
-        $this->view->tableHeaders = $indexTable->getHeaders();
+        $this->view->tableHeaders = $objectCacheManager->getRegionsTable()->getHeaders();
         $this->view->sortCol = Name::getName();
 	}
 
