@@ -735,7 +735,7 @@ app.utils = {
 		var texts = $select.multipleSelect('getSelects', 'text');
 		var summary = $(document.createElement('div'));
 		var total = $select.find('option').length;
-		if(texts && texts.length > 1 && texts.length < total) { // don't show a summary when all selected
+		if(texts && texts.length > 0 && texts.length < total) { // don't show a summary when all selected
 			// if we have selected options, we know that the summary starts with the first option
 			var summaryText = texts[0];
 			var summaryAnchor = '';
@@ -781,6 +781,8 @@ app.utils = {
 			}
 			summary.append(summaryText);
 			summary.append(summaryAnchor);
+		} else if(texts && texts.length===0) {
+			summary = '';
 		} else {
 			summary = placeholder || '';
 		}
