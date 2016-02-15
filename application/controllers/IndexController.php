@@ -7,7 +7,7 @@ use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class IndexController extends GraphingController
 {
-	protected static $publicActions = array('index', 'build-badge-data', 'clear-cache');
+	protected static $publicActions = array('index', 'build-badge-data');
 
 	public function indexAction()
 	{
@@ -238,45 +238,6 @@ class IndexController extends GraphingController
 		unlink($fileName);
 		exit;
 	}
-
-    public function clearCacheAction()
-    {
-        $this->setupConsoleOutput();
-
-
-
-        /** @var TableIndex $presenceIndexTable */
-		$this->log("Updating Presence Index Table Cache");
-		$this->updatePresenceIndexCache();
-        $this->log("Updated Presence Index Table Cache");
-
-
-        $this->log("Updating Country Index Table Cache");
-        /** @var TableIndex $countryIndexTable */
-        $countryIndexTable = $this->getContainer()->get('table.country-index');
-        $countries = Model_Country::fetchAll();
-        $rows = $countryIndexTable->getRows($countries);
-        $this->setObjectCache('country-index', $rows);
-        $this->log("Updated Country Index Table Cache");
-
-
-        $this->log("Updating Group Index Table Cache");
-        /** @var TableIndex $groupIndexTable */
-        $groupIndexTable = $this->getContainer()->get('table.group-index');
-        $groups = Model_Group::fetchAll();
-        $rows = $groupIndexTable->getRows($groups);
-        $this->setObjectCache('group-index', $rows);
-        $this->log("Updated Group Index Table Cache");
-
-
-        $this->log("Updating Region Index Table Cache");
-        /** @var TableIndex $groupIndexTable */
-        $regionIndexTable = $this->getContainer()->get('table.region-index');
-        $region = Model_Region::fetchAll();
-        $rows = $regionIndexTable->getRows($region);
-        $this->setObjectCache('region-index', $rows);
-        $this->log("Updated Region Index Table Cache");
-    }
 
     protected function log($message, $ignoreSilent = false) {
     $log = date('Y-m-d H:i:s') . " $message\n";

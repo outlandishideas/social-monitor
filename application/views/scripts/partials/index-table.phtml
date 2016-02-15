@@ -7,6 +7,7 @@
  * $emptyText = Text to show when no rows
  * $sortCol = Name of column to sort on, by default
  */
+use Outlandish\SocialMonitor\Helper\Gatekeeper;
 use Outlandish\SocialMonitor\TableIndex\Header\Countries;
 use Outlandish\SocialMonitor\TableIndex\Header\Handle;
 use Outlandish\SocialMonitor\TableIndex\Header\Header;
@@ -70,7 +71,7 @@ $gatekeeper = $this->gatekeeper();
                                         echo "<li>{$link}</li>";
                                     } else {
                                         $text = str_replace(
-                                            array('<a href="' . Zend_View_Helper_Gatekeeper::PLACEHOLDER_URL . '"', '</a>'),
+                                            array('<a href="' . Gatekeeper::PLACEHOLDER_URL . '"', '</a>'),
                                             array('<span', '</span>'),
                                             $template
                                         );

@@ -1,20 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 10/06/2015
- * Time: 11:22
- */
 
 namespace Outlandish\SocialMonitor\TableIndex;
-
 
 use Outlandish\SocialMonitor\TableIndex\Header\Header;
 
 class TableIndex {
 
     /**
-     * @var \Header_Abstract[]
+     * @var Header[]
      */
     private $headers = array();
 

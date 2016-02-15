@@ -260,3 +260,10 @@ services:
             - [addHeader, ["@table.header.target_audience"]]
             - [addHeader, ["@table.header.options"]]
 
+    object-cache-manager:
+        class: Outlandish\SocialMonitor\ObjectCache\ObjectCacheManager
+        calls:
+            - [setPresencesTable, ["@table.presence-index"]]
+            - [setCountriesTable, ["@table.country-index"]]
+            - [setGroupsTable, ["@table.group-index"]]
+            - [setRegionsTable, ["@table.region-index"]]
