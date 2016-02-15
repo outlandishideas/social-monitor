@@ -248,9 +248,7 @@ app.datatables = {
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
-				},
-				app.datatables.linksColumn(),
-				app.datatables.dateColumn()
+				}
 			]);
 
 			$div.on('click', '.require-response', function(e) {
@@ -264,8 +262,8 @@ app.datatables = {
 		'#statuses .linkedin': function($div) {
 			app.datatables.initStatusList($div, 'post', [
 				{
-					mDataProp:'message',
-					fnRender:function (o) {
+					mDataProp: 'message',
+					fnRender: function (o) {
 						if (typeof o.aData.message != 'string') {
 							o.aData.message = '';
 						}
@@ -286,11 +284,9 @@ app.datatables = {
 						return message;
 					},
 					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				},
-				app.datatables.linksColumn(),
-				app.datatables.dateColumn()
+					bSortable: false,
+					bUseRendered: false
+				}
 			]);
 
 			$div.on('click', '.require-response', function(e) {
@@ -335,9 +331,7 @@ app.datatables = {
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
-				},
-				app.datatables.linksColumn(),
-				app.datatables.dateColumn()
+				}
 			]);
 
 			$div.on('click', '.require-response', function(e) {
@@ -349,18 +343,16 @@ app.datatables = {
 			});
 		},
 		'#statuses .twitter': function($div) {
-			app.datatables.initStatusList($div, 'tweet', [
+			app.datatables.initStatusList($div, 'post', [
 				{
 					mDataProp:'message',
 					fnRender:function (o) {
-						return parseTemplate(app.templates.tweet, o.aData);
+						return parseTemplate(app.templates.post, o.aData);
 					},
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
-				},
-				app.datatables.linksColumn(),
-				app.datatables.dateColumn()
+				}
 			]);
 		},
 		'#statuses .instagram': function($div) {
@@ -373,8 +365,7 @@ app.datatables = {
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
-				},
-				app.datatables.dateColumn()
+				}
 			]);
 		},
 		'#statuses .sina_weibo': function($div) {
@@ -387,9 +378,7 @@ app.datatables = {
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
-				},
-				app.datatables.linksColumn(),
-				app.datatables.dateColumn()
+				}
 			]);
 		}
 	},
@@ -442,12 +431,17 @@ app.datatables = {
 				var $el = $(nRow);
 				$el.data('id', aData.id);
 				var $name = $el.find('.presence-name');
-				var id = $name.data('presence');
-				var presence = _.find(window.presences,function(p) {
-					return p.id == id;
-				});
-				if(presence) {
-					$name.text(presence.name);
+				var nameText = $('.presence-name').first().text().trim();
+				if(nameText) {
+					$name.text(nameText);
+				} else {
+					var id = $name.data('presence');
+					var presence = _.find(window.presences, function (p) {
+						return p.id == id;
+					});
+					if (presence) {
+						$name.text(presence.name);
+					}
 				}
 			},
 			aoColumns:columns,
@@ -459,7 +453,7 @@ app.datatables = {
 			.dataTable(args)
 			.fnSetFilteringDelay(250);
 
-		app.datatables.moveSearchBox();
+		app.datatables.moveSearchBox('Search by content');
 
 		// fix header cells when switching to the statuses tab
 		$(document).foundation({
@@ -501,9 +495,9 @@ app.datatables = {
 			asSorting:['desc', 'asc']
 		};
 	},
-	moveSearchBox: function() {
+	moveSearchBox: function(placeholder) {
 		var $search = $('div.dataTables_filter');
-		$search.find('input').first().attr('placeholder', 'Search by content');
+		$search.find('input').first().attr('placeholder', placeholder || 'Search');
 		$('#search-table').empty().append($search);
 
 		var $filters = $('.statusesDisplay .filters');

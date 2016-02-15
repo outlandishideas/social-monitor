@@ -81,6 +81,7 @@ class StatusesController extends GraphingController
             $countryParamString = $this->_request->getParam('country');
             $regionParamString = $this->_request->getParam('region');
             $sbuParamString = $this->_request->getParam('sbu');
+            $typeParamString = $this->_request->getParam('type');
 
             /** Update $presences to include all presences in specified countries */
             if (isset($countryParamString)) {
@@ -133,8 +134,7 @@ class StatusesController extends GraphingController
             }
 
             /** Filter presences by type */
-            if ($this->_request->getParam('type')) {
-                $typeParamString = $this->_request->getParam('type');
+            if (isset($typeParamString)) {
                 $types = array();
                 if ($typeParamString) {
                     $typeParams = explode(',', $typeParamString);
@@ -370,7 +370,13 @@ class StatusesController extends GraphingController
         $statuses = array();
         /** @var Provider_Abstract $provider */
         foreach ($this->providers as $provider) {
-            if ($types && count($types) && in_array($provider->getType(), $types)) {
+            if ($types !== null) {
+                if(count($types) && in_array($provider->getType(), $types)) {
+                    $data = $provider->getStatusStreamMulti($presences, $start, $end, $search, $order, $limit, $offset);
+                    $data->type = $provider->getType();
+                    $statuses[] = $data;
+                }
+            } else {
                 $data = $provider->getStatusStreamMulti($presences, $start, $end, $search, $order, $limit, $offset);
                 $data->type = $provider->getType();
                 $statuses[] = $data;
