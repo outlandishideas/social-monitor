@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "94366f11368147a5301fdb8482e87799",
-    "content-hash": "39de6e6d3d2433bbde10d4d06de45da4",
+    "hash": "f8100e95e5a1fd9ff0dc05c6e002ded4",
+    "content-hash": "14200ad70305946fc162c0c3e90b24be",
     "packages": [
         {
             "name": "cosenary/instagram",
@@ -894,6 +894,59 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2015-07-26 08:59:42"
+        },
+        {
+            "name": "zendframework/zendframework1",
+            "version": "1.12.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zf1.git",
+                "reference": "effdab16e8777cf9277761c43242289dcdd71b49"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://packages.zendframework.com/composer/zendframework-zendframework1-1.12.17-dbc95b.zip",
+                "reference": "effdab16e8777cf9277761c43242289dcdd71b49",
+                "shasum": "7eb28dec95695f4fa3b166a0b3c2a1d24f02d596"
+            },
+            "archive": {
+                "exclude": [
+                    "/demos",
+                    "/documentation",
+                    "/tests"
+                ]
+            },
+            "require": {
+                "php": ">=5.2.11"
+            },
+            "require-dev": {
+                "phpunit/dbunit": "1.3.*",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.12.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend_": "library/"
+                }
+            },
+            "include-path": [
+                "library/"
+            ],
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Zend Framework 1",
+            "homepage": "http://framework.zend.com/",
+            "keywords": [
+                "framework",
+                "zf1"
+            ],
+            "time": "2015-11-23 15:11:10"
         }
     ],
     "packages-dev": [
