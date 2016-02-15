@@ -19,7 +19,7 @@ use Outlandish\SocialMonitor\TableIndex\Header\Presences;
 $headers = array_filter($this->tableHeaders, function(Header $h) {
         return $h->isForScreen();
     });
-/** @var Zend_View_Helper_Gatekeeper $gatekeeper */
+/** @var Gatekeeper $gatekeeper */
 $gatekeeper = $this->gatekeeper();
 ?>
 
