@@ -138,9 +138,6 @@ abstract class Model_PresenceFactory
 
 	protected static function instantiatePresence($internals)
 	{
-		if(!$internals['id']) {
-			$a = 3;
-		}
 		if($internals) {
 			$type = Enum_PresenceType::get($internals['type']);
 			$provider = $type->getProvider(static::$db);
