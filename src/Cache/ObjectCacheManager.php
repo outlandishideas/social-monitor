@@ -90,21 +90,21 @@ class ObjectCacheManager
     /**
      * Gets the rows for the given table from the object cache, generating them from the items if
      * necessary (when cache is missing or when forced)
-     * @param string $indexName
-     * @param array $items
      * @param TableIndex $table
      * @param bool $force
      * @return array
      */
-    protected function getTableIndex($indexName, $items, $table, $force = false)
+    protected function getTableIndex($table, $force = false)
     {
+        $indexName = $table->getIndexName();
+
         $rows = array();
         if (!$force) {
             $rows = $this->getObjectCache($indexName);
         }
 
         if (!$rows) {
-            $rows = $table->getRows($items);
+            $rows = $table->generateRows();
             $this->setObjectCache($indexName, $rows);
         }
 
@@ -120,15 +120,12 @@ class ObjectCacheManager
      */
     public function updatePresenceIndexCache()
     {
-        return $this->getPresenceIndex(null, true);
+        return $this->getPresenceIndexRows(true);
     }
 
-    public function getPresenceIndex($presences, $force = false)
+    public function getPresenceIndexRows($force = false)
     {
-        if (!$presences) {
-            $presences = Model_PresenceFactory::getPresences();
-        }
-        return $this->getTableIndex('presence-index', $presences, $this->presencesTable, $force);
+        return $this->getTableIndex($this->presencesTable, $force);
     }
 
     /**
@@ -136,15 +133,12 @@ class ObjectCacheManager
      */
     public function updateCountryIndexCache()
     {
-        return $this->getCountryIndex(null, true);
+        return $this->getCountryIndexRows(true);
     }
 
-    public function getCountryIndex($countries, $force = false)
+    public function getCountryIndexRows($force = false)
     {
-        if (!$countries) {
-            $countries = Model_Country::fetchAll();
-        }
-        return $this->getTableIndex('country-index', $countries, $this->countriesTable, $force);
+        return $this->getTableIndex($this->countriesTable, $force);
     }
 
     /**
@@ -152,15 +146,12 @@ class ObjectCacheManager
      */
     public function updateGroupIndexCache()
     {
-        return $this->getGroupIndex(null, true);
+        return $this->getGroupIndexRows(true);
     }
 
-    public function getGroupIndex($groups, $force = false)
+    public function getGroupIndexRows($force = false)
     {
-        if (!$groups) {
-            $groups = Model_Group::fetchAll();
-        }
-        return $this->getTableIndex('group-index', $groups, $this->groupsTable, $force);
+        return $this->getTableIndex($this->groupsTable, $force);
     }
 
     /**
@@ -168,15 +159,12 @@ class ObjectCacheManager
      */
     public function updateRegionIndexCache()
     {
-        return $this->getRegionIndex(null, true);
+        return $this->getRegionIndexRows(true);
     }
 
-    public function getRegionIndex($regions, $force = false)
+    public function getRegionIndexRows($force = false)
     {
-        if (!$regions) {
-            $regions = Model_Region::fetchAll();
-        }
-        return $this->getTableIndex('region-index', $regions, $this->regionsTable, $force);
+        return $this->getTableIndex($this->regionsTable, $force);
     }
 
     public function getFrontPageData($dayRange, $temp)

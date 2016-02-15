@@ -40,16 +40,15 @@ class PresenceController extends GraphingController
 	 */
 	public function indexAction()
 	{
-		Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
-		$presences = Model_PresenceFactory::getPresences();
-
 		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
-		$rows = $objectCacheManager->getPresenceIndex($presences, $this->_request->getParam('force'));
+		$table = $objectCacheManager->getPresencesTable();
+
+		$rows = $objectCacheManager->getPresenceIndexRows($this->_request->getParam('force'));
 
         $this->view->title = 'Presences';
-        $this->view->presences = $presences;
+        $this->view->presences = $table->getTableData();
         $this->view->rows = $rows;
-        $this->view->tableHeaders = $objectCacheManager->getPresencesTable()->getHeaders();
+        $this->view->tableHeaders = $table->getHeaders();
         $this->view->sortCol = Handle::getName();
 		$this->view->regions = Model_Region::fetchAll();
 	}

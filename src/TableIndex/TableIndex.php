@@ -2,14 +2,34 @@
 
 namespace Outlandish\SocialMonitor\TableIndex;
 
+use Model_Campaign;
+use Model_Presence;
+use Model_Region;
 use Outlandish\SocialMonitor\TableIndex\Header\Header;
+use Outlandish\SocialMonitor\TableIndex\TableSource\TableSource;
 
 class TableIndex {
 
-    /**
-     * @var Header[]
-     */
+    /** @var Header[] */
     private $headers = array();
+
+    /** @var TableSource */
+    protected $dataSource;
+
+    /** @var string */
+    protected $indexName;
+
+    protected $tableData = null;
+
+    /**
+     * @param string $indexName
+     * @param TableSource $dataSource
+     */
+    function __construct($indexName, $dataSource)
+    {
+        $this->indexName = $indexName;
+        $this->dataSource = $dataSource;
+    }
 
     public function addHeader(Header $header)
     {
@@ -21,15 +41,35 @@ class TableIndex {
         return $this->headers;
     }
 
+    public function getDataSource()
+    {
+        return $this->dataSource;
+    }
+
+    public function getIndexName()
+    {
+        return $this->indexName;
+    }
+
+    public function getTableData()
+    {
+        if ($this->tableData === null) {
+            $this->tableData = $this->dataSource->getTableData();
+        }
+        return $this->tableData;
+    }
+
     /**
-     * @param \Model_Campaign[]|\Model_Presence[] $data
      * @return array
      */
-    public function getRows(array $data)
+    public function generateRows()
     {
         $rows = [];
 
+        $data = $this->getTableData();
         foreach ($data as $model) {
+            /** @var Model_Presence|Model_Campaign $model */
+            /** @var Model_Region $region */
             $region = $model->getRegion();
             $row = new \stdClass();
             $row->id = $model->id;

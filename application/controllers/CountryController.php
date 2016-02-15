@@ -31,8 +31,11 @@ class CountryController extends CampaignController {
 	 * @user-level user
 	 */
 	public function indexAction() {
+		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
+		$table = $objectCacheManager->getCountriesTable();
+
 		/** @var Model_Country[] $countries */
-		$countries = Model_Country::fetchAll();
+		$countries = $table->getTableData();
 		$presences = array();
 		foreach (Model_PresenceFactory::getPresences() as $p) {
 			$presences[$p->id] = $p;
@@ -50,8 +53,7 @@ class CountryController extends CampaignController {
 			$country->getPresences($mapping, $presences);
 		}
 
-		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
-		$rows = $objectCacheManager->getCountryIndex($countries, $this->_request->getParam('force'));
+		$rows = $objectCacheManager->getCountryIndexRows($this->_request->getParam('force'));
 
 		$this->view->countries = $countries;
 		$this->view->rows = $rows;

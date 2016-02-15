@@ -29,14 +29,14 @@ class GroupController extends CampaignController {
 	 */
 	public function indexAction() {
 
-        $groups = Model_Group::fetchAll();
-
         $objectCacheManager = $this->getContainer()->get('object-cache-manager');
-        $rows = $objectCacheManager->getGroupIndex($groups, $this->_request->getParam('force'));
+        $table = $objectCacheManager->getGroupsTable();
 
-		$this->view->groups = $groups;
+        $rows = $objectCacheManager->getGroupIndexRows($this->_request->getParam('force'));
+
+		$this->view->groups = $table->getTableData();
 		$this->view->rows = $rows;
-        $this->view->tableHeaders = $objectCacheManager->getGroupsTable()->getHeaders();
+        $this->view->tableHeaders = $table->getHeaders();
         $this->view->sortCol = Name::getName();
 	}
 
