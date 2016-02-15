@@ -1,5 +1,7 @@
 <?php
 
+use Outlandish\SocialMonitor\Cache\KpiCacheEntry;
+
 class Model_Presence
 {
 	protected $provider;
@@ -365,7 +367,7 @@ class Model_Presence
         if ($metric instanceof Metric_Abstract) {
             $metric = $metric->getName();
         }
-        $kpiData = $this->getKpiData($startDate,$endDate);
+        $kpiData = $this->getKpiData(new KpiCacheEntry($startDate, $endDate));
         if ($kpiData && isset($kpiData[$metric])) {
             return $kpiData[$metric];
         }
@@ -419,20 +421,9 @@ class Model_Presence
 		return floatval($stmt->fetchColumn());
 	}
 
-	public function getKpiData(DateTime $start = null, DateTime $end = null, $useCache = true)
+	public function updateKpiData(KpiCacheEntry $cacheEntry, $useCache = false)
 	{
-		if (!$start || !$end) {
-			$end = new DateTime();
-			$start = clone $end;
-			$start->sub(DateInterval::createFromDateString('30 days'));
-		}
-
-		$endString = $end->format('Y-m-d');
-		$startString = $start->format('Y-m-d');
-		$key = $startString . $endString;
-
-		if(!array_key_exists($key, $this->kpiData) || !$useCache) {
-			$stmt = $this->db->prepare("
+		$stmt = $this->db->prepare("
                 INSERT INTO `kpi_cache`
                     (`presence_id`, `metric`, `start_date`, `end_date`, `value`)
                 VALUES
@@ -441,53 +432,51 @@ class Model_Presence
                     `value` = VALUES(`value`)
             ");
 
-			//start (re)calculation when data not available, or when indicated not to use cache
-			$cachedValues = array();
-			if ($useCache) {
-				$cachedValues = $this->getCachedKpiData($start, $end);
-			}
-
-			foreach($this->getMetrics() as $metric) {
-				$metricName = $metric->getName();
-				if(!array_key_exists($metricName, $cachedValues)) {
-					$result = $metric->calculate($this, $start, $end);
-					$stmt->execute(array(
-						':id' => $this->getId(),
-						':metric' => $metricName,
-						':start' => $startString,
-						':end' => $endString,
-						':value' => $result
-					));
-					$cachedValues[$metricName] = $result;
-				}
-			}
-
-			$this->updateKpiData($key, $cachedValues);
-		}
-
-		return $this->kpiData[$key];
-	}
-
-	public function getCachedKpiData(DateTime $start, DateTime $end)
-	{
-		$stmt = $this->db->prepare(
-			"SELECT metric, value FROM `kpi_cache`
+		//start (re)calculation when data not available, or when indicated not to use cache
+		$cachedValues = array();
+		if ($useCache) {
+			$stmt = $this->db->prepare(
+				"SELECT metric, value FROM `kpi_cache`
 				WHERE `presence_id` = :pid
 				AND `start_date` = :start
 				AND `end_date` = :end");
-		$args = array(
-			':pid' => $this->getId(),
-			':start' => $start->format("Y-m-d"),
-			':end' => $end->format("Y-m-d")
-		);
-		$stmt->execute($args);
-		$kpis = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-		return $kpis;
+			$args = array(
+				':pid' => $this->getId(),
+				':start' => $cacheEntry->startString,
+				':end' => $cacheEntry->endString
+			);
+			$stmt->execute($args);
+			$cachedValues = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+		}
+
+		foreach($this->getMetrics() as $metric) {
+			$metricName = $metric->getName();
+			if(!array_key_exists($metricName, $cachedValues)) {
+				$result = $metric->calculate($this, $cacheEntry->start, $cacheEntry->end);
+				$stmt->execute(array(
+					':id' => $this->getId(),
+					':metric' => $metricName,
+					':start' => $cacheEntry->startString,
+					':end' => $cacheEntry->endString,
+					':value' => $result
+				));
+				$cachedValues[$metricName] = $result;
+			}
+		}
+
+		$this->kpiData[$cacheEntry->key] = $cachedValues;
 	}
 
-	public function updateKpiData($key, $value)
+	public function getKpiData(KpiCacheEntry $cacheEntry = null, $useCache = true)
 	{
-		$this->kpiData[$key] = $value;
+		if (!$cacheEntry) {
+			$cacheEntry = new KpiCacheEntry();
+		}
+		if(!array_key_exists($cacheEntry->key, $this->kpiData) || !$useCache) {
+			$this->updateKpiData($cacheEntry, $useCache);
+		}
+
+		return $this->kpiData[$cacheEntry->key];
 	}
 
 	public function getHistoricData(\DateTime $start, \DateTime $end, $type = null)

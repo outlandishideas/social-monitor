@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 29/04/2015
- * Time: 16:58
- */
 
 namespace Outlandish\SocialMonitor\Query;
 
 class TotalPopularityHistoryDataQuery {
 
     /**
-     * @var PDO
+     * @var \PDO
      */
     private $db;
 
@@ -24,6 +18,7 @@ class TotalPopularityHistoryDataQuery {
 
     public function get(\Datetime $startDate, \DateTime $endDate)
     {
+        // need to use MAX(value) as DB schema allows multiple entries per day
         $subTable = "SELECT
                   presence_id,
                   DATE(datetime) AS `date`,
