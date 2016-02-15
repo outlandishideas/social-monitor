@@ -41,6 +41,12 @@ class ReportMetricCommand extends ContainerAwareCommand
                 'The date to the view of the response time metric score for',
                 date('Y-m-d')
             )
+            ->addOption(
+                'file',
+                'f',
+                InputOption::VALUE_REQUIRED,
+                'Enter filename to output a csv; leave black to print out a table'
+            )
         ;
     }
 
@@ -83,11 +89,27 @@ class ReportMetricCommand extends ContainerAwareCommand
             $rows[] = $row;
         }
 
-        $table = new Table($output);
-        $table
-            ->setHeaders(array_keys($rows[0]))
-            ->setRows($rows);
-        $table->render();
+        $f = $input->getOption('file');
+        if($f) {
+            $handle = fopen($f, 'w');
+
+            //headers
+            fputcsv($handle,array_keys($rows[0]));
+
+            foreach ($rows as $row) {
+                // add a line in the csv file. You need to implement a toArray() method
+                // to transform your object into an array
+                fputcsv($handle, $row);
+            }
+
+        } else {
+            $table = new Table($output);
+            $table
+                ->setHeaders(array_keys($rows[0]))
+                ->setRows($rows);
+            $table->render();
+        }
+
     }
 
 }

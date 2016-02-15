@@ -5,6 +5,7 @@ class Metric_PopularityTime extends Metric_Abstract {
     protected static $name = "popularity_time";
     protected static $title = "Popularity Trend";
     protected static $icon = "fa fa-line-chart";
+    protected static $gliding = false;
 
     function __construct()
     {
@@ -57,8 +58,6 @@ class Metric_PopularityTime extends Metric_Abstract {
 
         // if $popularity is null then we return null for 'no data'
         if(is_numeric($target) && $target > 0 && is_numeric($popularity)) {
-            $date = new DateTime; //the return value
-
             // if we are above the target already then return today as the target date, which gives us 100%
             if($popularity < $target) {
                 $data = $presence->getHistoricData($start, $end, Metric_Popularity::getName());
@@ -84,6 +83,7 @@ class Metric_PopularityTime extends Metric_Abstract {
                     $denominator = ($sumXX - $count * $meanX * $meanX);
                     $numerator = ($sumXY - $count * $meanX * $meanY);
 
+                    // numerator / denominator is gradient, want to return maximum datetime if gradient will be 0
                     if ($denominator != 0 && $numerator / $denominator > 0) {
                         $gradient = $factor * $numerator / $denominator;
                         $intersect = $meanY - $factor * $gradient * $meanX;
@@ -104,11 +104,14 @@ class Metric_PopularityTime extends Metric_Abstract {
 
                 if (!($date instanceof DateTime) || $date->getTimestamp() < time()) {
                     try {
-                        $date = new DateTime(PHP_INT_MAX);
+                        $date = new DateTime('1st January 2999');
                     } catch (Exception $e) {
                         $date = null;
                     }
                 }
+            } else {
+                // we have already reached the target
+                $date = new DateTime; //the return value
             }
         }
 

@@ -420,4 +420,8 @@ class Model_Campaign extends Model_Base {
 		return $this->display_name;
 	}
 
+	public function getRegion()
+	{
+		return null;
+	}
 }

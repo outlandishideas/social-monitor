@@ -47,18 +47,14 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
             </div>
         </div>
 
-        <?php if(count($this->smallCountries) > 0) : ?>
-            <div class="small-country-list">
-                <h4>Small Countries</h4>
-                <ul class="country-list">
-                    <?php foreach($this->smallCountries as $country) : /** @var Model_Country $country */ ?>
-                        <li data-id="<?php echo $country->id; ?>" data-badge>
-                            <a href="#"><?php echo $country->getName(); ?> <span data-badge-score="%"></span></a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif; ?>
+        <div class="find-country">
+            <form onsubmit="return app.home.selectCountry()">
+                <label for="search-countries">Find country</label>
+                <input type="text" id="search-countries" oninput="app.home.searchCountries()" />
+            </form>
+            <ul class="country-list">
+            </ul>
+        </div>
 
         <?php foreach($allBadges as $badge): ?>
         <div class="badge-description" data-badge-name="<?php echo $badge->getName(); ?>">
@@ -79,24 +75,7 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
     </div>
     <div class="small-24 large-5 columns">
         <div id="country-stats" class="global">
-            <div id="overall-score" class="badge-small" data-country-id="0" data-badge data-score="0" data-color="#fff">
-                <h3>British Council around the web</h3>
-                <div class="badge-score bd-btm">
-                    <h4><span data-badge-title>Overall</span> Score</h4>
-                    <div class="score-value" data-badge-score="%"></div>
-                </div>
-            </div>
-            <div id="overall-fans" class="badge-small" data-country-id="0" data-badge data-score="0" data-color="#fff">
-                <div class="badge-score bd-btm">
-                    <h4><span data-badge-title>Overall</span> Fans/Followers</h4>
-                    <div class="score-value" data-badge-score></div>
-                </div>
-                <div class="bd-btm">
-                    <div>
-                        This is built up from the total scores from all British Council presences around the world.
-                    </div>
-                </div>
-            </div>
+            <!-- overall score now inserted in app.home.setup() because we use a template that we can insert and remove -->
         </div>
     </div>
 </div>
