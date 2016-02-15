@@ -314,6 +314,12 @@ class ObjectCacheManager
         return $fanData;
     }
 
+    /**
+     * Adds an object to the object cache
+     * @param string $key
+     * @param object $value
+     * @param bool $temp
+     */
     public function setObjectCache($key, $value, $temp = false)
     {
         // delete any old/temporary entries for this key
@@ -330,6 +336,13 @@ class ObjectCacheManager
         $insert->execute(array(':key' => $key, ':value' => gzcompress(json_encode($value)), ':temp' => $temp ? 1 : 0));
     }
 
+    /**
+     * Gets an object from the object cache. Will ignore temporary or old objects if the arguments won't allow them
+     * @param string $key
+     * @param bool $allowTemp
+     * @param int $expires
+     * @return object|false
+     */
     public function getObjectCache($key, $allowTemp = true, $expires = 86400)
     {
         $sql = 'SELECT * FROM object_cache WHERE `key` = :key ORDER BY last_modified DESC LIMIT 1';

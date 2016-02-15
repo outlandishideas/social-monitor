@@ -472,12 +472,25 @@ class BaseController extends Zend_Controller_Action
         return in_array($action, static::$publicActions);
     }
 
+    /**
+     * TODO: Remove this when Badge_Factory is moved (to a service?)
+     * @param $key
+     * @param $value
+     * @param bool|false $temp
+     */
     public static function setObjectCache($key, $value, $temp = false)
     {
         $cacheManager = self::$container->get('object-cache-manager');
         $cacheManager->setObjectCache($key, $value, $temp);
     }
 
+    /**
+     * TODO: Remove this when Badge_Factory is moved (to a service?)
+     * @param $key
+     * @param bool|true $allowTemp
+     * @param int $expires
+     * @return bool|mixed
+     */
     public static function getObjectCache($key, $allowTemp = true, $expires = 86400)
     {
         $cacheManager = self::$container->get('object-cache-manager');
