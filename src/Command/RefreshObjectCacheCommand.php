@@ -6,7 +6,7 @@ use Outlandish\SocialMonitor\Command\Output\DatestampFormatter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ClearCacheCommand extends ContainerAwareCommand
+class RefreshObjectCacheCommand extends ContainerAwareCommand
 {
     /** @var OutputInterface */
     protected $output;

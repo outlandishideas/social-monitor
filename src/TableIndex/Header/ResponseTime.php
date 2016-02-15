@@ -15,7 +15,7 @@ class ResponseTime extends Header {
 
     /**
      * @param \Model_Presence|\Model_Campaign $model
-     * @return string
+     * @return float
      */
     function getValue($model = null)
     {
@@ -46,7 +46,7 @@ class ResponseTime extends Header {
             }
             $actual /= $count;
         } else {
-            throw new RuntimeException("Invalid model");
+            throw new \RuntimeException("Invalid model");
         }
         return $actual;
     }

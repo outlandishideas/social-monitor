@@ -2,6 +2,8 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Model_Presence;
+
 class Branding extends Header {
 
     protected static $name = "branding";

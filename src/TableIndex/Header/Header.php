@@ -158,9 +158,4 @@ abstract class Header {
     function formatValue($value) {
         return $value;
     }
-
-    public static function getInstance()
-    {
-        return Header_Factory::getHeader(self::getName());
-    }
 }

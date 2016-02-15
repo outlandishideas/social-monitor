@@ -418,30 +418,10 @@ class CountryController extends CampaignController {
 	}
 
 	public function downloadAction() {
-        $csvData = Util_Csv::generateCsvData(Model_Country::fetchAll(), $this->tableIndexHeaders());
+		$table = $this->getContainer()->get('table.country-index');
+        $csvData = Util_Csv::generateCsvData(Model_Country::fetchAll(), $table->getHeaders());
         Util_Csv::outputCsv($csvData, 'countries');
         exit;
 	}
-
-    /**
-     * @return Header[]
-     */
-    protected function tableIndexHeaders() {
-
-        return array(
-            Name::getInstance(),
-            //Header_Country::getInstance(),
-            TotalRank::getInstance(),
-            TotalScore::getInstance(),
-            TargetAudience::getInstance(),
-            DigitalPopulation::getInstance(),
-            DigitalPopulationHealth::getInstance(),
-            ActionsPerDay::getInstance(),
-            ResponseTime::getInstance(),
-            Presences::getInstance(),
-            PresenceCount::getInstance(),
-            Options::getInstance()
-        );
-    }
 
 }

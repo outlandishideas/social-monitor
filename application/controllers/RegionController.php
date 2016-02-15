@@ -346,28 +346,11 @@ class RegionController extends CampaignController
 	}
 
 	public function downloadAction() {
-        $csvData = Util_Csv::generateCsvData(Model_Region::fetchAll(), $this->tableIndexHeaders());
+        $table = $this->getContainer()->get('table.region-index');
+        $csvData = Util_Csv::generateCsvData(Model_Region::fetchAll(), $table->getHeaders());
         Util_Csv::outputCsv($csvData, 'regions');
         exit;
 	}
-
-
-    protected function tableIndexHeaders()
-    {
-        return array(
-            Name::getInstance(),
-            TotalRank::getInstance(),
-            TotalScore::getInstance(),
-            TargetAudience::getInstance(),
-            PercentTargetAudience::getInstance(),
-            ActionsPerDay::getInstance(),
-            ResponseTime::getInstance(),
-            Countries::getInstance(),
-            CountryCount::getInstance(),
-            PresenceCount::getInstance(),
-            Options::getInstance(),
-        );
-    }
 
     /**
      * Gets all of the graph data for the requested region

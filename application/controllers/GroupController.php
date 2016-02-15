@@ -354,25 +354,10 @@ class GroupController extends CampaignController {
 	}
 
 	public function downloadAction() {
-        $csvData = Util_Csv::generateCsvData(Model_Group::fetchAll(), $this->tableIndexHeaders());
+        $table = $this->getContainer()->get('table.group-index');
+        $csvData = Util_Csv::generateCsvData(Model_Group::fetchAll(), $table->getHeaders());
         Util_Csv::outputCsv($csvData, 'SBUs');
         exit;
 	}
-
-    protected function tableIndexHeaders()
-    {
-        return array(
-            Name::getInstance(),
-            TotalRank::getInstance(),
-            TotalScore::getInstance(),
-            TargetAudience::getInstance(),
-            ActionsPerDay::getInstance(),
-            ResponseTime::getInstance(),
-            Presences::getInstance(),
-            PresenceCount::getInstance(),
-            Options::getInstance()
-        );
-    }
-
 
 }

@@ -2,6 +2,8 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Model_Country;
+
 class DigitalPopulationHealth extends Header {
 
     protected static $name = "digital_population_health";

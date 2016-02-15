@@ -513,29 +513,11 @@ class PresenceController extends GraphingController
         Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
         $presences = Model_PresenceFactory::getPresences();
 
-        $csvData = Util_Csv::generateCsvData($presences, $this->tableIndexHeaders());
+		$table = $this->getContainer()->get('table.presence-index');
+        $csvData = Util_Csv::generateCsvData($presences, $table->getHeaders());
 
         Util_Csv::outputCsv($csvData, 'presences');
 	    exit;
-    }
-
-    /**
-     * @return Header[]
-     */
-    protected function tableIndexHeaders() {
-        return array(
-//            Header_Compare::getInstance(),//todo: reinstate when compare functionality is restored
-            Handle::getInstance(),
-            SignOff::getInstance(),
-            Branding::getInstance(),
-            TotalRank::getInstance(),
-            TotalScore::getInstance(),
-            CurrentAudience::getInstance(),
-            TargetAudience::getInstance(),
-            ActionsPerDay::getInstance(),
-            ResponseTime::getInstance(),
-            Options::getInstance()
-        );
     }
 
 }

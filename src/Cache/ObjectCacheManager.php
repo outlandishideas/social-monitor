@@ -317,7 +317,7 @@ class ObjectCacheManager
     /**
      * Adds an object to the object cache
      * @param string $key
-     * @param object $value
+     * @param object|array $value
      * @param bool $temp
      */
     public function setObjectCache($key, $value, $temp = false)
