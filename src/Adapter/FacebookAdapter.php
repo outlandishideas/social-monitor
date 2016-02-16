@@ -94,6 +94,7 @@ class FacebookAdapter extends AbstractAdapter
 
     /**
      * @param array $postUIDs
+     * @param $presenceUID
      * @return Status[]
      */
     public function getResponses($postUIDs,$presenceUID)

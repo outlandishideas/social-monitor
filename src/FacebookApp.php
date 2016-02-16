@@ -1,26 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 04/05/2015
- * Time: 13:22
- */
 
 namespace Outlandish\SocialMonitor;
 
-
 use DateTime;
-use Facebook\FacebookRequest;
 use Facebook\FacebookRequestException;
-use Facebook\FacebookSession;
 use Facebook\GraphObject;
 use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 use Outlandish\SocialMonitor\FacebookFetcher\CommentsCountFetcher;
 use Outlandish\SocialMonitor\FacebookFetcher\FeedFetcher;
 use Outlandish\SocialMonitor\FacebookFetcher\LikesCountFetcher;
 use Outlandish\SocialMonitor\FacebookFetcher\RequestFactory;
-use Outlandish\SocialMonitor\FacebookFetcher\SessionFactory;
-use Outlandish\SocialMonitor\FacebookFetcher\SharesCountFetcher;
 
 class FacebookApp
 {

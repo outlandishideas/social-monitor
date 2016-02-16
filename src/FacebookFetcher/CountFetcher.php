@@ -1,16 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 31/05/2015
- * Time: 16:15
- */
 
 namespace Outlandish\SocialMonitor\FacebookFetcher;
 
-
 use Facebook\FacebookRequest;
-use Facebook\FacebookRequestException;
 use Facebook\FacebookResponse;
 use Facebook\FacebookSDKException;
 use Facebook\GraphObject;
@@ -75,8 +67,6 @@ abstract class CountFetcher
         try {
             $response = $request->execute();
         } catch (FacebookSDKException $e) {
-            $response = null;
-        } catch (FacebookRequestException $e) {
             $response = null;
         }
 

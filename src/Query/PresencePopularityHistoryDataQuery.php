@@ -1,12 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 29/04/2015
- * Time: 16:58
- */
 
 namespace Outlandish\SocialMonitor\Query;
+
+use PDO;
 
 class PresencePopularityHistoryDataQuery {
 

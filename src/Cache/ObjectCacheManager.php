@@ -4,11 +4,8 @@ namespace Outlandish\SocialMonitor\Cache;
 
 use Badge_Factory;
 use Enum_Period;
-use Model_Base;
 use Model_Country;
 use Model_Group;
-use Model_PresenceFactory;
-use Model_Region;
 use Outlandish\SocialMonitor\Query\TotalPopularityHistoryDataQuery;
 use Outlandish\SocialMonitor\TableIndex\TableIndex;
 use PDO;

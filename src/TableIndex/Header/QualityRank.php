@@ -2,6 +2,8 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Badge_Quality;
+
 class QualityRank extends BadgeRank {
 
     protected static $name = "quality-rank";

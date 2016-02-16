@@ -1,21 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 07/05/2015
- * Time: 16:05
- */
 
 namespace Outlandish\SocialMonitor\Report;
 
-
-use Badge_Factory;
-use Badge_Total;
-use DateTime;
-use Enum_Period;
 use Model_Country;
-use Model_PresenceFactory;
-use Outlandish\SocialMonitor\Query\BadgeRankQuerier;
 
 class ReportableCountry implements Reportable
 {

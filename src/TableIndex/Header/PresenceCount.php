@@ -2,6 +2,8 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Model_Campaign;
+
 class PresenceCount extends Header {
 
     protected static $name = "presence-count";

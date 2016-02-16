@@ -14,6 +14,7 @@ use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
 use Outlandish\SocialMonitor\Models\Status;
+use RuntimeException;
 
 class LinkedinAdapter extends AbstractAdapter
 {
@@ -130,7 +131,7 @@ class LinkedinAdapter extends AbstractAdapter
 
     /**
      * @param $handle
-     * @return array|null
+     * @return object
      * @throws SocialMonitorException
      */
     protected function getCompanyFromHandle($handle)
