@@ -205,10 +205,10 @@ app.home = {
 		var $countryStats = $('#country-stats');
 		if(id) {
 			if(id > -1) {
-				$countryStats.addClass('loading');
+				var $loading = $('<span class="fa fa-refresh fa-spin loading-icon"></span>').appendTo($countryStats);
 				$countryStats.load('country/stats-panel/id/' + id, function () {
 					$countryStats.removeClass('global');
-					$countryStats.removeClass('loading');
+					$loading.remove();
 					$('[data-badge-title]').text($('#homepage-tabs').find('dd.active').data('title'));
 					app.home.updateAll();
 				});
