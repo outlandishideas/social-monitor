@@ -2,21 +2,11 @@
 
 namespace Outlandish\SocialMonitor\Query;
 
-use PDO;
-
-class PresencePopularityHistoryDataQuery {
-
-    /**
-     * @var PDO
-     */
-    private $db;
-
-    /**
-     * @param \PDO $db
-     */
-    public function __construct(\PDO $db) {
-        $this->db = $db;
-    }
+/**
+ * @unused
+ */
+class PresencePopularityHistoryDataQuery extends HistoryDataQuery
+{
 
     public function get(\Datetime $startDate, \DateTime $endDate)
     {
