@@ -16,21 +16,11 @@ class IndexController extends GraphingController
 		$this->view->countries = Model_Country::fetchAll();
 
 		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
-		list($mapData, $smallMapData, $groupData, $fanData) = $objectCacheManager->getFrontPageData($dayRange, true);
-
-		$smallCountries = array();
-		foreach(Model_Country::smallCountryCodes() as $code => $country) {
-			$smallCountry = Model_Country::fetchByCountryCode($code);
-			if($smallCountry) {
-                $smallCountries[] = $smallCountry;
-            }
-		}
-
+		list($mapData, $groupData, $fanData) = $objectCacheManager->getFrontPageData($dayRange, true);
 
         $this->view->mapArgs = array(
             'geochartMetrics' => $this->view->geochartMetrics,
             'mapData' => $mapData,
-            'smallMapData' => $smallMapData,
             'groupData' => $groupData,
             'fanData' => $fanData
         );
@@ -39,7 +29,6 @@ class IndexController extends GraphingController
 		$this->view->currentDate = $now->format('Y-m-d');
 		$this->view->dayRange = $dayRange;
 		$this->view->badges = Badge_Factory::getBadges();
-		$this->view->smallCountries = $smallCountries;
 		$this->view->groups = Model_Group::fetchAll();
 	}
 
