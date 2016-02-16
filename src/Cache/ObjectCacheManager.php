@@ -9,8 +9,6 @@ use Model_Group;
 use Outlandish\SocialMonitor\Query\TotalPopularityHistoryDataQuery;
 use Outlandish\SocialMonitor\TableIndex\TableIndex;
 use PDO;
-use Zend_Db_Adapter_Pdo_Abstract;
-use Zend_Registry;
 
 class ObjectCacheManager
 {
@@ -23,13 +21,15 @@ class ObjectCacheManager
     /** @var TableIndex */
     protected $regionsTable;
 
-    /** @var Zend_Db_Adapter_Pdo_Abstract */
+    /** @var PDO */
     protected $db;
 
+    protected $popularityQuery;
 
-    function __construct()
+    function __construct(PDO $db, TotalPopularityHistoryDataQuery $querier)
     {
-        $this->db = Zend_Registry::get('db');
+        $this->db = $db;
+        $this->popularityQuery = $querier;
     }
 
     /**
@@ -164,17 +164,31 @@ class ObjectCacheManager
         return $this->getTableIndex($this->regionsTable, $force);
     }
 
-    public function getFrontPageData($dayRange, $temp)
+    /**
+     * Forces an update of the xxx_data_xxx object caches
+     * @param int $dayRange
+     */
+    public function updateFrontPageData($dayRange = 30)
     {
-        $badgeData = $this->getBadgeData($dayRange, $temp);
-        $mapData = $this->getMapData($badgeData, $dayRange, $temp);
-        $smallCountryData = $this->getSmallCountryData($mapData, $dayRange, $temp);
-        $groupData = $this->getGroupData($badgeData, $dayRange, $temp);
-        $fanData = $this->getFanData($dayRange, $temp);
-        return [$mapData, $smallCountryData, $groupData, $fanData];
+        //todo include week data in the data that we send out as json
+        $badgeData = Badge_Factory::getAllCurrentData(
+            Enum_Period::MONTH(),
+            new \DateTime("now -$dayRange days"),
+            new \DateTime('now')
+        );
+        $this->setObjectCache('badge_data_' . $dayRange, $badgeData, false);
+
+        $mapData = $this->calculateMapData($badgeData, $dayRange);
+        $this->setObjectCache('map_data_' . $dayRange, $mapData, false);
+
+        $groupData = Model_Group::constructFrontPageData($badgeData, $dayRange);
+        $this->setObjectCache('group_data_' . $dayRange, $groupData, false);
+
+        $fanData = $this->calculateFanData($dayRange);
+        $this->setObjectCache('fan_data_' . $dayRange, $fanData, false);
     }
 
-    public function getBadgeData($dayRange, $temp)
+    public function getFrontPageData($dayRange, $temp)
     {
         $key = 'badge_data_' . $dayRange;
         $badgeData = $this->getObjectCache($key, $temp);
@@ -187,115 +201,111 @@ class ObjectCacheManager
             );
             $this->setObjectCache($key, $badgeData, $temp);
         }
-        return $badgeData;
-    }
-
-    public function populatePresenceBadgeData()
-    {
-        $key = 'presence_badges';
-        $oldData = $this->getObjectCache($key, false);
-        if(!$oldData) {
-            //if no oldData (too old or temp) get current data (which is now up to date) and set it in the object cache
-            $data = Badge_Factory::getAllCurrentData(Enum_Period::MONTH(), new \DateTime(), new \DateTime());
-            $this->setObjectCache($key, $data, false);
-        }
-    }
-
-    public function getMapData($badgeData, $dayRange, $temp)
-    {
-        $allBadgeTypes = Badge_Factory::getBadgeNames();
 
         $key = 'map_data_' . $dayRange;
         $mapData = $this->getObjectCache($key, $temp);
-
         if (!$mapData) {
-            $mapData = Model_Country::constructFrontPageData($badgeData, $dayRange);
-
-            $existingCountries = array();
-            foreach($mapData as $country){
-                $existingCountries[$country->c] = $country->n;
-            }
-
-            // construct a set of data for a country that has no presence
-            $blankBadges = new \stdClass();
-            foreach ($allBadgeTypes as $badgeType) {
-                $blankBadges->{$badgeType} = array();
-                for ($day = 1; $day <= $dayRange; $day++) {
-                    $blankBadges->{$badgeType}[$day] = (object)array('s'=>0,'l'=>'N/A');
-                }
-            }
-
-            $missingCountries = array_diff_key(Model_Country::countryCodes(), $existingCountries);
-            foreach($missingCountries as $code => $name){
-                $mapData[] = (object)array(
-                    'id'=>-1,
-                    'c' => $code,
-                    'n' => $name,
-                    'p' => 0,
-                    'b' => $blankBadges
-                );
-            }
-
+            $mapData = $this->calculateMapData($badgeData, $dayRange);
             $this->setObjectCache($key, $mapData, $temp);
         }
 
-        return $mapData;
-    }
-
-    public function getSmallCountryData($mapData, $dayRange, $temp)
-    {
-        $key = 'small_country_data_' . $dayRange;
-        $smallMapData = $this->getObjectCache($key, $temp);
-        if (!$smallMapData) {
-            $smallCountries = Model_Country::smallCountryCodes();
-            $smallMapData = array();
-            foreach($mapData as $country){
-                if(array_key_exists($country->c, $smallCountries)){
-                    $smallMapData[] = $country;
-                }
-            }
-            $this->setObjectCache($key, $smallMapData, $temp);
-        }
-        return $smallMapData;
-    }
-
-    public function getGroupData($badgeData, $dayRange, $temp)
-    {
         $key = 'group_data_' . $dayRange;
         $groupData = $this->getObjectCache($key, $temp);
         if (!$groupData) {
             $groupData = Model_Group::constructFrontPageData($badgeData, $dayRange);
             $this->setObjectCache($key, $groupData, $temp);
         }
-        return $groupData;
-    }
 
-    public function getFanData($dayRange, $temp)
-    {
         $key = 'fan_data_' . $dayRange;
         $fanData = $this->getObjectCache($key, $temp);
         if (!$fanData) {
-            $now = new \DateTime();
-            $old = clone $now;
-            $old->modify('-30 days')->setTime(0, 0, 0);
-
-            $dateData = array();
-            $query = new TotalPopularityHistoryDataQuery($this->db->getConnection());
-            $popularityData = $query->get($old, $now);
-            foreach ($popularityData as $row) {
-                $diff = $old->diff(new \DateTime($row['date']));
-                $dayOffset = $diff->days;
-                $dateData[$dayOffset] = array('s' => intval($row['score']));
-            }
-            ksort($dateData);
-
-            $fanData = array('b' => array());
-            foreach (Badge_Factory::getBadgeNames() as $badgeName) {
-                $fanData['b'][$badgeName] = $dateData;
-            };
-
+            $fanData = $this->calculateFanData($dayRange);
             $this->setObjectCache($key, $fanData, $temp);
         }
+
+        return [$mapData, $groupData, $fanData];
+    }
+
+    public function populatePresenceBadgeData()
+    {
+        $data = Badge_Factory::getAllCurrentData(Enum_Period::MONTH(), new \DateTime(), new \DateTime());
+        $this->setObjectCache('presence_badges', $data, false);
+    }
+
+    public function calculateMapData($badgeData, $dayRange)
+    {
+        $allBadgeTypes = Badge_Factory::getBadgeNames();
+
+        $mapData = Model_Country::constructFrontPageData($badgeData, $dayRange);
+
+        $existingCountries = array();
+        foreach($mapData as $country){
+            $existingCountries[$country->c] = $country->n;
+        }
+
+        // construct a set of data for a country that has no presence
+        $blankBadges = new \stdClass();
+        foreach ($allBadgeTypes as $badgeType) {
+            $blankBadges->{$badgeType} = array();
+            for ($day = 1; $day <= $dayRange; $day++) {
+                $blankBadges->{$badgeType}[$day] = (object)array('s'=>0,'l'=>'N/A');
+            }
+        }
+
+        $missingCountries = array_diff_key(Model_Country::countryCodes(), $existingCountries);
+        foreach($missingCountries as $code => $name){
+            $mapData[] = (object)array(
+                'id'=>-1,
+                'c' => $code,
+                'n' => $name,
+                'p' => 0,
+                'b' => $blankBadges
+            );
+        }
+
+        return $mapData;
+    }
+
+    public function calculateFanData($dayRange)
+    {
+        $now = new \DateTime();
+        $old = clone $now;
+        $old->modify('-30 days')->setTime(0, 0, 0);
+
+        $dateData = array();
+        $popularityData = $this->popularityQuery->get($old, $now);
+        foreach ($popularityData as $row) {
+            $diff = $old->diff(new \DateTime($row['date']));
+            $dayOffset = $diff->days;
+            $dateData[$dayOffset] = array('s' => intval($row['score']));
+        }
+
+        // fill in any gaps, by copying the closest one
+        for ($day = 0; $day <= $dayRange; $day++) {
+            if (!array_key_exists($day, $dateData)) {
+                $key = '';
+                for ($offset = 1; $offset < 30; $offset++) {
+                    if (array_key_exists($day - $offset, $dateData)) {
+                        $key = $day - $offset;
+                        break;
+                    } else if (array_key_exists($day + $offset, $dateData)) {
+                        $key = $day + $offset;
+                        break;
+                    }
+                }
+                if ($key) {
+                    $dateData[$day] = $dateData[$key];
+                }
+            }
+        }
+
+        ksort($dateData);
+
+        $fanData = array('b' => array());
+        foreach (Badge_Factory::getBadgeNames() as $badgeName) {
+            $fanData['b'][$badgeName] = $dateData;
+        };
+
         return $fanData;
     }
 

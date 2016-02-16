@@ -274,8 +274,13 @@ services:
             - [addHeader, ["@table.header.target_audience"]]
             - [addHeader, ["@table.header.options"]]
 
+    history-query.total-population:
+        class: Outlandish\SocialMonitor\Query\TotalPopularityHistoryDataQuery
+        arguments: ["@pdo"]
+
     object-cache-manager:
         class: Outlandish\SocialMonitor\Cache\ObjectCacheManager
+        arguments: ["@pdo", "@history-query.total-population"]
         calls:
             - [setPresencesTable, ["@table.presence-index"]]
             - [setCountriesTable, ["@table.country-index"]]

@@ -42,6 +42,11 @@ class RefreshObjectCacheCommand extends ContainerAwareCommand
         $output->writeln("Updating Region Index Table Cache...");
         $objectCacheManager->updateRegionIndexCache();
         $output->writeln("...Done");
+
+
+        $output->writeln("Updating Front Page Cache...");
+        $objectCacheManager->updateFrontPageData();
+        $output->writeln("...Done");
     }
 
 }
