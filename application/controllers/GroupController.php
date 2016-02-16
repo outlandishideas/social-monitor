@@ -1,18 +1,8 @@
 <?php
 
-use mikehaertl\wkhtmlto\Pdf;
 use Outlandish\SocialMonitor\Report\ReportableGroup;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
-use Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay;
 use Outlandish\SocialMonitor\TableIndex\Header\Name;
-use Outlandish\SocialMonitor\TableIndex\Header\Options;
-use Outlandish\SocialMonitor\TableIndex\Header\PresenceCount;
-use Outlandish\SocialMonitor\TableIndex\Header\Presences;
-use Outlandish\SocialMonitor\TableIndex\Header\ResponseTime;
-use Outlandish\SocialMonitor\TableIndex\Header\TargetAudience;
-use Outlandish\SocialMonitor\TableIndex\Header\TotalRank;
-use Outlandish\SocialMonitor\TableIndex\Header\TotalScore;
-use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class GroupController extends CampaignController {
 
@@ -266,7 +256,8 @@ class GroupController extends CampaignController {
 
             $errorMessages = array();
 
-            $editedCountries = array();
+            /** @var Model_Group[] $editedGroups */
+            $editedGroups = array();
 
             foreach($editingGroups as $g){
                 $editingGroup = Model_Group::fetchById($g['id']);
@@ -355,7 +346,7 @@ class GroupController extends CampaignController {
 
 	public function downloadAction() {
         $table = $this->getContainer()->get('table.group-index');
-        $csvData = Util_Csv::generateCsvData(Model_Group::fetchAll(), $table->getHeaders());
+        $csvData = Util_Csv::generateCsvData($table);
         Util_Csv::outputCsv($csvData, 'SBUs');
         exit;
 	}

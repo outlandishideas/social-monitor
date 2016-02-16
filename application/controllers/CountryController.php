@@ -1,21 +1,8 @@
 <?php
 
-use mikehaertl\wkhtmlto\Pdf;
 use Outlandish\SocialMonitor\Report\ReportableCountry;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
-use Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay;
-use Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulation;
-use Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulationHealth;
-use Outlandish\SocialMonitor\TableIndex\Header\Header;
 use Outlandish\SocialMonitor\TableIndex\Header\Name;
-use Outlandish\SocialMonitor\TableIndex\Header\Options;
-use Outlandish\SocialMonitor\TableIndex\Header\PresenceCount;
-use Outlandish\SocialMonitor\TableIndex\Header\Presences;
-use Outlandish\SocialMonitor\TableIndex\Header\ResponseTime;
-use Outlandish\SocialMonitor\TableIndex\Header\TargetAudience;
-use Outlandish\SocialMonitor\TableIndex\Header\TotalRank;
-use Outlandish\SocialMonitor\TableIndex\Header\TotalScore;
-use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class CountryController extends CampaignController {
 
@@ -421,7 +408,7 @@ class CountryController extends CampaignController {
 
 	public function downloadAction() {
 		$table = $this->getContainer()->get('table.country-index');
-        $csvData = Util_Csv::generateCsvData(Model_Country::fetchAll(), $table->getHeaders());
+        $csvData = Util_Csv::generateCsvData($table);
         Util_Csv::outputCsv($csvData, 'countries');
         exit;
 	}

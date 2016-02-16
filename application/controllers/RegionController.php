@@ -1,20 +1,8 @@
 <?php
 
-use mikehaertl\wkhtmlto\Pdf;
 use Outlandish\SocialMonitor\Report\ReportableRegion;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
-use Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay;
-use Outlandish\SocialMonitor\TableIndex\Header\Countries;
-use Outlandish\SocialMonitor\TableIndex\Header\CountryCount;
 use Outlandish\SocialMonitor\TableIndex\Header\Name;
-use Outlandish\SocialMonitor\TableIndex\Header\Options;
-use Outlandish\SocialMonitor\TableIndex\Header\PercentTargetAudience;
-use Outlandish\SocialMonitor\TableIndex\Header\PresenceCount;
-use Outlandish\SocialMonitor\TableIndex\Header\ResponseTime;
-use Outlandish\SocialMonitor\TableIndex\Header\TargetAudience;
-use Outlandish\SocialMonitor\TableIndex\Header\TotalRank;
-use Outlandish\SocialMonitor\TableIndex\Header\TotalScore;
-use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class RegionController extends CampaignController
 {
@@ -347,7 +335,7 @@ class RegionController extends CampaignController
 
 	public function downloadAction() {
         $table = $this->getContainer()->get('table.region-index');
-        $csvData = Util_Csv::generateCsvData(Model_Region::fetchAll(), $table->getHeaders());
+        $csvData = Util_Csv::generateCsvData($table);
         Util_Csv::outputCsv($csvData, 'regions');
         exit;
 	}
