@@ -59,6 +59,7 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
     {
         $score = $presence->getMetricValue($this);
 
+        $level = 0;
         foreach($this->target as $level => $target) {
             //if we haven't reached level 1 yet, then
             //set the level as 0 and break out
