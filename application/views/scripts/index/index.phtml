@@ -85,20 +85,7 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
     <div class="row">
         <div class="small-24 large-23 large-centered columns">
             <div class="row">
-                <?php
-                /** @var Model_Group $group */
-                foreach($this->groups as $group):
-                    $presenceGroups = array();
-                    foreach(Enum_PresenceType::enumValues() as $type) {
-                        $typePresences = $group->getPresencesByType($type);
-                        if (count($typePresences) > 0) {
-                            $presenceGroups[] = array(
-                                'type' => $type,
-                                'presences' => $typePresences
-                            );
-                        }
-                    }
-                ?>
+                <?php foreach($this->groups as $group): /** @var Model_Group $group */ ?>
                     <div class="small-24 large-8 columns">
                         <div class="badge-small" data-group-id="<?php echo $group->id ?>" data-badge>
                             <h3><a href="<?php echo $this->url(array('controller'=>'group', 'action'=>'view', 'id'=>$group->id)); ?>"><?php echo $group->display_name; ?></a></h3>
@@ -117,48 +104,38 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                                             <div class="score-value"><?php echo count($group->getPresences()) ?></div>
                                         </a>
                                     </li>
-                                    <?php foreach ($presenceGroups as $pg) : $type = $pg['type']; /** @var $type Enum_PresenceType */?>
+                                    <?php foreach (Enum_PresenceType::enumValues() as $type) : ?>
+                                        <?php $typePresences = $group->getPresencesByType($type); ?>
+                                        <?php if ($typePresences) : ?>
                                         <li>
                                             <a href="#<?php echo $type->getValue(); ?>">
                                                 <h4><?php echo $type->getTitle(); ?></h4>
-                                                <div class="score-value"><?php echo count($pg['presences']); ?></div>
+                                                <div class="score-value"><?php echo count($typePresences); ?></div>
                                             </a>
                                         </li>
+                                        <?php endif; ?>
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
                             <div class="hide-for-small-down">
-                                <ul class="badge-presences" data-all-presences>
+                                <ul class="badge-presences">
                                     <?php foreach($group->getPresences() as $presence) : /** @var $presence Model_Presence */ ?>
-                                        <li>
+                                        <li data-presence-type="<?php echo $presence->getType()->getValue(); ?>">
                                             <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
-                                                <span class="<?php echo $presence->getPresenceSign(); ?>"></span> <?php echo $presence->getHandle(); ?>
+                                                <span class="<?php echo $presence->getPresenceSign(); ?> fixed-width"></span> <?php echo $presence->getHandle(); ?>
+                                                <?php
+                                                if ($presence->isForFacebook()) {
+                                                    $score = $presence->getFacebookEngagement();
+                                                    echo "<span class=\"engagement-score facebook\" title=\"Facebook engagement score: $score\">" . round($score) . '</span>';
+                                                } else if ($presence->isForTwitter()) {
+                                                    $score = $presence->getKloutScore();
+                                                    echo "<span class=\"engagement-score klout\" title=\"Klout score: $score\">" . round($score) . '</span>';
+                                                }
+                                                ?>
                                             </a>
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>
-                                <?php foreach ($presenceGroups as $pg) : $type = $pg['type']; /** @var $type Enum_PresenceType */ ?>
-                                    <ul class="badge-presences" data-<?php echo $type->getValue(); ?>-presences>
-                                        <?php foreach($pg['presences'] as $presence) : /** @var $presence Model_Presence */ ?>
-                                            <li>
-                                                <?php
-                                                    $sign = $presence->getPresenceSign();
-                                                    $handle = $presence->getHandle();
-                                                    $value = "<span class='{$sign}'></span> {$handle}";
-                                                    if ($presence->isForFacebook()) {
-                                                        $score = $presence->getFacebookEngagement();
-                                                        $value .= " <span class=\"engagement-score facebook\" title=\"Facebook engagement score: $score\">" . round($score) . '</span>';
-                                                    } else if ($presence->isForTwitter()) {
-                                                        $score = $presence->getKloutScore();
-                                                        $value .= " <span class=\"engagement-score klout\" title=\"Klout score: $score\">" . round($score) . '</span>';
-                                                    } ?>
-                                                <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
-                                                    <?php echo $value; ?>
-                                                </a>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                <?php endforeach; ?>
                             </div>
                         </div>
                     </div>

@@ -95,15 +95,20 @@ app.home = {
             .on('click', 'li a', function(event){
                 event.preventDefault();
                 var $this = $(this);
-                var type = $(this).attr('href').replace('#','');
-                $this.parents('.badge-presences-buttons')
-                    .find('li a').removeClass('active')
-                    .filter('[href="#' +type+ '"]').addClass('active');
-                $this.parents('.badge-small')
-                    .find('.badge-presences').hide()
-                    .filter('[data-'+type+'-presences]').show();
+                var type = $this.attr('href').replace('#','');
+				var $parent = $this.closest('[data-badge]');
+                $parent.find('.badge-presences-buttons li a').removeClass('active');
+				$this.addClass('active');
+				if (type == 'all') {
+					$parent.find('.badge-presences li[data-presence-type]').slideDown()
+						.find('.engagement-score').hide();
+				} else {
+					$parent.find('.badge-presences li:not([data-presence-type=' + type + '])').slideUp();
+					$parent.find('.badge-presences li[data-presence-type=' + type + ']').slideDown()
+						.find('.engagement-score').show();
+				}
             })
-            .end().find('.badge-presences').hide();
+			.end().find('[data-presence-type]').hide();
 
 	    var $homepageTabs = $('#homepage-tabs');
 	    $homepageTabs.on('click', 'a', function(e) {

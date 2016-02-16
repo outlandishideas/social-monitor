@@ -1731,6 +1731,11 @@ h4 {
 	color: #fff;
 }
 
+.badge-presences .fa.fixed-width {
+	width: 20px;
+	text-align: center;
+}
+
 .badge-presences-buttons {
 	margin-bottom: 1rem;
 }
