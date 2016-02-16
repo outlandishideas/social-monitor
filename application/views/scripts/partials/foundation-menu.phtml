@@ -21,7 +21,7 @@
             </a>
             <?php if(!empty($page->pages)) : ?>
                 <ul class="dropdown">
-                    <?php foreach($page->pages as $subPage) : ?>
+                    <?php foreach($page->pages as $subPage) : /** @var Zend_Navigation_Page_Mvc $subPage */ ?>
                         <li>
                             <a href="<?php echo $subPage->getHref(); ?>">
                                 <?php echo $subPage->getLabel(); ?>

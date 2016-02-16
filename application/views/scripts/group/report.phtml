@@ -1,8 +1,8 @@
 <?php
-    /** @var Model_Group $country */
+    /** @var Model_Group $group */
     $group = $this->group;
-    /** @var Model_Presence $c */
     $presences = array_map(function($c) {
+        /** @var Model_Presence $c */
         return $c->getName();
     }, $group->getPresences());
     $presenceCount = count($presences);

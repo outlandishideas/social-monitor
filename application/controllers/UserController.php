@@ -95,6 +95,7 @@ class UserController extends BaseController
 			if (!$username) {
                 $this->flashMessage('Please enter a username or email address', 'error');
 			} else {
+				/** @var Model_User $user */
 				$user = Model_User::fetchBy('name', $username);
 				if (!$user) {
 					$user = Model_User::fetchBy('email', $username);
