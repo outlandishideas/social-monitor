@@ -423,7 +423,7 @@ class Model_Presence
 
 	public function updateKpiData(KpiCacheEntry $cacheEntry, $useCache = false)
 	{
-		$stmt = $this->db->prepare("
+		$insertStmt = $this->db->prepare("
                 INSERT INTO `kpi_cache`
                     (`presence_id`, `metric`, `start_date`, `end_date`, `value`)
                 VALUES
@@ -435,7 +435,7 @@ class Model_Presence
 		//start (re)calculation when data not available, or when indicated not to use cache
 		$cachedValues = array();
 		if ($useCache) {
-			$stmt = $this->db->prepare(
+			$selectStmt = $this->db->prepare(
 				"SELECT metric, value FROM `kpi_cache`
 				WHERE `presence_id` = :pid
 				AND `start_date` = :start
@@ -445,15 +445,15 @@ class Model_Presence
 				':start' => $cacheEntry->startString,
 				':end' => $cacheEntry->endString
 			);
-			$stmt->execute($args);
-			$cachedValues = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+			$selectStmt->execute($args);
+			$cachedValues = $selectStmt->fetchAll(PDO::FETCH_KEY_PAIR);
 		}
 
 		foreach($this->getMetrics() as $metric) {
 			$metricName = $metric->getName();
 			if(!array_key_exists($metricName, $cachedValues)) {
 				$result = $metric->calculate($this, $cacheEntry->start, $cacheEntry->end);
-				$stmt->execute(array(
+				$insertStmt->execute(array(
 					':id' => $this->getId(),
 					':metric' => $metricName,
 					':start' => $cacheEntry->startString,
