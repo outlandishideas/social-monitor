@@ -64,30 +64,11 @@ abstract class Chart_Badge extends Chart_Compare {
         $data = parent::getData($model, $start, $end);
         $data["type"] = "spline";
 
-        $colors = array(
-            'grey' => '#d2d2d2',
-            'red' => '#D06959',
-            'green' => '#84af5b',
-            'orange' => '#F1DC63',
-            'yellow' => '#FFFF50'
-        );
-
-        $range = array(
-            'range' => array(0, 1, 20, 50, 80, 100),
-            'colors' => array($colors['grey'], $colors['red'],$colors['red'], $colors['yellow'], $colors['green'], $colors['green'])
-        );
-
         $colorValues = array();
-        $color = $range['colors'][0];
 
         foreach($data['columns'] as $column) {
             if(in_array($column[0], $this->dataColumns)){
                 $value = $column[1];
-                // foreach($range['range'] as $i => $score){
-                //     if($value >= $score) {
-                //         $color = $range['colors'][$i];
-                //     }
-                // }
                 $color = Badge_Abstract::colorize($value);
                 $colorValues[$column[0]] = $color;
             }

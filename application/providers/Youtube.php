@@ -2,7 +2,6 @@
 
 
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
-use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
 

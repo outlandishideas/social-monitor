@@ -1,7 +1,6 @@
 <?php
 
 use Outlandish\SocialMonitor\Helper\Gatekeeper;
-use Outlandish\SocialMonitor\TableIndex\TableIndex;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class BaseController extends Zend_Controller_Action
@@ -168,7 +167,7 @@ class BaseController extends Zend_Controller_Action
 
     /**
      * Recursively set each page's active state, depending on whether they or their children are currently being shown
-     * @param $pages Zend_Navigation_Page_Mvc[]
+     * @param $pages Zend_Navigation_Page[]
      * @return bool true if an active page is found within $pages
      */
     protected function setActivePages($pages)

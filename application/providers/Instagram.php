@@ -1,11 +1,7 @@
 <?php
 
 
-use Facebook\GraphObject;
-use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 use Outlandish\SocialMonitor\Adapter\InstagramAdapter;
-use Outlandish\SocialMonitor\Models\FacebookStatus;
-use Outlandish\SocialMonitor\FacebookEngagement\FacebookEngagementMetric;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
 
 class Provider_Instagram extends Provider_Abstract

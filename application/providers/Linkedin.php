@@ -1,17 +1,13 @@
 <?php
 
 use Outlandish\SocialMonitor\Adapter\LinkedinAdapter;
-use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
-use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
-use Outlandish\SocialMonitor\Models\YoutubeComment;
-use Outlandish\SocialMonitor\Models\YoutubeVideo;
 
 class Provider_Linkedin extends Provider_Abstract
 {
 	protected $connection = null;
     /**
-     * @var YoutubeAdapter
+     * @var LinkedInAdapter
      */
     private $adapter;
 

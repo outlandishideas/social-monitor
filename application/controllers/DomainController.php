@@ -152,7 +152,7 @@ class DomainController extends BaseController {
 		$facebookLookup = $this->db()->prepare('SELECT * FROM facebook_stream WHERE id = :id');
 
 		$links = array();
-		foreach ($domain->getLinks(true) as $link) {
+		foreach ($domain->getLinks() as $link) {
 			$lookup = $link->type == 'facebook' ? $facebookLookup : $twitterLookup;
 			$lookup->execute(array(':id'=>$link->status_id));
 			$status = $lookup->fetchAll(PDO::FETCH_OBJ);
