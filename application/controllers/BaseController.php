@@ -1,5 +1,6 @@
 <?php
 
+use Outlandish\SocialMonitor\Helper\Gatekeeper;
 use Outlandish\SocialMonitor\TableIndex\TableIndex;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -161,7 +162,9 @@ class BaseController extends Zend_Controller_Action
      */
     protected function rejectIfNotAllowed($controller, $action, $id)
     {
-        $level = $this->view->gatekeeper()->getRequiredUserLevel($controller, $action);
+        /** @var Gatekeeper $gatekeeper */
+        $gatekeeper = $this->view->gatekeeper();
+        $level = $gatekeeper->getRequiredUserLevel($controller, $action);
         if ($this->view->user && !$this->view->user->canPerform($level, $controller, $action, $id)) {
             $message = 'Not allowed: Insufficient access rights';
             if (APPLICATION_ENV != 'live') {
@@ -171,7 +174,7 @@ class BaseController extends Zend_Controller_Action
                 $this->apiError($message);
             } else {
                 $this->flashMessage($message, 'error');
-                $urlArgs = $this->view->gatekeeper()->fallbackUrlArgs(array('action' => 'index'));
+                $urlArgs = $gatekeeper->fallbackUrlArgs(array('action' => 'index'));
                 $this->_helper->redirector->gotoRoute($urlArgs, null, true);
             }
         }
@@ -436,52 +439,29 @@ class BaseController extends Zend_Controller_Action
         return in_array($action, static::$publicActions);
     }
 
+    /**
+     * TODO: Remove this when Badge_Factory is moved (to a service?)
+     * @param $key
+     * @param $value
+     * @param bool|false $temp
+     */
     public static function setObjectCache($key, $value, $temp = false)
     {
-		// delete any old/temporary entries for this key
-	    $deleteSql = 'DELETE FROM object_cache WHERE `key` = :key';
-	    $deleteArgs = array(':key' => $key);
-	    if ($temp) {
-		    $deleteSql .= ' AND `temporary` = :temp';
-		    $deleteArgs[':temp'] = 1;
-	    }
-        $delete = self::db()->prepare($deleteSql);
-        $delete->execute($deleteArgs);
-
-	    $insert = self::db()->prepare('INSERT INTO object_cache (`key`, value, `temporary`) VALUES (:key, :value, :temp)');
-        $insert->execute(array(':key' => $key, ':value' => gzcompress(json_encode($value)), ':temp' => $temp ? 1 : 0));
-    }
-
-    public static function getObjectCache($key, $allowTemp = true, $expires = 86400)
-    {
-        $sql = 'SELECT * FROM object_cache WHERE `key` = :key ORDER BY last_modified DESC LIMIT 1';
-        $statement = self::db()->prepare($sql);
-        $statement->execute(array(':key' => $key));
-        $result = $statement->fetch(PDO::FETCH_OBJ);
-	    if ($result) {
-	        if ((time() - strtotime($result->last_modified)) < $expires && ( $allowTemp || $result->temporary == 0)) {
-	            return json_decode(gzuncompress( $result->value));
-	        }
-	    }
-        return false;
+        $cacheManager = self::$container->get('object-cache-manager');
+        $cacheManager->setObjectCache($key, $value, $temp);
     }
 
     /**
+     * TODO: Remove this when Badge_Factory is moved (to a service?)
      * @param $key
-     * @param TableIndex $table
-     * @param Base_Model[] $data
-     * @return array
+     * @param bool|true $allowTemp
+     * @param int $expires
+     * @return bool|mixed
      */
-    protected function getTableIndex($key, TableIndex $table, array $data)
+    public static function getObjectCache($key, $allowTemp = true, $expires = 86400)
     {
-        $rows = $this->getObjectCache($key);
-
-        if (!$rows || $this->_request->getParam('force')) {
-            $rows = $table->getRows($data);
-            $this->setObjectCache($key, $rows);
-        }
-
-        return $rows;
+        $cacheManager = self::$container->get('object-cache-manager');
+        return $cacheManager->getObjectCache($key, $allowTemp, $expires);
     }
 
     protected function flashMessage($message, $type = 'info') {

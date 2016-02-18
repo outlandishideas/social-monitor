@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 29/04/2015
- * Time: 14:45
- */
-require __DIR__.'/vendor/autoload.php';
 
 // Define path to application directory
 defined('APPLICATION_PATH')
@@ -27,7 +20,7 @@ if (APPLICATION_ENV != 'live') {
 
 
 //autoloader to load zend components on demand
-require_once 'Zend/Loader/Autoloader.php';
+require __DIR__.'/vendor/autoload.php';
 $autoloader = Zend_Loader_Autoloader::getInstance();
 
 Zend_Session::start();

@@ -64,7 +64,7 @@ body {
 }
 
 #feedback-form textarea {
-	height: 200px;
+	height: 100px;
 	margin-bottom: 15px;
 }
 
@@ -199,6 +199,7 @@ fieldset {
 	top: 16px;
 	border-radius: 10px;
 	border-top-left-radius: 0px;
+	font-family: 'Open Sans', sans-serif;
 }
 
 .help-text p {
@@ -2060,13 +2061,16 @@ table .cell-handle .missing {
 .button-bc-bar .button-group > li {
 	margin: 0 0.5rem;
 	float: none;
+	vertical-align: middle;
+}
+
+.button-bc-bar .button-group > li > * {
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 .button-bc-bar .button-group > li > select {
-	background: transparent;
-	border-color: white;
-	color: white;
-	padding-right: 1rem;
+	height: 35px;
 }
 
 .button-bc-bar .button-group > li > select option {
@@ -2226,14 +2230,12 @@ table td ul li a:hover {
 	color: #fff;
 }
 
-.small-country-list {
-	margin-top: 1rem;
-	margin-bottom: 2rem;
-}
-
-.small-country-list h4 {
-	margin-bottom: 1rem;
-
+.find-country label {
+	font-size: 1rem;
+	font-weight: 300;
+	margin: 0;
+	padding: 0.25rem 0;
+	text-transform: uppercase;
 }
 
 .country-list {
@@ -2251,9 +2253,11 @@ table td ul li a:hover {
 
 .country-list li a {
 	color: #fff;
+	display: inline-block;
+	width: 80%;
 }
 
-.country-list li span {
+.country-list li .score {
 	font-size: 1.5rem;
 	position: absolute;
 	right: 0;

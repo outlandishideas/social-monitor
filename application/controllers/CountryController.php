@@ -31,8 +31,11 @@ class CountryController extends CampaignController {
 	 * @user-level user
 	 */
 	public function indexAction() {
+		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
+		$table = $objectCacheManager->getCountriesTable();
+
 		/** @var Model_Country[] $countries */
-		$countries = Model_Country::fetchAll();
+		$countries = $table->getTableData();
 		$presences = array();
 		foreach (Model_PresenceFactory::getPresences() as $p) {
 			$presences[$p->id] = $p;
@@ -50,13 +53,11 @@ class CountryController extends CampaignController {
 			$country->getPresences($mapping, $presences);
 		}
 
-        /** @var TableIndex $indexTable */
-        $indexTable = $this->getContainer()->get('table.country-index');
-        $rows = $this->getTableIndex('country-index', $indexTable, $countries);
+		$rows = $objectCacheManager->getCountryIndexRows($this->_request->getParam('force'));
 
 		$this->view->countries = $countries;
 		$this->view->rows = $rows;
-        $this->view->tableHeaders = $indexTable->getHeaders();
+        $this->view->tableHeaders = $objectCacheManager->getCountriesTable()->getHeaders();
         $this->view->sortCol = Name::getName();
 		$this->view->regions = Model_Region::fetchAll();
 	}
@@ -419,30 +420,10 @@ class CountryController extends CampaignController {
 	}
 
 	public function downloadAction() {
-        $csvData = Util_Csv::generateCsvData(Model_Country::fetchAll(), $this->tableIndexHeaders());
+		$table = $this->getContainer()->get('table.country-index');
+        $csvData = Util_Csv::generateCsvData(Model_Country::fetchAll(), $table->getHeaders());
         Util_Csv::outputCsv($csvData, 'countries');
         exit;
 	}
-
-    /**
-     * @return Header[]
-     */
-    protected function tableIndexHeaders() {
-
-        return array(
-            Name::getInstance(),
-            //Header_Country::getInstance(),
-            TotalRank::getInstance(),
-            TotalScore::getInstance(),
-            TargetAudience::getInstance(),
-            DigitalPopulation::getInstance(),
-            DigitalPopulationHealth::getInstance(),
-            ActionsPerDay::getInstance(),
-            ResponseTime::getInstance(),
-            Presences::getInstance(),
-            PresenceCount::getInstance(),
-            Options::getInstance()
-        );
-    }
 
 }

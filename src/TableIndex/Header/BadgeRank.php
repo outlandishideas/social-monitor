@@ -2,6 +2,9 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Model_Campaign;
+use Model_Presence;
+
 abstract class BadgeRank extends Header {
 
     function __construct()

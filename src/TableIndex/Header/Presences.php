@@ -2,6 +2,8 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Outlandish\SocialMonitor\Helper\Gatekeeper;
+
 class Presences extends Header {
 
     protected static $name = "presences";
@@ -17,14 +19,14 @@ class Presences extends Header {
 
 
     /**
-     * @param Model_Campaign $model
+     * @param \Model_Campaign $model
      * @return array
      */
     public function getTableCellValue($model)
     {
         $presences = array();
         foreach($model->getPresences() as $presence) {
-            $template = '<a href="' . \Zend_View_Helper_Gatekeeper::PLACEHOLDER_URL . '"><span class="' . $presence->getPresenceSign() . ' fa-lg fa-fw"></span>' . $presence->getHandle() . '</a>';
+            $template = '<a href="' . Gatekeeper::PLACEHOLDER_URL . '"><span class="' . $presence->getPresenceSign() . ' fa-lg fa-fw"></span>' . $presence->getHandle() . '</a>';
             $urlArgs = array("controller" => "presence", "action" => "view", "id" => $presence->getId());
             $presences[$template] = $urlArgs;
         }

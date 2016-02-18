@@ -137,13 +137,6 @@ abstract class GraphingController extends BaseController {
 	}
 
     /**
-     * @return Header_Abstract[]
-     */
-    protected function tableIndexHeaders() {
-        return array();
-    }
-
-    /**
      * @param $model Model_Campaign|Model_Presence
      * @param Badge_Abstract $badge
      * @return array
@@ -214,8 +207,6 @@ abstract class GraphingController extends BaseController {
 					if (!$m['gliding'] && $m['score'] !== null) {
 						if ($m['score'] == 0) {
 							$m['color'] = '#D06959';	// red for score of 0%
-						} else {
-							$m['color'] = '#84af5b';    // green
 						}
 					}
 					$metrics[] = $m;

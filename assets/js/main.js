@@ -85,7 +85,43 @@ $.extend(app, {
 			'<table>\
 				<tr><th>Target date</th><% _.each(requiredRates, function(r){ %><td><%=r.date%></td><%})%></tr>\
 				<tr><th>Required gain<br />per day</th><% _.each(requiredRates, function(r){ %><td><%=app.utils.numberFixedDecimal(r.rate)%></td><%})%></tr>\
-			</table>'
+			</table>',
+		countryListItem:
+			'<li data-id="<%= id %>" data-badge>\
+				<a href="#"><span class="name"><%= n %></span> <span class="score" data-badge-score="%"></span></a>\
+			</li>',
+		emptyCountryBadge:
+			'<div class="badge-small" data-badge>\
+			    <h3><%= name %></h3>\
+                <div class="badge-score bd-btm">\
+	                <h4><span data-badge-title></span> Score</h4>\
+                    <div class="score-value">0</div>\
+                        <div class="score-bar"></div>\
+                    </div>\
+                    <div class="bd-btm">\
+	                <h4>Presences</h4>\
+	                <div class="score-value">0</div>\
+                </div>\
+            </div>',
+		globalScore:
+			'<div id="overall-score" class="badge-small" data-country-id="0" data-badge data-score="0" data-color="#fff">\
+				<h3>British Council around the web</h3>\
+				<div class="badge-score bd-btm">\
+					<h4><span data-badge-title>Overall</span> Score</h4>\
+					<div class="score-value" data-badge-score="%"></div>\
+				</div>\
+			</div>\
+			<div id="overall-fans" class="badge-small" data-country-id="0" data-badge data-score="0" data-color="#fff">\
+				<div class="badge-score bd-btm">\
+					<h4><span data-badge-title>Overall</span> Fans/Followers</h4>\
+					<div class="score-value" data-badge-score></div>\
+				</div>\
+				<div class="bd-btm">\
+					<div>\
+						This is built up from the total scores from all British Council presences around the world.\
+					</div>\
+				</div>\
+			</div>'
 	}
 
 });

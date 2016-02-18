@@ -29,14 +29,14 @@ class GroupController extends CampaignController {
 	 */
 	public function indexAction() {
 
-        $groups = Model_Group::fetchAll();
-        /** @var TableIndex $indexTable */
-        $indexTable = $this->getContainer()->get('table.group-index');
-        $rows = $this->getTableIndex('group-index', $indexTable, $groups);
+        $objectCacheManager = $this->getContainer()->get('object-cache-manager');
+        $table = $objectCacheManager->getGroupsTable();
 
-		$this->view->groups = $groups;
+        $rows = $objectCacheManager->getGroupIndexRows($this->_request->getParam('force'));
+
+		$this->view->groups = $table->getTableData();
 		$this->view->rows = $rows;
-        $this->view->tableHeaders = $indexTable->getHeaders();
+        $this->view->tableHeaders = $table->getHeaders();
         $this->view->sortCol = Name::getName();
 	}
 
@@ -354,25 +354,10 @@ class GroupController extends CampaignController {
 	}
 
 	public function downloadAction() {
-        $csvData = Util_Csv::generateCsvData(Model_Group::fetchAll(), $this->tableIndexHeaders());
+        $table = $this->getContainer()->get('table.group-index');
+        $csvData = Util_Csv::generateCsvData(Model_Group::fetchAll(), $table->getHeaders());
         Util_Csv::outputCsv($csvData, 'SBUs');
         exit;
 	}
-
-    protected function tableIndexHeaders()
-    {
-        return array(
-            Name::getInstance(),
-            TotalRank::getInstance(),
-            TotalScore::getInstance(),
-            TargetAudience::getInstance(),
-            ActionsPerDay::getInstance(),
-            ResponseTime::getInstance(),
-            Presences::getInstance(),
-            PresenceCount::getInstance(),
-            Options::getInstance()
-        );
-    }
-
 
 }

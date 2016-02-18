@@ -41,17 +41,15 @@ class PresenceController extends GraphingController
 	 */
 	public function indexAction()
 	{
-		Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
-		$presences = Model_PresenceFactory::getPresences();
+		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
+		$table = $objectCacheManager->getPresencesTable();
 
-        /** @var TableIndex $indexTable */
-        $indexTable = $this->getContainer()->get('table.presence-index');
-        $rows = $this->getTableIndex('presence-index', $indexTable, $presences);
+		$rows = $objectCacheManager->getPresenceIndexRows($this->_request->getParam('force'));
 
         $this->view->title = 'Presences';
-        $this->view->presences = $presences;
+        $this->view->presences = $table->getTableData();
         $this->view->rows = $rows;
-        $this->view->tableHeaders = $indexTable->getHeaders();
+        $this->view->tableHeaders = $table->getHeaders();
         $this->view->sortCol = Handle::getName();
 		$this->view->regions = Model_Region::fetchAll();
 	}
@@ -551,29 +549,11 @@ class PresenceController extends GraphingController
         Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
         $presences = Model_PresenceFactory::getPresences();
 
-        $csvData = Util_Csv::generateCsvData($presences, $this->tableIndexHeaders());
+		$table = $this->getContainer()->get('table.presence-index');
+        $csvData = Util_Csv::generateCsvData($presences, $table->getHeaders());
 
         Util_Csv::outputCsv($csvData, 'presences');
 	    exit;
-    }
-
-    /**
-     * @return Header[]
-     */
-    protected function tableIndexHeaders() {
-        return array(
-//            Header_Compare::getInstance(),//todo: reinstate when compare functionality is restored
-            Handle::getInstance(),
-            SignOff::getInstance(),
-            Branding::getInstance(),
-            TotalRank::getInstance(),
-            TotalScore::getInstance(),
-            CurrentAudience::getInstance(),
-            TargetAudience::getInstance(),
-            ActionsPerDay::getInstance(),
-            ResponseTime::getInstance(),
-            Options::getInstance()
-        );
     }
 
 }

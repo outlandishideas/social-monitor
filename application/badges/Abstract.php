@@ -105,6 +105,8 @@ abstract class Badge_Abstract
             $range = Enum_Period::MONTH();
         }
 
+		$dateString = $date->format('Y-m-d');
+
         $defaultRank = count(Model_PresenceFactory::getPresences());
 
 		$name = static::getName();
@@ -123,8 +125,8 @@ abstract class Badge_Abstract
         $range = (string)$range;
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute(array(
-			':date'	=> $date->format('Y-m-d'),
-			':range'	=> $range
+			':date'	=> $dateString,
+			':range' => $range
 		));
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -135,7 +137,7 @@ abstract class Badge_Abstract
 			$stmt->execute(array(
 				':rank'		=> isset($row['rank']) && !empty($row['rank']) ? $row['rank'] : $defaultRank,
 				':id'		=> $row['presence_id'],
-				':date'		=> $date->format('Y-m-d'),
+				':date'		=> $dateString,
 				':range'	=> $range
 			));
 		}
