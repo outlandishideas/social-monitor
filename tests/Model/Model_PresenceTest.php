@@ -32,6 +32,7 @@ class Model_PresenceTest extends PHPUnit_Framework_TestCase
             'image_url' => 'image_url',
             'last_updated' => '2016-02-16 18:00:00',
             'last_fetched' => '2016-02-16 18:00:00',
+            'user_id' => null
         ];
     }
 
