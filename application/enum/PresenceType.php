@@ -16,6 +16,7 @@ class Enum_PresenceType extends Enum_Abstract
      * @var ContainerInterface
      */
     protected static $container;
+    protected static $requiresAccessToken = [self::LINKEDIN];
 
     public static function TWITTER() { return self::get(self::TWITTER); }
     public static function FACEBOOK() { return self::get(self::FACEBOOK); }
@@ -207,6 +208,11 @@ class Enum_PresenceType extends Enum_Abstract
 	{
         return $this->applicableMetrics;
 	}
+
+    public function requiresAccessToken()
+    {
+        return in_array($this->getValue(), self::$requiresAccessToken);
+    }
 
     /**
      * Gets the metrics from the given list that are applicable to this presence type

@@ -3,6 +3,8 @@
 $presence = $this->presence;
 /** @var Enum_PresenceType[] $types */
 $types = $this->types;
+/** @var Model_User $user */
+$user = $this->user;
 
 $topBar = $this->gatekeeper()->filterAll(array(
     '<a href="%url%" class="button-bc button-view">View</a>' => array('action'=>'view', 'id'=>$presence->id),
@@ -33,12 +35,15 @@ if ($topBar && $this->showButtons) {
             </div>
             <div class="small-24 medium-18 large-20 end columns">
                 <ul class="blockLabels">
-                    <?php foreach ($types as $val) : ?>
+                    <?php foreach ($types as $val) :
+                        $requiresAccessToken = $val->requiresAccessToken() && !$user->getAccessToken($val);
+                        $title = $val->getTitle(); ?>
                     <li>
-                        <label class="radio"><input name="type" type="radio" value="<?php echo $val->getValue(); ?>"
+                        <label class="radio withFormHint"><input name="type" type="radio" value="<?php echo $val->getValue(); ?>"
                             <?php if ($presence->type == $val) echo 'checked'; ?>
-                            <?php if (!$this->editType) echo 'disabled'; ?>> <?php echo $val->getTitle(); ?>
-                        </label>
+                            <?php if (!$this->editType || $requiresAccessToken) echo 'disabled'; ?>>
+                            <?php echo $title; ?>
+                        </label><span class="formHint"><?php echo $requiresAccessToken ? "(Please connect your account to {$title})": ""; ?></span>
                         <?php if (!$this->editType && ($presence->type == $val)) : ?>
                             <input type="hidden" value="<?php echo $val->getValue(); ?>" name="type">
                         <?php endif; ?>
@@ -127,7 +132,30 @@ if ($topBar && $this->showButtons) {
                 </ul>
             </div>
         </div>
+
 	</fieldset>
+
+    <?php if (!$this->editType && $presence->getType()->requiresAccessToken()) : ?>
+    <fieldset>
+        <div clas="row">
+            <div class="columns small-24">
+                <h2>Access Token</h2>
+                <p>This type of presence requires an access token to fetch data.</p>
+                <?php if ($presence->getUser()) : ?>
+                    <p>This presence is currently using the access token from the following user: <strong><?php echo $presence->getUser()->name; ?></strong></p>
+                <?php else : ?>
+                    <p>This presence does not currently have an access token and so cannot be fetched.</p>
+                <?php endif; ?>
+
+                <?php if ($user->getAccessToken($presence->getType())) :
+                    $accessButton = $this->gatekeeper()->filter('<a href="%url%" class="button-bc inline">Use your access token</a>', array('controller'=>'presence', 'action'=>'assign', 'id'=>$presence->id), null, true);?>
+                    <p><?php echo $accessButton; ?></p>
+                <?php endif; ?>
+
+            </div>
+        </div>
+    </fieldset>
+    <?php endif; ?>
 
     <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$bottomBar, 'dark'=>true)); ?>
 </form>
