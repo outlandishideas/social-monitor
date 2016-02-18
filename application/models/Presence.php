@@ -714,10 +714,7 @@ class Model_Presence
 	{
 		$size = $this->getSize();
 		// get the number of presences of the same size as $this
-		$presenceCount = count(array_filter($owner->getPresences(), function ($presence) use ($size) {
-			/** @var Model_Presence $presence */
-			return $presence->getSize() == $size;
-		}));
+		$presenceCount = count($owner->getPresencesBySize($size));
 
 		$sizePercent = BaseController::getOption("size_{$size}_presences");
 
