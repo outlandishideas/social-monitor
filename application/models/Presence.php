@@ -432,7 +432,7 @@ class Model_Presence
 
 	public function updateKpiData(KpiCacheEntry $cacheEntry, $useCache = false)
 	{
-		$stmt = $this->db->prepare("
+		$insertStmt = $this->db->prepare("
                 INSERT INTO `kpi_cache`
                     (`presence_id`, `metric`, `start_date`, `end_date`, `value`)
                 VALUES
@@ -462,7 +462,7 @@ class Model_Presence
 			$metricName = $metric->getName();
 			if(!array_key_exists($metricName, $cachedValues)) {
 				$result = $metric->calculate($this, $cacheEntry->start, $cacheEntry->end);
-				$stmt->execute(array(
+                $insertStmt->execute(array(
 					':id' => $this->getId(),
 					':metric' => $metricName,
 					':start' => $cacheEntry->startString,
