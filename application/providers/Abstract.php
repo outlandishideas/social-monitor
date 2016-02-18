@@ -92,6 +92,20 @@ abstract class Provider_Abstract
     }
 
     /**
+     * Run a simple test on the adapter to see if we can fetch the presence
+     *
+     * Override this method if this needs to be run before creating a new presence.
+     *
+     * @param Model_Presence $presence
+     * @throws SocialMonitorException
+     * @return null
+     */
+    public function testAdapter(Model_Presence $presence)
+    {
+        return null;
+    }
+
+    /**
      * @param string $type
      * @param array $links map of status_id=>links
      */

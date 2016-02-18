@@ -2276,6 +2276,10 @@ form p.label {
 	padding: 0;
 }
 
+form label.radio.withFormHint {
+	display: inline;
+}
+
 .flag {
 	position: relative;
 	top: -2px;

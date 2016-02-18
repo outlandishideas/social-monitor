@@ -67,43 +67,10 @@ class BaseController extends Zend_Controller_Action
 
         }
 
-	    // check the fetch lock
-	    $lockTime = $this->getOption($this->lockName('fetch'));
-	    if ($lockTime && $this->_request instanceof Zend_Controller_Request_Http && !$this->_request->isXmlHttpRequest()) {
-		    $seconds = time() - $lockTime;
-		    if ($seconds > (10 * $this->config->app->fetch_time_limit)) {
-			    $factors = array(
-				    'day' => 86400,
-				    'hour' => 3600,
-				    'min' => 60,
-				    'sec' => 0
-			    );
-			    $elements = array();
-			    foreach ($factors as $label => $factor) {
-				    if ($seconds > $factor) {
-					    if ($factor) {
-						    $tmp = $seconds % $factor;
-						    $elements[] = array(($seconds - $tmp) / $factor, $label);
-						    $seconds = $tmp;
-					    } else {
-						    $elements[] = array($seconds, $label);
-					    }
-				    }
-			    }
-			    foreach ($elements as $i => $e) {
-				    $elements[$i] = $this->view->pluralise($e[1], $e[0]);
-			    }
-			    $message = 'Fetch process has been inactive for ' . implode(', ', $elements) . ', indicating something has gone wrong. ';
-			    $urlArgs = array('controller'=>'fetch', 'action'=>'clear-lock');
-			    $url = $this->view->gatekeeper()->filter('%url%', $urlArgs);
-			    if ($url) {
-				    $message .= 'Click <a href="' . $url . '">here</a> to clear the lock manually.';
-			    } else {
-				    $message .= 'Please log in to clear the lock.';
-			    }
-			    $this->flashMessage($message, 'inaction');
-		    }
-	    }
+	    // check the fetch lock and show if has been locked over a period of time
+        $this->showFetchLockMessage();
+
+        $this->showAccessTokenNeedsRefreshMessage();
 
 	    //if user hasn't been loaded and this is not a public action, go to login
         if (!$this->view->user && !in_array($this->_request->getActionName(), static::$publicActions)) {
@@ -520,6 +487,111 @@ class BaseController extends Zend_Controller_Action
             ob_end_flush();
         }
         ob_implicit_flush(true);
+    }
+
+    /**
+     * Updates the presence index cache
+     *
+     * The presence index table is very large and was performing very badly. This method calculates the needed
+     * values for this table and stores it as json in the object cache table to be used when rendering that
+     * particular page.
+     */
+    protected function updatePresenceIndexCache()
+    {
+        $presenceIndexTable = $this->getContainer()->get('table.presence-index');
+        $presences = Model_PresenceFactory::getPresences();
+        $rows = $presenceIndexTable->getRows($presences);
+        BaseController::setObjectCache('presence-index', $rows);
+    }
+
+    protected function showFetchLockMessage()
+    {
+        $lockTime = $this->getOption($this->lockName('fetch'));
+        if ($lockTime && $this->isHttpRequest()) {
+            $seconds = time() - $lockTime;
+            if ($this->fetchHasBeenLockedForTooLong($seconds)) {
+                $message = $this->createFetchLockWarningMessage($seconds);
+                $this->flashMessage($message, 'inaction');
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isHttpRequest()
+    {
+        return $this->_request instanceof Zend_Controller_Request_Http && !$this->_request->isXmlHttpRequest();
+    }
+
+    /**
+     * @param $seconds
+     * @return bool
+     */
+    protected function fetchHasBeenLockedForTooLong($seconds)
+    {
+        return $seconds > (10 * $this->config->app->fetch_time_limit);
+    }
+
+    /**
+     * @param $seconds
+     * @return string
+     */
+    protected function createFetchLockWarningMessage($seconds)
+    {
+        $elements = $this->secondsIntoFriendlyTime($seconds);
+        $message = 'Fetch process has been inactive for ' . implode(', ', $elements) . ', indicating something has gone wrong. ';
+        $urlArgs = array('controller' => 'fetch', 'action' => 'clear-lock');
+        $url = $this->view->gatekeeper()->filter('%url%', $urlArgs);
+        if ($url) {
+            $message .= 'Click <a href="' . $url . '">here</a> to clear the lock manually.';
+            return $message;
+        } else {
+            $message .= 'Please log in to clear the lock.';
+            return $message;
+        }
+    }
+
+    /**
+     * @param $seconds
+     * @return array
+     */
+    protected function secondsIntoFriendlyTime($seconds)
+    {
+        $factors = array(
+            'day' => 86400,
+            'hour' => 3600,
+            'min' => 60,
+            'sec' => 0
+        );
+        $elements = array();
+        foreach ($factors as $label => $factor) {
+            if ($seconds > $factor) {
+                if ($factor) {
+                    $tmp = $seconds % $factor;
+                    $elements[] = array(($seconds - $tmp) / $factor, $label);
+                    $seconds = $tmp;
+                } else {
+                    $elements[] = array($seconds, $label);
+                }
+            }
+        }
+        foreach ($elements as $i => $e) {
+            $elements[$i] = $this->view->pluralise($e[1], $e[0]);
+        }
+        return $elements;
+    }
+
+    private function showAccessTokenNeedsRefreshMessage()
+    {
+        /** @var Model_User $user */
+        $user = $this->view->user;
+        if ($user && $user->hasAccessTokensNeedRefreshing()) {
+            $urlArgs = ['controller' => 'user', 'action' => 'edit-self'];
+            $url = $this->view->gatekeeper()->filter('%url%', $urlArgs);
+            $message = "One or more of your access tokens are set to expire soon. <a href=\"{$url}\">Click here</a> to refresh these tokens.";
+            $this->flashMessage($message, 'inaction');
+        }
     }
 
 }
