@@ -118,13 +118,7 @@ class ConfigController extends BaseController {
                             'fb_active_user_percentage_medium'=>array('label'=>'...medium presences'),
                             'fb_active_user_percentage_large'=>array('label'=>'...large presences'),
                             'fb_active_user_percentage_xlarge'=>array('label'=>'...and extra large presences'),
-                            'facebook_engagement_weighting'=>array('label'=>'Facebook Engagement Score Weighting'),
-                            'fb_engagement_target'=>array('label'=>'Facebook Engagement Score (For a single level)', 'hint' => 'The presence will score 100% if it reaches this target (and we are using the old calculation)'),
-                            'fb_engagement_target_level_1'=>array('label'=>'Facebook Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
-                            'fb_engagement_target_level_2'=>array('label'=>'Facebook Engagement Score Level 2', 'hint' => 'The presence will score 40% if it reaches this target'),
-                            'fb_engagement_target_level_3'=>array('label'=>'Facebook Engagement Score Level 3', 'hint' => 'The presence will score 60% if it reaches this target'),
-                            'fb_engagement_target_level_4'=>array('label'=>'Facebook Engagement Score Level 4', 'hint' => 'The presence will score 80% if it reaches this target'),
-                            'fb_engagement_target_level_5'=>array('label'=>'Facebook Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
+                            'facebook_engagement_weighting'=>array('label'=>'Facebook Engagement Score Weighting')
                         )
                     ),
                     (object)array(
@@ -134,13 +128,7 @@ class ConfigController extends BaseController {
                             'sw_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
                             'sw_active_user_percentage_medium'=>array('label'=>'...medium presences'),
                             'sw_active_user_percentage_large'=>array('label'=>'...and large presences'),
-                            'sina_weibo_engagement_weighting'=>array('label'=>'Sina Weibo Engagement Score Weighting'),
-                            'sina_weibo_engagement_target'=>array('label'=>'Sina Weibo Engagement Score (For a single level)', 'hint' => 'The presence will score 100% if it reaches this target (and we are using the old calculation)'),
-                            'sina_weibo_engagement_target_level_1'=>array('label'=>'Sina Weibo Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
-                            'sina_weibo_engagement_target_level_2'=>array('label'=>'Sina Weibo Engagement Score Level 2', 'hint' => 'The presence will score 40% if it reaches this target'),
-                            'sina_weibo_engagement_target_level_3'=>array('label'=>'Sina Weibo Engagement Score Level 3', 'hint' => 'The presence will score 60% if it reaches this target'),
-                            'sina_weibo_engagement_target_level_4'=>array('label'=>'Sina Weibo Engagement Score Level 4', 'hint' => 'The presence will score 80% if it reaches this target'),
-                            'sina_weibo_engagement_target_level_5'=>array('label'=>'Sina Weibo Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
+                            'sina_weibo_engagement_weighting'=>array('label'=>'Sina Weibo Engagement Score Weighting')
                         )
                     ),
                     (object)array(
@@ -150,13 +138,7 @@ class ConfigController extends BaseController {
                             'ig_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
                             'ig_active_user_percentage_medium'=>array('label'=>'...medium presences'),
                             'ig_active_user_percentage_large'=>array('label'=>'...and large presences'),
-                            'instagram_engagement_weighting'=>array('label'=>'Instagram Engagement Score Weighting'),
-                            'ig_engagement_target'=>array('label'=>'Instagram Engagement Score (For a single level)', 'hint' => 'The presence will score 100% if it reaches this target (and we are using the old calculation)'),
-                            'ig_engagement_target_level_1'=>array('label'=>'Instagram Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
-                            'ig_engagement_target_level_2'=>array('label'=>'Instagram Engagement Score Level 2', 'hint' => 'The presence will score 40% if it reaches this target'),
-                            'ig_engagement_target_level_3'=>array('label'=>'Instagram Engagement Score Level 3', 'hint' => 'The presence will score 60% if it reaches this target'),
-                            'ig_engagement_target_level_4'=>array('label'=>'Instagram Engagement Score Level 4', 'hint' => 'The presence will score 80% if it reaches this target'),
-                            'ig_engagement_target_level_5'=>array('label'=>'Instagram Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
+                            'instagram_engagement_weighting'=>array('label'=>'Instagram Engagement Score Weighting')
                         )
                     ),
                     (object)array(
@@ -166,12 +148,7 @@ class ConfigController extends BaseController {
                             'yt_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
                             'yt_active_user_percentage_medium'=>array('label'=>'...medium presences'),
                             'yt_active_user_percentage_large'=>array('label'=>'...and large presences'),
-                            'youtube_engagement_weighting'=>array('label'=>'Youtube Engagement Score Weighting'),
-                            'yt_engagement_target_level_1'=>array('label'=>'Youtube Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
-                            'yt_engagement_target_level_2'=>array('label'=>'Youtube Engagement Score Level 2', 'hint' => 'The presence will score 40% if it reaches this target'),
-                            'yt_engagement_target_level_3'=>array('label'=>'Youtube Engagement Score Level 3', 'hint' => 'The presence will score 60% if it reaches this target'),
-                            'yt_engagement_target_level_4'=>array('label'=>'Youtube Engagement Score Level 4', 'hint' => 'The presence will score 80% if it reaches this target'),
-                            'yt_engagement_target_level_5'=>array('label'=>'Youtube Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
+                            'youtube_engagement_weighting'=>array('label'=>'Youtube Engagement Score Weighting')
                         )
                     ),
                     (object)array(
@@ -181,12 +158,7 @@ class ConfigController extends BaseController {
                             'in_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
                             'in_active_user_percentage_medium'=>array('label'=>'...medium presences'),
                             'in_active_user_percentage_large'=>array('label'=>'...and large presences'),
-                            'linkedin_engagement_weighting'=>array('label'=>'Linkedin Engagement Score Weighting'),
-                            'in_engagement_target_level_1'=>array('label'=>'Linkedin Engagement Score Level 1', 'hint' => 'The presence will score 20% if it reaches this target'),
-                            'in_engagement_target_level_2'=>array('label'=>'Linkedin Engagement Score Level 2', 'hint' => 'The presence will score 40% if it reaches this target'),
-                            'in_engagement_target_level_3'=>array('label'=>'Linkedin Engagement Score Level 3', 'hint' => 'The presence will score 60% if it reaches this target'),
-                            'in_engagement_target_level_4'=>array('label'=>'Linkedin Engagement Score Level 4', 'hint' => 'The presence will score 80% if it reaches this target'),
-                            'in_engagement_target_level_5'=>array('label'=>'Linkedin Engagement Score Level 5', 'hint' => 'The presence will score 100% if it reaches this target')
+                            'linkedin_engagement_weighting'=>array('label'=>'Linkedin Engagement Score Weighting')
                         )
                     )
                 )
