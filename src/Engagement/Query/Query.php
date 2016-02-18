@@ -149,8 +149,6 @@ abstract class Query {
         $weightedEngagement = array();
         $clauses = ['ph.presence_id AS `presence_id`', 'ph.size', 'ph.popularity'];
         foreach ($this->engagementWeighting as $key => $weight) {
-            //$clauses[] = "IFNULL(f.$key,0) AS $key";
-            //$clauses[] = "IFNULL(f.$key,0)*$weight AS weighted_$key";
             $weightedEngagement[] = "f.$key*$weight";
         }
         $weightedEngagementStr = "IFNULL((" . implode('+', $weightedEngagement) . "),0) AS `likes_equivalent`";
