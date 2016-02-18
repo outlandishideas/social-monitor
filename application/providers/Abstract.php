@@ -1,5 +1,7 @@
 <?php
 
+use Outlandish\SocialMonitor\Models\Status;
+
 abstract class Provider_Abstract
 {
 	protected $db;
@@ -107,12 +109,13 @@ abstract class Provider_Abstract
             error_log('error fetching statuses:'.implode(',',$stmt->errorInfo()));
         }
         $ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $objects = $this->parseStatuses($ret);
         $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
 
         $this->decorateStreamData($ret);
 
         return (object)array(
-            'stream' => count($ret) ? $ret : null,
+            'stream' => $objects,
             'total' => $total
         );
     }
@@ -338,4 +341,6 @@ abstract class Provider_Abstract
     {
         return [];
     }
+
+    abstract protected function parseStatuses($raw);
 }

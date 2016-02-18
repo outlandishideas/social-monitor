@@ -222,8 +222,39 @@ Scotty.prototype = {
 	}
 };
 
+function getStatusRowRenderFunction(showResponses) {
+	return function(o) {
+		if (typeof o.aData.message != 'string') {
+			o.aData.message = '';
+		}
+		o.aData.date = moment(o.aData.created_time).format('D MMM');
+		var message = parseTemplate(app.templates.post, o.aData);
+		if(showResponses) {
+			message = appendResponseTemplate(message, o.aData);
+		}
+		return message;
+	}
+}
+
 function parseTemplate(str, data) {
 	return _.template(str, data);
+}
+
+function appendResponseTemplate(message,aData) {
+	var response = aData.first_response;
+	var rTitle, rMessage, rIcon;
+	if (aData.needs_response == '1') {
+		rTitle = 'Does not require a response';
+		rMessage = 'Awaiting response (' + response.date_diff + ')...';
+		rIcon = 'icon-comment-alt';
+	} else {
+		rTitle = 'Requires a response';
+		rMessage = 'No response required';
+		rIcon = 'icon-comments';
+	}
+	message += '<p class="more"><a href="#" class="require-response" title="' + rTitle + '"><span class="' + rIcon + ' icon-large"></span></a></p>' +
+		'<p class="no-response">' + rMessage + '</p>';
+	return message;
 }
 
 var Base64 = {

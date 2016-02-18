@@ -3,6 +3,7 @@
 use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 use Outlandish\SocialMonitor\Models\FacebookStatus;
 use Outlandish\SocialMonitor\Engagement\EngagementMetric;
+use Outlandish\SocialMonitor\Models\Status;
 
 class Provider_Facebook extends Provider_Abstract
 {
@@ -507,4 +508,62 @@ class Provider_Facebook extends Provider_Abstract
     }
 
 
+    protected function parseStatuses($raw)
+    {
+        if(!$raw || !count($raw)) {
+            return [];
+        }
+        $parsed = array();
+        foreach ($raw as $r) {
+
+            if (array_key_exists('first_response',$r)) {
+                $response = $r['first_response']->message;
+                $responseDate = $r['first_response']->created_time;
+            } else {
+                $response = null;
+                $responseDate = gmdate('Y-m-d H:i:s');
+            }
+
+            $timeDiff = strtotime($responseDate) - strtotime($r['created_time']);
+            $components = array();
+            $timeDiff /= 60;
+            $elements = array(
+                'minute' => 60,
+                'hour' => 24,
+                'day' => 100000
+            );
+            foreach ($elements as $label => $size) {
+                $val = $timeDiff % $size;
+                $timeDiff /= $size;
+                if ($val) {
+                    array_unshift($components, $val . ' ' . $label . ($val == 1 ? '' : 's'));
+                }
+            }
+
+            $status = new Status();
+            $status->id = $r['id'];
+            $status->message = $r['message'];
+            $status->created_time = $r['created_time'];
+            $status->permalink = $r['permalink'];
+            $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
+            $status->presence_id = $r['presence_id'];
+            $status->presence_name = $presence->getName();
+            $status->engagement = [
+                'shares' => $r['share_count'],
+                'likes' => $r['likes'],
+                'comments' => $r['comments'],
+                'comparable' => (($r['likes'] + $r['comments'] * 4 + $r['share_count'] * 7) / 12)
+            ];
+            $status->icon = Enum_PresenceType::FACEBOOK()->getSign();
+            $status->needs_response = $r['needs_response'];
+            $status->first_response = array(
+                'message' => $response,
+                'date' => Model_Base::shortDate($responseDate),
+                'date_diff' => implode(', ', $components),
+            );
+
+            $parsed[] = (array)$status;
+        }
+        return $parsed;
+    }
 }

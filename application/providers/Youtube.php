@@ -3,6 +3,7 @@
 
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
+use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
 
@@ -468,5 +469,30 @@ class Provider_Youtube extends Provider_Abstract
         return $data;
     }
 
+    protected function parseStatuses($raw)
+    {
+        if(!$raw || !count($raw)) {
+            return [];
+        }
+        $parsed = array();
+        foreach ($raw as $r) {
+            $status = new Status();
+            $status->id = $r['id'];
+            $status->message = $r['message'];
+            $status->created_time = $r['created_time'];
+            $status->permalink = $r['permalink'];
+            $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
+            $status->presence_id = $r['presence_id'];
+            $status->presence_name = $presence->getName();
+            $status->engagement = [
+                'comments' => $r['number_of_replies'],
+                'likes' => $r['likes'],
+                'comparable' => (($r['likes'] + $r['number_of_replies'] * 4) / 5)
+            ];
+            $status->icon = Enum_PresenceType::YOUTUBE()->getSign();
+            $parsed[] = (array)$status;
+        }
 
+        return $parsed;
+    }
 }

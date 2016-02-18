@@ -33,7 +33,7 @@ $.extend(app, {
 			    <p class="more"><a href="<%=url%>" target="_blank" title="View on Sina Weibo"><span class="icon-external-link icon-large"></span></a></p>\
 				<div class="<%=icon%>"></div>\
 				<div class="content">\
-					<h4 class="presence-name" data-presence="<%=presence_id%>"></h4>\
+					<h4 class="presence-name" data-presence="<%=presence_id%>"><%=presence_name%></h4>\
 					<%=message.replace(/\\n/g, "<br />")%>\
 					<p class="date"><%=date%></p>\
 				</div>\

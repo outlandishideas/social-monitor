@@ -2,50 +2,53 @@
 
 
 use Outlandish\SocialMonitor\Adapter\TwitterAdapter;
+use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Models\Tweet;
 
 class Provider_Twitter extends Provider_Abstract
 {
-	protected $connection = null;
+    protected $connection = null;
 
-	protected $kloutApi = null;
+    protected $kloutApi = null;
     protected $adapter;
 
-	const KLOUT_API_ENDPOINT = 'http://api.klout.com/v2/';
+    const KLOUT_API_ENDPOINT = 'http://api.klout.com/v2/';
 
-	public function __construct(PDO $db, TwitterAdapter $adapter) {
-		parent::__construct($db);
-		$this->type = Enum_PresenceType::TWITTER();
+    public function __construct(PDO $db, TwitterAdapter $adapter)
+    {
+        parent::__construct($db);
+        $this->type = Enum_PresenceType::TWITTER();
         $this->tableName = 'twitter_tweets';
         $this->adapter = $adapter;
         $this->engagementStatement = '(retweet_count)';
         $this->contentColumn = 'text_expanded';
     }
 
-	public function fetchStatusData(Model_Presence $presence)
-	{
-		if (!$presence->uid) {
-			throw new Exception('Presence not initialised/found');
-		}
+    public function fetchStatusData(Model_Presence $presence)
+    {
+        if (!$presence->uid) {
+            throw new Exception('Presence not initialised/found');
+        }
 //        $fetchCount->type = 'tweet';
         $stmt = $this->db->prepare("SELECT tweet_id FROM {$this->tableName} WHERE presence_id = :id ORDER BY created_time DESC LIMIT 1");
-        $stmt->execute(array(':id'=>$presence->getId()));
+        $stmt->execute(array(':id' => $presence->getId()));
         $lastTweetId = $stmt->fetchColumn();
 
-        $tweetsAndMentions = $this->adapter->getStatuses($presence->getUID(),$lastTweetId,$presence->getHandle());
+        $tweetsAndMentions = $this->adapter->getStatuses($presence->getUID(), $lastTweetId, $presence->getHandle());
 
 
         $count = 0;
         $count += $this->insertTweets($presence, $tweetsAndMentions);
         return $count;
-	}
+    }
 
     /**
      * @param Model_Presence $presence
      * @param array $tweetData
      * @return array
      */
-    protected function insertTweets($presence, $tweetData) {
+    protected function insertTweets($presence, $tweetData)
+    {
         $stmt = $this->db->prepare("
             INSERT INTO {$this->tableName}
             (tweet_id, presence_id, text_expanded, created_time, retweet_count, html_tweet, permalink,
@@ -62,7 +65,7 @@ class Provider_Twitter extends Provider_Abstract
         while ($tweetData) {
             /** @var Tweet $tweet */
             $tweet = array_shift($tweetData);
-            $permalink = Model_TwitterTweet::getTwitterUrl($presence->handle,$tweet->id);
+            $permalink = Model_TwitterTweet::getTwitterUrl($presence->handle, $tweet->id);
             $args = array(
                 ':tweet_id' => $tweet->id,
                 ':presence_id' => $presenceId,
@@ -78,8 +81,8 @@ class Provider_Twitter extends Provider_Abstract
             );
             try {
                 $result = $stmt->execute($args);
-                if(!$result) {
-                    error_log('error inserting tweet:'.implode(',',$stmt->errorInfo()));
+                if (!$result) {
+                    error_log('error inserting tweet:' . implode(',', $stmt->errorInfo()));
                 }
                 $id = $this->db->lastInsertId();
                 if (!empty($tweet->links)) {
@@ -87,7 +90,7 @@ class Provider_Twitter extends Provider_Abstract
                 }
                 $count++;
             } catch (Exception $ex) {
-                $i=0;
+                $i = 0;
             }
         }
 
@@ -96,7 +99,8 @@ class Provider_Twitter extends Provider_Abstract
         return $count;
     }
 
-    protected function decorateStreamData(&$statuses) {
+    protected function decorateStreamData(&$statuses)
+    {
         // decorate tweets with links
         $tweetIds = array();
         foreach ($statuses as $tweet) {
@@ -111,9 +115,9 @@ class Provider_Twitter extends Provider_Abstract
     }
 
 
-	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false)
-	{
-		$stmt = $this->db->prepare("
+    public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false)
+    {
+        $stmt = $this->db->prepare("
 			SELECT
 				posts.date AS date,
 				posts.number_of_posts AS number_of_actions,
@@ -130,7 +134,7 @@ class Provider_Twitter extends Provider_Abstract
 						created_time >= :start
 						AND created_time <= :end
 						AND presence_id = :id
-                        ".($ownPostsOnly ? 'AND responsible_presence IS NULL' : '')."
+                        " . ($ownPostsOnly ? 'AND responsible_presence IS NULL' : '') . "
 					GROUP BY
 						DATE_FORMAT(created_time, '%Y-%m-%d')
 				) AS posts
@@ -147,24 +151,24 @@ class Provider_Twitter extends Provider_Abstract
 						p.created_time >= :start
 						AND p.created_time <= :end
 						AND p.presence_id = :id
-                        ".($ownPostsOnly ? 'AND p.responsible_presence IS NULL' : '')."
+                        " . ($ownPostsOnly ? 'AND p.responsible_presence IS NULL' : '') . "
 					GROUP BY
 						DATE_FORMAT(p.created_time, '%Y-%m-%d')
 				) AS links ON (posts.date = links.date)
 			ORDER BY
 				`date`
 		");
-		$stmt->execute(array(
-			':id'		=> $presence->getId(),
-			':start'	=> $start->format('Y-m-d H:i:s'),
-			':end'	=> $end->format('Y-m-d H:i:s')
-		));
-		return $stmt->fetchAll(PDO::FETCH_ASSOC);
-	}
+        $stmt->execute(array(
+            ':id' => $presence->getId(),
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end' => $end->format('Y-m-d H:i:s')
+        ));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 
-	public function update(Model_Presence $presence)
-	{
+    public function update(Model_Presence $presence)
+    {
         parent::update($presence);
         $kloutId = $presence->getKloutId();
         if (!$kloutId) {
@@ -176,59 +180,60 @@ class Provider_Twitter extends Provider_Abstract
         } else {
             $presence->klout_score = null;
         }
-	}
+    }
 
-	protected function getKloutApi()
-	{
-		if(!$this->kloutApi){
-			try {
-				$this->kloutApi = Zend_Registry::get('config')->klout->api_key;
-			} catch (Exception $e) {
-				$this->kloutApi = null;
-			}
-		}
-		return $this->kloutApi;
-	}
-
-	/**
-	 * @param $uid
-	 * @return mixed|null
-	 */
-	public function lookupKloutId($uid)
-	{
-		$apiKey = $this->getKloutApi();
-		if ($apiKey) {
+    protected function getKloutApi()
+    {
+        if (!$this->kloutApi) {
             try {
-    			$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $uid . '?key=' . $apiKey);
+                $this->kloutApi = Zend_Registry::get('config')->klout->api_key;
+            } catch (Exception $e) {
+                $this->kloutApi = null;
+            }
+        }
+        return $this->kloutApi;
+    }
+
+    /**
+     * @param $uid
+     * @return mixed|null
+     */
+    public function lookupKloutId($uid)
+    {
+        $apiKey = $this->getKloutApi();
+        if ($apiKey) {
+            try {
+                $json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'identity.json/tw/' . $uid . '?key=' . $apiKey);
             } catch (Exception $ex) {
                 return null;
             }
-			return $json->id;
-		}
-		return null;
-	}
+            return $json->id;
+        }
+        return null;
+    }
 
-	/**
-	 * @param $kloutId
-	 * @return mixed|null
-	 */
-	public function lookupKloutScore($kloutId)
-	{
-		$apiKey = $this->getKloutApi();
-		if($apiKey){
-			try {
-				$json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'user.json/' . $kloutId . '?key=' . $apiKey);
-				return $json->score->score;
-			} catch (RuntimeException $ex) {
-				if ($ex->getCode() == 404) {
-					/* Do Something */
-				}
-			}
-		}
-		return null;
-	}
+    /**
+     * @param $kloutId
+     * @return mixed|null
+     */
+    public function lookupKloutScore($kloutId)
+    {
+        $apiKey = $this->getKloutApi();
+        if ($apiKey) {
+            try {
+                $json = Util_Http::fetchJson(self::KLOUT_API_ENDPOINT . 'user.json/' . $kloutId . '?key=' . $apiKey);
+                return $json->score->score;
+            } catch (RuntimeException $ex) {
+                if ($ex->getCode() == 404) {
+                    /* Do Something */
+                }
+            }
+        }
+        return null;
+    }
 
-	public function updateMetadata(Model_Presence $presence) {
+    public function updateMetadata(Model_Presence $presence)
+    {
 
         try {
             $data = $this->adapter->getMetadata($presence->handle);
@@ -243,7 +248,7 @@ class Provider_Twitter extends Provider_Abstract
         $presence->name = $data->name;
         $presence->page_url = $data->page_url;
         $presence->popularity = $data->popularity;
-	}
+    }
 
     /**
      * @param Model_Presence $presence
@@ -261,7 +266,7 @@ class Provider_Twitter extends Provider_Abstract
             't.created_time <= :end_date'
         );
         $args = array(
-            ':pid'=>$presence->getId(),
+            ':pid' => $presence->getId(),
             ':start_date' => $start->format('Y-m-d'),
             ':end_date' => $end->format('Y-m-d')
         );
@@ -269,11 +274,11 @@ class Provider_Twitter extends Provider_Abstract
           SELECT t.tweet_id as id, t.created_time as created, TIME_TO_SEC( TIMEDIFF( r.created_time, t.created_time ))/3600 AS time
           FROM {$this->tableName} AS t
             INNER JOIN {$this->tableName} AS r ON t.tweet_id = r.in_reply_to_status_uid
-            WHERE " . implode(' AND ', $clauses) ."");
+            WHERE " . implode(' AND ', $clauses) . "");
         $stmt->execute($args);
         foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
             $key = $r->id;
-            if(!array_key_exists($key, $responseData)) {
+            if (!array_key_exists($key, $responseData)) {
                 $responseData[$key] = (object)array('diff' => null, 'created' => null);
             }
             if (empty($responseData[$key]->diff) || $r->time < $responseData[$key]->diff) {
@@ -285,4 +290,28 @@ class Provider_Twitter extends Provider_Abstract
     }
 
 
+    protected function parseStatuses($raw)
+    {
+        if(!$raw || !count($raw)) {
+            return [];
+        }
+        $parsed = array();
+        foreach ($raw as $r) {
+            $status = new Status();
+            $status->id = $r['id'];
+            $status->message = $r['html_tweet'];
+            $status->created_time = $r['created_time'];
+            $status->permalink = $r['permalink'];
+            $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
+            $status->presence_id = $r['presence_id'];
+            $status->presence_name = $presence->getName();
+            $status->engagement = [
+                'shares' => $r['retweet_count'],
+                'comparable' => $r['retweet_count']
+            ];
+            $status->icon = Enum_PresenceType::TWITTER()->getSign();
+            $parsed[] = (array)$status;
+        }
+        return $parsed;
+    }
 }

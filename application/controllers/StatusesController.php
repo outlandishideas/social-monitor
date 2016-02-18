@@ -1,6 +1,7 @@
 <?php
 
 use mikehaertl\wkhtmlto\Pdf;
+use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Report\ReportablePresence;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
 use Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay;
@@ -161,7 +162,6 @@ class StatusesController extends GraphingController
         $tableData = array();
         $count = 0;
         foreach ($streams as $data) {
-            $type = $data->type;
             $stream = $data->stream;
 
             if (!$stream) {
@@ -169,159 +169,7 @@ class StatusesController extends GraphingController
             }
 
             $count = $count + $data->total;
-
-            switch ($type) {
-                case Enum_PresenceType::TWITTER:
-                    foreach ($stream as $status) {
-                        $tweet = (object)$status;
-                        $tableData[] = array(
-                            'id' => $tweet->id,
-                            'message' => $format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
-                            'date' => Model_Base::shortDate($tweet->created_time),
-                            'isodate' => $tweet->created_time,
-                            'url' => $tweet->permalink,
-                            'presence_id' => $tweet->presence_id,
-                            'engagement' => [
-                                'shares' => $tweet->retweet_count,
-                                'comparable' => $tweet->retweet_count
-                            ],
-                            'icon' => Enum_PresenceType::TWITTER()->getSign()
-                        );
-                    }
-                    break;
-                case Enum_PresenceType::FACEBOOK:
-                    foreach ($stream as $status) {
-                        $post = (object)$status;
-                        if ($post->message) {
-                            if ($post->first_response) {
-                                $response = $post->first_response->message;
-                                $responseDate = $post->first_response->created_time;
-                            } else {
-                                $response = null;
-                                $responseDate = gmdate('Y-m-d H:i:s');
-                            }
-
-                            $timeDiff = strtotime($responseDate) - strtotime($post->created_time);
-                            $components = array();
-                            $timeDiff /= 60;
-
-                            $elements = array(
-                                'minute' => 60,
-                                'hour' => 24,
-                                'day' => 100000
-                            );
-                            foreach ($elements as $label => $size) {
-                                $val = $timeDiff % $size;
-                                $timeDiff /= $size;
-                                if ($val) {
-                                    array_unshift($components, $val . ' ' . $label . ($val == 1 ? '' : 's'));
-                                }
-                            }
-
-                            $tableData[] = array(
-                                'id' => $post->id,
-                                'url' => $post->permalink,
-                                'message' => $post->message,
-                                'date' => Model_Base::shortDate($post->created_time),
-                                'isodate' => $post->created_time,
-                                'needs_response' => $post->needs_response,
-                                'first_response' => array(
-                                    'message' => $response,
-                                    'date' => Model_Base::shortDate($responseDate),
-                                    'date_diff' => implode(', ', $components),
-                                ),
-                                'presence_id' => $post->presence_id,
-                                'engagement' => [
-                                    'shares' => $post->share_count,
-                                    'likes' => $post->likes,
-                                    'comments' => $post->comments,
-                                    'comparable' => (($post->likes + $post->comments * 4 + $post->share_count * 7) / 12)
-                                ],
-                                'icon' => Enum_PresenceType::FACEBOOK()->getSign()
-                            );
-                        }
-                    }
-                    break;
-                case Enum_PresenceType::SINA_WEIBO:
-                    foreach ($stream as $status) {
-                        $post = (object)$status;
-                        $tableData[] = array(
-                            'id' => $post->id,
-                            'url' => Provider_SinaWeibo::BASEURL . $post->remote_user_id . '/' . Provider_SinaWeibo::getMidForPostId($post->remote_id),
-                            'message' => $post->text,
-                            'date' => Model_Base::shortDate($post->created_at),
-                            'presence_id' => $post->presence_id,
-                            'isodate' => $post->created_at,
-                            'engagement' => [
-                                'shares' => $post->repost_count,
-                                'likes' => $post->attitude_count,
-                                'comments' => $post->comment_count,
-                                'comparable' => (($post->attitude_count + $post->comment_count * 4 + $post->repost_count * 7) / 12)
-                            ],
-                            'icon' => Enum_PresenceType::SINA_WEIBO()->getSign()
-                        );
-                    }
-                    break;
-                case Enum_PresenceType::INSTAGRAM:
-                    foreach ($stream as $status) {
-                        $post = (object)$status;
-                        $tableData[] = array(
-                            'id' => $post->id,
-                            'url' => $post->permalink,
-                            'message' => $post->message . ' <img src="' . $post->image_url . '">',
-                            'date' => Model_Base::shortDate($post->created_time),
-                            'isodate' => $post->created_time,
-                            'presence_id' => $post->presence_id,
-                            'engagement' => [
-                                'comments' => $post->comments,
-                                'likes' => $post->likes,
-                                'comparable' => (($post->likes + $post->comments * 4) / 5)
-                            ],
-                            'icon' => Enum_PresenceType::INSTAGRAM()->getSign()
-                        );
-                    }
-                    break;
-                case Enum_PresenceType::YOUTUBE:
-                    foreach ($stream as $status) {
-                        $post = (object)$status;
-                        $tableData[] = array(
-                            'id' => $post->id,
-                            'url' => '', //messages don't have a direct link
-                            'message' => $post->message,
-                            'date' => Model_Base::shortDate($post->created_time),
-                            'isodate' => $post->created_time,
-                            'presence_id' => $post->presence_id,
-                            'engagement' => [
-                                'comments' => $post->number_of_replies,
-                                'likes' => $post->likes,
-                                'comparable' => (($post->likes + $post->number_of_replies * 4) / 5)
-                            ],
-                            'icon' => Enum_PresenceType::YOUTUBE()->getSign()
-                        );
-                    }
-                    break;
-                case Enum_PresenceType::LINKEDIN:
-                    foreach ($stream as $status) {
-                        $post = (object)$status;
-                        $tableData[] = array(
-                            'id' => $post->id,
-                            'url' => '', //messages don't have a direct link
-                            'message' => $post->message,
-                            'date' => Model_Base::shortDate($post->created_time),
-                            'isodate' => $post->created_time,
-                            'presence_id' => $post->presence_id,
-                            'engagement' => [
-                                'comments' => $post->comments,
-                                'likes' => $post->likes,
-                                'comparable' => (($post->likes + $post->comments * 4) / 5)
-                            ],
-                            'icon' => Enum_PresenceType::LINKEDIN()->getSign()
-                        );
-                    }
-                    break;
-                default:
-                    break;
-            }
+            $tableData = array_merge($stream,$tableData);
         }
 
         //return CSV or JSON?
@@ -337,7 +185,7 @@ class StatusesController extends GraphingController
                 });
             } else {
                 usort($tableData, function ($a, $b) {
-                    $aAfterB = $a['isodate'] > $b['isodate'];
+                    $aAfterB = $a['created_time'] > $b['created_time'];
                     return $aAfterB ? -1 : 1;
                 });
             }

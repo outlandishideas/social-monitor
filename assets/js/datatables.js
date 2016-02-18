@@ -209,12 +209,10 @@ app.datatables = {
 			if(types) {
 				app.datatables.query.type = types.join();
 			}
-			app.datatables.initStatusList($div, 'post', [
+			app.datatables.initStatusList($div, 'statuses', [
 				{
 					mDataProp:'message',
-					fnRender:function (o) {
-						return parseTemplate(app.templates.post, o.aData);
-					},
+					fnRender: getStatusRowRenderFunction(false),
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
@@ -222,29 +220,10 @@ app.datatables = {
 			]);
 		},
 		'#statuses .youtube': function($div) {
-			app.datatables.initStatusList($div, 'post', [
+			app.datatables.initStatusList($div, 'presence', [
 				{
 					mDataProp:'message',
-					fnRender:function (o) {
-						if (typeof o.aData.message != 'string') {
-							o.aData.message = '';
-						}
-						var message = parseTemplate(app.templates.post, o.aData);
-						var response = o.aData.first_response;
-						var rTitle, rMessage, rIcon;
-						if (o.aData.needs_response == '1') {
-							rTitle = 'Does not require a response';
-							rMessage = 'Awaiting response (' + response.date_diff + ')...';
-							rIcon = 'icon-comment-alt';
-						} else {
-							rTitle = 'Requires a response';
-							rMessage = 'No response required';
-							rIcon = 'icon-comments';
-						}
-						message += '<p class="more"><a href="#" class="require-response" title="' + rTitle + '"><span class="' + rIcon + ' icon-large"></span></a></p>' +
-							'<p class="no-response">' + rMessage + '</p>';
-						return message;
-					},
+					fnRender: getStatusRowRenderFunction(true),
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
@@ -260,29 +239,10 @@ app.datatables = {
 			});
 		},
 		'#statuses .linkedin': function($div) {
-			app.datatables.initStatusList($div, 'post', [
+			app.datatables.initStatusList($div, 'presence', [
 				{
 					mDataProp: 'message',
-					fnRender: function (o) {
-						if (typeof o.aData.message != 'string') {
-							o.aData.message = '';
-						}
-						var message = parseTemplate(app.templates.post, o.aData);
-						var response = o.aData.first_response;
-						var rTitle, rMessage, rIcon;
-						if (o.aData.needs_response == '1') {
-							rTitle = 'Does not require a response';
-							rMessage = 'Awaiting response (' + response.date_diff + ')...';
-							rIcon = 'icon-comment-alt';
-						} else {
-							rTitle = 'Requires a response';
-							rMessage = 'No response required';
-							rIcon = 'icon-comments';
-						}
-						message += '<p class="more"><a href="#" class="require-response" title="' + rTitle + '"><span class="' + rIcon + ' icon-large"></span></a></p>' +
-							'<p class="no-response">' + rMessage + '</p>';
-						return message;
-					},
+					fnRender: getStatusRowRenderFunction(true),
 					sClass: 'message',
 					bSortable: false,
 					bUseRendered: false
@@ -298,36 +258,10 @@ app.datatables = {
 			});
 		},
 		'#statuses .facebook': function($div) {
-			app.datatables.initStatusList($div, 'post', [
+			app.datatables.initStatusList($div, 'presence', [
 				{
 					mDataProp:'message',
-					fnRender:function (o) {
-						if (typeof o.aData.message != 'string') {
-							o.aData.message = '';
-						}
-						var message = parseTemplate(app.templates.post, o.aData);
-						var response = o.aData.first_response;
-						if (response.message != null) {
-							message += '<div class="first-response">' +
-								'<h4>First response: ' + Date.parse(response.date).toString('d MMM HH:mm') + ' <span>(' + response.date_diff + ')</span></h4>' +
-								'<p>' + response.message.replace(/\\n/g, '<br />') + '</p>' +
-								'</div>';
-						} else {
-							var rTitle, rMessage, rIcon;
-							if (o.aData.needs_response == '1') {
-								rTitle = 'Does not require a response';
-								rMessage = 'Awaiting response (' + response.date_diff + ')...';
-								rIcon = 'icon-comment-alt';
-							} else {
-								rTitle = 'Requires a response';
-								rMessage = 'No response required';
-								rIcon = 'icon-comments';
-							}
-							message += '<p class="more"><a href="#" class="require-response" title="' + rTitle + '"><span class="' + rIcon + ' icon-large"></span></a></p>' +
-								'<p class="no-response">' + rMessage + '</p>';
-						}
-						return message;
-					},
+					fnRender: getStatusRowRenderFunction(true),
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
@@ -343,12 +277,10 @@ app.datatables = {
 			});
 		},
 		'#statuses .twitter': function($div) {
-			app.datatables.initStatusList($div, 'post', [
+			app.datatables.initStatusList($div, 'presence', [
 				{
 					mDataProp:'message',
-					fnRender:function (o) {
-						return parseTemplate(app.templates.post, o.aData);
-					},
+					fnRender: getStatusRowRenderFunction(false),
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
@@ -356,12 +288,10 @@ app.datatables = {
 			]);
 		},
 		'#statuses .instagram': function($div) {
-			app.datatables.initStatusList($div, 'post', [
+			app.datatables.initStatusList($div, 'presence', [
 				{
 					mDataProp:'message',
-					fnRender:function (o) {
-						return parseTemplate(app.templates.post, o.aData);
-					},
+					fnRender: getStatusRowRenderFunction(false),
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
@@ -372,9 +302,7 @@ app.datatables = {
 			app.datatables.initStatusList($div, 'post', [
 				{
 					mDataProp:'message',
-					fnRender:function (o) {
-						return parseTemplate(app.templates.post, o.aData);
-					},
+					fnRender: getStatusRowRenderFunction(false),
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
@@ -382,7 +310,7 @@ app.datatables = {
 			]);
 		}
 	},
-	initStatusList: function($container, statusType, columns, sortColumn) {
+	initStatusList: function($container, fnRowCallback, columns, sortColumn) {
 		if (typeof sortColumn == 'undefined') {
 			sortColumn = 'date';
 		}
@@ -403,11 +331,19 @@ app.datatables = {
 		var dates = $datePicker.val();
 		var start,end = '';
 		if(dates) {
-			start = new Date(dates.split('-')[0]).toString('yyyy-MM-dd');
-			end = new Date(dates.split('-')[1]).toString('yyyy-MM-dd');;
-		} else {
-			start = d.toString('yyyy-MM-dd');
-			end = d.toString('yyyy-MM-dd');
+			var parts = dates.split('-');
+			if(parts[0]) {
+				start = new Date(dates.split('-')[0]).toString('yyyy-MM-dd');
+			}
+			if(parts[1]) {
+				end = new Date(dates.split('-')[1]).toString('yyyy-MM-dd');
+			}
+		}
+		if(!start) {
+			start = moment().add(-30, 'days').format('YYYY-MM-DD');
+		}
+		if(!end) {
+			end = moment(start).add(1,'days').format('YYYY-MM-DD');
 		}
 
 		var args = {
@@ -428,24 +364,10 @@ app.datatables = {
 				[sortColumnIndex, 'desc']
 			],
 			fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-				var $el = $(nRow);
-				var $name = $el.find('.presence-name');
-				$el.data('id', aData.id);
-				var id = $name.data('presence');
-				var presence = _.find(window.presences, function (p) {
-					return p.id == id;
-				});
-				if (presence) {
-					$name.text(presence.name);
-				} else {
-					var nameText = $('.presence-name').first().text().trim();
-					if(nameText) {
-						$name.text(nameText);
-					}
-				}
+
 			},
 			aoColumns:columns,
-			oLanguage:app.datatables.generateLanguage(statusType)
+			oLanguage:app.datatables.generateLanguage('post')
 		};
 
 		args = $.extend({}, app.datatables.serverSideArgs(), args);

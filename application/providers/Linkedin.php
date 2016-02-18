@@ -5,6 +5,7 @@ use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
+use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
 
@@ -207,6 +208,33 @@ class Provider_Linkedin extends Provider_Abstract
     public function testAdapter(Model_Presence $presence)
     {
         $this->adapter->getChannelWithAccessToken($presence->getHandle(), $presence->getAccessToken($presence->getType()));
+    }
+
+    protected function parseStatuses($raw)
+    {
+        if(!$raw || !count($raw)) {
+            return [];
+        }
+        $parsed = array();
+        foreach ($raw as $r) {
+            $status = new Status();
+            $status->id = $r['id'];
+            $status->message = $r['message'];
+            $status->created_time = $r['created_time'];
+            $status->permalink = $r['permalink'];
+            $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
+            $status->presence_id = $r['presence_id'];
+            $status->presence_name = $presence->getName();
+            $status->engagement = [
+                'comments' => $r['comments'],
+                'likes' => $r['likes'],
+                'comparable' => (($r['likes'] + $r['comments'] * 4) / 5)
+            ];
+            $status->icon = Enum_PresenceType::LINKEDIN()->getSign();
+            $parsed[] = (array)$status;
+        }
+
+        return $parsed;
     }
 
 

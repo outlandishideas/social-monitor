@@ -1,5 +1,7 @@
 <?php
 
+use Outlandish\SocialMonitor\Models\Status;
+
 require_once(__DIR__ . '/../../lib/sina_weibo/sinaweibo.php');
 
 class Provider_SinaWeibo extends Provider_Abstract
@@ -291,5 +293,31 @@ class Provider_SinaWeibo extends Provider_Abstract
 		return $metric->get($presence->getId(), $now, $then);
 	}
 
+	protected function parseStatuses($raw)
+	{
+		if(!$raw || !count($raw)) {
+			return [];
+		}
+		$parsed = array();
+		foreach ($raw as $r) {
+			$status = new Status();
+			$status->id = $r['id'];
+			$status->message = $r['text'];
+			$status->created_time = $r['created_at'];
+			$status->permalink = Provider_SinaWeibo::BASEURL . $r['remote_user_id'] . '/' . Provider_SinaWeibo::getMidForPostId($r['remote_id']);
+			$presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
+			$status->presence_id = $r['presence_id'];
+			$status->presence_name = $presence->getName();
+			$status->engagement = [
+				'shares' => $r['repost_count'],
+				'likes' => $r['attitude_count'],
+				'comments' => $r['comment_count'],
+				'comparable' => (($r['attitude_count'] + $r['comment_count'] * 4 + $r['repost_count'] * 7) / 12)
+			];
+			$status->icon = Enum_PresenceType::SINA_WEIBO()->getSign();
+			$parsed[] = (array)$status;
+		}
+		return $parsed;
+	}
 
 }
