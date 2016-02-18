@@ -48,7 +48,7 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_PopularityTime::getName(),
                     Metric_Relevance::getName(),
                     Metric_SignOff::getName(),
-                    Metric_SinaWeiboEngagementLeveled::getName()
+                    Metric_SinaWeiboEngagement::getName()
                 );
                 break;
             case self::FACEBOOK:
@@ -62,7 +62,7 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_PopularityTime::getName(),
                     Metric_Relevance::getName(),
                     Metric_SignOff::getName(),
-                    Metric_FBEngagementLeveled::getName(),
+                    Metric_FBEngagement::getName(),
                     Metric_LikesPerPost::getName(),
                     Metric_ResponseRatio::getName(),
                     Metric_ResponseTimeNew::getName()
@@ -94,7 +94,7 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_Branding::getName(),
                     Metric_SignOff::getName(),
                     Metric_LikesPerPost::getName(),
-                    Metric_InstagramEngagementLeveled::getName()
+                    Metric_InstagramEngagement::getName()
                 );
                 break;
             case self::YOUTUBE:
@@ -106,7 +106,7 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_PopularityTime::getName(),
                     Metric_Branding::getName(),
                     Metric_SignOff::getName(),
-                    Metric_YoutubeEngagementLeveled::getName(),
+                    Metric_YoutubeEngagement::getName(),
                     Metric_LikesPerView::getName()
                 );
                 break;
@@ -121,7 +121,7 @@ class Enum_PresenceType extends Enum_Abstract
                     Metric_SignOff::getName(),
                     Metric_ActionsPerDay::getName(),
                     Metric_Relevance::getName(),
-                    Metric_LinkedinEngagementLeveled::getName()
+                    Metric_LinkedinEngagement::getName()
                 );
                 break;
             default:
