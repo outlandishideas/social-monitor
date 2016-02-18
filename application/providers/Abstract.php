@@ -168,7 +168,9 @@ abstract class Provider_Abstract
 		$stmt = $this->db->prepare("
 			SELECT *
 			FROM `presence_history`
-			WHERE " . implode(' AND ', $clauses));
+			WHERE " . implode(' AND ', $clauses) . "
+            ORDER BY datetime DESC
+        ");
 		$stmt->execute($args);
 		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
