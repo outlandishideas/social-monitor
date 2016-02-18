@@ -168,7 +168,6 @@ class StatusesController extends GraphingController
                 continue;
             }
 
-            // aren't these going to be the same?
             $count = $count + $data->total;
 
             switch ($type) {
@@ -180,8 +179,7 @@ class StatusesController extends GraphingController
                             'message' => $format == 'csv' ? $tweet->text_expanded : $tweet->html_tweet,
                             'date' => Model_Base::shortDate($tweet->created_time),
                             'isodate' => $tweet->created_time,
-                            'links' => $tweet->links,
-                            'twitter_url' => $tweet->permalink,
+                            'url' => $tweet->permalink,
                             'presence_id' => $tweet->presence_id,
                             'engagement' => [
                                 'shares' => $tweet->retweet_count,
@@ -222,13 +220,8 @@ class StatusesController extends GraphingController
 
                             $tableData[] = array(
                                 'id' => $post->id,
-//						'actor_type' => $post->actor->type,
-                                'actor_name' => $post->actor->name,
-//						'pic_url' => $post->actor->pic_url,
-                                'facebook_url' => $post->permalink,
-                                'profile_url' => $post->actor->profile_url,
+                                'url' => $post->permalink,
                                 'message' => $post->message,
-                                'links' => $post->links,
                                 'date' => Model_Base::shortDate($post->created_time),
                                 'isodate' => $post->created_time,
                                 'needs_response' => $post->needs_response,
@@ -256,7 +249,6 @@ class StatusesController extends GraphingController
                             'id' => $post->id,
                             'url' => Provider_SinaWeibo::BASEURL . $post->remote_user_id . '/' . Provider_SinaWeibo::getMidForPostId($post->remote_id),
                             'message' => $post->text,
-                            'links' => $post->links,
                             'date' => Model_Base::shortDate($post->created_at),
                             'presence_id' => $post->presence_id,
                             'isodate' => $post->created_at,
@@ -277,7 +269,6 @@ class StatusesController extends GraphingController
                             'id' => $post->id,
                             'url' => $post->permalink,
                             'message' => $post->message . ' <img src="' . $post->image_url . '">',
-                            'links' => array(),
                             'date' => Model_Base::shortDate($post->created_time),
                             'isodate' => $post->created_time,
                             'presence_id' => $post->presence_id,
@@ -297,7 +288,6 @@ class StatusesController extends GraphingController
                             'id' => $post->id,
                             'url' => '', //messages don't have a direct link
                             'message' => $post->message,
-                            'links' => array(),
                             'date' => Model_Base::shortDate($post->created_time),
                             'isodate' => $post->created_time,
                             'presence_id' => $post->presence_id,
@@ -317,7 +307,6 @@ class StatusesController extends GraphingController
                             'id' => $post->id,
                             'url' => '', //messages don't have a direct link
                             'message' => $post->message,
-                            'links' => array(),
                             'date' => Model_Base::shortDate($post->created_time),
                             'isodate' => $post->created_time,
                             'presence_id' => $post->presence_id,

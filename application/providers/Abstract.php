@@ -101,13 +101,9 @@ abstract class Provider_Abstract
         $sql .= $this->getOrderSql($order, array('date'=>$this->createdTimeColumn, 'engagement'=>$this->engagementStatement));
         $sql .= $this->getLimitSql($limit, $offset);
 
-        error_log('sql '.$sql);
-        error_log('search '.implode(',',$searchArgs['args']));
-
         $stmt = $this->db->prepare($sql);
         $success = $stmt->execute($args);
         if(!$success) {
-            error_log('class'.get_class($this));
             error_log('error fetching statuses:'.implode(',',$stmt->errorInfo()));
         }
         $ret = $stmt->fetchAll(PDO::FETCH_ASSOC);

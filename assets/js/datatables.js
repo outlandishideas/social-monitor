@@ -229,7 +229,7 @@ app.datatables = {
 						if (typeof o.aData.message != 'string') {
 							o.aData.message = '';
 						}
-						var message = parseTemplate(app.templates.ytpost, o.aData);
+						var message = parseTemplate(app.templates.post, o.aData);
 						var response = o.aData.first_response;
 						var rTitle, rMessage, rIcon;
 						if (o.aData.needs_response == '1') {
@@ -267,7 +267,7 @@ app.datatables = {
 						if (typeof o.aData.message != 'string') {
 							o.aData.message = '';
 						}
-						var message = parseTemplate(app.templates.inpost, o.aData);
+						var message = parseTemplate(app.templates.post, o.aData);
 						var response = o.aData.first_response;
 						var rTitle, rMessage, rIcon;
 						if (o.aData.needs_response == '1') {
@@ -305,7 +305,7 @@ app.datatables = {
 						if (typeof o.aData.message != 'string') {
 							o.aData.message = '';
 						}
-						var message = parseTemplate(app.templates.fbPost, o.aData);
+						var message = parseTemplate(app.templates.post, o.aData);
 						var response = o.aData.first_response;
 						if (response.message != null) {
 							message += '<div class="first-response">' +
@@ -360,7 +360,7 @@ app.datatables = {
 				{
 					mDataProp:'message',
 					fnRender:function (o) {
-						return parseTemplate(app.templates.igpost, o.aData);
+						return parseTemplate(app.templates.post, o.aData);
 					},
 					sClass: 'message',
 					bSortable:false,
@@ -373,7 +373,7 @@ app.datatables = {
 				{
 					mDataProp:'message',
 					fnRender:function (o) {
-						return parseTemplate(app.templates.swPost, o.aData);
+						return parseTemplate(app.templates.post, o.aData);
 					},
 					sClass: 'message',
 					bSortable:false,

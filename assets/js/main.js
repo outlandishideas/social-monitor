@@ -28,16 +28,9 @@ $.extend(app, {
 				'<%if(status!="unknown"){%><%=hits%> hits remaining<br>Reset in <%=reset%> minutes<%}else{%>Status is unknown because there have been no recent requests<%}%><br>' +
 				'<a href="<%=url%>">Deauthorise <%=type%></a></div>',
 		addTextSearch: '<tr><td valign="top" colspan="<%=colspan%>" class="dataTables_empty"><span class="add-manual-search link">Add manual search</span></td></tr>',
-		tweet:'<p class="more"><a href="<%=twitter_url%>" target="_blank" title="View on Twitter"><span class="icon-external-link icon-large"></span></a></p>' +
-				'<p><%=message.replace(/\\n/g, "<br />")%></p>',
-		igpost:'<p class="more"><a href="<%=url%>" target="_blank" title="View on Instagram"><span class="icon-external-link icon-large"></span></a></p>' +
-		'<p><%=message.replace(/\\n/g, "<br />")%></p>',
-		ytpost:'<p class="more"></p>' +
-		'<p><%=message.replace(/\\n/g, "<br />")%></p>',
-		inpost:'<p class="more"></p>' +
-		'<p><%=message.replace(/\\n/g, "<br />")%></p>',
 		post: '\
 			<div>\
+			    <p class="more"><a href="<%=url%>" target="_blank" title="View on Sina Weibo"><span class="icon-external-link icon-large"></span></a></p>\
 				<div class="<%=icon%>"></div>\
 				<div class="content">\
 					<h4 class="presence-name" data-presence="<%=presence_id%>"></h4>\
@@ -50,15 +43,6 @@ $.extend(app, {
 					<% if(!_.isUndefined(engagement.shares)) { %><p>Shares: <%=engagement.shares%></p><% } %>\
 				</div>\
 			</div>',
-		fbPost:'<p class="more"><a href="<%=facebook_url%>" target="_blank" title="View on Facebook"><span class="icon-external-link icon-large"></span></a></p>' +
-		'<%if(actor_name){%>' +
-		'<h4><%if(profile_url){%><a href="<%=profile_url%>" target="_blank"><%=actor_name%></a><%}else{%><%=actor_name%><%}%></h4>' +
-		'<%}else{%>' +
-		'<h4>Unknown author</h4>' +
-		'<%}%><p>' +
-		'<%=message.replace(/\\n/g, "<br />")%></p>',
-		swPost:'<p class="more"><a href="<%=url%>" target="_blank" title="View on Sina Weibo"><span class="icon-external-link icon-large"></span></a></p>' +
-				'<p><%=message.replace(/\\n/g, "<br />")%></p>',
 		searchArea: '<li class="area">\
 						<div class="marker <%=className%>"></div>\
 						<input type="hidden" class="lat" name="lat[]" value="<%=lat%>" />\
