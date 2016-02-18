@@ -27,6 +27,13 @@ class Model_Campaign extends Model_Base {
         }
     }
 
+	public function getPresencesBySize($size)
+	{
+		return array_filter($this->getPresences(), function (Model_Presence $presence) use ($size) {
+			return $presence->getSize() == $size;
+		});
+	}
+
 	protected function fetch($clause = null, $args = array()) {
         $type = self::campaignType();
 		if($type !== null) {

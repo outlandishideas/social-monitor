@@ -47,8 +47,10 @@ class Model_Presence
     protected static $sizes = array(
         0 => "Small",
         1 => "Medium",
-        2 => "Large"
+        2 => "Large",
+        3 => "Extra Large"
     );
+
     protected $accessToken;
 
     /**
@@ -758,34 +760,31 @@ class Model_Presence
     }
 
     /**
-     * Split the target of the owner by the size of the presence in question
-     *
-     * If Model_Group is the owner then we divide up the target population amongst the presences
-     * we use the size of the presence to calculate how much of the target population should be
-     * used by them.
-     *
-     * eg. SBU has two large / six medium / eight small presences. the two large presences take 50%/2
-     * of the target population as their target, the medium take 30%/6 of the target population as their target, etc.
-     *
-     * @param Model_Campaign $owner
-     * @param $target
-     * @return float
-     */
-    private function updateTargetBasedOnSize($owner, $target)
-    {
-        $size = $this->getSize();
-        // get the number of presences of the same size as $this
-        $presenceCount = count(array_filter($owner->getPresences(), function ($presence) use ($size) {
-            /** @var Model_Presence $presence */
-            return $presence->getSize() == $size;
-        }));
+	 * Split the target of the owner by the size of the presence in question
+	 *
+	 * If Model_Group is the owner then we divide up the target population amongst the presences
+	 * we use the size of the presence to calculate how much of the target population should be
+	 * used by them.
+	 *
+	 * eg. SBU has two large / six medium / eight small presences. the two large presences take 50%/2
+	 * of the target population as their target, the medium take 30%/6 of the target population as their target, etc.
+	 *
+	 * @param Model_Campaign $owner
+	 * @param $target
+	 * @return float
+	 */
+	private function updateTargetBasedOnSize($owner, $target)
+	{
+		$size = $this->getSize();
+		// get the number of presences of the same size as $this
+		$presenceCount = count($owner->getPresencesBySize($size));
 
-        $sizePercent = BaseController::getOption("size_{$size}_presences");
+		$sizePercent = BaseController::getOption("size_{$size}_presences");
 
-        $target *= $sizePercent / 100 / $presenceCount;
+		$target *= $sizePercent / 100 / $presenceCount;
 
-        return $target;
-    }
+		return $target;
+	}
 
     public function getStatusStream(\DateTime $start, \DateTime $end, $search = null, $order = null, $limit = null, $offset = null)
     {
