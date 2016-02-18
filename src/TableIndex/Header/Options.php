@@ -2,6 +2,8 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Outlandish\SocialMonitor\Helper\Gatekeeper;
+
 class Options extends Header {
 
     protected static $name = "options";
@@ -46,7 +48,7 @@ class Options extends Header {
 
         $mappedOptions = array();
         foreach ($options as $key=>$args) {
-            $mappedOptions['<a href="' . \Zend_View_Helper_Gatekeeper::PLACEHOLDER_URL . '" class="button-bc button-' . strtolower($key) . '">' . $key . '</a>'] = $args;
+            $mappedOptions['<a href="' . Gatekeeper::PLACEHOLDER_URL . '" class="button-bc button-' . strtolower($key) . '">' . $key . '</a>'] = $args;
         }
         return $mappedOptions;
 

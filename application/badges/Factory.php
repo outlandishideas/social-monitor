@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\Console\Output\OutputInterface;
+
 abstract class Badge_Factory
 {
 	protected static $badges = array();
@@ -47,16 +49,24 @@ abstract class Badge_Factory
         return self::$badges;
 	}
 
+	/**
+	 * @param Enum_Period $dateRange
+	 * @param DateTime $startDate
+	 * @param DateTime $endDate
+	 * @param OutputInterface $output
+	 * @param array $presenceIds
+	 * @param bool|false $force
+	 */
 	public static function guaranteeHistoricalData(
 		Enum_Period $dateRange,
 		\DateTime $startDate,
 		\DateTime $endDate,
-        $log = null,
+        $output = null,
 		$presenceIds = array(),
         $force = false
 	) {
-        if (!$log) {
-            $log = function($message) {};
+        if (!$output) {
+			$output = new \Symfony\Component\Console\Output\NullOutput();
         }
 
 		$data = static::getAllCurrentData($dateRange, $startDate, $endDate, $presenceIds);
@@ -94,7 +104,7 @@ abstract class Badge_Factory
         }
 		while ($currentDate <= $endDate) {
             $formattedDate = $currentDate->format('Y-m-d');
-            $log("Checking $formattedDate");
+            $output->writeln("Checking $formattedDate");
 			if (array_key_exists($formattedDate, $groupedData)) {
                 $badgeScores = $groupedData[$formattedDate];
             } else {
@@ -123,24 +133,36 @@ abstract class Badge_Factory
                         'date' => $formattedDate
                     ));
                 }
+				$presenceUpdateClauses = array();
+				$presenceUpdateArgs = array();
                 foreach ($badges as $b) {
                     $badgeName = $b->getName();
-                    if (is_null($existing[$badgeName]) || $force) {
+					$missing = is_null($existing[$badgeName]);
+					if ($missing) {
                         $missingCount++;
+					}
+                    if ($missing || $force) {
                         $score = $b->calculate($p, $currentDate, $dateRange);
                         if (!is_null($score)) {
-                            $stmt = self::$db->prepare("UPDATE `badge_history` SET `{$badgeName}` = :score WHERE `id` = :id");
-                            $stmt->execute(array(':score' => $score, ':id' => $existing['id']));
+							$presenceUpdateClauses[] = "`{$badgeName}` = :{$badgeName}";
+							$presenceUpdateArgs[$badgeName] = $score;
                             $successCount++;
                         }
                     }
                 }
+
+				if ($presenceUpdateClauses) {
+					$updates = implode(', ', $presenceUpdateClauses);
+					$stmt = self::$db->prepare("UPDATE `badge_history` SET $updates WHERE `id` = :id");
+					$presenceUpdateArgs['id'] = $existing['id'];
+					$stmt->execute($presenceUpdateArgs);
+				}
             }
 
-            $log("Found $missingCount missing, updated $successCount");
+			$output->writeln("Found $missingCount missing, updated $successCount");
 
             if ($successCount > 0) {
-                $log("Assigning ranks");
+				$output->writeln("Assigning ranks");
                 foreach ($badges as $b) {
                     $b->assignRanks($currentDate, $dateRange);
                 }

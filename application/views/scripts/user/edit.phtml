@@ -74,6 +74,24 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 					</div>
 				</div>
 
+				<?php if ($this->showAccessTokens) : ?>
+
+				<div class="row">
+					<div class="small-24 medium-8 large-8 columns">
+						<label>
+							Linkedin
+						</label>
+					</div>
+					<div class="small-24 medium-16 large-16 end columns">
+						<a href="<?php echo $this->linkedinUrl ?>"
+						   class="button-bc inline"><?php echo $this->linkedinToken ? 'Refresh account' : 'Connect account'; ?></a>
+						<?php if ($this->linkedinToken && !$this->linkedinToken->isExpired()) : ?>
+							<div>You will be logged out of Linkedin in <?php echo $this->linkedinToken->getExpires()->diffForHumans(); ?></div>
+						<?php endif; ?>
+					</div>
+				</div>
+
+				<?php endif; ?>
 
 			</fieldset>
 		</div>

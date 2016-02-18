@@ -33,6 +33,14 @@
 	"swiftmailer/swiftmailer": "5.4.1",
     "robmorgan/phinx": "0.4.2",
     "google/apiclient": "1.1.6",
-    "linkedinapi/linkedin": "1.1.0"
-  }
+    "linkedinapi/linkedin": "1.1.0",
+    "nesbot/carbon": "1.9.0",
+    "zendframework/zendframework1": "^1.12"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.zendframework.com/"
+    }
+  ]
 }

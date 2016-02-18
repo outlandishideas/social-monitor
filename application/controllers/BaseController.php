@@ -1,5 +1,6 @@
 <?php
 
+use Outlandish\SocialMonitor\Helper\Gatekeeper;
 use Outlandish\SocialMonitor\TableIndex\TableIndex;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -66,43 +67,10 @@ class BaseController extends Zend_Controller_Action
 
         }
 
-	    // check the fetch lock
-	    $lockTime = $this->getOption($this->lockName('fetch'));
-	    if ($lockTime && $this->_request instanceof Zend_Controller_Request_Http && !$this->_request->isXmlHttpRequest()) {
-		    $seconds = time() - $lockTime;
-		    if ($seconds > (10 * $this->config->app->fetch_time_limit)) {
-			    $factors = array(
-				    'day' => 86400,
-				    'hour' => 3600,
-				    'min' => 60,
-				    'sec' => 0
-			    );
-			    $elements = array();
-			    foreach ($factors as $label => $factor) {
-				    if ($seconds > $factor) {
-					    if ($factor) {
-						    $tmp = $seconds % $factor;
-						    $elements[] = array(($seconds - $tmp) / $factor, $label);
-						    $seconds = $tmp;
-					    } else {
-						    $elements[] = array($seconds, $label);
-					    }
-				    }
-			    }
-			    foreach ($elements as $i => $e) {
-				    $elements[$i] = $this->view->pluralise($e[1], $e[0]);
-			    }
-			    $message = 'Fetch process has been inactive for ' . implode(', ', $elements) . ', indicating something has gone wrong. ';
-			    $urlArgs = array('controller'=>'fetch', 'action'=>'clear-lock');
-			    $url = $this->view->gatekeeper()->filter('%url%', $urlArgs);
-			    if ($url) {
-				    $message .= 'Click <a href="' . $url . '">here</a> to clear the lock manually.';
-			    } else {
-				    $message .= 'Please log in to clear the lock.';
-			    }
-			    $this->flashMessage($message, 'inaction');
-		    }
-	    }
+	    // check the fetch lock and show if has been locked over a period of time
+        $this->showFetchLockMessage();
+
+        $this->showAccessTokenNeedsRefreshMessage();
 
 	    //if user hasn't been loaded and this is not a public action, go to login
         if (!$this->view->user && !in_array($this->_request->getActionName(), static::$publicActions)) {
@@ -194,7 +162,9 @@ class BaseController extends Zend_Controller_Action
      */
     protected function rejectIfNotAllowed($controller, $action, $id)
     {
-        $level = $this->view->gatekeeper()->getRequiredUserLevel($controller, $action);
+        /** @var Gatekeeper $gatekeeper */
+        $gatekeeper = $this->view->gatekeeper();
+        $level = $gatekeeper->getRequiredUserLevel($controller, $action);
         if ($this->view->user && !$this->view->user->canPerform($level, $controller, $action, $id)) {
             $message = 'Not allowed: Insufficient access rights';
             if (APPLICATION_ENV != 'live') {
@@ -204,7 +174,7 @@ class BaseController extends Zend_Controller_Action
                 $this->apiError($message);
             } else {
                 $this->flashMessage($message, 'error');
-                $urlArgs = $this->view->gatekeeper()->fallbackUrlArgs(array('action' => 'index'));
+                $urlArgs = $gatekeeper->fallbackUrlArgs(array('action' => 'index'));
                 $this->_helper->redirector->gotoRoute($urlArgs, null, true);
             }
         }
@@ -469,52 +439,29 @@ class BaseController extends Zend_Controller_Action
         return in_array($action, static::$publicActions);
     }
 
+    /**
+     * TODO: Remove this when Badge_Factory is moved (to a service?)
+     * @param $key
+     * @param $value
+     * @param bool|false $temp
+     */
     public static function setObjectCache($key, $value, $temp = false)
     {
-		// delete any old/temporary entries for this key
-	    $deleteSql = 'DELETE FROM object_cache WHERE `key` = :key';
-	    $deleteArgs = array(':key' => $key);
-	    if ($temp) {
-		    $deleteSql .= ' AND `temporary` = :temp';
-		    $deleteArgs[':temp'] = 1;
-	    }
-        $delete = self::db()->prepare($deleteSql);
-        $delete->execute($deleteArgs);
-
-	    $insert = self::db()->prepare('INSERT INTO object_cache (`key`, value, `temporary`) VALUES (:key, :value, :temp)');
-        $insert->execute(array(':key' => $key, ':value' => gzcompress(json_encode($value)), ':temp' => $temp ? 1 : 0));
-    }
-
-    public static function getObjectCache($key, $allowTemp = true, $expires = 86400)
-    {
-        $sql = 'SELECT * FROM object_cache WHERE `key` = :key ORDER BY last_modified DESC LIMIT 1';
-        $statement = self::db()->prepare($sql);
-        $statement->execute(array(':key' => $key));
-        $result = $statement->fetch(PDO::FETCH_OBJ);
-	    if ($result) {
-	        if ((time() - strtotime($result->last_modified)) < $expires && ( $allowTemp || $result->temporary == 0)) {
-	            return json_decode(gzuncompress( $result->value));
-	        }
-	    }
-        return false;
+        $cacheManager = self::$container->get('object-cache-manager');
+        $cacheManager->setObjectCache($key, $value, $temp);
     }
 
     /**
+     * TODO: Remove this when Badge_Factory is moved (to a service?)
      * @param $key
-     * @param TableIndex $table
-     * @param Base_Model[] $data
-     * @return array
+     * @param bool|true $allowTemp
+     * @param int $expires
+     * @return bool|mixed
      */
-    protected function getTableIndex($key, TableIndex $table, array $data)
+    public static function getObjectCache($key, $allowTemp = true, $expires = 86400)
     {
-        $rows = $this->getObjectCache($key);
-
-        if (!$rows || $this->_request->getParam('force')) {
-            $rows = $table->getRows($data);
-            $this->setObjectCache($key, $rows);
-        }
-
-        return $rows;
+        $cacheManager = self::$container->get('object-cache-manager');
+        return $cacheManager->getObjectCache($key, $allowTemp, $expires);
     }
 
     protected function flashMessage($message, $type = 'info') {
@@ -555,6 +502,96 @@ class BaseController extends Zend_Controller_Action
         $presences = Model_PresenceFactory::getPresences();
         $rows = $presenceIndexTable->getRows($presences);
         BaseController::setObjectCache('presence-index', $rows);
+    }
+
+    protected function showFetchLockMessage()
+    {
+        $lockTime = $this->getOption($this->lockName('fetch'));
+        if ($lockTime && $this->isHttpRequest()) {
+            $seconds = time() - $lockTime;
+            if ($this->fetchHasBeenLockedForTooLong($seconds)) {
+                $message = $this->createFetchLockWarningMessage($seconds);
+                $this->flashMessage($message, 'inaction');
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isHttpRequest()
+    {
+        return $this->_request instanceof Zend_Controller_Request_Http && !$this->_request->isXmlHttpRequest();
+    }
+
+    /**
+     * @param $seconds
+     * @return bool
+     */
+    protected function fetchHasBeenLockedForTooLong($seconds)
+    {
+        return $seconds > (10 * $this->config->app->fetch_time_limit);
+    }
+
+    /**
+     * @param $seconds
+     * @return string
+     */
+    protected function createFetchLockWarningMessage($seconds)
+    {
+        $elements = $this->secondsIntoFriendlyTime($seconds);
+        $message = 'Fetch process has been inactive for ' . implode(', ', $elements) . ', indicating something has gone wrong. ';
+        $urlArgs = array('controller' => 'fetch', 'action' => 'clear-lock');
+        $url = $this->view->gatekeeper()->filter('%url%', $urlArgs);
+        if ($url) {
+            $message .= 'Click <a href="' . $url . '">here</a> to clear the lock manually.';
+            return $message;
+        } else {
+            $message .= 'Please log in to clear the lock.';
+            return $message;
+        }
+    }
+
+    /**
+     * @param $seconds
+     * @return array
+     */
+    protected function secondsIntoFriendlyTime($seconds)
+    {
+        $factors = array(
+            'day' => 86400,
+            'hour' => 3600,
+            'min' => 60,
+            'sec' => 0
+        );
+        $elements = array();
+        foreach ($factors as $label => $factor) {
+            if ($seconds > $factor) {
+                if ($factor) {
+                    $tmp = $seconds % $factor;
+                    $elements[] = array(($seconds - $tmp) / $factor, $label);
+                    $seconds = $tmp;
+                } else {
+                    $elements[] = array($seconds, $label);
+                }
+            }
+        }
+        foreach ($elements as $i => $e) {
+            $elements[$i] = $this->view->pluralise($e[1], $e[0]);
+        }
+        return $elements;
+    }
+
+    private function showAccessTokenNeedsRefreshMessage()
+    {
+        /** @var Model_User $user */
+        $user = $this->view->user;
+        if ($user && $user->hasAccessTokensNeedRefreshing()) {
+            $urlArgs = ['controller' => 'user', 'action' => 'edit-self'];
+            $url = $this->view->gatekeeper()->filter('%url%', $urlArgs);
+            $message = "One or more of your access tokens are set to expire soon. <a href=\"{$url}\">Click here</a> to refresh these tokens.";
+            $this->flashMessage($message, 'inaction');
+        }
     }
 
 }

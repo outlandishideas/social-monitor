@@ -50,15 +50,15 @@ class RegionController extends CampaignController
 	 */
 	public function indexAction()
     {
-        $regions = Model_Region::fetchAll();
-        /** @var TableIndex $indexTable */
-        $indexTable = $this->getContainer()->get('table.region-index');
-        $rows = $this->getTableIndex('region-index', $indexTable, $regions);
+        $objectCacheManager = $this->getContainer()->get('object-cache-manager');
+        $table = $objectCacheManager->getRegionsTable();
+
+        $rows = $objectCacheManager->getRegionIndexRows($this->_request->getParam('force'));
 
         $this->view->title = 'Regions';
-		$this->view->regions = $regions;
+		$this->view->regions = $table->getTableData();
 		$this->view->rows = $rows;
-        $this->view->tableHeaders = $indexTable->getHeaders();
+        $this->view->tableHeaders = $table->getHeaders();
         $this->view->sortCol = Name::getName();
 	}
 
@@ -346,28 +346,11 @@ class RegionController extends CampaignController
 	}
 
 	public function downloadAction() {
-        $csvData = Util_Csv::generateCsvData(Model_Region::fetchAll(), $this->tableIndexHeaders());
+        $table = $this->getContainer()->get('table.region-index');
+        $csvData = Util_Csv::generateCsvData(Model_Region::fetchAll(), $table->getHeaders());
         Util_Csv::outputCsv($csvData, 'regions');
         exit;
 	}
-
-
-    protected function tableIndexHeaders()
-    {
-        return array(
-            Name::getInstance(),
-            TotalRank::getInstance(),
-            TotalScore::getInstance(),
-            TargetAudience::getInstance(),
-            PercentTargetAudience::getInstance(),
-            ActionsPerDay::getInstance(),
-            ResponseTime::getInstance(),
-            Countries::getInstance(),
-            CountryCount::getInstance(),
-            PresenceCount::getInstance(),
-            Options::getInstance(),
-        );
-    }
 
     /**
      * Gets all of the graph data for the requested region

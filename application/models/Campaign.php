@@ -1,4 +1,5 @@
 <?php
+use Outlandish\SocialMonitor\Cache\KpiCacheEntry;
 
 /**
  * @property int audience
@@ -162,7 +163,7 @@ class Model_Campaign extends Model_Base {
 
 		foreach ($this->getPresences() as $presence) {
 			$row = array('name'=>$presence->name, 'id'=>$presence->id);
-			$row = array_merge($row, $presence->getKpiData($startDate, $endDate));
+			$row = array_merge($row, $presence->getKpiData(new KpiCacheEntry($startDate, $endDate)));
 			$return[] = $row;
 		}
 
