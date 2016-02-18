@@ -2,6 +2,7 @@
 
 use Outlandish\SocialMonitor\Adapter\LinkedinAdapter;
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
+use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
@@ -243,6 +244,15 @@ class Provider_Linkedin extends Provider_Abstract
     public function testAdapter(Model_Presence $presence)
     {
         $this->adapter->getChannelWithAccessToken($presence->getHandle(), $presence->getAccessToken($presence->getType()));
+    }
+
+    /**
+     * @param Model_Presence $presence
+     * @return EngagementScore
+     */
+    function getEngagementScore($presence)
+    {
+        return new EngagementScore('Linkedin engagement score', 'linkedin', $presence->getLinkedinEngagement());
     }
 
 

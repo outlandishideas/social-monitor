@@ -2,6 +2,7 @@
 
 
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
+use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
@@ -464,5 +465,13 @@ class Provider_Youtube extends Provider_Abstract
         return $data;
     }
 
+    /**
+     * @param Model_Presence $presence
+     * @return EngagementScore
+     */
+    function getEngagementScore($presence)
+    {
+        return new EngagementScore('Youtube engagement score', 'youtube', $presence->getYoutubeEngagement());
+    }
 
 }

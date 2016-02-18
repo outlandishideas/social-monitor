@@ -1,6 +1,7 @@
 <?php
 
 use Outlandish\SocialMonitor\Cache\KpiCacheEntry;
+use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\AccessToken;
 class Model_Presence
 {
@@ -847,6 +848,14 @@ class Model_Presence
     public function testUpdate()
     {
         $this->provider->testAdapter($this);
+    }
+
+    /**
+     * @return EngagementScore
+     */
+    public function getEngagementScore()
+    {
+        return $this->provider->getEngagementScore($this);
     }
 
 
