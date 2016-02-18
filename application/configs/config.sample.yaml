@@ -25,7 +25,6 @@ live:
   app:
 # e.g. 7 Feb 2012 for PHP date()
     dateFormat: j M Y
-    notification_email: lpteam@33-digital.com
     fetch_time_limit: 1140
   jsConfig:
 # e.g. 7 Feb 2012 for jQuery UI
@@ -37,8 +36,6 @@ stage:
   db:
     params:
       dbname: staging
-  app:
-    notification_email: tamlyn.rhodes@gmail.com
 
 devel:
   _extends: live
@@ -50,5 +47,3 @@ alpha:
       host: 127.0.0.1
       username: root
       password:
-  app:
-    notification_email: tamlyn.rhodes@gmail.com

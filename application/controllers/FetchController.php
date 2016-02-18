@@ -206,13 +206,6 @@ class FetchController extends BaseController
 
     }
 
-	/**
-	 * @param $message string Send an email to the configured email address
-	 */
-	protected function sendNotificationEmail($message) {
-		$this->sendEmail($message, 'nobody@example.com', 'The Social Media Monitor', $this->config->app->notification_email, 'Social Dashboard Notification');
-	}
-
 	protected function setupConsoleOutput() {
 
         parent::setupConsoleOutput();

@@ -196,9 +196,20 @@ services:
     table.header.parent:
         class: Outlandish\SocialMonitor\TableIndex\Header\ParentName
 
+    # Index table data sources
+    table.source.region:
+        class: Outlandish\SocialMonitor\TableIndex\TableSource\RegionSource
+    table.source.group:
+        class: Outlandish\SocialMonitor\TableIndex\TableSource\GroupSource
+    table.source.country:
+        class: Outlandish\SocialMonitor\TableIndex\TableSource\CountrySource
+    table.source.presence:
+        class: Outlandish\SocialMonitor\TableIndex\TableSource\PresenceSource
+
     # Index Tables
     table.region-index:
         class: Outlandish\SocialMonitor\TableIndex\TableIndex
+        arguments: ['region-index', "@table.source.region"]
         calls:
             - [addHeader, ["@table.header.name"]]
             - [addHeader, ["@table.header.total_rank"]]
@@ -215,6 +226,7 @@ services:
 
     table.group-index:
         class: Outlandish\SocialMonitor\TableIndex\TableIndex
+        arguments: ['group-index', "@table.source.group"]
         calls:
             - [addHeader, ["@table.header.name"]]
             - [addHeader, ["@table.header.total_rank"]]
@@ -230,6 +242,7 @@ services:
 
     table.country-index:
         class: Outlandish\SocialMonitor\TableIndex\TableIndex
+        arguments: ['country-index', "@table.source.country"]
         calls:
             - [addHeader, ["@table.header.name"]]
             - [addHeader, ["@table.header.total_rank"]]
@@ -246,6 +259,7 @@ services:
 
     table.presence-index:
         class: Outlandish\SocialMonitor\TableIndex\TableIndex
+        arguments: ['presence-index', "@table.source.presence"]
         calls:
             - [addHeader, ["@table.header.handle"]]
             - [addHeader, ["@table.header.parent"]]
@@ -260,3 +274,10 @@ services:
             - [addHeader, ["@table.header.target_audience"]]
             - [addHeader, ["@table.header.options"]]
 
+    object-cache-manager:
+        class: Outlandish\SocialMonitor\Cache\ObjectCacheManager
+        calls:
+            - [setPresencesTable, ["@table.presence-index"]]
+            - [setCountriesTable, ["@table.country-index"]]
+            - [setGroupsTable, ["@table.group-index"]]
+            - [setRegionsTable, ["@table.region-index"]]

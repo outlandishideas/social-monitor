@@ -2,6 +2,8 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use RuntimeException;
+
 class ActionsPerDay extends Header {
 
     protected static $name = "actions-per-day";
@@ -15,7 +17,7 @@ class ActionsPerDay extends Header {
 
     /**
      * @param \Model_Presence|\Model_Campaign $model
-     * @return string
+     * @return float
      */
     function getValue($model = null)
     {

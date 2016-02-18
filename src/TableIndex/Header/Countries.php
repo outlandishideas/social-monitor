@@ -2,6 +2,8 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Outlandish\SocialMonitor\Helper\Gatekeeper;
+
 class Countries extends Header {
 
     protected static $name = "countries";
@@ -18,7 +20,7 @@ class Countries extends Header {
 
 
     /**
-     * @param Model_Region $model
+     * @param \Model_Region $model
      * @return array
      */
     public function getTableCellValue($model)
@@ -32,7 +34,7 @@ class Countries extends Header {
         }
         foreach($model->getCountries() as $country) {
             $imageUrl = $baseUrl . '/assets/img/flags/' . $country->getCountryCode() . '.png';
-            $template = '<a href="' . \Zend_View_Helper_Gatekeeper::PLACEHOLDER_URL . '" class="entity country"><span class="flag"><img src="' . $imageUrl . '" /></span> ' . $country->getName() . '</a>';
+            $template = '<a href="' . Gatekeeper::PLACEHOLDER_URL . '" class="entity country"><span class="flag"><img src="' . $imageUrl . '" /></span> ' . $country->getName() . '</a>';
             $urlArgs = array("controller" => "country", "action" => "view", "id" => $country->id);
             $presences[$template] = $urlArgs;
         }

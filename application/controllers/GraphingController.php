@@ -137,13 +137,6 @@ abstract class GraphingController extends BaseController {
 	}
 
     /**
-     * @return Header_Abstract[]
-     */
-    protected function tableIndexHeaders() {
-        return array();
-    }
-
-    /**
      * @param $model Model_Campaign|Model_Presence
      * @param Badge_Abstract $badge
      * @return array
