@@ -429,18 +429,18 @@ app.datatables = {
 			],
 			fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 				var $el = $(nRow);
-				$el.data('id', aData.id);
 				var $name = $el.find('.presence-name');
-				var nameText = $('.presence-name').first().text().trim();
-				if(nameText) {
-					$name.text(nameText);
+				$el.data('id', aData.id);
+				var id = $name.data('presence');
+				var presence = _.find(window.presences, function (p) {
+					return p.id == id;
+				});
+				if (presence) {
+					$name.text(presence.name);
 				} else {
-					var id = $name.data('presence');
-					var presence = _.find(window.presences, function (p) {
-						return p.id == id;
-					});
-					if (presence) {
-						$name.text(presence.name);
+					var nameText = $('.presence-name').first().text().trim();
+					if(nameText) {
+						$name.text(nameText);
 					}
 				}
 			},
