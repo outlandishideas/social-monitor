@@ -167,11 +167,6 @@ class WeightedYoutubeEngagementQuery extends Query
 
             $presenceData['likes_equivalent'] = $weightedEngagement;
             $presenceData['engagement'] = $weightedEngagement / $scale;
-            $score = $presenceData['engagement'] * 100 / 0.08;
-            if($score > 100) {
-                $score = 100;
-            }
-            $presenceData['score_as_likes_per_view'] = $score;
 
             $allPresencesEngagement[] = $presenceData;
         }
