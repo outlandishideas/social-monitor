@@ -1,5 +1,7 @@
 <?php
 
+use Outlandish\SocialMonitor\Engagement\EngagementScore;
+
 abstract class Provider_Abstract
 {
 	protected $db;
@@ -106,6 +108,13 @@ abstract class Provider_Abstract
     {
         return null;
     }
+
+    /**
+     * @param Model_Presence $presence
+     * @return EngagementScore
+     */
+    abstract function getEngagementScore($presence);
+
 
     /**
      * @param string $type
