@@ -122,10 +122,10 @@ class Provider_Linkedin extends Provider_Abstract
         $insertStmt = $this->db->prepare("
 			INSERT INTO `{$this->tableName}`
 			(`post_id`, `presence_id`, `message`, `created_time`,
-			`likes`, `comments`, `type`)
+			`likes`, `comments`, `type`, `permalink`)
 			VALUES
 			(:post_id, :presence_id, :message, :created_time, :likes,
-				:comments, :type)
+				:comments, :type, :permalink)
             ON DUPLICATE KEY UPDATE
                 `likes` = VALUES(`likes`), `comments` = VALUES(`comments`);
 		");
@@ -141,7 +141,8 @@ class Provider_Linkedin extends Provider_Abstract
                 ':created_time' => gmdate('Y-m-d H:i:s', $status->created_time),
                 ':likes' => $status->likes,
                 ':comments' => $status->comments,
-                ':type' => $status->type
+                ':type' => $status->type,
+                ':permalink' => $status->permalink
             );
             try {
                 $result = $insertStmt->execute($args);
@@ -236,6 +237,7 @@ class Provider_Linkedin extends Provider_Abstract
             $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
             $status->presence_id = $r['presence_id'];
             $status->presence_name = $presence->getName();
+            $status->permalink = $r['permalink'];
             $status->engagement = [
                 'comments' => $r['comments'],
                 'likes' => $r['likes'],
