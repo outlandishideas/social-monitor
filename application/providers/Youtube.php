@@ -465,6 +465,7 @@ class Provider_Youtube extends Provider_Abstract
                 'comparable' => (($r['likes'] + $r['number_of_replies'] * 4) / 5)
             ];
             $status->icon = Enum_PresenceType::YOUTUBE()->getSign();
+            $status->permalink = 'https://www.youtube.com/watch?v=' . $r['video_id'];
             $parsed[] = (array)$status;
         }
 

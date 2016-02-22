@@ -236,6 +236,7 @@ class YoutubeAdapter extends AbstractAdapter
         $comment->posted_by_owner = $comment->authorChannelId === $channel->getId() ? 1 : 0;
         $comment->rating = $commentSnippet->getViewerRating();
         $comment->message = $commentSnippet->getTextDisplay();
+        $comment->videoId = $commentSnippet->videoId;
         return $comment;
     }
 
