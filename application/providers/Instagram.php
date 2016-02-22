@@ -259,7 +259,7 @@ class Provider_Instagram extends Provider_Abstract
         return new EngagementScore('Instagram engagement score', 'instagram', $presence->getInstagramEngagement());
     }
 
-    function parseStatuses($raw)
+    protected function parseStatuses($raw)
     {
         if(!$raw || !count($raw)) {
             return [];
