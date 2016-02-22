@@ -49,7 +49,7 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
         if($score > 1) {
             return 100;
         } else {
-            return round($score * 100, 3);
+            return round($score * 100, 1);
         }
     }
 
