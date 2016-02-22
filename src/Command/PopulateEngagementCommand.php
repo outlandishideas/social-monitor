@@ -40,27 +40,37 @@ class PopulateEngagementCommand extends ContainerAwareCommand
         $presences = \Model_PresenceFactory::getPresences();
         $start = date_create_from_format('Y-m-d', $input->getArgument('start-date'));
         $end = date_create_from_format('Y-m-d', $input->getArgument('end-date'));
+        $startStr = $start->format('Y-m-d');
+        $endStr = $end->format('Y-m-d');
         /** @var PDO $pdo */
         $pdo = $this->getContainer()->get('pdo');
+        $deleteStmt = $pdo->prepare(
+            "DELETE FROM presence_history
+                     WHERE DATE(datetime)>'$startStr'
+                     AND DATE(datetime)<'$endStr'
+                     AND type IN ('facebook_engagement','sina_weibo_engagement','instagram_engagement','linkedin_engagement','youtube_engagement')");
+        $success = $deleteStmt->execute();
+        if(!$success) {
+            $error = $deleteStmt->errorInfo();
+        }
         foreach($presences as $presence) {
             $id = $presence->getId();
             $value = $presence->getEngagementValue();
             $current = clone $start;
             $type = $presence->getType()->getEngagementMetric();
+            $values = array();
             do {
                 $dateStr = $current->format('Y-m-d');
-                $deleteStmt = $pdo->prepare(
-                    "DELETE FROM presence_history
-                     WHERE DATE(datetime)='$dateStr' AND type='$type' AND presence_id=$id");
-                $success = $deleteStmt->execute();
-                $insertStmt = $pdo->prepare(
-                    "INSERT INTO presence_history (presence_id,datetime,type,value) VALUES
-                      ($id,'$dateStr','$type',$value)"
-                );
-                $success = $insertStmt->execute();
+                $values[] = "($id,'$dateStr','$type',$value)";
                 $current->modify('+1 day');
             } while ($current <= $end);
-            error_log("inserted history for $id");
+            $values = implode(",",$values);
+            $insertStmt = $pdo->prepare(
+                "INSERT INTO presence_history (presence_id,datetime,type,value) VALUES
+                      $values"
+            );
+            $success = $insertStmt->execute();
+            $output->writeln("inserted history for $id");
         }
 
         $output->writeln("Done");
