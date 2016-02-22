@@ -141,19 +141,13 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                                     <ul class="badge-presences" data-<?php echo $type->getValue(); ?>-presences>
                                         <?php foreach($pg['presences'] as $presence) : /** @var $presence Model_Presence */ ?>
                                             <li>
-                                                <?php
-                                                    $sign = $presence->getPresenceSign();
-                                                    $handle = $presence->getHandle();
-                                                    $value = "<span class='{$sign}'></span> {$handle}";
-                                                    if ($presence->isForFacebook()) {
-                                                        $score = $presence->getFacebookEngagement();
-                                                        $value .= " <span class=\"engagement-score facebook\" title=\"Facebook engagement score: $score\">" . round($score) . '</span>';
-                                                    } else if ($presence->isForTwitter()) {
-                                                        $score = $presence->getKloutScore();
-                                                        $value .= " <span class=\"engagement-score klout\" title=\"Klout score: $score\">" . round($score) . '</span>';
-                                                    } ?>
                                                 <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
-                                                    <?php echo $value; ?>
+                                                    <span class="<?php echo $this->getPresenceSign(); ?>"></span>
+                                                    <?php echo $this->getHandle(); ?>
+                                                    <span class="engagement-score <?php echo $this->getEngagementScore()->getType(); ?>"
+                                                          title="<?php echo $this->getEngagementScore()->getName(); ?>: <?php echo $this->getEngagementScore()->getScore(); ?>">
+                                                    <?php echo round($this->getEngagementScore()->getScore()); ?>
+                                                </span>
                                                 </a>
                                             </li>
                                         <?php endforeach; ?>

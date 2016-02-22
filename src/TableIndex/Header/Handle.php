@@ -24,23 +24,10 @@ class Handle extends Header {
     {
         $handle = $this->getValue($model);
         $sign = $model->getPresenceSign();
+        $engagment = $model->getEngagementScore();
         $value = "<span class=\"$sign fa-lg fa-fw\"></span> $handle";
-        if ($model->isForFacebook()) {
-            $score = $model->getFacebookEngagement();
-            $value .= " <span class=\"engagement-score facebook\" title=\"Facebook engagement score: $score\">" . round($score) . '</span>';
-        } else if ($model->isForTwitter()) {
-            $score = $model->getKloutScore();
-            $value .= " <span class=\"engagement-score klout\" title=\"Klout score: $score\">" . round($score) . '</span>';
-        } else if ($model->isForSinaWeibo()) {
-            $score = $model->getSinaWeiboEngagement();
-            $value .= " <span class=\"engagement-score sina-weibo\" title=\"Sina Weibo engagement score: $score\">" . round($score) . '</span>';
-        } else if ($model->isForInstagram()) {
-            $score = $model->getInstagramEngagement();
-            $value .= " <span class=\"engagement-score instagram\" title=\"Instagram engagement score: $score\">" . round($score) . '</span>';
-        }
-        if (!$model->getUID()) {
-            $value = '<span class="missing" title="Presence not found">' . $value . '</span>';
-        }
+        $value .= " <span class=\"engagement-score {$engagment->getType()}\" title=\"{$engagment->getName()}: {$engagment->getScore()}\">" . round($engagment->getScore()) . '</span>';
+
         return $value;
     }
 

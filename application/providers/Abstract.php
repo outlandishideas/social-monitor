@@ -1,5 +1,6 @@
 <?php
 
+use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\Status;
 
 abstract class Provider_Abstract
@@ -38,7 +39,6 @@ abstract class Provider_Abstract
      * @param null $offset
      * @return object   The historic streamdata and the total count
      */
-
     public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
                                       $search = null, $order = null, $limit = null, $offset = null)
     {
@@ -160,10 +160,6 @@ abstract class Provider_Abstract
             $clauses[] = '`type` = :type';
             $args[':type'] = $type;
         }
-        $sql = "
-			SELECT *
-			FROM `presence_history`
-			WHERE " . implode(' AND ', $clauses);
 		$stmt = $this->db->prepare("
 			SELECT *
 			FROM `presence_history`
@@ -207,6 +203,13 @@ abstract class Provider_Abstract
     {
         return null;
     }
+
+    /**
+     * @param Model_Presence $presence
+     * @return EngagementScore
+     */
+    abstract function getEngagementScore($presence);
+
 
     /**
      * @param string $type

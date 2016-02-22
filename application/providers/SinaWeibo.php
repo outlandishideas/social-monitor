@@ -1,6 +1,6 @@
 <?php
-
 use Outlandish\SocialMonitor\Models\Status;
+use Outlandish\SocialMonitor\Engagement\EngagementScore;
 
 require_once(__DIR__ . '/../../lib/sina_weibo/sinaweibo.php');
 
@@ -319,5 +319,17 @@ class Provider_SinaWeibo extends Provider_Abstract
 		}
 		return $parsed;
 	}
+
+/**
+	 * @param Model_Presence $presence
+	 * @return EngagementScore
+	 */
+	function getEngagementScore($presence)
+	{
+		return new EngagementScore('Sina Weibo engagement score', 'sina-weibo', $presence->getSinaWeiboEngagement());
+	}
+
+
+}
 
 }

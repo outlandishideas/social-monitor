@@ -1099,6 +1099,9 @@ form.management button.add-item {
 .engagement-score.linkedin {
 	background-image: url(../img/linkedin_engagement.png);
 }
+.engagement-score.youtube {
+	background-image: url(../img/youtube_engagement.png);
+}
 
 /* Slider & Date */
 

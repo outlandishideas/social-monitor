@@ -3,6 +3,7 @@
 
 use Outlandish\SocialMonitor\Adapter\TwitterAdapter;
 use Outlandish\SocialMonitor\Models\Status;
+use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\Tweet;
 
 class Provider_Twitter extends Provider_Abstract
@@ -313,5 +314,14 @@ class Provider_Twitter extends Provider_Abstract
             $parsed[] = (array)$status;
         }
         return $parsed;
+    }
+
+    /**
+     * @param Model_Presence $presence
+     * @return EngagementScore
+     */
+    function getEngagementScore($presence)
+    {
+        return new EngagementScore('Klout score', 'klout', $presence->getKloutScore());
     }
 }
