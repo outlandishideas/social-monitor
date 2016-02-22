@@ -32,7 +32,8 @@ foreach (Enum_PresenceType::enumValues() as $type) {
     </div>
 
     <?php foreach ($presenceGroups as $group) : ?>
-        <div class="bd-btm presence-list">
+        <?php if($group['presences'] && count($group['presences'])): ?>
+            <div class="bd-btm presence-list">
             <h4><?php
                 /** @var Enum_PresenceType $type */
                 $type = $group['type']; echo $type->getTitle();
@@ -46,5 +47,6 @@ foreach (Enum_PresenceType::enumValues() as $type) {
                 <?php endforeach; ?>
             </ul>
         </div>
+        <?php endif; ?>
     <?php endforeach; ?>
 </div>

@@ -1,17 +1,20 @@
-<?php $presence = $this->presence ?>
+<?php
+/** @var Model_Presence $presence */
+$presence = $this->presence
+?>
 <a href="<?php echo $this->url(array('controller' => 'presence', 'action' => 'view', 'id' => $presence->getId())); ?>">
     <span class="<?php echo $presence->getPresenceSign(); ?>"></span>
     <?php echo $presence->getHandle(); ?>
-    <span class="engagement-score <?php echo $presence->getEngagementScore()->getType(); ?>"
+    <span class="flag-score engagement <?php echo $presence->getEngagementScore()->getType(); ?>"
           title="<?php echo $presence->getEngagementScore()->getName(); ?>: <?php echo $presence->getEngagementScore()->getScore(); ?>">
     <?php echo round($presence->getEngagementScore()->getScore()); ?>
 </span>
-<span class="reach-score"
-      title="Reach: <?php echo $presence->getReachScore(); ?>">
+<span class="flag-score reach <?php echo $presence->getType(); ?>"
+      title="Reach score: <?php echo $presence->getReachScore(); ?>">
     <?php echo round($presence->getReachScore()); ?>
 </span>
-<span class="quality-score"
-      title="Quality: <?php echo $presence->getQualityScore(); ?>">
+<span class="flag-score quality <?php echo $presence->getType(); ?>"
+      title="Quality score: <?php echo $presence->getQualityScore(); ?>">
     <?php echo round($presence->getQualityScore()); ?>
 </span>
 </a>

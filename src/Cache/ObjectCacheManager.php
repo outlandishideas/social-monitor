@@ -171,10 +171,9 @@ class ObjectCacheManager
     {
         $badgeData = $this->getBadgeData($dayRange, $temp);
         $mapData = $this->getMapData($badgeData, $dayRange, $temp);
-        $smallCountryData = $this->getSmallCountryData($mapData, $dayRange, $temp);
         $groupData = $this->getGroupData($badgeData, $dayRange, $temp);
         $fanData = $this->getFanData($dayRange, $temp);
-        return [$mapData, $smallCountryData, $groupData, $fanData];
+        return [$mapData, $groupData, $fanData];
     }
 
     public function getBadgeData($dayRange, $temp)
@@ -243,23 +242,6 @@ class ObjectCacheManager
         }
 
         return $mapData;
-    }
-
-    public function getSmallCountryData($mapData, $dayRange, $temp)
-    {
-        $key = 'small_country_data_' . $dayRange;
-        $smallMapData = $this->getObjectCache($key, $temp);
-        if (!$smallMapData) {
-            $smallCountries = Model_Country::smallCountryCodes();
-            $smallMapData = array();
-            foreach($mapData as $country){
-                if(array_key_exists($country->c, $smallCountries)){
-                    $smallMapData[] = $country;
-                }
-            }
-            $this->setObjectCache($key, $smallMapData, $temp);
-        }
-        return $smallMapData;
     }
 
     public function getGroupData($badgeData, $dayRange, $temp)

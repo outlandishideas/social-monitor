@@ -402,7 +402,10 @@ function updateElement($el, d) {
 	var badge = $('#homepage-tabs').find('dd.active').data('badge');
 	var colorArgs = app.home.geochartMetrics[badge];
 
-	var score = d.b[badge][day].s;
+	$el.find('.flag-score').hide();
+	$el.find('.flag-score.'+badge).show();
+
+	var score = d.b[badge][day] ? d.b[badge][day].s : 0;
 	$el.data('score', numberWithCommas(Math.round(score)));
 	var color = colorArgs.colors[0];
 	for (var j=0; j<colorArgs.colors.length-1; j++) {
