@@ -77,7 +77,7 @@ abstract class Model_PresenceFactory
 	public static function getPresencesByCampaign($campaign, array $queryOptions = array())
 	{
 		$queryOptions = array_merge(static::$defaultQueryOptions, $queryOptions);
-		$sql = "SELECT `p`.* FROM `" . self::TABLE_CAMPAIGN_PRESENCES . "` AS `cp` LEFT JOIN `" . self::TABLE_PRESENCES . "` AS `p` ON (`cp`.`presence_id` = `p`.`id`) WHERE `cp`.`campaign_id` = :cid";
+		$sql = "SELECT `p`.* FROM `" . self::TABLE_CAMPAIGN_PRESENCES . "` AS `cp` INNER JOIN `" . self::TABLE_PRESENCES . "` AS `p` ON (`cp`.`presence_id` = `p`.`id`) WHERE `cp`.`campaign_id` = :cid";
 		if (strlen($queryOptions['orderColumn'])) {
 			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
 		}

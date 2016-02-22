@@ -1,0 +1,47 @@
+<div class="content" id="statuses">
+    <h2 class="page-title">Statuses</h2>
+
+    <div class="statusesDisplay all">
+        <?php
+        $buttons = array();
+        array_unshift($buttons, '<div id="search-table">Loading data...</div>');
+
+        echo $this->partial('partials/button-bar.phtml', array('buttons' => $buttons, 'dark' => true));
+
+        ?>
+
+        <div class="filters" style="display:none;"> <!-- show when data is returned -->
+            <div class="date-filter-container">
+                <?php
+                echo $this->partial('partials/daterange.phtml', array('dateRangeString' => $this->dateRangeString));
+                echo '<label>You are viewing:</label>'; ?>
+            </div>
+            <?php
+            foreach ($this->queryOptions as $option) {
+                echo $this->partial(
+                    'partials/multi-select-box.phtml',
+                    array(
+                        'label' => $option['label'],
+                        'queryParamName' => $option['name'],
+                        'options' => $option['options']
+                    )
+                );
+            }
+            ?>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th class="message">Content</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type='text/javascript'>
+    var presences = <?php echo json_encode($this->presences); ?>;
+</script>

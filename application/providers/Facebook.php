@@ -4,6 +4,7 @@ use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\FacebookStatus;
 use Outlandish\SocialMonitor\Engagement\EngagementMetric;
+use Outlandish\SocialMonitor\Models\Status;
 
 class Provider_Facebook extends Provider_Abstract
 {
@@ -20,6 +21,7 @@ class Provider_Facebook extends Provider_Abstract
         $this->tableName = 'facebook_stream';
         $this->adapter = $adapter;
         $this->engagementMetric = $metric;
+        $this->engagementStatement = '(likes + comments * 4 + share_count * 7)';
     }
 
 	public function fetchStatusData(Model_Presence $presence)
@@ -169,6 +171,7 @@ class Provider_Facebook extends Provider_Abstract
 	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
         $search = null, $order = null, $limit = null, $offset = null)
 	{
+        $presenceId = $presence->getId();
         $clauses = array(
             'p.created_time >= :start',
             'p.created_time <= :end',
@@ -178,27 +181,35 @@ class Provider_Facebook extends Provider_Abstract
         $args = array(
             ':start' => $start->format('Y-m-d H:i:s'),
             ':end'   => $end->format('Y-m-d H:i:s'),
-            ':id'    => $presence->getId()
+            ':id' => $presenceId
         );
-        $searchArgs = $this->getSearchClauses($search, array('p.message'));
-        $clauses = array_merge($clauses, $searchArgs['clauses']);
-        $args = array_merge($args, $searchArgs['args']);
+        return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
+	}
 
-        $clauseString = implode(' AND ', $clauses);
+    public function getHistoricStreamMulti($presences, \DateTime $start, \DateTime $end,
+                                           $search = null, $order = null, $limit = null, $offset = null)
+    {
+        $clauses = array(
+            "p.$this->createdTimeColumn >= :start",
+            "p.$this->createdTimeColumn <= :end",
+            'p.in_response_to IS NULL' // response data are merged into the original posts
+        );
+        $args = array(
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end'   => $end->format('Y-m-d H:i:s'),
+        );
+        if($presences && count($presences)) {
+            $ids = array_map(function($p) {
+                return $p->getId();
+            },$presences);
+            $clauses[] = 'p.presence_id IN ('.implode($ids,',') .')';
+        }
 
-		$sql = "
-			SELECT SQL_CALC_FOUND_ROWS p.*
-			FROM {$this->tableName} AS p
-			WHERE {$clauseString}";
-        $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
-        $sql .= $this->getLimitSql($limit, $offset);
+        return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
+    }
 
-        $stmt = $this->db->prepare($sql);
-		$stmt->execute($args);
-		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
-
-		// decorate the posts with actors, links and responses
+    protected function decorateStreamData(&$ret) {
+        // decorate the posts with actors, links and responses
         $postIds = array();
         $actorIds = array();
         $facebookIds = array();
@@ -210,24 +221,20 @@ class Provider_Facebook extends Provider_Abstract
 
         $links = $this->getLinks($postIds, 'facebook');
         $actors = $this->getActors($actorIds);
-        $responses = $this->getResponses($presence->getId(), $facebookIds);
 
-		foreach ($ret as &$r) {
+        foreach ($ret as &$r) {
             $id = $r['id'];
-			$r['links'] = isset($links[$id]) ? $links[$id] : array();
+            $responses = $this->getResponses($r['presence_id'], [$id]);
+
+            $r['links'] = isset($links[$id]) ? $links[$id] : array();
 
             $facebookId = $r['post_id'];
-			$r['first_response'] = isset($responses[$facebookId]) ? $responses[$facebookId] : array();
+            $r['first_response'] = isset($responses[$facebookId]) ? $responses[$facebookId] : array();
 
             $actorId = $r['actor_id'];
             $r['actor'] = isset($actors[$actorId]) ? $actors[$actorId] : new stdClass();
-		}
-
-		return (object)array(
-            'stream' => count($ret) ? $ret : null,
-            'total' => $total
-        );
-	}
+        }
+    }
 
     /**
      * Gets (object) data for the first response (if any) to the given posts, keyed by the originating post
@@ -511,4 +518,62 @@ class Provider_Facebook extends Provider_Abstract
         return new EngagementScore('Facebook engagement score', 'facebook', $presence->getFacebookEngagement());
     }
 
+    protected function parseStatuses($raw)
+    {
+        if(!$raw || !count($raw)) {
+            return [];
+        }
+        $parsed = array();
+        foreach ($raw as $r) {
+
+            if (array_key_exists('first_response',$r)) {
+                $response = $r['first_response']->message;
+                $responseDate = $r['first_response']->created_time;
+            } else {
+                $response = null;
+                $responseDate = gmdate('Y-m-d H:i:s');
+            }
+
+            $timeDiff = strtotime($responseDate) - strtotime($r['created_time']);
+            $components = array();
+            $timeDiff /= 60;
+            $elements = array(
+                'minute' => 60,
+                'hour' => 24,
+                'day' => 100000
+            );
+            foreach ($elements as $label => $size) {
+                $val = $timeDiff % $size;
+                $timeDiff /= $size;
+                if ($val) {
+                    array_unshift($components, $val . ' ' . $label . ($val == 1 ? '' : 's'));
+                }
+            }
+
+            $status = new Status();
+            $status->id = $r['id'];
+            $status->message = $r['message'];
+            $status->created_time = $r['created_time'];
+            $status->permalink = $r['permalink'];
+            $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
+            $status->presence_id = $r['presence_id'];
+            $status->presence_name = $presence->getName();
+            $status->engagement = [
+                'shares' => $r['share_count'],
+                'likes' => $r['likes'],
+                'comments' => $r['comments'],
+                'comparable' => (($r['likes'] + $r['comments'] * 4 + $r['share_count'] * 7) / 12)
+            ];
+            $status->icon = Enum_PresenceType::FACEBOOK()->getSign();
+            $status->needs_response = $r['needs_response'];
+            $status->first_response = array(
+                'message' => $response,
+                'date' => Model_Base::shortDate($responseDate),
+                'date_diff' => implode(', ', $components),
+            );
+
+            $parsed[] = (array)$status;
+        }
+        return $parsed;
+    }
 }

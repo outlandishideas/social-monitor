@@ -155,13 +155,9 @@ abbr {
 	border-radius: 25px;
 	background-color: black;
 	background-color: rgba(0, 0, 0, 0.6);
-	position: absolute;
 	width: 50px;
 	height: 50px;
-	top: 50%;
-	left: 50%;
-	margin-top: -25px;
-	margin-left: -25px;
+	margin: 1rem auto;
 }
 .loader-shield.dead,
 .loader.dead {
@@ -672,8 +668,38 @@ form .formError {
 .statusesDisplay .button-bc-bar .button-group > li {
 	float: left;
 }
+
+.statusesDisplay.all .button-bc-bar .button-group > li {
+	float: none;
+}
+
+.statusesDisplay.all .picker input {
+	background-color: #000;
+	border: 1px solid #fff;
+	height: 40px;
+}
+
+.statusesDisplay.all .picker {
+}
+
+.statusesDisplay.all .filters {
+	text-align:center;
+}
+
+.statusesDisplay.all .filters > div:last-child {
+	margin-right:0;
+}
+
 .statusesDisplay .icon-large {
 	font-size: 20px;
+}
+
+.statusesDisplay table {
+	width:100% ! important;
+}
+
+.statusesDisplay .dataTables_scrollHeadInner {
+	width:100% ! important;
 }
 
 .statusesDisplay td.date {
@@ -694,15 +720,42 @@ form .formError {
 	vertical-align: top;
 }
 .statusesDisplay td.message {
-	/*width: 10000px;*/
 	vertical-align: top;
+}
+.statusesDisplay td.message .fa {
+	vertical-align: top;
+	padding: 3px 3px 3px 4px;
+	background-color: #fff;
+	margin-right: 5px;
+	margin-top: 5px;
 }
 .statusesDisplay td.message h4 {
 	margin-top: 0;
 	margin-bottom: 10px;
+	color:#fff;
+	text-transform: none;
 }
 .statusesDisplay td.message p {
 	margin: 0;
+}
+.statusesDisplay td.message img {
+	display: block;
+}
+.statusesDisplay td.message .content {
+	display: inline-block;
+	width: 75%;
+}
+.statusesDisplay td.message .engagement {
+	display: inline-block;
+	width: 15%;
+	float: right;
+	vertical-align: top;
+	text-align:right;
+}
+.statusesDisplay td.message .date {
+	color:rgba(255,255,255, 0.5);
+	margin-top:15px;
+	margin-bottom:10px;
 }
 .statusesDisplay td.message .first-response {
 	margin-top: 15px;
@@ -735,10 +788,6 @@ form .formError {
 	visibility: visible;
 }
 
-.statusesDisplay .dataTable thead th {
-	border-bottom: 1px solid black;
-}
-
 .statusesDisplay td.statusPic img {
 	width: 50px;
 	height: 50px;
@@ -751,6 +800,11 @@ form .formError {
 
 .statusesDisplay td.statusPic img.facebook-actor {
 	background: url(../img/facebook-placeholder.png) no-repeat center center;
+}
+
+.statusesDisplay.all .table-container {
+	width:80%;
+	margin:1rem auto;
 }
 
 /* DataTables */
@@ -1778,6 +1832,55 @@ h4 {
     vertical-align: top;
 }
 
+.date-filter-container {
+	display: inline-block;
+	margin-right: 20px;
+}
+
+.date-filter-container label {
+	text-align: right;
+	color: white;
+	font-weight: bold;
+}
+
+.social-monitor-multi-select-box {
+	width:200px;
+	text-align: left;
+	margin-right: 20px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.social-monitor-multi-select-box label {
+	font-size: 0.8rem;
+	font-weight: 300;
+	color: #fff;
+	color: rgba(255,255,255, 0.5);
+	text-align: left;
+}
+
+.social-monitor-multi-select-box select {
+	width:200px;
+}
+
+.social-monitor-multi-select-box button {
+	font-weight:300;
+}
+
+.social-monitor-multi-select-box .ms-drop button:hover {
+	background-color:#0872BA;
+}
+
+.social-monitor-multi-select-box .selected-summary {
+	margin-top:16px;
+	padding-right:10px;
+}
+
+.statusesController .ui-daterangepickercontain .ui-daterangepicker {
+	background-color: #000;
+	border: 1px solid #fff;
+}
+
 .model-header .page-icon {
 	float: left;
 	font-size: 2rem;
@@ -2352,7 +2455,6 @@ td.countries a {
 
 .dataTable th {
 	font-weight: normal;
-	text-transform: uppercase;
 }
 
 .dataTables_scrollHead table {

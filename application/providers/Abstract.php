@@ -1,6 +1,7 @@
 <?php
 
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
+use Outlandish\SocialMonitor\Models\Status;
 
 abstract class Provider_Abstract
 {
@@ -8,11 +9,18 @@ abstract class Provider_Abstract
 	protected $tableName;
     /** @var Enum_PresenceType */
     protected $type = null;
+    protected $createdTimeColumn = 'created_time';
+    protected $contentColumn = 'message';
+    protected $engagementStatement = '(likes + comments * 4)';
 
 	public function __construct(PDO $db)
 	{
 		$this->db = $db;
 	}
+
+    public function getType() {
+        return $this->type;
+    }
 
 	/**
 	 * Fetch data for a certain handle (twitter handle, facebook name, sina weibo name etc)
@@ -31,8 +39,90 @@ abstract class Provider_Abstract
      * @param null $offset
      * @return object   The historic streamdata and the total count
      */
-	abstract public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
-        $search = null, $order = null, $limit = null, $offset = null);
+    public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
+                                      $search = null, $order = null, $limit = null, $offset = null)
+    {
+        $presenceId = $presence->getId();
+        $clauses = array(
+            "p.$this->createdTimeColumn >= :start",
+            "p.$this->createdTimeColumn <= :end",
+            'p.presence_id = :id'
+        );
+        $args = array(
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end'   => $end->format('Y-m-d H:i:s'),
+            ':id' => $presenceId
+        );
+        return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
+    }
+
+    /**
+     *
+     * Get all statuses for the provided $presences, or all presences if $presences null or empty
+     *
+     * @param Model_Presence[] $presences
+     * @param DateTime $start
+     * @param DateTime $end
+     * @param null $search
+     * @param null $order
+     * @param null $limit
+     * @param null $offset
+     * @return object
+     */
+    public function getHistoricStreamMulti($presences, \DateTime $start, \DateTime $end,
+                                           $search = null, $order = null, $limit = null, $offset = null)
+    {
+        $clauses = array(
+            "p.$this->createdTimeColumn >= :start",
+            "p.$this->createdTimeColumn <= :end",
+        );
+        $args = array(
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end'   => $end->format('Y-m-d H:i:s'),
+        );
+        if($presences && count($presences)) {
+            $ids = array_map(function($p) {
+                return $p->getId();
+            },$presences);
+            $ids = array_unique($ids);
+            $clauses[] = 'p.presence_id IN (' . implode($ids,',') . ')';
+        }
+
+        return $this->getHistoricStreamData($clauses,$args,$search,$order,$limit,$offset);
+    }
+
+    public function getHistoricStreamData($clauses, $args, $search = null, $order = null, $limit = null, $offset = null) {
+        $searchArgs = $this->getSearchClauses($search, array("p.{$this->contentColumn}"));
+        $clauses = array_merge($clauses, $searchArgs['clauses']);
+        $args = array_merge($args, $searchArgs['args']);
+
+        $sql = "
+			SELECT SQL_CALC_FOUND_ROWS p.*
+			FROM {$this->tableName} AS p
+			WHERE " . implode(' AND ', $clauses);
+        $sql .= $this->getOrderSql($order, array('date'=>$this->createdTimeColumn, 'engagement'=>$this->engagementStatement));
+        $sql .= $this->getLimitSql($limit, $offset);
+
+        $stmt = $this->db->prepare($sql);
+        $success = $stmt->execute($args);
+        if(!$success) {
+            error_log('error fetching statuses:'.implode(',',$stmt->errorInfo()));
+        }
+        $ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $objects = $this->parseStatuses($ret);
+        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
+
+        $this->decorateStreamData($ret);
+
+        return (object)array(
+            'stream' => $objects,
+            'total' => $total
+        );
+    }
+
+    protected function decorateStreamData(&$statuses) {
+        return;
+    }
 
 	/**
 	 * Get all metadata for posts/tweets/streamdata for a specific presence between 2 dates
@@ -93,6 +183,11 @@ abstract class Provider_Abstract
     public function getStatusStream(Model_Presence $presence, $start, $end, $search, $order, $limit, $offset)
     {
         return $this->getHistoricStream($presence, $start, $end, $search, $order, $limit, $offset);
+    }
+
+    public function getStatusStreamMulti($presences, $start, $end, $search, $order, $limit, $offset)
+    {
+        return $this->getHistoricStreamMulti($presences, $start, $end, $search, $order, $limit, $offset);
     }
 
     /**
@@ -191,7 +286,9 @@ abstract class Provider_Abstract
                     $ordering[] = $validColumns[$column] . ' ' . $dir;
                 }
             }
-            return ' ORDER BY '.implode(',', $ordering);
+            if (!is_null($ordering) && count($ordering) > 0) {
+                return ' ORDER BY ' . implode(',', $ordering);
+            }
         }
         return '';
     }
@@ -247,4 +344,6 @@ abstract class Provider_Abstract
     {
         return [];
     }
+
+    abstract protected function parseStatuses($raw);
 }

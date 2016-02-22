@@ -28,23 +28,21 @@ $.extend(app, {
 				'<%if(status!="unknown"){%><%=hits%> hits remaining<br>Reset in <%=reset%> minutes<%}else{%>Status is unknown because there have been no recent requests<%}%><br>' +
 				'<a href="<%=url%>">Deauthorise <%=type%></a></div>',
 		addTextSearch: '<tr><td valign="top" colspan="<%=colspan%>" class="dataTables_empty"><span class="add-manual-search link">Add manual search</span></td></tr>',
-		tweet:'<p class="more"><a href="<%=twitter_url%>" target="_blank" title="View on Twitter"><span class="icon-external-link icon-large"></span></a></p>' +
-				'<p><%=message.replace(/\\n/g, "<br />")%></p>',
-		igpost:'<p class="more"><a href="<%=url%>" target="_blank" title="View on Instagram"><span class="icon-external-link icon-large"></span></a></p>' +
-		'<p><%=message.replace(/\\n/g, "<br />")%></p>',
-		ytpost:'<p class="more"></p>' +
-		'<p><%=message.replace(/\\n/g, "<br />")%></p>',
-		inpost:'<p class="more"></p>' +
-		'<p><%=message.replace(/\\n/g, "<br />")%></p>',
-		post:'<p class="more"><a href="<%=facebook_url%>" target="_blank" title="View on Facebook"><span class="icon-external-link icon-large"></span></a></p>' +
-			'<%if(actor_name){%>' +
-				'<h4><%if(profile_url){%><a href="<%=profile_url%>" target="_blank"><%=actor_name%></a><%}else{%><%=actor_name%><%}%></h4>' +
-				'<%}else{%>' +
-				'<h4>Unknown author</h4>' +
-			'<%}%><p>' +
-			'<%=message.replace(/\\n/g, "<br />")%></p>',
-		swPost:'<p class="more"><a href="<%=url%>" target="_blank" title="View on Sina Weibo"><span class="icon-external-link icon-large"></span></a></p>' +
-				'<p><%=message.replace(/\\n/g, "<br />")%></p>',
+		post: '\
+			<div>\
+			    <p class="more"><a href="<%=url%>" target="_blank" title="View on Sina Weibo"><span class="icon-external-link icon-large"></span></a></p>\
+				<div class="<%=icon%>"></div>\
+				<div class="content">\
+					<h4 class="presence-name" data-presence="<%=presence_id%>"><%=presence_name%></h4>\
+					<%=message.replace(/\\n/g, "<br />")%>\
+					<p class="date"><%=date%></p>\
+				</div>\
+				<div class="engagement">\
+					<% if(!_.isUndefined(engagement.likes)) { %><p>Likes: <%=engagement.likes%></p><% } %>\
+					<% if(!_.isUndefined(engagement.comments)) { %><p>Comments: <%=engagement.comments%></p><% } %>\
+					<% if(!_.isUndefined(engagement.shares)) { %><p>Shares: <%=engagement.shares%></p><% } %>\
+				</div>\
+			</div>',
 		searchArea: '<li class="area">\
 						<div class="marker <%=className%>"></div>\
 						<input type="hidden" class="lat" name="lat[]" value="<%=lat%>" />\
@@ -249,6 +247,41 @@ app.init = {
                 });
             });
         },
+
+		'.social-monitor-multi-select': function($items) {
+			$items.each(function() {
+				var $item = $(this);
+				var single = ($item.attr('id') === 'sort'); // sort isn't multi select
+				$item.multipleSelect({
+					placeholder: 'None selected',
+					single: single,
+					onClose: function() {
+						if(single) { // we don't need to show the summary for single value selects
+							setTimeout(function() { // bug with multi-select component – wait for $item.val() to update
+								app.statuses.search($item.attr('id'), $item.val());
+							},1);
+						} else {
+							var summary = app.utils.summariseSelectedOptions($item,'Any '+$item.parent().find('label').first().text());
+							$item.parent().find('.selected-summary').html(summary);
+							app.statuses.search($item.attr('id'), $item.val());
+						}
+					}
+				});
+				if(!single) {
+					$item.multipleSelect('checkAll');
+					var $button = $(document.createElement('button'));
+					$button.text('Done');
+					$button.click(function() {
+						$item.multipleSelect('close');
+					});
+					var $component = $item.parent().find('.ms-drop');
+					$component.append($button);
+
+					var summary = app.utils.summariseSelectedOptions($item,'Any '+$item.parent().find('label').first().text());
+					$item.parent().find('.selected-summary').html(summary);
+				}
+			})
+		},
 
 		'#date-picker': function($item) {
             var quarter = app.date.lastQuarter();
@@ -552,7 +585,11 @@ app.date = {
 			//update chart(s)
 			app.state.dateRange = dateRange;
 			$(document).trigger('dateRangeUpdated');
-		}, 1);
+
+            // update statuses table
+            app.statuses.search('dateRange',dateRange);
+
+        }, 1);
 	},
 
 	/**
@@ -677,6 +714,70 @@ app.utils = {
 	    }
         var p = Math.pow(10,n);
         return parseFloat(Math.round(x * p) / p).toFixed(n);
+    },
+	summariseSelectedOptions: function($select,placeholder) {
+		var texts = $select.multipleSelect('getSelects', 'text');
+		var summary = $(document.createElement('div'));
+		var total = $select.find('option').length;
+		if(texts && texts.length > 0 && texts.length < total) { // don't show a summary when all selected
+			// if we have selected options, we know that the summary starts with the first option
+			var summaryText = texts[0];
+			var summaryAnchor = '';
+			var hiddenText = ''; // hidden behind <a>
+
+			// we have this many texts left to add, which is coincidentally the index of the last element
+			var lastIndex = texts.length - 1;
+
+			// set this to 1 so we don't repeat the first album
+			var i = 1;
+			var hidden = 0;
+
+			// this adds on all texts up to and NOT including the last text. limit to 3.
+			while(i < lastIndex && i<3) {
+				summaryText += ', ' + texts[i];
+				i++;
+			}
+
+			// this puts the rest of the texts in the hidden span revealed by clicking the <a>
+			while(i < lastIndex) {
+				hiddenText += ', ' + texts[i];
+				i++;
+				hidden++;
+			}
+
+			// finally, if the last index is not 0 we add the last text on (if it is 0, it means we only have one text)
+			if(lastIndex > 0) {
+				// don't show more for just one item
+				if(hidden === 0) {
+					summaryText += ' and ' + texts[lastIndex];
+				} else {
+					hiddenText += ' and ' + texts[lastIndex];
+					hidden++; // we have one more hidden item: texts[lastIndex]
+					summaryAnchor = $(document.createElement('span'));
+					var showMore = $(document.createElement('a'));
+					showMore.attr('href','#');
+					showMore.text(' and '+(hidden)+' more');
+					showMore.click(function() {
+						summaryAnchor.text(hiddenText);
+					});
+					summaryAnchor.append(showMore);
+				}
+			}
+			summary.append(summaryText);
+			summary.append(summaryAnchor);
+		} else if(texts && texts.length===0) {
+			summary = '';
+		} else {
+			summary = placeholder || '';
+		}
+		return summary;
+	}
+};
+
+app.statuses = {
+	search: function(queryParam, value) {
+        app.datatables.query[queryParam] = value;
+        $(document).trigger('dataChanged');
     }
 };
 

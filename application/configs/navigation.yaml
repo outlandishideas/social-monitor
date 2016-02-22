@@ -34,3 +34,9 @@ domain:
   icon: icon-laptop icon-large
   controller: domain
   action: index
+statuses:
+  label: Statuses
+  title: All Statuses
+  icon: icon-comment-alt icon-large
+  controller: statuses
+  action: index
