@@ -116,7 +116,8 @@ class YoutubeAdapter extends AbstractAdapter
         $args = [
             'order' => 'time',
             'allThreadsRelatedToChannelId' => $channel->id,
-            'maxResults' => 100
+            'maxResults' => 100,
+            'textFormat' => 'plainText'
         ];
 
         $complete = false;
