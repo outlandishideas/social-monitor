@@ -245,7 +245,7 @@ class Model_Presence
      */
     public function getFacebookEngagement()
     {
-        return floatval($this->facebook_engagement);
+        return Metric_FBEngagement::convertToScore(floatval($this->facebook_engagement));
     }
 
     /**
@@ -253,7 +253,7 @@ class Model_Presence
      */
     public function getInstagramEngagement()
     {
-        return floatval($this->instagram_engagement);
+        return Metric_InstagramEngagement::convertToScore(floatval($this->instagram_engagement));
     }
 
     /**
@@ -261,7 +261,7 @@ class Model_Presence
      */
     public function getLinkedinEngagement()
     {
-        return $this->linkedin_engagement;
+        return Metric_LinkedinEngagement::convertToScore(floatval($this->linkedin_engagement));
     }
 
     /**
@@ -269,7 +269,7 @@ class Model_Presence
      */
     public function getYoutubeEngagement()
     {
-        return floatval($this->youtube_engagement);
+        return Metric_YoutubeEngagement::convertToScore(floatval($this->youtube_engagement));
     }
 
     public function getPresenceSign()
