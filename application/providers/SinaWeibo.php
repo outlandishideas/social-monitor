@@ -320,7 +320,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 		return $parsed;
 	}
 
-/**
+	/**
 	 * @param Model_Presence $presence
 	 * @return EngagementScore
 	 */
@@ -328,8 +328,5 @@ class Provider_SinaWeibo extends Provider_Abstract
 	{
 		return new EngagementScore('Sina Weibo engagement score', 'sina-weibo', $presence->getSinaWeiboEngagement());
 	}
-
-
-}
 
 }
