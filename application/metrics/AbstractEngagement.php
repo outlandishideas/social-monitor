@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Outlandish\SocialMonitor\Engagement\Query\Query;
 
 abstract class Metric_AbstractEngagement extends Metric_Abstract {
@@ -31,8 +32,18 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
     {
         $data = $presence->getHistoricData($start, $end, self::getName());
         if($data and count($data)) {
-            $score = $data[0]['value'];
-            return $score;
+            $date = null;
+            $total = 0;
+            $count = 0;
+            foreach($data as $d) {
+                $nextDate =  Carbon::parse($d['datetime'])->format('Y-m-d');
+                if($date !== $nextDate) {
+                    $date = $nextDate;
+                    $total += $d['value'];
+                    $count++;
+                }
+            }
+            return $count > 0 ? $total / $count : 0;
         } else {
             return 0;
         }

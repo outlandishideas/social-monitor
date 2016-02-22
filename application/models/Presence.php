@@ -885,6 +885,30 @@ class Model_Presence
         return $this->provider->getEngagementScore($this);
     }
 
+    public function getEngagementValue() {
+        switch($this->getType()) {
+            case Enum_PresenceType::FACEBOOK(): {
+                return $this->facebook_engagement;
+            }
+            case Enum_PresenceType::INSTAGRAM(): {
+                return $this->instagram_engagement;
+            }
+            case Enum_PresenceType::TWITTER(): {
+                return $this->klout_score;
+            }
+            case Enum_PresenceType::SINA_WEIBO(): {
+                return $this->sina_weibo_engagement;
+            }
+            case Enum_PresenceType::LINKEDIN(): {
+                return $this->linkedin_engagement;
+            }
+            case Enum_PresenceType::YOUTUBE(): {
+                return $this->youtube_engagement;
+            }
+        }
+        return null;
+    }
+
     public function getReachScore() {
         return $this->getBadgeScore('reach');
     }
