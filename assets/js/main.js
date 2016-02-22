@@ -30,7 +30,7 @@ $.extend(app, {
 		addTextSearch: '<tr><td valign="top" colspan="<%=colspan%>" class="dataTables_empty"><span class="add-manual-search link">Add manual search</span></td></tr>',
 		post: '\
 			<div>\
-			    <p class="more"><a href="<%=url%>" target="_blank" title="View on Sina Weibo"><span class="icon-external-link icon-large"></span></a></p>\
+			    <p class="more"><a href="<%=permalink%>" target="_blank" title="View update"><span class="icon-external-link icon-large"></span></a></p>\
 				<div class="<%=icon%>"></div>\
 				<div class="content">\
 					<h4 class="presence-name" data-presence="<%=presence_id%>"><%=presence_name%></h4>\
