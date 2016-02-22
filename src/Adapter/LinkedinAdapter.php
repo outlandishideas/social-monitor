@@ -118,7 +118,7 @@ class LinkedinAdapter extends AbstractAdapter
      * @param $since
      * @param $handle
      * @param $accessToken
-     * @return PresenceMetadata
+     * @return Status[]
      */
     public function getStatusesWithAccessToken($pageUID, $since, $handle, $accessToken)
     {

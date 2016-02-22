@@ -4,11 +4,8 @@ use Outlandish\SocialMonitor\Adapter\LinkedinAdapter;
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
-use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
 use Outlandish\SocialMonitor\Models\Status;
-use Outlandish\SocialMonitor\Models\YoutubeComment;
-use Outlandish\SocialMonitor\Models\YoutubeVideo;
 
 class Provider_Linkedin extends Provider_Abstract
 {
@@ -187,6 +184,10 @@ class Provider_Linkedin extends Provider_Abstract
         // TODO: Implement getResponseData() method.
     }
 
+    /**
+     * @param Model_Presence $presence
+     * @return float|null
+     */
     private function calculateEngagement($presence)
     {
         $now = new DateTime();
@@ -208,7 +209,7 @@ class Provider_Linkedin extends Provider_Abstract
      */
     public function testAdapter(Model_Presence $presence)
     {
-        $this->adapter->getChannelWithAccessToken($presence->getHandle(), $presence->getAccessToken($presence->getType()));
+        $this->adapter->getChannelWithAccessToken($presence->getHandle(), $presence->getAccessToken());
     }
 
 
@@ -232,7 +233,6 @@ class Provider_Linkedin extends Provider_Abstract
             $status->id = $r['id'];
             $status->message = $r['message'];
             $status->created_time = $r['created_time'];
-            $status->permalink = $r['permalink'];
             $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
             $status->presence_id = $r['presence_id'];
             $status->presence_name = $presence->getName();
