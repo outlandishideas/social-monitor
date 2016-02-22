@@ -885,5 +885,24 @@ class Model_Presence
         return $this->provider->getEngagementScore($this);
     }
 
+    public function getReachScore() {
+        return $this->getBadgeScore('reach');
+    }
+
+    public function getQualityScore() {
+        return $this->getBadgeScore('quality');
+    }
+
+    public function getBadgeScore($badgeName) {
+        $date = new \Carbon\Carbon();
+        $date->subDay();
+        $scores = $this->getBadgeScores($date, Enum_Period::MONTH());
+        if($scores && array_key_exists($badgeName,$scores)) {
+            return $scores[$badgeName];
+        } else {
+            return 0;
+        }
+    }
+
 
 }

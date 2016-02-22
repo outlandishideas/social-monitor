@@ -3,38 +3,17 @@
 $country = $this->country;
 /** @var Model_Presence[] $presences */
 $presences = $country->getPresences();
-$countryLink = $this->gatekeeper()->filter('<a href="%url%">' . $country->display_name . '</a>', array('controller'=>'country', 'action'=>'view', 'id'=>$country->id));
+$countryLink = $this->gatekeeper()->filter('<a href="%url%">' . $country->display_name . '</a>', array('controller' => 'country', 'action' => 'view', 'id' => $country->id));
 if (!$countryLink) {
     $countryLink = $country->display_name;
 }
 $presenceGroups = array();
-foreach(Enum_PresenceType::enumValues() as $type) {
+foreach (Enum_PresenceType::enumValues() as $type) {
     $typePresences = $country->getPresencesByType($type);
-    if(count($typePresences) > 0) {
-        $group = array();
-        foreach($typePresences as $presence) {
-            $presenceText = '<span class="' . $presence->getPresenceSign() . '"></span> ' . $presence->getName();
-            if ($presence->isForFacebook()) {
-                $score = $presence->getFacebookEngagement();
-                $presenceText .= " <span class=\"engagement-score facebook\" title=\"Facebook engagement score: $score\">" . round($score) . '</span>';
-            } else if ($presence->isForTwitter()) {
-                $score = $presence->getKloutScore();
-                $presenceText .= " <span class=\"engagement-score klout\" title=\"Klout score: $score\">" . round($score) . '</span>';
-            } else  if ($presence->isForSinaWeibo()) {
-                $score = $presence->getSinaWeiboEngagement();
-                $presenceText .= " <span class=\"engagement-score sina-weibo\" title=\"Sina Weibo engagement score: $score\">" . round($score) . '</span>';
-            }
-            $presenceLink = $this->gatekeeper()->filter('<a href="%url%">' . $presenceText . '</a>', array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId()));
-            if (!$presenceLink) {
-                $presenceLink = $presenceText;
-            }
-            $group[] = $presenceLink;
-        }
-        $presenceGroups[] = array(
-            'type' => $type,
-            'links' => $group
-        );
-    }
+    $presenceGroups[] = array(
+        'type' => $type,
+        'presences' => $typePresences
+    );
 }
 ?>
 
@@ -43,21 +22,29 @@ foreach(Enum_PresenceType::enumValues() as $type) {
     <div class="badge-score bd-btm">
         <h4><span data-badge-title></span> Score</h4>
         <div class="score-value" data-badge-score></div>
-        <div class="score-bar"><div data-badge-bar></div></div>
+        <div class="score-bar">
+            <div data-badge-bar></div>
+        </div>
     </div>
     <div class="bd-btm">
         <h4>Presences</h4>
-        <div class="score-value"><?php echo count($presences);?></div>
+        <div class="score-value"><?php echo count($presences); ?></div>
     </div>
 
     <?php foreach ($presenceGroups as $group) : ?>
-    <div class="bd-btm presence-list">
-        <h4><?php echo $group['type']->getTitle(); ?></h4>
-        <ul class="badge-presences">
-            <?php foreach($group['links'] as $link): ?>
-                <li><?php echo $link; ?></li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
+        <div class="bd-btm presence-list">
+            <h4><?php
+                /** @var Enum_PresenceType $type */
+                $type = $group['type']; echo $type->getTitle();
+                ?>
+            </h4>
+            <ul class="badge-presences">
+                <?php foreach ($group['presences'] as $presence): ?>
+                    <li>
+                        <?php echo $this->partial('partials/presence-summary.phtml', array('presence'=>$presence)); ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
     <?php endforeach; ?>
 </div>

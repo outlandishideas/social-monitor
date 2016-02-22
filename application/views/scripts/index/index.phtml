@@ -141,14 +141,7 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                                     <ul class="badge-presences" data-<?php echo $type->getValue(); ?>-presences>
                                         <?php foreach($pg['presences'] as $presence) : /** @var $presence Model_Presence */ ?>
                                             <li>
-                                                <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
-                                                    <span class="<?php echo $presence->getPresenceSign(); ?>"></span>
-                                                    <?php echo $presence->getHandle(); ?>
-                                                    <span class="engagement-score <?php echo $presence->getEngagementScore()->getType(); ?>"
-                                                          title="<?php echo $presence->getEngagementScore()->getName(); ?>: <?php echo $presence->getEngagementScore()->getScore(); ?>">
-                                                    <?php echo round($presence->getEngagementScore()->getScore()); ?>
-                                                </span>
-                                                </a>
+                                                <?php echo $this->partial('partials/presence-summary.phtml', array('presence'=>$presence)); ?>
                                             </li>
                                         <?php endforeach; ?>
                                     </ul>
