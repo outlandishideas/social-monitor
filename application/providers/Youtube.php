@@ -455,7 +455,6 @@ class Provider_Youtube extends Provider_Abstract
             $status->id = $r['id'];
             $status->message = $r['message'];
             $status->created_time = $r['created_time'];
-            $status->permalink = $r['permalink'];
             $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
             $status->presence_id = $r['presence_id'];
             $status->presence_name = $presence->getName();
