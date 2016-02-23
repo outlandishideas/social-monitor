@@ -307,7 +307,6 @@ class Provider_SinaWeibo extends Provider_Abstract
 			$status->permalink = Provider_SinaWeibo::BASEURL . $r['remote_user_id'] . '/' . Provider_SinaWeibo::getMidForPostId($r['remote_id']);
 			$presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
 			$status->presence_id = $r['presence_id'];
-			error_log('status '.$r['id'].' has presence id '.$r['presence_id']);
 			$status->presence_name = $presence ? $presence->getName() : '';
 			$status->engagement = [
 				'shares' => $r['repost_count'],
