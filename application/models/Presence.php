@@ -678,15 +678,17 @@ class Model_Presence
             return;
         }
 
+
+
         switch ($this->type) {
             case Enum_PresenceType::INSTAGRAM:
-                $instagramEngagement = $this->getInstagramEngagement();
+                $instagramEngagement = $this->instagram_engagement;
                 break;
             case Enum_PresenceType::YOUTUBE:
-                $instagramEngagement = $this->getYoutubeEngagement();
+                $instagramEngagement = $this->youtube_engagement;
                 break;
             case Enum_PresenceType::LINKEDIN:
-                $instagramEngagement = $this->getLinkedinEngagement();
+                $instagramEngagement = $this->linkedin_engagement;
                 break;
             default:
                 $instagramEngagement = null;
@@ -709,8 +711,8 @@ class Model_Presence
             'popularity' => $this->getPopularity(),
             'klout_id' => $this->getKloutId(),
             'klout_score' => $this->getKloutScore(),
-            'facebook_engagement' => $this->getFacebookEngagement(),
-            'sina_weibo_engagement' => $this->getSinaWeiboEngagement(),
+            'facebook_engagement' => $this->facebook_engagement,
+            'sina_weibo_engagement' => $this->sina_weibo_engagement,
             'instagram_engagement' => $instagramEngagement,
             'last_updated' => $this->getLastUpdated(),
             'last_fetched' => $this->getLastFetched(),

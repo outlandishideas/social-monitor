@@ -122,8 +122,8 @@ if ($sizeDiff > 0) {
                     <p>Yesterday's Facebook Engagement score: <?php echo $presence->getFacebookEngagement(); ?>%</p>
                     <p>Monthly Average Facebook Engagement score: <?php echo $presence->getFacebookEngagement(true); ?>%</p>
                 <?php elseif ($presence->isForTwitter()) : ?>
-                    <p>Yesterday's Klout score: <?php echo $presence->klout_score; ?></p>
-                    <p>Monthly Average Klout score: <?php echo $presence->getMetricValue('klout_score'); ?></p>
+                    <p>Yesterday's Klout score: <?php echo $presence->klout_score; ?>%</p>
+                    <p>Monthly Average Klout score: <?php echo $presence->getMetricValue('klout_score'); ?>%</p>
                 <?php elseif ($presence->isForSinaWeibo()) : ?>
                     <p>Yesterday's Sina Weibo Engagement score: <?php echo $presence->getSinaWeiboEngagement(); ?>%</p>
                     <p>Monthly Average Sina Weibo Engagement score: <?php echo $presence->getSinaWeiboEngagement(true); ?>%</p>
