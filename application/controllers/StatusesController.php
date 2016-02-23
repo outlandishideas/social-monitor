@@ -96,6 +96,7 @@ class StatusesController extends GraphingController
             }
 
             error_log('country params '.implode(",",$countryParams));
+            error_log('presences '.count($presences));
 
             foreach ($countryParams as $cid) {
                 if ($cid) {
@@ -122,6 +123,7 @@ class StatusesController extends GraphingController
             }
 
             error_log('region params '.implode(",",$regionParams));
+            error_log('presences '.count($presences));
 
             /** Add presences in SBUs */
             if (isset($sbuParamString)) {
@@ -140,6 +142,7 @@ class StatusesController extends GraphingController
             }
 
             error_log('sbu params '.implode(",",$sbuParams));
+            error_log('presences '.count($presences));
 
             /** Filter presences by type */
             if (isset($typeParamString)) {
