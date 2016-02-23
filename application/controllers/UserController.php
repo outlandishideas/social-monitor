@@ -18,7 +18,7 @@ class UserController extends BaseController
         $this->linkedin = new LinkedIn([
             'api_key' => '77412v04nudx5x',
             'api_secret' => 'SpOZEGPlW0wi1FwO',
-            'callback_url' => 'http://socialmonitor.local/user/linkedin'
+            'callback_url' => 'http://socialmonitor.dev.outlandish.com/user/linkedin'
         ]);
         $this->view->linkedinUrl = $this->linkedin->getLoginUrl([LinkedIn::SCOPE_BASIC_PROFILE, 'rw_company_admin']);
     }
