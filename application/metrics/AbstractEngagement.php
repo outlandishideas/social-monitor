@@ -32,7 +32,8 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
     {
         $data = $presence->getHistoricData($start, $end, self::getName());
         if($data and count($data)) {
-            $date = null;
+            return $data[0]['value'];
+            /*$date = null;
             $total = 0;
             $count = 0;
             foreach($data as $d) {
@@ -43,7 +44,7 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
                     $count++;
                 }
             }
-            return $count > 0 ? $total / $count : 0;
+            return $count > 0 ? $total / $count : 0;*/
         } else {
             return 0;
         }
