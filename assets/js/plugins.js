@@ -231,6 +231,8 @@ function getStatusRowRenderFunction(showResponses) {
 		var message = parseTemplate(app.templates.post, o.aData);
 		if(showResponses) {
 			message = appendResponseTemplate(message, o.aData);
+		} else {
+			message = convertTitleToLink(message, o.aData);
 		}
 		return message;
 	}
@@ -238,6 +240,14 @@ function getStatusRowRenderFunction(showResponses) {
 
 function parseTemplate(str, data) {
 	return _.template(str, data);
+}
+
+function convertTitleToLink(message, data) {
+	var $el = $(message);
+	var title = $el.find('h4').text();
+	title = '<a href="/presence/view/id/' + data.presence_id + '">' + title + '</a>';
+	$el.find('h4').html(title);
+	return $el.html();
 }
 
 function appendResponseTemplate(message,aData) {
