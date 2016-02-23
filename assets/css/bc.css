@@ -1844,7 +1844,7 @@ h4 {
 }
 
 .social-monitor-multi-select-box {
-	width:200px;
+	width:150px;
 	text-align: left;
 	margin-right: 20px;
 	display: inline-block;
@@ -1860,7 +1860,7 @@ h4 {
 }
 
 .social-monitor-multi-select-box select {
-	width:200px;
+	width:150px;
 }
 
 .social-monitor-multi-select-box button {

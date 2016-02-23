@@ -261,7 +261,7 @@ app.init = {
 								app.statuses.search($item.attr('id'), $item.val());
 							},1);
 						} else {
-							var summary = app.utils.summariseSelectedOptions($item,'Any '+$item.parent().find('label').first().text());
+							var summary = app.utils.summariseSelectedOptions($item,'All '+$item.parent().find('label').first().text());
 							$item.parent().find('.selected-summary').html(summary);
 							app.statuses.search($item.attr('id'), $item.val());
 						}
@@ -277,7 +277,7 @@ app.init = {
 					var $component = $item.parent().find('.ms-drop');
 					$component.append($button);
 
-					var summary = app.utils.summariseSelectedOptions($item,'Any '+$item.parent().find('label').first().text());
+					var summary = app.utils.summariseSelectedOptions($item,'All '+$item.parent().find('label').first().text());
 					$item.parent().find('.selected-summary').html(summary);
 				}
 			})

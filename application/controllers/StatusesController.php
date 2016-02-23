@@ -44,9 +44,9 @@ class StatusesController extends GraphingController
         $this->view->sortCol = Handle::getName();
         $this->view->queryOptions = [
             ['name' => 'type', 'label' => 'Social Media', 'options' => Enum_PresenceType::enumValues()],
-            ['name' => 'country', 'label' => 'Country', 'options' => Model_Country::fetchAll()],
-            ['name' => 'region', 'label' => 'Region', 'options' => Model_Region::fetchAll()],
-            ['name' => 'sbu', 'label' => 'SBU', 'options' => Model_Group::fetchAll()],
+            ['name' => 'country', 'label' => 'Countries', 'options' => Model_Country::fetchAll()],
+            ['name' => 'region', 'label' => 'Regions', 'options' => Model_Region::fetchAll()],
+            ['name' => 'sbu', 'label' => 'SBUs', 'options' => Model_Group::fetchAll()],
             ['name' => 'sort', 'label' => 'Sort', 'options' =>
                 [
                     ['value' => 'date', 'title' => 'Date'],
