@@ -217,10 +217,9 @@ class StatusesController extends GraphingController
                                      $order = null, $limit = null, $offset = null)
     {
         $statuses = array();
-        $ids = array_map(function($p) {
-            return $p->getId();
-        },$presences);
-        error_log('getting statuses for '.implode(",",$ids));
+        if(!$presences || !count($presences)) {
+            return $statuses;
+        }
         /** @var Provider_Abstract $provider */
         foreach ($this->providers as $provider) {
             if ($types !== null) {
