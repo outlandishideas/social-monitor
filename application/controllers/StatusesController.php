@@ -115,10 +115,12 @@ class StatusesController extends GraphingController
                 }, $regions);
             }
             foreach ($regionParams as $rid) {
-                $countries = Model_Country::getCountriesByRegion($rid);
-                foreach ($countries as $c) {
-                    $countryPresences = Model_PresenceFactory::getPresencesByCampaign($c->id);
-                    $presences = array_merge($presences, $countryPresences);
+                if ($rid) {
+                    $countries = Model_Country::getCountriesByRegion($rid);
+                    foreach ($countries as $c) {
+                        $countryPresences = Model_PresenceFactory::getPresencesByCampaign($c->id);
+                        $presences = array_merge($presences, $countryPresences);
+                    }
                 }
             }
 
