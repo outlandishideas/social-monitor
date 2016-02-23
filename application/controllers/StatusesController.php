@@ -94,6 +94,9 @@ class StatusesController extends GraphingController
                 }, $countries);
 
             }
+
+            error_log('country params '.implode(",",$countryParams));
+
             foreach ($countryParams as $cid) {
                 if ($cid) {
                     $countryPresences = Model_PresenceFactory::getPresencesByCampaign($cid);
@@ -118,6 +121,8 @@ class StatusesController extends GraphingController
                 }
             }
 
+            error_log('region params '.implode(",",$regionParams));
+
             /** Add presences in SBUs */
             if (isset($sbuParamString)) {
                 $sbuParams = explode(',', $sbuParamString);
@@ -133,6 +138,8 @@ class StatusesController extends GraphingController
                     $presences = array_merge($presences, $sbuPresences);
                 }
             }
+
+            error_log('sbu params '.implode(",",$sbuParams));
 
             /** Filter presences by type */
             if (isset($typeParamString)) {
@@ -205,6 +212,10 @@ class StatusesController extends GraphingController
                                      $order = null, $limit = null, $offset = null)
     {
         $statuses = array();
+        $ids = array_map(function($p) {
+            return $p->getId();
+        },$presences);
+        error_log('getting statuses for '.implode(",",$ids));
         /** @var Provider_Abstract $provider */
         foreach ($this->providers as $provider) {
             if ($types !== null) {
@@ -231,26 +242,6 @@ class StatusesController extends GraphingController
             $sort = 'date';
         }
         return [ $sort => 'desc' ];
-    }
-
-    /**
-     * @return Header[]
-     */
-    protected function tableIndexHeaders()
-    {
-        return array(
-//            Header_Compare::getInstance(),//todo: reinstate when compare functionality is restored
-            Handle::getInstance(),
-            SignOff::getInstance(),
-            Branding::getInstance(),
-            TotalRank::getInstance(),
-            TotalScore::getInstance(),
-            CurrentAudience::getInstance(),
-            TargetAudience::getInstance(),
-            ActionsPerDay::getInstance(),
-            ResponseTime::getInstance(),
-            Options::getInstance()
-        );
     }
 
 }
