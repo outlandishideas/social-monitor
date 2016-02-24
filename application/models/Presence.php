@@ -241,10 +241,50 @@ class Model_Presence
     }
 
     /**
+     * @return mixed
+     */
+    public function getFacebookEngagement()
+    {
+        return $this->facebook_engagement;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstagramEngagement()
+    {
+        return $this->instagram_engagement;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSinaWeiboEngagement()
+    {
+        return $this->sina_weibo_engagement;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getYoutubeEngagement()
+    {
+        return $this->youtube_engagement;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLinkedinEngagement()
+    {
+        return $this->linkedin_engagement;
+    }
+
+    /**
      * @param $monthlyAverage bool - set to true to get a weighted average over the past month
      * @return mixed
      */
-    public function getFacebookEngagement($monthlyAverage = false)
+    public function getFacebookEngagementScore($monthlyAverage = false)
     {
         if($monthlyAverage) {
             return Metric_FBEngagement::convertToScore($this->getMetricValue('facebook_engagement'));
@@ -257,7 +297,7 @@ class Model_Presence
      * @param $monthlyAverage bool - set to true to get a weighted average over the past month
      * @return float|int
      */
-    public function getSinaWeiboEngagement($monthlyAverage = false)
+    public function getSinaWeiboEngagementScore($monthlyAverage = false)
     {
         if($monthlyAverage) {
             return Metric_SinaWeiboEngagement::convertToScore($this->getMetricValue('sina_weibo_engagement'));
@@ -270,7 +310,7 @@ class Model_Presence
      * @param $monthlyAverage bool - set to true to get a weighted average over the past month
      * @return mixed
      */
-    public function getInstagramEngagement($monthlyAverage = false)
+    public function getInstagramEngagementScore($monthlyAverage = false)
     {
         if($monthlyAverage) {
             return Metric_InstagramEngagement::convertToScore($this->getMetricValue('instagram_engagement'));
@@ -283,7 +323,7 @@ class Model_Presence
      * @param $monthlyAverage bool - set to true to get a weighted average over the past month
      * @return mixed
      */
-    public function getLinkedinEngagement($monthlyAverage = false)
+    public function getLinkedinEngagementScore($monthlyAverage = false)
     {
         if($monthlyAverage) {
             return Metric_LinkedinEngagement::convertToScore($this->getMetricValue('linkedin_engagement'));
@@ -296,7 +336,7 @@ class Model_Presence
      * @param $monthlyAverage bool - set to true to get a weighted average over the past month
      * @return mixed
      */
-    public function getYoutubeEngagement($monthlyAverage = false)
+    public function getYoutubeEngagementScore($monthlyAverage = false)
     {
         if($monthlyAverage) {
             return Metric_YoutubeEngagement::convertToScore($this->getMetricValue('youtube_engagement'));

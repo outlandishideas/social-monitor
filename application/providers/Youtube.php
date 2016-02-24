@@ -358,6 +358,16 @@ class Provider_Youtube extends Provider_Abstract
         return $this->getStatusStreamMulti([$presence], $start, $end, $start, $order, $limit, $offset);
     }
 
+    /**
+     * @param $presences
+     * @param DateTime $start
+     * @param DateTime $end
+     * @param $search
+     * @param $order
+     * @param $limit
+     * @param $offset
+     * @return object
+     */
     public function getStatusStreamMulti($presences, $start, $end, $search, $order, $limit, $offset)
     {
         $clauses = array(
@@ -369,7 +379,7 @@ class Provider_Youtube extends Provider_Abstract
             ':end' => $end->format('Y-m-d H:i:s'),
         );
         if ($presences && count($presences)) {
-            $ids = array_map(function ($p) {
+            $ids = array_map(function (Model_Presence $p) {
                 return $p->getId();
             }, $presences);
             $clauses[] = 'p.presence_id IN (' . implode($ids, ',') . ')';
@@ -478,7 +488,7 @@ class Provider_Youtube extends Provider_Abstract
      */
     function getEngagementScore($presence)
     {
-        return new EngagementScore('Youtube engagement score', 'youtube', $presence->getYoutubeEngagement());
+        return new EngagementScore('Youtube engagement score', 'youtube', $presence->getYoutubeEngagementScore());
     }
 
 }

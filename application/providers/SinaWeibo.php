@@ -326,7 +326,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 	 */
 	function getEngagementScore($presence)
 	{
-		return new EngagementScore('Sina Weibo engagement score', 'sina-weibo', $presence->getSinaWeiboEngagement());
+		return new EngagementScore('Sina Weibo engagement score', 'sina-weibo', $presence->getSinaWeiboEngagementScore());
 	}
 
 }

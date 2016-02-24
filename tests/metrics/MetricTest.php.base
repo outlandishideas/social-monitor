@@ -31,7 +31,7 @@ abstract class MetricTest extends PHPUnit_Framework_TestCase
 		$this->emptyPresence->method('getHistoricStream')->willReturn(null);
 		$this->emptyPresence->method('getHistoricStreamMeta')->willReturn(null);
 		$this->emptyPresence->method('getHistoricData')->willReturn(array());
-		$this->emptyPresence->method('getFacebookEngagement')->willReturn(null);
+		$this->emptyPresence->method('getFacebookEngagementScore')->willReturn(null);
 		$this->emptyPresence->method('getKloutScore')->willReturn(null);
 		$this->emptyPresence->method('getPopularity')->willReturn(0);
 		$this->emptyPresence->method('getTargetAudienceDate')->willReturn(null);

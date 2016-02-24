@@ -119,23 +119,23 @@ if ($sizeDiff > 0) {
                 </h4>
                 <p>This is a <a href="<?php echo $presence->page_url; ?>" target="_blank"><?php echo $presenceType; ?> <span class="icon-external-link"></span></a> presence</p>
                 <?php if ($presence->isForFacebook()) : ?>
-                    <p>Yesterday's Facebook Engagement score: <?php echo $presence->getFacebookEngagement(); ?>%</p>
-                    <p>Monthly Average Facebook Engagement score: <?php echo $presence->getFacebookEngagement(true); ?>%</p>
+                    <p>Yesterday's Facebook Engagement score: <?php echo $presence->getFacebookEngagementScore(); ?>%</p>
+                    <p>Monthly Average Facebook Engagement score: <?php echo $presence->getFacebookEngagementScore(true); ?>%</p>
                 <?php elseif ($presence->isForTwitter()) : ?>
                     <p>Yesterday's Klout score: <?php echo $presence->klout_score; ?>%</p>
                     <p>Monthly Average Klout score: <?php echo $presence->getMetricValue('klout_score'); ?>%</p>
                 <?php elseif ($presence->isForSinaWeibo()) : ?>
-                    <p>Yesterday's Sina Weibo Engagement score: <?php echo $presence->getSinaWeiboEngagement(); ?>%</p>
-                    <p>Monthly Average Sina Weibo Engagement score: <?php echo $presence->getSinaWeiboEngagement(true); ?>%</p>
+                    <p>Yesterday's Sina Weibo Engagement score: <?php echo $presence->getSinaWeiboEngagementScore(); ?>%</p>
+                    <p>Monthly Average Sina Weibo Engagement score: <?php echo $presence->getSinaWeiboEngagementScore(true); ?>%</p>
                 <?php elseif ($presence->isForInstagram()) : ?>
-                    <p>Yesterday's Instagram Engagement score: <?php echo $presence->getInstagramEngagement(); ?>%</p>
-                    <p>Monthly Average Instagram Engagement score: <?php echo $presence->getInstagramEngagement(true); ?>%</p>
+                    <p>Yesterday's Instagram Engagement score: <?php echo $presence->getInstagramEngagementScore(); ?>%</p>
+                    <p>Monthly Average Instagram Engagement score: <?php echo $presence->getInstagramEngagementScore(true); ?>%</p>
                 <?php elseif ($presence->isForYoutube()) : ?>
-                    <p>Yesterday's Youtube Engagement score: <?php echo $presence->getYoutubeEngagement(); ?>%</p>
-                    <p>Monthly Average Youtube Engagement score: <?php echo $presence->getYoutubeEngagement(true); ?>%</p>
+                    <p>Yesterday's Youtube Engagement score: <?php echo $presence->getYoutubeEngagementScore(); ?>%</p>
+                    <p>Monthly Average Youtube Engagement score: <?php echo $presence->getYoutubeEngagementScore(true); ?>%</p>
                 <?php elseif ($presence->isForLinkedin()) : ?>
-                    <p>Yesterday's Linkedin Engagement score: <?php echo $presence->getLinkedinEngagement(); ?>%</p>
-                    <p>Monthly Average Linkedin Engagement score: <?php echo $presence->getLinkedinEngagement(true); ?>%</p>
+                    <p>Yesterday's Linkedin Engagement score: <?php echo $presence->getLinkedinEngagementScore(); ?>%</p>
+                    <p>Monthly Average Linkedin Engagement score: <?php echo $presence->getLinkedinEngagementScore(true); ?>%</p>
                 <?php endif; ?>
                 <?php if ($ownerUrl) : ?>
                     <p>This presence contributes to the statistics for <a href="<?php echo $ownerUrl; ?>"><?php echo $owner->display_name; ?></a></p>
