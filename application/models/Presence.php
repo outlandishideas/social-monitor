@@ -88,11 +88,11 @@ class Model_Presence
         $this->klout_score = $internals['klout_score'];
         $this->facebook_engagement = $internals['facebook_engagement'];
         $this->sina_weibo_engagement = $internals['sina_weibo_engagement'];
-        if ($this->type === Enum_PresenceType::INSTAGRAM) {
+        if ($this->type === Enum_PresenceType::INSTAGRAM()) {
             $this->instagram_engagement = $internals['instagram_engagement'];
-        } else if ($this->type === Enum_PresenceType::YOUTUBE) {
+        } else if ($this->type === Enum_PresenceType::YOUTUBE()) {
             $this->youtube_engagement = $internals['instagram_engagement'];
-        } else if ($this->type === Enum_PresenceType::LINKEDIN) {
+        } else if ($this->type === Enum_PresenceType::LINKEDIN()) {
             $this->linkedin_engagement = $internals['instagram_engagement'];
         }
         $this->page_url = $internals['page_url'];
