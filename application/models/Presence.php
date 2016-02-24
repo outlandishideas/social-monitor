@@ -721,13 +721,13 @@ class Model_Presence
 
 
         switch ($this->type) {
-            case Enum_PresenceType::INSTAGRAM:
+            case Enum_PresenceType::INSTAGRAM():
                 $instagramEngagement = $this->instagram_engagement;
                 break;
-            case Enum_PresenceType::YOUTUBE:
+            case Enum_PresenceType::YOUTUBE():
                 $instagramEngagement = $this->youtube_engagement;
                 break;
-            case Enum_PresenceType::LINKEDIN:
+            case Enum_PresenceType::LINKEDIN():
                 $instagramEngagement = $this->linkedin_engagement;
                 break;
             default:
