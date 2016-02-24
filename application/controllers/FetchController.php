@@ -344,7 +344,8 @@ class FetchController extends BaseController
             $this->log('strtotime()');
             if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
                 $this->log('Update info [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
-                    '[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . ']');
+                    '[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . ']' .
+					'[' . $presence->getEngagementValue() . ']');
                 try {
                     // update using provider
                     $presence->update();
