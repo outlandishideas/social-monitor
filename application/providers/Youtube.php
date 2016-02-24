@@ -488,7 +488,7 @@ class Provider_Youtube extends Provider_Abstract
      */
     function getEngagementScore($presence)
     {
-        return new EngagementScore('Youtube engagement score', 'youtube', $presence->getYoutubeEngagementScore());
+        return new EngagementScore('Youtube engagement score', 'youtube', $presence->getYoutubeEngagementScore(true));
     }
 
 }

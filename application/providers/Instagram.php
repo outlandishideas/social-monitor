@@ -256,7 +256,7 @@ class Provider_Instagram extends Provider_Abstract
      */
     function getEngagementScore($presence)
     {
-        return new EngagementScore('Instagram engagement score', 'instagram', $presence->getInstagramEngagementScore());
+        return new EngagementScore('Instagram engagement score', 'instagram', $presence->getInstagramEngagementScore(true));
     }
 
     protected function parseStatuses($raw)

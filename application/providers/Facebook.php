@@ -515,7 +515,7 @@ class Provider_Facebook extends Provider_Abstract
      */
     public function getEngagementScore($presence)
     {
-        return new EngagementScore('Facebook engagement score', 'facebook', $presence->getFacebookEngagementScore());
+        return new EngagementScore('Facebook engagement score', 'facebook', $presence->getFacebookEngagementScore(true));
     }
 
     protected function parseStatuses($raw)
