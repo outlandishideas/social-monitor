@@ -11,6 +11,7 @@ namespace Outlandish\SocialMonitor\Adapter;
 
 use LinkedIn\LinkedIn;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
+use Outlandish\SocialMonitor\Models\AccessToken;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
 use Outlandish\SocialMonitor\Models\Status;
@@ -148,7 +149,7 @@ class LinkedinAdapter extends AbstractAdapter
         }
 
         if (empty($company)) {
-            throw new SocialMonitorException("No companies for logged in user");
+            throw new SocialMonitorException("The company \"{$handle}\" is not owned by you and cannot be fetched.");
         }
 
         return (object)array_values($company)[0];
@@ -211,5 +212,11 @@ class LinkedinAdapter extends AbstractAdapter
         $status->links = array_merge($submittedLink, $messageLinks);
 
         return $status;
+    }
+
+    public function getChannelWithAccessToken($handle, AccessToken $accessToken)
+    {
+        $this->linkedIn->setAccessToken($accessToken->getToken());
+        $this->getCompanyFromHandle($handle);
     }
 }

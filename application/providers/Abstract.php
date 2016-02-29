@@ -1,5 +1,7 @@
 <?php
 
+use Outlandish\SocialMonitor\Engagement\EngagementScore;
+
 abstract class Provider_Abstract
 {
 	protected $db;
@@ -72,7 +74,9 @@ abstract class Provider_Abstract
 		$stmt = $this->db->prepare("
 			SELECT *
 			FROM `presence_history`
-			WHERE " . implode(' AND ', $clauses));
+			WHERE " . implode(' AND ', $clauses) . "
+            ORDER BY datetime DESC
+        ");
 		$stmt->execute($args);
 		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -91,6 +95,27 @@ abstract class Provider_Abstract
     {
         return $this->getHistoricStream($presence, $start, $end, $search, $order, $limit, $offset);
     }
+
+    /**
+     * Run a simple test on the adapter to see if we can fetch the presence
+     *
+     * Override this method if this needs to be run before creating a new presence.
+     *
+     * @param Model_Presence $presence
+     * @throws SocialMonitorException
+     * @return null
+     */
+    public function testAdapter(Model_Presence $presence)
+    {
+        return null;
+    }
+
+    /**
+     * @param Model_Presence $presence
+     * @return EngagementScore
+     */
+    abstract function getEngagementScore($presence);
+
 
     /**
      * @param string $type

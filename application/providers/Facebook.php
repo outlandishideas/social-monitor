@@ -1,6 +1,7 @@
 <?php
 
 use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
+use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\FacebookStatus;
 use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 
@@ -11,6 +12,7 @@ class Provider_Facebook extends Provider_Abstract
      * @var FacebookAdapter
      */
     private $adapter;
+    private $engagementMetric;
 
     public function __construct(PDO $db, FacebookAdapter $adapter, EngagementMetric $metric) {
 		parent::__construct($db);
@@ -500,5 +502,13 @@ class Provider_Facebook extends Provider_Abstract
         return $postIds;
     }
 
+    /**
+     * @param Model_Presence $presence
+     * @return EngagementScore
+     */
+    public function getEngagementScore($presence)
+    {
+        return new EngagementScore('Facebook engagement score', 'facebook', $presence->getFacebookEngagement());
+    }
 
 }

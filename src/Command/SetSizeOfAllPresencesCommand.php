@@ -12,9 +12,10 @@ class SetSizeOfAllPresencesCommand extends ContainerAwareCommand
     /**
      *
      * Facebook:
-     *     Small  : p < 5000          : 48
-     *     Medium : 5000 < p < 100000 : 90
-     *     Large  : 100000 < p        : 39
+     *     Small  : p < 5000            : 48
+     *     Medium : 5000 < p < 100000   : 90
+     *     Large  : 100000 < p < 500000 : 39
+     *     XLarge : 500000 < p
      *
      * Twitter:
      *     Small  : p < 2500          : 63
@@ -43,7 +44,7 @@ class SetSizeOfAllPresencesCommand extends ContainerAwareCommand
      *
      */
     private $sizeMap = [
-        'facebook' => [5000,100000],
+        'facebook' => [5000,100000,500000],
         'twitter' => [2500,50000],
         'instagram' => [2500,50000],
         'sina_weibo' => [2500,50000],

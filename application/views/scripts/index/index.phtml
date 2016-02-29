@@ -123,15 +123,11 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                                         <li data-presence-type="<?php echo $presence->getType()->getValue(); ?>">
                                             <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
                                                 <span class="<?php echo $presence->getPresenceSign(); ?> fixed-width"></span> <?php echo $presence->getHandle(); ?>
-                                                <?php
-                                                if ($presence->isForFacebook()) {
-                                                    $score = $presence->getFacebookEngagement();
-                                                    echo "<span class=\"engagement-score facebook\" title=\"Facebook engagement score: $score\">" . round($score) . '</span>';
-                                                } else if ($presence->isForTwitter()) {
-                                                    $score = $presence->getKloutScore();
-                                                    echo "<span class=\"engagement-score klout\" title=\"Klout score: $score\">" . round($score) . '</span>';
-                                                }
-                                                ?>
+                                                <?php $score = $presence->getEngagementScore(); ?>
+                                                <span class="engagement-score <?php echo $score->getType(); ?>"
+                                                      title="<?php echo $score->getName(); ?>: <?php echo $score->getScore(); ?>">
+                                                    <?php echo round($score->getScore()); ?>
+                                                </span>
                                             </a>
                                         </li>
                                     <?php endforeach; ?>

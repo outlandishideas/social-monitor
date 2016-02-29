@@ -1,6 +1,8 @@
 <?php
 
 use Outlandish\SocialMonitor\Adapter\LinkedinAdapter;
+use Outlandish\SocialMonitor\Engagement\EngagementScore;
+use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
 
 class Provider_Linkedin extends Provider_Abstract
@@ -27,7 +29,7 @@ class Provider_Linkedin extends Provider_Abstract
 
         // get all videos - we need to update all of them as they are all potentially contributing to engagement
 
-        $statuses = $this->adapter->getStatusesWithAccessToken($presence->getUID(), null, $presence->handle, 'token');
+        $statuses = $this->adapter->getStatusesWithAccessToken($presence->getUID(), null, $presence->handle, $presence->getAccessToken());
 
         $this->insertStatuses($presence, $statuses, $count);
 
@@ -129,7 +131,7 @@ class Provider_Linkedin extends Provider_Abstract
     public function updateMetadata(Model_Presence $presence) {
 
         try {
-            $metadata = $this->adapter->getMetadataWithAccessToken($presence->handle, 'token');
+            $metadata = $this->adapter->getMetadataWithAccessToken($presence->handle, $presence->getAccessToken());
         } catch (Exception_FacebookNotFound $e) {
             $presence->uid = null;
             throw $e;
@@ -216,6 +218,10 @@ class Provider_Linkedin extends Provider_Abstract
         // TODO: Implement getResponseData() method.
     }
 
+    /**
+     * @param Model_Presence $presence
+     * @return float|null
+     */
     private function calculateEngagement($presence)
     {
         $now = new DateTime();
@@ -227,4 +233,27 @@ class Provider_Linkedin extends Provider_Abstract
 
         return $metric->get($presence->getId(), $now, $then);
     }
+
+    /**
+     * Run a simple test on the adapter to see if we can fetch the presence
+     *
+     * @param Model_Presence $presence
+     * @throws SocialMonitorException
+     * @return null
+     */
+    public function testAdapter(Model_Presence $presence)
+    {
+        $this->adapter->getChannelWithAccessToken($presence->getHandle(), $presence->getAccessToken());
+    }
+
+    /**
+     * @param Model_Presence $presence
+     * @return EngagementScore
+     */
+    function getEngagementScore($presence)
+    {
+        return new EngagementScore('Linkedin engagement score', 'linkedin', $presence->getLinkedinEngagement());
+    }
+
+
 }

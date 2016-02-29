@@ -15,9 +15,10 @@ class WeightedFacebookEngagementQuery extends Query
     public function __construct(PDO $db)
     {
         $this->db = $db;
-        $this->activeUserProportion[0] = BaseController::getOption('sw_active_user_percentage_small') / 100;
-        $this->activeUserProportion[1] = BaseController::getOption('sw_active_user_percentage_medium') / 100;
-        $this->activeUserProportion[2] = BaseController::getOption('sw_active_user_percentage_large') / 100;
+        $this->activeUserProportion[0] = BaseController::getOption('fb_active_user_percentage_small') / 100;
+        $this->activeUserProportion[1] = BaseController::getOption('fb_active_user_percentage_medium') / 100;
+        $this->activeUserProportion[2] = BaseController::getOption('fb_active_user_percentage_large') / 100;
+        $this->activeUserProportion[3] = BaseController::getOption('fb_active_user_percentage_xlarge') / 100;
     }
 
 

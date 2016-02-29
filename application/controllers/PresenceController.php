@@ -1,5 +1,6 @@
 <?php
 
+use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\Report\ReportablePresence;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
 use Outlandish\SocialMonitor\TableIndex\Header\Handle;
@@ -39,6 +40,31 @@ class PresenceController extends GraphingController
         $this->view->tableHeaders = $table->getHeaders();
         $this->view->sortCol = Handle::getName();
 		$this->view->regions = Model_Region::fetchAll();
+	}
+
+	/**
+	 * Lists all presences
+	 * @user-level user
+	 */
+	public function assignAction()
+	{
+		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+		$this->validateData($presence);
+
+		/** @var Model_User $user */
+		$user = $this->view->user;
+
+		$accessToken = $user->getAccessToken($presence->getType());
+
+		if ($accessToken) {
+			$presence->user = $user;
+			$presence->save();
+			$this->flashMessage("Presence was assigned to user.");
+		} else {
+			$this->flashMessage("Presence could not be assigned to user");
+		}
+
+		$this->_helper->redirector->gotoRoute(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id));
 	}
 
 	/**
@@ -214,6 +240,7 @@ class PresenceController extends GraphingController
             $signOff = $this->_request->getParam('sign_off');
             $branding = $this->_request->getParam('branding');
             $size = $this->_request->getParam('size');
+			$userId = $this->_request->getParam('user_id');
 			if (!$type) {
 				$errorMessages[] = 'Please choose a type';
 			}
@@ -235,13 +262,23 @@ class PresenceController extends GraphingController
                         $type = Enum_PresenceType::get($type);
                         $presence = Model_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
                         $presence->setSize($size);
+						if ($presence->getType()->requiresAccessToken()) {
+							$presence->user = $this->view->user;
+						}
+						$presence->testUpdate();
                         $presence->save();
                     } else {
                     	$presence->setSize($size);
+						if ($presence->getType()->requiresAccessToken() && $userId) {
+							$user = Model_User::fetchById($userId);
+							$presence->setUser($user);
+						}
                         $presence->update();
                         $presence->save();
                     }
-                } catch (Exception $ex) {
+                } catch (SocialMonitorException $ex) {
+					$errorMessages[] = $ex->getMessage();
+				} catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
                         $errorMessages[] = 'Presence already exists';
                     } else {

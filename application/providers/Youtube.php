@@ -2,6 +2,7 @@
 
 
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
+use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
 
@@ -381,6 +382,16 @@ class Provider_Youtube extends Provider_Abstract
 
     }
 
+    /**
+     * @param Model_Presence $presence
+     * @param DateTime $start
+     * @param DateTime $end
+     * @param string $search
+     * @param string $order
+     * @param string $limit
+     * @param string $offset
+     * @return object
+     */
     public function getStatusStream(Model_Presence $presence, $start, $end, $search, $order, $limit, $offset)
     {
 
@@ -463,5 +474,13 @@ class Provider_Youtube extends Provider_Abstract
         return $data;
     }
 
+    /**
+     * @param Model_Presence $presence
+     * @return EngagementScore
+     */
+    function getEngagementScore($presence)
+    {
+        return new EngagementScore('Youtube engagement score', 'youtube', $presence->getYoutubeEngagement());
+    }
 
 }
