@@ -207,10 +207,11 @@ app.init = {
 
 			icons.sort();
 
-			var html = '<select id="filter-presence" style="font-family: FontAwesome">';
+			var html = '<select id="filter-presence">';
+			html += '<option value"">All</option>';
 
 			$.each(options, function (i, item) {
-				html += '<option value="' + item.value + '">' + item.label + '</option>';
+				html += '<option value="' + item.value + '" class="' + item.value +'">' + item.label + '</option>';
 			});
 
 			html += '</select>';

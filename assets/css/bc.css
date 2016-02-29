@@ -2481,6 +2481,30 @@ td.countries a {
 	background: #051b21;
 }
 
+.dataTable thead select option.facebook {
+	color: #3B5998;
+}
+
+.dataTable thead select option.twitter {
+	color: #4099FF;
+}
+
+.dataTable thead select option.sina_weibo {
+	color: #e6162d;
+}
+
+.dataTable thead select option.linkedin {
+	color: #007bb5;
+}
+
+.dataTable thead select option.youtube {
+	color: #e52d27;
+}
+
+.dataTable thead select option.instagram {
+	color: #3f729b;
+}
+
 /* tabs on right-hand-side of presence/campaign page */
 #model-tabs,
 #homepage-tabs {
