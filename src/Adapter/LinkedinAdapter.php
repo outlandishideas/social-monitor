@@ -186,6 +186,7 @@ class LinkedinAdapter extends AbstractAdapter
         $status->postId = $postContent['share']['id'];
         $status->created_time = $postContent['share']['timestamp']/1000;
         $status->type = 'status-update';
+        $status->permalink = 'https://www.linkedin.com/nhome/updates?topic=' . explode("-", $post['updateKey'])[2];
 
         $submittedLink = !empty($postContent['share']['content']['submittedUrl']) ? [$postContent['share']['content']['submittedUrl']] : [];
         $messageLinks = $status->message ? $this->extractLinks($status->message) : [];
@@ -206,6 +207,7 @@ class LinkedinAdapter extends AbstractAdapter
         $status->postId = $postContent['job']['id'];
         $status->created_time = $post['timestamp']/1000;
         $status->type = 'job-posting';
+        $status->permalink = 'https://www.linkedin.com/nhome/updates?topic=' . explode("-", $post['updateKey'])[2];
 
         $submittedLink = !empty($postContent['job']['siteJobRequest']['url']) ? [$postContent['job']['siteJobRequest']['url']] : [];
         $messageLinks = $status->message ? $this->extractLinks($status->message) : [];

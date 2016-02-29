@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Outlandish\SocialMonitor\Engagement\Query\Query;
 
 abstract class Metric_AbstractEngagement extends Metric_Abstract {
@@ -11,25 +12,13 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
     protected static $queryClassName = 'Outlandish\SocialMonitor\Engagement\Query\ChangeThisQuery';
     /** @var Query */
     protected $query;
-    public $target = 0.25;
+    public static $engagementTarget = 0.25;
     protected $cache = array();
 
     function __construct()
     {
-        //$this->target = $this->getTargets();
         $db = Zend_Registry::get('db')->getConnection();
         $this->query = new static::$queryClassName($db);
-    }
-
-    protected function getTargets()
-    {
-        $target = [];
-
-        for($i=0;$i<count(static::$targetOptions);$i++) {
-            $target[$i+1] = floatval(BaseController::getOption(static::$targetOptions[$i]));
-        }
-
-        return $target;
     }
 
     /**
@@ -43,8 +32,18 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
     {
         $data = $presence->getHistoricData($start, $end, self::getName());
         if($data and count($data)) {
-            $score = $data[0]['value'];
-            return $score;
+            $date = null;
+            $total = 0;
+            $count = 0;
+            foreach($data as $d) {
+                $nextDate =  Carbon::parse($d['datetime'])->format('Y-m-d');
+                if($date !== $nextDate) {
+                    $date = $nextDate;
+                    $total += $d['value'];
+                    $count++;
+                }
+            }
+            return $count > 0 ? $total / $count : 0;
         } else {
             return 0;
         }
@@ -53,11 +52,15 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $likesPerUsers = $presence->getMetricValue($this);
-        $score = $likesPerUsers / $this->target;
+        return self::convertToScore($likesPerUsers);
+    }
+
+    public static function convertToScore($raw) {
+        $score = $raw / static::$engagementTarget;
         if($score > 1) {
             return 100;
         } else {
-            return $score * 100;
+            return round($score * 100, 1);
         }
     }
 

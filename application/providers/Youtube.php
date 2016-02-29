@@ -1,33 +1,35 @@
 <?php
 
-
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
+use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
 
 class Provider_Youtube extends Provider_Abstract
 {
-	protected $connection = null;
+    protected $connection = null;
     /**
      * @var YoutubeAdapter
      */
     private $adapter;
 
-    private $videoHistoryColumns = ['views','likes','dislikes','comments'];
+    private $videoHistoryColumns = ['views', 'likes', 'dislikes', 'comments'];
     private $commentTableName;
     public static $historyTableName = 'youtube_video_history';
 
-    public function __construct(PDO $db, YoutubeAdapter $adapter) {
-		parent::__construct($db);
-		$this->type = Enum_PresenceType::YOUTUBE();
+    public function __construct(PDO $db, YoutubeAdapter $adapter)
+    {
+        parent::__construct($db);
+        $this->type = Enum_PresenceType::YOUTUBE();
         $this->tableName = 'youtube_video_stream';
         $this->commentTableName = 'youtube_comment_stream';
         $this->adapter = $adapter;
+        $this->engagementStatement = '(likes + number_of_replies * 4)';
     }
 
-	public function fetchStatusData(Model_Presence $presence)
-	{
+    public function fetchStatusData(Model_Presence $presence)
+    {
         $count = 0;
         if (!$presence->getUID()) {
             throw new Exception('Presence not initialised/found');
@@ -35,7 +37,7 @@ class Provider_Youtube extends Provider_Abstract
 
         // get all videos - we need to update all of them as they are all potentially contributing to engagement
 
-        $videos = $this->adapter->getStatuses($presence->getUID(),null,$presence->handle);
+        $videos = $this->adapter->getStatuses($presence->getUID(), null, $presence->handle);
 
         $this->insertVideos($presence, $videos, $count);
 
@@ -50,11 +52,11 @@ class Provider_Youtube extends Provider_Abstract
 
     /**
      * @param Model_Presence $presence
-     * @param array          $videos
-     * @param mixed          $count
+     * @param array $videos
+     * @param mixed $count
      */
     protected function insertVideos(Model_Presence $presence, array $videos, &$count)
-	{
+    {
         $insertStmt = $this->db->prepare("
 			INSERT INTO `{$this->tableName}`
 			(`presence_id`, `video_id`, `title`, `description`, `created_time`, `permalink`,
@@ -85,9 +87,9 @@ class Provider_Youtube extends Provider_Abstract
             );
             try {
                 $result = $insertStmt->execute($args);
-                if(!$result) {
+                if (!$result) {
                     $error = $insertStmt->errorInfo();
-                    error_log('Error inserting youtube video: '.$error[2]);
+                    error_log('Error inserting youtube video: ' . $error[2]);
                 }
             } catch (PDOException $ex) {
                 if ($ex->getCode() == 23000) {
@@ -109,7 +111,8 @@ class Provider_Youtube extends Provider_Abstract
      *
      * @param Model_Presence $presence
      */
-    private function updateVideoHistory($presence) {
+    private function updateVideoHistory($presence)
+    {
         $query = $this->db->prepare("SELECT * FROM `youtube_video_stream` WHERE `presence_id`=" . $presence->getId());
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -124,7 +127,7 @@ class Provider_Youtube extends Provider_Abstract
         ");
         $date = gmdate('Y-m-d H:i:s');
 
-        foreach($result as $row) {
+        foreach ($result as $row) {
             foreach ($this->videoHistoryColumns as $type) {
                 $value = $row[$type];
                 if (!is_null($value)) {
@@ -134,53 +137,18 @@ class Provider_Youtube extends Provider_Abstract
                         ':type' => $type,
                         ':value' => $value
                     ));
-                    if(!$result) {
+                    if (!$result) {
                         $error = $insertStmt->errorInfo();
-                        error_log('Error saving youtube video history: '.$error[2]);
+                        error_log('Error saving youtube video history: ' . $error[2]);
                     }
                 }
             }
         }
     }
 
-	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
-        $search = null, $order = null, $limit = null, $offset = null)
-	{
-        $clauses = array(
-            'p.created_time >= :start',
-            'p.created_time <= :end',
-            'p.presence_id = :id'
-        );
-        $args = array(
-            ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s'),
-            ':id'    => $presence->getId()
-        );
-        $searchArgs = $this->getSearchClauses($search, array('p.title','p.description'));
-        $clauses = array_merge($clauses, $searchArgs['clauses']);
-        $args = array_merge($args, $searchArgs['args']);
-
-		$sql = "
-			SELECT SQL_CALC_FOUND_ROWS p.*
-			FROM {$this->tableName} AS p
-			WHERE " . implode(' AND ', $clauses);
-        $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
-        $sql .= $this->getLimitSql($limit, $offset);
-
-        $stmt = $this->db->prepare($sql);
-		$stmt->execute($args);
-		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
-
-		return (object)array(
-            'stream' => count($ret) ? $ret : null,
-            'total' => $total
-        );
-	}
-
-	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false)
-	{
-		$stmt = $this->db->prepare("
+    public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false)
+    {
+        $stmt = $this->db->prepare("
 			SELECT
 				posts.date AS date,
 				posts.number_of_posts AS number_of_actions
@@ -201,17 +169,17 @@ class Provider_Youtube extends Provider_Abstract
 			ORDER BY
 				`date`
 		");
-		$stmt->execute(array(
-			':id'		=> $presence->getId(),
-			':start'	=> $start->format('Y-m-d H:i:s'),
-			':end'	=> $end->format('Y-m-d H:i:s')
-		));
-		return $stmt->fetchAll(PDO::FETCH_ASSOC);
-	}
+        $stmt->execute(array(
+            ':id' => $presence->getId(),
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end' => $end->format('Y-m-d H:i:s')
+        ));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-	public function update(Model_Presence $presence)
-	{
-		parent::update($presence);
+    public function update(Model_Presence $presence)
+    {
+        parent::update($presence);
         $presence->youtube_engagement = $this->calculateYoutubeEngagement($presence);
     }
 
@@ -227,7 +195,8 @@ class Provider_Youtube extends Provider_Abstract
         return $metric->get($presence->getId(), $now, $then);
     }
 
-    public function updateMetadata(Model_Presence $presence) {
+    public function updateMetadata(Model_Presence $presence)
+    {
 
         try {
             $metadata = $this->adapter->getMetadata($presence->handle);
@@ -242,7 +211,7 @@ class Provider_Youtube extends Provider_Abstract
         $presence->page_url = $metadata->page_url;
         $presence->popularity = $metadata->popularity;
         $presence->image_url = $metadata->image_url;
-	}
+    }
 
     /**
      * @param Model_Presence $presence
@@ -365,9 +334,9 @@ class Provider_Youtube extends Provider_Abstract
             );
             try {
                 $result = $insertStmt->execute($args);
-                if(!$result) {
+                if (!$result) {
                     $error = $insertStmt->errorInfo();
-                    error_log('Error inserting youtube comment: '.$error[2]);
+                    error_log('Error inserting youtube comment: ' . $error[2]);
                 }
             } catch (PDOException $ex) {
                 if ($ex->getCode() == 23000) {
@@ -394,17 +363,35 @@ class Provider_Youtube extends Provider_Abstract
      */
     public function getStatusStream(Model_Presence $presence, $start, $end, $search, $order, $limit, $offset)
     {
+        return $this->getStatusStreamMulti([$presence], $start, $end, $start, $order, $limit, $offset);
+    }
 
+    /**
+     * @param $presences
+     * @param DateTime $start
+     * @param DateTime $end
+     * @param $search
+     * @param $order
+     * @param $limit
+     * @param $offset
+     * @return object
+     */
+    public function getStatusStreamMulti($presences, $start, $end, $search, $order, $limit, $offset)
+    {
         $clauses = array(
             'p.created_time >= :start',
             'p.created_time <= :end',
-            'p.presence_id = :id'
         );
         $args = array(
             ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s'),
-            ':id'    => $presence->getId()
+            ':end' => $end->format('Y-m-d H:i:s'),
         );
+        if ($presences && count($presences)) {
+            $ids = array_map(function (Model_Presence $p) {
+                return $p->getId();
+            }, $presences);
+            $clauses[] = 'p.presence_id IN (' . implode($ids, ',') . ')';
+        }
         $searchArgs = $this->getSearchClauses($search, array('p.message'));
         $clauses = array_merge($clauses, $searchArgs['clauses']);
         $args = array_merge($args, $searchArgs['args']);
@@ -413,25 +400,26 @@ class Provider_Youtube extends Provider_Abstract
 			SELECT SQL_CALC_FOUND_ROWS p.*
 			FROM {$this->commentTableName} AS p
 			WHERE " . implode(' AND ', $clauses);
-        $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
+        $sql .= $this->getOrderSql($order, array('date' => 'created_time', 'engagement' => $this->engagementStatement));
         $sql .= $this->getLimitSql($limit, $offset);
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($args);
         $ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $objects = $this->parseStatuses($ret);
         $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
 
         return (object)array(
-            'stream' => count($ret) ? $ret : null,
+            'stream' => count($objects) ? $objects : null,
             'total' => $total
         );
     }
 
     /**
-     * @param Model_Presence $presence  the presence to fetch the data for
-     * @param DateTime $start  the date from which to fetch historic data from (inclusive)
-     * @param DateTime $end  the date from which to fetch historic data to (inclusive)
-     * @param array $types  the types of data to be returned from the history table (if empty all types will be returned)
+     * @param Model_Presence $presence the presence to fetch the data for
+     * @param DateTime $start the date from which to fetch historic data from (inclusive)
+     * @param DateTime $end the date from which to fetch historic data to (inclusive)
+     * @param array $types the types of data to be returned from the history table (if empty all types will be returned)
      * @return array
      */
     public function getHistoryData(Model_Presence $presence, \DateTime $start, \DateTime $end, $types = [])
@@ -457,10 +445,10 @@ class Provider_Youtube extends Provider_Abstract
 
         $tableName = self::$historyTableName;
         $sql = "SELECT `datetime`, `type`, SUM(`value`) AS `value` FROM {$tableName}
-                WHERE `video_id` IN ('" .implode("','", $videoIds) . "')
+                WHERE `video_id` IN ('" . implode("','", $videoIds) . "')
                 AND `datetime` <= :end_date
                 AND `datetime` >= :start_date
-                AND type IN ('" .implode("','", $types) . "')
+                AND type IN ('" . implode("','", $types) . "')
                 GROUP BY `type`, `datetime`;";
 
         $statement = $this->db->prepare($sql);
@@ -474,13 +462,41 @@ class Provider_Youtube extends Provider_Abstract
         return $data;
     }
 
+    protected function parseStatuses($raw)
+    {
+        if (!$raw || !count($raw)) {
+            return [];
+        }
+        $parsed = array();
+        foreach ($raw as $r) {
+            $status = new Status();
+            $status->id = $r['id'];
+            $status->message = $r['message'];
+            $status->created_time = $r['created_time'];
+            $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
+            $status->presence_id = $r['presence_id'];
+            $status->presence_name = $presence->getName();
+            $status->icon = Enum_PresenceType::YOUTUBE()->getSign();
+            $status->engagement = [
+                'comments' => $r['number_of_replies'],
+                'likes' => $r['likes'],
+                'comparable' => (($r['likes'] + $r['number_of_replies'] * 4) / 5)
+            ];
+            $status->icon = Enum_PresenceType::YOUTUBE()->getSign();
+            $status->permalink = 'https://www.youtube.com/watch?v=' . $r['video_id'];
+            $parsed[] = (array)$status;
+        }
+
+        return $parsed;
+    }
+
     /**
      * @param Model_Presence $presence
      * @return EngagementScore
      */
     function getEngagementScore($presence)
     {
-        return new EngagementScore('Youtube engagement score', 'youtube', $presence->getYoutubeEngagement());
+        return new EngagementScore('Youtube engagement score', 'youtube', $presence->getYoutubeEngagementScore(true));
     }
 
 }

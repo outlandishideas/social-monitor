@@ -35,7 +35,7 @@ class Metric_Popularity extends Metric_Abstract {
 
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        // TODO: Implement getData() method.
+        return ['target' => $presence->getTargetAudience()];
     }
 
 

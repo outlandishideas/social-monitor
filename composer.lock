@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8e89ab9d70cb888f19d91ffac38a7faa",
-    "content-hash": "14200ad70305946fc162c0c3e90b24be",
+    "hash": "36c122c7ae5b483b2e93ba56d5c3add6",
+    "content-hash": "ae22ddb9a7b44a88fc206d7be05cccd5",
     "packages": [
         {
             "name": "cosenary/instagram",
@@ -371,7 +371,7 @@
             ],
             "authors": [
                 {
-                    "name": "Michael HÃ¤rtl",
+                    "name": "Michael Härtl",
                     "email": "haertl.mike@gmail.com"
                 }
             ],
@@ -1162,7 +1162,7 @@
                 "symfony/filesystem": "~2.1|~3.0"
             },
             "suggest": {
-                "phpspec/nyan-formatters": "~1.0 â€“ Adds Nyan formatters"
+                "phpspec/nyan-formatters": "~1.0 – Adds Nyan formatters"
             },
             "bin": [
                 "bin/phpspec"

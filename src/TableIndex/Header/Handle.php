@@ -26,7 +26,7 @@ class Handle extends Header {
         $sign = $model->getPresenceSign();
         $engagment = $model->getEngagementScore();
         $value = "<span class=\"$sign fa-lg fa-fw\"></span> $handle";
-        $value .= " <span class=\"engagement-score {$engagment->getType()}\" title=\"{$engagment->getName()}: {$engagment->getScore()}\">" . round($engagment->getScore()) . '</span>';
+        $value .= " <span class=\"flag-score {$engagment->getType()}\" title=\"{$engagment->getName()}: {$engagment->getScore()}\">" . round($engagment->getScore()) . '</span>';
 
         return $value;
     }

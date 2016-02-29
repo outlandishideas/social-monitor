@@ -29,6 +29,7 @@ class Enum_PresenceType extends Enum_Abstract
     protected $title = '';
     protected $relevancePercentage = 0;
     protected $applicableMetrics = array();
+    protected $engagementMetric;
     protected $badges = array();
     /** @var Metric_Abstract[] */
     protected $metrics = array();
@@ -41,6 +42,7 @@ class Enum_PresenceType extends Enum_Abstract
                 $this->sign = "fa fa-weibo";
                 $this->title = "Sina Weibo";
                 $this->relevancePercentage = BaseController::getOption('sina_weibo_relevance_percentage');
+                $this->engagementMetric = Metric_SinaWeiboEngagement::getName();
                 $this->applicableMetrics = array(
                     Metric_ActionsPerDay::getName(),
                     Metric_Branding::getName(),
@@ -55,6 +57,7 @@ class Enum_PresenceType extends Enum_Abstract
                 $this->sign = "fa fa-facebook";
                 $this->title = 'Facebook';
                 $this->relevancePercentage = BaseController::getOption('facebook_relevance_percentage');
+                $this->engagementMetric = Metric_FBEngagement::getName();
                 $this->applicableMetrics = array(
                     Metric_ActionsPerDay::getName(),
                     Metric_Branding::getName(),
@@ -72,6 +75,7 @@ class Enum_PresenceType extends Enum_Abstract
                 $this->sign = "fa fa-twitter";
                 $this->title = 'Twitter';
                 $this->relevancePercentage = BaseController::getOption('twitter_relevance_percentage');
+                $this->engagementMetric = Metric_Klout::getName();
                 $this->applicableMetrics = array(
                     Metric_ActionsPerDay::getName(),
                     Metric_Branding::getName(),
@@ -87,6 +91,7 @@ class Enum_PresenceType extends Enum_Abstract
                 $this->sign = "fa fa-instagram";
                 $this->title = "Instagram";
                 $this->relevancePercentage = BaseController::getOption('instagram_relevance_percentage');
+                $this->engagementMetric = Metric_InstagramEngagement::getName();
                 $this->applicableMetrics = array(
                     Metric_Popularity::getName(),
                     Metric_PopularityTime::getName(),
@@ -101,6 +106,7 @@ class Enum_PresenceType extends Enum_Abstract
                 $this->sign = "fa fa-youtube";
                 $this->title = "Youtube";
                 $this->relevancePercentage = 10;
+                $this->engagementMetric = Metric_YoutubeEngagement::getName();
                 $this->applicableMetrics = array(
                     Metric_Popularity::getName(),
                     Metric_PopularityTime::getName(),
@@ -114,6 +120,7 @@ class Enum_PresenceType extends Enum_Abstract
                 $this->sign = "fa fa-linkedin";
                 $this->title = "LinkedIn";
                 $this->relevancePercentage = 10;
+                $this->engagementMetric = Metric_LinkedinEngagement::getName();
                 $this->applicableMetrics = array(
                     Metric_Popularity::getName(),
                     Metric_PopularityTime::getName(),
@@ -208,6 +215,11 @@ class Enum_PresenceType extends Enum_Abstract
 	{
         return $this->applicableMetrics;
 	}
+
+    public function getEngagementMetric()
+    {
+        return $this->engagementMetric;
+    }
 
     public function requiresAccessToken()
     {

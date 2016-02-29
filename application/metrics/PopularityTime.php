@@ -142,7 +142,12 @@ class Metric_PopularityTime extends Metric_Abstract {
 
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        // TODO: Implement getData() method.
+        $date = $this->getTargetAudienceDate($presence, $start, $end);
+        return [
+            'target' => $presence->getTargetAudience(),
+            'current' => $presence->getPopularity(),
+            'expected date when target will be reached' => $date ? $date->format('Y-m-d') : 'N/A'
+        ];
     }
 
 

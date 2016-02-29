@@ -4,6 +4,7 @@
 use Outlandish\SocialMonitor\Adapter\InstagramAdapter;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
+use Outlandish\SocialMonitor\Models\Status;
 
 class Provider_Instagram extends Provider_Abstract
 {
@@ -92,41 +93,6 @@ class Provider_Instagram extends Provider_Abstract
             }
             $count++;
         }
-	}
-
-	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
-        $search = null, $order = null, $limit = null, $offset = null)
-	{
-        $clauses = array(
-            'p.created_time >= :start',
-            'p.created_time <= :end',
-            'p.presence_id = :id'
-        );
-        $args = array(
-            ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s'),
-            ':id'    => $presence->getId()
-        );
-        $searchArgs = $this->getSearchClauses($search, array('p.message'));
-        $clauses = array_merge($clauses, $searchArgs['clauses']);
-        $args = array_merge($args, $searchArgs['args']);
-
-		$sql = "
-			SELECT SQL_CALC_FOUND_ROWS p.*
-			FROM {$this->tableName} AS p
-			WHERE " . implode(' AND ', $clauses);
-        $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
-        $sql .= $this->getLimitSql($limit, $offset);
-
-        $stmt = $this->db->prepare($sql);
-		$stmt->execute($args);
-		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
-
-		return (object)array(
-            'stream' => count($ret) ? $ret : null,
-            'total' => $total
-        );
 	}
 
 	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false)
@@ -287,7 +253,33 @@ class Provider_Instagram extends Provider_Abstract
      */
     function getEngagementScore($presence)
     {
-        return new EngagementScore('Instagram engagement score', 'instagram', $presence->getInstagramEngagement());
+        return new EngagementScore('Instagram engagement score', 'instagram', $presence->getInstagramEngagementScore(true));
+    }
+
+    protected function parseStatuses($raw)
+    {
+        if(!$raw || !count($raw)) {
+            return [];
+        }
+        $parsed = array();
+        foreach ($raw as $r) {
+            $status = new Status();
+            $status->id = $r['id'];
+            $status->message = $r['message'] . ' <img src="' . $r['image_url'] . '">';
+            $status->created_time = $r['created_time'];
+            $status->permalink = $r['permalink'];
+            $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
+            $status->presence_id = $r['presence_id'];
+            $status->presence_name = $presence->getName();
+            $status->engagement = [
+                'comments' => $r['comments'],
+                'likes' => $r['likes'],
+                'comparable' => (($r['likes'] + $r['comments'] * 4) / 5)
+            ];
+            $status->icon = Enum_PresenceType::INSTAGRAM()->getSign();
+            $parsed[] = (array)$status;
+        }
+        return $parsed;
     }
 
 

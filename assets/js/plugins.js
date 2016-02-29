@@ -17,26 +17,19 @@
 	$.fn.showLoader = function(settings) {
 		return this.each(function () {
 			var $toCover = $(this);
-			var offset = $toCover.offset();
+			var $parent = $toCover.parent();
+			$toCover.hide();
 
 			var id = $toCover.getLoaderId();
 			var $spinner = $('div#' + id);
-			var $shield = $('div#shield-' + id);
 
 			if ($spinner.length == 0) {
-				$shield = $('<div />')
-					.attr('id', 'shield-' + id)
-					.addClass('loader-shield')
-					.width($toCover.outerWidth())
-					.height($toCover.outerHeight())
-					.offset(offset)
-					.appendTo('body');
 
 				$spinner = $('<div />')
 					.attr('id', id)
 					.addClass('loader')
-					.appendTo($shield)
-					.spinner({ 
+					.insertBefore($toCover)
+					.spinner({
 						colour : '255,255,255',
 						spokeCount : 10,
 						spokeWidth : 3,
@@ -48,26 +41,16 @@
 						centered : false
 					});
 			}
-
-			$shield
-				.removeClass('dead')
-				.width($toCover.outerWidth())
-				.height($toCover.outerHeight())
-				.offset(offset);
 		});
 	};
 
 	$.fn.hideLoader = function(skip) {
 
 		return this.each(function () {
-			var $shield = $('div#shield-' + $(this).getLoaderId());
-
-			if ($shield.length > 0) {
-				var delay = (typeof skip != 'undefined') ? 800 : 0;
-				setTimeout(function () {
-					$shield.addClass('dead');
-				}, delay);
-			}
+			var id = $(this).getLoaderId();
+			var $spinner = $('div#' + id);
+			$(this).show();
+			$spinner.remove();
 		});
 
 	}
@@ -239,8 +222,49 @@ Scotty.prototype = {
 	}
 };
 
+function getStatusRowRenderFunction(showResponses) {
+	return function(o) {
+		if (typeof o.aData.message != 'string') {
+			o.aData.message = '';
+		}
+		o.aData.date = moment(o.aData.created_time).format('D MMM');
+		var message = parseTemplate(app.templates.post, o.aData);
+		if(showResponses) {
+			message = appendResponseTemplate(message, o.aData);
+		} else {
+			message = convertTitleToLink(message, o.aData);
+		}
+		return message;
+	}
+}
+
 function parseTemplate(str, data) {
 	return _.template(str, data);
+}
+
+function convertTitleToLink(message, data) {
+	var $el = $(message);
+	var title = $el.find('h4').text();
+	title = '<a href="/presence/view/id/' + data.presence_id + '">' + title + '</a>';
+	$el.find('h4').html(title);
+	return $el.html();
+}
+
+function appendResponseTemplate(message,aData) {
+	var response = aData.first_response;
+	var rTitle, rMessage, rIcon;
+	if (aData.needs_response == '1') {
+		rTitle = 'Does not require a response';
+		rMessage = 'Awaiting response (' + response.date_diff + ')...';
+		rIcon = 'icon-comment-alt';
+	} else {
+		rTitle = 'Requires a response';
+		rMessage = 'No response required';
+		rIcon = 'icon-comments';
+	}
+	message += '<p class="more"><a href="#" class="require-response" title="' + rTitle + '"><span class="' + rIcon + ' icon-large"></span></a></p>' +
+		'<p class="no-response">' + rMessage + '</p>';
+	return message;
 }
 
 var Base64 = {

@@ -4,6 +4,7 @@ use Outlandish\SocialMonitor\Adapter\LinkedinAdapter;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
+use Outlandish\SocialMonitor\Models\Status;
 
 class Provider_Linkedin extends Provider_Abstract
 {
@@ -35,42 +36,6 @@ class Provider_Linkedin extends Provider_Abstract
 
         return $count;
     }
-
-
-	public function getHistoricStream(Model_Presence $presence, \DateTime $start, \DateTime $end,
-        $search = null, $order = null, $limit = null, $offset = null)
-	{
-        $clauses = array(
-            'p.created_time >= :start',
-            'p.created_time <= :end',
-            'p.presence_id = :id'
-        );
-        $args = array(
-            ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s'),
-            ':id'    => $presence->getId()
-        );
-        $searchArgs = $this->getSearchClauses($search, array('p.message'));
-        $clauses = array_merge($clauses, $searchArgs['clauses']);
-        $args = array_merge($args, $searchArgs['args']);
-
-		$sql = "
-			SELECT SQL_CALC_FOUND_ROWS p.*
-			FROM {$this->tableName} AS p
-			WHERE " . implode(' AND ', $clauses);
-        $sql .= $this->getOrderSql($order, array('date'=>'created_time'));
-        $sql .= $this->getLimitSql($limit, $offset);
-
-        $stmt = $this->db->prepare($sql);
-		$stmt->execute($args);
-		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
-
-		return (object)array(
-            'stream' => count($ret) ? $ret : [],
-            'total' => $total
-        );
-	}
 
 	public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false)
 	{
@@ -156,10 +121,10 @@ class Provider_Linkedin extends Provider_Abstract
         $insertStmt = $this->db->prepare("
 			INSERT INTO `{$this->tableName}`
 			(`post_id`, `presence_id`, `message`, `created_time`,
-			`likes`, `comments`, `type`)
+			`likes`, `comments`, `type`, `permalink`)
 			VALUES
 			(:post_id, :presence_id, :message, :created_time, :likes,
-				:comments, :type)
+				:comments, :type, :permalink)
             ON DUPLICATE KEY UPDATE
                 `likes` = VALUES(`likes`), `comments` = VALUES(`comments`);
 		");
@@ -175,7 +140,8 @@ class Provider_Linkedin extends Provider_Abstract
                 ':created_time' => gmdate('Y-m-d H:i:s', $status->created_time),
                 ':likes' => $status->likes,
                 ':comments' => $status->comments,
-                ':type' => $status->type
+                ':type' => $status->type,
+                ':permalink' => $status->permalink
             );
             try {
                 $result = $insertStmt->execute($args);
@@ -246,13 +212,41 @@ class Provider_Linkedin extends Provider_Abstract
         $this->adapter->getChannelWithAccessToken($presence->getHandle(), $presence->getAccessToken());
     }
 
+
     /**
      * @param Model_Presence $presence
      * @return EngagementScore
      */
     function getEngagementScore($presence)
     {
-        return new EngagementScore('Linkedin engagement score', 'linkedin', $presence->getLinkedinEngagement());
+        return new EngagementScore('Linkedin engagement score', 'linkedin', $presence->getLinkedinEngagementScore(true));
+    }
+
+    protected function parseStatuses($raw)
+    {
+        if(!$raw || !count($raw)) {
+            return [];
+        }
+        $parsed = array();
+        foreach ($raw as $r) {
+            $status = new Status();
+            $status->id = $r['id'];
+            $status->message = $r['message'];
+            $status->created_time = $r['created_time'];
+            $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
+            $status->presence_id = $r['presence_id'];
+            $status->presence_name = $presence->getName();
+            $status->permalink = $r['permalink'];
+            $status->engagement = [
+                'comments' => $r['comments'],
+                'likes' => $r['likes'],
+                'comparable' => (($r['likes'] + $r['comments'] * 4) / 5)
+            ];
+            $status->icon = Enum_PresenceType::LINKEDIN()->getSign();
+            $parsed[] = (array)$status;
+        }
+
+        return $parsed;
     }
 
 

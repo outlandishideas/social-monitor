@@ -88,11 +88,11 @@ class Model_Presence
         $this->klout_score = $internals['klout_score'];
         $this->facebook_engagement = $internals['facebook_engagement'];
         $this->sina_weibo_engagement = $internals['sina_weibo_engagement'];
-        if ($this->type === Enum_PresenceType::INSTAGRAM) {
+        if ($this->type === Enum_PresenceType::INSTAGRAM()) {
             $this->instagram_engagement = $internals['instagram_engagement'];
-        } else if ($this->type === Enum_PresenceType::YOUTUBE) {
+        } else if ($this->type === Enum_PresenceType::YOUTUBE()) {
             $this->youtube_engagement = $internals['instagram_engagement'];
-        } else if ($this->type === Enum_PresenceType::LINKEDIN) {
+        } else if ($this->type === Enum_PresenceType::LINKEDIN()) {
             $this->linkedin_engagement = $internals['instagram_engagement'];
         }
         $this->page_url = $internals['page_url'];
@@ -245,7 +245,7 @@ class Model_Presence
      */
     public function getFacebookEngagement()
     {
-        return floatval($this->facebook_engagement);
+        return $this->facebook_engagement;
     }
 
     /**
@@ -253,7 +253,23 @@ class Model_Presence
      */
     public function getInstagramEngagement()
     {
-        return floatval($this->instagram_engagement);
+        return $this->instagram_engagement;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSinaWeiboEngagement()
+    {
+        return $this->sina_weibo_engagement;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getYoutubeEngagement()
+    {
+        return $this->youtube_engagement;
     }
 
     /**
@@ -265,11 +281,68 @@ class Model_Presence
     }
 
     /**
+     * @param $monthlyAverage bool - set to true to get a weighted average over the past month
      * @return mixed
      */
-    public function getYoutubeEngagement()
+    public function getFacebookEngagementScore($monthlyAverage = false)
     {
-        return floatval($this->youtube_engagement);
+        if($monthlyAverage) {
+            return Metric_FBEngagement::convertToScore($this->getMetricValue('facebook_engagement'));
+        } else {
+            return Metric_FBEngagement::convertToScore(floatval($this->facebook_engagement));
+        }
+    }
+
+    /**
+     * @param $monthlyAverage bool - set to true to get a weighted average over the past month
+     * @return float|int
+     */
+    public function getSinaWeiboEngagementScore($monthlyAverage = false)
+    {
+        if($monthlyAverage) {
+            return Metric_SinaWeiboEngagement::convertToScore($this->getMetricValue('sina_weibo_engagement'));
+        } else {
+            return Metric_SinaWeiboEngagement::convertToScore(floatval($this->sina_weibo_engagement));
+        }
+    }
+
+    /**
+     * @param $monthlyAverage bool - set to true to get a weighted average over the past month
+     * @return mixed
+     */
+    public function getInstagramEngagementScore($monthlyAverage = false)
+    {
+        if($monthlyAverage) {
+            return Metric_InstagramEngagement::convertToScore($this->getMetricValue('instagram_engagement'));
+        } else {
+            return Metric_InstagramEngagement::convertToScore(floatval($this->instagram_engagement));
+        }
+    }
+
+    /**
+     * @param $monthlyAverage bool - set to true to get a weighted average over the past month
+     * @return mixed
+     */
+    public function getLinkedinEngagementScore($monthlyAverage = false)
+    {
+        if($monthlyAverage) {
+            return Metric_LinkedinEngagement::convertToScore($this->getMetricValue('linkedin_engagement'));
+        } else {
+            return Metric_LinkedinEngagement::convertToScore(floatval($this->linkedin_engagement));
+        }
+    }
+
+    /**
+     * @param $monthlyAverage bool - set to true to get a weighted average over the past month
+     * @return mixed
+     */
+    public function getYoutubeEngagementScore($monthlyAverage = false)
+    {
+        if($monthlyAverage) {
+            return Metric_YoutubeEngagement::convertToScore($this->getMetricValue('youtube_engagement'));
+        } else {
+            return Metric_YoutubeEngagement::convertToScore(floatval($this->youtube_engagement));
+        }
     }
 
     public function getPresenceSign()
@@ -645,15 +718,17 @@ class Model_Presence
             return;
         }
 
+
+
         switch ($this->type) {
-            case Enum_PresenceType::INSTAGRAM:
-                $instagramEngagement = $this->getInstagramEngagement();
+            case Enum_PresenceType::INSTAGRAM():
+                $instagramEngagement = $this->instagram_engagement;
                 break;
-            case Enum_PresenceType::YOUTUBE:
-                $instagramEngagement = $this->getYoutubeEngagement();
+            case Enum_PresenceType::YOUTUBE():
+                $instagramEngagement = $this->youtube_engagement;
                 break;
-            case Enum_PresenceType::LINKEDIN:
-                $instagramEngagement = $this->getLinkedinEngagement();
+            case Enum_PresenceType::LINKEDIN():
+                $instagramEngagement = $this->linkedin_engagement;
                 break;
             default:
                 $instagramEngagement = null;
@@ -676,8 +751,8 @@ class Model_Presence
             'popularity' => $this->getPopularity(),
             'klout_id' => $this->getKloutId(),
             'klout_score' => $this->getKloutScore(),
-            'facebook_engagement' => $this->getFacebookEngagement(),
-            'sina_weibo_engagement' => $this->getSinaWeiboEngagement(),
+            'facebook_engagement' => $this->facebook_engagement,
+            'sina_weibo_engagement' => $this->sina_weibo_engagement,
             'instagram_engagement' => $instagramEngagement,
             'last_updated' => $this->getLastUpdated(),
             'last_fetched' => $this->getLastFetched(),
@@ -713,11 +788,6 @@ class Model_Presence
         $tableName = Model_PresenceFactory::TABLE_PRESENCES;
         $this->db->prepare("DELETE FROM {$tableName} WHERE id = ?")
             ->execute(array($this->id));
-    }
-
-    public function getSinaWeiboEngagement()
-    {
-        return floatval($this->sina_weibo_engagement);
     }
 
     /**
@@ -855,6 +925,49 @@ class Model_Presence
     public function getEngagementScore()
     {
         return $this->provider->getEngagementScore($this);
+    }
+
+    public function getEngagementValue() {
+        switch($this->getType()) {
+            case Enum_PresenceType::FACEBOOK(): {
+                return $this->facebook_engagement;
+            }
+            case Enum_PresenceType::INSTAGRAM(): {
+                return $this->instagram_engagement;
+            }
+            case Enum_PresenceType::TWITTER(): {
+                return $this->klout_score;
+            }
+            case Enum_PresenceType::SINA_WEIBO(): {
+                return $this->sina_weibo_engagement;
+            }
+            case Enum_PresenceType::LINKEDIN(): {
+                return $this->linkedin_engagement;
+            }
+            case Enum_PresenceType::YOUTUBE(): {
+                return $this->youtube_engagement;
+            }
+        }
+        return null;
+    }
+
+    public function getReachScore() {
+        return $this->getBadgeScore('reach');
+    }
+
+    public function getQualityScore() {
+        return $this->getBadgeScore('quality');
+    }
+
+    public function getBadgeScore($badgeName) {
+        $date = new \Carbon\Carbon();
+        $date->subDay();
+        $scores = $this->getBadgeScores($date, Enum_Period::MONTH());
+        if($scores && array_key_exists($badgeName,$scores)) {
+            return $scores[$badgeName];
+        } else {
+            return 0;
+        }
     }
 
 

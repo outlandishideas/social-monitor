@@ -1,5 +1,5 @@
 <?php
-
+use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 
 require_once(__DIR__ . '/../../lib/sina_weibo/sinaweibo.php');
@@ -18,6 +18,9 @@ class Provider_SinaWeibo extends Provider_Abstract
 		}
 		$this->type = Enum_PresenceType::SINA_WEIBO();
         $this->tableName = 'sina_weibo_posts';
+		$this->createdTimeColumn = 'created_at';
+		$this->engagementStatement = '(attitude_count + comment_count * 4 + repost_count * 7)';
+		$this->contentColumn = 'text';
 	}
 
 	public function fetchStatusData(Model_Presence $presence)
@@ -51,59 +54,27 @@ class Provider_SinaWeibo extends Provider_Abstract
         return $count;
 	}
 
-	public function getHistoricStream (Model_Presence $presence, \DateTime $start, \DateTime $end,
-        $search = null, $order = null, $limit = null, $offset = null
-	) {
-        $clauses = array(
-            'p.created_at >= :start',
-            'p.created_at <= :end',
-            'p.presence_id = :id'
-        );
-        $args = array(
-            ':start' => $start->format('Y-m-d H:i:s'),
-            ':end'   => $end->format('Y-m-d H:i:s'),
-            ':id'    => $presence->getId()
-        );
-        $searchArgs = $this->getSearchClauses($search, array('p.text'));
-        $clauses = array_merge($clauses, $searchArgs['clauses']);
-        $args = array_merge($args, $searchArgs['args']);
-        $sql = "
-			SELECT SQL_CALC_FOUND_ROWS p.*
-			FROM {$this->tableName} AS p
-			WHERE " . implode(' AND ', $clauses);
-        $sql .= $this->getOrderSql($order, array('date'=>'created_at'));
-        $sql .= $this->getLimitSql($limit, $offset);
-
-		$stmt = $this->db->prepare($sql);
-		$stmt->execute($args);
-		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
-
+	protected function decorateStreamData(&$posts) {
 		//add retweets and links to posts
-        $postIds = array();
-        $remoteIds = array();
-        foreach ($ret as $post) {
-            $postIds[] = $post['id'];
-            $remoteIds[] = $post['remote_id'];
-        }
+		$postIds = array();
+		$remoteIds = array();
+		foreach ($posts as $post) {
+			$postIds[] = $post['id'];
+			$remoteIds[] = $post['remote_id'];
+		}
 
-        $retweets = $this->getRetweets($remoteIds);
-        $links = $this->getLinks($postIds, 'sina_weibo');
+		$retweets = $this->getRetweets($remoteIds);
+		$links = $this->getLinks($postIds, 'sina_weibo');
 
-        foreach ($ret as &$r) {
-            $id = $r['id'];
-            $r['links'] = isset($links[$id]) ? $links[$id] : array();
+		foreach ($posts as &$r) {
+			$id = $r['id'];
+			$r['links'] = isset($links[$id]) ? $links[$id] : array();
 
-            $retweet = $r['included_retweet'];
+			$retweet = $r['included_retweet'];
 			if (!$retweet && array_key_exists($retweet, $retweets)) {
 				$r['included_retweet'] = $retweets[$retweet];
 			}
 		}
-
-        return (object)array(
-            'stream' => count($ret) ? $ret : null,
-            'total' => $total
-        );
 	}
 
     protected function getRetweets($postIds) {
@@ -322,14 +293,40 @@ class Provider_SinaWeibo extends Provider_Abstract
 		return $metric->get($presence->getId(), $now, $then);
 	}
 
+	protected function parseStatuses($raw)
+	{
+		if(!$raw || !count($raw)) {
+			return [];
+		}
+		$parsed = array();
+		foreach ($raw as $r) {
+			$status = new Status();
+			$status->id = $r['id'];
+			$status->message = $r['text'];
+			$status->created_time = $r['created_at'];
+			$status->permalink = Provider_SinaWeibo::BASEURL . $r['remote_user_id'] . '/' . Provider_SinaWeibo::getMidForPostId($r['remote_id']);
+			$presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
+			$status->presence_id = $r['presence_id'];
+			$status->presence_name = $presence ? $presence->getName() : '';
+			$status->engagement = [
+				'shares' => $r['repost_count'],
+				'likes' => $r['attitude_count'],
+				'comments' => $r['comment_count'],
+				'comparable' => (($r['attitude_count'] + $r['comment_count'] * 4 + $r['repost_count'] * 7) / 12)
+			];
+			$status->icon = Enum_PresenceType::SINA_WEIBO()->getSign();
+			$parsed[] = (array)$status;
+		}
+		return $parsed;
+	}
+
 	/**
 	 * @param Model_Presence $presence
 	 * @return EngagementScore
 	 */
 	function getEngagementScore($presence)
 	{
-		return new EngagementScore('Sina Weibo engagement score', 'sina-weibo', $presence->getSinaWeiboEngagement());
+		return new EngagementScore('Sina Weibo engagement score', 'sina-weibo', $presence->getSinaWeiboEngagementScore(true));
 	}
-
 
 }

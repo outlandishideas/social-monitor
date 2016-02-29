@@ -111,7 +111,8 @@ class YoutubeAdapter extends AbstractAdapter
         $args = [
             'order' => 'time',
             'allThreadsRelatedToChannelId' => $channel->id,
-            'maxResults' => 100
+            'maxResults' => 100,
+            'textFormat' => 'plainText'
         ];
 
         $complete = false;
@@ -231,6 +232,7 @@ class YoutubeAdapter extends AbstractAdapter
         $comment->posted_by_owner = $comment->authorChannelId === $channel->getId() ? 1 : 0;
         $comment->rating = $commentSnippet->getViewerRating();
         $comment->message = $commentSnippet->getTextDisplay();
+        $comment->videoId = $commentSnippet->videoId;
         return $comment;
     }
 

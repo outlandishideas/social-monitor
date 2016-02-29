@@ -124,7 +124,7 @@ if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
                                             <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
                                                 <span class="<?php echo $presence->getPresenceSign(); ?> fixed-width"></span> <?php echo $presence->getHandle(); ?>
                                                 <?php $score = $presence->getEngagementScore(); ?>
-                                                <span class="engagement-score <?php echo $score->getType(); ?>"
+                                                <span class="flag-score <?php echo $score->getType(); ?>"
                                                       title="<?php echo $score->getName(); ?>: <?php echo $score->getScore(); ?>">
                                                     <?php echo round($score->getScore()); ?>
                                                 </span>
