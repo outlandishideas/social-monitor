@@ -203,6 +203,37 @@ app.init = {
 			});
 		},
 
+		'#all-presences th[data-name="handle"]': function ($tableHeader) {
+			var $table = $('#all-presences');
+
+			var icons = [];
+			var options = [];
+
+			$.each($table.find('td.cell-handle span.fa'), function(i, item) {
+				if ($.inArray(item.className, icons) === -1) {
+					icons.push(item.className);
+					options.push({
+						value: $(item).closest('tr').data('type'),
+						label: item.className
+					});
+				}
+			});
+
+			icons.sort();
+
+			console.log(options[0]);
+
+			var html = '<select id="filter-presence">';
+
+			$.each(options, function (i, item) {
+				html += '<option value="' + item.value + '" class="'+ item.label +'"></option>';
+			});
+
+			html += '</select>';
+
+			$table.find('th[data-name="handle"]').append(html);
+		},
+
         '.button.compare': function ($button) {
 	        var updateComparison = function() {
 		        var $list = $('.compare.list');
