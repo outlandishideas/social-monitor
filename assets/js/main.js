@@ -207,8 +207,8 @@ app.init = {
 
 			icons.sort();
 
-			var html = '<select id="filter-presence">';
-			html += '<option value"">All</option>';
+			var html = '<select id="filter-presence" data-selected="">';
+			html += '<option value="">All</option>';
 
 			$.each(options, function (i, item) {
 				html += '<option value="' + item.value + '" class="' + item.value +'">' + item.label + '</option>';
@@ -223,6 +223,7 @@ app.init = {
 				.on('change', function() {
 					var $self = $(this);
 					app.state.indexFilters.type = $self.val();
+					$self.attr('data-selected', $self.val());
 					app.table.filter();
 				});
 		},

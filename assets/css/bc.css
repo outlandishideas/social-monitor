@@ -2479,29 +2479,36 @@ td.countries a {
 
 .dataTable thead select option {
 	background: #051b21;
+	color: white;
 }
 
-.dataTable thead select option.facebook {
+.dataTable thead select option.facebook,
+.dataTable thead select[data-selected="facebook"] {
 	color: #3B5998;
 }
 
-.dataTable thead select option.twitter {
+.dataTable thead select option.twitter,
+.dataTable thead select[data-selected="twitter"] {
 	color: #4099FF;
 }
 
-.dataTable thead select option.sina_weibo {
+.dataTable thead select option.sina_weibo,
+.dataTable thead select[data-selected="sina_weibo"] {
 	color: #e6162d;
 }
 
-.dataTable thead select option.linkedin {
+.dataTable thead select option.linkedin,
+.dataTable thead select[data-selected="linkedin"] {
 	color: #007bb5;
 }
 
-.dataTable thead select option.youtube {
+.dataTable thead select option.youtube,
+.dataTable thead select[data-selected="youtube"] {
 	color: #e52d27;
 }
 
-.dataTable thead select option.instagram {
+.dataTable thead select option.instagram,
+.dataTable thead select[data-selected="instagram"] {
 	color: #3f729b;
 }
 
