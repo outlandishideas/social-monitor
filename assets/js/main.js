@@ -17,7 +17,11 @@ $.extend(app, {
 		colors: {},
 		timestamps: [],
 		unloading: false,
-        badges: []
+        badges: [],
+		indexFilters: {
+			region: null,
+			type: null
+		}
 	},
 	templates: {
 		legendLabel: '<div class="dataset <%=className%>" data-line-id="<%=line_id%>">\
@@ -180,26 +184,8 @@ app.init = {
 		'#filter-region': function ($item) {
 			$item.on('change', function() {
 				var $self = $(this);
-				var region_id = $self.val();
-
-				console.log(region_id);
-
-				var $table = $('table');
-
-				var $rows = $table.find('tbody tr');
-
-				$rows.show();
-
-				if (region_id) {
-					$rows.hide();
-					$rows.filter('[data-region="' + region_id +'"]').show();
-				}
-
-				$rows
-					.removeClass('odd').removeClass('even')
-					.filter(':visible')
-					.filter(':odd').addClass('odd').end()
-					.filter(':even').addClass('even');
+				app.state.indexFilters.region = $self.val();
+				app.table.filter();
 			});
 		},
 
@@ -214,24 +200,30 @@ app.init = {
 					icons.push(item.className);
 					options.push({
 						value: $(item).closest('tr').data('type'),
-						label: item.className
+						label: window.getComputedStyle(item,':before').content.replace(/"/gi, '')
 					});
 				}
 			});
 
 			icons.sort();
 
-			console.log(options[0]);
-
-			var html = '<select id="filter-presence">';
+			var html = '<select id="filter-presence" style="font-family: FontAwesome">';
 
 			$.each(options, function (i, item) {
-				html += '<option value="' + item.value + '" class="'+ item.label +'"></option>';
+				html += '<option value="' + item.value + '">' + item.label + '</option>';
 			});
 
 			html += '</select>';
 
-			$table.find('th[data-name="handle"]').append(html);
+			$(html).appendTo($tableHeader)
+				.on('click', function(event) {
+					event.stopPropagation();
+				})
+				.on('change', function() {
+					var $self = $(this);
+					app.state.indexFilters.type = $self.val();
+					app.table.filter();
+				});
 		},
 
         '.button.compare': function ($button) {
@@ -818,6 +810,36 @@ app.modal = {
 	},
 	hide: function() {
 		$('#modal-container,#modal-backdrop').fadeOut();
+	}
+};
+
+app.table = {
+	filter: function () {
+		var $table = $('table');
+		var $rows = $table.find('tbody tr');
+		$rows.show();
+
+		var filters = app.state.indexFilters;
+
+		if (filters.region || filters.type) {
+			$rows.hide();
+
+			if (filters.region) {
+				$rows = $rows.filter('[data-region="' + filters.region +'"]');
+			}
+
+			if (filters.type) {
+				$rows = $rows.filter('[data-type="' + filters.type +'"]');
+			}
+
+			$rows.show();
+		}
+
+		$rows
+			.removeClass('odd').removeClass('even')
+			.filter(':visible')
+			.filter(':odd').addClass('odd').end()
+			.filter(':even').addClass('even');
 	}
 };
 

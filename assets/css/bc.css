@@ -2464,6 +2464,23 @@ td.countries a {
 	border: 0;
 }
 
+.dataTable thead select {
+	font-family: FontAwesome;
+	display: inline-block;
+	width: 3rem;
+	float: right;
+	margin: 0;
+	color: white;
+	background-color: rgba(0,0,0,0.5);
+	border-color: white;
+	padding: 0 0 0 0.5rem;
+	font-size: 1.1rem;
+}
+
+.dataTable thead select option {
+	background: #051b21;
+}
+
 /* tabs on right-hand-side of presence/campaign page */
 #model-tabs,
 #homepage-tabs {
