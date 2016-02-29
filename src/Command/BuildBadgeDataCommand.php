@@ -11,6 +11,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * This should be run in a cron job daily, just after midnight. This ensures that the day's data is created, but will
+ * be updated later as part of fetch
+ */
 class BuildBadgeDataCommand extends ContainerAwareCommand
 {
     protected function configure()
@@ -46,7 +50,7 @@ class BuildBadgeDataCommand extends ContainerAwareCommand
         Badge_Factory::guaranteeHistoricalData(Enum_Period::MONTH(), new \DateTime('now -60 days'), new \DateTime('now'), $output, [], $force);
 
         // do everything that the index page does, but using the (potentially) updated data
-        $objectCacheManager->getFrontPageData(30, true);
+        $objectCacheManager->updateFrontPageData();
 
         // also store a non-temporary version of Badge::badgeData
         $objectCacheManager->populatePresenceBadgeData();

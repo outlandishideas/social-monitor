@@ -520,7 +520,7 @@ class Model_Presence
 		//start (re)calculation when data not available, or when indicated not to use cache
 		$cachedValues = array();
 		if ($useCache) {
-			$stmt = $this->db->prepare(
+			$selectStmt = $this->db->prepare(
 				"SELECT metric, value FROM `kpi_cache`
 				WHERE `presence_id` = :pid
 				AND `start_date` = :start
@@ -530,8 +530,8 @@ class Model_Presence
 				':start' => $cacheEntry->startString,
 				':end' => $cacheEntry->endString
 			);
-			$stmt->execute($args);
-			$cachedValues = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+			$selectStmt->execute($args);
+			$cachedValues = $selectStmt->fetchAll(PDO::FETCH_KEY_PAIR);
 		}
 
 		foreach($this->getMetrics() as $metric) {

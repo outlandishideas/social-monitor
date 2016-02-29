@@ -123,6 +123,7 @@
 			}
 		}
 	} else {
+		/** @var Zend_View_Helper_MinifyHeadScript $minify */
 		$minify = $this->minifyHeadScript();
 		foreach ($scripts as $type=>$script) {
 			list($type, $s) = $script;

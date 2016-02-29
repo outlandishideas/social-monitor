@@ -1,7 +1,6 @@
 <?php
 
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
-use Outlandish\SocialMonitor\Models\Status;
 
 abstract class Provider_Abstract
 {
@@ -124,16 +123,17 @@ abstract class Provider_Abstract
         return;
     }
 
-	/**
-	 * Get all metadata for posts/tweets/streamdata for a specific presence between 2 dates
-	 * @param Model_Presence $presence  The presence to get the data for
-	 * @param \DateTime $start      The first day to fetch the data for (inclusive)
-	 * @param \DateTime $end        The last day to fetch the data for (inclusive)
-	 * @return array   The historic metadata for the stream in format: array(
-	 *	                    																array('date', '# posts', '#links', '#bc links'),
-	 *                                     										...
-	 *                                 											 )
-	 */
+    /**
+     * Get all metadata for posts/tweets/streamdata for a specific presence between 2 dates
+     * @param Model_Presence $presence The presence to get the data for
+     * @param \DateTime $start The first day to fetch the data for (inclusive)
+     * @param \DateTime $end The last day to fetch the data for (inclusive)
+     * @param bool $ownPostsOnly
+     * @return array The historic metadata for the stream in format: array(
+     *                                                                                        array('date', '# posts', '#links', '#bc links'),
+     * ...
+     * )
+     */
 	abstract public function getHistoricStreamMeta(Model_Presence $presence, \DateTime $start, \DateTime $end, $ownPostsOnly = false);
 
     /**

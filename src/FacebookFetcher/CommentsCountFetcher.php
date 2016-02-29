@@ -1,18 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 31/05/2015
- * Time: 16:15
- */
 
 namespace Outlandish\SocialMonitor\FacebookFetcher;
-
-
-use Facebook\FacebookRequest;
-use Facebook\FacebookRequestException;
-use Facebook\FacebookSDKException;
-use Facebook\GraphObject;
 
 /**
  * Class fetches comment counts for a given facebook object

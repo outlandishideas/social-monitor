@@ -207,10 +207,6 @@ abstract class Badge_Abstract
 		return $color;
 	}
 
-    static function getInstance() {
-        return Badge_Factory::getBadge(self::getName());
-    }
-
     public function setMetrics(array $metrics, $weighting = array())
     {
         $this->metrics = $metrics;

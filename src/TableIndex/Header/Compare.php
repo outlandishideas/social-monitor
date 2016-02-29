@@ -2,6 +2,8 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Model_Presence;
+
 class Compare extends Header {
 
     protected static $name = "compare";
@@ -15,6 +17,10 @@ class Compare extends Header {
     }
 
 
+    /**
+     * @param Model_Presence $model
+     * @return string
+     */
     public function getTableCellValue($model)
     {
         return "<input

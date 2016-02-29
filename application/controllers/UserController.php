@@ -98,11 +98,12 @@ class UserController extends BaseController
             $username = $this->_request->getParam('username');
             if (!$username) {
                 $this->flashMessage('Please enter a username or email address', 'error');
-            } else {
-                $user = Model_User::fetchBy('name', $username);
-                if (!$user) {
-                    $user = Model_User::fetchBy('email', $username);
-                }
+			} else {
+				/** @var Model_User $user */
+				$user = Model_User::fetchBy('name', $username);
+				if (!$user) {
+					$user = Model_User::fetchBy('email', $username);
+				}
 
                 if (!$user) {
                     $this->flashMessage('User not found', 'error');

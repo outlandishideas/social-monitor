@@ -1,6 +1,5 @@
 <?php
 
-
 use Outlandish\SocialMonitor\Adapter\TwitterAdapter;
 use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;

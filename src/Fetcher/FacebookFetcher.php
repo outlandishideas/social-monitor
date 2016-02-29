@@ -11,7 +11,6 @@ namespace Outlandish\SocialMonitor\Fetcher;
 
 use DateTime;
 use Facebook\FacebookRequest;
-use Facebook\FacebookRequestException;
 use Facebook\FacebookSession;
 use Facebook\GraphObject;
 
