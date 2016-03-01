@@ -74,6 +74,7 @@ class TableIndex {
             $row = new \stdClass();
             $row->id = $model->id;
             $row->region_id = $region ? $region->id : null;
+            $row->type = $model instanceof Model_Presence ? $model->getType()->getValue() : null;
             foreach ($this->headers as $header) {
                 $name = $header->getName();
                 $row->{$name} = $header->getTableCellValue($model);

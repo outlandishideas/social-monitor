@@ -2475,6 +2475,66 @@ td.countries a {
 	border: 0;
 }
 
+.dataTable thead select {
+	display: inline-block;
+	width: auto;
+	float: right;
+	margin: 0;
+	color: white;
+	background-color: rgba(0,0,0,0.5);
+	border-color: white;
+	padding: 0 0 0 0.5rem;
+	font-size: 1.1rem;
+	text-align: center;
+}
+
+.dataTable thead select option {
+	background: #051b21;
+	color: white;
+	font-family: FontAwesome;
+}
+
+.dataTable thead select option.all,
+.dataTable thead select[data-selected=""] {
+	font-family: 'Open Sans', sans-serif;
+}
+
+.dataTable thead select option.facebook,
+.dataTable thead select[data-selected="facebook"] {
+	color: #3B5998;
+	font-family: FontAwesome;
+}
+
+.dataTable thead select option.twitter,
+.dataTable thead select[data-selected="twitter"] {
+	color: #4099FF;
+	font-family: FontAwesome;
+}
+
+.dataTable thead select option.sina_weibo,
+.dataTable thead select[data-selected="sina_weibo"] {
+	color: #e6162d;
+	font-family: FontAwesome;
+}
+
+.dataTable thead select option.linkedin,
+.dataTable thead select[data-selected="linkedin"] {
+	color: #007bb5;
+	font-family: FontAwesome;
+}
+
+.dataTable thead select option.youtube,
+.dataTable thead select[data-selected="youtube"] {
+	color: #e52d27;
+	font-family: FontAwesome;
+}
+
+.dataTable thead select option.instagram,
+.dataTable thead select[data-selected="instagram"] {
+	color: #3f729b;
+	font-family: FontAwesome;
+}
+
 /* tabs on right-hand-side of presence/campaign page */
 #model-tabs,
 #homepage-tabs {
