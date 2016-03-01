@@ -98,7 +98,7 @@ $.extend(app, {
                     </div>\
                     <div class="bd-btm">\
 	                <h4>Presences</h4>\
-	                <div class="score-value">0</div>\
+	                <p>This country has presences.</p>\
                 </div>\
             </div>',
 		globalScore:
