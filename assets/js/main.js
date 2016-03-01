@@ -120,7 +120,7 @@ $.extend(app, {
 					</div>\
 				</div>\
 			</div>\
-			<div id="overall-presences" class="badge-small" data-country-id="0" data-badge data-score="418" data-color="#fff">\
+			<div id="total-presences" class="badge-small" data-country-id="0" data-badge data-score="418" data-color="#fff">\
 				<div class="badge-score bd-btm">\
 					<h4>Total Presences</h4>\
 					<div class="score-value" data-badge-score></div>\

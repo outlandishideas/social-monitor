@@ -12,6 +12,7 @@ app.home = {
 	fanData: [],
 	metrics: {},
     totalData: undefined,
+	totalPresences: 0,
 
     totalScore: function() {
         if (!app.home.totalData) {
@@ -60,6 +61,7 @@ app.home = {
 	    app.home.countryData = mapArgs.mapData;
 	    app.home.geochartMetrics = mapArgs.geochartMetrics;
 	    app.home.fanData = mapArgs.fanData;
+		app.home.totalPresences = mapArgs.totalPresences
 
 	    // copy the provided metrics to app.home, and populate values
 	    app.home.metrics = mapArgs['geochartMetrics'];
@@ -222,6 +224,7 @@ app.home = {
 			// no id specified, show overall data
 			$countryStats.addClass('global');
 			$countryStats.html(app.templates.globalScore);
+			$('#total-presences').data('score', app.home.totalPresences);
 			app.home.updateAll();
 		}
 	},
