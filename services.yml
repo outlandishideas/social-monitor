@@ -196,6 +196,9 @@ services:
     table.header.parent:
         class: Outlandish\SocialMonitor\TableIndex\Header\ParentName
 
+    table.header.region_parent:
+        class: Outlandish\SocialMonitor\TableIndex\Header\Region
+
     # Index table data sources
     table.source.region:
         class: Outlandish\SocialMonitor\TableIndex\TableSource\RegionSource
@@ -245,6 +248,7 @@ services:
         arguments: ['country-index', "@table.source.country"]
         calls:
             - [addHeader, ["@table.header.name"]]
+            - [addHeader, ["@table.header.region_parent"]]
             - [addHeader, ["@table.header.total_rank"]]
             - [addHeader, ["@table.header.total_score"]]
             - [addHeader, ["@table.header.reach_score"]]
@@ -263,6 +267,7 @@ services:
         calls:
             - [addHeader, ["@table.header.handle"]]
             - [addHeader, ["@table.header.parent"]]
+            - [addHeader, ["@table.header.region_parent"]]
             - [addHeader, ["@table.header.branding"]]
             - [addHeader, ["@table.header.sign_off"]]
             - [addHeader, ["@table.header.total_rank"]]
