@@ -17,7 +17,8 @@ $.extend(app, {
 		colors: {},
 		timestamps: [],
 		unloading: false,
-        badges: []
+        badges: [],
+		totalPresences: 100000,
 	},
 	templates: {
 		legendLabel: '<div class="dataset <%=className%>" data-line-id="<%=line_id%>">\
@@ -110,7 +111,7 @@ $.extend(app, {
 				</div>\
 			</div>\
 			<div id="overall-fans" class="badge-small" data-country-id="0" data-badge data-score="0" data-color="#fff">\
-				<div class="badge-score bd-btm">\
+				<div class="badge-score">\
 					<h4><span data-badge-title>Overall</span> Fans/Followers</h4>\
 					<div class="score-value" data-badge-score></div>\
 				</div>\
@@ -118,6 +119,12 @@ $.extend(app, {
 					<div>\
 						This is built up from the total scores from all British Council presences around the world.\
 					</div>\
+				</div>\
+			</div>\
+			<div id="overall-presences" class="badge-small" data-country-id="0" data-badge data-score="0" data-color="#fff">\
+				<div class="badge-score bd-btm">\
+					<h4><span data-badge-title>Overall</span> Presences</h4>\
+					<div class="score-value" data-badge-score>' + app.state.totalPresences + ' </div>\
 				</div>\
 			</div>'
 	}
