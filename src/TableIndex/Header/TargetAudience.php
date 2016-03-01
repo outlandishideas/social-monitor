@@ -2,6 +2,9 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Model_Campaign;
+use Model_Presence;
+
 class TargetAudience extends Header {
 
     protected static $name = "target-audience";

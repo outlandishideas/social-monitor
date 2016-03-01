@@ -1,26 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 29/04/2015
- * Time: 16:58
- */
 
 namespace Outlandish\SocialMonitor\Query;
 
-class PresencePopularityHistoryDataQuery {
-
-    /**
-     * @var PDO
-     */
-    private $db;
-
-    /**
-     * @param \PDO $db
-     */
-    public function __construct(\PDO $db) {
-        $this->db = $db;
-    }
+/**
+ * @unused
+ */
+class PresencePopularityHistoryDataQuery extends HistoryDataQuery
+{
 
     public function get(\Datetime $startDate, \DateTime $endDate)
     {

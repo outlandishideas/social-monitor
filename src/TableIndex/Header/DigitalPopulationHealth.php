@@ -2,6 +2,7 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Badge_Abstract;
 use Model_Country;
 
 class DigitalPopulationHealth extends Header {
@@ -29,7 +30,7 @@ class DigitalPopulationHealth extends Header {
             $value = -1;
             $style = '';
         } else {
-            $style = 'style="color:' . \Util_Color::getDigitalPopulationHealthColor($value) . ';"';
+            $style = 'style="color:' . Badge_Abstract::colorize($value) . ';"';
         }
 
         return "<span $style data-value='{$value}'>{$text}<span>";

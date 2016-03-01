@@ -1,23 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 29/06/2015
- * Time: 14:34
- */
 
 namespace Outlandish\SocialMonitor\Report;
-
-
-use GuzzleHttp\Client;
 
 class ReportDownloader
 {
 
-    /**
-     * @var Client
-     */
-    private $client;
     /**
      * The url of the site to download the report from
      * eg. https://socialmonitor.britishcouncil.net

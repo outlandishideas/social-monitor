@@ -2,6 +2,8 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Model_Region;
+
 class CountryCount extends Header {
 
     protected static $name = "country-count";

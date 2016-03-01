@@ -2,8 +2,6 @@
 
 namespace Outlandish\SocialMonitor\Adapter;
 
-use DateTime;
-use Exception_InstagramNotFound;
 use Google_Service_YouTube_Channel;
 use Google_Service_YouTube_ChannelSnippet;
 use Google_Service_YouTube_ChannelStatistics;
@@ -14,10 +12,7 @@ use Google_Service_YouTube_CommentThreadListResponse;
 use Google_Service_YouTube_CommentThreadReplies;
 use Google_Service_YouTube_CommentThreadSnippet;
 use Google_Service_YouTube_ThumbnailDetails;
-use Outlandish\SocialMonitor\InstagramApp;
-use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
-use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
 
@@ -215,7 +210,7 @@ class YoutubeAdapter extends AbstractAdapter
 
     /**
      * @param Google_Service_YouTube_Channel $channel
-     * @param $thread
+     * @param Google_Service_YouTube_CommentThread $thread
      * @return YoutubeComment
      */
     protected function parseCommentThread(Google_Service_YouTube_Channel $channel, $thread)

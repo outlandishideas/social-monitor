@@ -1,16 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 29/04/2015
- * Time: 14:33
- */
 
 namespace Outlandish\SocialMonitor\Command;
 
 use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 use PDO;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

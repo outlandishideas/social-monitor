@@ -1,21 +1,9 @@
 <?php
 
-use mikehaertl\wkhtmlto\Pdf;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\Report\ReportablePresence;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
-use Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay;
-use Outlandish\SocialMonitor\TableIndex\Header\Branding;
-use Outlandish\SocialMonitor\TableIndex\Header\CurrentAudience;
 use Outlandish\SocialMonitor\TableIndex\Header\Handle;
-use Outlandish\SocialMonitor\TableIndex\Header\Header;
-use Outlandish\SocialMonitor\TableIndex\Header\Options;
-use Outlandish\SocialMonitor\TableIndex\Header\ResponseTime;
-use Outlandish\SocialMonitor\TableIndex\Header\SignOff;
-use Outlandish\SocialMonitor\TableIndex\Header\TargetAudience;
-use Outlandish\SocialMonitor\TableIndex\Header\TotalRank;
-use Outlandish\SocialMonitor\TableIndex\Header\TotalScore;
-use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class PresenceController extends GraphingController
 {
@@ -389,12 +377,8 @@ class PresenceController extends GraphingController
 	}
 
     public function downloadAction() {
-        Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
-        $presences = Model_PresenceFactory::getPresences();
-
 		$table = $this->getContainer()->get('table.presence-index');
-        $csvData = Util_Csv::generateCsvData($presences, $table->getHeaders());
-
+        $csvData = Util_Csv::generateCsvData($table);
         Util_Csv::outputCsv($csvData, 'presences');
 	    exit;
     }

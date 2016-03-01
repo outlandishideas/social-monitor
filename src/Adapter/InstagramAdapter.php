@@ -7,7 +7,6 @@ use Exception_InstagramNotFound;
 use Outlandish\SocialMonitor\InstagramApp;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
-use Outlandish\SocialMonitor\Models\Status;
 
 class InstagramAdapter extends AbstractAdapter
 {
@@ -20,6 +19,8 @@ class InstagramAdapter extends AbstractAdapter
     public function getMetadata($handle)
     {
         $user = null;
+        /** @var object $users */
+        /** @var object $user */
         $users = $this->instagram->searchUser($handle, 10);
         if (count($users->data) === 1) {
             $user = $users->data[0];

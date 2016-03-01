@@ -81,12 +81,13 @@ class Model_Country extends Model_Campaign {
         }
     }
 
+	public function isSmallCountry()
+	{
+		return in_array($this->getCountryCode(), self::smallCountryCodes());
+	}
+
     public static function smallCountryCodes(){
-        return array(
-            'SG' => 'Singapore',
-            'AL' => 'Albania',
-            'HK' => 'Hong Kong'
-        );
+        return array('SG', 'AL', 'HK');
     }
 
 	public static function countryCodes() {

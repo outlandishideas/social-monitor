@@ -2,6 +2,8 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
+use Badge_Reach;
+
 class ReachRank extends BadgeRank {
 
     protected static $name = "reach-rank";

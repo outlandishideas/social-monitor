@@ -96,7 +96,7 @@ class Chart_Compare extends Chart_Abstract {
 
     protected function getCampaignNames($data = null)
     {
-        return $this->getNames($data);
+        return $this->getNames();
     }
 
     protected function getData($model, DateTime $start, DateTime $end)
@@ -105,7 +105,7 @@ class Chart_Compare extends Chart_Abstract {
             /** @var Model_Presence $model */
             $data = $model->getBadgeHistory($start, $end);
             $columns = $this->getColumns($data);
-            $names = $this->getNames($data);
+            $names = $this->getNames();
         } else if ($model instanceof Model_Region) {
             $data = $model->getBadgeHistory($start, $end);
             $columns = array_values($this->getCampaignColumns($data, 'campaign_id'));
@@ -114,6 +114,7 @@ class Chart_Compare extends Chart_Abstract {
             } else {
                 $names = array();
                 foreach (Model_Country::fetchByIds($this->getCountryIdsFromData($data)) as $c) {
+                    /** @var $c Model_Country */
                     $names[$c->id] = $c->getName();
                 }
             }

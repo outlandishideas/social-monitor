@@ -1,12 +1,12 @@
 <?php
     $countriesCount = count($this->countries);
-    /** @var Model_Country $c */
     $countries = array_map(function($c) {
+        /** @var Model_Country $c */
         return $c->getName();
     }, $this->countries);
 
-    /** @var Model_Country $c */
     $presences = array_map(function($c) {
+        /** @var Model_Country $c */
         return $c->getName();
     }, $this->region->getPresences());
     $presenceCount = count($presences);

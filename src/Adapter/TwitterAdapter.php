@@ -2,12 +2,10 @@
 
 namespace Outlandish\SocialMonitor\Adapter;
 
-use DateTime;
 use Exception_TwitterNotFound;
 use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
 use Outlandish\SocialMonitor\Models\Tweet;
-use RuntimeException;
 use Util_Twitter;
 
 class TwitterAdapter extends AbstractAdapter {

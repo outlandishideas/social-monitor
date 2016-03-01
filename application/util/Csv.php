@@ -1,14 +1,17 @@
 <?php
 
 use Outlandish\SocialMonitor\TableIndex\Header\Header;
+use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 class Util_Csv {
     /**
-     * @param Model_Presence[]|Model_Campaign[] $models
-     * @param Header[] $headers
+     * @param TableIndex $table
      * @return array
      */
-    static function generateCsvData($models, $headers) {
+    static function generateCsvData($table) {
+        $headers = $table->getHeaders();
+        $models = $table->getTableData();
+
         /*if (userHasNoPermissions) {
             $this->view->msg = 'This file cannot be downloaded!';
             $this->_forward('error', 'download');

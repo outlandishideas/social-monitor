@@ -1,11 +1,8 @@
 <?php
 
 
-use Facebook\GraphObject;
-use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
 use Outlandish\SocialMonitor\Adapter\InstagramAdapter;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
-use Outlandish\SocialMonitor\Models\FacebookStatus;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\Status;
 

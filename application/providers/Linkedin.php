@@ -1,7 +1,6 @@
 <?php
 
 use Outlandish\SocialMonitor\Adapter\LinkedinAdapter;
-use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
@@ -11,7 +10,7 @@ class Provider_Linkedin extends Provider_Abstract
 {
 	protected $connection = null;
     /**
-     * @var YoutubeAdapter
+     * @var LinkedInAdapter
      */
     private $adapter;
 

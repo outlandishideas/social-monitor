@@ -12,6 +12,7 @@ app.home = {
 	fanData: [],
 	metrics: {},
     totalData: undefined,
+	totalPresences: 0,
 
     totalScore: function() {
         if (!app.home.totalData) {
@@ -60,6 +61,7 @@ app.home = {
 	    app.home.countryData = mapArgs.mapData;
 	    app.home.geochartMetrics = mapArgs.geochartMetrics;
 	    app.home.fanData = mapArgs.fanData;
+		app.home.totalPresences = mapArgs.totalPresences
 
 	    // copy the provided metrics to app.home, and populate values
 	    app.home.metrics = mapArgs['geochartMetrics'];
@@ -95,15 +97,20 @@ app.home = {
             .on('click', 'li a', function(event){
                 event.preventDefault();
                 var $this = $(this);
-                var type = $(this).attr('href').replace('#','');
-                $this.parents('.badge-presences-buttons')
-                    .find('li a').removeClass('active')
-                    .filter('[href="#' +type+ '"]').addClass('active');
-                $this.parents('.badge-small')
-                    .find('.badge-presences').hide()
-                    .filter('[data-'+type+'-presences]').show();
+                var type = $this.attr('href').replace('#','');
+				var $parent = $this.closest('[data-badge]');
+                $parent.find('.badge-presences-buttons li a').removeClass('active');
+				$this.addClass('active');
+				if (type == 'all') {
+					$parent.find('.badge-presences li[data-presence-type]').slideDown()
+						.find('.flag-score').hide();
+				} else {
+					$parent.find('.badge-presences li:not([data-presence-type=' + type + '])').slideUp();
+					$parent.find('.badge-presences li[data-presence-type=' + type + ']').slideDown()
+						.find('.flag-score').show();
+				}
             })
-            .end().find('.badge-presences').hide();
+			.end().find('[data-presence-type]').hide();
 
 	    var $homepageTabs = $('#homepage-tabs');
 	    $homepageTabs.on('click', 'a', function(e) {
@@ -200,10 +207,10 @@ app.home = {
 		var $countryStats = $('#country-stats');
 		if(id) {
 			if(id > -1) {
-				$countryStats.addClass('loading');
+				var $loading = $('<span class="fa fa-refresh fa-spin loading-icon"></span>').appendTo($countryStats);
 				$countryStats.load('country/stats-panel/id/' + id, function () {
 					$countryStats.removeClass('global');
-					$countryStats.removeClass('loading');
+					$loading.remove();
 					$('[data-badge-title]').text($('#homepage-tabs').find('dd.active').data('title'));
 					app.home.updateAll();
 				});
@@ -217,6 +224,7 @@ app.home = {
 			// no id specified, show overall data
 			$countryStats.addClass('global');
 			$countryStats.html(app.templates.globalScore);
+			$('#total-presences').data('score', app.home.totalPresences);
 			app.home.updateAll();
 		}
 	},

@@ -22,7 +22,8 @@ class IndexController extends GraphingController
             'geochartMetrics' => $this->view->geochartMetrics,
             'mapData' => $mapData,
             'groupData' => $groupData,
-            'fanData' => $fanData
+            'fanData' => $fanData,
+			'totalPresences' => count(Model_PresenceFactory::getPresences())
         );
 
 		$this->view->dateRangeString = $old->format('d M Y') . ' - ' . $now->format('d M Y');

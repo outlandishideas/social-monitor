@@ -3,6 +3,33 @@
 $locale = 'en_US';
 $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
 
+function metricAttributes($metric) {
+    $attrs = array();
+    $title = $metric['title'];
+    if (array_key_exists('score', $metric)) {
+        $score = $metric['score'];
+        $attrs['style'] = "color: " . $metric['color'];
+        if ($score > 0) {
+            $score = round($score*10)/10; // use 1 decimal place maximum
+            $attrs['title'] = "This presence has scored {$score}% for {$title} based on an average of the last 30 days of data.";
+        } else {
+            if ($metric['gliding'] || $score === null) {
+                $attrs['title'] = "There is no data available to calculate {$title}.";
+            } else {
+                $attrs['title'] = "This presence has scored 0% for {$title}.";
+            }
+        }
+    } else {
+        $attrs['title'] = "{$title} is not applicable for this presence";
+    }
+
+    $attrStrings = [];
+    foreach ($attrs as $key=>$value) {
+        $attrStrings[] = $key . '="' . $value . '"';
+    }
+
+    return implode(' ', $attrStrings);
+}
 ?>
 
 <div class="badges">
@@ -60,25 +87,8 @@ $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
                     <?php if ($this->showMetrics): ?>
                         <ul class="badge-metrics show-for-large-up">
                             <?php foreach($badge['metrics'] as $metric): ?>
-                                <li
-                                    class="bd-btm"
-                                    <?php if (!empty($this->titles)) : ?>
-                                        <?php if (array_key_exists('score', $metric)): ?>
-                                            style="color: <?php echo($metric['color']); ?>"
-                                            <?php if ($metric['score'] > 0): ?>
-                                                title="This presence has scored <?php echo($metric['score']); ?>% for <?php echo $metric['title']; ?> based on an average of the last 30 days of data"."
-                                            <?php else: ?>
-                                                <?php if ($metric['gliding'] || $metric['score'] === null): ?>
-                                                    title="There is no data available to calculate <?php echo $metric['title']; ?>."
-                                                <?php else: ?>
-                                                    title="This presence has scored 0% for <?php echo $metric['title']; ?>."
-                                                <?php endif; ?>
-                                            <?php endif; ?>
-                                        <?php else : ?>
-                                            title="<?php echo $metric['title']; ?> is not applicable for this presence"
-                                        <?php endif; ?>
-                                    <?php endif; ?>
-                                >
+                                <li class="bd-btm"
+                                    <?php if (!empty($this->titles)) { echo metricAttributes($metric); } ?> >
                                     <span class="<?php echo $metric['icon']; ?> fa-fw"></span> <?php echo $metric['title']; ?>
                                 </li>
                             <?php endforeach; ?>

@@ -13,7 +13,7 @@
 						data-icon="<?php echo $presenceType['sign']; ?>"
 						data-type="<?php echo $presenceType['type']; ?>">
 					<option value="">-- Select --</option>
-					<?php foreach ($presenceType['presences'] as $p) : ?>
+					<?php foreach ($presenceType['presences'] as $p) : /** @var $p Model_Presence */ ?>
 						<option value="<?php echo $p->id; ?>"
 								data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
 								data-label="<?php echo $p->handle; ?>"

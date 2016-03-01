@@ -1788,6 +1788,11 @@ h4 {
 	color: #fff;
 }
 
+.badge-presences .fa.fixed-width {
+	width: 20px;
+	text-align: center;
+}
+
 .badge-presences-buttons {
 	margin-bottom: 1rem;
 }
@@ -2444,9 +2449,15 @@ td.countries a {
 }
 
 #country-stats {
-	min-height: 20px;
 	background-color: #0a3542;
-	background-position: right top;
+	position: relative;
+}
+
+#country-stats .loading-icon {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 18px;
 }
 
 #country-stats .presence-list h4 {

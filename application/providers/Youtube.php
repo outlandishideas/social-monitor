@@ -1,9 +1,7 @@
 <?php
 
-
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
-use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
@@ -353,6 +351,16 @@ class Provider_Youtube extends Provider_Abstract
 
     }
 
+    /**
+     * @param Model_Presence $presence
+     * @param DateTime $start
+     * @param DateTime $end
+     * @param string $search
+     * @param string $order
+     * @param string $limit
+     * @param string $offset
+     * @return object
+     */
     public function getStatusStream(Model_Presence $presence, $start, $end, $search, $order, $limit, $offset)
     {
         return $this->getStatusStreamMulti([$presence], $start, $end, $start, $order, $limit, $offset);
