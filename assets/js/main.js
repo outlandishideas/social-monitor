@@ -18,7 +18,6 @@ $.extend(app, {
 		timestamps: [],
 		unloading: false,
         badges: [],
-		totalPresences: 100000,
 	},
 	templates: {
 		legendLabel: '<div class="dataset <%=className%>" data-line-id="<%=line_id%>">\
@@ -124,7 +123,7 @@ $.extend(app, {
 			<div id="overall-presences" class="badge-small" data-country-id="0" data-badge data-score="0" data-color="#fff">\
 				<div class="badge-score bd-btm">\
 					<h4><span data-badge-title>Overall</span> Presences</h4>\
-					<div class="score-value" data-badge-score>' + app.state.totalPresences + ' </div>\
+					<div class="score-value" data-badge-score></div>\
 				</div>\
 			</div>'
 	}
