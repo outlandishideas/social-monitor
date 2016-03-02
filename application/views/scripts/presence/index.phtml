@@ -3,7 +3,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
     '<a class="button-bc" href="%url%">Add New</a>' => array('action'=>'new'),
     '<a class="button-bc" href="%url%">Download CSV</a>' => array('action'=>'download'),
 ));
-array_unshift($buttons, $this->partial('partials/region-filter.phtml', ['regions' => $this->regions]));
+array_unshift($buttons, '<span id="filter-region"></span>');
 array_unshift($buttons, '<div id="search-table">Loading data...</div>');
 
 echo '<h2 class="page-title">Presences</h2>';

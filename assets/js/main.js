@@ -142,12 +142,6 @@ app.init = {
 	bootstrap: function() {
 		$('a.autoConfirm, .button-delete').on('click', app.autoConfirm.ask);
 
-		//run conditional init functions if selector exists on page
-		for (var selector in app.init.selectors) {
-			var $item = $(selector);
-			if ($item.length) app.init.selectors[selector]($item);
-		}
-
 		//randomise order of colours
 		app.colors.sort(function () { return 0.5 - Math.random() });
 
@@ -156,6 +150,13 @@ app.init = {
 		});
 
 		app.datatables.init();
+
+		//run conditional init functions if selector exists on page
+		for (var selector in app.init.selectors) {
+			var $item = $(selector);
+			if ($item.length) app.init.selectors[selector]($item);
+		}
+
 	},
 
 	//selector-based init functions, called from bootstrap
@@ -188,11 +189,30 @@ app.init = {
 		},
 
 		'#filter-region': function ($item) {
-			$item.on('change', function() {
-				var $self = $(this);
-				app.state.indexFilters.region = $self.val();
-				app.table.filter();
-			});
+			var $table = $('table.dataTable').dataTable();
+			$table.api().columns().every( function () {
+				var column = this;
+				if ($(column.header()).data('name') == 'region') {
+
+					var select = $('<select class="button-bc" name="filter-region"><option value="">Filter by region</option></select>')
+						.appendTo( $item )
+						.on( 'change', function () {
+							var val = $.fn.dataTable.util.escapeRegex(
+								$(this).val()
+							);
+
+							column
+								.search( val ? '^'+val+'$' : '', true, false )
+								.draw();
+						} );
+					column.data().unique().sort().each( function ( d, j ) {
+						if (d !== 'No Region' && d !== '') {
+							select.append( '<option value="'+d+'">'+d+'</option>' )
+						}
+					} );
+				}
+
+			} );
 		},
 
 		'#all-presences th[data-name="handle"]': function ($tableHeader) {

@@ -109,7 +109,6 @@ app.datatables = {
 
 			//set data-hidden on th of column that you want to hide
 			var hidden = $cell.data('hidden');
-			console.log(hidden);
 			if (typeof hidden != 'undefined') {
 				column.hidden = true;
 			}
@@ -133,7 +132,6 @@ app.datatables = {
 	selectors: {
 		'.dtable.standard, #all-sbus, #all-countries, #all-regions, #all-presences, #all-users': function($table) {
 			var columns = app.datatables.generateColumns($table);
-			console.log(columns);
 			var sortCol = 0;
 			var sortColName = $table.data('sortCol');
 			if (sortColName) {
@@ -156,19 +154,21 @@ app.datatables = {
 					[sortCol, 'asc']
 				],
 				bScrollInfinite: true,
-				iDisplayLength: 10,
+				iDisplayLength: 1000,
 				bScrollCollapse: true,
+				bPaginate: false,
 				bFilter: true,
 				bInfo: false,
 				aoColumns: columns,
 				oLanguage: {
 					sSearch: ''
 				},
+				fixedHeader: true,
 				"columnDefs": [
 					{
 						"targets": hiddenCols,
 						"visible": false,
-						"searchable": false
+						"searchable": true
 					}
 				]
 			});

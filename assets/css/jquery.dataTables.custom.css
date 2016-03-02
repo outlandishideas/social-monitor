@@ -23,3 +23,7 @@ table.dataTable tbody tr.alt {
 	width: auto;
 	display: inline-block;
 }
+
+table.fixedHeader-floating {
+	background-color: #0a3542;
+}
