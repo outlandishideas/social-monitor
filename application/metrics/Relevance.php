@@ -5,6 +5,7 @@ class Metric_Relevance extends Metric_Abstract {
     protected static $name = "relevance";
     protected static $title = "Relevance";
     protected static $icon = "fa fa-tags";
+    protected static $gliding = false;
 
     protected $updatesPerDay;
 

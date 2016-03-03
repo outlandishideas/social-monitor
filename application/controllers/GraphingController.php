@@ -201,11 +201,12 @@ abstract class GraphingController extends BaseController {
 					 *  If gliding, 0 and null imply no data, so we leave it grey.
 					 *  If not gliding:
 					 *   - null implies no data
-					 *   - 0 implies a score of 0%, so we change to red
+					 *   - score between 0 and 1 implies a score of 0%, so we change to red
+					 *
 					 */
 
 					if (!$m['gliding'] && $m['score'] !== null) {
-						if ($m['score'] == 0) {
+						if ($m['score'] == 0 || $m['score'] < 1) {
 							$m['color'] = '#D06959';	// red for score of 0%
 						}
 					}
