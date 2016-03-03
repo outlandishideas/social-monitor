@@ -51,7 +51,7 @@ class ConfigController extends BaseController {
 
                             'in_min'=>array('label'=>'Linkedin Minimum Audience (% of total)'),
                             'in_opt'=>array('label'=>'Linkedin Optimum Audience (% of total)'),
-
+                            'size_3_presences'=>array('label'=>'% of owner Target Audience that is shared amongst extra large presences'),
                             'size_2_presences'=>array('label'=>'% of owner Target Audience that is shared amongst large presences'),
                             'size_1_presences'=>array('label'=>'% of owner Target Audience that is shared amongst medium presences'),
                             'size_0_presences'=>array('label'=>'% of owner Target Audience that is shared amongst small presences'),
