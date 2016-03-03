@@ -178,18 +178,15 @@ app.datatables = {
 		'table#domains': function($table) {
 			var args = {
 				sAjaxSource:jsConfig.apiEndpoint + "domain/list",
-				sDom: {
-
-				},
 				aaSorting:[
 					[0, 'asc']
 				],
 				aoColumns:[
 					{
 						mDataProp:'domain',
-						render:function (o, val) {
-							if (o.aData.url) {
-								val = '<a href="' + o.aData.url + '">' + val + '<a/>';
+						render:function (val, type, row) {
+							if (row.url) {
+								val = '<a href="' + row.url + '">' + val + '<a/>';
 							}
 							return val;
 						},
@@ -200,8 +197,8 @@ app.datatables = {
 					},
 					{
 						mDataProp:'is_bc',
-						render:function (o, val) {
-							var d = o.aData;
+						render:function (val, type, row) {
+							var d = row;
 							var $input = $('<input type="checkbox" />')
 								.attr('id', 'domain-' + d.id)
 								.attr('name', 'is_bc[' + d.id + ']');
