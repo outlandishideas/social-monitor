@@ -20,6 +20,7 @@ app.datatables = {
         // sort by a numeric value in data-value on the direct child or a descendent of the table cell
         app.datatables.addSortFunction('data-value-numeric', function ( a ) {
 			var $element = $(a);
+			//if element does not have data-value attribute get a child element with it.
 			if (!$element[0].hasAttribute('data-value')) {
 				$element = $element.find('[data-value]');
 			}
