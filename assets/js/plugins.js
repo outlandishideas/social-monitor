@@ -223,16 +223,16 @@ Scotty.prototype = {
 };
 
 function getStatusRowRenderFunction(showResponses) {
-	return function(o) {
-		if (typeof o.aData.message != 'string') {
-			o.aData.message = '';
+	return function(o, type, row, meta) {
+		if (typeof row.message != 'string') {
+			row.message = '';
 		}
-		o.aData.date = moment(o.aData.created_time).format('D MMM');
-		var message = parseTemplate(app.templates.post, o.aData);
+		row.date = moment(row.created_time).format('D MMM');
+		var message = parseTemplate(app.templates.post, row);
 		if(showResponses) {
-			message = appendResponseTemplate(message, o.aData);
+			message = appendResponseTemplate(message, row);
 		} else {
-			message = convertTitleToLink(message, o.aData);
+			message = convertTitleToLink(message, row);
 		}
 		return message;
 	}

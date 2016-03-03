@@ -187,7 +187,7 @@ app.datatables = {
 				aoColumns:[
 					{
 						mDataProp:'domain',
-						fnRender:function (o, val) {
+						render:function (o, val) {
 							if (o.aData.url) {
 								val = '<a href="' + o.aData.url + '">' + val + '<a/>';
 							}
@@ -200,7 +200,7 @@ app.datatables = {
 					},
 					{
 						mDataProp:'is_bc',
-						fnRender:function (o, val) {
+						render:function (o, val) {
 							var d = o.aData;
 							var $input = $('<input type="checkbox" />')
 								.attr('id', 'domain-' + d.id)
@@ -234,7 +234,7 @@ app.datatables = {
 			app.datatables.initStatusList($div, 'statuses', [
 				{
 					mDataProp:'message',
-					fnRender: getStatusRowRenderFunction(false),
+					render: getStatusRowRenderFunction(false),
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
@@ -245,7 +245,7 @@ app.datatables = {
 			app.datatables.initStatusList($div, 'presence', [
 				{
 					mDataProp:'message',
-					fnRender: getStatusRowRenderFunction(true),
+					render: getStatusRowRenderFunction(true),
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
@@ -264,7 +264,7 @@ app.datatables = {
 			app.datatables.initStatusList($div, 'presence', [
 				{
 					mDataProp: 'message',
-					fnRender: getStatusRowRenderFunction(true),
+					render: getStatusRowRenderFunction(true),
 					sClass: 'message',
 					bSortable: false,
 					bUseRendered: false
@@ -283,7 +283,7 @@ app.datatables = {
 			app.datatables.initStatusList($div, 'presence', [
 				{
 					mDataProp:'message',
-					fnRender: getStatusRowRenderFunction(true),
+					render: getStatusRowRenderFunction(true),
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
@@ -302,7 +302,7 @@ app.datatables = {
 			app.datatables.initStatusList($div, 'presence', [
 				{
 					mDataProp:'message',
-					fnRender: getStatusRowRenderFunction(false),
+					render: getStatusRowRenderFunction(false),
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
@@ -313,7 +313,7 @@ app.datatables = {
 			app.datatables.initStatusList($div, 'presence', [
 				{
 					mDataProp:'message',
-					fnRender: getStatusRowRenderFunction(false),
+					render: getStatusRowRenderFunction(false),
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
@@ -324,7 +324,7 @@ app.datatables = {
 			app.datatables.initStatusList($div, 'post', [
 				{
 					mDataProp:'message',
-					fnRender: getStatusRowRenderFunction(false),
+					render: getStatusRowRenderFunction(false),
 					sClass: 'message',
 					bSortable:false,
 					bUseRendered:false
@@ -413,7 +413,7 @@ app.datatables = {
 	linksColumn: function() {
 		return {
 			mDataProp:'links',
-			fnRender:function (o, links) {
+			render:function (o, links) {
 				var linkStrings = [];
 				if (links) {
 					for (var i=0; i<links.length; i++) {
@@ -431,7 +431,7 @@ app.datatables = {
 	dateColumn: function() {
 		return {
 			mDataProp:'date',
-			fnRender:function (o, val) {
+			render:function (o, val) {
 				return Date.parse(val).toString('d MMM<br>HH:mm');
 			},
 			bUseRendered:false,
@@ -464,7 +464,7 @@ app.datatables = {
 			bAutoWidth:false,
 			fnServerData:function (sSource, aoData, fnCallback) {
 				var $wrapper = $(this).parent();
-				$wrapper.showLoader();
+				//$wrapper.showLoader();
 				$.getJSON(sSource, aoData,
 					function (e) {
 						//display data
@@ -476,7 +476,7 @@ app.datatables = {
 						aoData.push({name:'format', value:'csv'});
 						//update CSV download URL
 						$wrapper.find('.dataTables_info a').attr('href', sSource + '?' + $.param(aoData));
-						$wrapper.hideLoader();
+						//$wrapper.hideLoader();
 					}).error(function (e) {
 						var data = null;
 						try {
@@ -504,8 +504,7 @@ app.datatables = {
 			bInfo:true,
 			bScrollInfinite:true,
 			bScrollCollapse:false,
-			sScrollY:"600px",
-			iScrollLoadGap:500,
+			lengthChange: false,
 			fnDrawCallback:app.datatables.reloadAvatars
 		};
 	},
