@@ -17,9 +17,13 @@ app.datatables = {
 	        }
         });
 
-        // sort by a numeric value in data-value on the direct child of the table cell
+        // sort by a numeric value in data-value on the direct child or a descendent of the table cell
         app.datatables.addSortFunction('data-value-numeric', function ( a ) {
-	        var value = $(a).data('value');
+			var $element = $(a);
+			if (!$element[0].hasAttribute('data-value')) {
+				$element = $element.find('[data-value]');
+			}
+	        var value = $element.data('value');
 	        return value ? value : 0;
         });
 
