@@ -26,7 +26,7 @@ class Presences extends Header {
     {
         $presences = array();
         foreach($model->getPresences() as $presence) {
-            $template = '<a href="' . Gatekeeper::PLACEHOLDER_URL . '"><span class="' . $presence->getPresenceSign() . ' fa-lg fa-fw"></span>' . $presence->getHandle() . '</a>';
+            $template = '<a href="' . Gatekeeper::PLACEHOLDER_URL . '"><span class="white-background fixed-width ' . $presence->getPresenceSign() . ' fa-fw"></span>' . $presence->getHandle() . '</a>';
             $urlArgs = array("controller" => "presence", "action" => "view", "id" => $presence->getId());
             $presences[$template] = $urlArgs;
         }

@@ -2082,6 +2082,12 @@ body .ui-daterangepicker li.ui-state-active a:visited {
 	width: 10%;
 }
 
+.fa.white-background {
+	background-color: white;
+	border-radius: 5%;
+	padding-top: 2px;
+}
+
 .fa.fa-twitter {
 	color: #4099FF;
 }

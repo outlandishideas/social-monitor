@@ -25,7 +25,7 @@ class Handle extends Header {
         $handle = $this->getValue($model);
         $sign = $model->getPresenceSign();
         $engagment = $model->getEngagementScore();
-        $value = "<span class=\"$sign fa-lg fa-fw\"></span> $handle";
+        $value = "<span class=\"white-background fixed-width $sign fa-fw\"></span> $handle";
         $value .= " <span class=\"flag-score {$engagment->getType()}\" title=\"{$engagment->getName()}: {$engagment->getScore()}\">" . round($engagment->getScore()) . '</span>';
 
         return $value;

@@ -3,7 +3,7 @@
 $presence = $this->presence
 ?>
 <a href="<?php echo $this->url(array('controller' => 'presence', 'action' => 'view', 'id' => $presence->getId())); ?>">
-    <span class="<?php echo $presence->getPresenceSign(); ?>"></span>
+    <span class="white-background fixed-width <?php echo $presence->getPresenceSign(); ?>"></span>
     <?php echo $presence->getHandle(); ?>
     <span class="flag-score engagement <?php echo $presence->getEngagementScore()->getType(); ?>"
           title="<?php echo $presence->getEngagementScore()->getName(); ?>: <?php echo $presence->getEngagementScore()->getScore(); ?>">
