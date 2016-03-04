@@ -3,6 +3,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
     '<a class="button-bc" href="%url%">Add New</a>' => array('action'=>'new'),
     '<a class="button-bc" href="%url%">Download CSV</a>' => array('action'=>'download'),
 ));
+array_unshift($buttons, '<span id="filter-presence-type"></span>');
 array_unshift($buttons, '<span id="filter-region"></span>');
 array_unshift($buttons, '<div id="search-table">Loading data...</div>');
 

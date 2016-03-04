@@ -199,6 +199,9 @@ services:
     table.header.region_parent:
         class: Outlandish\SocialMonitor\TableIndex\Header\Region
 
+    table.header.presence_type:
+        class: Outlandish\SocialMonitor\TableIndex\Header\PresenceType
+
     # Index table data sources
     table.source.region:
         class: Outlandish\SocialMonitor\TableIndex\TableSource\RegionSource
@@ -268,6 +271,7 @@ services:
             - [addHeader, ["@table.header.handle"]]
             - [addHeader, ["@table.header.parent"]]
             - [addHeader, ["@table.header.region_parent"]]
+            - [addHeader, ["@table.header.presence_type"]]
             - [addHeader, ["@table.header.branding"]]
             - [addHeader, ["@table.header.sign_off"]]
             - [addHeader, ["@table.header.total_rank"]]

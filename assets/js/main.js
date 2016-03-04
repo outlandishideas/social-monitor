@@ -215,43 +215,31 @@ app.init = {
 			} );
 		},
 
-		'#all-presences th[data-name="handle"]': function ($tableHeader) {
-			var $table = $('#all-presences');
+		'#filter-presence-type': function ($item) {
+			var $table = $('table.dataTable').dataTable();
+			$table.api().columns().every( function () {
+				var column = this;
+				if ($(column.header()).data('name') == 'presence-type') {
 
-			var icons = [];
-			var options = [];
+					var select = $('<select class="button-bc" name="filter-presence-type"><option value="">Filter by presence</option></select>')
+						.appendTo( $item )
+						.on( 'change', function () {
+							var val = $.fn.dataTable.util.escapeRegex(
+								$(this).val()
+							);
 
-			$.each($table.find('td.cell-handle span.fa'), function(i, item) {
-				if ($.inArray(item.className, icons) === -1) {
-					icons.push(item.className);
-					options.push({
-						value: $(item).closest('tr').data('type'),
-						label: window.getComputedStyle(item,':before').content.replace(/"/gi, '')
-					});
+							column
+								.search( val ? '^'+val+'$' : '', true, false )
+								.draw();
+						} );
+					column.data().unique().sort().each( function ( d, j ) {
+						if (d !== 'N/A' && d !== '') {
+							select.append( '<option value="'+d+'">'+d+'</option>' )
+						}
+					} );
 				}
-			});
 
-			icons.sort();
-
-			var html = '<select id="filter-presence" data-selected="">';
-			html += '<option value="">All</option>';
-
-			$.each(options, function (i, item) {
-				html += '<option value="' + item.value + '" class="' + item.value +'">' + item.label + '</option>';
-			});
-
-			html += '</select>';
-
-			$(html).appendTo($tableHeader)
-				.on('click', function(event) {
-					event.stopPropagation();
-				})
-				.on('change', function() {
-					var $self = $(this);
-					app.state.indexFilters.type = $self.val();
-					$self.attr('data-selected', $self.val());
-					app.table.filter();
-				});
+			} );
 		},
 
         '.button.compare': function ($button) {
