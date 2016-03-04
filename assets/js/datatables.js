@@ -17,9 +17,14 @@ app.datatables = {
 	        }
         });
 
-        // sort by a numeric value in data-value on the direct child of the table cell
+        // sort by a numeric value in data-value on the direct child or a descendent of the table cell
         app.datatables.addSortFunction('data-value-numeric', function ( a ) {
-	        var value = $(a).data('value');
+			var $element = $(a);
+			//if element does not have data-value attribute get a child element with it.
+			if (!$element[0].hasAttribute('data-value')) {
+				$element = $element.find('[data-value]');
+			}
+	        var value = $element.data('value');
 	        return value ? value : 0;
         });
 
@@ -107,6 +112,12 @@ app.datatables = {
 				column.sWidth = width;
 			}
 
+			//set data-hidden on th of column that you want to hide
+			var hidden = $cell.data('hidden');
+			if (typeof hidden != 'undefined') {
+				column.hidden = true;
+			}
+
 			if (column.sType == 'forminput') {
 				column.mRender = function(content, type, c) {
 					if (type == 'filter') {
@@ -136,6 +147,13 @@ app.datatables = {
 					}
 				}
 			}
+			var hiddenCols = [];
+			for(var i=0; i<columns.length; i++) {
+				if (columns[i].hidden) {
+					hiddenCols.push(i);
+				}
+			}
+
 			$table.dataTable({
 				aaSorting:[
 					[sortCol, 'asc']
@@ -143,12 +161,21 @@ app.datatables = {
 				bScrollInfinite: true,
 				iDisplayLength: 1000,
 				bScrollCollapse: true,
+				bPaginate: false,
 				bFilter: true,
 				bInfo: false,
 				aoColumns: columns,
 				oLanguage: {
 					sSearch: ''
-				}
+				},
+				fixedHeader: true,
+				"columnDefs": [
+					{
+						"targets": hiddenCols,
+						"visible": false,
+						"searchable": true
+					}
+				]
 			});
 
 			app.datatables.moveSearchBox();

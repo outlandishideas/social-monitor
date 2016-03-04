@@ -1,16 +1,29 @@
-table.dataTable td {
-	background-color: #fff;
-	border-bottom: 1px solid #ccc;
+table.dataTable thead th, table.dataTable thead td {
+	border-bottom-color: #fff;
 }
 
-table.dataTable tr td.sorting_1, table.dataTable tr td.sorting_2 {
-	background: #e2e2e2;
+table.dataTable tbody tr {
+	background-color: transparent;
 }
 
-table.dataTable tr.selected td {
-	background-color: #dff0d8;
+table.dataTable tbody tr.even,
+table.dataTable tbody tr.alt {
+	background: #000;
+	background: rgba(255,255,255,0.1);
 }
 
-table.dataTable tr.selected td.sorting_1, table.dataTable tr.selected td.sorting_2 {
-	background-color: #d6e9c6;
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+	color: #fff !important;
+}
+
+.dataTables_length label {
+	color: #fff;
+}
+.dataTables_length select {
+	width: auto;
+	display: inline-block;
+}
+
+table.fixedHeader-floating {
+	background-color: #0a3542;
 }

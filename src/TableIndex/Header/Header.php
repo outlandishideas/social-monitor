@@ -42,13 +42,18 @@ abstract class Header {
     public function getTableHeaderElement(){
         $properties = array(
             "data-name" => $this->getName(),
-            "data-sort" => $this->getSort()
+            "data-sort" => $this->getSort(),
+
         );
         if($this->getDescription() !== null) {
             $properties['title'] = $this->getDescription();
         }
         if($this->getWidth() !== null) {
             $properties['data-width'] =  $this->getWidth();
+        }
+
+        if ($this->isHidden()) {
+            $properties['data-hidden'] = "";
         }
 
         $html = "<th";
@@ -157,5 +162,10 @@ abstract class Header {
 
     function formatValue($value) {
         return $value;
+    }
+
+    protected function isHidden()
+    {
+        return false;
     }
 }
