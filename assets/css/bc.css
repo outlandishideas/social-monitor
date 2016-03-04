@@ -1889,12 +1889,17 @@ h4 {
 .model-header .page-icon {
 	float: left;
 	font-size: 2rem;
-	margin-top: 16px;
+	margin-top: 13px;
+	padding-top: 3px;
+	border-radius: 5%;
 	width: 50px;
 	text-align: center;
 }
 .model-header .page-icon.fa {
 	font-size: 2.5rem;
+}
+.model-header .page-icon.white-background {
+	background-color: white;
 }
 
 .model-header .picker {
