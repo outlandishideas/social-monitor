@@ -91,7 +91,7 @@ class BaseController extends Zend_Controller_Action
 
     public function init()
     {
-//		if (APPLICATION_ENV == 'live') {
+//		if (APPLICATION_ENV == 'prod') {
 //			$this->getResponse()
 //				->setHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
 //		}
@@ -166,7 +166,7 @@ class BaseController extends Zend_Controller_Action
         $level = $gatekeeper->getRequiredUserLevel($controller, $action);
         if ($this->view->user && !$this->view->user->canPerform($level, $controller, $action, $id)) {
             $message = 'Not allowed: Insufficient access rights';
-            if (APPLICATION_ENV != 'live') {
+            if (APPLICATION_ENV != 'prod') {
                 $message .= ' (' . implode('/', array_filter(array($controller, $action, $id))) . ')';
             }
             if ($this->_request->isXmlHttpRequest()) {

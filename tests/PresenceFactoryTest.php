@@ -33,7 +33,7 @@ class PresenceFactoryTest extends PHPUnit_Extensions_Database_TestCase
     	defined('APPLICATION_PATH')
     		|| define('APPLICATION_PATH', __DIR__ . '/../application');
     	defined('APPLICATION_ENV')
-    		|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
+    		|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'prod'));
     	require_once 'Zend/Loader/Autoloader.php';
 		$autoloader = Zend_Loader_Autoloader::getInstance();
 		$resourceLoader = new Zend_Application_Module_Autoloader(array(

@@ -1,4 +1,4 @@
-live:
+prod:
   db:
     adapter: Pdo_Mysql
     params:
@@ -32,16 +32,16 @@ live:
     pageSize: 50
 
 stage:
-  _extends: live
+  _extends: prod
   db:
     params:
       dbname: staging
 
 devel:
-  _extends: live
+  _extends: prod
 
 alpha:
-  _extends: live
+  _extends: prod
   db:
     params:
       host: 127.0.0.1

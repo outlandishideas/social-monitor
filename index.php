@@ -5,7 +5,7 @@ require_once __DIR__.'/bootstrap.php';
 
 //set up logging
 //$logger = new Zend_Log();
-//if (APPLICATION_ENV != 'live') {
+//if (APPLICATION_ENV != 'prod') {
 //	$writer = new Zend_Log_Writer_Firebug();
 //} else {
 //	$writer = new Zend_Log_Writer_Stream('php://stderr');

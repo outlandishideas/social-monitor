@@ -16,7 +16,7 @@ defined('APPLICATION_ENV')
 
 
 //error reporting
-if (APPLICATION_ENV != 'live') {
+if (APPLICATION_ENV != 'prod') {
     error_reporting(E_ALL);
     ini_set('display_errors', true);
 }
