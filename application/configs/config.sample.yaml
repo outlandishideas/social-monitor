@@ -26,6 +26,7 @@ prod:
 # e.g. 7 Feb 2012 for PHP date()
     dateFormat: j M Y
     fetch_time_limit: 1140
+    client_name: Outlandish
   jsConfig:
 # e.g. 7 Feb 2012 for jQuery UI
     dateFormat: d M yy
