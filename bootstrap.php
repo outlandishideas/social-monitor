@@ -1,5 +1,6 @@
 <?php
 
+// get OUTLANDISH_ENV from file in /var/projects/lib/include/env.php, if present
 @include('env.php');
 
 // Define path to application directory
@@ -11,7 +12,7 @@ defined('APP_ROOT_PATH')
 
 // Define application environment
 defined('APPLICATION_ENV')
-|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'alpha'));
+|| define('APPLICATION_ENV', defined('OUTLANDISH_ENV') ? OUTLANDISH_ENV : (getenv('APPLICATION_ENV') ?: 'alpha'));
 
 
 //error reporting
