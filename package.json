@@ -9,6 +9,7 @@
   "author": "Outlandish",
   "dependencies": {},
   "devDependencies": {
+    "gulp": "^3.9.1",
     "gulp-load-plugins": "^1.0.0-rc.1",
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.0.1",
