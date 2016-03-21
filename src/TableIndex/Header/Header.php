@@ -34,9 +34,11 @@ abstract class Header {
     protected $display = self::DISPLAY_TYPE_BOTH;
     protected $allowedTypes = array(self::MODEL_TYPE_NONE);
     protected $cellClasses = array();
+	protected $translator;
 
     public function __construct($translator) {
         /** @var Translator $translator */
+		$this->translator = $translator;
         $className = get_class($this);
         $this->label = $translator->trans($className.'.label');
         $this->description = $translator->trans($className.'.description');

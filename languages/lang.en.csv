@@ -4,6 +4,8 @@
 "Global.loading-data";"Loading data..."
 "Global.add-new";"Add New"
 "Global.edit-all";"Edit All"
+"Global.edit";"Edit"
+"Global.delete";"Delete"
 "Global.download-csv";"Download CSV"
 
 "Global.home";"Home"
@@ -43,7 +45,7 @@
 "Index.index.pdf-download-link";"Download metrics"
 "Index.index.pdf-download-link-title";"Download metrics PDF"
 
-"Region.index.page-title";"Regions"
+"Region.index.empty-table";"No regions found"
 
 
 "Badge_Engagement.name";"engagement"

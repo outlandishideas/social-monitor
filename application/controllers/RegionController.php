@@ -38,7 +38,9 @@ class RegionController extends CampaignController
 
         $rows = $objectCacheManager->getRegionIndexRows($this->_request->getParam('force'));
 
-        $this->view->pageTitle = 'Regions';
+		$translator = $this->getContainer()->get('translation.translator');
+
+        $this->view->pageTitle = $translator->trans('Global.regions');
 		$this->view->regions = $table->getTableData();
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();

@@ -19,28 +19,33 @@ class Options extends Header {
 
     public function getTableCellValue($model)
     {
-        if ($model instanceof \Model_Presence) {
+		$editStr = $this->translator->trans("Global.edit");
+		$deleteStr = $this->translator->trans("Global.delete");
+		$presencesStr = $this->translator->trans("Global.presences");
+
+		if ($model instanceof \Model_Presence) {
             $options = array(
-                'Edit' => array('controller'=>'presence', 'action'=>'edit', 'id'=>$model->id),
-                'Delete' => array('controller'=>'presence', 'action'=>'delete', 'id'=>$model->id)
+				$editStr => array('controller'=>'presence', 'action'=>'edit', 'id'=>$model->id),
+				$deleteStr => array('controller'=>'presence', 'action'=>'delete', 'id'=>$model->id)
             );
         } else if ($model instanceof \Model_Country) {
             $options = array(
-                'Edit' => array('controller'=>'country', 'action'=>'edit', 'id'=>$model->id),
-                'Presences' => array('controller'=>'country', 'action'=>'manage', 'id'=>$model->id),
-                'Delete' => array('controller'=>'country', 'action'=>'delete', 'id'=>$model->id)
+				$editStr => array('controller'=>'country', 'action'=>'edit', 'id'=>$model->id),
+				$presencesStr => array('controller'=>'country', 'action'=>'manage', 'id'=>$model->id),
+				$deleteStr => array('controller'=>'country', 'action'=>'delete', 'id'=>$model->id)
             );
         } else if ($model instanceof \Model_Group) {
             $options = array(
-                'Edit' => array('controller'=>'group', 'action'=>'edit', 'id'=>$model->id),
-                'Presences' => array('controller'=>'group', 'action'=>'manage', 'id'=>$model->id),
-                'Delete' => array('controller'=>'group', 'action'=>'delete', 'id'=>$model->id)
+				$editStr => array('controller'=>'group', 'action'=>'edit', 'id'=>$model->id),
+				$presencesStr => array('controller'=>'group', 'action'=>'manage', 'id'=>$model->id),
+				$deleteStr => array('controller'=>'group', 'action'=>'delete', 'id'=>$model->id)
             );
         } else if ($model instanceof \Model_Region) {
-            $options = array(
-                'Edit' => array('controller'=>'region', 'action'=>'edit', 'id'=>$model->id),
-                'Countries' => array('controller'=>'region', 'action'=>'manage', 'id'=>$model->id),
-                'Delete' => array('controller'=>'region', 'action'=>'delete', 'id'=>$model->id)
+			$countriesStr = $this->translator->trans("Global.countries");
+			$options = array(
+				$editStr => array('controller'=>'region', 'action'=>'edit', 'id'=>$model->id),
+				$countriesStr => array('controller'=>'region', 'action'=>'manage', 'id'=>$model->id),
+				$deleteStr => array('controller'=>'region', 'action'=>'delete', 'id'=>$model->id)
             );
         } else {
             $options = array();
