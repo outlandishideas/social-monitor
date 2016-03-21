@@ -2709,3 +2709,7 @@ table a.view-link:hover {
 #uncheck-all:hover {
 	text-decoration: underline;
 }
+
+#content .empty-table {
+  margin-bottom: 20px;
+}

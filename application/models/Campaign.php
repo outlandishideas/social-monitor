@@ -292,10 +292,12 @@ class Model_Campaign extends Model_Base {
 	public static function constructFrontPageData($data, $dayRange){
 		$campaignIds = array();
 		$maxDate = null;
-		foreach ($data as $row) {
-			$campaignIds[$row->campaign_id] = 1;
-			if (!$maxDate || $row->date > $maxDate) {
-				$maxDate = $row->date;
+		if ($data) {
+			foreach ($data as $row) {
+				$campaignIds[$row->campaign_id] = 1;
+				if (!$maxDate || $row->date > $maxDate) {
+					$maxDate = $row->date;
+				}
 			}
 		}
 

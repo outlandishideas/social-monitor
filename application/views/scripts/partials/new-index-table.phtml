@@ -25,7 +25,7 @@ $gatekeeper = $this->gatekeeper();
 ?>
 
 <?php if (!$this->rows) : ?>
-<h3><?php echo $this->emptyText; ?></h3>
+<h3 class="empty-table"><?php echo $this->emptyText; ?></h3>
 <?php else : ?>
 <table class="text dtable" id="<?php echo $this->tableId; ?>" data-sort-col="<?php echo $this->sortCol; ?>">
     <thead>

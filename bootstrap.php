@@ -54,9 +54,11 @@ $resourceLoader->addResourceType('chart', 'charts/', 'Chart');
 $resourceLoader->addResourceType('provider', 'providers/', 'Provider');
 $resourceLoader->addResourceType('enum', 'enum/', 'Enum');
 
-//load config
+
+//initialise zend
+
 if (!file_exists(APPLICATION_PATH . '/configs/config.yaml')) {
-    die('Please copy configs/config.sample.yaml to configs/config.yaml');
+    die('Please copy ' . APPLICATION_PATH . '/configs/config.sample.yaml to ' . APPLICATION_PATH . '/configs/config.yaml');
 }
 $config = new Zend_Config_Yaml(
     APPLICATION_PATH . '/configs/config.yaml',
@@ -64,10 +66,17 @@ $config = new Zend_Config_Yaml(
 );
 Zend_Registry::set('config', $config);
 
-//connect to database
 $db = Zend_Db::factory($config->db);
 Zend_Db_Table::setDefaultAdapter($db);
 Zend_Registry::set('db', $db);
+
+
+
+// initialise Symfony
+
+if (!file_exists(APP_ROOT_PATH . '/parameters.yml')) {
+	die('Please copy ' . APP_ROOT_PATH . '/parameters.yml.dist to ' . APP_ROOT_PATH . '/parameters.yml, and populate it');
+}
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -77,6 +86,9 @@ $container = new ContainerBuilder();
 $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
 $loader->load('parameters.yml');
 $loader->load('services.yml');
+
+
+// give Zend components access to symfony
 
 Enum_PresenceType::setContainer($container);
 BaseController::setContainer($container);
