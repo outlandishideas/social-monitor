@@ -154,11 +154,7 @@ class Provider_Instagram extends Provider_Abstract
         }
 
         $presence->type = $this->type;
-        $presence->uid = $metadata->uid;
-        $presence->name = $metadata->name;
-        $presence->page_url = $metadata->page_url;
-        $presence->popularity = $metadata->popularity;
-        $presence->image_url = $metadata->image_url;
+		$presence->updateFromMetadata($metadata);
 	}
 
     /**

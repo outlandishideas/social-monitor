@@ -3,6 +3,8 @@
 use Outlandish\SocialMonitor\Cache\KpiCacheEntry;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\AccessToken;
+use Outlandish\SocialMonitor\Models\PresenceMetadata;
+
 class Model_Presence
 {
     protected $provider;
@@ -597,6 +599,18 @@ class Model_Presence
         $this->provider->update($this);
         $this->last_updated = gmdate('Y-m-d H:i:s');
     }
+
+	/**
+	 * @param PresenceMetadata $metadata
+	 */
+	public function updateFromMetadata($metadata)
+	{
+		$this->uid = $metadata->uid;
+		$this->name = $metadata->name;
+		$this->page_url = $metadata->page_url;
+		$this->popularity = $metadata->popularity;
+		$this->image_url = $metadata->image_url;
+	}
 
     public function updateHistory()
     {

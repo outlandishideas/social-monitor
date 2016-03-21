@@ -236,18 +236,14 @@ class Provider_Twitter extends Provider_Abstract
     {
 
         try {
-            $data = $this->adapter->getMetadata($presence->handle);
+            $metadata = $this->adapter->getMetadata($presence->handle);
         } catch (Exception_TwitterNotFound $e) {
             $presence->uid = null;
             throw $e;
         }
 
         $presence->type = $this->type;
-        $presence->uid = $data->uid;
-        $presence->image_url = $data->image_url;
-        $presence->name = $data->name;
-        $presence->page_url = $data->page_url;
-        $presence->popularity = $data->popularity;
+		$presence->updateFromMetadata($metadata);
     }
 
     /**

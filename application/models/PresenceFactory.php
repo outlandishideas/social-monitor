@@ -140,7 +140,7 @@ abstract class Model_PresenceFactory
 	{
 		if($internals) {
 			$type = Enum_PresenceType::get($internals['type']);
-			$provider = $type->getProvider(static::$db);
+			$provider = $type->getProvider();
 			$metrics = $type->getMetrics();
 			$badges = $type->getBadges();
 			return new Model_Presence(static::$db, $internals, $provider, $metrics, $badges);

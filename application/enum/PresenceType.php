@@ -163,10 +163,7 @@ class Enum_PresenceType extends Enum_Abstract
                 return new Provider_Facebook($db, $facebookAdapter, $engagementMetric);
 				break;
 			case self::TWITTER:
-				/** @var TwitterAdapter $twitterAdapter */
-				$twitterAdapter = $container->get('adapter.twitter');
-				return new Provider_Twitter($db, $twitterAdapter);
-				break;
+				return $container->get('provider.twitter');
             case self::INSTAGRAM:
                 $instagramAdapter = $container->get('adapter.instagram');
                 return new Provider_Instagram($db, $instagramAdapter);

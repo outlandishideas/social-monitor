@@ -90,7 +90,7 @@ abstract class Enum_Abstract
     /**
      * Ensures that each enum is only created once
      * @param $name
-     * @return mixed
+     * @return Enum_PresenceType
      */
     public static function get($name) {
         $class = get_called_class();

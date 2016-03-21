@@ -53,6 +53,13 @@ services:
         arguments: ["%twitter.fetch_per_page%"]
 
     ###################################
+    # providers
+    ###################################
+    provider.twitter:
+        class: Provider_Twitter
+        arguments: ["@pdo", "@adapter.twitter"]
+
+    ###################################
     # instagram engagement services
     ###################################
     instagram.app:
