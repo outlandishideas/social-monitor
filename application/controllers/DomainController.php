@@ -5,11 +5,6 @@ use Outlandish\SocialMonitor\Helper\Gatekeeper;
 
 class DomainController extends BaseController {
 
-	public function init() {
-		parent::init();
-		$this->view->titleIcon = 'icon-laptop';
-	}
-
 	/**
 	 * Lists the domains of links mentioned by presences, allowing them to be marked as belonging to british council or not
 	 * @user-level user

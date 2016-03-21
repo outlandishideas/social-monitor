@@ -26,12 +26,6 @@ class RegionController extends CampaignController
         );
     }
 
-	public function init()
-    {
-		parent::init();
-		$this->view->titleIcon = Model_Region::ICON_TYPE;
-	}
-
 	/**
 	 * Lists all regions
 	 * @user-level user
@@ -60,6 +54,7 @@ class RegionController extends CampaignController
         $region = Model_Region::fetchById($this->_request->getParam('id'));
         $this->validateData($region);
 
+		$this->view->titleIcon = Model_Region::ICON_TYPE;
         $this->view->badgePartial = $this->badgeDetails($region);
         $this->view->chartOptions = $this->chartOptions();
         $this->view->region = $region;
@@ -155,7 +150,6 @@ class RegionController extends CampaignController
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
         $this->view->pageTitle = 'New Region';
-	    $this->view->titleIcon = 'icon-plus-sign';
 
         $presences = array();
         $presenceIds = $this->_request->getParam('presences');
@@ -216,7 +210,6 @@ class RegionController extends CampaignController
 
         $this->view->editingRegion = $editingRegion;
         $this->view->pageTitle = 'Edit Region';
-        $this->view->titleIcon = 'icon-edit';
     }
 
 
@@ -284,8 +277,6 @@ class RegionController extends CampaignController
             }
 
         }
-
-        $this->view->titleIcon = 'icon-edit';
     }
 
 	/**
@@ -309,7 +300,6 @@ class RegionController extends CampaignController
         }
 
         $this->view->pageTitle = 'Manage Countries: ' . $region->display_name;
-        $this->view->titleIcon = 'icon-tasks';
         $this->view->region = $region;
         $this->view->allCountries = Model_Country::fetchAll();
 	}

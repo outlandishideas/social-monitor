@@ -8,11 +8,6 @@ class GroupController extends CampaignController {
 
     protected static $publicActions = array('report');
 
-	public function init() {
-		parent::init();
-		$this->view->titleIcon = Model_Group::ICON_TYPE;
-	}
-
 	/**
 	 * Lists all groups
 	 * @user-level user
@@ -41,8 +36,8 @@ class GroupController extends CampaignController {
 		$group = Model_Group::fetchById($this->_request->getParam('id'));
 		$this->validateData($group);
 
+		$this->view->titleIcon = Model_Group::ICON_TYPE;
         $this->view->badgePartial = $this->badgeDetails($group);
-
 		$this->view->chartOptions = self::chartOptions();
 		$this->view->tableMetrics = self::tableMetrics();
         $this->view->group = $group;
@@ -160,7 +155,6 @@ class GroupController extends CampaignController {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
         $this->view->pageTitle = 'New SBU';
-	    $this->view->titleIcon = 'icon-plus-sign';
 
         $presences = array();
         $presenceIds = $this->_request->getParam('presences');
@@ -227,7 +221,6 @@ class GroupController extends CampaignController {
 
         $this->view->editingGroup = $editingGroup;
         $this->view->pageTitle = 'Edit SBU';
-        $this->view->titleIcon = 'icon-edit';
     }
 
 
@@ -296,8 +289,6 @@ class GroupController extends CampaignController {
             }
 
         }
-
-        $this->view->titleIcon = 'icon-edit';
     }
 
 	/**
@@ -322,7 +313,6 @@ class GroupController extends CampaignController {
         }
 
         $this->view->pageTitle = 'Manage Presences: ' .  $group->display_name;
-        $this->view->titleIcon = 'icon-tasks';
         $this->view->group = $group;
         $this->view->presences = $this->managePresencesList();
 	}

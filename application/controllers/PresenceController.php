@@ -186,7 +186,6 @@ class PresenceController extends GraphingController
         }
 
         $this->view->pageTitle = 'Comparing '.count($compareData).' Presences';
-        $this->view->titleIcon = 'icon-exchange';
 	    $this->view->chartOptions = $this->chartOptions();
 	    $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
@@ -202,7 +201,6 @@ class PresenceController extends GraphingController
 		$this->editAction();
         $this->view->editType = true;
 		$this->view->pageTitle = 'New presence';
-		$this->view->titleIcon = 'icon-plus-sign';
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -310,7 +308,6 @@ class PresenceController extends GraphingController
         $this->view->groups = Model_Group::fetchAll();
 		$this->view->presence = $presence;
 		$this->view->pageTitle = 'Edit Presence';
-		$this->view->titleIcon = 'icon-edit';
 	}
 
 	/**

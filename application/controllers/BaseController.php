@@ -103,7 +103,6 @@ class BaseController extends Zend_Controller_Action
         $this->view->pageTitle = ucfirst($this->_request->getControllerName()) . ' > ' . ucfirst($this->_request->getActionName());
         $this->view->subtitle = '';
         $this->view->titleImage = '';
-        $this->view->titleIcon = '';
 
         //calculate twitter api status
         $this->view->apiStatus = array();

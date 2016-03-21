@@ -13,7 +13,6 @@ class UserController extends BaseController
     public function init()
     {
         parent::init();
-        $this->view->titleIcon = 'icon-group';
 
         $this->linkedin = new LinkedIn([
             'api_key' => '77412v04nudx5x',
@@ -211,7 +210,6 @@ class UserController extends BaseController
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
         $this->view->pageTitle = 'New User';
-        $this->view->titleIcon = 'icon-plus-sign';
         $this->_helper->viewRenderer->setScriptAction('edit');
     }
 
@@ -332,7 +330,6 @@ class UserController extends BaseController
         $this->view->userLevels = Model_User::$userLevels;
         $this->view->editingUser = $editingUser;
         $this->view->pageTitle = 'Edit User';
-        $this->view->titleIcon = 'icon-edit';
         $this->view->showAccessTokens = false;
     }
 
@@ -370,7 +367,6 @@ class UserController extends BaseController
         }
 
         $this->view->pageTitle = 'Edit access rights for ' . $user->safeName;
-        $this->view->titleIcon = 'icon-tasks';
         $this->view->editingUser = $user;
         $this->view->twitterPresences = Model_PresenceFactory::getPresencesByType(Enum_PresenceType::TWITTER());
         $this->view->facebookPresences = Model_PresenceFactory::getPresencesByType(Enum_PresenceType::FACEBOOK());

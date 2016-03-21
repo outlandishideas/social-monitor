@@ -8,11 +8,6 @@ class CountryController extends CampaignController {
 
     protected static $publicActions = array('stats-panel', 'report');
 
-	public function init() {
-		parent::init();
-		$this->view->titleIcon = Model_Country::ICON_TYPE;
-	}
-
 	/**
 	 * Lists all countries
 	 * @user-level user
@@ -72,6 +67,7 @@ class CountryController extends CampaignController {
 		$country = Model_Country::fetchById($this->_request->getParam('id'));
 		$this->validateData($country);
 
+		$this->view->titleIcon = Model_Country::ICON_TYPE;
 		$this->view->badgePartial = $this->badgeDetails($country);
 		$this->view->chartOptions = self::chartOptions();
         $this->view->country = $country;
@@ -166,7 +162,6 @@ class CountryController extends CampaignController {
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
 		$this->view->pageTitle = 'New Country';
-		$this->view->titleIcon = 'icon-plus-sign';
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -268,7 +263,6 @@ class CountryController extends CampaignController {
 
 		$this->view->editingCountry = $editingCountry;
 		$this->view->pageTitle = 'Edit Country';
-		$this->view->titleIcon = 'icon-edit';
 	}
 
     /**
@@ -339,8 +333,6 @@ class CountryController extends CampaignController {
             }
 
         }
-
-        $this->view->titleIcon = 'icon-edit';
     }
 
 	/**
@@ -365,7 +357,6 @@ class CountryController extends CampaignController {
 		}
 
 		$this->view->pageTitle = 'Manage Presences: ' . $country->display_name;
-		$this->view->titleIcon = 'icon-tasks';
 		$this->view->country = $country;
 		$this->view->presences = $this->managePresencesList();
 	}

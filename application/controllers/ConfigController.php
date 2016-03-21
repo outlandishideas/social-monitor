@@ -8,7 +8,6 @@ class ConfigController extends BaseController {
 	 */
 	function indexAction() {
 		$this->view->pageTitle = 'Settings';
-		$this->view->titleIcon = 'icon-cog';
 
 		$values = array(
 
