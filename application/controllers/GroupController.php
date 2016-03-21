@@ -24,6 +24,7 @@ class GroupController extends CampaignController {
 
         $rows = $objectCacheManager->getGroupIndexRows($this->_request->getParam('force'));
 
+		$this->view->pageTitle = 'SBUs';
 		$this->view->groups = $table->getTableData();
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
@@ -45,7 +46,7 @@ class GroupController extends CampaignController {
 		$this->view->chartOptions = self::chartOptions();
 		$this->view->tableMetrics = self::tableMetrics();
         $this->view->group = $group;
-        $this->view->title = 'SBU: ' . $group->display_name;
+        $this->view->pageTitle = 'SBU: ' . $group->display_name;
         $this->view->allCampaigns = Model_Group::fetchAll();
 	}
 
@@ -158,7 +159,7 @@ class GroupController extends CampaignController {
     {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
-        $this->view->title = 'New SBU';
+        $this->view->pageTitle = 'New SBU';
 	    $this->view->titleIcon = 'icon-plus-sign';
 
         $presences = array();
@@ -225,7 +226,7 @@ class GroupController extends CampaignController {
 
 
         $this->view->editingGroup = $editingGroup;
-        $this->view->title = 'Edit SBU';
+        $this->view->pageTitle = 'Edit SBU';
         $this->view->titleIcon = 'icon-edit';
     }
 
@@ -238,7 +239,7 @@ class GroupController extends CampaignController {
     public function editAllAction()
     {
 
-        $this->view->title = 'Edit All';
+        $this->view->pageTitle = 'Edit All SBUs';
         $this->view->groups = Model_Group::fetchAll();
 
         if ($this->_request->isPost()) {
@@ -320,7 +321,7 @@ class GroupController extends CampaignController {
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 
-        $this->view->title = 'Manage SBU Presences';
+        $this->view->pageTitle = 'Manage Presences: ' .  $group->display_name;
         $this->view->titleIcon = 'icon-tasks';
         $this->view->group = $group;
         $this->view->presences = $this->managePresencesList();

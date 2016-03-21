@@ -1,4 +1,4 @@
-<h2 class="page-title">Settings</h2>
+<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 <form method="post" action="<?php echo $this->url(); ?>" enctype="multipart/form-data" id="settings">
     <?php foreach ($this->values as $section) : ?>

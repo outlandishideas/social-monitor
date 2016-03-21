@@ -25,6 +25,7 @@ class UserController extends BaseController
 
     public function linkedinAction()
     {
+		$this->view->pageTitle = 'Login to LinkedIn';
         if (isset($_REQUEST['code'])) {
             $token = $this->linkedin->getAccessToken($_REQUEST['code']);
 
@@ -45,7 +46,7 @@ class UserController extends BaseController
      */
     public function indexAction()
     {
-        $this->view->title = 'Users';
+        $this->view->pageTitle = 'Users';
         $this->view->users = Model_User::fetchAll();
         $this->view->userLevels = Model_User::$userLevels;
     }
@@ -59,7 +60,7 @@ class UserController extends BaseController
             $this->_helper->redirector->gotoSimple('index', 'index');
         }
 
-        $this->view->title = 'Login';
+        $this->view->pageTitle = 'Login';
 
         if ($this->_request->isPost()) {
             $authAdapter = new Model_User();
@@ -121,7 +122,7 @@ class UserController extends BaseController
                 }
             }
         }
-        $this->view->title = 'Forgotten password';
+        $this->view->pageTitle = 'Forgotten password';
         $this->_helper->layout()->setLayout('notabs');
     }
 
@@ -169,8 +170,9 @@ class UserController extends BaseController
             $this->flashMessage('Incorrect user/key combination for password reset', 'error');
             $this->_helper->redirector->gotoSimple('index', 'index');
         }
-        $this->view->title = 'Reset password';
-        $this->_helper->layout()->setLayout('notabs');
+
+		$this->view->pageTitle = 'Change Password';
+		$this->_helper->layout()->setLayout('notabs');
     }
 
     /**
@@ -192,9 +194,9 @@ class UserController extends BaseController
         $this->editAction();
         $registerSuccessful = $this->_request->getParam('result') === 'success';
         if ($registerSuccessful) {
-            $this->view->title = 'Registration success';
+            $this->view->pageTitle = 'Registration success';
         } else {
-            $this->view->title = 'Register user';
+            $this->view->pageTitle = 'Register user';
         }
         $this->view->registerSuccessful = $registerSuccessful;
         $this->_helper->layout()->setLayout('notabs');
@@ -208,7 +210,7 @@ class UserController extends BaseController
     {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
-        $this->view->title = 'New User';
+        $this->view->pageTitle = 'New User';
         $this->view->titleIcon = 'icon-plus-sign';
         $this->_helper->viewRenderer->setScriptAction('edit');
     }
@@ -329,7 +331,7 @@ class UserController extends BaseController
 
         $this->view->userLevels = Model_User::$userLevels;
         $this->view->editingUser = $editingUser;
-        $this->view->title = 'Edit User';
+        $this->view->pageTitle = 'Edit User';
         $this->view->titleIcon = 'icon-edit';
         $this->view->showAccessTokens = false;
     }
@@ -367,7 +369,7 @@ class UserController extends BaseController
             $this->_helper->redirector->gotoSimple('index');
         }
 
-        $this->view->title = 'User Permissions';
+        $this->view->pageTitle = 'Edit access rights for ' . $user->safeName;
         $this->view->titleIcon = 'icon-tasks';
         $this->view->editingUser = $user;
         $this->view->twitterPresences = Model_PresenceFactory::getPresencesByType(Enum_PresenceType::TWITTER());

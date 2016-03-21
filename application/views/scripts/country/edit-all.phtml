@@ -9,7 +9,7 @@ $topBar = $bottomBar;
 array_unshift($topBar, '<div id="search-table">Loading data...</div>');
 ?>
 
-<h2 class="page-title">Edit All Countries</h2>
+<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 <form class="edit-all" method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-all-countries">
 

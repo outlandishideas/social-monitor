@@ -34,7 +34,7 @@ class PresenceController extends GraphingController
 
 		$rows = $objectCacheManager->getPresenceIndexRows($this->_request->getParam('force'));
 
-        $this->view->title = 'Presences';
+        $this->view->pageTitle = 'Presences';
         $this->view->presences = $table->getTableData();
         $this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
@@ -185,7 +185,7 @@ class PresenceController extends GraphingController
             );
         }
 
-        $this->view->title = 'Comparing '.count($compareData).' Presences';
+        $this->view->pageTitle = 'Comparing '.count($compareData).' Presences';
         $this->view->titleIcon = 'icon-exchange';
 	    $this->view->chartOptions = $this->chartOptions();
 	    $this->view->tableMetrics = self::tableMetrics();
@@ -201,7 +201,7 @@ class PresenceController extends GraphingController
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
         $this->view->editType = true;
-		$this->view->title = 'New presence';
+		$this->view->pageTitle = 'New presence';
 		$this->view->titleIcon = 'icon-plus-sign';
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
@@ -309,7 +309,7 @@ class PresenceController extends GraphingController
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->groups = Model_Group::fetchAll();
 		$this->view->presence = $presence;
-		$this->view->title = 'Edit Presence';
+		$this->view->pageTitle = 'Edit Presence';
 		$this->view->titleIcon = 'icon-edit';
 	}
 

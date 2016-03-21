@@ -13,7 +13,7 @@ if ($this->rows) {
 }
 ?>
 
-<h2 class="page-title">Presences</h2>
+<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 <?php if (!$this->rows) : ?>
 	<h3 class="empty-table">No presences found</h3>

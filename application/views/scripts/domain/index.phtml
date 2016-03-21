@@ -12,7 +12,8 @@ $topBar = $bottomBar;
 array_unshift($topBar, '<div id="search-table">Loading data...</div>');
 ?>
 
-<h2 class="page-title">Domains</h2>
+<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
+
 <div class="row">
     <div class="small-24 medium-12 columns">
         <p>This shows the list of all domains linked to by tweets or facebook statuses. Click the links to see more usage information and the specific URLs.</p>

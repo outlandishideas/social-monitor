@@ -29,7 +29,7 @@ class DomainController extends BaseController {
 			}
 			$this->_helper->redirector->gotoSimple('');
 		}
-		$this->view->title = 'Domains';
+		$this->view->pageTitle = 'Domains';
 		$this->view->canEdit = $this->view->user->isManager;
 	}
 
@@ -182,7 +182,7 @@ class DomainController extends BaseController {
 		}
 		$this->view->domain = $domain;
 		$this->view->links = $links;
-		$this->view->title = $domain->domain;
+		$this->view->pageTitle = $domain->domain;
 	}
 
 //    function downloadAction() {

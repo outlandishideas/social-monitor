@@ -14,7 +14,7 @@ if ($cancel) {
 $bottomBar[] = '<button type="submit" class="button-bc">Save</button>';
 ?>
 
-<h2 class="page-title">Manage Presences: <?php echo $country->display_name; ?></h2>
+<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 <form class="management" method="post" action="<?php echo $this->url(); ?>" novalidate id="manage-country">
     <?php

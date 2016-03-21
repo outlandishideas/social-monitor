@@ -7,7 +7,7 @@ if ($new) {
 array_unshift($buttons, '<div id="search-table">Loading data...</div>');
 ?>
 
-<h2 class="page-title">Users</h2>
+<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));?>
 

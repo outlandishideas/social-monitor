@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>British Council :: <?php echo strip_tags($this->title); ?></title>
+	<title><?php echo $this->clientName; ?> :: <?php echo strip_tags($this->pageTitle); ?></title>
 	<link rel="stylesheet" href="<?php echo $this->assetUrl('fonts/proxima-nova-fontfacekit/stylesheet.css'); ?>">
 	<link href="<?php echo $this->cacheBust('lib/foundation/css/normalize.css'); ?>" rel="stylesheet" type="text/css">
 	<link href="<?php echo $this->cacheBust('lib/foundation/css/foundation.css'); ?>" rel="stylesheet" type="text/css">

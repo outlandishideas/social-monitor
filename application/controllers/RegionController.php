@@ -43,7 +43,7 @@ class RegionController extends CampaignController
 
         $rows = $objectCacheManager->getRegionIndexRows($this->_request->getParam('force'));
 
-        $this->view->title = 'Regions';
+        $this->view->pageTitle = 'Regions';
 		$this->view->regions = $table->getTableData();
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
@@ -63,7 +63,7 @@ class RegionController extends CampaignController
         $this->view->badgePartial = $this->badgeDetails($region);
         $this->view->chartOptions = $this->chartOptions();
         $this->view->region = $region;
-        $this->view->title = 'Region: ' . $region->display_name;
+        $this->view->pageTitle = 'Region: ' . $region->display_name;
         $this->view->allCampaigns = Model_Region::fetchAll();
     }
 
@@ -154,7 +154,7 @@ class RegionController extends CampaignController
     {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
-        $this->view->title = 'New Region';
+        $this->view->pageTitle = 'New Region';
 	    $this->view->titleIcon = 'icon-plus-sign';
 
         $presences = array();
@@ -215,7 +215,7 @@ class RegionController extends CampaignController
 
 
         $this->view->editingRegion = $editingRegion;
-        $this->view->title = 'Edit Region';
+        $this->view->pageTitle = 'Edit Region';
         $this->view->titleIcon = 'icon-edit';
     }
 
@@ -228,7 +228,7 @@ class RegionController extends CampaignController
     public function editAllAction()
     {
 
-        $this->view->title = 'Edit All';
+        $this->view->pageTitle = 'Edit All Regions';
         $this->view->regions = Model_Region::fetchAll();
 
         if ($this->_request->isPost()) {
@@ -289,7 +289,7 @@ class RegionController extends CampaignController
     }
 
 	/**
-	 * Manages the presences that belong to a region
+	 * Manages the countries that belong to a region
 	 * @user-level manager
 	 */
 	public function manageAction()
@@ -308,7 +308,7 @@ class RegionController extends CampaignController
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 
-        $this->view->title = 'Manage Region Countries';
+        $this->view->pageTitle = 'Manage Countries: ' . $region->display_name;
         $this->view->titleIcon = 'icon-tasks';
         $this->view->region = $region;
         $this->view->allCountries = Model_Country::fetchAll();

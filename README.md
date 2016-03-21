@@ -22,5 +22,6 @@ For development purposes, update the `alpha` configuration (at the bottom) to us
 
 Currently there are also some parameters required in the `parameters.yml` that is used for the Symfony container.
 
-To configure these, copy the `parameters.dist.yml` to `parameters.yml` and edit the database parameters to match your local settings. Some values should be copied from the dev/prod environment
+To configure these, copy the `parameters.dist.yml` to `parameters.yml` and edit the database parameters to match your local settings. Some values should be copied from the dev/prod environment.
 
+Symfony's services are defined in services.yml in the root directory of the project.

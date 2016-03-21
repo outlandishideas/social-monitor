@@ -7,7 +7,7 @@ class ConfigController extends BaseController {
 	 * @user-level manager
 	 */
 	function indexAction() {
-		$this->view->title = 'Settings';
+		$this->view->pageTitle = 'Settings';
 		$this->view->titleIcon = 'icon-cog';
 
 		$values = array(

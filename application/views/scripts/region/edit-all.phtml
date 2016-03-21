@@ -13,7 +13,7 @@ if ($this->regions) {
 }
 ?>
 
-<h2 class="page-title">Edit All Regions</h2>
+<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 <?php if (!$this->regions) : ?>
 	<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $topBar, 'dark' => true)); ?>

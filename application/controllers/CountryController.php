@@ -47,6 +47,7 @@ class CountryController extends CampaignController {
         $this->view->tableHeaders = $objectCacheManager->getCountriesTable()->getHeaders();
         $this->view->sortCol = Name::getName();
 		$this->view->regions = Model_Region::fetchAll();
+		$this->view->pageTitle = 'Countries';
 	}
 
     public function statsPanelAction()
@@ -74,7 +75,7 @@ class CountryController extends CampaignController {
 		$this->view->badgePartial = $this->badgeDetails($country);
 		$this->view->chartOptions = self::chartOptions();
         $this->view->country = $country;
-        $this->view->title = 'Country: ' . $country->display_name;
+        $this->view->pageTitle = 'Country: ' . $country->display_name;
         $this->view->allCampaigns = Model_Country::fetchAll();
 	}
 
@@ -164,7 +165,7 @@ class CountryController extends CampaignController {
 	{
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
-		$this->view->title = 'New Country';
+		$this->view->pageTitle = 'New Country';
 		$this->view->titleIcon = 'icon-plus-sign';
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
@@ -266,7 +267,7 @@ class CountryController extends CampaignController {
 //		}
 
 		$this->view->editingCountry = $editingCountry;
-		$this->view->title = 'Edit Country';
+		$this->view->pageTitle = 'Edit Country';
 		$this->view->titleIcon = 'icon-edit';
 	}
 
@@ -277,7 +278,7 @@ class CountryController extends CampaignController {
     public function editAllAction()
     {
 
-        $this->view->title = 'Edit All';
+        $this->view->pageTitle = 'Edit All Countries';
         $this->view->countries = Model_Country::fetchAll();
         $this->view->countryCodes = Model_Country::countryCodes();
 
@@ -363,7 +364,7 @@ class CountryController extends CampaignController {
 			$this->_helper->redirector->gotoRoute(array('action'=>'view'));
 		}
 
-		$this->view->title = 'Manage Country Presences';
+		$this->view->pageTitle = 'Manage Presences: ' . $country->display_name;
 		$this->view->titleIcon = 'icon-tasks';
 		$this->view->country = $country;
 		$this->view->presences = $this->managePresencesList();

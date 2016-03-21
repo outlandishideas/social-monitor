@@ -11,9 +11,12 @@ class IndexController extends GraphingController
 		$old = clone $now;
 		$old->modify("-$dayRange days");
 
-		$this->view->title = 'British Council Social Media Monitor';
-		$this->view->titleIcon = 'icon-home';
-		$this->view->countries = Model_Country::fetchAll();
+		$this->view->pageTitle = 'Social Media Monitor';
+		if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
+			$this->view->pdfLink = 'data/uploads/kpis.pdf';
+		} else {
+			$this->view->pdfLink = null;
+		}
 
 		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
 		list($mapData, $groupData, $fanData) = $objectCacheManager->getFrontPageData($dayRange, true);
@@ -26,7 +29,6 @@ class IndexController extends GraphingController
 			'totalPresences' => count(Model_PresenceFactory::getPresences())
         );
 
-		$this->view->dateRangeString = $old->format('d M Y') . ' - ' . $now->format('d M Y');
 		$this->view->currentDate = $now->format('Y-m-d');
 		$this->view->dayRange = $dayRange;
 		$this->view->badges = Badge_Factory::getBadges();

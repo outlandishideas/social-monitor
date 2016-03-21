@@ -5,7 +5,7 @@ $buttons = array(
 );
 ?>
 
-<h2 class="page-title">Login</h2>
+<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 <form method="post" action="<?php echo $this->url(array('controller'=>'user', 'action'=>'login')); ?>">
 	<input type="hidden" name="redirect_to" value="<?php echo $this->redirect_to; ?>" />
 	<fieldset>

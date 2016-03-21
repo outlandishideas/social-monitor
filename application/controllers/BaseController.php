@@ -39,6 +39,7 @@ class BaseController extends Zend_Controller_Action
     {
         $this->auth = Zend_Auth::getInstance();
         $this->view->user = null;
+		$this->view->clientName = $this->config->app->client_name;
 
         //try to load the user
         if ($this->auth->hasIdentity()) {
@@ -99,7 +100,7 @@ class BaseController extends Zend_Controller_Action
 
         $this->view->bodyClass = $this->_request->getActionName() . 'Action '.$this->_request->getControllerName().'Controller';
         // provide a default page title
-        $this->view->title = ucfirst($this->_request->getControllerName()) . ' > ' . ucfirst($this->_request->getActionName());
+        $this->view->pageTitle = ucfirst($this->_request->getControllerName()) . ' > ' . ucfirst($this->_request->getActionName());
         $this->view->subtitle = '';
         $this->view->titleImage = '';
         $this->view->titleIcon = '';
