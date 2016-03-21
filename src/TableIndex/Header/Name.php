@@ -26,7 +26,7 @@ class Name extends Header {
     {
         if ($model instanceof Model_Country) {
             $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
-            $imageUrl = $baseUrl.'/assets/img/flags/'.$model->getCountryCode().'.png';
+            $imageUrl = $baseUrl.'/public/img/flags/'.$model->getCountryCode().'.png';
             return '<span class="flag"><img src="'.$imageUrl.'" /></span> '.$model->display_name;
         }
         return $model->display_name;

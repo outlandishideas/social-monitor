@@ -33,7 +33,7 @@ class Countries extends Header {
             }
         }
         foreach($model->getCountries() as $country) {
-            $imageUrl = $baseUrl . '/assets/img/flags/' . $country->getCountryCode() . '.png';
+            $imageUrl = $baseUrl . '/public/img/flags/' . $country->getCountryCode() . '.png';
             $template = '<a href="' . Gatekeeper::PLACEHOLDER_URL . '" class="entity country"><span class="flag"><img src="' . $imageUrl . '" /></span> ' . $country->getName() . '</a>';
             $urlArgs = array("controller" => "country", "action" => "view", "id" => $country->id);
             $presences[$template] = $urlArgs;
