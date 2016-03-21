@@ -1,20 +1,29 @@
 <?php
-$buttons = $this->gatekeeper()->filterAll(array(
+$buttons = array(
     '<a class="button-bc" href="%url%">Add New</a>' => array('action'=>'new'),
-    '<a class="button-bc" href="%url%">Edit All</a>' => array('action'=>'edit-all'),
-    '<a class="button-bc" href="%url%">Download CSV</a>' => array('action' => 'download')
-));
-array_unshift($buttons, $this->partial('partials/region-filter.phtml', ['regions' => $this->regions]));
-array_unshift($buttons, '<div id="search-table">Loading data...</div>');
+);
+if ($this->rows) {
+	$buttons['<a class="button-bc" href="%url%">Edit All</a>'] = array('action'=>'edit-all');
+    $buttons['<a class="button-bc" href="%url%">Download CSV</a>'] = array('action' => 'download');
+}
+$buttons = $this->gatekeeper()->filterAll($buttons);
+if ($this->rows) {
+	array_unshift($buttons, $this->partial('partials/region-filter.phtml', ['regions' => $this->regions]));
+	array_unshift($buttons, '<div id="search-table">Loading data...</div>');
+}
+?>
 
-echo '<h2 class="page-title">Countries</h2>';
+<h2 class="page-title">Countries</h2>
 
-echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
-
-echo $this->partial("partials/new-index-table.phtml", array(
-	"tableHeaders" => $this->tableHeaders,
-	"tableId" => "all-countries",
-	"rows" => $this->rows,
-    'emptyText' => 'No countries found',
-    'sortCol' => $this->sortCol
-));
+<?php if (!$this->rows) : ?>
+	<h3 class="empty-table">No countries found</h3>
+	<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
+<?php else :
+	echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
+	echo $this->partial("partials/new-index-table.phtml", array(
+		"tableHeaders" => $this->tableHeaders,
+		"tableId" => "all-countries",
+		"rows" => $this->rows,
+		'sortCol' => $this->sortCol
+	));
+endif;
