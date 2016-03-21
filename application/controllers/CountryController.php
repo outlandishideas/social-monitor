@@ -210,8 +210,12 @@ class CountryController extends CampaignController {
 				try {
 					$editingCountry->save();
 
+					$objectCacheManager = $this->getContainer()->get('object-cache-manager');
+					$table = $objectCacheManager->getCountriesTable();
+					$objectCacheManager->invalidateObjectCache($table->getIndexName());
+
                     $this->flashMessage('Country saved');
-					$this->_helper->redirector->gotoRoute(array('action' => 'view'));
+					$this->_helper->redirector->gotoRoute(array('action' => 'view', 'id' => $editingCountry->id));
 				} catch (Exception $ex) {
 					if (strpos($ex->getMessage(), '23000') !== false) {
                         $this->flashMessage('Display name already taken', 'error');

@@ -351,4 +351,17 @@ class ObjectCacheManager
         }
         return false;
     }
+
+	/**
+	 * Invalidates the object cache for the given key
+	 * @param string $key
+	 * @return bool
+	 */
+	public function invalidateObjectCache($key)
+	{
+		$sql = 'DELETE FROM object_cache WHERE `key` = :key';
+		$statement = $this->db->prepare($sql);
+		$statement->execute(array(':key' => $key));
+		return $statement->execute();
+	}
 }
