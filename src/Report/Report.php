@@ -81,10 +81,10 @@ class Report {
     {
         $ranks = [];
         $orderedRanks = [
-            Badge_Total::getName(),
-            Badge_Reach::getName(),
-            Badge_Engagement::getName(),
-            Badge_Quality::getName()
+            Badge_Total::getInstance()->getName(),
+            Badge_Reach::getInstance()->getName(),
+            Badge_Engagement::getInstance()->getName(),
+            Badge_Quality::getInstance()->getName()
         ];
 
         foreach (Badge_Factory::getBadges() as $badge) {

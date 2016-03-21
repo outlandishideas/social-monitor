@@ -10,7 +10,7 @@ class Chart_Quality extends Chart_Badge {
         parent::__construct($db);
         $this->yLabel = "Quality Score";
         $this->dataColumns = array(
-            Badge_Quality::getName()
+            Badge_Quality::getInstance()->getName()
         );
     }
 

@@ -36,10 +36,10 @@ abstract class Badge_Factory
             /** @var Badge_Abstract[] $badges */
             $db = self::getDb();
             $badges = array(
-                new Badge_Reach($db),
-                new Badge_Engagement($db),
-                new Badge_Quality($db),
-                new Badge_Total($db)
+                Badge_Reach::getInstance($db),
+				Badge_Engagement::getInstance($db),
+                Badge_Quality::getInstance($db),
+                Badge_Total::getInstance($db)
             );
             self::$badges = array();
             foreach ($badges as $b) {
@@ -94,7 +94,7 @@ abstract class Badge_Factory
 
         // get all badges, except for total (the total score is not saved)
         $badges = static::getBadges();
-        unset($badges[Badge_Total::getName()]);
+        unset($badges[Badge_Total::getInstance()->getName()]);
 
         $createRow = self::$db->prepare("INSERT INTO `badge_history` (`presence_id`, `daterange`, `date`) VALUES (:presence_id, :date_range, :date)");
         $emptyRow = array();

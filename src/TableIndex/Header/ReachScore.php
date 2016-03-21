@@ -18,7 +18,7 @@ class ReachScore extends BadgeScore {
      */
     public function getBadgeName()
     {
-        return \Badge_Reach::getName();
+        return \Badge_Reach::getInstance()->getName();
     }
 
 

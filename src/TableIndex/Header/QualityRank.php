@@ -20,7 +20,7 @@ class QualityRank extends BadgeRank {
      */
     public function getBadgeName()
     {
-        return Badge_Quality::getName() . "_rank";
+        return Badge_Quality::getInstance()->getName() . "_rank";
     }
 
 }

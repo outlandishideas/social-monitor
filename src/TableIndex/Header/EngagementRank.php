@@ -20,7 +20,7 @@ class EngagementRank extends BadgeRank {
      */
     public function getBadgeName()
     {
-        return Badge_Engagement::getName() . "_rank";
+        return Badge_Engagement::getInstance()->getName() . "_rank";
     }
 
 }

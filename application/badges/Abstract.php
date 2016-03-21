@@ -2,20 +2,46 @@
 
 abstract class Badge_Abstract
 {
-	protected static $name = '';
-	protected static $title = '';
-	protected static $description;
+	protected $name = '';
+	protected $title = '';
+	protected $description;
 	protected $db;
+	protected static $instance;
 
 	protected $metrics = array();
 	protected $metricsWeighting = array();
 
-    public function __construct(PDO $db = null)
+    protected function __construct(PDO $db = null)
 	{
 		if (is_null($db)) {
 			$db = Zend_Registry::get('db')->getConnection();
 		}
 		$this->db = $db;
+
+		// populate $name, $title, $description from transation files
+		$translate = Zend_Registry::get('translate');
+		$className = get_class($this);
+		$this->name = $translate->_($className.'.name');
+		$this->title = $translate->_($className.'.title');
+		$this->description = $translate->_($className.'.description');
+	}
+
+	/**
+	 * All implementations of this class should be singletons.
+	 * This function, when inherited, provides access to the singleton.
+	 *
+	 * @param PDO|null $db
+	 * @return Badge_Abstract
+	 */
+	public static function getInstance(PDO $db = null) {
+		// use 'static' so that the child's instance property is used instead of this one
+		// make sure the child class declares a static $instance property, otherwise this one will be inherited
+		if(!static::$instance) {
+			// returns the class that this static method has been called on, e.g. Badge_Engagement
+			$class = get_called_class();
+			static::$instance = new $class($db);
+		}
+		return static::$instance;
 	}
 
 	public function calculate(Model_Presence $presence, \DateTime $date = null, Enum_Period $range = null)
@@ -54,19 +80,19 @@ abstract class Badge_Abstract
 		return $result;
 	}
 
-	public static function getName()
+	public function getName()
 	{
-		return static::$name;
+		return $this->name;
 	}
 
-	public static function getTitle()
+	public function getTitle()
 	{
-		return static::$title;
+		return $this->title;
 	}
 
-	public static function getDescription()
+	public function getDescription()
 	{
-		return static::$description;
+		return $this->description;
 	}
 
     /**

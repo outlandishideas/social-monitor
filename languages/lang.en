@@ -1,4 +1,5 @@
-"controller.view.partial.id";"copy"
+"controller.view[.partial].id";"copy"
+
 "Base.layout.foundation-menu.home";"Home"
 "Base.layout.foundation-menu.regions";"Regions"
 "Base.layout.foundation-menu.countries";"Countries"
@@ -25,6 +26,26 @@
 "Base.layout.feedback-modal.message-placeholder";"Enter your message (max. 1000 characters)"
 "Base.layout.feedback-modal.submit";"Send form"
 "Base.layout.feedback-modal.close";"Cancel"
+
+"Index.index.page-title";"Social Media Monitor"
+"Index.index.page-title-contextual-help";"Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU."
+
+"Badge_Engagement.name";"engagement"
+"Badge_Engagement.title";"Engagement"
+"Badge_Engagement.description";"<p>The Engagement KPI provides an overall score for how well the presence, country or SBU engages with its audience. This score combines the following metrics:</p><ul><li>The Klout Score for this presence (Twitter Only).</li><li>The Facebook Engagement score for this presence (Facebook Only).</li><li>The Sina Weibo Engagement score for this presence (Sina Weibo Only).</li><li>The Instagram Engagement score for this presence (Instagram Only).</li><li>The Youtube Engagement score for this presence (Youtube Only).</li><li>The Linkedin Engagement score for this presence (Linkedin Only).</li></ul>"
+
+"Badge_Reach.name";"reach"
+"Badge_Reach.title";"Reach"
+"Badge_Reach.description";"<p>The Reach KPI provides an overall score for how well the presence, country or SBU reaches its audience. This score combines the following metrics:</p><ul><li>Current number of Fans / Followers</li><li>Number of months to reach the Target number of Fans / Followers</li><li>Average number of shares / retweets for each post / tweet</li></ul>"
+
+"Badge_Quality.name";"quality"
+"Badge_Quality.title";"Quality"
+"Badge_Quality.description";"<p>The Quality KPI provides an overall score for the quality of the posts produced by the presence or presences in a Country or SBU. This score combines the following metrics:</p><ul><li>The average number of posts / tweets per day.</li><li>The average number of links per day.</li><li>The average number of likes / retweets per post / tweet / video view.</li><li>The Sign Off status of the presence.</li><li>The Branding status of the presence.</li><li>The number of relevant posts made each day.</li><li>The Average Response Time to comments for this presence.</li></ul>"
+
+"Badge_Total.name";"total"
+"Badge_Total.title";"Overall"
+"Badge_Total.description";"<p>The overall score KPI provides an overall score for how well a social media presence, country or SBU is doing in the other three KPIs. The score combines the total score of the following three KPIs:</p><ul><li>Reach KPI</li><li>Engagement KPI</li><li>Quality KPI</li></ul>"
+
 
 
 // flash messages

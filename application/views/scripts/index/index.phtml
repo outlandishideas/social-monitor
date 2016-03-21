@@ -1,14 +1,15 @@
 <?php
 /** @var Badge_Abstract[] $allBadges */
 $allBadges = $this->badges;
+$pageId = 'Index.index.';
 ?>
 
 <div class="row">
     <div class="small-24 large-5 columns homepage-title">
-        <h2 class="page-title">Social Media Monitor</h2>
+        <h2 class="page-title"><?php echo $this->translate($pageId . 'page-title')?></h2>
         <span class="help-text-toggle icon-question-sign icon-large">
             <div class="help-text">
-                <p>Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU.</p>
+                <p><?php echo $this->translate($pageId . 'page-title-contextual-help')?></p>
             </div>
         </span>
     </div>

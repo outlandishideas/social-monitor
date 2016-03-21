@@ -20,7 +20,7 @@ class ReachRank extends BadgeRank {
      */
     public function getBadgeName()
     {
-        return Badge_Reach::getName() . "_rank";
+        return Badge_Reach::getInstance()->getName() . "_rank";
     }
 
 }
