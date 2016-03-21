@@ -194,22 +194,14 @@ app.init = {
 				var column = this;
 				if ($(column.header()).data('name') == 'region') {
 
-					var select = $('<select class="button-bc" name="filter-region"><option value="">Filter by region</option></select>')
-						.appendTo( $item )
-						.on( 'change', function () {
-							var val = $.fn.dataTable.util.escapeRegex(
-								$(this).val()
-							);
-
-							column
-								.search( val ? '^'+val+'$' : '', true, false )
-								.draw();
-						} );
-					column.data().unique().sort().each( function ( d, j ) {
+					var options = [];
+					column.data().unique().sort().each( function ( d ) {
 						if (d !== 'No Region' && d !== '') {
-							select.append( '<option value="'+d+'">'+d+'</option>' )
+							options.push(d);
 						}
 					} );
+
+					app.utils.setupTableFilter(column, $item, options, 'filter-region', 'Filter by region');
 				}
 
 			} );
@@ -221,22 +213,14 @@ app.init = {
 				var column = this;
 				if ($(column.header()).data('name') == 'presence-type') {
 
-					var select = $('<select class="button-bc" name="filter-presence-type"><option value="">Filter by presence</option></select>')
-						.appendTo( $item )
-						.on( 'change', function () {
-							var val = $.fn.dataTable.util.escapeRegex(
-								$(this).val()
-							);
-
-							column
-								.search( val ? '^'+val+'$' : '', true, false )
-								.draw();
-						} );
-					column.data().unique().sort().each( function ( d, j ) {
+					var options = [];
+					column.data().unique().sort().each( function ( d ) {
 						if (d !== 'N/A' && d !== '') {
-							select.append( '<option value="'+d+'">'+d+'</option>' )
+							options.push(d);
 						}
 					} );
+
+					app.utils.setupTableFilter(column, $item, options, 'filter-presence-type', 'Filter by presence');
 				}
 
 			} );
@@ -810,6 +794,27 @@ app.utils = {
 			summary = placeholder || '';
 		}
 		return summary;
+	},
+	setupTableFilter: function(column, $parent, options, name, defaultValue) {
+		if (options.length > 1) {
+			var $select = $('<select class="button-bc" name="' + name + '"></select>');
+			$select.on('change', function () {
+				var val = $.fn.dataTable.util.escapeRegex(
+					$(this).val()
+				);
+
+				column
+					.search(val ? '^' + val + '$' : '', true, false)
+					.draw();
+			});
+			$select.append('<option value="">' + defaultValue + '</option>');
+			options.forEach(function(option) {
+				$select.append('<option value="' + option + '">' + option + '</option>');
+			});
+			$select.appendTo($parent)
+		} else {
+			$parent.closest('li').remove();
+		}
 	}
 };
 

@@ -202,7 +202,11 @@ class GroupController extends CampaignController {
                 try {
                     $editingGroup->save();
 
-                    $p = $this->_request->getParam('p');
+					$objectCacheManager = $this->getContainer()->get('object-cache-manager');
+					$table = $objectCacheManager->getGroupsTable();
+					$objectCacheManager->invalidateObjectCache($table->getIndexName());
+
+					$p = $this->_request->getParam('p');
                     if($p){
                         $editingGroup->assignPresences($p);
                     }

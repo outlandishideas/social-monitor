@@ -195,8 +195,13 @@ class RegionController extends CampaignController
             } else {
                 try {
                     $editingRegion->save();
-                    $this->flashMessage('Region saved');
-                    $this->_helper->redirector->gotoRoute(array('action' => 'view'));
+
+					$objectCacheManager = $this->getContainer()->get('object-cache-manager');
+					$table = $objectCacheManager->getRegionsTable();
+					$objectCacheManager->invalidateObjectCache($table->getIndexName());
+
+					$this->flashMessage('Region saved');
+                    $this->_helper->redirector->gotoRoute(array('action' => 'view', 'id' => $editingRegion->id));
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
                         $this->flashMessage('Display name already taken', 'error');

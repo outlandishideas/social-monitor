@@ -290,7 +290,11 @@ class PresenceController extends GraphingController
                     $this->flashMessage($message, 'error');
 				}
 			} else {
-                $this->flashMessage('Presence saved');
+				$objectCacheManager = $this->getContainer()->get('object-cache-manager');
+				$table = $objectCacheManager->getPresencesTable();
+				$objectCacheManager->invalidateObjectCache($table->getIndexName());
+
+				$this->flashMessage('Presence saved');
 
 				//if new presence created, update presence index cache so that it will appear in the presence index page
 				if ($this->view->isNew) {
