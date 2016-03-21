@@ -7,8 +7,9 @@ use Model_Presence;
 
 abstract class BadgeRank extends Header {
 
-    function __construct()
+    function __construct($translator)
     {
+        parent::__construct($translator);
         $this->sort = self::SORT_TYPE_NUMERIC;
         $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE, self::MODEL_TYPE_CAMPAIGN);
     }

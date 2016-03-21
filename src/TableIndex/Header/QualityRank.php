@@ -8,11 +8,9 @@ class QualityRank extends BadgeRank {
 
     protected static $name = "quality-rank";
 
-    function __construct()
+    function __construct($translator)
     {
-        parent::__construct();
-        $this->label = "Quality Rank";
-        $this->description = "Quality Rank shows the rank of this presence or group when compared against others.";
+        parent::__construct($translator);
     }
 
     /**
@@ -20,7 +18,7 @@ class QualityRank extends BadgeRank {
      */
     public function getBadgeName()
     {
-        return Badge_Quality::getName() . "_rank";
+        return Badge_Quality::getInstance()->getName() . "_rank";
     }
 
 }

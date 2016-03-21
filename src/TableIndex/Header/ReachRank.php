@@ -8,11 +8,9 @@ class ReachRank extends BadgeRank {
 
     protected static $name = "reach-rank";
 
-    function __construct()
+    function __construct($translator)
     {
-        parent::__construct();
-        $this->label = "Reach Rank";
-        $this->description = "Reach Rank shows the rank of this presence or group when compared against others.";
+        parent::__construct($translator);
     }
 
     /**
@@ -20,7 +18,7 @@ class ReachRank extends BadgeRank {
      */
     public function getBadgeName()
     {
-        return Badge_Reach::getName() . "_rank";
+        return Badge_Reach::getInstance()->getName() . "_rank";
     }
 
 }

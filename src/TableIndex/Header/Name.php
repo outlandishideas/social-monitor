@@ -10,9 +10,9 @@ class Name extends Header {
 
     protected static $name = "name";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Name";
+        parent::__construct($translator);
         $this->allowedTypes = array(self::MODEL_TYPE_CAMPAIGN);
         $this->cellClasses[] = 'left-align';
     }

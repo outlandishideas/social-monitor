@@ -8,9 +8,9 @@ class Presences extends Header {
 
     protected static $name = "presences";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Presences";
+        parent::__construct($translator);
         $this->sort = self::SORT_TYPE_NONE;
         $this->allowedTypes = array(self::MODEL_TYPE_CAMPAIGN);
         $this->display = self::DISPLAY_TYPE_SCREEN;

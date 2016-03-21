@@ -23,11 +23,11 @@
 
                 if ($href) : ?>
                     <a href="<?php echo $href; ?>" class="<?php echo implode(' ', $classes); ?>">
-                        <span><?php echo $page->getLabel(); ?></span>
+                        <span><?php echo $this->translate('Global.' . $page->getId()); ?></span>
                     </a><?php
                 else : ?>
                     <span class="<?php echo implode(' ', $classes); ?>">
-                        <span><?php echo $page->getLabel(); ?></span>
+                        <span><?php echo $this->translate('Global.' . $page->getId()); ?></span>
                     </span><?php
                 endif;
 

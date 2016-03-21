@@ -9,9 +9,9 @@ class PresenceType extends Header {
 
     protected static $name = "presence-type";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Presence Type";
+        parent::__construct($translator);
         $this->allowedTypes = array(self::MODEL_TYPE_COUNTRY, self::MODEL_TYPE_PRESENCE);
     }
 

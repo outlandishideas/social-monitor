@@ -32,12 +32,15 @@ class RegionController extends CampaignController
 	 */
 	public function indexAction()
     {
+        /** @var \Outlandish\SocialMonitor\Cache\ObjectCacheManager $objectCacheManager */
         $objectCacheManager = $this->getContainer()->get('object-cache-manager');
         $table = $objectCacheManager->getRegionsTable();
 
         $rows = $objectCacheManager->getRegionIndexRows($this->_request->getParam('force'));
 
-        $this->view->pageTitle = 'Regions';
+		$translator = $this->getContainer()->get('translation.translator');
+
+        $this->view->pageTitle = $translator->trans('Global.regions');
 		$this->view->regions = $table->getTableData();
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();

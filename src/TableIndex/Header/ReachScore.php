@@ -6,11 +6,9 @@ class ReachScore extends BadgeScore {
 
     protected static $name = "reach-score";
 
-    function __construct()
+    function __construct($translator)
     {
-        parent::__construct();
-        $this->label = "Reach Score";
-        $this->description = "Reach Score shows the score for the combined measures that measure a presences engagement";
+        parent::__construct($translator);
     }
 
     /**
@@ -18,7 +16,7 @@ class ReachScore extends BadgeScore {
      */
     public function getBadgeName()
     {
-        return \Badge_Reach::getName();
+        return \Badge_Reach::getInstance()->getName();
     }
 
 

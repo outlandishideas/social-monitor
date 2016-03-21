@@ -26,6 +26,7 @@
 		"symfony/dependency-injection": "~2.6",
 		"symfony/config": "~2.6",
 		"symfony/yaml": "~2.6",
+    "symfony/translation": "~2.6",
 		"facebook/php-sdk-v4": "~4.0",
 		"guzzlehttp/guzzle": "~5.2",
 		"mikehaertl/phpwkhtmltopdf": "~2.0",

@@ -109,8 +109,8 @@ abstract class GraphingController extends BaseController {
             $badgeArgs = new stdClass();
             $badgeArgs->range = array(0, 1, 20, 50, 80, 100);
             $badgeArgs->colors = array($colors->grey, $colors->red, $colors->red, $colors->yellow, $colors->green, $colors->green);
-            $badgeArgs->label = $badge::getTitle();
-            $geochart[$badge::getName()] = $badgeArgs;
+            $badgeArgs->label = $badge::getInstance()->getTitle();
+            $geochart[$badge::getInstance()->getName()] = $badgeArgs;
         }
 		$this->assignRgbColors($geochart);
 
@@ -145,7 +145,7 @@ abstract class GraphingController extends BaseController {
 	{
         $badgeData = $model->getBadges();
         if ($badgeData) {
-    		$score = round($badgeData[$badge::getName()]);
+    		$score = round($badgeData[$badge->getName()]);
         } else {
             $score = 0;
         }
@@ -159,10 +159,10 @@ abstract class GraphingController extends BaseController {
 		}
 
 		$badgeArr = array();
-		$badgeArr["title"] = $badge::getTitle();
+		$badgeArr["title"] = $badge->getTitle();
         if ($badgeData) {
             $badgeArr["rank"] = array(
-                "value" => $badgeData[$badge::getName()."_rank"], //get rank for badge
+                "value" => $badgeData[$badge->getName()."_rank"], //get rank for badge
                 "denominator" => $badgeData['denominator'] //get count of $model type
             );
         } else {

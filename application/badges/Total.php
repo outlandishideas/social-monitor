@@ -2,14 +2,7 @@
 
 class Badge_Total extends Badge_Abstract
 {
-	protected static $name = 'total';
-	protected static $title = 'Overall';
-	protected static $description = '<p>The overall score KPI provides an overall score for how well a social media presence, country or SBU is doing in the other three KPIs. The score combines the total score of the following three KPIs:</p>
-                <ul>
-                    <li>Reach KPI</li>
-                    <li>Engagement KPI</li>
-                    <li>Quality KPI</li>
-                </ul>';
+	protected static $instance;
 
 	public function calculate(Model_Presence $presence, \DateTime $date = null, Enum_Period $range = null)
 	{
@@ -21,9 +14,9 @@ class Badge_Total extends Badge_Abstract
 		}
 
 		$badgeNames = array(
-			Badge_Reach::getName(),
-            Badge_Engagement::getName(),
-            Badge_Quality::getName()
+			Badge_Reach::getInstance()->getName(),
+            Badge_Engagement::getInstance()->getName(),
+            Badge_Quality::getInstance()->getName()
 		);
 
 		$total = 0;

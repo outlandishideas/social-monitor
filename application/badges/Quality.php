@@ -2,20 +2,9 @@
 
 class Badge_Quality extends Badge_Abstract
 {
-	protected static $name = 'quality';
-	protected static $title = 'Quality';
-	protected static $description = '<p>The Quality KPI provides an overall score for the quality of the posts produced by the presence or presences in a Country or SBU. This score combines the following metrics:</p>
-						<ul>
-							<li>The average number of posts / tweets per day.</li>
-							<li>The average number of links per day.</li>
-							<li>The average number of likes / retweets per post / tweet / video view.</li>
-							<li>The Sign Off status of the presence.</li>
-							<li>The Branding status of the presence.</li>
-							<li>The number of relevant posts made each day.</li>
-							<li>The Average Response Time to comments for this presence.</li>
-						</ul>';
+    protected static $instance;
 
-    public function __construct(PDO $db = null)
+    protected function __construct(PDO $db = null)
     {
         parent::__construct($db);
         $this->metrics = array(

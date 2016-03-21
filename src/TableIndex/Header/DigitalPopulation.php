@@ -8,9 +8,9 @@ class DigitalPopulation extends Header {
 
     protected static $name = "digital-population";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Digital Population";
+        parent::__construct($translator);
         $this->sort = self::SORT_TYPE_NUMERIC_DATA_VALUE;
         $this->allowedTypes = array(self::MODEL_TYPE_COUNTRY);
     }

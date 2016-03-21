@@ -25,8 +25,8 @@ class ConfigController extends BaseController {
                 )
             ),
             (object)array(
-                'title' => Badge_Reach::getTitle(),
-                'description' => Badge_Reach::getDescription(),
+                'title' => Badge_Reach::getInstance()->getTitle(),
+                'description' => Badge_Reach::getInstance()->getDescription(),
                 'kpis' => array(
                     (object)array(
                         'title' => 'Target Audience',
@@ -79,8 +79,8 @@ class ConfigController extends BaseController {
                 )
             ),
             (object)array(
-                'title' => Badge_Engagement::getTitle(),
-                'description' => Badge_Engagement::getDescription(),
+                'title' => Badge_Engagement::getInstance()->getTitle(),
+                'description' => Badge_Engagement::getInstance()->getDescription(),
                 'kpis' => array(
                     (object)array(
                         'title' => 'Replies to Number of Posts',
@@ -163,8 +163,8 @@ class ConfigController extends BaseController {
                 )
             ),
             (object)array(
-                'title' => Badge_Quality::getTitle(),
-                'description' => Badge_Quality::getDescription(),
+                'title' => Badge_Quality::getInstance()->getTitle(),
+                'description' => Badge_Quality::getInstance()->getDescription(),
                 'kpis' => array(
                     (object)array(
                         'title' => 'Actions Per Day',

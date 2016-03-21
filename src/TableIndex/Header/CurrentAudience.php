@@ -9,9 +9,9 @@ class CurrentAudience extends Header {
 
     protected static $name = "current-audience";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Current Audience";
+        parent::__construct($translator);
         $this->sort = self::SORT_TYPE_NUMERIC_FUZZY;
         $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE);
     }

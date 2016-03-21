@@ -8,9 +8,9 @@ class PercentTargetAudience extends Header {
 
     protected static $name = "percent-target-audience";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Percentage of Target Audience";
+        parent::__construct($translator);
         $this->sort = self::SORT_TYPE_NUMERIC_FUZZY;
         $this->allowedTypes = array(self::MODEL_TYPE_REGION);
     }

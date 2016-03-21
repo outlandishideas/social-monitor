@@ -8,10 +8,9 @@ class PresenceCount extends Header {
 
     protected static $name = "presence-count";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Presences";
-        $this->description = 'The number of presences.';
+        parent::__construct($translator);
         $this->sort = self::SORT_TYPE_NONE;
         $this->allowedTypes = array(self::MODEL_TYPE_CAMPAIGN);
         $this->display = self::DISPLAY_TYPE_CSV;

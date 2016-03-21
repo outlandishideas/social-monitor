@@ -8,9 +8,9 @@ class Country extends Header {
 
     protected static $name = "country";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Country";
+        parent::__construct($translator);
         $this->allowedTypes = array(self::MODEL_TYPE_COUNTRY);
     }
 

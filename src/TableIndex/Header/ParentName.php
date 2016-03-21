@@ -8,9 +8,9 @@ class ParentName extends Header {
 
     protected static $name = "parent-name";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Country/SBU";
+        parent::__construct($translator);
         $this->allowedTypes = array(self::MODEL_TYPE_CAMPAIGN);
         $this->cellClasses[] = 'left-align';
     }
