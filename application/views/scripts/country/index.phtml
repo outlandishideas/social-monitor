@@ -8,7 +8,9 @@ if ($this->rows) {
 }
 $buttons = $this->gatekeeper()->filterAll($buttons);
 if ($this->rows) {
-	array_unshift($buttons, $this->partial('partials/region-filter.phtml', ['regions' => $this->regions]));
+	if ($this->regions) {
+		array_unshift($buttons, $this->partial('partials/region-filter.phtml', ['regions' => $this->regions]));
+	}
 	array_unshift($buttons, '<div id="search-table">Loading data...</div>');
 }
 ?>

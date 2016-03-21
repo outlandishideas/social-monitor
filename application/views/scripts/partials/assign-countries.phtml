@@ -8,7 +8,7 @@
 					<option value="<?php echo $c->id; ?>"
 							data-url="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$c->id)); ?>"
 							data-label="<?php echo $c->getName(); ?>"
-							data-flag="<?php echo $this->baseUrl('/'); ?>assets/img/flags/<?php echo($c->getCountryCode()); ?>.png"
+							data-flag="<?php echo $this->assetUrl('img/flags/' . $c->getCountryCode() . '.png'); ?>"
 					>
 						<?php echo $c->getName(); ?>
 					</option>

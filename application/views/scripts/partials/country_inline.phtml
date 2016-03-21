@@ -9,6 +9,6 @@ if ($url) {
 }
 ?>
 <<?php echo $tag; ?> <?php echo $attrs; ?> class="entity country">
-    <span class="flag"><img src="<?php echo $this->baseUrl('/') . 'assets/img/flags/' . $this->country->getCountryCode() . '.png'; ?>" /></span>
+    <span class="flag"><img src="<?php echo $this->assetUrl('img/flags/' . $this->country->getCountryCode() . '.png'); ?>" /></span>
     <?php echo $this->country->getName(); ?>
 </<?php echo $tag; ?>>
