@@ -78,6 +78,15 @@ if (!file_exists(APP_ROOT_PATH . '/parameters.yml')) {
 	die('Please copy ' . APP_ROOT_PATH . '/parameters.yml.dist to ' . APP_ROOT_PATH . '/parameters.yml, and populate it');
 }
 
+$translate = new Zend_Translate(
+    array(
+        'adapter' => 'csv',
+        'content' => 'languages/lang.en',
+        'locale'  => 'en'
+    )
+);
+Zend_Registry::set('translate', $translate);
+
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;

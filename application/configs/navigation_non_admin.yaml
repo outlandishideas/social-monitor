@@ -1,14 +1,14 @@
 user:
-  label: User
+  id: user
   controller: user
   action: edit-self
   icon: icon-user icon-large
   pages:
     account:
-      label: Account
+      id: account
       controller: user
       action: edit-self
     signout:
-      label: Sign Out
+      id: sign-out
       controller: user
       action: logout

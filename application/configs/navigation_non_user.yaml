@@ -1,10 +1,10 @@
 user:
-  label: Login
+  id: login
   controller: user
   action: login
   icon: icon-user icon-large
 register:
-  label: Register
+  id: register
   controller: user
   action: register
   icon: icon-user icon-large

@@ -4,23 +4,23 @@
 #  action: edit-self
 #  icon: icon-user icon-large
 users:
-  label: Users
+  id: users
   controller: user
   icon: icon-group icon-large
   class: parent
   pages:
     account:
-      label: Account
+      id: account
       controller: user
       action: edit-self
     edit-all:
-      label: Edit Users
+      id: edit-users
       controller: user
     signout:
-      label: Sign Out
+      id: sign-out
       controller: user
       action: logout
 config:
-  label: Settings
+  id: settings
   controller: config
   icon: icon-cog icon-large

@@ -1,25 +1,36 @@
+<?php $pageId = "Base.layout.feedback-modal." ?>
 <div id="modal-container" style="display:none;">
     <div id="feedback-form">
         <header>
-            <h2>Feedback form</h2>
-            <p>All feedback is welcome. Please let us know your thoughts and suggestions.</p>
+            <h2><?php echo $this->translate($pageId . "title")?></h2>
+            <p><?php echo $this->translate($pageId . "subtitle")?></p>
         </header>
         <form>
-            <label for="name">Your name</label>
-            <input id="name" name="name" maxlength="64" type="text" placeholder="Enter your first and last name" required />
+            <label for="name"><?php echo $this->translate($pageId . "name-label") ?></label>
+            <input id="name" name="name" maxlength="64" type="text"
+                   placeholder="<?php echo $this->translate($pageId . "name-placeholder") ?>" required />
 
-            <label for="from">Your email</label>
-            <input id="from" name="from" maxlength="64" type="email" placeholder="Enter your email address" required />
+            <label for="from"><?php echo $this->translate($pageId . "email-label") ?></label>
+            <input id="from" name="from" maxlength="64" type="email"
+                   placeholder="<?php echo $this->translate($pageId . "email-placeholder") ?>" required />
 
-            <label for="body">Your message</label>
-            <textarea id="body" name="body" maxlength="1000" placeholder="Enter your message (max. 1000 characters)"
-                      required></textarea>
+            <label for="body"><?php echo $this->translate($pageId . "message-label") ?></label>
+            <textarea id="body" name="body" maxlength="1000"
+                      placeholder="<?php echo $this->translate($pageId . "message-placeholder") ?>" required></textarea>
 
             <input id="url" name="url" maxlength="64" type="hidden" value="<?php echo $this->baseUrl('/feedback') ?>"/>
 
             <ul class="button-group">
-                <li><button id="submit" type="button" class="button-bc primary" onclick="app.feedbackForm.send()">Send form</button></li>
-                <li><button id="close" type="button" class="button-bc" onclick="app.modal.hide()">Cancel</button></li>
+                <li>
+                    <button id="submit" type="button" class="button-bc primary" onclick="app.feedbackForm.send()">
+                        <?php echo $this->translate($pageId . "submit") ?>
+                    </button>
+                </li>
+                <li>
+                    <button id="close" type="button" class="button-bc" onclick="app.modal.hide()">
+                        <?php echo $this->translate($pageId . "close") ?>
+                    </button>
+                </li>
             </ul>
 
         </form>

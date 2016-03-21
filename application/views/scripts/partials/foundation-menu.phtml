@@ -2,6 +2,7 @@
     /** @var Zend_Navigation_Page_Mvc $page */
 
     $href = $page->getHref();
+    $pageId = 'Base.layout.foundation-menu';
 
     if($href) :
 
@@ -16,7 +17,7 @@
         <li class="<?php echo implode(' ', $classes); ?>">
             <a href="<?php echo $href; ?>">
                 <span class="<?php echo $page->icon; ?>"></span>
-                <span class="text"><?php echo $page->getLabel(); ?></span>
+                <span class="text"><?php echo $this->translate($pageId . '.' . $page->getId()); ?></span>
                 <div class="triangle hide-for-medium-down"></div>
             </a>
             <?php if(!empty($page->pages)) : ?>
@@ -24,7 +25,7 @@
                     <?php foreach($page->pages as $subPage) : /** @var Zend_Navigation_Page_Mvc $subPage */ ?>
                         <li>
                             <a href="<?php echo $subPage->getHref(); ?>">
-                                <?php echo $subPage->getLabel(); ?>
+                                <?php echo $this->translate($pageId . '.' . $subPage->getId()); ?>
                             </a>
                         </li>
                     <?php endforeach; ?>
