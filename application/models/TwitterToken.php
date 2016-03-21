@@ -49,17 +49,6 @@ class Model_TwitterToken extends Model_Base {
 		}
 	}
 
-	public static function getAuthorizeUrl($callback_url = null) {
-		$config = Zend_Registry::get('config');
-
-		$connection = new TwitterOAuth($config->twitter->consumer_key, $config->twitter->consumer_secret);
-		$connection->host = 'https://api.twitter.com/1.1/';
-		$temp_token = $connection->getRequestToken($callback_url);
-		$_SESSION['temp_token'] = $temp_token;
-
-		return $connection->getAuthorizeURL($temp_token, false);
-	}
-
 	public static function getToken($oauth_verifier) {
 		$config = Zend_Registry::get('config');
 
@@ -81,12 +70,6 @@ class Model_TwitterToken extends Model_Base {
 		$token->twitter_user_id = $the_token['user_id'];
 
 		return $token;
-	}
-
-	public static function getCurrentUserToken() {
-		$auth = Zend_Auth::getInstance();
-		$currentUser = Model_User::fetchById($auth->getIdentity());
-		return $currentUser->twitterToken;
 	}
 
 	public function save() {

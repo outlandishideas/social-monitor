@@ -1,46 +1,47 @@
 {
-  "autoload": {
-      "psr-4": {
-          "Outlandish\\SocialMonitor\\": "src/"
-      }
-  },
-  "name": "outlandish/social-monitor",
-  "authors": [
-    {
-      "name": "Outlandish",
-      "email": "info@outlandish.com",
-      "homepage": "http://outlandish.com",
-      "role": "Developer"
-    }
-  ],
-  "license": "https://creativecommons.org/licenses/by-sa/2.0/uk/legalcode",
-  "require-dev": {
+	"autoload": {
+		"psr-4": {
+			"Outlandish\\SocialMonitor\\": "src/"
+		}
+	},
+	"name": "outlandish/social-monitor",
+	"authors": [
+		{
+			"name": "Outlandish",
+			"email": "info@outlandish.com",
+			"homepage": "http://outlandish.com",
+			"role": "Developer"
+		}
+	],
+	"license": "https://creativecommons.org/licenses/by-sa/2.0/uk/legalcode",
+	"require-dev": {
 		"phpunit/phpunit": "4.3.*",
 		"phpunit/dbunit": ">=1.2",
 		"phpunit/phpunit-selenium": ">=1.2",
 		"facebook/webdriver": "dev-master",
-        "phpspec/phpspec": "~2.2"
-  },
-  "require": {
-	"symfony/console": "~2.6",
-    "symfony/dependency-injection": "~2.6",
-    "symfony/config": "~2.6",
-    "symfony/yaml": "~2.6",
-    "facebook/php-sdk-v4": "~4.0",
-    "guzzlehttp/guzzle": "~5.2",
-    "mikehaertl/phpwkhtmltopdf": "~2.0",
-    "cosenary/instagram": "^2.3",
-	"swiftmailer/swiftmailer": "5.4.1",
-    "robmorgan/phinx": "0.4.2",
-    "google/apiclient": "1.1.6",
-    "linkedinapi/linkedin": "1.1.0",
-    "zendframework/zendframework1": "^1.12",
-    "nesbot/carbon": "1.9.0"
-  },
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://packages.zendframework.com/"
-    }
-  ]
+		"phpspec/phpspec": "~2.2"
+	},
+	"require": {
+		"symfony/console": "~2.6",
+		"symfony/dependency-injection": "~2.6",
+		"symfony/config": "~2.6",
+		"symfony/yaml": "~2.6",
+		"facebook/php-sdk-v4": "~4.0",
+		"guzzlehttp/guzzle": "~5.2",
+		"mikehaertl/phpwkhtmltopdf": "~2.0",
+		"cosenary/instagram": "^2.3",
+		"swiftmailer/swiftmailer": "5.4.1",
+		"robmorgan/phinx": "0.4.2",
+		"google/apiclient": "1.1.6",
+		"linkedinapi/linkedin": "1.1.0",
+		"zendframework/zendframework1": "^1.12",
+		"nesbot/carbon": "1.9.0",
+		"hwi/oauth-bundle": "^0.4.1"
+	},
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "https://packages.zendframework.com/"
+		}
+	]
 }
