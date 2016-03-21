@@ -12,20 +12,20 @@ class Model_Campaign extends Model_Base {
 	// use this to filter campaigns table by campaign_type column
 	protected static $campaignType = null;
 
-    /**
-     * @param $presenceId
-     * @return Model_Campaign|null
-     */
-    public static function fetchOwner($presenceId) {
-        $stmt = self::$db->prepare('SELECT campaign_id FROM campaign_presences WHERE presence_id = :pid');
-        $stmt->execute(array(':pid'=>$presenceId));
-        $campaignId = $stmt->fetchColumn(0);
-        if($campaignId === false) {
-            return null;
-        } else {
-            return Model_Campaign::fetchById($campaignId);
-        }
-    }
+	/**
+	 * @param $presenceId
+	 * @return Model_Campaign|null
+	 */
+	public static function fetchOwner($presenceId) {
+		$stmt = self::$db->prepare('SELECT campaign_id FROM campaign_presences WHERE presence_id = :pid');
+		$stmt->execute(array(':pid'=>$presenceId));
+		$campaignId = $stmt->fetchColumn(0);
+		if($campaignId === false) {
+			return null;
+		} else {
+			return Model_Campaign::fetchById($campaignId);
+		}
+	}
 
 	public function getPresencesBySize($size)
 	{
@@ -35,7 +35,7 @@ class Model_Campaign extends Model_Base {
 	}
 
 	protected function fetch($clause = null, $args = array()) {
-        $type = self::campaignType();
+		$type = self::campaignType();
 		if($type !== null) {
 			if ($clause) {
 				$clause .= ' AND ';
@@ -51,14 +51,14 @@ class Model_Campaign extends Model_Base {
 	 */
 	public static function objectify($data) {
 		$objects = array();
-        $campaignClasses = Model_Campaign::campaignClasses();
+		$campaignClasses = Model_Campaign::campaignClasses();
 		foreach ($data as $row) {
-            foreach ($campaignClasses as $campaignClass) {
-                if ($row['campaign_type'] == $campaignClass::campaignType()) {
-                    $objects[] = new $campaignClass($row, true);
-                    break;
-                }
-            }
+			foreach ($campaignClasses as $campaignClass) {
+				if ($row['campaign_type'] == $campaignClass::campaignType()) {
+					$objects[] = new $campaignClass($row, true);
+					break;
+				}
+			}
 		}
 		return $objects;
 	}
@@ -71,15 +71,15 @@ class Model_Campaign extends Model_Base {
 	 *
 	 * @return int
 	 */
-    public function getTargetAudience() {
+	public function getTargetAudience() {
 		$target = $this->audience;
 
-        if (!is_numeric($target)) {
+		if (!is_numeric($target)) {
 			$target = 0;
 		}
 
 		return intval($target);
-    }
+	}
 
 	protected function count($clause = null, $args = array()) {
 		if ($clause) {
@@ -96,7 +96,7 @@ class Model_Campaign extends Model_Base {
 	}
 
 	function getPresenceCount() {
-        return count($this->getPresenceIds());
+		return count($this->getPresenceIds());
 	}
 
 	function getPresenceIds($mapping = null) {
@@ -138,11 +138,11 @@ class Model_Campaign extends Model_Base {
 		return $this->presences;
 	}
 
-    /**
-     * @param Enum_PresenceType $type
-     * @return Model_Presence[]
-     */
-    public function getPresencesByType(Enum_PresenceType $type){
+	/**
+	 * @param Enum_PresenceType $type
+	 * @return Model_Presence[]
+	 */
+	public function getPresencesByType(Enum_PresenceType $type){
 		$presences = $this->getPresences();
 		return array_filter($presences, function(Model_Presence $a) use ($type) {
 			return $a->getType() == $type;
@@ -177,75 +177,75 @@ class Model_Campaign extends Model_Base {
 		return $return;
 	}
 
-    /*****************************************************************
-     * Badge Factory
-     *****************************************************************/
+	/*****************************************************************
+	 * Badge Factory
+	 *****************************************************************/
 
 	public function getBadges()
 	{
-        $allBadges = self::getAllBadges();
-        if(array_key_exists($this->id, $allBadges)){
-            return $allBadges[$this->id];
-        } else {
-            return null;
-        }
+		$allBadges = self::getAllBadges();
+		if(array_key_exists($this->id, $allBadges)){
+			return $allBadges[$this->id];
+		} else {
+			return null;
+		}
 	}
 
 	public function getBadgeHistory(DateTime $start, DateTime $end)
 	{
-        $presenceIds = $this->getPresenceIds();
-        if (!$presenceIds) {
-            return array();
-        }
+		$presenceIds = $this->getPresenceIds();
+		if (!$presenceIds) {
+			return array();
+		}
 		return Badge_Factory::getAllCurrentData(Enum_Period::MONTH(), $start, $end, $presenceIds);
 	}
 
-    /**
-     * Very similar to Model_Presence::getAllBadges, but presences are grouped and keyed by campaign ID
-     * @return array
-     */
-    public static function getAllBadges()
+	/**
+	 * Very similar to Model_Presence::getAllBadges, but presences are grouped and keyed by campaign ID
+	 * @return array
+	 */
+	public static function getAllBadges()
 	{
-        $key = get_called_class();
+		$key = get_called_class();
 		if(empty(static::$badges[$key])){
 			$campaignIds = array();
-            foreach (static::fetchAll() as $campaign) {
-                $campaignIds[] = $campaign->id;
-            };
+			foreach (static::fetchAll() as $campaign) {
+				$campaignIds[] = $campaign->id;
+			};
 
 			$badgeData = Badge_Factory::badgesData();
 			$badgeNames = Badge_Factory::getBadgeNames();
 
-            $totalBadgeName = Badge_Total::getName();
+			$totalBadgeName = Badge_Total::getName();
 			$keyedData = array();
-            foreach ($badgeData as $row) {
+			foreach ($badgeData as $row) {
 				$toAdd = array($row->campaign_id, $row->region_id);
-                foreach ($toAdd as $campaignId) {
-                    if(in_array($campaignId, $campaignIds)) {
-                        if(!array_key_exists($campaignId, $keyedData)){
-                            $keyedData[$campaignId] = array('presences' => 0, 'denominator' => count($campaignIds));
-                            foreach($badgeNames as $badgeName){
-                                $keyedData[$campaignId][$badgeName] = 0;
-                            }
-                        }
-                        foreach($badgeNames as $badgeName){
-                            if($badgeName != $totalBadgeName) {
-                                $keyedData[$campaignId][$badgeName] += $row->$badgeName;
-                            }
-                        }
-                        $keyedData[$campaignId]['presences']++;
-                    }
-                }
+				foreach ($toAdd as $campaignId) {
+					if(in_array($campaignId, $campaignIds)) {
+						if(!array_key_exists($campaignId, $keyedData)){
+							$keyedData[$campaignId] = array('presences' => 0, 'denominator' => count($campaignIds));
+							foreach($badgeNames as $badgeName){
+								$keyedData[$campaignId][$badgeName] = 0;
+							}
+						}
+						foreach($badgeNames as $badgeName){
+							if($badgeName != $totalBadgeName) {
+								$keyedData[$campaignId][$badgeName] += $row->$badgeName;
+							}
+						}
+						$keyedData[$campaignId]['presences']++;
+					}
+				}
 			}
 
 			foreach($keyedData as &$campaignData){
 				foreach($badgeNames as $badgeName){
 					if($badgeName != $totalBadgeName) {
-                        //get average for kpi scores by dividing by number of presences
-                        $campaignData[$badgeName] /= $campaignData['presences'];
-                        //add average to total score
-                        $campaignData[$totalBadgeName] += $campaignData[$badgeName];
-                    }
+						//get average for kpi scores by dividing by number of presences
+						$campaignData[$badgeName] /= $campaignData['presences'];
+						//add average to total score
+						$campaignData[$totalBadgeName] += $campaignData[$badgeName];
+					}
 				}
 				//divide the total score by the number of badges (-1 for the total badge)
 				$campaignData[$totalBadgeName] /= count($badgeNames) - 1;
@@ -253,7 +253,7 @@ class Model_Campaign extends Model_Base {
 			}
 
 			foreach($badgeNames as $badgeName){
-                Badge_Abstract::doRanking($keyedData, $badgeName, $badgeName . '_rank');
+				Badge_Abstract::doRanking($keyedData, $badgeName, $badgeName . '_rank');
 				//colorize
 				foreach($keyedData as $id=>&$row) {
 					if (array_key_exists($badgeName, $row)){
@@ -267,12 +267,12 @@ class Model_Campaign extends Model_Base {
 		return static::$badges[$key];
 	}
 
-    /**
-     * Gets the SQL for getting the campaign<->presence mapping
-     * @return string
-     */
-    protected static function mappingSql() {
-        return '
+	/**
+	 * Gets the SQL for getting the campaign<->presence mapping
+	 * @return string
+	 */
+	protected static function mappingSql() {
+		return '
             SELECT
               c.id AS campaign_id,
               cp.presence_id
@@ -281,7 +281,7 @@ class Model_Campaign extends Model_Base {
               LEFT OUTER JOIN campaign_presences AS cp ON cp.campaign_id = c.id
             WHERE
               c.campaign_type = :campaign_type';
-    }
+	}
 
 	/**
 	 * Creates a structure containing data for $dayRange days worth of badge data for all of this type of campaign
@@ -298,6 +298,11 @@ class Model_Campaign extends Model_Base {
 				$maxDate = $row->date;
 			}
 		}
+
+		if (!$campaignIds) {
+			return array();
+		}
+
 		$maxDate = new DateTime($maxDate);
 
 		$badgeTypes = Badge_Factory::getBadges();
@@ -305,7 +310,7 @@ class Model_Campaign extends Model_Base {
 		$campaigns = array();
 
 		/** @var Model_Campaign[] $campaignData */
-        $campaignData = static::fetchAll('id IN (' . implode(',', array_filter(array_keys($campaignIds))) . ')');
+		$campaignData = static::fetchAll('id IN (' . implode(',', array_filter(array_keys($campaignIds))) . ')');
 		foreach ($campaignData as $campaign) {
 			$row = (object)array(
 				'id'=>intval($campaign->id),
@@ -318,7 +323,7 @@ class Model_Campaign extends Model_Base {
 			// add data structures for keeping scores in
 			foreach ($badgeTypes as $type) {
 				if ((!$type instanceof Badge_Total)) {
-                    $typeName = $type::getName();
+					$typeName = $type::getName();
 					$row->b->$typeName = array();
 				}
 			}
@@ -399,17 +404,17 @@ class Model_Campaign extends Model_Base {
 		return array_values($campaigns);
 	}
 
-    static function campaignType() {
-        return static::$campaignType;
-    }
+	static function campaignType() {
+		return static::$campaignType;
+	}
 
-    /**
-     * Gets all of the valid subclasses of campaign, in priority order
-     * @return self[]
-     */
-    static function campaignClasses() {
-        return array('Model_Country', 'Model_Group', 'Model_Region');
-    }
+	/**
+	 * Gets all of the valid subclasses of campaign, in priority order
+	 * @return self[]
+	 */
+	static function campaignClasses() {
+		return array('Model_Country', 'Model_Group', 'Model_Region');
+	}
 
 	/**
 	 * Returns the summed popularity of all the presences for this campaign
