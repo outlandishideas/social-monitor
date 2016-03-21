@@ -10,9 +10,9 @@ class Region extends Header {
 
     protected static $name = "region";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Region";
+        parent::__construct($translator);
         $this->allowedTypes = array(self::MODEL_TYPE_COUNTRY, self::MODEL_TYPE_PRESENCE);
     }
 

@@ -8,9 +8,9 @@ class Options extends Header {
 
     protected static $name = "options";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Options";
+        parent::__construct($translator);
         $this->sort = self::SORT_TYPE_NONE;
         $this->display = self::DISPLAY_TYPE_SCREEN;
         $this->width = "160px";

@@ -8,10 +8,9 @@ class SignOff extends Header {
 
     protected static $name = "sign-off";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = 'Sign Off';
-        $this->description = 'Sign Off shows whether a presence has been signed off by the Head of Digital.';
+        parent::__construct($translator);
         $this->sort = self::SORT_TYPE_NUMERIC_DATA_VALUE;
         $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE);
     }

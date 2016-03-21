@@ -145,7 +145,7 @@ abstract class GraphingController extends BaseController {
 	{
         $badgeData = $model->getBadges();
         if ($badgeData) {
-    		$score = round($badgeData[$badge::getName()]);
+    		$score = round($badgeData[$badge->getName()]);
         } else {
             $score = 0;
         }
@@ -159,10 +159,10 @@ abstract class GraphingController extends BaseController {
 		}
 
 		$badgeArr = array();
-		$badgeArr["title"] = $badge::getTitle();
+		$badgeArr["title"] = $badge->getTitle();
         if ($badgeData) {
             $badgeArr["rank"] = array(
-                "value" => $badgeData[$badge::getName()."_rank"], //get rank for badge
+                "value" => $badgeData[$badge->getName()."_rank"], //get rank for badge
                 "denominator" => $badgeData['denominator'] //get count of $model type
             );
         } else {

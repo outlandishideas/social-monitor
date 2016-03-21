@@ -6,11 +6,9 @@ class TotalRank extends BadgeRank {
 
     protected static $name = "total-rank";
 
-    function __construct()
+    function __construct($translator)
     {
-        parent::__construct();
-        $this->label = "Overall Rank";
-        $this->description = "Overall Rank shows the rank of this presence or group when compared against others.";
+        parent::__construct($translator);
     }
 
     /**
@@ -18,7 +16,7 @@ class TotalRank extends BadgeRank {
      */
     public function getBadgeName()
     {
-        return \Badge_Total::getName() . "_rank";
+        return \Badge_Total::getInstance()->getName() . "_rank";
     }
 
 

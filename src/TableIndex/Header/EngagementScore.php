@@ -6,11 +6,9 @@ class EngagementScore extends BadgeScore {
 
     protected static $name = "engagement-score";
 
-    function __construct()
+    function __construct($translator)
     {
-        parent::__construct();
-        $this->label = "Engagement Score";
-        $this->description = "Engagement Score shows the score for the combined measures that measure a presences engagement";
+        parent::__construct($translator);
     }
 
     /**

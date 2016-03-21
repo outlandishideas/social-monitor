@@ -8,11 +8,9 @@ class EngagementRank extends BadgeRank {
 
     protected static $name = "engagement-rank";
 
-    function __construct()
+    function __construct($translator)
     {
-        parent::__construct();
-        $this->label = "Engagement Rank";
-        $this->description = "Engagement Rank shows the rank of this presence or group when compared against others.";
+        parent::__construct($translator);
     }
 
     /**

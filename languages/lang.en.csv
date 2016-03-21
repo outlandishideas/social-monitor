@@ -1,0 +1,138 @@
+"controller.view[.partial].id";"copy"
+
+"Global.score";"Score"
+"Global.loading-data";"Loading data..."
+"Global.add-new";"Add New"
+"Global.edit-all";"Edit All"
+"Global.download-csv";"Download CSV"
+
+"Global.home";"Home"
+"Global.regions";"Regions"
+"Global.countries";"Countries"
+"Global.sbus";"SBUs"
+"Global.presences";"Presences"
+"Global.domains";"Domains"
+"Global.statuses";"Statuses"
+"Global.login";"Login"
+"Global.register";"Register"
+"Global.user";"User"
+"Global.users";"Users"
+"Global.account";"Account"
+"Global.edit-users";"Edit Users"
+"Global.sign-out";"Sign Out"
+"Global.settings";"Settings"
+"Base.layout.feedback-button";"Feedback"
+"Base.layout.feedback-modal.title";"Feedback form"
+"Base.layout.feedback-modal.subtitle";"All feedback is welcome. Please let us know your thoughts and suggestions."
+"Base.layout.feedback-modal.name-label";"Your name"
+"Base.layout.feedback-modal.name-placeholder";"Enter your first and last name"
+"Base.layout.feedback-modal.email-label";"Your email"
+"Base.layout.feedback-modal.email-placeholder";"Enter your email address"
+"Base.layout.feedback-modal.message-label";"Your message"
+"Base.layout.feedback-modal.message-placeholder";"Enter your message (max. 1000 characters)"
+"Base.layout.feedback-modal.submit";"Send form"
+"Base.layout.feedback-modal.close";"Cancel"
+
+"Index.index.page-title";"Social Media Monitor"
+"Index.index.page-title-contextual-help";"Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU."
+"Index.index.date-range";"Date Range"
+"Index.index.date-range-contextual-help";"Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU."
+"Index.index.find-country";"Find country"
+"Index.index.map-contextual-help";"Click on the map to select a country and preview the individual social media presences."
+"Index.index.pdf-download-description";"These scores are derived from the organisation's social media metrics.<br />You can download a copy of the PDF that explains them here:"
+"Index.index.pdf-download-link";"Download metrics"
+"Index.index.pdf-download-link-title";"Download metrics PDF"
+
+"Region.index.page-title";"Regions"
+
+
+"Badge_Engagement.name";"engagement"
+"Badge_Engagement.title";"Engagement"
+"Badge_Engagement.description";"<p>The Engagement KPI provides an overall score for how well the presence, country or SBU engages with its audience. This score combines the following metrics:</p><ul><li>The Klout Score for this presence (Twitter Only).</li><li>The Facebook Engagement score for this presence (Facebook Only).</li><li>The Sina Weibo Engagement score for this presence (Sina Weibo Only).</li><li>The Instagram Engagement score for this presence (Instagram Only).</li><li>The Youtube Engagement score for this presence (Youtube Only).</li><li>The Linkedin Engagement score for this presence (Linkedin Only).</li></ul>"
+
+"Badge_Reach.name";"reach"
+"Badge_Reach.title";"Reach"
+"Badge_Reach.description";"<p>The Reach KPI provides an overall score for how well the presence, country or SBU reaches its audience. This score combines the following metrics:</p><ul><li>Current number of Fans / Followers</li><li>Number of months to reach the Target number of Fans / Followers</li><li>Average number of shares / retweets for each post / tweet</li></ul>"
+
+"Badge_Quality.name";"quality"
+"Badge_Quality.title";"Quality"
+"Badge_Quality.description";"<p>The Quality KPI provides an overall score for the quality of the posts produced by the presence or presences in a Country or SBU. This score combines the following metrics:</p><ul><li>The average number of posts / tweets per day.</li><li>The average number of links per day.</li><li>The average number of likes / retweets per post / tweet / video view.</li><li>The Sign Off status of the presence.</li><li>The Branding status of the presence.</li><li>The number of relevant posts made each day.</li><li>The Average Response Time to comments for this presence.</li></ul>"
+
+"Badge_Total.name";"total"
+"Badge_Total.title";"Overall"
+"Badge_Total.description";"<p>The overall score KPI provides an overall score for how well a social media presence, country or SBU is doing in the other three KPIs. The score combines the total score of the following three KPIs:</p><ul><li>Reach KPI</li><li>Engagement KPI</li><li>Quality KPI</li></ul>"
+
+"Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay.label";"Actions per day"
+
+"Outlandish\SocialMonitor\TableIndex\Header\Branding.label";"Branding"
+"Outlandish\SocialMonitor\TableIndex\Header\Branding.description";"Branding shows whether a presence meets the British Council branding guidelines for social media presences."
+
+"Outlandish\SocialMonitor\TableIndex\Header\Compare.label";"<span class="icon-check"></span>"
+"Outlandish\SocialMonitor\TableIndex\Header\Compare.description";"Select all the presences that you would like to compare, and then click on the Compare Button above';"
+
+"Outlandish\SocialMonitor\TableIndex\Header\Countries.label";"Countries"
+"Outlandish\SocialMonitor\TableIndex\Header\Countries.description";"The countries in this region."
+
+"Outlandish\SocialMonitor\TableIndex\Header\Country.label";"Country"
+
+"Outlandish\SocialMonitor\TableIndex\Header\CountryCount.label";"Countries"
+"Outlandish\SocialMonitor\TableIndex\Header\CountryCount.description";"The number of countries."
+
+"Outlandish\SocialMonitor\TableIndex\Header\CurrentAudience.label";"Current Audience"
+
+"Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulation.label";"Digital Population"
+
+"Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulationHealth.label";"Digital Population Health"
+
+"Outlandish\SocialMonitor\TableIndex\Header\EngagementRank.label";"Engagement Rank"
+"Outlandish\SocialMonitor\TableIndex\Header\EngagementRank.description";"Engagement Rank shows the rank of this presence or group when compared against others."
+
+"Outlandish\SocialMonitor\TableIndex\Header\EngagementScore.label";"Engagement Score"
+"Outlandish\SocialMonitor\TableIndex\Header\EngagementScore.description";"Engagement Score shows the score for the combined measures that measure a presences engagement"
+
+"Outlandish\SocialMonitor\TableIndex\Header\Handle.label";"Handle"
+"Outlandish\SocialMonitor\TableIndex\Header\Handle.description";"Select all the presences that you would like to compare, and then click on the Compare Button above"
+
+"Outlandish\SocialMonitor\TableIndex\Header\Name.label";"Name"
+
+"Outlandish\SocialMonitor\TableIndex\Header\Options.label";"Options"
+
+"Outlandish\SocialMonitor\TableIndex\Header\ParentName.label";"Country/SBU"
+
+"Outlandish\SocialMonitor\TableIndex\Header\PercentTargetAudience.label";"Percentage of Target Audience"
+
+"Outlandish\SocialMonitor\TableIndex\Header\PresenceCount.label";"Presences"
+"Outlandish\SocialMonitor\TableIndex\Header\PresenceCount.description";"The number of presences."
+
+"Outlandish\SocialMonitor\TableIndex\Header\Presences.label";"Presences"
+
+"Outlandish\SocialMonitor\TableIndex\Header\PresenceType.label";"Presence Type"
+
+"Outlandish\SocialMonitor\TableIndex\Header\QualityRank.label";"Quality Rank"
+"Outlandish\SocialMonitor\TableIndex\Header\QualityRank.description";"Quality Rank shows the rank of this presence or group when compared against others."
+
+"Outlandish\SocialMonitor\TableIndex\Header\QualityScore.label";"Quality Score"
+"Outlandish\SocialMonitor\TableIndex\Header\QualityScore.description";"Quality Score shows the score for the combined measures that measure a presences engagement"
+
+"Outlandish\SocialMonitor\TableIndex\Header\ReachRank.label";"Reach Rank"
+"Outlandish\SocialMonitor\TableIndex\Header\ReachRank.description";"Reach Rank shows the rank of this presence or group when compared against others."
+
+"Outlandish\SocialMonitor\TableIndex\Header\ReachScore.label";"Reach Score"
+"Outlandish\SocialMonitor\TableIndex\Header\ReachScore.description";"Reach Score shows the score for the combined measures that measure a presences engagement"
+
+"Outlandish\SocialMonitor\TableIndex\Header\Region.label";"Region"
+
+"Outlandish\SocialMonitor\TableIndex\Header\ResponseTime.label";"Response Time"
+
+"Outlandish\SocialMonitor\TableIndex\Header\SignOff.label";"Sign Off"
+"Outlandish\SocialMonitor\TableIndex\Header\SignOff.description";"Sign Off shows whether a presence has been signed off by the Head of Digital."
+
+"Outlandish\SocialMonitor\TableIndex\Header\TargetAudience.label";"Target Audience"
+
+"Outlandish\SocialMonitor\TableIndex\Header\TotalRank.label";"Overall Rank"
+"Outlandish\SocialMonitor\TableIndex\Header\TotalRank.description";"Overall Rank shows the rank of this presence or group when compared against others."
+
+"Outlandish\SocialMonitor\TableIndex\Header\TotalScore.label";"Overall Score"
+"Outlandish\SocialMonitor\TableIndex\Header\TotalScore.description";"Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality."
+
+// flash messages

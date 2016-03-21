@@ -8,10 +8,9 @@ class Countries extends Header {
 
     protected static $name = "countries";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Countries";
-        $this->description = 'The countries in this region.';
+        parent::__construct($translator);
         $this->sort = self::SORT_TYPE_NONE;
         $this->allowedTypes = array(self::MODEL_TYPE_REGION);
         $this->display = self::DISPLAY_TYPE_SCREEN;

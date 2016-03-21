@@ -216,7 +216,7 @@ class Model_Campaign extends Model_Base {
 			$badgeData = Badge_Factory::badgesData();
 			$badgeNames = Badge_Factory::getBadgeNames();
 
-			$totalBadgeName = Badge_Total::getName();
+            $totalBadgeName = Badge_Total::getInstance()->getName();
 			$keyedData = array();
 			foreach ($badgeData as $row) {
 				$toAdd = array($row->campaign_id, $row->region_id);
@@ -325,7 +325,7 @@ class Model_Campaign extends Model_Base {
 			// add data structures for keeping scores in
 			foreach ($badgeTypes as $type) {
 				if ((!$type instanceof Badge_Total)) {
-					$typeName = $type::getName();
+                    $typeName = $type->getName();
 					$row->b->$typeName = array();
 				}
 			}
@@ -377,7 +377,7 @@ class Model_Campaign extends Model_Base {
 				$value /= $badgeCount; // average out the badges
 				$total[$day] = (object)array('s'=>round($value*10)/10, 'l'=>round($value).'%');
 			}
-			$campaign->b->{Badge_Total::getName()} = $total;
+			$campaign->b->{Badge_Total::getInstance()->getName()} = $total;
 		}
 
 		// fill in any holes by copying the closest day

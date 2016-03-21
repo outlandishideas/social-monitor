@@ -6,6 +6,19 @@ services:
             user: "%db.username%"
             password: "%db.password%"
 
+    translation.message-selector:
+        class: Symfony\Component\Translation\MessageSelector
+
+    translation.csv-loader:
+        class: Symfony\Component\Translation\Loader\CsvFileLoader
+
+    translation.translator:
+        class: Symfony\Component\Translation\Translator
+        arguments: ["en", "@translation.message-selector"]
+        calls:
+            - [addLoader, ["csv", "@translation.csv-loader"]]
+            - [addResource, ["csv", "languages/lang.en.csv", 'en']]
+
     guzzle.client:
         class: GuzzleHttp\Client
 
@@ -135,72 +148,95 @@ services:
 
     table.header.handle:
         class: Outlandish\SocialMonitor\TableIndex\Header\Handle
+        arguments: ["@translation.translator"]
 
     table.header.branding:
         class: Outlandish\SocialMonitor\TableIndex\Header\Branding
+        arguments: ["@translation.translator"]
 
     table.header.sign_off:
         class: Outlandish\SocialMonitor\TableIndex\Header\SignOff
+        arguments: ["@translation.translator"]
 
     table.header.total_rank:
         class: Outlandish\SocialMonitor\TableIndex\Header\TotalRank
+        arguments: ["@translation.translator"]
 
     table.header.total_score:
         class: Outlandish\SocialMonitor\TableIndex\Header\TotalScore
+        arguments: ["@translation.translator"]
 
     table.header.reach_score:
         class: Outlandish\SocialMonitor\TableIndex\Header\ReachScore
+        arguments: ["@translation.translator"]
 
     table.header.engagement_score:
         class: Outlandish\SocialMonitor\TableIndex\Header\EngagementScore
+        arguments: ["@translation.translator"]
 
     table.header.quality_score:
         class: Outlandish\SocialMonitor\TableIndex\Header\QualityScore
+        arguments: ["@translation.translator"]
 
     table.header.current_audience:
         class: Outlandish\SocialMonitor\TableIndex\Header\CurrentAudience
+        arguments: ["@translation.translator"]
 
     table.header.target_audience:
         class: Outlandish\SocialMonitor\TableIndex\Header\TargetAudience
+        arguments: ["@translation.translator"]
 
     table.header.actions_per_day:
         class: Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay
+        arguments: ["@translation.translator"]
 
     table.header.response_time:
         class: Outlandish\SocialMonitor\TableIndex\Header\ResponseTime
+        arguments: ["@translation.translator"]
 
     table.header.options:
         class: Outlandish\SocialMonitor\TableIndex\Header\Options
+        arguments: ["@translation.translator"]
 
     table.header.name:
         class: Outlandish\SocialMonitor\TableIndex\Header\Name
+        arguments: ["@translation.translator"]
 
     table.header.digital_population:
         class: Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulation
+        arguments: ["@translation.translator"]
 
     table.header.digital_population_health:
         class: Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulationHealth
+        arguments: ["@translation.translator"]
 
     table.header.presences:
         class: Outlandish\SocialMonitor\TableIndex\Header\Presences
+        arguments: ["@translation.translator"]
 
     table.header.presence_count:
         class: Outlandish\SocialMonitor\TableIndex\Header\PresenceCount
+        arguments: ["@translation.translator"]
 
     table.header.countries:
         class: Outlandish\SocialMonitor\TableIndex\Header\Countries
+        arguments: ["@translation.translator"]
 
     table.header.country_count:
         class: Outlandish\SocialMonitor\TableIndex\Header\CountryCount
+        arguments: ["@translation.translator"]
 
     table.header.parent:
         class: Outlandish\SocialMonitor\TableIndex\Header\ParentName
+        arguments: ["@translation.translator"]
 
     table.header.region_parent:
         class: Outlandish\SocialMonitor\TableIndex\Header\Region
+        arguments: ["@translation.translator"]
 
     table.header.presence_type:
         class: Outlandish\SocialMonitor\TableIndex\Header\PresenceType
+        arguments: ["@translation.translator"]
 
     # Index table data sources
     table.source.region:

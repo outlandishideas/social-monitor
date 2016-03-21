@@ -228,7 +228,7 @@ abstract class Badge_Factory
         $badgeNames = self::getBadgeNames();
         $rankNames = array_filter(array_map(
                 function($type) {
-                    return $type == Badge_Total::getName() ? null : $type . '_rank';
+                    return $type == Badge_Total::getInstance()->getName() ? null : $type . '_rank';
                 }, $badgeNames));
 		foreach ($data as $row) {
 			foreach ($rankNames as $rank) {

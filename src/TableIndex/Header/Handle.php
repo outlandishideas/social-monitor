@@ -8,10 +8,9 @@ class Handle extends Header {
 
     protected static $name = "handle";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = 'Handle';
-        $this->description = 'Select all the presences that you would like to compare, and then click on the Compare Button above';
+        parent::__construct($translator);
         $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE);
         $this->cellClasses[] = 'left-align';
     }

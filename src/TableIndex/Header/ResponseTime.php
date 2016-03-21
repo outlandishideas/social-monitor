@@ -6,9 +6,9 @@ class ResponseTime extends Header {
 
     protected static $name = "response-time";
 
-    function __construct()
+    function __construct($translator)
     {
-        $this->label = "Response Time";
+        parent::__construct($translator);
         $this->sort = self::SORT_TYPE_NUMERIC_FUZZY;
         $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE, self::MODEL_TYPE_CAMPAIGN);
     }

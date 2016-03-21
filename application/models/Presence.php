@@ -662,7 +662,7 @@ class Model_Presence
             $badgeData = Badge_Factory::badgesData();
             $badgeNames = Badge_Factory::getBadgeNames();
 
-            $totalBadgeName = Badge_Total::getName();
+            $totalBadgeName = Badge_Total::getInstance()->getName();
             $keyedData = array();
             foreach ($badgeData as $presenceData) {
                 $presenceData->$totalBadgeName = 0;

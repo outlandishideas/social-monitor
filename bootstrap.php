@@ -81,7 +81,7 @@ if (!file_exists(APP_ROOT_PATH . '/parameters.yml')) {
 $translate = new Zend_Translate(
     array(
         'adapter' => 'csv',
-        'content' => 'languages/lang.en',
+        'content' => 'languages/lang.en.csv',
         'locale'  => 'en'
     )
 );

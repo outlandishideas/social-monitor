@@ -32,6 +32,7 @@ class RegionController extends CampaignController
 	 */
 	public function indexAction()
     {
+        /** @var \Outlandish\SocialMonitor\Cache\ObjectCacheManager $objectCacheManager */
         $objectCacheManager = $this->getContainer()->get('object-cache-manager');
         $table = $objectCacheManager->getRegionsTable();
 
