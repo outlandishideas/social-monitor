@@ -199,9 +199,7 @@ class RegionController extends CampaignController
                 try {
                     $editingRegion->save();
 
-					$objectCacheManager = $this->getContainer()->get('object-cache-manager');
-					$table = $objectCacheManager->getRegionsTable();
-					$objectCacheManager->invalidateObjectCache($table->getIndexName());
+					$this->invalidateTableCache();
 
 					$this->flashMessage('Region saved');
                     $this->_helper->redirector->gotoRoute(array('action' => 'view', 'id' => $editingRegion->id));
@@ -272,6 +270,8 @@ class RegionController extends CampaignController
                         $region->save();
                     }
 
+					$this->invalidateTableCache();
+
                     $this->flashMessage(count($editedRegions) . ' Regions saved');
                     $this->_helper->redirector->gotoSimple('index');
 
@@ -303,6 +303,9 @@ class RegionController extends CampaignController
                 $countryIds[] = $id;
             }
             $region->assignCountries($countryIds);
+
+			$this->invalidateTableCache();
+
             $this->flashMessage('Region countries updated');
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
@@ -323,6 +326,9 @@ class RegionController extends CampaignController
 
 		if ($this->_request->isPost()) {
 			$region->delete();
+
+			$this->invalidateTableCache();
+
             $this->flashMessage('Region saved');
     		$this->_helper->redirector->gotoSimple('index');
         } else {
@@ -360,4 +366,11 @@ class RegionController extends CampaignController
 
         $this->apiSuccess($chartObject->getChart($region, $start, $end));
     }
+
+	protected function invalidateTableCache()
+	{
+		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
+		$table = $objectCacheManager->getRegionsTable();
+		$objectCacheManager->invalidateObjectCache($table->getIndexName());
+	}
 }
