@@ -2,11 +2,9 @@
 /** @var Model_Country|Model_Group|Model_Region $campaign */
 $campaign = $this->campaign;
 $presences = $campaign->getPresences();
-$infoIcon = null;
 $region = null;
 $countries = array();
 if ($campaign instanceof Model_Country) {
-    $infoIcon = '<span class="flag"><img src="' . $this->assetUrl('img/flags/' . $campaign->getCountryCode() . '.png') . '" /></span>';
     $region = $campaign->getRegion();
 } else if ($campaign instanceof Model_Region) {
     $countries = $campaign->getCountries();

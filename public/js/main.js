@@ -76,7 +76,7 @@ $.extend(app, {
 			'<li class="link box country split">\
 				<input type="hidden" value="<%=id%>" name="<%=name%>" />\
 				<a href="<%=url%>" class="first" target="_blank">\
-					<span class="flag"><img src="<%=flag%>" /></span>\
+					<div class="sm-flag flag-<%=flag%>"></div>\
 					<%=label%>\
 				</a>' + // don't put whitespace between the links
 				'<a href="#" class="remove-item last">\
