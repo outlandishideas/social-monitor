@@ -2513,6 +2513,7 @@ $countries: TN TO TR TT TV TW TZ UA UG US UY UZ VA VC VE VG VI VN VU WF WS XK YE
   background-position: 0 4px;
   background-repeat: no-repeat;
 
+  /* smaller versions were generated using imagemagick: `mogrify -crop 60x40+2+12 -resize 33x22 +repage -path ./flags-small flags/*.png` */
   @each $country in $countries {
     &.flag-#{$country} {
       background-image: url("../img/flags-small/#{$country}.png");
