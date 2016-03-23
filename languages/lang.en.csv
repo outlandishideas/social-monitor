@@ -7,6 +7,7 @@
 "Global.download-csv";"Download CSV"
 
 "Global.home";"Home"
+"Global.region";"Region"
 "Global.regions";"Regions"
 "Global.country";"Country"
 "Global.countries";"Countries"
@@ -29,6 +30,8 @@
 "Global.social-media";"Social Media"
 "Global.sort";"Sort"
 "Global.date";"Date"
+"Global.cancel";"Cancel"
+"Global.save";"Save"
 "Global.email-address";"Email address"
 
 "Base.layout.feedback-button";"Feedback"
@@ -60,6 +63,14 @@
 "Region.view.buttons.manage-countries";"Manage Countries"
 "Region.view.buttons.delete-region";"Delete Region"
 "Region.view.buttons.download-report";"Download Report"
+
+"Region.edit.page-title";"Edit Region"
+"Region.edit.buttons.view-region";"View Region"
+"Region.edit.error.display-name-missing";"Please enter a display name"
+"Region.edit.error.display-name-exists";"Display name already taken"
+"Region.edit.success-message";"Region saved"
+
+
 
 "Region.index.empty-table";"No regions found"
 
