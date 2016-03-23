@@ -361,6 +361,7 @@
 "Error.missing-username";"Please enter a user name"
 "Error.missing-email";"Please enter an email address"
 "Error.invalid-email";"Please enter a valid email address"
+"Error.invalid-date-range";"Invalid date range"
 "Error.use-company-email";"To register, you must use a valid British Council email address"
 "Error.email-in-use";"Email already in use"
 "Error.username-in-use";"User name already in use"
