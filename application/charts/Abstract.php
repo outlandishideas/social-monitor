@@ -2,12 +2,12 @@
 
 abstract class Chart_Abstract {
 
-    protected static $title;
     protected static $name;
 
     protected $xLabel;
     protected $yLabel;
-    protected $description;
+	protected $title;
+	protected $description;
 
     public function __construct(PDO $db = null)
     {
@@ -18,9 +18,9 @@ abstract class Chart_Abstract {
 		// populate $name, $title, $description from transation files
 		$translate = Zend_Registry::get('translate');
 		$className = get_class($this);
-		$this->name = $translate->_($className.'.name');
-		$this->title = $translate->_($className.'.title');
-		$this->description = $translate->_($className.'.description');
+		$this->translate = $translate;
+		$this->title = $this->translate->_($className.'.title');
+		$this->description = $this->translate->_($className.'.description');
     }
 
     public function getChart($model, DateTime $start, DateTime $end)
@@ -50,9 +50,9 @@ abstract class Chart_Abstract {
     /**
      * @return mixed
      */
-    public static function getTitle()
+    public function getTitle()
     {
-        return static::$title;
+        return $this->title;
     }
 
     /**

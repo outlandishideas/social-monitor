@@ -2,14 +2,13 @@
 
 class Chart_Popularity extends Chart_Abstract {
 
-    protected static $title = "Measure: Popularity";
     protected static $name = "popularity";
 
     protected function getXAxis()
     {
         return array(
             "type" => 'timeseries',
-            "label" => 'Date',
+            "label" => $this->translate->_("Global.date"),
             "position" => 'outer-center'
         );
     }
@@ -17,7 +16,7 @@ class Chart_Popularity extends Chart_Abstract {
     protected function getYAxis()
     {
         return array(
-            "label" => 'Number of Fans/Followers',
+            "label" => $this->translate->_(get_class($this).".y-axis-label"),
             "position" => 'outer-middle',
          );
     }

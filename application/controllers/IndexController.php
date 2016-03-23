@@ -45,7 +45,7 @@ class IndexController extends GraphingController
 			$_SESSION['dateRange'] = $dateRange;
 			$this->apiSuccess($dateRange);
 		} else {
-			$this->apiError('Invalid date range');
+			$this->apiError($this->translator->trans('Error.invalid-date-range'));
 		}
 	}
 

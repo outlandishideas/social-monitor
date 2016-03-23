@@ -6,7 +6,7 @@ abstract class Chart_Badge extends Chart_Compare {
     {
         parent::__construct($db);
 
-        $this->xLabel = "Time";
+        $this->xLabel = $this->translate->_("Global.time");
     }
 
     /**

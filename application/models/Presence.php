@@ -146,7 +146,7 @@ class Model_Presence
     public function getCharts()
     {
         return array(
-            Chart_Compare::getName() => Chart_Compare::getTitle()
+            Chart_Compare::getName() => Chart_Compare::getInstance()->getTitle()
         );
     }
 

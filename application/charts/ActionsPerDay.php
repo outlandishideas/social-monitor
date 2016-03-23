@@ -2,14 +2,13 @@
 
 class Chart_ActionsPerDay extends Chart_Abstract {
 
-    protected static $title = "Measure: Actions per Day";
     protected static $name = "actionsPerDay";
 
     protected function getXAxis()
     {
         return array(
             "type" => 'timeseries',
-            "label" => 'Date',
+            "label" => $this->translate->_('Global.date'),
             "position" => 'outer-center'
         );
     }
@@ -17,7 +16,7 @@ class Chart_ActionsPerDay extends Chart_Abstract {
     protected function getYAxis()
     {
         return array(
-            "label" => 'Number of Actions Per Day',
+            "label" => $this->translate->_(get_class($this).'.y-axis'),
             "position" => 'outer-middle',
          );
     }
@@ -36,7 +35,7 @@ class Chart_ActionsPerDay extends Chart_Abstract {
             $key = Metric_ActionsPerDay::getName();
             $key2 = 'relevant';
             $names[$key] = Metric_ActionsPerDay::getTitle();
-            $names[$key2] = 'Relevant links per day';
+            $names[$key2] = $this->translate->_(get_class($this).'.relevant-links');
             $dataSets[$key] = $data;
         }
 

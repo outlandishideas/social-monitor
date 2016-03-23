@@ -201,4 +201,8 @@ abstract class PresenceType
         return $container;
     }
 
+	public function __toString() {
+		return $this->value;
+	}
+
 }
