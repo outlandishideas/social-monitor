@@ -25,11 +25,11 @@ class UserController extends BaseController
 
     public function linkedinAction()
     {
-		$this->view->pageTitle = 'Login to LinkedIn';
+		$this->view->pageTitle = $this->translator->trans('User.linkedin-title'); //'Login to LinkedIn';
         if (isset($_REQUEST['code'])) {
             $token = $this->linkedin->getAccessToken($_REQUEST['code']);
 
-            $this->flashMessage("Linkedin Account connected");
+            $this->flashMessage($this->translator->trans('Success.linkedin-login'));
             /** @var Model_User $user */
             $user = Model_User::fetchById($this->auth->getIdentity());
             $expires = (new Carbon())->addSeconds($this->linkedin->getAccessTokenExpiration());
@@ -46,7 +46,7 @@ class UserController extends BaseController
      */
     public function indexAction()
     {
-        $this->view->pageTitle = 'Users';
+        $this->view->pageTitle = $this->translator->trans('Global.users');
         $this->view->users = Model_User::fetchAll();
         $this->view->userLevels = Model_User::$userLevels;
     }
@@ -60,7 +60,7 @@ class UserController extends BaseController
             $this->_helper->redirector->gotoSimple('index', 'index');
         }
 
-        $this->view->pageTitle = 'Login';
+        $this->view->pageTitle = $this->translator->trans('Global.login');
 
         if ($this->_request->isPost()) {
             $authAdapter = new Model_User();
@@ -77,7 +77,7 @@ class UserController extends BaseController
                 $this->redirect($redirect);
             } else {
                 $this->view->redirect_to = $redirect;
-                $this->flashMessage('Incorrect username/password or email has not been confirmed', 'error');
+                $this->flashMessage($this->translator->trans('Error.unconfirmed-username'), 'error'); //'Incorrect username/password or email has not been confirmed'
             }
         } else {
             $this->view->redirect_to = $this->_request->getPathInfo();
@@ -98,7 +98,7 @@ class UserController extends BaseController
         if ($this->_request->isPost()) {
             $username = $this->_request->getParam('username');
             if (!$username) {
-                $this->flashMessage('Please enter a username or email address', 'error');
+                $this->flashMessage($this->translator->trans('Error.missing-username-email'), 'error'); //'Please enter a username or email address'
 			} else {
 				/** @var Model_User $user */
 				$user = Model_User::fetchBy('name', $username);
@@ -107,7 +107,7 @@ class UserController extends BaseController
 				}
 
                 if (!$user) {
-                    $this->flashMessage('User not found', 'error');
+                    $this->flashMessage($this->translator->trans('Error.user-not-found'), 'error'); //'User not found'
                 } else {
                     $code = $this->generateCode();
                     $user->reset_key = $code;
@@ -115,14 +115,14 @@ class UserController extends BaseController
 
                     try {
                         $this->sendResetPasswordEmail($user);
-                        $this->flashMessage('You should receive an email shortly with a password reset link');
+                        $this->flashMessage($this->translator->trans('Success.password-reset-email-sent')); //'You should receive an email shortly with a password reset link'
                     } catch (Exception $ex) {
-                        $this->flashMessage('Failed to send reset email.<br />Please ask an admin user to reset your password', 'error');
+                        $this->flashMessage($this->translator->trans('Error.password-reset-failed-email'), 'error'); //'Failed to send reset email.<br />Please ask an admin user to reset your password'
                     }
                 }
             }
         }
-        $this->view->pageTitle = 'Forgotten password';
+        $this->view->pageTitle = $this->translator->trans('Global.forgotten-password'); //'Forgotten password'
         $this->_helper->layout()->setLayout('notabs');
     }
 
@@ -146,11 +146,11 @@ class UserController extends BaseController
                 $password = $this->_request->getParam('password');
                 $password2 = $this->_request->getParam('password_confirm');
                 if (!$password || !$password2) {
-                    $this->flashMessage('Both passwords are required', 'error');
+                    $this->flashMessage($this->translator->trans('Error.both-passwords-required'), 'error'); //'Both passwords are required'
                 } else if ($password != $password2) {
-                    $this->flashMessage('Passwords do not match', 'error');
+                    $this->flashMessage($this->translator->trans('Error.passwords-dont-match'), 'error'); //'Passwords do not match'
                 } else if (strlen($password) < 4) {
-                    $this->flashMessage('Password must be at least 4 characters', 'error');
+                    $this->flashMessage($this->translator->trans('Error.passwords-too-short'), 'error'); //'Password must be at least 4 characters'
                 } else {
                     $user->fromArray(array('password' => $password));
                     $user->reset_key = null;
@@ -162,16 +162,16 @@ class UserController extends BaseController
                     $authAdapter->authPassword = $password;
                     $this->auth->authenticate($authAdapter);
 
-                    $this->flashMessage('Password changed successfully');
+                    $this->flashMessage($this->translator->trans('Success.password-change')); //'Password changed successfully'
                     $this->_helper->redirector->gotoSimple('index', 'index');
                 }
             }
         } else {
-            $this->flashMessage('Incorrect user/key combination for password reset', 'error');
+            $this->flashMessage($this->translator->trans('Error.incorrect-user-key'), 'error'); //'Incorrect user/key combination for password reset'
             $this->_helper->redirector->gotoSimple('index', 'index');
         }
 
-		$this->view->pageTitle = 'Change Password';
+		$this->view->pageTitle = $this->translator->trams('Global.change-password') ; //'Change Password'
 		$this->_helper->layout()->setLayout('notabs');
     }
 
@@ -181,7 +181,7 @@ class UserController extends BaseController
     public function logoutAction()
     {
         $this->auth->clearIdentity();
-        $this->flashMessage('Logged out');
+        $this->flashMessage($this->translator->trans('Success.logged-out'));
         $this->_helper->redirector->gotoSimple('index', 'index');
     }
 
@@ -194,9 +194,9 @@ class UserController extends BaseController
         $this->editAction();
         $registerSuccessful = $this->_request->getParam('result') === 'success';
         if ($registerSuccessful) {
-            $this->view->pageTitle = 'Registration success';
+            $this->view->pageTitle = $this->translator->trans('Success.registration'); //'Registration success';
         } else {
-            $this->view->pageTitle = 'Register user';
+            $this->view->pageTitle = $this->translator->trans('Global.register-user'); //'Register user';
         }
         $this->view->registerSuccessful = $registerSuccessful;
         $this->_helper->layout()->setLayout('notabs');
@@ -210,7 +210,7 @@ class UserController extends BaseController
     {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
-        $this->view->pageTitle = 'New User';
+        $this->view->pageTitle = $this->translator->trans('Global.new-user'); //'New User';
         $this->_helper->viewRenderer->setScriptAction('edit');
     }
 
@@ -234,16 +234,16 @@ class UserController extends BaseController
      */
     public function editAction()
     {
-        $messageOnSave = 'User saved';
+        $messageOnSave = $this->translator->trans('User.saved'); //'User saved';
         /** @var Model_User $editingUser */
         switch ($this->_request->getActionName()) {
             case 'new':
                 $editingUser = new Model_User(array());
-                $messageOnSave = 'User created';
+                $messageOnSave = $this->translator->trans('User.created'); //'User created';
                 break;
             case 'register':
                 $editingUser = new Model_User(array());
-                $messageOnSave = 'User registered';
+                $messageOnSave = $this->translator->trans('User.registered'); //'User registered';
                 break;
             case 'edit-self':
                 $editingUser = new Model_User($this->view->user->toArray(), true);
@@ -269,16 +269,16 @@ class UserController extends BaseController
 
             $errorMessages = array();
             if (!$this->_request->getParam('name')) {
-                $errorMessages[] = 'Please enter a user name';
+                $errorMessages[] = $this->translator->trans('Error.missing-username'); //'Please enter a user name';
             }
             if (!$this->_request->getParam('email')) {
-                $errorMessages[] = 'Please enter an email address';
+                $errorMessages[] = $this->translator->trans('Error.missing-email'); //'Please enter an email address';
             } else if (preg_match('/.*@.*/', $this->_request->getParam('email')) === 0) {
-                $errorMessages[] = 'Please enter a valid email address';
+                $errorMessages[] = $this->translator->trans('Error.invalid-email'); //'Please enter a valid email address';
             } else if ($this->isRegistration() &&
                 !$this->isBritishCouncilEmailAddress($this->_request->getParam('email'))
             ) {
-                $errorMessages[] = 'To register, you must use a valid British Council email address';
+                $errorMessages[] = $this->translator->trans('Error.use-company-email'); //'To register, you must use a valid British Council email address';
             }
 
             if (!$errorMessages) {
@@ -286,11 +286,11 @@ class UserController extends BaseController
                 $password2 = $this->_request->getParam('password_confirm');
                 // don't require a new password for existing users
                 if (!$editingUser->id && (!$password || !$password2)) {
-                    $errorMessages[] = 'Please enter the password in both boxes';
+                    $errorMessages[] = $this->translator->trans('Error.both-passwords-required'); //'Please enter the password in both boxes';
                 } else if ($password != $password2) {
-                    $errorMessages[] = 'Passwords do not match';
+                    $errorMessages[] = $this->translator->trans('Error.passwords-dont-match'); //'Passwords do not match';
                 } else if ($password && strlen($password) < 4) {
-                    $errorMessages[] = 'Password must be at least 4 characters';
+                    $errorMessages[] = $this->translator->trans('Error.passwords-too-short'); //'Password must be at least 4 characters';
                 }
             }
 
@@ -316,9 +316,9 @@ class UserController extends BaseController
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
                         if (strpos($ex->getMessage(), 'email') !== false) {
-                            $message = 'Email address already in use';
+                            $message = $this->translator->trans('Error.email-in-use'); //'Email address already in use';
                         } else {
-                            $message = 'User name already taken';
+                            $message = $this->translator->trans('Error.username-in-use'); //'User name already taken';
                         }
                         $this->flashMessage($message, 'error');
                     } else {
@@ -330,7 +330,7 @@ class UserController extends BaseController
 
         $this->view->userLevels = Model_User::$userLevels;
         $this->view->editingUser = $editingUser;
-        $this->view->pageTitle = 'Edit User';
+        $this->view->pageTitle = $this->translator->trans('User.edit-user'); //'Edit User';
         $this->view->showAccessTokens = false;
     }
 
@@ -346,7 +346,7 @@ class UserController extends BaseController
 
         if ($this->_request->isPost()) {
             $user->delete();
-            $this->flashMessage('User deleted');
+            $this->flashMessage($this->translator->trans('Success.user-deleted')); //'User deleted'
         }
         $this->_helper->redirector->gotoSimple('index');
     }
@@ -363,11 +363,11 @@ class UserController extends BaseController
 
         if ($this->_request->isPost()) {
             $user->assignAccess($this->_request->getParam('assigned'));
-            $this->flashMessage('User permissions saved');
+            $this->flashMessage($this->translator->trans('Success.permissions-saved')); //'User permissions saved');
             $this->_helper->redirector->gotoSimple('index');
         }
 
-        $this->view->pageTitle = 'Edit access rights for ' . $user->safeName;
+        $this->view->pageTitle = $this->translator->trans('User.edit-permissions') . $user->safeName; // 'Edit access rights for ' . $user->safeName;
         $this->view->editingUser = $user;
         $this->view->twitterPresences = Model_PresenceFactory::getPresencesByType(PresenceType::TWITTER());
         $this->view->facebookPresences = Model_PresenceFactory::getPresencesByType(PresenceType::FACEBOOK());
@@ -395,13 +395,13 @@ class UserController extends BaseController
                 $user->confirm_email_key = null;
                 $user->save();
             } catch (Exception $ex) {
-                $this->flashMessage('Something went wrong and we could\'nt confirm your email address.', 'error');
+                $this->flashMessage($this->translator->trans('Error.cant-confirm-email'), 'error'); //'Something went wrong and we could\'nt confirm your email address.'
                 $this->_helper->redirector->gotoSimple('index', 'index');
             }
-            $this->flashMessage('Thank you for confirming your email. You can now login.', 'info');
+            $this->flashMessage($this->translator->trans('Success.email-confirmed'), 'info');
             $this->_helper->redirector->gotoSimple('login', 'user');
         } else {
-            $this->flashMessage('Incorrect user/key combination for email confirmation', 'error');
+            $this->flashMessage($this->translator->trans('Error.invalid-confirm-email'), 'error');
             $this->_helper->redirector->gotoSimple('index', 'index');
         }
     }
@@ -413,16 +413,12 @@ class UserController extends BaseController
      */
     private function sendRegisterEmail(Model_User $registeredUser)
     {
-        $subject = "You have successfully registered";
+        $subject = $this->translator->trans('User.register-email.subject'); //"You have successfully registered";
         $toEmail = $registeredUser->email;
         $fromEmail = 'do.not.reply@example.com';
         $fromName = 'The British Council Social Media Monitor team';
         $resetLink = $this->getResetLink($registeredUser, 'confirm-email');
-        $message = '<p>Hi ' . $registeredUser->name . ',</p>
-					<p>Thank you for registering with the British Council Social Monitor</p>
-					<p>If you did not register for this service, please ignore this email.</p>
-					<p>Otherwise, click this link to confirm your email so that you can login with your new account <a href="' . $resetLink . '">Confirm email</a></p>
-					<p>Thanks,<br />the British Council Social Media Monitor team</p>';
+        $message = $this->translator->trans('User.register-email.message', ['%name%' => $registeredUser->name, '%link%' => $resetLink]);
 
         $this->sendEmail($message, $fromEmail, $fromName, $toEmail, $subject);
     }
@@ -436,17 +432,13 @@ class UserController extends BaseController
     private function sendResetPasswordEmail(Model_User $user)
     {
         $resetLink = $this->getResetLink($user, 'reset-password');
-        $message = '<p>Hi ' . $user->name . ',</p>
-					<p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p>
-					<p>If you did not request a reset, please ignore this email.</p>
-					<p>Otherwise, click this link to reset your password <a href="' . $resetLink . '">Reset password</a></p>
-					<p>Thanks,<br />the British Council Social Media Monitor team</p>';
+        $message = $this->translator->trans('User.reset-email.message', ['%name%' => $user->name, '%link%' => $resetLink]);
         $this->sendEmail(
             $message,
             'do.not.reply@example.com',
             'The British Council Social Media Monitor team',
             $user->email,
-            'Password reset'
+            $this->translator->trans('User.reset-email.subject')
         );
     }
 
