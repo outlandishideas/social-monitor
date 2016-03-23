@@ -412,16 +412,12 @@ class UserController extends BaseController
      */
     private function sendRegisterEmail(Model_User $registeredUser)
     {
-        $subject = "You have successfully registered";
+        $subject = $this->translator->trans('User.register-email.subject'); //"You have successfully registered";
         $toEmail = $registeredUser->email;
         $fromEmail = 'do.not.reply@example.com';
         $fromName = 'The British Council Social Media Monitor team';
         $resetLink = $this->getResetLink($registeredUser, 'confirm-email');
-        $message = '<p>Hi ' . $registeredUser->name . ',</p>
-					<p>Thank you for registering with the British Council Social Monitor</p>
-					<p>If you did not register for this service, please ignore this email.</p>
-					<p>Otherwise, click this link to confirm your email so that you can login with your new account <a href="' . $resetLink . '">Confirm email</a></p>
-					<p>Thanks,<br />the British Council Social Media Monitor team</p>';
+        $message = $this->translator->trans('User.register-email.message', ['%name%' => $registeredUser->name, '%link%' => $resetLink]);
 
         $this->sendEmail($message, $fromEmail, $fromName, $toEmail, $subject);
     }
@@ -435,17 +431,13 @@ class UserController extends BaseController
     private function sendResetPasswordEmail(Model_User $user)
     {
         $resetLink = $this->getResetLink($user, 'reset-password');
-        $message = '<p>Hi ' . $user->name . ',</p>
-					<p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p>
-					<p>If you did not request a reset, please ignore this email.</p>
-					<p>Otherwise, click this link to reset your password <a href="' . $resetLink . '">Reset password</a></p>
-					<p>Thanks,<br />the British Council Social Media Monitor team</p>';
+        $message = $this->translator->trans('User.reset-email.message', ['%name%' => $user->name, '%link%' => $resetLink]);
         $this->sendEmail(
             $message,
             'do.not.reply@example.com',
             'The British Council Social Media Monitor team',
             $user->email,
-            'Password reset'
+            $this->translator->trans('User.reset-email.subject')
         );
     }
 

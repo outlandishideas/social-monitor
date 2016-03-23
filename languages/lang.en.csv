@@ -71,6 +71,11 @@ Base.layout.feedback-button";"Feedback"
 "User.registered";"User registered"
 "User.edit-user";"Edit user"
 "User.edit-permissions";"Edit access rights for "
+"User.register-email.subject";"You have successfully registered"
+"User.register-email.message";"<p>Hi %name%,</p><p>Thank you for registering with the British Council Social Monitor</p><p>If you did not register for this service, please ignore this email.</p><p>Otherwise, click this link to confirm your email so that you can login with your new account <a href="%link%">Confirm email</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
+"User.reset-password.subject";"Password reset"
+"User.reset-password.message";"'<p>Hi %name%,</p><p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p><p>If you did not request a reset, please ignore this email.</p><p>Otherwise, click this link to reset your password <a href="%link%">Reset password</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
+
 
 "Badge_Engagement.name";"engagement"
 "Badge_Engagement.title";"Engagement"
