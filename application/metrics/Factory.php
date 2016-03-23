@@ -17,7 +17,7 @@ abstract class Metric_Factory {
             Metric_Klout::getName() => "Metric_Klout",
             Metric_LikesPerPost::getName() => "Metric_LikesPerPost",
             Metric_LikesPerView::getName() => "Metric_LikesPerView",
-            Metric_ResponseTimeNew::getName() => "Metric_ResponseTimeNew",
+            Metric_ResponseTime::getName() => "Metric_ResponseTime",
             Metric_ResponseRatio::getName() => "Metric_ResponseRatio",
             Metric_SinaWeiboEngagement::getName() => "Metric_SinaWeiboEngagement",
             Metric_InstagramEngagement::getName() => "Metric_InstagramEngagement",

@@ -42,8 +42,8 @@ class ResponseTimeMetricCommand extends ContainerAwareCommand
         $then = clone $now;
         $then->modify("-30 days");
 
-        /** @var \Metric_ResponseTimeNew $metric */
-        $metric = \Metric_Factory::getMetric(\Metric_ResponseTimeNew::getName());
+        /** @var \Metric_ResponseTime $metric */
+        $metric = \Metric_Factory::getMetric(\Metric_ResponseTime::getName());
 
         /** @var \Model_Presence $presence */
         $presence = \Model_PresenceFactory::getPresenceById($presenceId);

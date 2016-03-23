@@ -1,20 +1,26 @@
 <?php
 
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 abstract class Provider_Abstract
 {
 	protected $db;
 	protected $tableName;
-    /** @var Enum_PresenceType */
+    /** @var PresenceType */
     protected $type = null;
     protected $createdTimeColumn = 'created_time';
     protected $contentColumn = 'message';
     protected $engagementStatement = '(likes + comments * 4)';
+	// todo: declare this properly (instead of putting specific subclasses here)
+	/** @var Outlandish\SocialMonitor\Adapter\AbstractAdapter|Outlandish\SocialMonitor\Adapter\LinkedinAdapter|Outlandish\SocialMonitor\Adapter\YoutubeAdapter|Outlandish\SocialMonitor\Adapter\TwitterAdapter */
+	protected $adapter;
 
-	public function __construct(PDO $db)
+	public function __construct(PDO $db, $adapter, $type)
 	{
 		$this->db = $db;
+		$this->adapter = $adapter;
+		$this->type = $type;
 	}
 
     public function getType() {

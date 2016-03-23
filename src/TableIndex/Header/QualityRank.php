@@ -8,17 +8,12 @@ class QualityRank extends BadgeRank {
 
     protected static $name = "quality-rank";
 
-    function __construct($translator)
-    {
-        parent::__construct($translator);
-    }
-
     /**
      * @return mixed
      */
     public function getBadgeName()
     {
-        return Badge_Quality::getInstance()->getName() . "_rank";
+        return Badge_Quality::NAME . "_rank";
     }
 
 }

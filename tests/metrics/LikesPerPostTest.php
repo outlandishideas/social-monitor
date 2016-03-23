@@ -1,5 +1,7 @@
 <?php
 
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
+
 require_once 'vendor/autoload.php';
 require_once('MetricTest.php.base');
 
@@ -23,7 +25,7 @@ class LikesPerPostTest extends MetricTest
 	 */
 	public function testSinaWeiboReturnsNull()
 	{
-		$this->presence->method('getType')->willReturn(Enum_PresenceType::SINA_WEIBO());
+		$this->presence->method('getType')->willReturn(PresenceType::SINA_WEIBO());
 		$this->assertNull($this->metric->calculate($this->presence, new DateTime, new DateTime));
 	}
 
@@ -33,7 +35,7 @@ class LikesPerPostTest extends MetricTest
 	 */
 	public function testTwitterReturnsNull()
 	{
-		$this->presence->method('getType')->willReturn(Enum_PresenceType::TWITTER());
+		$this->presence->method('getType')->willReturn(PresenceType::TWITTER());
 		$this->assertNull($this->metric->calculate($this->presence, new DateTime, new DateTime));
 	}
 
@@ -44,7 +46,7 @@ class LikesPerPostTest extends MetricTest
 	 */
 	public function testCalulations($input, $expected)
 	{
-		$this->presence->method('getType')->willReturn(Enum_PresenceType::FACEBOOK());
+		$this->presence->method('getType')->willReturn(PresenceType::FACEBOOK());
 		$this->presence->method('getHistoricStream')->willReturn($input);
 		$this->assertEquals($expected, $this->metric->calculate($this->presence, new DateTime, new DateTime));
 	}

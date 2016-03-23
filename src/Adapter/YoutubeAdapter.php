@@ -20,6 +20,8 @@ class YoutubeAdapter extends AbstractAdapter
 {
 
     private $channels = [];
+	/** @var \Google_Service_YouTube */
+	protected $youtube;
 
     public function __construct(\Google_Service_YouTube $youtube)
     {
@@ -131,7 +133,7 @@ class YoutubeAdapter extends AbstractAdapter
         return $comments;
     }
 
-    public function getStatuses($pageUID, $since, $handle)
+    public function getStatuses($pageUID, $since, $handle = null)
     {
         $videos = array();
         $channels = $this->youtube->channels->listChannels('contentDetails',['id' => $pageUID])->getItems();

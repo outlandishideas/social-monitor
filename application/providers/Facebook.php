@@ -5,21 +5,16 @@ use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\FacebookStatus;
 use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 use Outlandish\SocialMonitor\Models\Status;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 class Provider_Facebook extends Provider_Abstract
 {
 	protected $connection = null;
-    /**
-     * @var FacebookAdapter
-     */
-    private $adapter;
     private $engagementMetric;
 
-    public function __construct(PDO $db, FacebookAdapter $adapter, EngagementMetric $metric) {
-		parent::__construct($db);
-		$this->type = Enum_PresenceType::FACEBOOK();
+    public function __construct(PDO $db, FacebookAdapter $adapter, EngagementMetric $metric, PresenceType $type) {
+		parent::__construct($db, $adapter, $type);
         $this->tableName = 'facebook_stream';
-        $this->adapter = $adapter;
         $this->engagementMetric = $metric;
         $this->engagementStatement = '(likes + comments * 4 + share_count * 7)';
     }
@@ -560,7 +555,7 @@ class Provider_Facebook extends Provider_Abstract
                 'comments' => $r['comments'],
                 'comparable' => (($r['likes'] + $r['comments'] * 4 + $r['share_count'] * 7) / 12)
             ];
-            $status->icon = Enum_PresenceType::FACEBOOK()->getSign();
+            $status->icon = PresenceType::FACEBOOK()->getSign();
             $status->needs_response = $r['needs_response'];
             $status->first_response = array(
                 'message' => $response,

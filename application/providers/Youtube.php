@@ -5,26 +5,21 @@ use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 class Provider_Youtube extends Provider_Abstract
 {
     protected $connection = null;
-    /**
-     * @var YoutubeAdapter
-     */
-    private $adapter;
 
     private $videoHistoryColumns = ['views', 'likes', 'dislikes', 'comments'];
     private $commentTableName;
     public static $historyTableName = 'youtube_video_history';
 
-    public function __construct(PDO $db, YoutubeAdapter $adapter)
+    public function __construct(PDO $db, YoutubeAdapter $adapter, PresenceType $type)
     {
-        parent::__construct($db);
-        $this->type = Enum_PresenceType::YOUTUBE();
+        parent::__construct($db, $adapter, $type);
         $this->tableName = 'youtube_video_stream';
         $this->commentTableName = 'youtube_comment_stream';
-        $this->adapter = $adapter;
         $this->engagementStatement = '(likes + number_of_replies * 4)';
     }
 
@@ -472,13 +467,12 @@ class Provider_Youtube extends Provider_Abstract
             $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
             $status->presence_id = $r['presence_id'];
             $status->presence_name = $presence->getName();
-            $status->icon = Enum_PresenceType::YOUTUBE()->getSign();
+            $status->icon = PresenceType::YOUTUBE()->getSign();
             $status->engagement = [
                 'comments' => $r['number_of_replies'],
                 'likes' => $r['likes'],
                 'comparable' => (($r['likes'] + $r['number_of_replies'] * 4) / 5)
             ];
-            $status->icon = Enum_PresenceType::YOUTUBE()->getSign();
             $status->permalink = 'https://www.youtube.com/watch?v=' . $r['video_id'];
             $parsed[] = (array)$status;
         }

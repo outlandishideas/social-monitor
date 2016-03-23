@@ -17,7 +17,7 @@ $resourceLoader->addResourceType('badge', 'badges/', 'Badge');
 // $pdo = new PDO('mysql:dbname=bcmonitor_test;host=localhost', 'bcmonitor_test', 'passwd');
 // NewModel_PresenceFactory::setDatabase($pdo);
 // Badge_Factory::setDB($pdo);
-// $presence = NewModel_PresenceFactory::getPresenceByHandle('learnenglish', Enum_PresenceType::SINA_WEIBO());
+// $presence = NewModel_PresenceFactory::getPresenceByHandle('learnenglish', PresenceType::SINA_WEIBO());
 
 // $provider = new NewModel_SinaWeiboProvider($pdo);
 

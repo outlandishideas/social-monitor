@@ -2,7 +2,16 @@
 
 class Badge_Total extends Badge_Abstract
 {
-	protected static $instance;
+	const NAME = 'total';
+	
+	/** @var Badge_Abstract[] */
+	protected $badges = array();
+
+	public function __construct(PDO $db, $badges)
+	{
+		parent::__construct(self::NAME, $db);
+		$this->badges = $badges;
+	}
 
 	public function calculate(Model_Presence $presence, \DateTime $date = null, Enum_Period $range = null)
 	{
@@ -13,17 +22,12 @@ class Badge_Total extends Badge_Abstract
 			$range = Enum_Period::MONTH();
 		}
 
-		$badgeNames = array(
-			Badge_Reach::getInstance()->getName(),
-            Badge_Engagement::getInstance()->getName(),
-            Badge_Quality::getInstance()->getName()
-		);
-
 		$total = 0;
         $count = 0;
         $scores = $presence->getBadgeScores($date, $range);
-		foreach ($badgeNames as $b) {
-            $badgeScore = $scores[$b];
+		foreach ($this->badges as $badge) {
+			$badgeName = $badge->getName();
+            $badgeScore = $scores[$badgeName];
             if (!is_null($badgeScore)) {
     			$total += $badgeScore;
                 $count++;

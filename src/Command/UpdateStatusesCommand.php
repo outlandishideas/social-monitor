@@ -2,9 +2,9 @@
 
 namespace Outlandish\SocialMonitor\Command;
 
-use Enum_PresenceType;
 use Facebook\FacebookSDKException;
 use Model_PresenceFactory;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -84,7 +84,7 @@ class UpdateStatusesCommand extends ContainerAwareCommand
 
     protected function getPresencesByType($type)
     {
-        return $type ? Model_PresenceFactory::getPresencesByType(Enum_PresenceType::get($type)) : Model_PresenceFactory::getPresences();
+        return $type ? Model_PresenceFactory::getPresencesByType(PresenceType::get($type)) : Model_PresenceFactory::getPresences();
     }
 
     protected function getAllPresences()

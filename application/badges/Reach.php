@@ -2,15 +2,11 @@
 
 class Badge_Reach extends Badge_Abstract
 {
-    protected static $instance;
+	const NAME = 'reach';
 
-    protected function __construct(PDO $db = null)
-    {
-        parent::__construct($db);
-        $this->metrics = array(
-            Metric_Popularity::getInstance(),
-            Metric_PopularityTime::getInstance()
-        );
-    }
+	public function __construct(PDO $db, $metrics)
+	{
+		parent::__construct(self::NAME, $db, $metrics);
+	}
 
 }

@@ -9,16 +9,18 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
     protected static $title = "ChangeThis Engagement Score";
     protected static $icon = "fa fa_change_this";
     protected static $gliding = false;
-    protected static $queryClassName = 'Outlandish\SocialMonitor\Engagement\Query\ChangeThisQuery';
     /** @var Query */
     protected $query;
     public static $engagementTarget = 0.25;
     protected $cache = array();
 
-    function __construct()
+
+	/**
+	 * @param Query $query
+	 */
+    function __construct($query)
     {
-        $db = Zend_Registry::get('db')->getConnection();
-        $this->query = new static::$queryClassName($db);
+        $this->query = $query;
     }
 
     /**

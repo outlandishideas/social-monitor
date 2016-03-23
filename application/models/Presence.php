@@ -4,6 +4,13 @@ use Outlandish\SocialMonitor\Cache\KpiCacheEntry;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\AccessToken;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
+use Outlandish\SocialMonitor\PresenceType\FacebookType;
+use Outlandish\SocialMonitor\PresenceType\InstagramType;
+use Outlandish\SocialMonitor\PresenceType\LinkedinType;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
+use Outlandish\SocialMonitor\PresenceType\SinaWeiboType;
+use Outlandish\SocialMonitor\PresenceType\TwitterType;
+use Outlandish\SocialMonitor\PresenceType\YoutubeType;
 
 class Model_Presence
 {
@@ -21,7 +28,7 @@ class Model_Presence
     //these should be public to mimic existing Presence Class
     public $id;
     public $handle;
-    /** @var Enum_PresenceType */
+    /** @var PresenceType */
     public $type;
     public $name;
     public $label;
@@ -58,20 +65,18 @@ class Model_Presence
 
     /**
      * Creates a new presence
-     * Provider, metrics and badges are passed in so that they can be mocked out for testing
+     * Provider and metrics are passed in so that they can be mocked out for testing
      * @param PDO $db
      * @param array $internals
      * @param Provider_Abstract $provider
      * @param array $metrics
-     * @param array $badges
      * @throws InvalidArgumentException
      */
-    public function __construct(PDO $db, array $internals, Provider_Abstract $provider, array $metrics = array(), array $badges = array())
+    public function __construct(PDO $db, array $internals, Provider_Abstract $provider, array $metrics = array())
     {
         $this->db = $db;
         $this->provider = $provider;
         $this->metrics = $metrics;
-//		$this->badges = $badges;
 
         if (!array_key_exists('id', $internals)) {
             throw new \InvalidArgumentException('Missing id for Presence');
@@ -90,11 +95,11 @@ class Model_Presence
         $this->klout_score = $internals['klout_score'];
         $this->facebook_engagement = $internals['facebook_engagement'];
         $this->sina_weibo_engagement = $internals['sina_weibo_engagement'];
-        if ($this->type === Enum_PresenceType::INSTAGRAM()) {
+        if ($this->type === PresenceType::INSTAGRAM()) {
             $this->instagram_engagement = $internals['instagram_engagement'];
-        } else if ($this->type === Enum_PresenceType::YOUTUBE()) {
+        } else if ($this->type === PresenceType::YOUTUBE()) {
             $this->youtube_engagement = $internals['instagram_engagement'];
-        } else if ($this->type === Enum_PresenceType::LINKEDIN()) {
+        } else if ($this->type === PresenceType::LINKEDIN()) {
             $this->linkedin_engagement = $internals['instagram_engagement'];
         }
         $this->page_url = $internals['page_url'];
@@ -147,7 +152,7 @@ class Model_Presence
 
     public function setType($typeName)
     {
-        $this->type = Enum_PresenceType::get($typeName);
+        $this->type = PresenceType::get($typeName);
     }
 
     public function getName()
@@ -354,32 +359,32 @@ class Model_Presence
 
     public function isForTwitter()
     {
-        return $this->getType()->getValue() == Enum_PresenceType::TWITTER;
+        return $this->getType()->getValue() == TwitterType::NAME;
     }
 
     public function isForFacebook()
     {
-        return $this->getType()->getValue() == Enum_PresenceType::FACEBOOK;
+        return $this->getType()->getValue() == FacebookType::NAME;
     }
 
     public function isForSinaWeibo()
     {
-        return $this->getType()->getValue() == Enum_PresenceType::SINA_WEIBO;
+        return $this->getType()->getValue() == SinaWeiboType::NAME;
     }
 
     public function isForInstagram()
     {
-        return $this->getType()->getValue() == Enum_PresenceType::INSTAGRAM;
+        return $this->getType()->getValue() == InstagramType::NAME;
     }
 
     public function isForYoutube()
     {
-        return $this->getType()->getValue() == Enum_PresenceType::YOUTUBE;
+        return $this->getType()->getValue() == YoutubeType::NAME;
     }
 
     public function isForLinkedin()
     {
-        return $this->getType()->getValue() == Enum_PresenceType::LINKEDIN;
+        return $this->getType()->getValue() == LinkedinType::NAME;
     }
 
     /**
@@ -422,22 +427,22 @@ class Model_Presence
 
                 $percent = 0;
                 switch ($this->getType()->getValue()) {
-                    case Enum_PresenceType::SINA_WEIBO:
+                    case SinaWeiboType::NAME:
                         $percent = BaseController::getOption('sw_min');
                         break;
-                    case Enum_PresenceType::FACEBOOK:
+                    case FacebookType::NAME:
                         $percent = BaseController::getOption('fb_min');
                         break;
-                    case Enum_PresenceType::TWITTER:
+                    case TwitterType::NAME:
                         $percent = BaseController::getOption('tw_min');
                         break;
-                    case Enum_PresenceType::INSTAGRAM:
+                    case InstagramType::NAME:
                         $percent = BaseController::getOption('ig_min');
                         break;
-                    case Enum_PresenceType::YOUTUBE:
+                    case YoutubeType::NAME:
                         $percent = BaseController::getOption('yt_min');
                         break;
-                    case Enum_PresenceType::LINKEDIN:
+                    case LinkedinType::NAME:
                         $percent = BaseController::getOption('in_min');
                         break;
                 }
@@ -676,7 +681,7 @@ class Model_Presence
             $badgeData = Badge_Factory::badgesData();
             $badgeNames = Badge_Factory::getBadgeNames();
 
-            $totalBadgeName = Badge_Total::getInstance()->getName();
+            $totalBadgeName = Badge_Total::NAME;
             $keyedData = array();
             foreach ($badgeData as $presenceData) {
                 $presenceData->$totalBadgeName = 0;
@@ -735,20 +740,20 @@ class Model_Presence
 
 
         switch ($this->type) {
-            case Enum_PresenceType::INSTAGRAM():
+            case PresenceType::INSTAGRAM():
                 $instagramEngagement = $this->instagram_engagement;
                 break;
-            case Enum_PresenceType::YOUTUBE():
+            case PresenceType::YOUTUBE():
                 $instagramEngagement = $this->youtube_engagement;
                 break;
-            case Enum_PresenceType::LINKEDIN():
+            case PresenceType::LINKEDIN():
                 $instagramEngagement = $this->linkedin_engagement;
                 break;
             default:
                 $instagramEngagement = null;
         }
 
-        if ($this->getType()->requiresAccessToken() && $this->user) {
+        if ($this->getType()->getRequiresAccessToken() && $this->user) {
             $token = $this->user->getAccessToken($this->getType());
             if ($token && $token->isExpired()) {
                 $this->user->deleteAccessToken($this->getType());
@@ -814,7 +819,7 @@ class Model_Presence
      */
     public function getAccessToken()
     {
-        if (!$this->getType()->requiresAccessToken() || !$this->getUser()) {
+        if (!$this->getType()->getRequiresAccessToken() || !$this->getUser()) {
             return null;
         }
 
@@ -839,7 +844,7 @@ class Model_Presence
      */
     public function setAccessToken(AccessToken $token)
     {
-        if ($this->getType()->requiresAccessToken()) {
+        if ($this->getType()->getRequiresAccessToken()) {
             $this->accessToken = $token;
         }
     }
@@ -890,18 +895,18 @@ class Model_Presence
     public function chartOptions()
     {
         switch ($this->getType()) {
-            case Enum_PresenceType::INSTAGRAM:
-            case Enum_PresenceType::YOUTUBE:
-            case Enum_PresenceType::LINKEDIN:
-            case Enum_PresenceType::SINA_WEIBO:
+            case InstagramType::NAME:
+            case YoutubeType::NAME:
+            case LinkedinType::NAME:
+            case SinaWeiboType::NAME:
                 return array(
                     Chart_Compare::getInstance(),
                     Chart_Popularity::getInstance(),
                     Chart_PopularityTrend::getInstance(),
                     Chart_ActionsPerDay::getInstance(),
                 );
-            case Enum_PresenceType::TWITTER:
-            case Enum_PresenceType::FACEBOOK:
+            case TwitterType::NAME:
+			case FacebookType::NAME:
             default:
                 return array(
                     Chart_Compare::getInstance(),
@@ -943,24 +948,18 @@ class Model_Presence
 
     public function getEngagementValue() {
         switch($this->getType()) {
-            case Enum_PresenceType::FACEBOOK(): {
+            case PresenceType::FACEBOOK():
                 return $this->facebook_engagement;
-            }
-            case Enum_PresenceType::INSTAGRAM(): {
+            case PresenceType::INSTAGRAM():
                 return $this->instagram_engagement;
-            }
-            case Enum_PresenceType::TWITTER(): {
+            case PresenceType::TWITTER():
                 return $this->klout_score;
-            }
-            case Enum_PresenceType::SINA_WEIBO(): {
+            case PresenceType::SINA_WEIBO():
                 return $this->sina_weibo_engagement;
-            }
-            case Enum_PresenceType::LINKEDIN(): {
+            case PresenceType::LINKEDIN():
                 return $this->linkedin_engagement;
-            }
-            case Enum_PresenceType::YOUTUBE(): {
+            case PresenceType::YOUTUBE():
                 return $this->youtube_engagement;
-            }
         }
         return null;
     }

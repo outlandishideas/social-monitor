@@ -1,4 +1,6 @@
 <?php
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
+
 /** @var Badge_Abstract[] $allBadges */
 $allBadges = $this->badges;
 $pageId = 'Index.index.';
@@ -101,7 +103,7 @@ $pageId = 'Index.index.';
                                             <div class="score-value"><?php echo count($group->getPresences()) ?></div>
                                         </a>
                                     </li>
-                                    <?php foreach (Enum_PresenceType::enumValues() as $type) : ?>
+                                    <?php foreach (PresenceType::getAll() as $type) : ?>
                                         <?php $typePresences = $group->getPresencesByType($type); ?>
                                         <?php if ($typePresences) : ?>
                                         <li>
