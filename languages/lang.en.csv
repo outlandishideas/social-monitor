@@ -26,6 +26,9 @@
 "Global.chart";"Chart"
 "Global.info";"Info"
 "Global.date-range";"Date range"
+"Global.social-media";"Social Media"
+"Global.sort";"Sort"
+"Global.date";"Date"
 "Base.layout.feedback-button";"Feedback"
 "Base.layout.feedback-modal.title";"Feedback form"
 "Base.layout.feedback-modal.subtitle";"All feedback is welcome. Please let us know your thoughts and suggestions."
@@ -149,4 +152,5 @@
 "Outlandish\SocialMonitor\TableIndex\Header\TotalScore.description";"Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality."
 
 // flash messages
+"Error.missing-date-range";"Missing date range"
 // date range picker
