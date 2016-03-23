@@ -17,8 +17,7 @@ class Provider_Youtube extends Provider_Abstract
 
     public function __construct(PDO $db, YoutubeAdapter $adapter, PresenceType $type)
     {
-        parent::__construct($db, $adapter, $type);
-        $this->tableName = 'youtube_video_stream';
+        parent::__construct($db, $adapter, $type, 'youtube_video_stream');
         $this->commentTableName = 'youtube_comment_stream';
         $this->engagementStatement = '(likes + number_of_replies * 4)';
     }
@@ -467,7 +466,7 @@ class Provider_Youtube extends Provider_Abstract
             $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
             $status->presence_id = $r['presence_id'];
             $status->presence_name = $presence->getName();
-            $status->icon = PresenceType::YOUTUBE()->getSign();
+            $status->icon = $this->type->getSign();
             $status->engagement = [
                 'comments' => $r['number_of_replies'],
                 'likes' => $r['likes'],

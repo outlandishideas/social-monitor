@@ -13,8 +13,7 @@ class Provider_Facebook extends Provider_Abstract
     private $engagementMetric;
 
     public function __construct(PDO $db, FacebookAdapter $adapter, EngagementMetric $metric, PresenceType $type) {
-		parent::__construct($db, $adapter, $type);
-        $this->tableName = 'facebook_stream';
+		parent::__construct($db, $adapter, $type, 'facebook_stream');
         $this->engagementMetric = $metric;
         $this->engagementStatement = '(likes + comments * 4 + share_count * 7)';
     }
@@ -555,7 +554,7 @@ class Provider_Facebook extends Provider_Abstract
                 'comments' => $r['comments'],
                 'comparable' => (($r['likes'] + $r['comments'] * 4 + $r['share_count'] * 7) / 12)
             ];
-            $status->icon = PresenceType::FACEBOOK()->getSign();
+            $status->icon = $this->type->getSign();
             $status->needs_response = $r['needs_response'];
             $status->first_response = array(
                 'message' => $response,

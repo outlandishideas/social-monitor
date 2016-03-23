@@ -16,8 +16,7 @@ class Provider_Twitter extends Provider_Abstract
 
     public function __construct(PDO $db, TwitterAdapter $adapter, PresenceType $type)
     {
-        parent::__construct($db, $adapter, $type);
-        $this->tableName = 'twitter_tweets';
+        parent::__construct($db, $adapter, $type, 'twitter_tweets');
         $this->engagementStatement = '(retweet_count)';
         $this->contentColumn = 'text_expanded';
     }
@@ -303,7 +302,7 @@ class Provider_Twitter extends Provider_Abstract
                 'shares' => $r['retweet_count'],
                 'comparable' => $r['retweet_count']
             ];
-            $status->icon = PresenceType::TWITTER()->getSign();
+            $status->icon = $this->type->getSign();
             $parsed[] = (array)$status;
         }
         return $parsed;

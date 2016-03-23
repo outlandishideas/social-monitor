@@ -12,8 +12,7 @@ class Provider_Instagram extends Provider_Abstract
 	protected $connection = null;
 
     public function __construct(PDO $db, InstagramAdapter $adapter, PresenceType $type) {
-		parent::__construct($db, $adapter, $type);
-        $this->tableName = 'instagram_stream';
+		parent::__construct($db, $adapter, $type, 'instagram_stream');
     }
 
 	public function fetchStatusData(Model_Presence $presence)
@@ -267,7 +266,7 @@ class Provider_Instagram extends Provider_Abstract
                 'likes' => $r['likes'],
                 'comparable' => (($r['likes'] + $r['comments'] * 4) / 5)
             ];
-            $status->icon = PresenceType::INSTAGRAM()->getSign();
+            $status->icon = $this->type->getSign();
             $parsed[] = (array)$status;
         }
         return $parsed;

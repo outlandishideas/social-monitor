@@ -16,11 +16,12 @@ abstract class Provider_Abstract
 	/** @var Outlandish\SocialMonitor\Adapter\AbstractAdapter|Outlandish\SocialMonitor\Adapter\LinkedinAdapter|Outlandish\SocialMonitor\Adapter\YoutubeAdapter|Outlandish\SocialMonitor\Adapter\TwitterAdapter */
 	protected $adapter;
 
-	public function __construct(PDO $db, $adapter, $type)
+	public function __construct(PDO $db, $adapter, $type, $tableName)
 	{
 		$this->db = $db;
 		$this->adapter = $adapter;
 		$this->type = $type;
+		$this->tableName = $tableName;
 	}
 
     public function getType() {

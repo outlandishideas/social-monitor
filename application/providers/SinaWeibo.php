@@ -12,12 +12,11 @@ class Provider_SinaWeibo extends Provider_Abstract
 	protected $connection = null;
 
 	public function __construct(PDO $db, PresenceType $type) {
-		parent::__construct($db, null, $type);
+		parent::__construct($db, null, $type, 'sina_weibo_posts');
 		$this->connection = new SaeTClientV2('1247980630', 'cfcd7c7170b70420d7e1c00628d639c2', '2.00cBChiFql593B4e223582cb04rzB6');
 		if (!array_key_exists('REMOTE_ADDR', $_SERVER)) {
 			$this->connection->set_remote_ip('127.0.0.1');
 		}
-        $this->tableName = 'sina_weibo_posts';
 		$this->createdTimeColumn = 'created_at';
 		$this->engagementStatement = '(attitude_count + comment_count * 4 + repost_count * 7)';
 		$this->contentColumn = 'text';
@@ -314,7 +313,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 				'comments' => $r['comment_count'],
 				'comparable' => (($r['attitude_count'] + $r['comment_count'] * 4 + $r['repost_count'] * 7) / 12)
 			];
-			$status->icon = PresenceType::SINA_WEIBO()->getSign();
+			$status->icon = $this->type->getSign();
 			$parsed[] = (array)$status;
 		}
 		return $parsed;
