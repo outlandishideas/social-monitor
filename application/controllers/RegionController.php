@@ -38,9 +38,7 @@ class RegionController extends CampaignController
 
         $rows = $objectCacheManager->getRegionIndexRows($this->_request->getParam('force'));
 
-		$translator = $this->getContainer()->get('translation.translator');
-
-        $this->view->pageTitle = $translator->trans('Global.regions');
+        $this->view->pageTitle = $this->translator->trans('Global.regions');
 		$this->view->regions = $table->getTableData();
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
@@ -61,7 +59,7 @@ class RegionController extends CampaignController
         $this->view->badgePartial = $this->badgeDetails($region);
         $this->view->chartOptions = $this->chartOptions();
         $this->view->region = $region;
-        $this->view->pageTitle = 'Region: ' . $region->display_name;
+        $this->view->pageTitle = $this->translator->trans('Global.region'). ': ' . $region->display_name;
         $this->view->allCampaigns = Model_Region::fetchAll();
     }
 
@@ -188,7 +186,7 @@ class RegionController extends CampaignController
 
             $errorMessages = array();
             if (!$this->_request->getParam('display_name')) {
-                $errorMessages[] = 'Please enter a display name';
+                $errorMessages[] = $this->translator->trans('Region.edit.error.display-name-missing');
             }
 
             if ($errorMessages) {
@@ -201,11 +199,11 @@ class RegionController extends CampaignController
 
 					$this->invalidateTableCache();
 
-					$this->flashMessage('Region saved');
+					$this->flashMessage($this->translator->trans('Region.edit.success-message'));
                     $this->_helper->redirector->gotoRoute(array('action' => 'view', 'id' => $editingRegion->id));
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->flashMessage('Display name already taken', 'error');
+                        $this->flashMessage($this->translator->trans('Region.edit.error.display-name-exists'), 'error');
                     } else {
                         $this->flashMessage($ex->getMessage(), 'error');
                     }
@@ -215,7 +213,7 @@ class RegionController extends CampaignController
 
 
         $this->view->editingRegion = $editingRegion;
-        $this->view->pageTitle = 'Edit Region';
+        $this->view->pageTitle = $this->translator->trans('Region.edit.page-title');
     }
 
 
@@ -227,7 +225,7 @@ class RegionController extends CampaignController
     public function editAllAction()
     {
 
-        $this->view->pageTitle = 'Edit All Regions';
+        $this->view->pageTitle = $this->translator->trans('Region.edit-all.page-title');
         $this->view->regions = Model_Region::fetchAll();
 
         if ($this->_request->isPost()) {
@@ -253,7 +251,11 @@ class RegionController extends CampaignController
                 $editingRegion->fromArray($g);
 
                 if (!$g['display_name']) {
-                    $errorMessages[] = 'Please enter a display name for '. $display_name;
+                    $errorMessages[] = str_replace(
+						'[]',
+						$display_name,
+						$this->translator->trans('Region.edit-all.error.display-name-missing')
+					);
                 }
 
                 $editedRegions[] = $editingRegion;
@@ -272,12 +274,16 @@ class RegionController extends CampaignController
 
 					$this->invalidateTableCache();
 
-                    $this->flashMessage(count($editedRegions) . ' Regions saved');
+                    $this->flashMessage(str_replace(
+						'[]',
+						count($editedRegions),
+						$this->translator->trans('Region.edit-all.success-message')
+					));
                     $this->_helper->redirector->gotoSimple('index');
 
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->flashMessage('Display name already taken', 'error');
+						$this->flashMessage($this->translator->trans('Region.edit.error.display-name-exists'), 'error');
                     } else {
                         $this->flashMessage($ex->getMessage(), 'error');
                     }
@@ -306,11 +312,11 @@ class RegionController extends CampaignController
 
 			$this->invalidateTableCache();
 
-            $this->flashMessage('Region countries updated');
+            $this->flashMessage($this->translator->trans('Region.manage.success-message'));
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 
-        $this->view->pageTitle = 'Manage Countries: ' . $region->display_name;
+        $this->view->pageTitle = $this->translator->trans('Region.manage.page-title').': ' . $region->display_name;
         $this->view->region = $region;
         $this->view->allCountries = Model_Country::fetchAll();
 	}

@@ -10,7 +10,7 @@ class Chart_Reach extends Chart_Badge {
         parent::__construct($db);
         $this->yLabel = "Reach Score";
         $this->dataColumns = array(
-            Badge_Reach::getInstance()->getName()
+            Badge_Reach::NAME
         );
     }
 }

@@ -76,7 +76,7 @@ abstract class Enum_Abstract
     }
 
     /**
-     * @return Enum_PresenceType[]
+     * @return self[]
      */
     public static function enumValues()
     {
@@ -90,7 +90,7 @@ abstract class Enum_Abstract
     /**
      * Ensures that each enum is only created once
      * @param $name
-     * @return Enum_PresenceType
+     * @return self
      */
     public static function get($name) {
         $class = get_called_class();

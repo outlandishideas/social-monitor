@@ -2,6 +2,7 @@
 
 use mikehaertl\wkhtmlto\Pdf;
 use Outlandish\SocialMonitor\Models\Status;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 use Outlandish\SocialMonitor\Report\ReportablePresence;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
 use Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay;
@@ -25,7 +26,7 @@ class StatusesController extends GraphingController
     public function init()
     {
         parent::init();
-        foreach (Enum_PresenceType::enumValues() as $type) {
+        foreach (PresenceType::getAll() as $type) {
             $this->providers[] = $type->getProvider();
         }
     }
@@ -43,7 +44,7 @@ class StatusesController extends GraphingController
         $this->view->presences = $presences;
         $this->view->sortCol = Handle::getName();
         $this->view->queryOptions = [
-            ['name' => 'type', 'label' => $this->translator->trans('Global.social-media'), 'options' => Enum_PresenceType::enumValues()],
+            ['name' => 'type', 'label' => $this->translator->trans('Global.social-media'), 'options' => PresenceType::getAll()],
             ['name' => 'country', 'label' => $this->translator->trans('Global.countries'), 'options' => Model_Country::fetchAll()],
             ['name' => 'region', 'label' => $this->translator->trans('Global.regions'), 'options' => Model_Region::fetchAll()],
             ['name' => 'sbu', 'label' => $this->translator->trans('Global.sbus'), 'options' => Model_Group::fetchAll()],
@@ -143,7 +144,7 @@ class StatusesController extends GraphingController
                 if ($typeParamString) {
                     $typeParams = explode(',', $typeParamString);
                     foreach ($typeParams as $type) {
-                        $types[] = Enum_PresenceType::get($type);
+                        $types[] = PresenceType::get($type);
                     }
                 }
             }

@@ -1,15 +1,16 @@
 <?php
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller' => 'region', 'action' => 'index'), null, true);
+$cancel = $this->gatekeeper()->filter(
+	'<a href="%url%" class="button-bc">'.$this->translate('Global.cancel').'</a>', array('controller' => 'region', 'action' => 'index'), null, true);
 if ($cancel) {
 	$bottomBar[] = $cancel;
 }
 if ($this->regions) {
-	$bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button>';
+	$bottomBar[] = '<button type="submit" class="button-bc button-save">'.$this->translate('Global.save').'</button>';
 }
 $topBar = $bottomBar;
 if ($this->regions) {
-	array_unshift($topBar, '<div id="search-table">Loading data...</div>');
+	array_unshift($topBar, '<div id="search-table">'.$this->translate('Global.loading-data').'</div>');
 }
 ?>
 
@@ -17,7 +18,7 @@ if ($this->regions) {
 
 <?php if (!$this->regions) : ?>
 	<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $topBar, 'dark' => true)); ?>
-	<h3 class="empty-table">No regions found</h3>
+	<h3 class="empty-table"><?php echo $this->translate('Region.index.empty-table')?></h3>
 <?php else : ?>
 	<form class="edit-all" method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-all-regions">
 

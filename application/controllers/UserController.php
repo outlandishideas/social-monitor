@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use LinkedIn\LinkedIn;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 class UserController extends BaseController
 {
@@ -32,7 +33,7 @@ class UserController extends BaseController
             /** @var Model_User $user */
             $user = Model_User::fetchById($this->auth->getIdentity());
             $expires = (new Carbon())->addSeconds($this->linkedin->getAccessTokenExpiration());
-            $user->saveAccessToken(Enum_PresenceType::LINKEDIN(), $token, $expires);
+            $user->saveAccessToken(PresenceType::LINKEDIN(), $token, $expires);
         }
 
         $this->_helper->redirector->gotoSimple('edit-self', 'user');
@@ -223,7 +224,7 @@ class UserController extends BaseController
         $this->editAction();
         $this->view->canChangeLevel = false;
         $this->view->showAccessTokens = true;
-        $this->view->linkedinToken = $this->view->editingUser->getAccessToken(Enum_PresenceType::LINKEDIN());
+        $this->view->linkedinToken = $this->view->editingUser->getAccessToken(PresenceType::LINKEDIN());
         $this->_helper->viewRenderer->setScriptAction('edit');
     }
 
@@ -368,8 +369,8 @@ class UserController extends BaseController
 
         $this->view->pageTitle = $this->translator->trans('User.edit-permissions') . $user->safeName; // 'Edit access rights for ' . $user->safeName;
         $this->view->editingUser = $user;
-        $this->view->twitterPresences = Model_PresenceFactory::getPresencesByType(Enum_PresenceType::TWITTER());
-        $this->view->facebookPresences = Model_PresenceFactory::getPresencesByType(Enum_PresenceType::FACEBOOK());
+        $this->view->twitterPresences = Model_PresenceFactory::getPresencesByType(PresenceType::TWITTER());
+        $this->view->facebookPresences = Model_PresenceFactory::getPresencesByType(PresenceType::FACEBOOK());
         $this->view->countries = Model_Country::fetchAll();
         $this->view->groups = Model_Group::fetchAll();
     }

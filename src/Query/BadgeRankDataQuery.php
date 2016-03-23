@@ -109,7 +109,7 @@ class BadgeRankDataQuery
      */
     protected function getScore(Badge_Abstract $badge, $row)
     {
-        if ($badge->getName() == Badge_Total::getInstance()->getName()) {
+        if ($badge->getName() == Badge_Total::NAME) {
             return ($row->reach + $row->engagement + $row->quality) / 3;
         } else {
             return $row->{$badge->getName()};

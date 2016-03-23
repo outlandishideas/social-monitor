@@ -56,8 +56,8 @@ $gatekeeper = $this->gatekeeper();
                         case Countries::getName():
                             $count = count((array)$cellValue);
                             if ($header->getName() == Countries::getName()) {
-								$countryText = $count == 1 ? $this->translate('General.country') :
-									$this->translate('General.countries');
+								$countryText = $count == 1 ? $this->translate('Global.country') :
+									$this->translate('Global.countries');
                                 $countText = $count . ' ' . $countryText;
                             } else {
                                 $countText = $count . ' presence' . ($count == 1 ? '' : 's');

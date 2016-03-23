@@ -57,27 +57,27 @@ services:
     ###################################
     provider.twitter:
         class: Provider_Twitter
-        arguments: ["@pdo", "@adapter.twitter"]
+        arguments: ["@pdo", "@adapter.twitter", "@presence-type.twitter"]
 
     provider.facebook:
         class: Provider_Facebook
-        arguments: ["@pdo", "@adapter.facebook", "@facebook_engagement.weighted"]
+        arguments: ["@pdo", "@adapter.facebook", "@facebook_engagement.weighted", "@presence-type.facebook"]
 
     provider.instagram:
         class: Provider_Instagram
-        arguments: ["@pdo", "@adapter.instagram"]
+        arguments: ["@pdo", "@adapter.instagram", "@presence-type.instagram"]
 
     provider.youtube:
         class: Provider_Youtube
-        arguments: ["@pdo", "@adapter.youtube"]
+        arguments: ["@pdo", "@adapter.youtube", "@presence-type.youtube"]
 
     provider.linkedin:
         class: Provider_Linkedin
-        arguments: ["@pdo", "@adapter.linkedin"]
+        arguments: ["@pdo", "@adapter.linkedin", "@presence-type.linkedin"]
 
     provider.sinaweibo:
         class: Provider_SinaWeibo
-        arguments: ["@pdo"]
+        arguments: ["@pdo", "@presence-type.sina-weibo"]
 
     ###################################
     # instagram engagement services
@@ -362,3 +362,193 @@ services:
             - [setCountriesTable, ["@table.country-index"]]
             - [setGroupsTable, ["@table.group-index"]]
             - [setRegionsTable, ["@table.region-index"]]
+
+    # engagement metric query classes
+    engagement-query.facebook:
+        class: Outlandish\SocialMonitor\Engagement\Query\WeightedFacebookEngagementQuery
+        arguments: ["@pdo"]
+    engagement-query.instagram:
+        class: Outlandish\SocialMonitor\Engagement\Query\WeightedInstagramEngagementQuery
+        arguments: ["@pdo"]
+    engagement-query.linkedin:
+        class: Outlandish\SocialMonitor\Engagement\Query\WeightedLinkedinEngagementQuery
+        arguments: ["@pdo"]
+    engagement-query.sina-weibo:
+        class: Outlandish\SocialMonitor\Engagement\Query\WeightedSinaWeiboEngagementQuery
+        arguments: ["@pdo"]
+    engagement-query.youtube:
+        class: Outlandish\SocialMonitor\Engagement\Query\WeightedYoutubeEngagementQuery
+        arguments: ["@pdo"]
+
+    # metrics
+    metric.actions-per-day:
+        class: Metric_ActionsPerDay
+    metric.branding:
+        class: Metric_Branding
+    metric.facebook-engagement:
+        class: Metric_FBEngagement
+        arguments: ["@engagement-query.facebook"]
+    metric.instagram-engagement:
+        class: Metric_InstagramEngagement
+        arguments: ["@engagement-query.instagram"]
+    metric.klout:
+        class: Metric_Klout
+    metric.likes-per-post:
+        class: Metric_LikesPerPost
+    metric.likes-per-view:
+        class: Metric_LikesPerView
+    metric.linkedin-engagement:
+        class: Metric_LinkedinEngagement
+        arguments: ["@engagement-query.linkedin"]
+    metric.popularity:
+        class: Metric_Popularity
+    metric.popularity-time:
+        class: Metric_PopularityTime
+    metric.relevance:
+        class: Metric_Relevance
+    metric.response-ratio:
+        class: Metric_ResponseRatio
+    metric.response-time:
+        class: Metric_ResponseTime
+    metric.sign-off:
+        class: Metric_SignOff
+    metric.sina-weibo-engagement:
+        class: Metric_SinaWeiboEngagement
+        arguments: ["@engagement-query.sina-weibo"]
+    metric.youtube-engagement:
+        class: Metric_YoutubeEngagement
+        arguments: ["@engagement-query.youtube"]
+
+    # presence types
+    presence-type.twitter:
+        class: Outlandish\SocialMonitor\PresenceType\TwitterType
+        arguments:
+            - "@metric.klout"
+            -
+                - "@metric.actions-per-day"
+                - "@metric.branding"
+                - "@metric.popularity"
+                - "@metric.popularity-time"
+                - "@metric.relevance"
+                - "@metric.sign-off"
+                - "@metric.response-time"
+                - "@metric.klout"
+        calls:
+            - [setProvider, ["@provider.twitter"]]
+
+    presence-type.facebook:
+        class: Outlandish\SocialMonitor\PresenceType\FacebookType
+        arguments:
+            - "@metric.facebook-engagement"
+            -
+                - "@metric.actions-per-day"
+                - "@metric.branding"
+                - "@metric.popularity"
+                - "@metric.popularity-time"
+                - "@metric.relevance"
+                - "@metric.sign-off"
+                - "@metric.facebook-engagement"
+                - "@metric.likes-per-post"
+                - "@metric.response-ratio"
+                - "@metric.response-time"
+        calls:
+            - [setProvider, ["@provider.facebook"]]
+
+    presence-type.instagram:
+        class: Outlandish\SocialMonitor\PresenceType\InstagramType
+        arguments:
+            - "@metric.instagram-engagement"
+            -
+                - "@metric.popularity"
+                - "@metric.popularity-time"
+                - "@metric.actions-per-day"
+                - "@metric.branding"
+                - "@metric.sign-off"
+                - "@metric.likes-per-post"
+                - "@metric.instagram-engagement"
+        calls:
+            - [setProvider, ["@provider.instagram"]]
+
+    presence-type.youtube:
+        class: Outlandish\SocialMonitor\PresenceType\YoutubeType
+        arguments:
+            - "@metric.youtube-engagement"
+            -
+                - "@metric.popularity"
+                - "@metric.popularity-time"
+                - "@metric.branding"
+                - "@metric.sign-off"
+                - "@metric.youtube-engagement"
+                - "@metric.likes-per-view"
+        calls:
+            - [setProvider, ["@provider.youtube"]]
+
+    presence-type.linkedin:
+        class: Outlandish\SocialMonitor\PresenceType\LinkedinType
+        arguments:
+            - "@metric.linkedin-engagement"
+            -
+                - "@metric.popularity"
+                - "@metric.popularity-time"
+                - "@metric.branding"
+                - "@metric.sign-off"
+                - "@metric.actions-per-day"
+                - "@metric.relevance"
+                - "@metric.linkedin-engagement"
+        calls:
+            - [setProvider, ["@provider.linkedin"]]
+
+    presence-type.sina-weibo:
+        class: Outlandish\SocialMonitor\PresenceType\SinaWeiboType
+        arguments:
+            - "@metric.sina-weibo-engagement"
+            -
+                - "@metric.actions-per-day"
+                - "@metric.branding"
+                - "@metric.popularity"
+                - "@metric.popularity-time"
+                - "@metric.relevance"
+                - "@metric.sign-off"
+                - "@metric.sina-weibo-engagement"
+        calls:
+            - [setProvider, ["@provider.sinaweibo"]]
+
+    # badges
+    badge.engagement:
+        class: Badge_Engagement
+        arguments:
+            - "@pdo"
+            -
+                - "@metric.klout"
+                - "@metric.facebook-engagement"
+                - "@metric.sina-weibo-engagement"
+                - "@metric.instagram-engagement"
+                - "@metric.youtube-engagement"
+                - "@metric.linkedin-engagement"
+
+    badge.quality:
+        class: Badge_Quality
+        arguments:
+            - "@pdo"
+            -
+                - "@metric.sign-off"
+                - "@metric.relevance"
+                - "@metric.branding"
+                - "@metric.actions-per-day"
+                - "@metric.response-time"
+                - "@metric.likes-per-post"
+                - "@metric.likes-per-view"
+
+    badge.reach:
+        class: Badge_Reach
+        arguments:
+            - "@pdo"
+            -
+                - "@metric.popularity"
+                - "@metric.popularity-time"
+
+    badge.total:
+        class: Badge_Total
+        arguments:
+            - "@pdo"
+            - ["@badge.reach", "@badge.engagement", "@badge.quality"]

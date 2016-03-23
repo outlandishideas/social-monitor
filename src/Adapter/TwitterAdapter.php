@@ -162,7 +162,7 @@ class TwitterAdapter extends AbstractAdapter
 	 * @param string $since
 	 * @return Status[]
 	 */
-	public function getStatuses($pageUID, $since, $handle)
+	public function getStatuses($pageUID, $since, $handle = null)
 	{
 
 		$tweets = $this->userTweets($pageUID, $since);

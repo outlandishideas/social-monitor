@@ -7,7 +7,6 @@ class Metric_InstagramEngagement extends Metric_AbstractEngagement {
     protected static $icon = "fa fa-instagram";
     public static $engagementTarget = 0.75;
     protected static $gliding = false;
-    protected static $queryClassName = 'Outlandish\SocialMonitor\Engagement\Query\WeightedInstagramEngagementQuery';
 
 
 

@@ -1,7 +1,15 @@
 <?php
+use Outlandish\SocialMonitor\PresenceType\FacebookType;
+use Outlandish\SocialMonitor\PresenceType\InstagramType;
+use Outlandish\SocialMonitor\PresenceType\LinkedinType;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
+use Outlandish\SocialMonitor\PresenceType\SinaWeiboType;
+use Outlandish\SocialMonitor\PresenceType\TwitterType;
+use Outlandish\SocialMonitor\PresenceType\YoutubeType;
+
 /** @var Model_Presence $presence */
 $presence = $this->presence;
-/** @var Enum_PresenceType[] $types */
+/** @var PresenceType[] $types */
 $types = $this->types;
 /** @var Model_User $user */
 $user = $this->user;
@@ -37,7 +45,7 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button
 				<div class="small-24 medium-18 large-20 end columns">
 					<ul class="blockLabels presence-types">
 						<?php foreach ($types as $val) :
-							$requiresAccessToken = $val->requiresAccessToken() && !$user->getAccessToken($val);
+							$requiresAccessToken = $val->getRequiresAccessToken() && !$user->getAccessToken($val);
 							$title = $val->getTitle(); ?>
 							<li>
 								<label class="radio withFormHint"><input name="type" type="radio"
@@ -67,25 +75,25 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button
 					<input name="handle" id="handle" type="text" value="<?php echo $presence->handle; ?>">
 				</div>
 				<div class="small-24 medium-10 large-12 end columns presence-handle-hints">
-					<p class="formHint hint-<?php echo Enum_PresenceType::FACEBOOK; ?>">
+					<p class="formHint hint-<?php echo FacebookType::NAME; ?>">
 						For www.facebook.com/<strong>platform</strong> the handle is '<strong>platform</strong>'
 						<br/>
 						For pages without vanity URLs, the handle is the long number in the URL, eg
 						www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>
 					</p>
-					<p class="formHint hint-<?php echo Enum_PresenceType::TWITTER; ?>">
+					<p class="formHint hint-<?php echo TwitterType::NAME; ?>">
 						For www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'
 					</p>
-					<p class="formHint hint-<?php echo Enum_PresenceType::INSTAGRAM; ?>">
+					<p class="formHint hint-<?php echo InstagramType::NAME; ?>">
 						For www.instagram.com/<strong>platform</strong> the handle is '<strong>platform</strong>'
 					</p>
-					<p class="formHint hint-<?php echo Enum_PresenceType::YOUTUBE; ?>">
+					<p class="formHint hint-<?php echo YoutubeType::NAME; ?>">
 						For www.youtube.com/channel/<strong>platform</strong> the handle is '<strong>platform</strong>'
 					</p>
-					<p class="formHint hint-<?php echo Enum_PresenceType::LINKEDIN; ?>">
+					<p class="formHint hint-<?php echo LinkedinType::NAME; ?>">
 						Use the name of the company, as it appears on its page. E.g. for <a href="https://www.linkedin.com/company/1337" target="_blank">LinkedIn themselves</a>, the handle is '<strong>LinkedIn</strong>'
 					</p>
-					<p class="formHint hint-<?php echo Enum_PresenceType::SINA_WEIBO; ?>">
+					<p class="formHint hint-<?php echo SinaWeiboType::NAME; ?>">
 						Use the name of the account, as it appears on its page. E.g. for <a href="http://www.weibo.com/u/2463797455" target="_blank">BBC World</a>, the handle is '<strong>BBCWorld</strong>'
 					</p>
 				</div>
@@ -159,7 +167,7 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button
 
 		</fieldset>
 
-		<?php if (!$this->editType && $presence->getType()->requiresAccessToken()) : ?>
+		<?php if (!$this->editType && $presence->getType()->getRequiresAccessToken()) : ?>
 			<fieldset>
 				<div clas="row">
 					<div class="columns small-24">

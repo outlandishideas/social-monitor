@@ -7,81 +7,142 @@ class ConfigController extends BaseController {
 	 * @user-level manager
 	 */
 	function indexAction() {
-		$this->view->pageTitle = 'Settings';
+		$this->view->pageTitle = $this->translator->trans('Config.index.page-title');
+
+		$reachBadge = self::getContainer()->get('badge.reach');
+		$qualityBadge = self::getContainer()->get('badge.quality');
+		$engagementBadge = self::getContainer()->get('badge.engagement');
 
 		$values = array(
 
             (object)array(
-                'title' => 'General',
+                'title' => $this->translator->trans('Config.index.sections.general.title'),
                 'description' => '',
                 'kpis' => array(
                     (object)array(
-                        'title' => 'Feedback',
-                        'description' => 'What email address should feedback be sent to?',
+                        'title' => $this->translator->trans('Config.index.sections.general.feedback.title'),
+                        'description' => $this->translator->trans('Config.index.sections.general.feedback.description'),
                         'values' => array(
-                            'email-feedback-to-address'=>array('label'=>'Email address','type'=>'email')
+                            'email-feedback-to-address'=>
+								array(
+									'label'=>$this->translator->trans('Global.email-address'),
+									'type'=>'email'
+								)
                         )
                     )
                 )
             ),
             (object)array(
-                'title' => Badge_Reach::getInstance()->getTitle(),
-                'description' => Badge_Reach::getInstance()->getDescription(),
+                'title' => $reachBadge->getTitle(),
+                'description' => $reachBadge->getDescription(),
                 'kpis' => array(
                     (object)array(
-                        'title' => 'Target Audience',
-                        'description' => 'Each presence has a target audience set against it. The score is given based on how close the presence is to its target',
+                        'title' => $this->translator->trans('Config.index.sections.reach.target-audience.title'),
+						'description' => $this->translator->trans('Config.index.sections.reach.target-audience.description'),
+						'values' => array(
+							'popularity_weighting' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.weighting')
+							),
+
+							'fb_min' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.fb-min')
+							),
+							'fb_opt' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.fb-opt')
+							),
+
+							'tw_min' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.tw-min')
+							),
+							'tw_opt' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.tw-opt')
+							),
+
+							'sw_min' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.sw-min')
+							),
+							'sw_opt' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.sw-opt')
+							),
+
+							'ig_min' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.ig-min')
+							),
+							'ig_opt' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.ig-opt')
+							),
+
+							'yt_min' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.yt-min')
+							),
+							'yt_opt' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.yt-opt')
+							),
+
+							'in_min' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.in-min')
+							),
+							'in_opt' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.in-opt')
+							),
+							'size_3_presences' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.shared-audience-extra-large')
+							),
+							'size_2_presences' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.shared-audience-large')
+							),
+							'size_1_presences' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.shared-audience-medium')
+							),
+							'size_0_presences' => array(
+								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.shared-audience-small')
+							),
+						)
+                    ),
+                    (object)array(
+                        'title' => $this->translator->trans('Config.index.sections.reach.time-to-target-audience.title'),
+                        'description' => $this->translator->trans('Config.index.sections.reach.time-to-target-audience.description'),
                         'values' => array(
-                            'popularity_weighting'=>array('label'=>'Target Audience Weighting'),
-                            'fb_min'=>array('label'=>'Facebook Minimum Audience (% of total)'),
-                            'fb_opt'=>array('label'=>'Facebook Optimum Audience (% of total)'),
-
-                            'tw_min'=>array('label'=>'Twitter Minimum Audience (% of total)'),
-                            'tw_opt'=>array('label'=>'Twitter Optimum Audience (% of total)'),
-
-                            'sw_min'=>array('label'=>'Sina Weibo Minimum Audience (% of total)'),
-                            'sw_opt'=>array('label'=>'Sina Weibo Optimum Audience (% of total)'),
-
-                            'ig_min'=>array('label'=>'Instagram Minimum Audience (% of total)'),
-                            'ig_opt'=>array('label'=>'Instagram Optimum Audience (% of total)'),
-
-                            'yt_min'=>array('label'=>'Youtube Minimum Audience (% of total)'),
-                            'yt_opt'=>array('label'=>'Youtube Optimum Audience (% of total)'),
-
-                            'in_min'=>array('label'=>'Linkedin Minimum Audience (% of total)'),
-                            'in_opt'=>array('label'=>'Linkedin Optimum Audience (% of total)'),
-                            'size_3_presences'=>array('label'=>'% of owner Target Audience that is shared amongst extra large presences'),
-                            'size_2_presences'=>array('label'=>'% of owner Target Audience that is shared amongst large presences'),
-                            'size_1_presences'=>array('label'=>'% of owner Target Audience that is shared amongst medium presences'),
-                            'size_0_presences'=>array('label'=>'% of owner Target Audience that is shared amongst small presences'),
+                            'popularity_time_weighting'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.weighting'),
+							),
+                            'achieve_audience_best'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.best-score-label'),
+								'hint'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.best-score-hint'),
+							),
+							'achieve_audience_good'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.good-score-label'),
+								'hint'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.good-score-hint'),
+							),
+							'achieve_audience_bad'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.bad-score-label'),
+								'hint'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.bad-score-hint'),
+							),
                         )
                     ),
                     (object)array(
-                        'title' => 'Time to Target Audience',
-                        'description' => 'Each presence has a target audience set against it. The score is given based on how close the presence is to its target',
+                        'title' => $this->translator->trans('Config.index.sections.reach.sharing.title'),
+                        'description' => $this->translator->trans('Config.index.sections.reach.sharing.description'),
                         'values' => array(
-                            'popularity_time_weighting'=>array('label'=>'Time to Target Audience Weighting'),
-                            'achieve_audience_best'=>array('label'=>'Target audience best score (months)', 'hint'=>'The number of months the target audience should be reached within to get the best score'),
-                            'achieve_audience_good'=>array('label'=>'Target audience good score (months)', 'hint'=>'The number of months the target audience should be reached within to get a medium score'),
-                            'achieve_audience_bad'=>array('label'=>'Target audience bad score (months)', 'hint'=>'If the target audience will be reached after this number of months, the presence will get a bad score'),
-                        )
-                    ),
-                    (object)array(
-                        'title' => 'Retweets/Shares',
-                        'description' => 'How often each presence\'s posts are shared (Facebook) or retweeted (Twitter)',
-                        'values' => array(
-                            'sharing_weighting'=>array('label'=>'Retweets/Shares Weighting'),
-                            'fb_share'=>array('label'=>'Average shares per post target (% of total audience)'),
-                            'tw_retweet'=>array('label'=>'Average retweets target (% of total audience)'),
+                            'sharing_weighting'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.reach.sharing.weighting'),
+							),
+                            'fb_share'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.reach.sharing.fb-target'),
+							),
+                            'tw_retweet'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.reach.sharing.tw-target'),
+							),
                         )
                     ),
 
                 )
             ),
             (object)array(
-                'title' => Badge_Engagement::getInstance()->getTitle(),
-                'description' => Badge_Engagement::getInstance()->getDescription(),
+                'title' => $engagementBadge->getTitle(),
+                'description' => $engagementBadge->getDescription(),
                 'kpis' => array(
+					//TODO: Remove this as we currently aren't using ResponseRatio
                     (object)array(
                         'title' => 'Replies to Number of Posts',
                         'description' => 'The more replies that each post receives the higher the engagement score will be',
@@ -92,90 +153,119 @@ class ConfigController extends BaseController {
                         )
                     ),
                     (object)array(
-                        'title' => 'Response Time',
-                        'description' => 'The response time score measures how quickly the presence responds to individual posts',
+                        'title' => $this->translator->trans('Config.index.sections.engagement.response-time.title'),
+                        'description' => $this->translator->trans('Config.index.sections.engagement.response-time.description'),
                         'values' => array(
-                            'response_time_weighting'=>array('label'=>'Response Time Weighting'),
-                            'response_time_best'=>array('label'=>'Perfect response time (hours)'),
-                            'response_time_good'=>array('label'=>'Good response time (hours)'),
-                            'response_time_bad'=>array('label'=>'Bad response time (hours)')
+                            'response_time_weighting'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.engagement.response-time.weighting'),
+							),
+                            'response_time_best'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.engagement.response-time.best-label'),
+							),
+                            'response_time_good'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.engagement.response-time.good-label'),
+							),
+                            'response_time_bad'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.engagement.response-time.bad-label'),
+							)
                         )
                     ),
                     (object)array(
-                        'title' => 'Klout Score (Twitter only)',
-                        'description' => 'The Klout Score is a third party measurement of your engagement with your audience (Twitter only)',
+                        'title' => $this->translator->trans('Config.index.sections.engagement.klout.title'),
+                        'description' => $this->translator->trans('Config.index.sections.engagement.klout.description'),
                         'values' => array(
-                            'klout_score_weighting'=>array('label'=>'Klout Score Weighting'),
-                            'klout_score_target'=>array('label'=>'Klout Score Target', 'hint'=>'The presence will score 100% if it meets or exceeds this target, but will only receive 0% if it does not meet it.')
+                            'klout_score_weighting'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.engagement.klout.weighting'),
+							),
+							//TODO: remove this - we don't use a target for Klout
+                            'klout_score_target'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.engagement.klout.target-label'),
+								'hint'=>$this->translator->trans('Config.index.sections.engagement.klout.target-hint')
+							)
                         )
                     ),
                     (object)array(
-                        'title' => 'Facebook Engagement Score (Facebook only)',
-                        'description' => 'The Facebook Engagement Score is based on Social Baker\'s Daily Page Engagement Rate calculation.',
+                        'title' => $this->translator->trans('Config.index.sections.engagement.fb.title'),
+                        'description' => $this->translator->trans('Config.index.sections.engagement.fb.description'),
                         'values' => array(
-                            'fb_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
-                            'fb_active_user_percentage_medium'=>array('label'=>'...medium presences'),
-                            'fb_active_user_percentage_large'=>array('label'=>'...large presences'),
-                            'fb_active_user_percentage_xlarge'=>array('label'=>'...and extra large presences'),
-                            'facebook_engagement_weighting'=>array('label'=>'Facebook Engagement Score Weighting')
+                            'fb_active_user_percentage_small'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.engagement.fb.active-users-small')
+							),
+                            'fb_active_user_percentage_medium'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.engagement.fb.active-users-medium')
+							),
+                            'fb_active_user_percentage_large'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.engagement.fb.active-users-large')
+							),
+                            'fb_active_user_percentage_xlarge'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.engagement.fb.active-users-extra-large')
+							),
+                            'facebook_engagement_weighting'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.engagement.fb.weighting'),
+							)
                         )
                     ),
                     (object)array(
-                        'title' => 'Sina Weibo Engagement Score (Sina Weibo only)',
-                        'description' => 'The Sina Weibo Engagement Score is based on Social Baker\'s Daily Page Engagement Rate calculation.',
+                        'title' => $this->translator->trans('Config.index.sections.engagement.sw.title'),
+                        'description' => $this->translator->trans('Config.index.sections.engagement.sw.description'),
                         'values' => array(
-                            'sw_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
-                            'sw_active_user_percentage_medium'=>array('label'=>'...medium presences'),
-                            'sw_active_user_percentage_large'=>array('label'=>'...and large presences'),
-                            'sina_weibo_engagement_weighting'=>array('label'=>'Sina Weibo Engagement Score Weighting')
+                            'sw_active_user_percentage_small'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.sw.active-users-small')),
+                            'sw_active_user_percentage_medium'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.sw.active-users-medium')),
+                            'sw_active_user_percentage_large'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.sw.active-users-large')),
+                            'sina_weibo_engagement_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.sw.weighting')),
                         )
                     ),
                     (object)array(
-                        'title' => 'Instagram Engagement Score (Instagram only)',
-                        'description' => 'The Instagram Engagement Score is based on Social Baker\'s Daily Page Engagement Rate calculation.',
+                        'title' => $this->translator->trans('Config.index.sections.engagement.ig.title'),
+                        'description' => $this->translator->trans('Config.index.sections.engagement.ig.description'),
                         'values' => array(
-                            'ig_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
-                            'ig_active_user_percentage_medium'=>array('label'=>'...medium presences'),
-                            'ig_active_user_percentage_large'=>array('label'=>'...and large presences'),
-                            'instagram_engagement_weighting'=>array('label'=>'Instagram Engagement Score Weighting')
+                            'ig_active_user_percentage_small'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.ig.active-users-small')),
+                            'ig_active_user_percentage_medium'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.ig.active-users-medium')),
+                            'ig_active_user_percentage_large'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.ig.active-users-large')),
+                            'instagram_engagement_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.ig.weighting'),)
                         )
                     ),
                     (object)array(
-                        'title' => 'Youtube Engagement Score (Youtube only)',
-                        'description' => 'The Youtube Engagement Score is not yet fully decided.',
+                        'title' => $this->translator->trans('Config.index.sections.engagement.yt.title'),
+                        'description' => $this->translator->trans('Config.index.sections.engagement.yt.description'),
                         'values' => array(
-                            'yt_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
-                            'yt_active_user_percentage_medium'=>array('label'=>'...medium presences'),
-                            'yt_active_user_percentage_large'=>array('label'=>'...and large presences'),
-                            'youtube_engagement_weighting'=>array('label'=>'Youtube Engagement Score Weighting')
+                            'yt_active_user_percentage_small'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.yt.active-users-small')),
+                            'yt_active_user_percentage_medium'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.yt.active-users-medium')),
+                            'yt_active_user_percentage_large'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.yt.active-users-large')),
+                            'youtube_engagement_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.yt.weighting')),
                         )
                     ),
                     (object)array(
-                        'title' => 'Linkedin Engagement Score (Linked In only)',
-                        'description' => 'The Linkedin Engagement Score is not yet fully decided.',
+						'title' => $this->translator->trans('Config.index.sections.engagement.in.title'),
+                        'description' => $this->translator->trans('Config.index.sections.engagement.in.description'),
                         'values' => array(
-                            'in_active_user_percentage_small'=>array('label'=>'Percentage of users assumed to be active for small presences'),
-                            'in_active_user_percentage_medium'=>array('label'=>'...medium presences'),
-                            'in_active_user_percentage_large'=>array('label'=>'...and large presences'),
-                            'linkedin_engagement_weighting'=>array('label'=>'Linkedin Engagement Score Weighting')
+                            'in_active_user_percentage_small'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.in.active-users-small')),
+                            'in_active_user_percentage_medium'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.in.active-users-medium')),
+                            'in_active_user_percentage_large'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.in.active-users-large')),
+                            'linkedin_engagement_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.in.weighting'))
                         )
                     )
                 )
             ),
             (object)array(
-                'title' => Badge_Quality::getInstance()->getTitle(),
-                'description' => Badge_Quality::getInstance()->getDescription(),
+                'title' => $qualityBadge->getTitle(),
+                'description' => $qualityBadge->getDescription(),
                 'kpis' => array(
                     (object)array(
-                        'title' => 'Actions Per Day',
-                        'description' => 'A measurement of the average number of actions per day against the benchmark',
+                        'title' => $this->translator->trans('Config.index.sections.quality.actions-per-day.title'),
+                        'description' => $this->translator->trans('Config.index.sections.quality.actions-per-day.description'),
                         'values' => array(
-                            'posts_per_day_weighting'=>array('label'=>'Actions per Day Weighting'),
-                            'updates_per_day'=>array('label'=>'Actions Per Day'),
-                            'updates_per_day_ok_range'=>array('label'=>'Actions Per Day OK range', 'hint'=>'Number above or below [actions per day] that is considered OK'),
-                            'updates_per_day_bad_range'=>array('label'=>'Actions Per Day bad range', 'hint'=>'Number above or below [actions per day] that is considered too much or too little'),
+                            'posts_per_day_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.quality.actions-per-day.weighting')),
+                            'updates_per_day'=>array('label'=>$this->translator->trans('Config.index.sections.quality.actions-per-day.target-label')),
+                            'updates_per_day_ok_range'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.quality.actions-per-day.ok-range-label'),
+								'hint'=>$this->translator->trans('Config.index.sections.quality.actions-per-day.ok-range-hint')),
+                            'updates_per_day_bad_range'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.quality.actions-per-day.bad-range-label'),
+								'hint'=>$this->translator->trans('Config.index.sections.quality.actions-per-day.bad-range-hint'))
                         )
                     ),
+					// TODO: Remove if we're not using this
                     (object)array(
                         'title' => 'Links Per Day',
                         'description' => 'Measures the average number of links used within posts per day',
@@ -187,45 +277,59 @@ class ConfigController extends BaseController {
                         )
                     ),
                     (object)array(
-                        'title' => 'Likes Per Post',
-                        'description' => 'Measures the average number of likes from users on each post',
+                        'title' => $this->translator->trans('Config.index.sections.quality.likes-per-post.title'),
+                        'description' => $this->translator->trans('Config.index.sections.quality.likes-per-post.description'),
                         'values' => array(
-                            'likes_per_post_weighting'=>array('label'=>'Likes per Post Weighting'),
-                            'likes_per_post_best'=>array('label'=>'Best likes Per Post','hint'=>'The presence will get the best score if the average likes per post is equal to or more than this'),
-                            'likes_per_post_good'=>array('label'=>'Good likes Per Post', 'hint'=>'The presence will get a good score if the average likes per post is equal to or more than this'),
+                            'likes_per_post_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.quality.likes-per-post.weighting')),
+                            'likes_per_post_best'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.quality.likes-per-post.best-label'),
+								'hint'=>$this->translator->trans('Config.index.sections.quality.likes-per-post.best-hint')),
+                            'likes_per_post_good'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.quality.likes-per-post.good-label'),
+								'hint'=>$this->translator->trans('Config.index.sections.quality.likes-per-post.good-hint'))
                         )
                     ),
                     (object)array(
-                        'title' => 'Likes Per View',
-                        'description' => 'Measures the average number of likes from users for each video view',
+                        'title' => $this->translator->trans('Config.index.sections.quality.likes-per-view.title'),
+                        'description' => $this->translator->trans('Config.index.sections.quality.likes-per-view.description'),
                         'values' => array(
-                            'likes_per_view_weighting'=>array('label'=>'Likes per View Weighting'),
-                            'likes_per_view_best'=>array('label'=>'Best likes Per View','hint'=>'The presence will get the best score if the average likes per view is equal to or more than this'),
-                            'likes_per_view_good'=>array('label'=>'Good likes Per View', 'hint'=>'The presence will get a good score if the average likes per view is equal to or more than this'),
+                            'likes_per_view_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.quality.likes-per-view.weighting')),
+                            'likes_per_view_best'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.quality.likes-per-view.best-label'),
+								'hint'=>$this->translator->trans('Config.index.sections.quality.likes-per-view.best-hint')),
+                            'likes_per_view_good'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.quality.likes-per-view.good-label'),
+								'hint'=>$this->translator->trans('Config.index.sections.quality.likes-per-view.good-hint'))
                         )
                     ),
                     (object)array(
-                        'title' => 'Sign Off',
-                        'description' => 'The presence has been signed off by key stakeholders',
+                        'title' => $this->translator->trans('Config.index.sections.quality.sign-off.title'),
+                        'description' => $this->translator->trans('Config.index.sections.quality.sign-off.description'),
                         'values' => array(
-                            'sign_off_weighting'=>array('label'=>'Sign Off Weighting'),
+                            'sign_off_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.quality.sign-off.weighting')),
                         )
                     ),
                     (object)array(
-                        'title' => 'Branding',
-                        'description' => 'The presence has the correct branding implemented',
+                        'title' => $this->translator->trans('Config.index.sections.quality.branding.title'),
+                        'description' => $this->translator->trans('Config.index.sections.quality.branding.description'),
                         'values' => array(
-                            'branding_weighting'=>array('label'=>'Branding Weighting'),
+                            'branding_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.quality.branding.weighting')),
                         )
                     ),
                     (object)array(
-                        'title' => 'Relevance',
-                        'description' => 'How relevant the presence\'s actions have been. This is currently based on the number of relevant, British Council domains that have been linked to in their actions per day.',
+                        'title' => $this->translator->trans('Config.index.sections.quality.relevance.title'),
+                        'description' => $this->translator->trans('Config.index.sections.quality.relevance.description'),
                         'values' => array(
-                            'relevance_weighting'=>array('label'=>'Relevance Weighting'),
-                            'facebook_relevance_percentage'=>array('label'=>'Percent of Actions Per Day that should be relevant for Facebook'),
-                            'twitter_relevance_percentage'=>array('label'=>'Percent of Actions Per Day that should be relevant for Twitter'),
-                            'sina_weibo_relevance_percentage'=>array('label'=>'Percent of Actions Per Day that should be relevant for Sina Weibo'),
+                            'relevance_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.quality.relevance.weighting')),
+                            'facebook_relevance_percentage'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.quality.relevance.facebook-target'),
+							),
+                            'twitter_relevance_percentage'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.quality.relevance.twitter-target'),
+							),
+                            'sina_weibo_relevance_percentage'=>array(
+								'label'=>$this->translator->trans('Config.index.sections.quality.relevance.sina-weibo-target'),
+							),
                         )
                     )
                 )
@@ -243,7 +347,11 @@ class ConfigController extends BaseController {
 		                if (!$args->value) {
 			                $args->value = 1;
 		                }
-		                $args->hint = 'A higher weighting will make this metric more important when calculating the ' . $section->title . ' Badge Score';
+		                $args->hint = str_replace(
+							'[]',
+							$section->title,
+							$this->translator->trans('Config.index.sections.all.weighting-hint')
+						);
 	                }
                     $args->error = null;
                     if (!isset($args->type)) {
@@ -267,13 +375,17 @@ class ConfigController extends BaseController {
                         switch ($args->type) {
                             case 'numeric':
                                 if (!is_numeric($args->value)) {
-                                    $args->error = 'Value must be numeric';
+                                    $args->error = $this->translator->trans('Config.index.numeric-error');
                                     $valid = false;
                                 }
                                 break;
                             case 'email':
                                 if (!filter_var($args->value, FILTER_VALIDATE_EMAIL)) {
-                                    $args->error = "This ($args->value) email address is considered invalid.";
+                                    $args->error = str_replace(
+										'[]',
+										'('.$args->value.')',
+										$this->translator->trans('Config.index.email-error')
+									);
                                     $valid = false;
                                 }
                                 break;
@@ -294,7 +406,7 @@ class ConfigController extends BaseController {
                         $this->flashMessage($message, 'error');
                     }
                 } else {
-                    $this->flashMessage('File Successfully uploaded');
+                    $this->flashMessage($this->translator->trans('Config.index.upload-success'));
                 }
             }
 
@@ -308,10 +420,10 @@ class ConfigController extends BaseController {
                     }
                 }
                 self::setOptions($args);
-                $this->flashMessage('Settings saved');
+                $this->flashMessage($this->translator->trans('Config.index.settings-saved'));
 				$this->_helper->redirector->gotoSimple('');
 			} else {
-                $this->flashMessage('Invalid values. Please check before saving', 'error');
+                $this->flashMessage($this->translator->trans('Config.index.invalid-values'), 'error');
 			}
 		}
 		$this->view->values = $values;

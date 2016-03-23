@@ -87,6 +87,7 @@ $translate = new Zend_Translate(
 );
 Zend_Registry::set('translate', $translate);
 
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -99,8 +100,9 @@ $loader->load('services.yml');
 
 // give Zend components access to symfony
 
-Enum_PresenceType::setContainer($container);
+PresenceType::setContainer($container);
 BaseController::setContainer($container);
+Badge_Factory::setContainer($container);
 
 
 //set db for PresenceFactory

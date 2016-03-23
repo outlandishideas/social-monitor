@@ -1,6 +1,7 @@
 <?php
 
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 use Outlandish\SocialMonitor\Report\ReportablePresence;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
 use Outlandish\SocialMonitor\TableIndex\Header\Handle;
@@ -257,17 +258,17 @@ class PresenceController extends GraphingController
             if (!$errorMessages) {
                 try {
                     if (!$presence->id) {
-                        $type = Enum_PresenceType::get($type);
+                        $type = PresenceType::get($type);
                         $presence = Model_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
                         $presence->setSize($size);
-						if ($presence->getType()->requiresAccessToken()) {
+						if ($presence->getType()->getRequiresAccessToken()) {
 							$presence->user = $this->view->user;
 						}
 						$presence->testUpdate();
                         $presence->save();
                     } else {
                     	$presence->setSize($size);
-						if ($presence->getType()->requiresAccessToken() && $userId) {
+						if ($presence->getType()->getRequiresAccessToken() && $userId) {
 							$user = Model_User::fetchById($userId);
 							$presence->setUser($user);
 						}
@@ -307,7 +308,7 @@ class PresenceController extends GraphingController
 		}
 
         $this->view->editType = false;
-		$this->view->types = Enum_PresenceType::enumValues();
+		$this->view->types = PresenceType::getAll();
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->groups = Model_Group::fetchAll();
 		$this->view->presence = $presence;

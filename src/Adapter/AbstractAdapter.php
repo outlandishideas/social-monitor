@@ -28,5 +28,5 @@ abstract class AbstractAdapter {
      * @param mixed $since
      * @return Status[]
      */
-    abstract public function getStatuses($pageUID,$since,$handle);
+    abstract public function getStatuses($pageUID,$since,$handle = null);
 }

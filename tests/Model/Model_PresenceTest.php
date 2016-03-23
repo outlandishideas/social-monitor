@@ -1,6 +1,7 @@
 <?php
 
 use \Mockery as m;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 class Model_PresenceTest extends PHPUnit_Framework_TestCase
 {
@@ -19,7 +20,7 @@ class Model_PresenceTest extends PHPUnit_Framework_TestCase
         $this->internals = $internals = [
             'id' => 1,
             'handle' => 'handle',
-            'type' => Enum_PresenceType::TWITTER(),
+            'type' => PresenceType::TWITTER(),
             'name' => 'name',
             'uid' => '12345678',
             'sign_off' => 1,
@@ -44,7 +45,7 @@ class Model_PresenceTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(Model_Presence::class, $presence);
     }
-    
+
     /** @test */
     public function it_gets_the_target_audience_from_its_owner()
     {
