@@ -59,6 +59,26 @@ services:
         class: Provider_Twitter
         arguments: ["@pdo", "@adapter.twitter"]
 
+    provider.facebook:
+        class: Provider_Facebook
+        arguments: ["@pdo", "@adapter.facebook", "@facebook_engagement.weighted"]
+
+    provider.instagram:
+        class: Provider_Instagram
+        arguments: ["@pdo", "@adapter.instagram"]
+
+    provider.youtube:
+        class: Provider_Youtube
+        arguments: ["@pdo", "@adapter.youtube"]
+
+    provider.linkedin:
+        class: Provider_Linkedin
+        arguments: ["@pdo", "@adapter.linkedin"]
+
+    provider.sinaweibo:
+        class: Provider_SinaWeibo
+        arguments: ["@pdo"]
+
     ###################################
     # instagram engagement services
     ###################################

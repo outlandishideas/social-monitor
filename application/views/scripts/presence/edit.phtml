@@ -18,7 +18,7 @@ if ($cancel) {
 $bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button>';
 ?>
 
-<div id="new-presence">
+<div id="presence-edit-form">
 	<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 	<?php
@@ -66,12 +66,27 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button
 				<div class="small-24 medium-8 large-8 columns">
 					<input name="handle" id="handle" type="text" value="<?php echo $presence->handle; ?>">
 				</div>
-				<div class="small-24 medium-10 large-12 end columns">
-					<p class="formHint">
-						For www.facebook.com/<strong>platform</strong> or www.twitter.com/<strong>platform</strong> the
-						handle is '<strong>platform</strong>'<br/>
-						For facebook pages without vanity URLs, the handle is the long number in the URL, eg
+				<div class="small-24 medium-10 large-12 end columns presence-handle-hints">
+					<p class="formHint hint-<?php echo Enum_PresenceType::FACEBOOK; ?>">
+						For www.facebook.com/<strong>platform</strong> the handle is '<strong>platform</strong>'
+						<br/>
+						For pages without vanity URLs, the handle is the long number in the URL, eg
 						www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>
+					</p>
+					<p class="formHint hint-<?php echo Enum_PresenceType::TWITTER; ?>">
+						For www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'
+					</p>
+					<p class="formHint hint-<?php echo Enum_PresenceType::INSTAGRAM; ?>">
+						For www.instagram.com/<strong>platform</strong> the handle is '<strong>platform</strong>'
+					</p>
+					<p class="formHint hint-<?php echo Enum_PresenceType::YOUTUBE; ?>">
+						For www.youtube.com/channel/<strong>platform</strong> the handle is '<strong>platform</strong>'
+					</p>
+					<p class="formHint hint-<?php echo Enum_PresenceType::LINKEDIN; ?>">
+						Use the name of the company, as it appears on its page. E.g. for <a href="https://www.linkedin.com/company/1337" target="_blank">LinkedIn themselves</a>, the handle is '<strong>LinkedIn</strong>'
+					</p>
+					<p class="formHint hint-<?php echo Enum_PresenceType::SINA_WEIBO; ?>">
+						Use the name of the account, as it appears on its page. E.g. for <a href="http://www.weibo.com/u/2463797455" target="_blank">BBC World</a>, the handle is '<strong>BBCWorld</strong>'
 					</p>
 				</div>
 			</div>

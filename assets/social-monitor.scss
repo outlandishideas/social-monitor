@@ -2864,9 +2864,13 @@ table a.view-link:hover {
   margin-bottom: 20px;
 }
 
-#new-presence {
+#presence-edit-form {
   .presence-types .fa {
     width: 20px;
     text-align: center;
+  }
+
+  .presence-handle-hints .formHint {
+    display: none;
   }
 }
