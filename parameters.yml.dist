@@ -6,6 +6,7 @@ parameters:
     linkedin.client_id:
     linkedin.client_secret:
     linkedin.redirect_url:
+    twitter.fetch_per_page: 200
     db.name:
     db.host:
     db.username:

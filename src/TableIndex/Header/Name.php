@@ -24,12 +24,11 @@ class Name extends Header {
      */
     public function getValue($model = null)
     {
+		$value = $model->display_name;
         if ($model instanceof Model_Country) {
-            $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
-            $imageUrl = $baseUrl.'/public/img/flags/'.$model->getCountryCode().'.png';
-            return '<span class="flag"><img src="'.$imageUrl.'" /></span> '.$model->display_name;
+            $value = '<div class="sm-flag flag-' . $model->getCountryCode() . '"></div> ' . $value;
         }
-        return $model->display_name;
+        return $value;
     }
 
 

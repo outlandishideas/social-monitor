@@ -97,17 +97,13 @@ class Provider_Linkedin extends Provider_Abstract
 
         try {
             $metadata = $this->adapter->getMetadataWithAccessToken($presence->handle, $presence->getAccessToken());
-        } catch (Exception_FacebookNotFound $e) {
+        } catch (Exception $e) {
             $presence->uid = null;
             throw $e;
         }
 
         $presence->type = $this->type;
-        $presence->uid = $metadata->uid;
-        $presence->name = $metadata->name;
-        $presence->page_url = $metadata->page_url;
-        $presence->popularity = $metadata->popularity;
-        $presence->image_url = $metadata->image_url;
+		$presence->updateFromMetadata($metadata);
 	}
 
     /**

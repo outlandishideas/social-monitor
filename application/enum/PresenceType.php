@@ -1,5 +1,6 @@
 <?php
 
+use Outlandish\SocialMonitor\Adapter\TwitterAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
@@ -162,8 +163,7 @@ class Enum_PresenceType extends Enum_Abstract
                 return new Provider_Facebook($db, $facebookAdapter, $engagementMetric);
 				break;
 			case self::TWITTER:
-				return new Provider_Twitter($db, new \Outlandish\SocialMonitor\Adapter\TwitterAdapter());
-				break;
+				return $container->get('provider.twitter');
             case self::INSTAGRAM:
                 $instagramAdapter = $container->get('adapter.instagram');
                 return new Provider_Instagram($db, $instagramAdapter);

@@ -48,6 +48,17 @@ services:
         class: Outlandish\SocialMonitor\Adapter\LinkedinAdapter
         arguments: ["@linkedin.client"]
 
+    adapter.twitter:
+        class: Outlandish\SocialMonitor\Adapter\TwitterAdapter
+        arguments: ["%twitter.fetch_per_page%"]
+
+    ###################################
+    # providers
+    ###################################
+    provider.twitter:
+        class: Provider_Twitter
+        arguments: ["@pdo", "@adapter.twitter"]
+
     ###################################
     # instagram engagement services
     ###################################

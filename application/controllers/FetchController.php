@@ -329,6 +329,8 @@ class FetchController extends BaseController
         $index = 0;
         /** @var Model_Presence[] $presences */
         foreach ($presences as $presence) {
+			$logPrefix = '[' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
+				'[' . $presence->getId() . ']';
             //forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
             $db->closeConnection();
             $db->getConnection();
@@ -337,8 +339,7 @@ class FetchController extends BaseController
             $lastUpdatedString = $presence->getLastUpdated();
             $lastUpdated = strtotime($lastUpdatedString);
             if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
-                $this->log('Update info [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
-                    '[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . ']' .
+                $this->log('Update info ' . $logPrefix . ' [' . $presence->getHandle() . '] [' . $presence->getName() . ']' .
 					'[' . $presence->getEngagementValue() . ']');
                 try {
                     // update using provider
@@ -346,8 +347,7 @@ class FetchController extends BaseController
                     // save to DB
                     $presence->save();
 
-					$this->log('Updated info [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
-						'[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . ']' .
+					$this->log('Updated info ' . $logPrefix . ' [' . $presence->getHandle() . '] [' . $presence->getName() . ']' .
 						'[' . $presence->getEngagementValue() . ']');
                 } catch (Exception $e) {
                     $this->log("Error updating presence info: " . $e->getMessage());
@@ -355,8 +355,7 @@ class FetchController extends BaseController
                 $this->touchLock($lockName);
                 $this->log('touchLock()');
             } else {
-				$this->log('Not updating info [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
-					'[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . '] as last updated '.$lastUpdatedString);
+				$this->log('Not updating info ' . $logPrefix . ' [' . $presence->getHandle() . '] [' . $presence->getName() . '] as last updated '.$lastUpdatedString);
 			}
         }
     }

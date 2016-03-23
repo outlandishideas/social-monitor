@@ -25,15 +25,8 @@ class Countries extends Header {
     public function getTableCellValue($model)
     {
         $presences = array();
-        $baseUrl = \Zend_Controller_Front::getInstance()->getBaseUrl();
-        if (isset($_SERVER['SCRIPT_NAME'])) {
-            if (($pos = strripos($baseUrl, basename($_SERVER['SCRIPT_NAME']))) !== false) {
-                $baseUrl = substr($baseUrl, 0, $pos);
-            }
-        }
         foreach($model->getCountries() as $country) {
-            $imageUrl = $baseUrl . '/public/img/flags/' . $country->getCountryCode() . '.png';
-            $template = '<a href="' . Gatekeeper::PLACEHOLDER_URL . '" class="entity country"><span class="flag"><img src="' . $imageUrl . '" /></span> ' . $country->getName() . '</a>';
+            $template = '<a href="' . Gatekeeper::PLACEHOLDER_URL . '" class="entity country"><div class="sm-flag flag-' . $country->getCountryCode() . '"></div> ' . $country->getName() . '</a>';
             $urlArgs = array("controller" => "country", "action" => "view", "id" => $country->id);
             $presences[$template] = $urlArgs;
         }
