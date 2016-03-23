@@ -2,7 +2,6 @@
 
 class Chart_ResponseTime extends Chart_Abstract {
 
-    protected static $title = "Measure: Response Time";
     protected static $name = "response-time";
 
     protected function getXAxis()

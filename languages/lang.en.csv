@@ -229,6 +229,23 @@
 "Badge_Total.title";"Overall"
 "Badge_Total.description";"<p>The overall score KPI provides an overall score for how well a social media presence, country or SBU is doing in the other three KPIs. The score combines the total score of the following three KPIs:</p><ul><li>Reach KPI</li><li>Engagement KPI</li><li>Quality KPI</li></ul>"
 
+"Chart_ActionsPerDay.title";"Measure: Actions per Day"
+"Chart_ActionsPerDay.description";""
+"Chart_Compare.title";"Compare: KPIs"
+"Chart_Compare.description";""
+"Chart_Engagement.title";"KPI: Engagement"
+"Chart_Engagement.description";""
+"Chart_Popularity.title";"Measure: Popularity"
+"Chart_Popularity.description";""
+"Chart_PopularityTrend.title";"Measure: Popularity Trend"
+"Chart_PopularityTrend.description";""
+"Chart_Quality.title";"KPI: Quality"
+"Chart_Quality.description";""
+"Chart_Reach.title";"KPI: Reach"
+"Chart_Reach.description";""
+"Chart_ResponseTime.title";"Measure: Response Time"
+"Chart_ResponseTime.description";""
+
 "Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay.label";"Actions per day"
 
 "Outlandish\SocialMonitor\TableIndex\Header\Branding.label";"Branding"
@@ -301,6 +318,8 @@
 
 "Outlandish\SocialMonitor\TableIndex\Header\TotalScore.label";"Overall Score"
 "Outlandish\SocialMonitor\TableIndex\Header\TotalScore.description";"Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality."
+
+
 
 // flash messages
 "Error.missing-date-range";"Missing date range"

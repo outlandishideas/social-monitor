@@ -2,7 +2,6 @@
 
 class Chart_Compare extends Chart_Abstract {
 
-    protected static $title = "Compare: KPIs";
     protected static $name = "compare";
 
     protected $dataColumns;

@@ -2,7 +2,6 @@
 
 class Chart_Quality extends Chart_Badge {
 
-    protected static $title = "KPI: Quality";
     protected static $name = "quality";
 
     public function __construct(PDO $db = null)

@@ -2,7 +2,6 @@
 
 class Chart_PopularityTrend extends Chart_Abstract {
 
-    protected static $title = "Measure: Popularity Trend";
     protected static $name = "popularity-trend";
 
     protected function getXAxis()

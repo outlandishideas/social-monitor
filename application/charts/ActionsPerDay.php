@@ -2,7 +2,6 @@
 
 class Chart_ActionsPerDay extends Chart_Abstract {
 
-    protected static $title = "Measure: Actions per Day";
     protected static $name = "actionsPerDay";
 
     protected function getXAxis()
