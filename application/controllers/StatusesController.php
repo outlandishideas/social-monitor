@@ -39,18 +39,18 @@ class StatusesController extends GraphingController
         Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
         $presences = Model_PresenceFactory::getPresences();
 
-        $this->view->pageTitle = 'Statuses';
+        $this->view->pageTitle = $this->translator->trans('Global.statuses');
         $this->view->presences = $presences;
         $this->view->sortCol = Handle::getName();
         $this->view->queryOptions = [
-            ['name' => 'type', 'label' => 'Social Media', 'options' => Enum_PresenceType::enumValues()],
-            ['name' => 'country', 'label' => 'Countries', 'options' => Model_Country::fetchAll()],
-            ['name' => 'region', 'label' => 'Regions', 'options' => Model_Region::fetchAll()],
-            ['name' => 'sbu', 'label' => 'SBUs', 'options' => Model_Group::fetchAll()],
-            ['name' => 'sort', 'label' => 'Sort', 'options' =>
+            ['name' => 'type', 'label' => $this->translator->trans('Global.social-media'), 'options' => Enum_PresenceType::enumValues()],
+            ['name' => 'country', 'label' => $this->translator->trans('Global.countries'), 'options' => Model_Country::fetchAll()],
+            ['name' => 'region', 'label' => $this->translator->trans('Global.regions'), 'options' => Model_Region::fetchAll()],
+            ['name' => 'sbu', 'label' => $this->translator->trans('Global.sbus'), 'options' => Model_Group::fetchAll()],
+            ['name' => 'sort', 'label' => $this->translator->trans('Global.sort'), 'options' =>
                 [
-                    ['value' => 'date', 'title' => 'Date'],
-                    ['value' => 'engagement', 'title' => 'Engagement']
+                    ['value' => 'date', 'title' => $this->translator->trans('Global.date')],
+                    ['value' => 'engagement', 'title' => $this->translator->trans('Badge_Engagement.title')]
                 ]
             ]
         ];
@@ -65,7 +65,7 @@ class StatusesController extends GraphingController
 
         $dateRange = $this->getRequestDateRange();
         if (!$dateRange) {
-            $this->apiError('Missing date range');
+            $this->apiError($this->translator->trans('Error.missing-date-range'));
         }
 
         /** @var Model_Presence $presence */

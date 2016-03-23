@@ -18,8 +18,10 @@ class BaseController extends Zend_Controller_Action
      * @var ContainerInterface
      */
     static protected $container;
+	/** @var \Symfony\Component\Translation\Translator */
+	protected $translator;
 
-    /**
+	/**
      * @param ContainerInterface $container
      */
     public static function setContainer(ContainerInterface $container)
@@ -130,6 +132,8 @@ class BaseController extends Zend_Controller_Action
         $configArray = $this->config->toArray();
         $this->view->jsConfig = $configArray['jsConfig'];
         $this->view->jsConfig['apiEndpoint'] = $this->view->baseUrl('/');
+
+		$this->translator = $this->getContainer()->get('translation.translator');
     }
 
     /**
