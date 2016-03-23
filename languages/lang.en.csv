@@ -351,6 +351,23 @@
 "Outlandish\SocialMonitor\TableIndex\Header\TotalScore.label";"Overall Score"
 "Outlandish\SocialMonitor\TableIndex\Header\TotalScore.description";"Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality."
 
+// metrics
+"Metric_ActionsPerDay.title";"Actions Per Day"
+"Metric_Branding.title";"Correct Branding"
+"Metric_FBEngagement.title";"Facebook Engagement Score"
+"Metric_InstagramEngagement.title";"Instagram Engagement Score"
+"Metric_Klout.title";"Klout Score"
+"Metric_LikesPerPost.title";"Likes per post"
+"Metric_LikesPerView.title";"Actions per view"
+"Metric_LinkedinEngagement.title";"LinkedIn Engagement Score"
+"Metric_Popularity.title";"Popularity"
+"Metric_PopularityTime.title";"Popularity Trend"
+"Metric_Relevance.title";"Relevance"
+"Metric_ResponseRatio.title";"Replies"
+"Metric_ResponseTime.title";"Responsiveness"
+"Metric_SignOff.title";"Signed Off"
+"Metric_SinaWeiboEngagement.title";"Sina Weibo Engagement Score"
+"Metric_YoutubeEngagement.title";"Youtube Engagement Score"
 
 
 // flash messages

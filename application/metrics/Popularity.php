@@ -2,12 +2,15 @@
 
 class Metric_Popularity extends Metric_Abstract {
 
-    static protected $name = "popularity";
-    static protected $title = "Popularity";
-    protected static $icon = "fa fa-users";
-    protected static $gliding = false;
+	const NAME = "popularity";
+	
+	public function __construct()
+	{
+		parent::__construct(self::NAME, "fa fa-users", false);
+	}
 
-    /**
+
+	/**
      * Calculates the average percentage of target popularity from a range of popularity values
      * @param Model_Presence $presence
      * @param DateTime $start

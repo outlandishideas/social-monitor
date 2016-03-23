@@ -2,12 +2,13 @@
 
 class Metric_SignOff extends Metric_Abstract {
 
-    protected static $name = "sign_off";
-    protected static $title = "Signed Off";
-    protected static $icon = "fa fa-check-square";
-    protected static $gliding = false;
+	public function __construct()
+	{
+		parent::__construct("sign_off", "fa fa-check-square", false);
+	}
 
-    /**
+
+	/**
      * Returns 100 if presence has been signed off, else returns 0
      * @param Model_Presence $presence
      * @param DateTime $start

@@ -1,13 +1,13 @@
 <?php
 
+use Outlandish\SocialMonitor\Engagement\Query\Query;
+
 class Metric_InstagramEngagement extends Metric_AbstractEngagement {
 
-    protected static $name = "instagram_engagement";
-    protected static $title = "Instagram Engagement Score";
-    protected static $icon = "fa fa-instagram";
-    public static $engagementTarget = 0.75;
-    protected static $gliding = false;
-
+	public function __construct(Query $query)
+	{
+		parent::__construct("instagram_engagement", "fa fa-instagram", $query, 0.75);
+	}
 
 
 }

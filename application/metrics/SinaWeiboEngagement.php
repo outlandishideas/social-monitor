@@ -1,11 +1,12 @@
 <?php
 
+use Outlandish\SocialMonitor\Engagement\Query\Query;
+
 class Metric_SinaWeiboEngagement extends Metric_AbstractEngagement {
 
-    protected static $name = "sina_weibo_engagement";
-    protected static $title = "Sina Weibo Engagement Score";
-    protected static $icon = "fa fa-weibo";
-    public static $engagementTarget = 0.5;
-    protected static $gliding = false;
+	public function __construct(Query $query)
+	{
+		parent::__construct("sina_weibo_engagement", "fa fa-weibo", $query, 0.5);
+	}
 
 }

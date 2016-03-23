@@ -467,7 +467,7 @@ class Model_Presence
 
     public function getTargetAudienceDate()
     {
-        $score = $this->getMetricValue(Metric_PopularityTime::getName());
+        $score = $this->getMetricValue(Metric_PopularityTime::NAME);
         if ($score) {
             return new DateTime('now +' . round($score) . ' months');
         }
@@ -713,7 +713,7 @@ class Model_Presence
      */
     public function getPopularityData(DateTime $start, DateTime $end)
     {
-        return $this->getHistoricData($start, $end, Metric_Popularity::getName());
+        return $this->getHistoricData($start, $end, Metric_Popularity::NAME);
     }
 
     public function getActionsPerDayData(DateTime $start, DateTime $end)

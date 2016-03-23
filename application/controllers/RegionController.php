@@ -20,9 +20,9 @@ class RegionController extends CampaignController
 
     protected static function tableMetrics(){
         return array(
-            Metric_PopularityTime::getName() => 'Time to Target Audience',
-            Metric_ActionsPerDay::getName() => 'Actions Per Day',
-            Metric_ResponseTime::getName() => 'Response Time',
+            Metric_PopularityTime::NAME => 'Time to Target Audience',
+            Metric_ActionsPerDay::NAME => 'Actions Per Day',
+            Metric_ResponseTime::NAME => 'Response Time',
         );
     }
 

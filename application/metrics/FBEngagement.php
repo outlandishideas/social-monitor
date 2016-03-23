@@ -1,12 +1,13 @@
 <?php
 
+use Outlandish\SocialMonitor\Engagement\Query\Query;
+
 class Metric_FBEngagement extends Metric_AbstractEngagement {
 
-    protected static $name = "facebook_engagement";
-    protected static $title = "Facebook Engagement Score";
-    protected static $icon = "fa fa-facebook-square";
-    public static $engagementTarget = 0.15;
-    protected static $gliding = false;
+	public function __construct(Query $query)
+	{
+		parent::__construct("facebook_engagement", "fa fa-facebook-square", $query, 0.15);
+	}
 
 
 }

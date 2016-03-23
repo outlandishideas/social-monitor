@@ -32,9 +32,9 @@ class Chart_ActionsPerDay extends Chart_Abstract {
         /** @var Model_Presence $model */
         $data = $model->getActionsPerDayData($start, $end);
         if ($data) {
-            $key = Metric_ActionsPerDay::getName();
+            $key = Metric_ActionsPerDay::NAME;
             $key2 = 'relevant';
-            $names[$key] = Metric_ActionsPerDay::getTitle();
+            $names[$key] = $this->translate->_('Metric_ActionsPerDay.title');
             $names[$key2] = $this->translate->_(get_class($this).'.relevant-links');
             $dataSets[$key] = $data;
         }

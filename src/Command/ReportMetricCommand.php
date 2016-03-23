@@ -25,7 +25,7 @@ class ReportMetricCommand extends ContainerAwareCommand
             ->addArgument(
                 'metric',
                 InputArgument::REQUIRED,
-                'The name of the metric to be reported on'
+                'The ID of the metric (in the services) to be reported on'
             )
             ->addOption(
                 'type',
@@ -56,7 +56,7 @@ class ReportMetricCommand extends ContainerAwareCommand
         $then = clone $now;
         $then->modify("-30 days");
 
-        $metric = \Metric_Factory::getMetric($metricName);
+        $metric = $this->getContainer()->get($metricName);
 
         if ($input->hasOption('type') && $input->getOption('type')) {
             /** @var PresenceType $type */

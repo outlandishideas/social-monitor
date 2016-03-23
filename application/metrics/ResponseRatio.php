@@ -2,12 +2,9 @@
 
 class Metric_ResponseRatio extends Metric_Abstract {
 
-    protected static $name = "response_ratio";
-    protected static $title = "Replies";
-    protected static $icon = "fa fa-reply";
-
     function __construct()
     {
+		parent::__construct("response_ratio", "fa fa-reply");
         $this->target = BaseController::getOption('replies_to_number_posts_best');
     }
 

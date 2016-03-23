@@ -2,11 +2,10 @@
 
 abstract class Metric_Abstract {
 
-    protected static $name;
-    protected static $title;
-    protected static $icon;
-    protected static $gliding = true;
-
+    protected $name;
+    protected $title;
+    protected $icon;
+    protected $gliding;
     public $target = 0;
 
     /**
@@ -37,30 +36,37 @@ abstract class Metric_Abstract {
      */
     abstract public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end);
 
-    public static function getName()
+	public function __construct($name, $icon, $gliding = true)
+	{
+		$translate = Zend_Registry::get('translate');
+		$className = get_class($this);
+
+		$this->name = $name;
+		$this->title = $translate->_($className.'.title');
+		$this->icon = $icon;
+		$this->gliding = $gliding;
+	}
+
+	public function getName()
     {
-        return static::$name;
-    }
-    public static function getTitle()
-    {
-        return static::$title;
+        return $this->name;
     }
 
-    public static function getIcon()
+    public function getTitle()
     {
-        return static::$icon;
+        return $this->title;
+    }
+
+    public function getIcon()
+    {
+        return $this->icon;
     }
 
     protected static function boundScore($score, $min = 0, $max = 100) {
         return max($min, min($max, $score));
     }
 
-    public static function isGliding() {
-        return static::$gliding;
-    }
-
-    public static function getInstance()
-    {
-        return Metric_Factory::getMetric(self::getName());
+    public function isGliding() {
+        return $this->gliding;
     }
 }

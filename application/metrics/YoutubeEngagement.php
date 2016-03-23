@@ -1,11 +1,12 @@
 <?php
 
+use Outlandish\SocialMonitor\Engagement\Query\Query;
+
 class Metric_YoutubeEngagement extends Metric_AbstractEngagement {
 
-    protected static $name = "youtube_engagement";
-    protected static $title = "Youtube Engagement Score";
-    protected static $icon = "fa fa-youtube";
-    public static $engagementTarget = 1.5;
-    protected static $gliding = false;
+	public function __construct(Query $query)
+	{
+		parent::__construct("youtube_engagement", "fa fa-youtube", $query, 1.5);
+	}
 
 }

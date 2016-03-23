@@ -33,8 +33,8 @@ class Chart_PopularityTrend extends Chart_Abstract {
             /** @var Model_Presence $model */
             $data = $model->getPopularityData($start, $end);
             if ($data) {
-                $key = Metric_Popularity::getName();
-                $names[$key] = Metric_Popularity::getTitle();
+                $key = Metric_Popularity::NAME;
+                $names[$key] = $this->translate->_('Metric_Popularity.title');
                 $dataSets[$key] = $data;
             }
         } else if ($model instanceof Model_Country || $model instanceof Model_Group || $model instanceof Model_Region) {

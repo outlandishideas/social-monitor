@@ -2,12 +2,11 @@
 
 class Metric_ResponseTime extends Metric_Abstract {
 
-    protected static $name = "response_time";
-    protected static $title = "Responsiveness";
-    protected static $icon = "fa fa-clock-o";
-
+	const NAME = "response_time";
+	
     function __construct()
     {
+		parent::__construct(self::NAME, "fa fa-clock-o");
         $this->target = BaseController::getOption('response_time_bad');
     }
 

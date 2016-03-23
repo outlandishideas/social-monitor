@@ -2,15 +2,13 @@
 
 class Metric_Relevance extends Metric_Abstract {
 
-    protected static $name = "relevance";
-    protected static $title = "Relevance";
-    protected static $icon = "fa fa-tags";
-    protected static $gliding = false;
-
+	const NAME = "relevance";
+	
     protected $updatesPerDay;
 
     function __construct()
     {
+		parent::__construct(self::NAME, "fa fa-tags", false);
         $this->updatesPerDay = floatval(BaseController::getOption('updates_per_day'));
     }
 
@@ -45,7 +43,7 @@ class Metric_Relevance extends Metric_Abstract {
         }
 
         $targetPercent = $presence->getType()->getRelevancePercentage()/100;
-        $numActions = $presence->getMetricValue(Metric_ActionsPerDay::getName());
+        $numActions = $presence->getMetricValue(Metric_ActionsPerDay::NAME);
 
         if ($numActions > 0) {
             $target = $numActions * $targetPercent;

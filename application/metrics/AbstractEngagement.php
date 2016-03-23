@@ -5,21 +5,22 @@ use Outlandish\SocialMonitor\Engagement\Query\Query;
 
 abstract class Metric_AbstractEngagement extends Metric_Abstract {
 
-    protected static $name = "changethis_engagement";
-    protected static $title = "ChangeThis Engagement Score";
-    protected static $icon = "fa fa_change_this";
-    protected static $gliding = false;
     /** @var Query */
     protected $query;
-    public static $engagementTarget = 0.25;
+    public $engagementTarget = 0;
     protected $cache = array();
 
 
 	/**
+	 * @param string $name
+	 * @param string $icon
 	 * @param Query $query
+	 * @param float $engagementTarget
 	 */
-    function __construct($query)
+    function __construct($name, $icon, $query, $engagementTarget)
     {
+		parent::__construct($name, $icon, false);
+		$this->engagementTarget = $engagementTarget;
         $this->query = $query;
     }
 
@@ -32,7 +33,7 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
      */
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $data = $presence->getHistoricData($start, $end, self::getName());
+        $data = $presence->getHistoricData($start, $end, $this->getName());
         if($data and count($data)) {
             $date = null;
             $total = 0;

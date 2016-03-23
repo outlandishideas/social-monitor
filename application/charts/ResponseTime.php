@@ -29,8 +29,8 @@ class Chart_ResponseTime extends Chart_Abstract {
             /** @var Model_Presence $model */
             $data = $model->getResponseData($start, $end);
             if ($data) {
-                $key = Metric_ResponseTime::getName();
-                $names[$key] = Metric_ResponseTime::getTitle();
+                $key = Metric_ResponseTime::NAME;
+                $names[$key] = $this->translate->_('Metric_ResponseTime.title');
                 $dataSets[$key] = $data;
             }
         } else if ($model instanceof Model_Country || $model instanceof Model_Group || $model instanceof Model_Region) {

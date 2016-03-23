@@ -2,13 +2,11 @@
 
 class Metric_PopularityTime extends Metric_Abstract {
 
-    protected static $name = "popularity_time";
-    protected static $title = "Popularity Trend";
-    protected static $icon = "fa fa-line-chart";
-    protected static $gliding = false;
-
-    function __construct()
-    {
+	const NAME = "popularity_time";
+	
+	public function __construct()
+	{
+		parent::__construct(self::NAME, "fa fa-line-chart", false);
         $this->target = floatval(BaseController::getOption('achieve_audience_good'));
     }
 
@@ -60,7 +58,7 @@ class Metric_PopularityTime extends Metric_Abstract {
         if(is_numeric($target) && $target > 0 && is_numeric($popularity)) {
             // if we are above the target already then return today as the target date, which gives us 100%
             if($popularity < $target) {
-                $data = $presence->getHistoricData($start, $end, Metric_Popularity::getName());
+                $data = $presence->getHistoricData($start, $end, Metric_Popularity::NAME);
                 $count = count($data);
 
                 if ($count > 1) {

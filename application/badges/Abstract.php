@@ -90,7 +90,7 @@ abstract class Badge_Abstract
 		if (count($this->metricsWeighting) == 0) {
 			$metrics = array();
 			foreach($this->getMetrics() as $metric){
-                $metricName = $metric::getName();
+                $metricName = $metric->getName();
                 //get weight from database, if it exists
                 $weight = floatval(BaseController::getOption($metricName . '_weighting'));
                 if (!$weight || $weight < 0) {

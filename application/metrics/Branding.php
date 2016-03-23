@@ -2,12 +2,13 @@
 
 class Metric_Branding extends Metric_Abstract {
 
-    protected static $name = "branding";
-    protected static $title = "Correct Branding";
-    protected static $icon = "fa fa-tag";
-    protected static $gliding = false;
+	public function __construct()
+	{
+		parent::__construct("branding", "fa fa-tag", false);
+	}
 
-    /**
+
+	/**
      * Returns 100 if presence has been branded correctly, else returns 0
      * @param Model_Presence $presence
      * @param DateTime $start

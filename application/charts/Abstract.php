@@ -8,6 +8,8 @@ abstract class Chart_Abstract {
     protected $yLabel;
 	protected $title;
 	protected $description;
+	/** @var Zend_Translate */
+	protected $translate;
 
     public function __construct(PDO $db = null)
     {

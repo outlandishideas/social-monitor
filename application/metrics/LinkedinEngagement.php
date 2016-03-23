@@ -1,11 +1,12 @@
 <?php
 
+use Outlandish\SocialMonitor\Engagement\Query\Query;
+
 class Metric_LinkedinEngagement extends Metric_AbstractEngagement {
 
-    protected static $name = "linkedin_engagement";
-    protected static $title = "LinkedIn Engagement Score";
-    protected static $icon = "fa fa_linkedin";
-    protected static $gliding = false;
-    public static $engagementTarget = 0.25;
+	public function __construct(Query $query)
+	{
+		parent::__construct("linkedin_engagement", "fa fa_linkedin", $query, 0.25);
+	}
 
 }

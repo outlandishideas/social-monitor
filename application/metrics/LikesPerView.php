@@ -2,12 +2,9 @@
 
 class Metric_LikesPerView extends Metric_Abstract {
 
-    protected static $name = "likes_per_view";
-    protected static $title = "Actions per view";
-    protected static $icon = "fa fa-thumbs-o-up";
-
     function __construct()
     {
+		parent::__construct("likes_per_view", "fa fa-thumbs-o-up");
         $this->target = floatval(BaseController::getOption('likes_per_view_best'));
     }
 
