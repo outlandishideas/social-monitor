@@ -225,7 +225,7 @@ class RegionController extends CampaignController
     public function editAllAction()
     {
 
-        $this->view->pageTitle = 'Edit All Regions';
+        $this->view->pageTitle = $this->translator->trans('Region.edit-all.page-title');
         $this->view->regions = Model_Region::fetchAll();
 
         if ($this->_request->isPost()) {
@@ -251,7 +251,11 @@ class RegionController extends CampaignController
                 $editingRegion->fromArray($g);
 
                 if (!$g['display_name']) {
-                    $errorMessages[] = 'Please enter a display name for '. $display_name;
+                    $errorMessages[] = str_replace(
+						'[]',
+						$display_name,
+						$this->translator->trans('Region.edit-all.error.display-name-missing')
+					);
                 }
 
                 $editedRegions[] = $editingRegion;
@@ -270,12 +274,16 @@ class RegionController extends CampaignController
 
 					$this->invalidateTableCache();
 
-                    $this->flashMessage(count($editedRegions) . ' Regions saved');
+                    $this->flashMessage(str_replace(
+						'[]',
+						count($editedRegions),
+						$this->translator->trans('Region.edit-all.success-message')
+					));
                     $this->_helper->redirector->gotoSimple('index');
 
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->flashMessage('Display name already taken', 'error');
+						$this->flashMessage($this->translator->trans('Region.edit.error.display-name-exists'), 'error');
                     } else {
                         $this->flashMessage($ex->getMessage(), 'error');
                     }
@@ -304,11 +312,11 @@ class RegionController extends CampaignController
 
 			$this->invalidateTableCache();
 
-            $this->flashMessage('Region countries updated');
+            $this->flashMessage($this->translator->trans('Region.manage.success-message'));
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 
-        $this->view->pageTitle = 'Manage Countries: ' . $region->display_name;
+        $this->view->pageTitle = $this->translator->trans('Region.manage.page-title').': ' . $region->display_name;
         $this->view->region = $region;
         $this->view->allCountries = Model_Country::fetchAll();
 	}

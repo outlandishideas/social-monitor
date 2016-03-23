@@ -59,18 +59,23 @@
 "Campaign.index.new-index-table.click-to-expand";"Click to expand"
 "Campaign.view.charts-unavailable";"Sorry, charts are not available on your device"
 
-"Region.view.buttons.edit-region";"Edit Region"
-"Region.view.buttons.manage-countries";"Manage Countries"
-"Region.view.buttons.delete-region";"Delete Region"
-"Region.view.buttons.download-report";"Download Report"
+"Region.buttons.edit-region";"Edit Region"
+"Region.buttons.manage-countries";"Manage Countries"
+"Region.buttons.delete-region";"Delete Region"
+"Region.buttons.download-report";"Download Report"
+"Region.buttons.view-region";"View Region"
 
 "Region.edit.page-title";"Edit Region"
-"Region.edit.buttons.view-region";"View Region"
 "Region.edit.error.display-name-missing";"Please enter a display name"
 "Region.edit.error.display-name-exists";"Display name already taken"
 "Region.edit.success-message";"Region saved"
 
+"Region.edit-all.page-title";"Edit All Regions"
+"Region.edit-all.error.display-name-missing";"Please enter a display name for []"
+"Region.edit-all.success-message";"[] regions saved"
 
+"Region.manage.page-title";"Manage Countries"
+"Region.manage.success-message";"Region countries updated"
 
 "Region.index.empty-table";"No regions found"
 
