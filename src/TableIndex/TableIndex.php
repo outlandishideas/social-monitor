@@ -21,14 +21,18 @@ class TableIndex {
 
     protected $tableData = null;
 
-    /**
-     * @param string $indexName
-     * @param TableSource $dataSource
-     */
-    function __construct($indexName, $dataSource)
+	/**
+	 * @param string $indexName
+	 * @param TableSource $dataSource
+	 * @param Header[] $headers
+	 */
+    function __construct($indexName, $dataSource, $headers = array())
     {
         $this->indexName = $indexName;
         $this->dataSource = $dataSource;
+		foreach ($headers as $header) {
+			$this->addHeader($header);
+		}
     }
 
     public function addHeader(Header $header)
