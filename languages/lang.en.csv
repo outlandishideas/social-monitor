@@ -29,7 +29,10 @@
 "Global.social-media";"Social Media"
 "Global.sort";"Sort"
 "Global.date";"Date"
-"Base.layout.feedback-button";"Feedback"
+"Global.forgotten-password";"Forgotten password"
+"Global.change-password";"Change password"
+"Global.register-user";"Register user"
+Base.layout.feedback-button";"Feedback"
 "Base.layout.feedback-modal.title";"Feedback form"
 "Base.layout.feedback-modal.subtitle";"All feedback is welcome. Please let us know your thoughts and suggestions."
 "Base.layout.feedback-modal.name-label";"Your name"
@@ -61,6 +64,7 @@
 
 "Region.index.empty-table";"No regions found"
 
+"User.linkedin-title";"Login to LinkedIn"
 
 "Badge_Engagement.name";"engagement"
 "Badge_Engagement.title";"Engagement"
@@ -153,4 +157,17 @@
 
 // flash messages
 "Error.missing-date-range";"Missing date range"
+"Error.unconfirmed-username";"Incorrect username/password or email has not been confirmed"
+"Error.missing-username-email";"Please enter a username or email address"
+"Error.user-not-found";"User not found"
+"Error.password-reset-failed-email";"Failed to send reset email.<br />Please ask an admin user to reset your password"
+"Error.both-passwords-required";"Both passwords are required"
+"Error.passwords-dont-match";"Passwords do not match"
+"Error.passwords-too-short";"Password must be at least 4 characters"
+"Error.incorrect-user-key";"Incorrect user/key combination for password reset"
+"Success.linkedin-login";"Linkedin Account connected"
+"Success.password-reset-email-sent";"You should receive an email shortly with a password reset link"
+"Success.password-change";"Password changed successfully"
+"Success.logged-out";"Logged out"
+""
 // date range picker

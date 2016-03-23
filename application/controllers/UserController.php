@@ -24,11 +24,11 @@ class UserController extends BaseController
 
     public function linkedinAction()
     {
-		$this->view->pageTitle = 'Login to LinkedIn';
+		$this->view->pageTitle = $this->translator->trans('User.linkedin-title'); //'Login to LinkedIn';
         if (isset($_REQUEST['code'])) {
             $token = $this->linkedin->getAccessToken($_REQUEST['code']);
 
-            $this->flashMessage("Linkedin Account connected");
+            $this->flashMessage($this->translator->trans('Success.linkedin-login'));
             /** @var Model_User $user */
             $user = Model_User::fetchById($this->auth->getIdentity());
             $expires = (new Carbon())->addSeconds($this->linkedin->getAccessTokenExpiration());
@@ -45,7 +45,7 @@ class UserController extends BaseController
      */
     public function indexAction()
     {
-        $this->view->pageTitle = 'Users';
+        $this->view->pageTitle = $this->translator->trans('Global.users');
         $this->view->users = Model_User::fetchAll();
         $this->view->userLevels = Model_User::$userLevels;
     }
@@ -59,7 +59,7 @@ class UserController extends BaseController
             $this->_helper->redirector->gotoSimple('index', 'index');
         }
 
-        $this->view->pageTitle = 'Login';
+        $this->view->pageTitle = $this->translator->trans('Global.login');
 
         if ($this->_request->isPost()) {
             $authAdapter = new Model_User();
@@ -76,7 +76,7 @@ class UserController extends BaseController
                 $this->redirect($redirect);
             } else {
                 $this->view->redirect_to = $redirect;
-                $this->flashMessage('Incorrect username/password or email has not been confirmed', 'error');
+                $this->flashMessage($this->translator->trans('Error.unconfirmed-username'), 'error'); //'Incorrect username/password or email has not been confirmed'
             }
         } else {
             $this->view->redirect_to = $this->_request->getPathInfo();
@@ -97,7 +97,7 @@ class UserController extends BaseController
         if ($this->_request->isPost()) {
             $username = $this->_request->getParam('username');
             if (!$username) {
-                $this->flashMessage('Please enter a username or email address', 'error');
+                $this->flashMessage($this->translator->trans('Error.missing-username-email'), 'error'); //'Please enter a username or email address'
 			} else {
 				/** @var Model_User $user */
 				$user = Model_User::fetchBy('name', $username);
@@ -106,7 +106,7 @@ class UserController extends BaseController
 				}
 
                 if (!$user) {
-                    $this->flashMessage('User not found', 'error');
+                    $this->flashMessage($this->translator->trans('Error.user-not-found'), 'error'); //'User not found'
                 } else {
                     $code = $this->generateCode();
                     $user->reset_key = $code;
@@ -114,14 +114,14 @@ class UserController extends BaseController
 
                     try {
                         $this->sendResetPasswordEmail($user);
-                        $this->flashMessage('You should receive an email shortly with a password reset link');
+                        $this->flashMessage($this->translator->trans('Success.password-reset-email-sent')); //'You should receive an email shortly with a password reset link'
                     } catch (Exception $ex) {
-                        $this->flashMessage('Failed to send reset email.<br />Please ask an admin user to reset your password', 'error');
+                        $this->flashMessage($this->translator->trans('Error.password-reset-failed-email'), 'error'); //'Failed to send reset email.<br />Please ask an admin user to reset your password'
                     }
                 }
             }
         }
-        $this->view->pageTitle = 'Forgotten password';
+        $this->view->pageTitle = $this->translator->trans('Global.forgotten-password'); //'Forgotten password'
         $this->_helper->layout()->setLayout('notabs');
     }
 
@@ -145,11 +145,11 @@ class UserController extends BaseController
                 $password = $this->_request->getParam('password');
                 $password2 = $this->_request->getParam('password_confirm');
                 if (!$password || !$password2) {
-                    $this->flashMessage('Both passwords are required', 'error');
+                    $this->flashMessage($this->translator->trans('Error.both-passwords-required'), 'error'); //'Both passwords are required'
                 } else if ($password != $password2) {
-                    $this->flashMessage('Passwords do not match', 'error');
+                    $this->flashMessage($this->translator->trans('Error.passwords-dont-match'), 'error'); //'Passwords do not match'
                 } else if (strlen($password) < 4) {
-                    $this->flashMessage('Password must be at least 4 characters', 'error');
+                    $this->flashMessage($this->translator->trans('Error.passwords-too-short'), 'error'); //'Password must be at least 4 characters'
                 } else {
                     $user->fromArray(array('password' => $password));
                     $user->reset_key = null;
@@ -161,16 +161,16 @@ class UserController extends BaseController
                     $authAdapter->authPassword = $password;
                     $this->auth->authenticate($authAdapter);
 
-                    $this->flashMessage('Password changed successfully');
+                    $this->flashMessage($this->translator->trans('Success.password-change')); //'Password changed successfully'
                     $this->_helper->redirector->gotoSimple('index', 'index');
                 }
             }
         } else {
-            $this->flashMessage('Incorrect user/key combination for password reset', 'error');
+            $this->flashMessage($this->translator->trans('Error.incorrect-user-key'), 'error'); //'Incorrect user/key combination for password reset'
             $this->_helper->redirector->gotoSimple('index', 'index');
         }
 
-		$this->view->pageTitle = 'Change Password';
+		$this->view->pageTitle = $this->translator->trams('Global.change-password') ; //'Change Password'
 		$this->_helper->layout()->setLayout('notabs');
     }
 
@@ -180,7 +180,7 @@ class UserController extends BaseController
     public function logoutAction()
     {
         $this->auth->clearIdentity();
-        $this->flashMessage('Logged out');
+        $this->flashMessage($this->translator->trans('Success.logged-out'));
         $this->_helper->redirector->gotoSimple('index', 'index');
     }
 
@@ -193,9 +193,9 @@ class UserController extends BaseController
         $this->editAction();
         $registerSuccessful = $this->_request->getParam('result') === 'success';
         if ($registerSuccessful) {
-            $this->view->pageTitle = 'Registration success';
+            $this->view->pageTitle = $this->translator->trans('Success.registration'); //'Registration success';
         } else {
-            $this->view->pageTitle = 'Register user';
+            $this->view->pageTitle = $this->translator->trans('Global.register-user'); //'Register user';
         }
         $this->view->registerSuccessful = $registerSuccessful;
         $this->_helper->layout()->setLayout('notabs');
