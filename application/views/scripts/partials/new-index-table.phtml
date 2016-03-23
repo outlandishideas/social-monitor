@@ -56,11 +56,14 @@ $gatekeeper = $this->gatekeeper();
                         case Countries::getName():
                             $count = count((array)$cellValue);
                             if ($header->getName() == Countries::getName()) {
-                                $countText = $count . ($count == 1 ? ' country' : ' countries');
+								$countryText = $count == 1 ? $this->translate('General.country') :
+									$this->translate('General.countries');
+                                $countText = $count . ' ' . $countryText;
                             } else {
                                 $countText = $count . ' presence' . ($count == 1 ? '' : 's');
                             }
                             if($count > 0) {
+								$clickToExpand = $this->translate('Campaign.index.new-index-table.click-to-expand');
                                 echo '<span class="entity-list-toggle" title="Click to expand">' . $countText . '</span>';
                                 echo '<ul class="entity-list">';
                                 foreach ($cellValue as $template=>$urlArgs) {

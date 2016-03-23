@@ -15,6 +15,12 @@ abstract class Chart_Abstract {
             $db = Zend_Registry::get('db')->getConnection();
         }
         $this->db = $db;
+		// populate $name, $title, $description from transation files
+		$translate = Zend_Registry::get('translate');
+		$className = get_class($this);
+		$this->name = $translate->_($className.'.name');
+		$this->title = $translate->_($className.'.title');
+		$this->description = $translate->_($className.'.description');
     }
 
     public function getChart($model, DateTime $start, DateTime $end)

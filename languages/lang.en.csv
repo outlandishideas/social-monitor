@@ -1,5 +1,3 @@
-"controller.view[.partial].id";"copy"
-
 "Global.score";"Score"
 "Global.loading-data";"Loading data..."
 "Global.add-new";"Add New"
@@ -10,6 +8,7 @@
 
 "Global.home";"Home"
 "Global.regions";"Regions"
+"Global.country";"Country"
 "Global.countries";"Countries"
 "Global.sbus";"SBUs"
 "Global.presences";"Presences"
@@ -23,6 +22,10 @@
 "Global.edit-users";"Edit Users"
 "Global.sign-out";"Sign Out"
 "Global.settings";"Settings"
+"Global.charts";"Charts"
+"Global.chart";"Chart"
+"Global.info";"Info"
+"Global.date-range";"Date range"
 "Base.layout.feedback-button";"Feedback"
 "Base.layout.feedback-modal.title";"Feedback form"
 "Base.layout.feedback-modal.subtitle";"All feedback is welcome. Please let us know your thoughts and suggestions."
@@ -44,6 +47,14 @@
 "Index.index.pdf-download-description";"These scores are derived from the organisation's social media metrics.<br />You can download a copy of the PDF that explains them here:"
 "Index.index.pdf-download-link";"Download metrics"
 "Index.index.pdf-download-link-title";"Download metrics PDF"
+
+"Campaign.index.new-index-table.click-to-expand";"Click to expand"
+"Campaign.view.charts-unavailable";"Sorry, charts are not available on your device"
+
+"Region.view.buttons.edit-region";"Edit Region"
+"Region.view.buttons.manage-countries";"Manage Countries"
+"Region.view.buttons.delete-region";"Delete Region"
+"Region.view.buttons.download-report";"Download Report"
 
 "Region.index.empty-table";"No regions found"
 
@@ -138,3 +149,4 @@
 "Outlandish\SocialMonitor\TableIndex\Header\TotalScore.description";"Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality."
 
 // flash messages
+// date range picker
