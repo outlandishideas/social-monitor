@@ -8,17 +8,12 @@ class EngagementRank extends BadgeRank {
 
     protected static $name = "engagement-rank";
 
-    function __construct($translator)
-    {
-        parent::__construct($translator);
-    }
-
     /**
      * @return mixed
      */
     public function getBadgeName()
     {
-        return Badge_Engagement::getInstance()->getName() . "_rank";
+        return Badge_Engagement::NAME . "_rank";
     }
 
 }

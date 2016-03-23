@@ -2,7 +2,7 @@
 
 namespace Outlandish\SocialMonitor\Command;
 
-use Enum_PresenceType;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -59,8 +59,8 @@ class ReportMetricCommand extends ContainerAwareCommand
         $metric = \Metric_Factory::getMetric($metricName);
 
         if ($input->hasOption('type') && $input->getOption('type')) {
-            /** @var Enum_PresenceType $type */
-            $type = Enum_PresenceType::get($input->getOption('type'));
+            /** @var PresenceType $type */
+            $type = PresenceType::get($input->getOption('type'));
             if (!$type->isMetricApplicable($metric)) {
                 $output->writeln('metric is not applicable for this presence type');
                 return;

@@ -9,6 +9,10 @@ class ConfigController extends BaseController {
 	function indexAction() {
 		$this->view->pageTitle = $this->translator->trans('Config.index.page-title');
 
+		$reachBadge = self::getContainer()->get('badge.reach');
+		$qualityBadge = self::getContainer()->get('badge.quality');
+		$engagementBadge = self::getContainer()->get('badge.engagement');
+
 		$values = array(
 
             (object)array(
@@ -29,8 +33,8 @@ class ConfigController extends BaseController {
                 )
             ),
             (object)array(
-                'title' => Badge_Reach::getInstance()->getTitle(),
-                'description' => Badge_Reach::getInstance()->getDescription(),
+                'title' => $reachBadge->getTitle(),
+                'description' => $reachBadge->getDescription(),
                 'kpis' => array(
                     (object)array(
                         'title' => $this->translator->trans('Config.index.sections.reach.target-audience.title'),
@@ -135,8 +139,8 @@ class ConfigController extends BaseController {
                 )
             ),
             (object)array(
-                'title' => Badge_Engagement::getInstance()->getTitle(),
-                'description' => Badge_Engagement::getInstance()->getDescription(),
+                'title' => $engagementBadge->getTitle(),
+                'description' => $engagementBadge->getDescription(),
                 'kpis' => array(
 					//TODO: Remove this as we currently aren't using ResponseRatio
                     (object)array(
@@ -244,8 +248,8 @@ class ConfigController extends BaseController {
                 )
             ),
             (object)array(
-                'title' => Badge_Quality::getInstance()->getTitle(),
-                'description' => Badge_Quality::getInstance()->getDescription(),
+                'title' => $qualityBadge->getTitle(),
+                'description' => $qualityBadge->getDescription(),
                 'kpis' => array(
                     (object)array(
                         'title' => $this->translator->trans('Config.index.sections.quality.actions-per-day.title'),

@@ -4,22 +4,19 @@ use Outlandish\SocialMonitor\Adapter\TwitterAdapter;
 use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\Tweet;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 class Provider_Twitter extends Provider_Abstract
 {
     protected $connection = null;
 
     protected $kloutApi = null;
-    protected $adapter;
 
     const KLOUT_API_ENDPOINT = 'http://api.klout.com/v2/';
 
-    public function __construct(PDO $db, TwitterAdapter $adapter)
+    public function __construct(PDO $db, TwitterAdapter $adapter, PresenceType $type)
     {
-        parent::__construct($db);
-        $this->type = Enum_PresenceType::TWITTER();
-        $this->tableName = 'twitter_tweets';
-        $this->adapter = $adapter;
+        parent::__construct($db, $adapter, $type, 'twitter_tweets');
         $this->engagementStatement = '(retweet_count)';
         $this->contentColumn = 'text_expanded';
     }
@@ -305,7 +302,7 @@ class Provider_Twitter extends Provider_Abstract
                 'shares' => $r['retweet_count'],
                 'comparable' => $r['retweet_count']
             ];
-            $status->icon = Enum_PresenceType::TWITTER()->getSign();
+            $status->icon = $this->type->getSign();
             $parsed[] = (array)$status;
         }
         return $parsed;

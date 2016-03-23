@@ -5,20 +5,14 @@ use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
 use Outlandish\SocialMonitor\Models\Status;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 class Provider_Linkedin extends Provider_Abstract
 {
 	protected $connection = null;
-    /**
-     * @var LinkedInAdapter
-     */
-    private $adapter;
 
-    public function __construct(PDO $db, LinkedinAdapter $adapter) {
-		parent::__construct($db);
-		$this->type = Enum_PresenceType::LINKEDIN();
-        $this->tableName = 'linkedin_stream';
-        $this->adapter = $adapter;
+    public function __construct(PDO $db, LinkedinAdapter $adapter, PresenceType $type) {
+		parent::__construct($db, $adapter, $type, 'linkedin_stream');
     }
 
 	public function fetchStatusData(Model_Presence $presence)
@@ -238,7 +232,7 @@ class Provider_Linkedin extends Provider_Abstract
                 'likes' => $r['likes'],
                 'comparable' => (($r['likes'] + $r['comments'] * 4) / 5)
             ];
-            $status->icon = Enum_PresenceType::LINKEDIN()->getSign();
+            $status->icon = $this->type->getSign();
             $parsed[] = (array)$status;
         }
 

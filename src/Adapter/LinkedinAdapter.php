@@ -81,7 +81,7 @@ class LinkedinAdapter extends AbstractAdapter
      * @param mixed $since
      * @return Status[]
      */
-    public function getStatuses($pageUID, $since, $handle)
+    public function getStatuses($pageUID, $since, $handle = null)
     {
         $statuses = [];
 

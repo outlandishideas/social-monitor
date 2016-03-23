@@ -109,8 +109,8 @@ abstract class GraphingController extends BaseController {
             $badgeArgs = new stdClass();
             $badgeArgs->range = array(0, 1, 20, 50, 80, 100);
             $badgeArgs->colors = array($colors->grey, $colors->red, $colors->red, $colors->yellow, $colors->green, $colors->green);
-            $badgeArgs->label = $badge::getInstance()->getTitle();
-            $geochart[$badge::getInstance()->getName()] = $badgeArgs;
+            $badgeArgs->label = $badge->getTitle();
+            $geochart[$badge->getName()] = $badgeArgs;
         }
 		$this->assignRgbColors($geochart);
 

@@ -1,5 +1,7 @@
 <?php
 
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
+
 abstract class Model_PresenceFactory
 {
     const TABLE_PRESENCES = 'presences';
@@ -39,13 +41,13 @@ abstract class Model_PresenceFactory
         return $presences ? $presences[0] : null;
 	}
 
-	public static function getPresenceByHandle($handle, Enum_PresenceType $type)
+	public static function getPresenceByHandle($handle, PresenceType $type)
 	{
         $presences = self::fetchPresences("SELECT * FROM `" . self::TABLE_PRESENCES . "` WHERE `handle` = :handle AND `type` = :t", array(':handle' => $handle, ':t' => $type));
         return $presences ? $presences[0] : null;
 	}
 
-    public static function getPresencesByType(Enum_PresenceType $type, array $queryOptions = array())
+    public static function getPresencesByType(PresenceType $type, array $queryOptions = array())
 	{
 		$queryOptions = array_merge(static::$defaultQueryOptions, $queryOptions);
 		$sql = "SELECT * FROM `" . self::TABLE_PRESENCES . "` AS `p` WHERE `type` = :type";
@@ -88,7 +90,7 @@ abstract class Model_PresenceFactory
         return self::fetchPresences($sql, array(":cid" => $campaign));
 	}
 
-	public static function createNewPresence(Enum_PresenceType $type, $handle, $signed_off, $branding)
+	public static function createNewPresence(PresenceType $type, $handle, $signed_off, $branding)
 	{
         // create a new presence
         $stmt = static::$db->prepare("
@@ -139,11 +141,10 @@ abstract class Model_PresenceFactory
 	protected static function instantiatePresence($internals)
 	{
 		if($internals) {
-			$type = Enum_PresenceType::get($internals['type']);
+			$type = PresenceType::get($internals['type']);
 			$provider = $type->getProvider();
 			$metrics = $type->getMetrics();
-			$badges = $type->getBadges();
-			return new Model_Presence(static::$db, $internals, $provider, $metrics, $badges);
+			return new Model_Presence(static::$db, $internals, $provider, $metrics);
 		} else {
 			return null;
 		}

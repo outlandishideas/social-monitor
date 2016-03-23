@@ -5,10 +5,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class Badge_Factory
 {
 	protected static $badges = array();
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+	protected static $container = null;
 
     /** @var PDO */
 	protected static $db = null;
 
+	public static function setContainer($container)
+	{
+		self::$container = $container;
+	}
+	
 	public static function getBadgeNames()
 	{
 		return array_keys(self::getBadges());
@@ -21,10 +28,11 @@ abstract class Badge_Factory
      */
     public static function getBadge($name)
 	{
-		if (!array_key_exists($name, self::getBadges())) {
+		$badges = self::getBadges();
+		if (!array_key_exists($name, $badges)) {
             throw new Exception('Invalid badge name: ' . $name);
 		}
-		return self::$badges[$name];
+		return $badges[$name];
 	}
 
     /**
@@ -34,12 +42,11 @@ abstract class Badge_Factory
 	{
         if (empty(self::$badges)) {
             /** @var Badge_Abstract[] $badges */
-            $db = self::getDb();
             $badges = array(
-                Badge_Reach::getInstance($db),
-				Badge_Engagement::getInstance($db),
-                Badge_Quality::getInstance($db),
-                Badge_Total::getInstance($db)
+				self::$container->get('badge.reach'),
+				self::$container->get('badge.engagement'),
+				self::$container->get('badge.quality'),
+				self::$container->get('badge.total')
             );
             self::$badges = array();
             foreach ($badges as $b) {
@@ -94,7 +101,7 @@ abstract class Badge_Factory
 
         // get all badges, except for total (the total score is not saved)
         $badges = static::getBadges();
-        unset($badges[Badge_Total::getInstance()->getName()]);
+        unset($badges[Badge_Total::NAME]);
 
         $createRow = self::$db->prepare("INSERT INTO `badge_history` (`presence_id`, `daterange`, `date`) VALUES (:presence_id, :date_range, :date)");
         $emptyRow = array();
@@ -228,7 +235,7 @@ abstract class Badge_Factory
         $badgeNames = self::getBadgeNames();
         $rankNames = array_filter(array_map(
                 function($type) {
-                    return $type == Badge_Total::getInstance()->getName() ? null : $type . '_rank';
+                    return $type == Badge_Total::NAME ? null : $type . '_rank';
                 }, $badgeNames));
 		foreach ($data as $row) {
 			foreach ($rankNames as $rank) {

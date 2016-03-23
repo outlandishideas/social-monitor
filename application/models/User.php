@@ -1,6 +1,7 @@
 <?php
 use Carbon\Carbon;
 use Outlandish\SocialMonitor\Models\AccessToken;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 /**
  * @property string|null email
@@ -187,7 +188,7 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 		$this->insertData('user_access', $rows);
 	}
 
-	public function getAccessToken(Enum_PresenceType $type)
+	public function getAccessToken(PresenceType $type)
 	{
 		$stmt = $this->_db->prepare('SELECT token, expires FROM access_tokens WHERE user_id = :user_id AND `presence_type` = :presence_type');
 		$result = $stmt->execute(array(':user_id'=>$this->id, ':presence_type' => $type->getValue()));
@@ -200,13 +201,13 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 		}
 	}
 
-    public function deleteAccessToken(Enum_PresenceType $type)
+    public function deleteAccessToken(PresenceType $type)
     {
         $stmt = $this->_db->prepare('DELETE FROM access_tokens WHERE user_id = :user_id AND presence_type = :presence_type');
         $stmt->execute([':user_id' => $this->id, ':presence_type' => $type->getValue()]);
     }
 
-	public function saveAccessToken(Enum_PresenceType $type, $token, Carbon $expires)
+	public function saveAccessToken(PresenceType $type, $token, Carbon $expires)
 	{
 		$stmt = $this->_db->prepare('
 							INSERT INTO access_tokens (`user_id`, `presence_type`, `token`, `expires`)
@@ -224,8 +225,8 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 
 	public function hasAccessTokensNeedRefreshing()
 	{
-		foreach (Enum_PresenceType::enumValues() as $type) {
-			if ($type->requiresAccessToken()) {
+		foreach (PresenceType::getAll() as $type) {
+			if ($type->getRequiresAccessToken()) {
 				$accessToken = $this->getAccessToken($type);
 				if ($accessToken->expiresSoon()) {
 					return true;

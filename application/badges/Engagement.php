@@ -2,18 +2,11 @@
 
 class Badge_Engagement extends Badge_Abstract
 {
-    protected static $instance;
+	const NAME = 'engagement';
 
-    protected function __construct(PDO $db = null)
-    {
-        parent::__construct($db);
-        $this->metrics = array(
-            Metric_Klout::getInstance(),
-            Metric_FBEngagement::getInstance(),
-            Metric_SinaWeiboEngagement::getInstance(),
-            Metric_InstagramEngagement::getInstance(),
-            Metric_YoutubeEngagement::getInstance(),
-            Metric_LinkedinEngagement::getInstance()
-        );
-    }
+	public function __construct(PDO $db, $metrics)
+	{
+		parent::__construct(self::NAME, $db, $metrics);
+	}
+
 }

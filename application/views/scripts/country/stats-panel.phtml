@@ -1,4 +1,6 @@
 <?php
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
+
 /** @var Model_Country $country */
 $country = $this->country;
 /** @var Model_Presence[] $presences */
@@ -8,7 +10,7 @@ if (!$countryLink) {
     $countryLink = $country->display_name;
 }
 $presenceGroups = array();
-foreach (Enum_PresenceType::enumValues() as $type) {
+foreach (PresenceType::getAll() as $type) {
     $typePresences = $country->getPresencesByType($type);
     $presenceGroups[] = array(
         'type' => $type,
@@ -35,7 +37,7 @@ foreach (Enum_PresenceType::enumValues() as $type) {
         <?php if($group['presences'] && count($group['presences'])): ?>
             <div class="bd-btm presence-list">
             <h4><?php
-                /** @var Enum_PresenceType $type */
+                /** @var PresenceType $type */
                 $type = $group['type']; echo $type->getTitle();
                 ?>
             </h4>

@@ -14,6 +14,8 @@ use RuntimeException;
 
 class FacebookAdapter extends AbstractAdapter
 {
+	/** @var FacebookApp */
+	protected $facebook;
 
     public function __construct(FacebookApp $facebook)
     {

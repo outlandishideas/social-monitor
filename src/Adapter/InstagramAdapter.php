@@ -10,6 +10,8 @@ use Outlandish\SocialMonitor\Models\PresenceMetadata;
 
 class InstagramAdapter extends AbstractAdapter
 {
+	/** @var InstagramApp */
+	protected $instagram;
 
     public function __construct(InstagramApp $instagram)
     {
@@ -51,7 +53,7 @@ class InstagramAdapter extends AbstractAdapter
         return $metadata;
     }
 
-    public function getStatuses($pageUID, $since, $handle)
+    public function getStatuses($pageUID, $since, $handle = null)
     {
         $posts = array();
         $media = null;

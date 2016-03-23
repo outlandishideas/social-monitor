@@ -5,20 +5,14 @@ use Outlandish\SocialMonitor\Adapter\InstagramAdapter;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\Status;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 class Provider_Instagram extends Provider_Abstract
 {
 	protected $connection = null;
-    /**
-     * @var InstagramAdapter
-     */
-    private $adapter;
 
-    public function __construct(PDO $db, InstagramAdapter $adapter) {
-		parent::__construct($db);
-		$this->type = Enum_PresenceType::INSTAGRAM();
-        $this->tableName = 'instagram_stream';
-        $this->adapter = $adapter;
+    public function __construct(PDO $db, InstagramAdapter $adapter, PresenceType $type) {
+		parent::__construct($db, $adapter, $type, 'instagram_stream');
     }
 
 	public function fetchStatusData(Model_Presence $presence)
@@ -272,7 +266,7 @@ class Provider_Instagram extends Provider_Abstract
                 'likes' => $r['likes'],
                 'comparable' => (($r['likes'] + $r['comments'] * 4) / 5)
             ];
-            $status->icon = Enum_PresenceType::INSTAGRAM()->getSign();
+            $status->icon = $this->type->getSign();
             $parsed[] = (array)$status;
         }
         return $parsed;

@@ -15,9 +15,9 @@ class Chart_Compare extends Chart_Abstract {
         $this->yLabel = "KPI Score";
         $this->xColumn = 'date';
         $this->dataColumns = array(
-            Badge_Quality::getInstance()->getName(),
-            Badge_Engagement::getInstance()->getName(),
-            Badge_Reach::getInstance()->getName()
+            Badge_Quality::NAME,
+            Badge_Engagement::NAME,
+            Badge_Reach::NAME
         );
     }
 

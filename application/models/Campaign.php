@@ -1,5 +1,6 @@
 <?php
 use Outlandish\SocialMonitor\Cache\KpiCacheEntry;
+use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 /**
  * @property int audience
@@ -139,10 +140,10 @@ class Model_Campaign extends Model_Base {
 	}
 
 	/**
-	 * @param Enum_PresenceType $type
+	 * @param PresenceType $type
 	 * @return Model_Presence[]
 	 */
-	public function getPresencesByType(Enum_PresenceType $type){
+	public function getPresencesByType(PresenceType $type){
 		$presences = $this->getPresences();
 		return array_filter($presences, function(Model_Presence $a) use ($type) {
 			return $a->getType() == $type;
@@ -216,7 +217,7 @@ class Model_Campaign extends Model_Base {
 			$badgeData = Badge_Factory::badgesData();
 			$badgeNames = Badge_Factory::getBadgeNames();
 
-            $totalBadgeName = Badge_Total::getInstance()->getName();
+            $totalBadgeName = Badge_Total::NAME;
 			$keyedData = array();
 			foreach ($badgeData as $row) {
 				$toAdd = array($row->campaign_id, $row->region_id);

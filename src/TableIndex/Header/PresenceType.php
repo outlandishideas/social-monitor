@@ -2,7 +2,6 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
-use Enum_PresenceType;
 use Model_Presence;
 
 class PresenceType extends Header {
@@ -27,7 +26,6 @@ class PresenceType extends Header {
      */
     public function getValue($model = null)
     {
-        /** @var Enum_PresenceType $region */
         $type = $model->getType();
         return $type ? $type->getTitle() : 'N/A';
     }
