@@ -86,6 +86,11 @@
 
 "Region.index.empty-table";"No regions found"
 
+"Feedback.index.error.missing-name";"Please enter your name."
+"Feedback.index.error.missing-email";"Please enter a valid email address."
+"Feedback.index.error.missing-message";"Please enter your message."
+"Feedback.index.email-subject";"Social Monitor feedback from []"
+
 "User.linkedin-title";"Login to LinkedIn"
 "User.saved";"User saved"
 "User.created";"User created"
