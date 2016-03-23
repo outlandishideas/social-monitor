@@ -525,6 +525,14 @@ app.init = {
 
                 element.attr('href', href);
             }
+		},
+		'#presence-edit-form .presence-types input[type=radio]': function($inputs) {
+			// only show the hint that is relevant to the presence type
+			var $hints = $('.presence-handle-hints .formHint');
+			$inputs.on('change', function() {
+				$hints.hide();
+				$hints.filter('.hint-' + $(this).val()).show();
+			});
 		}
 
 	}

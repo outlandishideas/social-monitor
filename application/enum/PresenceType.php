@@ -149,30 +149,19 @@ class Enum_PresenceType extends Enum_Abstract
 
     public function getProvider() {
         $container = $this->getContainer();
-        /** @var PDO $db */
-        $db = $container->get('pdo');
 		switch ($this->value) {
 			case self::SINA_WEIBO:
-				return new Provider_SinaWeibo($db);
-				break;
+				return $container->get('provider.sinaweibo');
 			case self::FACEBOOK:
-                /** @var EngagementMetric $engagementMetric */
-                $engagementMetric = $container->get('facebook_engagement.weighted');
-                /** @var FacebookAdapter $facebookAdapter */
-                $facebookAdapter = $container->get('adapter.facebook');
-                return new Provider_Facebook($db, $facebookAdapter, $engagementMetric);
-				break;
+				return $container->get('provider.facebook');
 			case self::TWITTER:
 				return $container->get('provider.twitter');
             case self::INSTAGRAM:
-                $instagramAdapter = $container->get('adapter.instagram');
-                return new Provider_Instagram($db, $instagramAdapter);
+				return $container->get('provider.instagram');
             case self::YOUTUBE:
-                $youtubeAdapter = $container->get('adapter.youtube');
-                return new Provider_Youtube($db, $youtubeAdapter);
+				return $container->get('provider.youtube');
             case self::LINKEDIN:
-                $adapter = $container->get('adapter.linkedin');
-                return new Provider_Linkedin($db, $adapter);
+				return $container->get('provider.linkedin');
 			default:
 				throw new \LogicException("Not implemented yet.");
 		}
