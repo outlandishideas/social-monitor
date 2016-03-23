@@ -7,7 +7,7 @@ class Chart_Engagement extends Chart_Badge {
     public function __construct(PDO $db = null)
     {
         parent::__construct($db);
-        $this->yLabel = "Reach Score";
+		$this->yLabel = $this->translate->_(get_class($this).".y-axis-label");
         $this->dataColumns = array(
             Badge_Engagement::NAME
         );

@@ -10,8 +10,8 @@ class Chart_Compare extends Chart_Abstract {
     public function __construct(PDO $db = null)
     {
         parent::__construct($db);
-        $this->xLabel = "Time";
-        $this->yLabel = "KPI Score";
+        $this->xLabel = $this->translate->_("Global.time");
+        $this->yLabel = $this->translate->_("Global.kpi-score");
         $this->xColumn = 'date';
         $this->dataColumns = array(
             Badge_Quality::NAME,

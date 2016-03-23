@@ -8,7 +8,7 @@ class Chart_ResponseTime extends Chart_Abstract {
     {
         return array(
             "type" => 'timeseries',
-            "label" => 'Date',
+            "label" => $this->translate->_("Global.date"),
             "position" => 'outer-center'
         );
     }
@@ -16,7 +16,7 @@ class Chart_ResponseTime extends Chart_Abstract {
     protected function getYAxis()
     {
         return array(
-            "label" => 'Response time in hours',
+            "label" => $this->translate->_(get_class($this).".y-axis-label"),
             "position" => 'outer-middle',
          );
     }
