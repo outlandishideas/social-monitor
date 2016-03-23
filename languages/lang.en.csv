@@ -63,6 +63,7 @@
 
 "Region.index.empty-table";"No regions found"
 
+"Config.index.page-title";"Settings"
 "Config.index.sections.general.title";"General"
 "Config.index.sections.general.feedback.title";"Feedback"
 "Config.index.sections.general.feedback.description";"What email address should feedback be sent to?"
