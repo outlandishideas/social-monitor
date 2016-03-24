@@ -6,10 +6,10 @@ $this->buttons = $this->gatekeeper()->filterAll(array(
 		array('action'=>'manage', 'id'=>$this->region->id),
     '<a class="button-bc button-delete" href="%url%">'.$this->translate("Region.buttons.delete-region").'</a>' =>
 		array('action'=>'delete', 'id'=>$this->region->id),
-    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%">'.$this->translate("Region.buttons.download-report").'</a>' =>
+    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%">'.$this->translate("Global.download-report").'</a>' =>
 		array('action'=>'download-report', 'id'=>$this->region->id),
 ));
 $this->campaign = $this->region;
 $this->controllerName = 'region';
-$this->campaignType = 'Region';
+$this->campaignType = $this->translate('Global.region');
 echo $this->render('partials/campaign-view.phtml');

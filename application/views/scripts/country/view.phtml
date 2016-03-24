@@ -1,11 +1,11 @@
 <?php
 $this->buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button-bc button-edit" href="%url%">Edit Country</a>' => array('action'=>'edit', 'id'=>$this->country->id),
-	'<a class="button-bc button-manage" href="%url%">Manage Presences</a>' => array('action'=>'manage', 'id'=>$this->country->id),
-	'<a class="button-bc button-delete" href="%url%">Delete Country</a>' => array('action'=>'delete', 'id'=>$this->country->id),
-    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>Download Report</a>' => array('action'=>'download-report', 'id'=>$this->country->id),
+	'<a class="button-bc button-edit" href="%url%">'.$this->translate('Country.buttons.edit-country').'</a>' => array('action'=>'edit', 'id'=>$this->country->id),
+	'<a class="button-bc button-manage" href="%url%">'.$this->translate('Country.buttons.manage-presences').'</a>' => array('action'=>'manage', 'id'=>$this->country->id),
+	'<a class="button-bc button-delete" href="%url%">'.$this->translate('Country.buttons.delete-country').'</a>' => array('action'=>'delete', 'id'=>$this->country->id),
+    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>'.$this->translate('Global.download-report').'</a>' => array('action'=>'download-report', 'id'=>$this->country->id),
 ));
 $this->campaign = $this->country;
 $this->controllerName = 'country';
-$this->campaignType = 'Country';
+$this->campaignType = $this->translate('Global.country');
 echo $this->render('partials/campaign-view.phtml');

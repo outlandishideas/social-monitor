@@ -121,7 +121,7 @@ class PresenceController extends GraphingController
 
         $downloader = $this->getContainer()->get('report.downloader');
 
-        $url = $downloader->getUrl(new ReportablePresence($presence), $from, $to);
+        $url = $downloader->getUrl(new ReportablePresence($presence, $this->translator), $from, $to);
 
         do {
             $content = file_get_contents($url);
@@ -162,7 +162,7 @@ class PresenceController extends GraphingController
             $to = clone $oldThen;
         }
 
-        $report = (new ReportGenerator())->generate(new ReportablePresence($presence), $from, $to);
+        $report = (new ReportGenerator())->generate(new ReportablePresence($presence, $this->translator), $from, $to);
         $report->generate();
         $this->view->report = $report;
         $this->view->presence = $presence;

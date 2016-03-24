@@ -6,6 +6,7 @@ use Outlandish\SocialMonitor\Report\ReportablePresence;
 use Outlandish\SocialMonitor\Report\ReportDownloader;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Translation\Translator;
 
 class ReportDownloaderCommand extends ContainerAwareCommand
 {
@@ -22,7 +23,9 @@ class ReportDownloaderCommand extends ContainerAwareCommand
         /** @var ReportDownloader $downloader */
         $downloader = $this->getContainer()->get('report.downloader');
         $presence = \Model_PresenceFactory::getPresenceById(43);
-        $reportable = new ReportablePresence($presence);
+		/** @var Translator $translator */
+		$translator = $this->getContainer()->get('translation.translator');
+        $reportable = new ReportablePresence($presence, $translator);
         $now = new \DateTime();
         $then = clone $now;
         $then->modify("-30 days");

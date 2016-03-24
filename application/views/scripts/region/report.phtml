@@ -15,13 +15,13 @@
 <div class="row">
     <div class="small-12 columns">
         <section class="border-section info-section">
-            <h2>Countries: <?php echo $countriesCount; ?></h2>
+            <h2><?php echo $this->translate('Global.countries')?>: <?php echo $countriesCount; ?></h2>
             <p><?php echo implode(", ", $countries) ?>.</p>
         </section>
     </div>
     <div class="small-12 columns">
         <section class="border-section info-section">
-            <h2>Presences: <?php echo $presenceCount; ?></h2>
+            <h2><?php echo $this->translate('Global.presences')?>: <?php echo $presenceCount; ?></h2>
             <p><?php echo implode(", ", $presences) ?>.</p>
         </section>
     </div>
