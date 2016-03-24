@@ -188,7 +188,7 @@ class PresenceController extends GraphingController
 
         $this->view->pageTitle = 'Comparing '.count($compareData).' Presences';
 	    $this->view->chartOptions = $this->chartOptions();
-	    $this->view->tableMetrics = self::tableMetrics();
+	    $this->view->tableMetrics = $this->tableMetrics();
         $this->view->compareData = $compareData;
     }
 

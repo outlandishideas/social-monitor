@@ -15,12 +15,12 @@ abstract class GraphingController extends BaseController {
 		);
 	}
 
-	protected static function tableMetrics(){
+	protected function tableMetrics(){
 		return array(
-            Metric_Popularity::NAME => 'Percent of Target Audience',
-            Metric_PopularityTime::NAME => 'Time to Target Audience',
-            Metric_ActionsPerDay::NAME => 'Actions Per Day',
-            Metric_ResponseTime::NAME => 'Response Time',
+            Metric_Popularity::NAME => $this->translator->trans('Metric_Popularity.title'),
+            Metric_PopularityTime::NAME => $this->translator->trans('Metric_PopularityTime.title'),
+            Metric_ActionsPerDay::NAME => $this->translator->trans('Metric_ActionsPerDay.title'),
+            Metric_ResponseTime::NAME => $this->translator->trans('Metric_ResponseTime.title'),
 		);
 	}
 
@@ -28,21 +28,21 @@ abstract class GraphingController extends BaseController {
 	{
 		$id = $this->_request->getParam('id');
 		if(!$id) {
-			$this->apiError('Missing ID');
+			$this->apiError($this->translator->trans('Error.missing-id')); //'Missing ID'
 		}
 
 		$dateRange = $this->getRequestDateRange();
 		if (!$dateRange) {
-			$this->apiError('Missing date range');
+			$this->apiError($this->translator->trans('Error.missing-date-range'));
 		}
 
 		$chart = $this->_request->getParam('chart');
 		if (!$chart) {
-			$this->apiError('Missing chart type');
+			$this->apiError($this->translator->trans('Error.missing-chart-type'));//'Missing chart type');
 		}
 
 		if(!in_array($chart, Chart_Factory::getChartNames())) {
-			$this->apiError('Chart type doesn\'t exist');
+			$this->apiError($this->translator->trans('Error.chart-doesnt-exist')); //'Chart type doesn\'t exist');
 		}
 	}
 

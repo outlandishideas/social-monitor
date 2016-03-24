@@ -39,7 +39,7 @@ class GroupController extends CampaignController {
 		$this->view->titleIcon = Model_Group::ICON_TYPE;
         $this->view->badgePartial = $this->badgeDetails($group);
 		$this->view->chartOptions = self::chartOptions();
-		$this->view->tableMetrics = self::tableMetrics();
+		$this->view->tableMetrics = $this->tableMetrics();
         $this->view->group = $group;
         $this->view->pageTitle = 'SBU: ' . $group->display_name;
         $this->view->allCampaigns = Model_Group::fetchAll();
