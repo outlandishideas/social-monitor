@@ -133,6 +133,11 @@
 "User.reset-password.subject";"Password reset"
 "User.reset-password.message";"'<p>Hi %name%,</p><p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p><p>If you did not request a reset, please ignore this email.</p><p>Otherwise, click this link to reset your password <a href="%link%">Reset password</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
 
+"Error.404.page-title";"Page not found"
+"Error.404.message";"Please check the url"
+"Error.500.page-title";"Application error"
+"Error.500.message";"Sorry, something has gone wrong"
+
 "Config.index.page-title";"Settings"
 "Config.index.sections.general.title";"General"
 "Config.index.sections.general.feedback.title";"Feedback"
