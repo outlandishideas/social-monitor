@@ -329,8 +329,7 @@ class FetchController extends BaseController
         $index = 0;
         /** @var Model_Presence[] $presences */
         foreach ($presences as $presence) {
-			$logPrefix = '[' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
-				'[' . $presence->getId() . ']';
+			$logPrefix = "[{$index}/{$presenceCount}] [{$presence->getType()->getTitle()}] [{$presence->getId()}]";
             //forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
             $db->closeConnection();
             $db->getConnection();
@@ -339,23 +338,22 @@ class FetchController extends BaseController
             $lastUpdatedString = $presence->getLastUpdated();
             $lastUpdated = strtotime($lastUpdatedString);
             if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
-                $this->log('Update info ' . $logPrefix . ' [' . $presence->getHandle() . '] [' . $presence->getName() . ']' .
-					'[' . $presence->getEngagementValue() . ']');
+				$message = " {$logPrefix} [{$presence->getHandle()}] [{$presence->getName()}] [{$presence->getEngagementValue()}]";
+                $this->log($this->translator->trans('Fetch.log.update-info.start', ['%message%' => $message]));
                 try {
                     // update using provider
                     $presence->update();
                     // save to DB
                     $presence->save();
 
-					$this->log('Updated info ' . $logPrefix . ' [' . $presence->getHandle() . '] [' . $presence->getName() . ']' .
-						'[' . $presence->getEngagementValue() . ']');
+					$this->log($this->translator->trans('Fetch.log.update-info.success', ['%message%' => $message]));
                 } catch (Exception $e) {
-                    $this->log("Error updating presence info: " . $e->getMessage());
+                    $this->log($this->translator->trans('Fetch.log.update-info.error', ['%message%' => $e->getMessage()]));
                 }
                 $this->touchLock($lockName);
                 $this->log('touchLock()');
             } else {
-				$this->log('Not updating info ' . $logPrefix . ' [' . $presence->getHandle() . '] [' . $presence->getName() . '] as last updated '.$lastUpdatedString);
+				$this->log($this->translator->trans('Fetch.log.update-info.skip', ['%message%' => $message, '%lastupdated%' => $lastUpdatedString]));
 			}
         }
     }
@@ -377,14 +375,14 @@ class FetchController extends BaseController
             $db->closeConnection();
             $db->getConnection();
             $index++;
-            $this->log('Fetch statuses [' . $index . '/' . $presenceCount . '] [' . $presence->getType()->getTitle() . '] ' .
-                '[' . $presence->getId() . '] [' . $presence->getHandle() . '] [' . $presence->getName() . ']');
+			$message = "[{$index}/{$presenceCount}] [{$presence->getType()->getTitle()}] [{$presence->getId()}] [{$presence->getHandle()}] [{$presence->getName()}]";
+            $this->log($this->translator->trans('Fetch.log.fetch-statues.start', ['%message%' => $message]));
             try {
                 $count = $presence->fetch();
                 $presence->save();
-                $this->log('Inserted ' . $count);
+                $this->log($this->translator->trans('Fetch.log.fetch-statues.success',['%count%' => $count]));
             } catch (Exception $e) {
-                $this->log("Error: " . $e->getMessage());
+                $this->log($this->translator->trans('Fetch.log.fetch-statues.error', ['%message%' => $e->getMessage()]));
             }
             $this->touchLock($lockName);
         }

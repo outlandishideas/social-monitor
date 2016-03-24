@@ -127,6 +127,13 @@
 "Fetch.log.lock-acquire.fail";"Stale lock found last active %seconds% seconds ago: %lockname%"
 "Fetch.log.presence-history.start";"Updating presence history"
 "Fetch.log.presence-history.error";"Error: %message%"
+"Fetch.log.update-info.start";"Update info %message%"
+"Fetch.log.update-info.success";"Updated info %message%"
+"Fetch.log.update-info.error";"Error updating presence info: %message%"
+"Fetch.log.update-info.skip";"Not updating info %message% as last updated %lastupdated%"
+"Fetch.log.fetch-statues.start";"Fetch statuses %message%"
+"Fetch.log.fetch-statues.success";"Inserted %count%"
+"Fetch.log.fetch-statues.error";"Error: %message%"
 
 "Config.index.page-title";"Settings"
 "Config.index.sections.general.title";"General"
