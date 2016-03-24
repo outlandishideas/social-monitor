@@ -92,6 +92,10 @@
 "Region.edit-all.error.display-name-missing";"Please enter a display name for []"
 "Region.edit-all.success-message";"[] regions saved"
 
+"Region.delete.success-message";"Region deleted"
+
+"Region.graph-data.not-found";"Region could not be found"
+
 "Region.manage.page-title";"Manage Countries"
 "Region.manage.success-message";"Region countries updated"
 
@@ -105,14 +109,19 @@
 "Country.buttons.manage-presences";"Manage Presences"
 "Country.buttons.view-country";"View Country"
 
+"Country.edit.success-message";"Country saved"
 "Country.edit.page-title";"Edit Country"
 "Country.new.page-title";"New Country"
 
 "Country.edit-all.page-title";"Edit All Countries"
 "Country.edit-all.success-message";"[] countries saved"
+"Country.edit-all.error.display-name-missing";"Please enter a display name for []"
+"Country.edit-all.error.country-missing";"Please select a country for []"
 
 "Country.manage.page-title";"Manage Presences"
 "Country.manage.success-message";"Country presences updated"
+"Country.delete.success-message";"Country deleted"
+"Country.graph-data.not-found";"Country could not be found"
 
 "Feedback.index.error.missing-name";"Please enter your name."
 "Feedback.index.error.missing-email";"Please enter a valid email address."
@@ -120,6 +129,22 @@
 "Feedback.index.email-subject";"Social Monitor feedback from []"
 
 "Campaign.report.page-title";"Social Media Monitor Report"
+
+"Group.new.page-title";"New SBU"
+"Group.edit.page-title";"Edit SBU"
+"Group.edit.success-message";"SBU saved"
+"Group.index.empty-table";"No SBUs Found"
+"Group.edit-all.page-title";"Edit All SBUs"
+"Group.edit-all.error.display-name-missing";"Please enter a display name for []"
+"Group.edit-all.success-message";"[] SBUs saved"
+"Group.manage.page-title";"Manage Presences"
+"Group.manage.success-message";"SBU presences updated"
+"Group.buttons.edit-sbu";"Edit SBU"
+"Group.buttons.delete-sbu";"Delete SBU"
+"Group.buttons.manage-presences";"Manage Presences"
+"Group.buttons.view-sbu";"View SBU"
+"Group.delete.success-message";"SBU deleted"
+"Group.graph-data.not-found";"SBU could not be found"
 
 "Presence.compare.page-title";"Comparing %count% presences"
 "Presence.new.page-title";"New presence"
@@ -432,11 +457,11 @@
 "Error.display-name-exists";"Display name already taken"
 "Error.select-country";"Please select a country"
 "Error.display-name-missing";"Please enter a display name"
-"Error.display-name-exists";"Display name already taken"
 "Error.select-country";"Please select a country"
 "Error.missing-id";"Missing ID"
 "Error.missing-chart-type";"Missing chart type"
 "Error.chart-doesnt-exist";"Chart doesn't exist"
+"Error.invalid-delete";"Incorrect usage of delete"
 
 "Success.email-confirmed";"Thank you for confirming your email. You can now login."
 "Success.linkedin-login";"Linkedin Account connected"

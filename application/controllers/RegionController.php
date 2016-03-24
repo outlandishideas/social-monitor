@@ -335,10 +335,10 @@ class RegionController extends CampaignController
 
 			$this->invalidateTableCache();
 
-            $this->flashMessage('Region saved');
+            $this->flashMessage($this->translator->trans('Region.delete.success-message'));
     		$this->_helper->redirector->gotoSimple('index');
         } else {
-            $this->flashMessage('Incorrect usage of delete');
+            $this->flashMessage($this->translator->trans('Error.invalid-delete'));
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
 		}
 	}
@@ -361,7 +361,7 @@ class RegionController extends CampaignController
         /** @var $region Model_Region */
         $region = Model_Region::fetchById($this->_request->getParam('id'));
         if(!$region) {
-            $this->apiError('Region could not be found');
+            $this->apiError($this->translator->trans('Region.graph-data.not-found'));
         }
 
         $dateRange = $this->getRequestDateRange();

@@ -1,12 +1,12 @@
 <?php
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a class="button-bc" href="%url%">Cancel</a>', array('controller'=>'group', 'action'=>'index'), null, true);
+$cancel = $this->gatekeeper()->filter('<a class="button-bc" href="%url%">' . $this->translate('Global.cancel') . '</a>', array('controller'=>'group', 'action'=>'index'), null, true);
 if ($cancel) {
     $bottomBar[] = $cancel;
 }
-$bottomBar[] = '<button type="submit" class="button-bc">Save</button>';
+$bottomBar[] = '<button type="submit" class="button-bc">' . $this->translate('Global.save') . '</button>';
 $topBar = $bottomBar;
-array_unshift($topBar, '<div id="search-table">Loading data...</div>');
+array_unshift($topBar, '<div id="search-table">' . $this->translate('Global.loading-data') . '</div>');
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
@@ -18,8 +18,8 @@ array_unshift($topBar, '<div id="search-table">Loading data...</div>');
     <table class="text dtable standard" id="all-groups">
         <thead>
             <tr>
-                <th data-name="name" data-sort="forminput">Display name</th>
-                <th data-name="audience" data-sort="fuzzy-numeric">Audience Size</th>
+                <th data-name="name" data-sort="forminput"><?php echo $this->translate('Global.display-name') ?></th>
+                <th data-name="audience" data-sort="fuzzy-numeric"><?php echo $this->translate('Global.audience-size') ?></th>
             </tr>
         </thead>
         <tbody>
