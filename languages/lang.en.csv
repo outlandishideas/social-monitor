@@ -4,6 +4,7 @@
 "Global.add-new";"Add New"
 "Global.edit-all";"Edit All"
 "Global.edit";"Edit"
+"Global.display-name";"Display name"
 "Global.delete";"Delete"
 "Global.download-csv";"Download CSV"
 
@@ -24,6 +25,7 @@
 "Global.edit-users";"Edit Users"
 "Global.sign-out";"Sign Out"
 "Global.settings";"Settings"
+"Global.select";"Select"
 "Global.charts";"Charts"
 "Global.chart";"Chart"
 "Global.info";"Info"
@@ -85,6 +87,18 @@
 "Region.manage.success-message";"Region countries updated"
 
 "Region.index.empty-table";"No regions found"
+
+"Country.index.empty-table";"No countries found"
+"Country.index.region-filter.placeholder";"Filter by region"
+
+"Country.buttons.edit-country";"Edit Country"
+"Country.buttons.manage-presences";"Manage Presences"
+"Country.buttons.view-country";"View Country"
+
+"Country.edit.available-audience-size";"Available Audience Size"
+"Country.edit.country-population";"Country Population"
+"Country.edit.internet-penetration";"Internet Penetration"
+
 
 "Feedback.index.error.missing-name";"Please enter your name."
 "Feedback.index.error.missing-email";"Please enter a valid email address."
