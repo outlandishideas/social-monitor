@@ -153,6 +153,9 @@
 "Group.delete.success-message";"SBU deleted"
 "Group.graph-data.not-found";"SBU could not be found"
 
+"Presence.handle";"Handle"
+"Presence.type";"Type"
+
 "Presence.compare.page-title";"Comparing %count% presences"
 "Presence.new.page-title";"New presence"
 "Presence.edit.page-title";"Edit presence"
@@ -174,7 +177,6 @@
 "Presence.buttons.delete-presence";"Delete Presence"
 
 "Presence.edit.label.type";"Type"
-"Presence.edit.label.handle";"Handle"
 "Presence.edit.label.size";"Size"
 "Presence.edit.label.signed-off";"Signed Off"
 "Presence.edit.label.branding";"Branding"
@@ -193,6 +195,9 @@
 "Presence.edit.access-token.has-user.message";"This presence is currently using the access token from the following user: <strong>%name%</strong>"
 "Presence.edit.access-token.no-user.message";"This presence does not currently have an access token and so cannot be fetched."
 "Presence.edit.access-token.button";"Use your access token"
+
+"Presence.compare.button.create-sbu";"Create SBU"
+"Presence.compare.chart-title";"Scores for the last 30 days:"
 
 "User.linkedin-title";"Login to LinkedIn"
 "User.saved";"User saved"

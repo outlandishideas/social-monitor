@@ -6,7 +6,7 @@
 
 <?php
     $links = $this->gatekeeper()->filterAll(array(
-        '<a class="button add" href="%url%"><span class="icon-plus"></span>  Create SBU</a>' => array('controller'=>'group','action' => 'new', 'presences'=>implode(',', array_keys($this->compareData))),
+        '<a class="button add" href="%url%"><span class="icon-plus"></span>  '.$this->translate->trans('Presence.compare.button.create-sbu').'</a>' => array('controller'=>'group','action' => 'new', 'presences'=>implode(',', array_keys($this->compareData))),
     ), null, true);
     if ($links) {
         echo '<div class="buttons">' . implode('', $links) . '</div>';
@@ -15,7 +15,7 @@
 
 <?php if (empty($this->compareData)) : ?>
 
-    <h3>No presences found</h3>
+    <h3><?php $this->translate()->trans('Presence.index.table-empty'); ?></h3>
 
 <?php else : ?>
 
@@ -39,13 +39,13 @@
     </div>
 
 	<div class="section-title">
-		<h2><span class="icon-bar-chart icon-large"></span> Scores for the last 30 days:</h2>
+		<h2><span class="icon-bar-chart icon-large"></span> <?php $this->translate()->trans('Presence.compare.chart-title'); ?></h2>
 	</div>
 
     <table class="text">
 
         <tr>
-            <th>Handle</th>
+            <th><?php $this->translate()->trans('Presence.handle'); ?></th>
             <?php foreach ($this->tableMetrics as $key=>$label) : ?>
                 <th><?php echo $label; ?></th>
             <?php endforeach; ?>
