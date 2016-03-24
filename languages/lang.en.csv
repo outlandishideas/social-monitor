@@ -434,6 +434,9 @@
 "Error.display-name-missing";"Please enter a display name"
 "Error.display-name-exists";"Display name already taken"
 "Error.select-country";"Please select a country"
+"Error.missing-id";"Missing ID"
+"Error.missing-chart-type";"Missing chart type"
+"Error.chart-doesnt-exist";"Chart doesn't exist"
 
 "Success.email-confirmed";"Thank you for confirming your email. You can now login."
 "Success.linkedin-login";"Linkedin Account connected"
