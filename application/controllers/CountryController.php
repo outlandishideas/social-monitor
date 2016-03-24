@@ -210,7 +210,7 @@ class CountryController extends CampaignController {
 					$table = $objectCacheManager->getCountriesTable();
 					$objectCacheManager->invalidateObjectCache($table->getIndexName());
 
-                    $this->flashMessage('Country saved');
+                    $this->flashMessage($this->translator->trans('Country.edit.success-message'));
 					$this->_helper->redirector->gotoRoute(array('action' => 'view', 'id' => $editingCountry->id));
 				} catch (Exception $ex) {
 					if (strpos($ex->getMessage(), '23000') !== false) {
@@ -300,10 +300,18 @@ class CountryController extends CampaignController {
                 $editingCountry->fromArray($c);
 
                 if (!$c['display_name']) {
-                    $errorMessages[] = 'Please enter a display name for '. $display_name;
+                    $errorMessages[] = str_replace(
+						'[]',
+						$display_name,
+						$this->translator->trans('Country.edit-all.error.display-name-missing')
+					);
                 }
                 if (!$c['country']) {
-                    $errorMessages[] = 'Please select a country for '. $display_name;
+                    $errorMessages[] = str_replace(
+						'[]',
+						$display_name,
+						$this->translator->trans('Country.edit-all.error.country-missing')
+					);
                 }
 
                 $editedCountries[] = $editingCountry;
@@ -376,10 +384,10 @@ class CountryController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 			$country->delete();
-            $this->flashMessage('Country deleted');
+            $this->flashMessage($this->translator->trans('Country.delete.success-message'));
     		$this->_helper->redirector->gotoSimple('index');
         } else {
-            $this->flashMessage('Incorrect usage of delete');
+            $this->flashMessage($this->translator->trans('Error.invalid-delete'));
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
 		}
 	}
@@ -395,7 +403,7 @@ class CountryController extends CampaignController {
 		/** @var $presence Model_Presence */
 		$presence = Model_Country::fetchById($this->_request->getParam('id'));
 		if(!$presence) {
-			$this->apiError('Country could not be found');
+			$this->apiError($this->translator->trans('Country.graph-data.not-found'));
 		}
 
 		$dateRange = $this->getRequestDateRange();
