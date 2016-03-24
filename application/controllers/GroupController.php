@@ -19,7 +19,7 @@ class GroupController extends CampaignController {
 
         $rows = $objectCacheManager->getGroupIndexRows($this->_request->getParam('force'));
 
-		$this->view->pageTitle = 'SBUs';
+		$this->view->pageTitle = $this->translator->trans('Global.sbus');
 		$this->view->groups = $table->getTableData();
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
@@ -41,7 +41,7 @@ class GroupController extends CampaignController {
 		$this->view->chartOptions = self::chartOptions();
 		$this->view->tableMetrics = $this->tableMetrics();
         $this->view->group = $group;
-        $this->view->pageTitle = 'SBU: ' . $group->display_name;
+        $this->view->pageTitle = $this->translator->trans('Global.sbu'). ': ' . $group->display_name;
         $this->view->allCampaigns = Model_Group::fetchAll();
 	}
 
@@ -134,7 +134,7 @@ class GroupController extends CampaignController {
         /** @var $group Model_Presence */
         $group = Model_Group::fetchById($this->_request->getParam('id'));
         if(!$group) {
-            $this->apiError('Group could not be found');
+			$this->apiError($this->translator->trans('Group.graph-data.not-found'));
         }
 
         $dateRange = $this->getRequestDateRange();
@@ -154,7 +154,7 @@ class GroupController extends CampaignController {
     {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
-        $this->view->pageTitle = 'New SBU';
+        $this->view->pageTitle = $this->translator->trans('Group.new.page-title');
 
         $presences = array();
         $presenceIds = $this->_request->getParam('presences');
@@ -191,7 +191,7 @@ class GroupController extends CampaignController {
 
             $errorMessages = array();
             if (!$this->_request->getParam('display_name')) {
-                $errorMessages[] = 'Please enter a display name';
+                $errorMessages[] = $this->translator->trans('Error.display-name-missing');
             }
 
             if ($errorMessages) {
@@ -210,11 +210,11 @@ class GroupController extends CampaignController {
                     if($p){
                         $editingGroup->assignPresences($p);
                     }
-                    $this->flashMessage('SBU saved');
+                    $this->flashMessage($this->translator->trans('Group.edit.success-message'));
                     $this->_helper->redirector->gotoRoute(array('action' => 'view'));
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->flashMessage('Display name already taken', 'error');
+                        $this->flashMessage($this->translator->trans('Error.display-name-exists'), 'error');
                     } else {
                         $this->flashMessage($ex->getMessage(), 'error');
                     }
@@ -224,7 +224,7 @@ class GroupController extends CampaignController {
 
 
         $this->view->editingGroup = $editingGroup;
-        $this->view->pageTitle = 'Edit SBU';
+		$this->view->pageTitle = $this->translator->trans('Group.edit.page-title');
     }
 
 
@@ -236,7 +236,7 @@ class GroupController extends CampaignController {
     public function editAllAction()
     {
 
-        $this->view->pageTitle = 'Edit All SBUs';
+        $this->view->pageTitle = $this->translator->trans('Group.edit-all.page-title');
         $this->view->groups = Model_Group::fetchAll();
 
         if ($this->_request->isPost()) {
@@ -263,7 +263,11 @@ class GroupController extends CampaignController {
                 $editingGroup->fromArray($g);
 
                 if (!$g['display_name']) {
-                    $errorMessages[] = 'Please enter a display name for '. $display_name;
+                    $errorMessages[] = str_replace(
+						'[]',
+						$display_name,
+						$this->translator->trans('Group.edit-all.error.display-name-missing')
+					);
                 }
 
                 $editedGroups[] = $editingGroup;
@@ -280,12 +284,16 @@ class GroupController extends CampaignController {
                         $group->save();
                     }
 
-                    $this->flashMessage(count($editedGroups) . ' SBUs saved');
+                    $this->flashMessage(str_replace(
+						'[]',
+						count($editedGroups),
+						$this->translator->trans('Group.edit-all.success-message')
+					));
                     $this->_helper->redirector->gotoSimple('index');
 
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->flashMessage('Display name already taken', 'error');
+                        $this->flashMessage($this->translator->trans('Error.display-name-exists'), 'error');
                     } else {
                         $this->flashMessage($ex->getMessage(), 'error');
                     }
@@ -312,11 +320,11 @@ class GroupController extends CampaignController {
                 }
             }
             $group->assignPresences($presenceIds);
-            $this->flashMessage('SBU presences updated');
+            $this->flashMessage($this->translator->trans('Group.manage.success-message'));
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 
-        $this->view->pageTitle = 'Manage Presences: ' .  $group->display_name;
+        $this->view->pageTitle = $this->translator->trans('Group.manage.page-title') . ': ' . $group->display_name;
         $this->view->group = $group;
         $this->view->presences = $this->managePresencesList();
 	}
@@ -331,10 +339,10 @@ class GroupController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 			$group->delete();
-            $this->flashMessage('SBU deleted');
+            $this->flashMessage($this->translator->trans('Group.delete.success-message'));
     		$this->_helper->redirector->gotoSimple('index');
         } else {
-            $this->flashMessage('Incorrect usage of delete');
+            $this->flashMessage($this->translator->trans('Error.invalid-delete'));
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
 		}
 	}
