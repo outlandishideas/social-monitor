@@ -35,7 +35,7 @@ class PresenceController extends GraphingController
 
 		$rows = $objectCacheManager->getPresenceIndexRows($this->_request->getParam('force'));
 
-        $this->view->pageTitle = 'Presences';
+        $this->view->pageTitle = $this->translator->trans('Global.presences');
         $this->view->presences = $table->getTableData();
         $this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
@@ -60,10 +60,11 @@ class PresenceController extends GraphingController
 		if ($accessToken) {
 			$presence->user = $user;
 			$presence->save();
-			$this->flashMessage("Presence was assigned to user.");
+			$message = $this->translator->trans('Success.presence-assigned-user');
 		} else {
-			$this->flashMessage("Presence could not be assigned to user");
+			$message = $this->translator->trans('Error.presence-not-assigned-user');
 		}
+		$this->flashMessage($message);
 
 		$this->_helper->redirector->gotoRoute(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->id));
 	}
@@ -186,7 +187,7 @@ class PresenceController extends GraphingController
             );
         }
 
-        $this->view->pageTitle = 'Comparing '.count($compareData).' Presences';
+        $this->view->pageTitle = $this->translator->trans('Presence.compare.page-title', ['%count%' => count($compareData)]);
 	    $this->view->chartOptions = $this->chartOptions();
 	    $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
@@ -201,7 +202,7 @@ class PresenceController extends GraphingController
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
         $this->view->editType = true;
-		$this->view->pageTitle = 'New presence';
+		$this->view->pageTitle = $this->translator->trans('Presence.new.page-title');
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -241,10 +242,10 @@ class PresenceController extends GraphingController
             $size = $this->_request->getParam('size');
 			$userId = $this->_request->getParam('user_id');
 			if (!$type) {
-				$errorMessages[] = 'Please choose a type';
+				$errorMessages[] = $this->translator->trans('Error.missing-presence-type'); //'Please choose a type';
 			}
 			if (!$handle) {
-				$errorMessages[] = 'Please enter a handle';
+				$errorMessages[] = $this->translator->trans('Error.missing-presence-handle'); //'Please enter a handle';
 			}
 
             if (!$presence->id) {
@@ -279,7 +280,7 @@ class PresenceController extends GraphingController
 					$errorMessages[] = $ex->getMessage();
 				} catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $errorMessages[] = 'Presence already exists';
+                        $errorMessages[] = $this->translator->trans('Error.presence-exists'); //'Presence already exists';
                     } else {
                         $errorMessages[] = $ex->getMessage();
                     }
@@ -295,7 +296,7 @@ class PresenceController extends GraphingController
 				$table = $objectCacheManager->getPresencesTable();
 				$objectCacheManager->invalidateObjectCache($table->getIndexName());
 
-				$this->flashMessage('Presence saved');
+				$this->flashMessage($this->translator->trans('Success.presence-saved')); //'Presence saved');
 
 				//if new presence created, update presence index cache so that it will appear in the presence index page
 				if ($this->view->isNew) {
@@ -312,7 +313,7 @@ class PresenceController extends GraphingController
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->groups = Model_Group::fetchAll();
 		$this->view->presence = $presence;
-		$this->view->pageTitle = 'Edit Presence';
+		$this->view->pageTitle = $this->translator->trans('User.edit.page-title');//'Edit Presence';
 	}
 
 	/**
@@ -326,10 +327,10 @@ class PresenceController extends GraphingController
 
 		if ($this->_request->isPost()) {
 			$presence->delete();
-            $this->flashMessage('Presence deleted');
+            $this->flashMessage($this->translator->trans('Success.presence-deleted')); //'Presence deleted');
             $this->_helper->redirector->gotoSimple('index');
 		} else {
-            $this->flashMessage('Incorrect usage of delete');
+            $this->flashMessage($this->translator->trans('Error.presence-deleted'));
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 	}
@@ -344,7 +345,7 @@ class PresenceController extends GraphingController
 
 		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
 		if(!$presence) {
-			$this->apiError('Presence could not be found');
+			$this->apiError($this->translator->trans('Error.presence-not-found')); //'Presence could not be found');
 		}
 
 		$dateRange = $this->getRequestDateRange();
@@ -362,7 +363,7 @@ class PresenceController extends GraphingController
 	public function toggleResponseNeededAction() {
 		$id = $this->_request->getParam('id');
 		if (!$id) {
-			$this->apiError('Missing ID');
+			$this->apiError($this->translator->trans('Error.missing-id'));//'Missing ID');
 		}
 		$stmt = $this->db()->prepare('UPDATE facebook_stream set needs_response = !needs_response WHERE id = :id');
 		$stmt->execute(array(':id'=>$id));

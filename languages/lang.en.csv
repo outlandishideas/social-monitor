@@ -121,6 +121,9 @@
 
 "Campaign.report.page-title";"Social Media Monitor Report"
 
+"Presence.compare.page-title";"Comparing %count% presences"
+"Presence.new.page-title";"New presence"
+"Presence.edit.page-title";"Edit presence"
 
 "User.linkedin-title";"Login to LinkedIn"
 "User.saved";"User saved"
@@ -428,6 +431,9 @@
 "Error.display-name-missing";"Please enter a display name"
 "Error.display-name-exists";"Display name already taken"
 "Error.select-country";"Please select a country"
+"Error.display-name-missing";"Please enter a display name"
+"Error.display-name-exists";"Display name already taken"
+"Error.select-country";"Please select a country"
 
 "Success.email-confirmed";"Thank you for confirming your email. You can now login."
 "Success.linkedin-login";"Linkedin Account connected"
@@ -436,4 +442,7 @@
 "Success.logged-out";"Logged out"
 "Success.user-deleted";"User deleted"
 "Success.permissions-saved";"User permissions saved"
+"Success.presence-assigned-user";"Presence was assigned to user"
+"Success.presence-saved";"Presence saved"
+"Success.presence-deleted";"Presence deleted"
 // date range picker
