@@ -1,12 +1,12 @@
 <?php
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$this->translate('Global.cancel').'</a>', array('controller'=>'country', 'action'=>'index'), null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$this->translate()->trans('Global.cancel').'</a>', array('controller'=>'country', 'action'=>'index'), null, true);
 if ($cancel) {
     $bottomBar[] = $cancel;
 }
-$bottomBar[] = '<button type="submit" class="button-bc">'.$this->translate('Global.save').'</button>';
+$bottomBar[] = '<button type="submit" class="button-bc">'.$this->translate()->trans('Global.save').'</button>';
 $topBar = $bottomBar;
-array_unshift($topBar, '<div id="search-table">'.$this->translate('Global.loading-data').'</div>');
+array_unshift($topBar, '<div id="search-table">'.$this->translate()->trans('Global.loading-data').'</div>');
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
@@ -18,11 +18,11 @@ array_unshift($topBar, '<div id="search-table">'.$this->translate('Global.loadin
     <table class="text dtable" id="all-countries">
         <thead>
             <tr>
-                <th data-name="name" data-sort="forminput"><?php echo $this->translate('Global.display-name')?></th>
-                <th data-name="country" data-sort="forminput"><?php echo $this->translate('Global.country')?></th>
-                <th data-name="audience" data-sort="fuzzy-numeric"><?php echo $this->translate('Global.audience-size')?></th>
-                <th data-name="population" data-sort="fuzzy-numeric"><?php echo $this->translate('Global.population')?></th>
-                <th data-name="penetration" data-sort="fuzzy-numeric"><?php echo $this->translate('Global.internet-penetration')?></th>
+                <th data-name="name" data-sort="forminput"><?php echo $this->translate()->trans('Global.display-name')?></th>
+                <th data-name="country" data-sort="forminput"><?php echo $this->translate()->trans('Global.country')?></th>
+                <th data-name="audience" data-sort="fuzzy-numeric"><?php echo $this->translate()->trans('Global.audience-size')?></th>
+                <th data-name="population" data-sort="fuzzy-numeric"><?php echo $this->translate()->trans('Global.population')?></th>
+                <th data-name="penetration" data-sort="fuzzy-numeric"><?php echo $this->translate()->trans('Global.internet-penetration')?></th>
             </tr>
         </thead>
         <tbody>

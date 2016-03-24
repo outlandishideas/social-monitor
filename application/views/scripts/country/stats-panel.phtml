@@ -22,14 +22,14 @@ foreach (PresenceType::getAll() as $type) {
 <div class="badge-small" data-country-id="<?php echo $country->id; ?>" data-badge>
     <h3><?php echo $countryLink; ?></h3>
     <div class="badge-score bd-btm">
-        <h4><span data-badge-title></span> <?php echo $this->translate('Global.score')?></h4>
+        <h4><span data-badge-title></span> <?php echo $this->translate()->trans('Global.score')?></h4>
         <div class="score-value" data-badge-score></div>
         <div class="score-bar">
             <div data-badge-bar></div>
         </div>
     </div>
     <div class="bd-btm">
-        <h4><?php echo $this->translate('Global.presences')?></h4>
+        <h4><?php echo $this->translate()->trans('Global.presences')?></h4>
         <div class="score-value"><?php echo count($presences); ?></div>
     </div>
 

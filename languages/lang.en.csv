@@ -278,6 +278,13 @@
 "Config.index.settings-saved";"Settings saved"
 "Config.index.invalid-values";"Invalid values. Please check before saving"
 
+"Domain.index.paragraph-1";"This shows the list of all domains linked to by tweets or facebook statuses. Click the links to see more usage information and the specific URLs."
+"Domain.index.paragraph-2";"You can say whether or not a domain belongs to the British Council by toggling the checkbox on the right, and clicking 'save'. Note that if you reorder the columns before saving, any changes will be lost."
+"Domain.table.header.domain";"Domain"
+"Domain.table.header.links";"Links"
+"Domain.table.header.relevant";"British Council"
+"Domain.view.linked-to-from";"%sites% linked to from %statuses%"
+
 
 "Badge_Engagement.title";"Engagement"
 "Badge_Engagement.description";"<p>The Engagement KPI provides an overall score for how well the presence, country or SBU engages with its audience. This score combines the following metrics:</p><ul><li>The Klout Score for this presence (Twitter Only).</li><li>The Facebook Engagement score for this presence (Facebook Only).</li><li>The Sina Weibo Engagement score for this presence (Sina Weibo Only).</li><li>The Instagram Engagement score for this presence (Instagram Only).</li><li>The Youtube Engagement score for this presence (Youtube Only).</li><li>The Linkedin Engagement score for this presence (Linkedin Only).</li></ul>"

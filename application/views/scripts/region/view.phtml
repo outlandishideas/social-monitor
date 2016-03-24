@@ -1,15 +1,15 @@
 <?php
 $this->buttons = $this->gatekeeper()->filterAll(array(
-    '<a class="button-bc button-edit" href="%url%">'.$this->translate("Region.buttons.edit-region").'</a>' =>
+    '<a class="button-bc button-edit" href="%url%">'.$this->translate()->trans("Region.buttons.edit-region").'</a>' =>
 		array('action'=>'edit', 'id'=>$this->region->id),
-    '<a class="button-bc button-manage" href="%url%">'.$this->translate("Region.buttons.manage-countries").'</a>' =>
+    '<a class="button-bc button-manage" href="%url%">'.$this->translate()->trans("Region.buttons.manage-countries").'</a>' =>
 		array('action'=>'manage', 'id'=>$this->region->id),
-    '<a class="button-bc button-delete" href="%url%">'.$this->translate("Region.buttons.delete-region").'</a>' =>
+    '<a class="button-bc button-delete" href="%url%">'.$this->translate()->trans("Region.buttons.delete-region").'</a>' =>
 		array('action'=>'delete', 'id'=>$this->region->id),
-    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%">'.$this->translate("Global.download-report").'</a>' =>
+    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%">'.$this->translate()->trans("Global.download-report").'</a>' =>
 		array('action'=>'download-report', 'id'=>$this->region->id),
 ));
 $this->campaign = $this->region;
 $this->controllerName = 'region';
-$this->campaignType = $this->translate('Global.region');
+$this->campaignType = $this->translate()->trans('Global.region');
 echo $this->render('partials/campaign-view.phtml');
