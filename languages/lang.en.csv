@@ -7,13 +7,17 @@
 "Global.display-name";"Display name"
 "Global.delete";"Delete"
 "Global.download-csv";"Download CSV"
+"Global.penetration";"penetration"
 "Global.internet-penetration";"Internet Penetration"
 "Global.country-population";"Country Population"
 "Global.available-audience-size";"Available Audience Size"
 "Global.additional-info";"Additional Info"
+"Global.download-report";"Download Report"
+"Global.containing-region";"Part of the [] region"
 
 "Global.home";"Home"
 "Global.audience-size";"Audience Size"
+"Global.digital-population";"Digital Population"
 "Global.region";"Region"
 "Global.regions";"Regions"
 "Global.country";"Country"
@@ -78,7 +82,6 @@
 "Region.buttons.edit-region";"Edit Region"
 "Region.buttons.manage-countries";"Manage Countries"
 "Region.buttons.delete-region";"Delete Region"
-"Region.buttons.download-report";"Download Report"
 "Region.buttons.view-region";"View Region"
 
 "Region.edit.page-title";"Edit Region"
@@ -97,6 +100,7 @@
 "Country.index.region-filter.placeholder";"Filter by region"
 
 "Country.buttons.edit-country";"Edit Country"
+"Country.buttons.delete-country";"Delete Country"
 "Country.buttons.manage-presences";"Manage Presences"
 "Country.buttons.view-country";"View Country"
 
@@ -107,9 +111,6 @@
 
 "Country.manage.page-title";"Manage Presences"
 "Country.manage.success-message";"Country presences updated"
-
-"Country.report.digital-population";"Digital Population"
-"Country.report.containing-region";"Part of the [] region"
 
 "Feedback.index.error.missing-name";"Please enter your name."
 "Feedback.index.error.missing-email";"Please enter a valid email address."

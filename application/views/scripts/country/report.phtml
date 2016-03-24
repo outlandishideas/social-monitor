@@ -13,10 +13,10 @@
     <div class="small-12 columns">
         <section class="border-section info-section">
             <h2><?php echo $this->translate('Global.additional-info')?></h2>
-            <p><?php echo str_replace('[]', $region->display_name, $this->translate('Country.report.containing-region'))?></p>
+            <p><?php echo str_replace('[]', $region->display_name, $this->translate('Global.containing-region'))?></p>
             <p><?php echo $this->translate('Global.available-audience-size')?>: <?php $country->getTargetAudience(); ?></p>
             <p><?php echo $this->translate('Global.country-population')?>: <?php echo number_format($country->population); ?></p>
-            <p><?php echo $this->translate('Country.report.digital-population')?>:
+            <p><?php echo $this->translate('Global.digital-population')?>:
 				<?php echo number_format(round($country->getDigitalPopulation())) . ' (' . $country->penetration . '% penetration)'; ?>
 			</p>
         </section>
