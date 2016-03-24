@@ -55,11 +55,11 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
         $likesPerUsers = $presence->getMetricValue($this);
-        return self::convertToScore($likesPerUsers);
+        return $this->convertToScore($likesPerUsers);
     }
 
-    public static function convertToScore($raw) {
-        $score = $raw / static::$engagementTarget;
+    public function convertToScore($raw) {
+        $score = $raw / $this->engagementTarget;
         if($score > 1) {
             return 100;
         } else {

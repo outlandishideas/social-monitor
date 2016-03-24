@@ -287,71 +287,6 @@ class Model_Presence
         return $this->linkedin_engagement;
     }
 
-    /**
-     * @param $monthlyAverage bool - set to true to get a weighted average over the past month
-     * @return mixed
-     */
-    public function getFacebookEngagementScore($monthlyAverage = false)
-    {
-        if($monthlyAverage) {
-            return Metric_FBEngagement::convertToScore($this->getMetricValue('facebook_engagement'));
-        } else {
-            return Metric_FBEngagement::convertToScore(floatval($this->facebook_engagement));
-        }
-    }
-
-    /**
-     * @param $monthlyAverage bool - set to true to get a weighted average over the past month
-     * @return float|int
-     */
-    public function getSinaWeiboEngagementScore($monthlyAverage = false)
-    {
-        if($monthlyAverage) {
-            return Metric_SinaWeiboEngagement::convertToScore($this->getMetricValue('sina_weibo_engagement'));
-        } else {
-            return Metric_SinaWeiboEngagement::convertToScore(floatval($this->sina_weibo_engagement));
-        }
-    }
-
-    /**
-     * @param $monthlyAverage bool - set to true to get a weighted average over the past month
-     * @return mixed
-     */
-    public function getInstagramEngagementScore($monthlyAverage = false)
-    {
-        if($monthlyAverage) {
-            return Metric_InstagramEngagement::convertToScore($this->getMetricValue('instagram_engagement'));
-        } else {
-            return Metric_InstagramEngagement::convertToScore(floatval($this->instagram_engagement));
-        }
-    }
-
-    /**
-     * @param $monthlyAverage bool - set to true to get a weighted average over the past month
-     * @return mixed
-     */
-    public function getLinkedinEngagementScore($monthlyAverage = false)
-    {
-        if($monthlyAverage) {
-            return Metric_LinkedinEngagement::convertToScore($this->getMetricValue('linkedin_engagement'));
-        } else {
-            return Metric_LinkedinEngagement::convertToScore(floatval($this->linkedin_engagement));
-        }
-    }
-
-    /**
-     * @param $monthlyAverage bool - set to true to get a weighted average over the past month
-     * @return mixed
-     */
-    public function getYoutubeEngagementScore($monthlyAverage = false)
-    {
-        if($monthlyAverage) {
-            return Metric_YoutubeEngagement::convertToScore($this->getMetricValue('youtube_engagement'));
-        } else {
-            return Metric_YoutubeEngagement::convertToScore(floatval($this->youtube_engagement));
-        }
-    }
-
     public function getPresenceSign()
     {
         return $this->getType()->getSign();
@@ -938,7 +873,46 @@ class Model_Presence
         $this->provider->testAdapter($this);
     }
 
-    /**
+	/**
+	 * Gets the raw engagement score, based on the appropriate engagement metric from this presence's list of metrics
+	 * @param $monthlyAverage bool - set to true to get a weighted average over the past month
+	 * @return mixed
+	 */
+	public function getEngagementScoreRaw($monthlyAverage = false)
+	{
+		$engagementMetric = null;
+		foreach ($this->metrics as $metric) {
+			if ($metric instanceof Metric_AbstractEngagement) {
+				$engagementMetric = $metric;
+				break;
+			}
+		}
+
+		if ($engagementMetric) {
+			switch($this->getType()) {
+				case PresenceType::FACEBOOK();
+					$property = 'facebook_engagement';
+					break;
+				case PresenceType::SINA_WEIBO();
+					$property = 'sina_weibo_engagement';
+					break;
+				case PresenceType::INSTAGRAM();
+					$property = 'instagram_engagement';
+					break;
+				case PresenceType::LINKEDIN();
+					$property = 'linkedin_engagement';
+					break;
+				default:
+					return 0;
+			}
+			$metricValue = $monthlyAverage ? $this->getMetricValue($property) : floatval($this->$property);
+			return $engagementMetric->convertToScore($metricValue);
+		}
+
+		return 0;
+	}
+
+	/**
      * @return EngagementScore
      */
     public function getEngagementScore()

@@ -209,7 +209,7 @@ class Provider_Linkedin extends Provider_Abstract
      */
     function getEngagementScore($presence)
     {
-        return new EngagementScore('Linkedin engagement score', 'linkedin', $presence->getLinkedinEngagementScore(true));
+        return new EngagementScore('Linkedin engagement score', 'linkedin', $presence->getEngagementScoreRaw(true));
     }
 
     protected function parseStatuses($raw)
