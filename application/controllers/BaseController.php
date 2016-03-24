@@ -78,9 +78,9 @@ class BaseController extends Zend_Controller_Action
         if (!$this->view->user && !in_array($this->_request->getActionName(), static::$publicActions)) {
             $this->auth->clearIdentity();
             if (PHP_SAPI == 'cli') {
-                die ('Not authorised');
+                die ($this->translator->trans('Error.not-authorized')); //'Not authorised');
             } elseif ($this->_request->isXmlHttpRequest()) {
-                $this->apiError('Not logged in');
+                $this->apiError($this->translator->trans('Error.not-logged-in'));
             } else {
                 $this->forward('login', 'user');
             }
@@ -94,10 +94,6 @@ class BaseController extends Zend_Controller_Action
 
     public function init()
     {
-//		if (APPLICATION_ENV == 'prod') {
-//			$this->getResponse()
-//				->setHeader('Expires', gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
-//		}
         $this->config = Zend_Registry::get('config');
 
         $this->view->bodyClass = $this->_request->getActionName() . 'Action '.$this->_request->getControllerName().'Controller';
@@ -169,7 +165,7 @@ class BaseController extends Zend_Controller_Action
         $gatekeeper = $this->view->gatekeeper();
         $level = $gatekeeper->getRequiredUserLevel($controller, $action);
         if ($this->view->user && !$this->view->user->canPerform($level, $controller, $action, $id)) {
-            $message = 'Not allowed: Insufficient access rights';
+            $message = $this->translator->trans('Error.not-allowed');
             if (APPLICATION_ENV != 'prod') {
                 $message .= ' (' . implode('/', array_filter(array($controller, $action, $id))) . ')';
             }
@@ -202,7 +198,7 @@ class BaseController extends Zend_Controller_Action
         if (!$type) {
             $type = $this->_request->getControllerName();
         }
-        $this->flashMessage($type . ' not found', 'error');
+        $this->flashMessage($this->translator->trans('Error.data-not-found', ['%type%' => $type]), 'error');
         $this->_helper->redirector->gotoSimple('');
     }
 
@@ -543,14 +539,14 @@ class BaseController extends Zend_Controller_Action
     protected function createFetchLockWarningMessage($seconds)
     {
         $elements = $this->secondsIntoFriendlyTime($seconds);
-        $message = 'Fetch process has been inactive for ' . implode(', ', $elements) . ', indicating something has gone wrong. ';
+        $message = $this->translator->trans('Error.lock-error.message', ['%time%' => implode(', ', $elements)]);
         $urlArgs = array('controller' => 'fetch', 'action' => 'clear-lock');
         $url = $this->view->gatekeeper()->filter('%url%', $urlArgs);
         if ($url) {
-            $message .= 'Click <a href="' . $url . '">here</a> to clear the lock manually.';
+            $message .= ' ' . $this->translator->trans('Error.lock-error.with-url', ['%url%' => $url]);
             return $message;
         } else {
-            $message .= 'Please log in to clear the lock.';
+            $message .= ' ' . $this->translator->trans('Error.lock-error.without-url');
             return $message;
         }
     }
@@ -592,7 +588,7 @@ class BaseController extends Zend_Controller_Action
         if ($user && $user->hasAccessTokensNeedRefreshing()) {
             $urlArgs = ['controller' => 'user', 'action' => 'edit-self'];
             $url = $this->view->gatekeeper()->filter('%url%', $urlArgs);
-            $message = "One or more of your access tokens are set to expire soon. <a href=\"{$url}\">Click here</a> to refresh these tokens.";
+            $message = $this->translator->trans('Error.access-token.refresh', ['%url%' => $url]);
             $this->flashMessage($message, 'inaction');
         }
     }
