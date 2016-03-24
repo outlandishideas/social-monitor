@@ -187,7 +187,7 @@ class PresenceController extends GraphingController
             );
         }
 
-        $this->view->pageTitle = $this->translator->trans('Presence.compare.title', ['%count%' => count($compareData)]);
+        $this->view->pageTitle = $this->translator->trans('Presence.compare.page-title', ['%count%' => count($compareData)]);
 	    $this->view->chartOptions = $this->chartOptions();
 	    $this->view->tableMetrics = self::tableMetrics();
         $this->view->compareData = $compareData;
@@ -202,7 +202,7 @@ class PresenceController extends GraphingController
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
         $this->view->editType = true;
-		$this->view->pageTitle = $this->translator->trans('Presence.new.title');
+		$this->view->pageTitle = $this->translator->trans('Presence.new.page-title');
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -313,7 +313,7 @@ class PresenceController extends GraphingController
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->groups = Model_Group::fetchAll();
 		$this->view->presence = $presence;
-		$this->view->pageTitle = $this->translator->trans('User.edit.title');//'Edit Presence';
+		$this->view->pageTitle = $this->translator->trans('User.edit.page-title');//'Edit Presence';
 	}
 
 	/**

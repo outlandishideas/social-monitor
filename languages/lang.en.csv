@@ -105,9 +105,9 @@
 "Feedback.index.error.missing-message";"Please enter your message."
 "Feedback.index.email-subject";"Social Monitor feedback from []"
 
-"Presence.compare.title";"Comparing %count% presences"
-"Presence.new.title";"New presence"
-"Presence.edit.title";"Edit presence"
+"Presence.compare.page-title";"Comparing %count% presences"
+"Presence.new.page-title";"New presence"
+"Presence.edit.page-title";"Edit presence"
 
 "User.linkedin-title";"Login to LinkedIn"
 "User.saved";"User saved"
