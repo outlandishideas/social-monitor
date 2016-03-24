@@ -14,6 +14,9 @@
 "Global.additional-info";"Additional Info"
 "Global.download-report";"Download Report"
 "Global.containing-region";"Part of the [] region"
+"Global.target-date";"Target date"
+"Global.gain-per-day";"Required gain per day"
+"Global.content";"Content"
 
 "Global.home";"Home"
 "Global.audience-size";"Audience Size"
@@ -52,6 +55,8 @@
 "Global.register-user";"Register user"
 "Global.new-user";"New User"
 "Global.population";"Population"
+"Global.edit-presence";"Edit presence"
+""
 
 "Base.layout.feedback-button";"Feedback"
 "Base.layout.feedback-button";"Feedback"
@@ -149,6 +154,22 @@
 "Presence.compare.page-title";"Comparing %count% presences"
 "Presence.new.page-title";"New presence"
 "Presence.edit.page-title";"Edit presence"
+"Presence.index.table-empty";"No presences found"
+
+"Presence.view.info.presence-type";"This is a %type% presence"
+
+"Presence.view.info.presence.score";"Yesterday's %type% Engagement score: %score%%"
+"Presence.view.info.presence.average-score";"Monthly Average %type% Engagement score: %score%%"
+"Presence.view.info.twitter.score";"Yesterday's Klout score: %score%%"
+"Presence.view.info.twitter.average-score";"Monthly Average Klout score: %score%%"
+
+"Presence.view.info.owner-name";"This presence contributes to the statistics for %link%"
+"Presence.view.info.target-audience";"The target audience size is %size%"
+"Presence.view.info.current-audience";"The target audience size is %size%"
+"Presence.view.info.time-to-target";"At the current rate, the target will be reached by %date%"
+"Presence.view.info.daily-gains";"The following daily gains are required to meet the target audience size:"
+"Presence.buttons.edit-presence";"Edit Presence"
+"Presence.buttons.delete-presence";"Delete Presence"
 
 "User.linkedin-title";"Login to LinkedIn"
 "User.saved";"User saved"
