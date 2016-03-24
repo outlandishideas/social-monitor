@@ -437,6 +437,7 @@
 "Error.missing-id";"Missing ID"
 "Error.missing-chart-type";"Missing chart type"
 "Error.chart-doesnt-exist";"Chart doesn't exist"
+"Error.domain.access-error";"You do not have sufficient access to change this data"
 
 "Success.email-confirmed";"Thank you for confirming your email. You can now login."
 "Success.linkedin-login";"Linkedin Account connected"
@@ -448,4 +449,6 @@
 "Success.presence-assigned-user";"Presence was assigned to user"
 "Success.presence-saved";"Presence saved"
 "Success.presence-deleted";"Presence deleted"
+"Success.domain.update";"Domains updated"
+
 // date range picker
