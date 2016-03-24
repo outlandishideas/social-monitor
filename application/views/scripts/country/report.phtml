@@ -12,16 +12,18 @@
 <div class="row">
     <div class="small-12 columns">
         <section class="border-section info-section">
-            <h2>Additonal Info</h2>
-            <p>Part of the <?php echo $region->display_name; ?> region</p>
-            <p>Available audience size: <?php $country->getTargetAudience(); ?></p>
-            <p>Country population: <?php echo number_format($country->population); ?></p>
-            <p>Digital population: <?php echo number_format(round($country->getDigitalPopulation())) . ' (' . $country->penetration . '% penetration)'; ?>
+            <h2><?php echo $this->translate('Global.additional-info')?></h2>
+            <p><?php echo str_replace('[]', $region->display_name, $this->translate('Country.report.containing-region'))?></p>
+            <p><?php echo $this->translate('Global.available-audience-size')?>: <?php $country->getTargetAudience(); ?></p>
+            <p><?php echo $this->translate('Global.country-population')?>: <?php echo number_format($country->population); ?></p>
+            <p><?php echo $this->translate('Country.report.digital-population')?>:
+				<?php echo number_format(round($country->getDigitalPopulation())) . ' (' . $country->penetration . '% penetration)'; ?>
+			</p>
         </section>
     </div>
     <div class="small-12 columns">
         <section class="border-section info-section">
-            <h2>Presences: <?php echo $presenceCount; ?></h2>
+            <h2><?php echo $this->translate('Global.presences')?>: <?php echo $presenceCount; ?></h2>
             <p><?php echo implode(", ", $presences) ?>.</p>
         </section>
     </div>

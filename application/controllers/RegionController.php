@@ -93,7 +93,7 @@ class RegionController extends CampaignController
 
         $downloader = $this->getContainer()->get('report.downloader');
 
-        $url = $downloader->getUrl(new ReportableRegion($region), $from, $to);
+        $url = $downloader->getUrl(new ReportableRegion($region, $this->translator), $from, $to);
 
         do {
             $content = file_get_contents($url);
@@ -133,7 +133,7 @@ class RegionController extends CampaignController
             $to = clone $oldThen;
         }
 
-        $report = (new ReportGenerator())->generate(new ReportableRegion($region), $from, $to);
+        $report = (new ReportGenerator())->generate(new ReportableRegion($region, $this->translator), $from, $to);
         $report->generate();
         $this->view->report = $report;
         $this->view->region = $region;
@@ -186,7 +186,7 @@ class RegionController extends CampaignController
 
             $errorMessages = array();
             if (!$this->_request->getParam('display_name')) {
-                $errorMessages[] = $this->translator->trans('Region.edit.error.display-name-missing');
+                $errorMessages[] = $this->translator->trans('Error.display-name-missing');
             }
 
             if ($errorMessages) {
@@ -203,7 +203,7 @@ class RegionController extends CampaignController
                     $this->_helper->redirector->gotoRoute(array('action' => 'view', 'id' => $editingRegion->id));
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->flashMessage($this->translator->trans('Region.edit.error.display-name-exists'), 'error');
+                        $this->flashMessage($this->translator->trans('Error.display-name-exists'), 'error');
                     } else {
                         $this->flashMessage($ex->getMessage(), 'error');
                     }
