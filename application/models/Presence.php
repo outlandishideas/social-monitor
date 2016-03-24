@@ -876,7 +876,7 @@ class Model_Presence
 	/**
 	 * Gets the raw engagement score, based on the appropriate engagement metric from this presence's list of metrics
 	 * @param $monthlyAverage bool - set to true to get a weighted average over the past month
-	 * @return mixed
+	 * @return EngagementScore
 	 */
 	public function getEngagementScore($monthlyAverage = false)
 	{
@@ -901,7 +901,7 @@ class Model_Presence
 			return new EngagementScore($title, str_replace('_', '-', $type), $score);
 		}
 
-		return 0;
+		return null;
 	}
 
     public function getEngagementValue() {
