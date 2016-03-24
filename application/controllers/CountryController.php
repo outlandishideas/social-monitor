@@ -42,7 +42,7 @@ class CountryController extends CampaignController {
         $this->view->tableHeaders = $objectCacheManager->getCountriesTable()->getHeaders();
         $this->view->sortCol = Name::getName();
 		$this->view->regions = Model_Region::fetchAll();
-		$this->view->pageTitle = 'Countries';
+		$this->view->pageTitle = $this->translator->trans('Global.countries');
 	}
 
     public function statsPanelAction()

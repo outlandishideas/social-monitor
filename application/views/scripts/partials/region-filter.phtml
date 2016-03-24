@@ -1,5 +1,5 @@
 <select id="filter-region" class="button-bc" name="filter-region">
-    <option value="">Filter by region</option>
+    <option value=""><?php echo $this->translate('Country.index.region-filter.placeholder')?></option>
     <?php foreach ($this->regions as $region) : ?>
         <option value="<?php echo $region->id; ?>"><?php echo $region->display_name; ?></option>
     <?php endforeach; ?>

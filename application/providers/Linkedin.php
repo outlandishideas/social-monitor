@@ -203,15 +203,6 @@ class Provider_Linkedin extends Provider_Abstract
     }
 
 
-    /**
-     * @param Model_Presence $presence
-     * @return EngagementScore
-     */
-    function getEngagementScore($presence)
-    {
-        return new EngagementScore('Linkedin engagement score', 'linkedin', $presence->getLinkedinEngagementScore(true));
-    }
-
     protected function parseStatuses($raw)
     {
         if(!$raw || !count($raw)) {

@@ -212,13 +212,6 @@ abstract class Provider_Abstract
     }
 
     /**
-     * @param Model_Presence $presence
-     * @return EngagementScore
-     */
-    abstract function getEngagementScore($presence);
-
-
-    /**
      * @param string $type
      * @param array $links map of status_id=>links
      */

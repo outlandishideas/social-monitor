@@ -6,7 +6,7 @@ $buttons = $this->gatekeeper()->filterAll(array(
 ));
 /** @var Model_Presence $presence */
 $presence = $this->presence;
-$presenceType = strtolower($presence->getType()->getTitle());
+$presenceType = $presence->getType()->getTitle();
 $owner = $presence->getOwner();
 $ownerUrl = null;
 $targetSize = $presence->getTargetAudience();
@@ -117,26 +117,14 @@ if ($sizeDiff > 0) {
                     <?php endif; ?>
                     <?php echo $presence->getName(); ?>
                 </h4>
-                <p>This is a <a href="<?php echo $presence->page_url; ?>" target="_blank"><?php echo $presenceType; ?> <span class="icon-external-link"></span></a> presence</p>
-                <?php if ($presence->isForFacebook()) : ?>
-                    <p>Yesterday's Facebook Engagement score: <?php echo $presence->getFacebookEngagementScore(); ?>%</p>
-                    <p>Monthly Average Facebook Engagement score: <?php echo $presence->getFacebookEngagementScore(true); ?>%</p>
-                <?php elseif ($presence->isForTwitter()) : ?>
-                    <p>Yesterday's Klout score: <?php echo $presence->klout_score; ?>%</p>
-                    <p>Monthly Average Klout score: <?php echo $presence->getMetricValue('klout_score'); ?>%</p>
-                <?php elseif ($presence->isForSinaWeibo()) : ?>
-                    <p>Yesterday's Sina Weibo Engagement score: <?php echo $presence->getSinaWeiboEngagementScore(); ?>%</p>
-                    <p>Monthly Average Sina Weibo Engagement score: <?php echo $presence->getSinaWeiboEngagementScore(true); ?>%</p>
-                <?php elseif ($presence->isForInstagram()) : ?>
-                    <p>Yesterday's Instagram Engagement score: <?php echo $presence->getInstagramEngagementScore(); ?>%</p>
-                    <p>Monthly Average Instagram Engagement score: <?php echo $presence->getInstagramEngagementScore(true); ?>%</p>
-                <?php elseif ($presence->isForYoutube()) : ?>
-                    <p>Yesterday's Youtube Engagement score: <?php echo $presence->getYoutubeEngagementScore(); ?>%</p>
-                    <p>Monthly Average Youtube Engagement score: <?php echo $presence->getYoutubeEngagementScore(true); ?>%</p>
-                <?php elseif ($presence->isForLinkedin()) : ?>
-                    <p>Yesterday's Linkedin Engagement score: <?php echo $presence->getLinkedinEngagementScore(); ?>%</p>
-                    <p>Monthly Average Linkedin Engagement score: <?php echo $presence->getLinkedinEngagementScore(true); ?>%</p>
-                <?php endif; ?>
+                <p>This is a <a href="<?php echo $presence->page_url; ?>" target="_blank"><?php echo strtolower($presenceType); ?> <span class="icon-external-link"></span></a> presence</p>
+				<?php if ($presence->isForTwitter()) : ?>
+					<p>Yesterday's Klout score: <?php echo $presence->klout_score; ?>%</p>
+					<p>Monthly Average Klout score: <?php echo $presence->getMetricValue('klout_score'); ?>%</p>
+				<?php else : ?>
+					<p>Yesterday's <?php echo $presenceType; ?> Engagement score: <?php echo $presence->getEngagementScore()->getScore(); ?>%</p>
+					<p>Monthly Average <?php echo $presenceType; ?> Engagement score: <?php echo $presence->getEngagementScore(true)->getScore(); ?>%</p>
+				<?php endif; ?>
                 <?php if ($ownerUrl) : ?>
                     <p>This presence contributes to the statistics for <a href="<?php echo $ownerUrl; ?>"><?php echo $owner->display_name; ?></a></p>
                     <p>The target audience size is <?php echo number_format($targetSize); ?></p>
@@ -166,7 +154,7 @@ if ($sizeDiff > 0) {
                 <?php endif; ?>
             </div>
             <div class="content" id="statuses">
-                <div class="statusesDisplay <?php echo str_replace(' ', '_', $presenceType); ?>" data-presence-id="<?php echo $presence->id; ?>">
+                <div class="statusesDisplay <?php echo str_replace(' ', '_', strtolower($presenceType)); ?>" data-presence-id="<?php echo $presence->id; ?>">
                     <?php
                     $buttons = array();
                     array_unshift($buttons, '<div id="search-table"></div>');

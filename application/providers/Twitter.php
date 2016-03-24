@@ -308,12 +308,4 @@ class Provider_Twitter extends Provider_Abstract
         return $parsed;
     }
 
-    /**
-     * @param Model_Presence $presence
-     * @return EngagementScore
-     */
-    function getEngagementScore($presence)
-    {
-        return new EngagementScore('Klout score', 'klout', $presence->getKloutScore());
-    }
 }

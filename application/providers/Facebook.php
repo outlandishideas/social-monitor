@@ -499,15 +499,6 @@ class Provider_Facebook extends Provider_Abstract
         return $postIds;
     }
 
-    /**
-     * @param Model_Presence $presence
-     * @return EngagementScore
-     */
-    public function getEngagementScore($presence)
-    {
-        return new EngagementScore('Facebook engagement score', 'facebook', $presence->getFacebookEngagementScore(true));
-    }
-
     protected function parseStatuses($raw)
     {
         if(!$raw || !count($raw)) {
