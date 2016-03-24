@@ -116,6 +116,18 @@
 "User.reset-password.subject";"Password reset"
 "User.reset-password.message";"'<p>Hi %name%,</p><p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p><p>If you did not request a reset, please ignore this email.</p><p>Otherwise, click this link to reset your password <a href="%link%">Reset password</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
 
+"Fetch.log.finished";"Finished"
+"Fetch.log.updating-facebook-actors.start";"Updating facebook actors"
+"Fetch.log.updating-facebook-actors.fail";"Failed to update facebook actors: %message%"
+"Fetch.log.updating-facebook-actors.success";"Updated %count% actors"
+"Fetch.log.updating-domains.start";"Updating linked domains"
+"Fetch.log.updating-domains.success";"Inserted %count% domains"
+"Fetch.log.start";"Starting %action% process on %start%"
+"Fetch.log.lock-acquire";"Process already running and last active %seconds% seconds ago"
+"Fetch.log.lock-acquire.fail";"Stale lock found last active %seconds% seconds ago: %lockname%"
+"Fetch.log.presence-history.start";"Updating presence history"
+"Fetch.log.presence-history.error";"Error: %message%"
+
 "Config.index.page-title";"Settings"
 "Config.index.sections.general.title";"General"
 "Config.index.sections.general.feedback.title";"Feedback"
