@@ -18,7 +18,7 @@ class RegionController extends CampaignController
         );
     }
 
-    protected static function tableMetrics(){
+    protected function tableMetrics(){
         return array(
             Metric_PopularityTime::NAME => 'Time to Target Audience',
             Metric_ActionsPerDay::NAME => 'Actions Per Day',
