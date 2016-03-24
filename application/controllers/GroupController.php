@@ -75,7 +75,7 @@ class GroupController extends CampaignController {
 
         $downloader = $this->getContainer()->get('report.downloader');
 
-        $url = $downloader->getUrl(new ReportableGroup($group), $from, $to);
+        $url = $downloader->getUrl(new ReportableGroup($group, $this->translator), $from, $to);
 
         do {
             $content = file_get_contents($url);
@@ -115,7 +115,7 @@ class GroupController extends CampaignController {
             $to = clone $oldThen;
         }
 
-        $report = (new ReportGenerator())->generate(new ReportableGroup($group), $from, $to);
+        $report = (new ReportGenerator())->generate(new ReportableGroup($group, $this->translator), $from, $to);
         $report->generate();
         $this->view->report = $report;
         $this->view->group = $group;
