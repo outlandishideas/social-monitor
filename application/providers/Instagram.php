@@ -237,15 +237,6 @@ class Provider_Instagram extends Provider_Abstract
         return $postIds;
     }
 
-    /**
-     * @param Model_Presence $presence
-     * @return EngagementScore
-     */
-    function getEngagementScore($presence)
-    {
-        return new EngagementScore('Instagram engagement score', 'instagram', $presence->getEngagementScoreRaw(true));
-    }
-
     protected function parseStatuses($raw)
     {
         if(!$raw || !count($raw)) {

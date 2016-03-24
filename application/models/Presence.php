@@ -878,8 +878,12 @@ class Model_Presence
 	 * @param $monthlyAverage bool - set to true to get a weighted average over the past month
 	 * @return mixed
 	 */
-	public function getEngagementScoreRaw($monthlyAverage = false)
+	public function getEngagementScore($monthlyAverage = false)
 	{
+		if ($this->isForTwitter()) {
+			return new EngagementScore('Klout score', 'klout', $this->getKloutScore());
+		}
+
 		$engagementMetric = null;
 		foreach ($this->metrics as $metric) {
 			if ($metric instanceof Metric_AbstractEngagement) {
@@ -889,36 +893,16 @@ class Model_Presence
 		}
 
 		if ($engagementMetric) {
-			switch($this->getType()) {
-				case PresenceType::FACEBOOK();
-					$property = 'facebook_engagement';
-					break;
-				case PresenceType::SINA_WEIBO();
-					$property = 'sina_weibo_engagement';
-					break;
-				case PresenceType::INSTAGRAM();
-					$property = 'instagram_engagement';
-					break;
-				case PresenceType::LINKEDIN();
-					$property = 'linkedin_engagement';
-					break;
-				default:
-					return 0;
-			}
+			$type = $this->getType()->getValue();
+			$title = $this->getType()->getTitle() . ' engagement score';
+			$property = $type . '_engagement';
 			$metricValue = $monthlyAverage ? $this->getMetricValue($property) : floatval($this->$property);
-			return $engagementMetric->convertToScore($metricValue);
+			$score = $engagementMetric->convertToScore($metricValue);
+			return new EngagementScore($title, str_replace('_', '-', $type), $score);
 		}
 
 		return 0;
 	}
-
-	/**
-     * @return EngagementScore
-     */
-    public function getEngagementScore()
-    {
-        return $this->provider->getEngagementScore($this);
-    }
 
     public function getEngagementValue() {
         switch($this->getType()) {

@@ -122,8 +122,8 @@ if ($sizeDiff > 0) {
 					<p>Yesterday's Klout score: <?php echo $presence->klout_score; ?>%</p>
 					<p>Monthly Average Klout score: <?php echo $presence->getMetricValue('klout_score'); ?>%</p>
 				<?php else : ?>
-					<p>Yesterday's <?php echo $presenceType; ?> Engagement score: <?php echo $presence->getEngagementScoreRaw(); ?>%</p>
-					<p>Monthly Average <?php echo $presenceType; ?> Engagement score: <?php echo $presence->getEngagementScoreRaw(true); ?>%</p>
+					<p>Yesterday's <?php echo $presenceType; ?> Engagement score: <?php echo $presence->getEngagementScore()->getScore(); ?>%</p>
+					<p>Monthly Average <?php echo $presenceType; ?> Engagement score: <?php echo $presence->getEngagementScore(true)->getScore(); ?>%</p>
 				<?php endif; ?>
                 <?php if ($ownerUrl) : ?>
                     <p>This presence contributes to the statistics for <a href="<?php echo $ownerUrl; ?>"><?php echo $owner->display_name; ?></a></p>

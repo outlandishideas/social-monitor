@@ -319,13 +319,4 @@ class Provider_SinaWeibo extends Provider_Abstract
 		return $parsed;
 	}
 
-	/**
-	 * @param Model_Presence $presence
-	 * @return EngagementScore
-	 */
-	function getEngagementScore($presence)
-	{
-		return new EngagementScore('Sina Weibo engagement score', 'sina-weibo', $presence->getEngagementScoreRaw(true));
-	}
-
 }
