@@ -1,22 +1,22 @@
 <?php
 $pageId = "Region.index.";
 $buttons = array(
-	'<a class="button-bc" href="%url%">' . $this->translate('Global.add-new') . '</a>' => array('action'=>'new'),
+	'<a class="button-bc" href="%url%">' . $this->translate()->trans('Global.add-new') . '</a>' => array('action'=>'new'),
 );
 if ($this->rows) {
-	$buttons['<a class="button-bc" href="%url%">' . $this->translate('Global.edit-all') . '</a>'] = array('action'=>'edit-all');
-	$buttons['<a class="button-bc" href="%url%">' . $this->translate('Global.download-csv') . '</a>'] = array('action' => 'download');
+	$buttons['<a class="button-bc" href="%url%">' . $this->translate()->trans('Global.edit-all') . '</a>'] = array('action'=>'edit-all');
+	$buttons['<a class="button-bc" href="%url%">' . $this->translate()->trans('Global.download-csv') . '</a>'] = array('action' => 'download');
 }
 $buttons = $this->gatekeeper()->filterAll($buttons);
 if ($this->rows) {
-	array_unshift($buttons, '<div id="search-table">' . $this->translate('Global.loading-data') . '</div>');
+	array_unshift($buttons, '<div id="search-table">' . $this->translate()->trans('Global.loading-data') . '</div>');
 }
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 <?php if (!$this->rows) : ?>
-	<h3 class="empty-table"><?php echo $this->translate($pageId . 'empty-table') ?></h3>
+	<h3 class="empty-table"><?php echo $this->translate()->trans($pageId . 'empty-table') ?></h3>
 	<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
 <?php else :
 	echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));
@@ -24,7 +24,7 @@ if ($this->rows) {
 		"tableHeaders" => $this->tableHeaders,
 		"tableId" => "all-regions",
 		"rows" => $this->rows,
-		'emptyText' => $this->translate($pageId . 'empty-table'),
+		'emptyText' => $this->translate()->trans($pageId . 'empty-table'),
 		'sortCol' => $this->sortCol
 	));
 endif;
