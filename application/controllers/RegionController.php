@@ -18,7 +18,7 @@ class RegionController extends CampaignController
         );
     }
 
-    protected static function tableMetrics(){
+    protected function tableMetrics(){
         return array(
             Metric_PopularityTime::NAME => 'Time to Target Audience',
             Metric_ActionsPerDay::NAME => 'Actions Per Day',
@@ -93,7 +93,7 @@ class RegionController extends CampaignController
 
         $downloader = $this->getContainer()->get('report.downloader');
 
-        $url = $downloader->getUrl(new ReportableRegion($region), $from, $to);
+        $url = $downloader->getUrl(new ReportableRegion($region, $this->translator), $from, $to);
 
         do {
             $content = file_get_contents($url);
@@ -133,7 +133,7 @@ class RegionController extends CampaignController
             $to = clone $oldThen;
         }
 
-        $report = (new ReportGenerator())->generate(new ReportableRegion($region), $from, $to);
+        $report = (new ReportGenerator())->generate(new ReportableRegion($region, $this->translator), $from, $to);
         $report->generate();
         $this->view->report = $report;
         $this->view->region = $region;
@@ -150,9 +150,9 @@ class RegionController extends CampaignController
     {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
-        $this->view->pageTitle = 'New Region';
+		$this->view->pageTitle = $this->translator->trans('Region.new.page-title');
 
-        $presences = array();
+		$presences = array();
         $presenceIds = $this->_request->getParam('presences');
         if($presenceIds){
 	        $presenceIds = explode(',',html_entity_decode($presenceIds));
@@ -186,7 +186,7 @@ class RegionController extends CampaignController
 
             $errorMessages = array();
             if (!$this->_request->getParam('display_name')) {
-                $errorMessages[] = $this->translator->trans('Region.edit.error.display-name-missing');
+                $errorMessages[] = $this->translator->trans('Error.display-name-missing');
             }
 
             if ($errorMessages) {
@@ -203,7 +203,7 @@ class RegionController extends CampaignController
                     $this->_helper->redirector->gotoRoute(array('action' => 'view', 'id' => $editingRegion->id));
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->flashMessage($this->translator->trans('Region.edit.error.display-name-exists'), 'error');
+                        $this->flashMessage($this->translator->trans('Error.display-name-exists'), 'error');
                     } else {
                         $this->flashMessage($ex->getMessage(), 'error');
                     }

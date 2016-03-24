@@ -42,7 +42,7 @@ class CountryController extends CampaignController {
         $this->view->tableHeaders = $objectCacheManager->getCountriesTable()->getHeaders();
         $this->view->sortCol = Name::getName();
 		$this->view->regions = Model_Region::fetchAll();
-		$this->view->pageTitle = 'Countries';
+		$this->view->pageTitle = $this->translator->trans('Global.countries');
 	}
 
     public function statsPanelAction()
@@ -71,7 +71,7 @@ class CountryController extends CampaignController {
 		$this->view->badgePartial = $this->badgeDetails($country);
 		$this->view->chartOptions = self::chartOptions();
         $this->view->country = $country;
-        $this->view->pageTitle = 'Country: ' . $country->display_name;
+        $this->view->pageTitle = $this->translator->trans('Global.country'). ': ' . $country->display_name;
         $this->view->allCampaigns = Model_Country::fetchAll();
 	}
 
@@ -105,7 +105,7 @@ class CountryController extends CampaignController {
 
 		$downloader = $this->getContainer()->get('report.downloader');
 
-		$url = $downloader->getUrl(new ReportableCountry($country), $from, $to);
+		$url = $downloader->getUrl(new ReportableCountry($country, $this->translator), $from, $to);
 
 		do {
 			$content = file_get_contents($url);
@@ -145,7 +145,7 @@ class CountryController extends CampaignController {
 			$to = clone $oldThen;
 		}
 
-		$report = (new ReportGenerator())->generate(new ReportableCountry($country), $from, $to);
+		$report = (new ReportGenerator())->generate(new ReportableCountry($country, $this->translator), $from, $to);
 		$report->generate();
 		$this->view->report = $report;
 		$this->view->country = $country;
@@ -161,7 +161,7 @@ class CountryController extends CampaignController {
 	{
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
-		$this->view->pageTitle = 'New Country';
+		$this->view->pageTitle = $this->translator->trans('Country.new.page-title');
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -189,10 +189,10 @@ class CountryController extends CampaignController {
 
 			$errorMessages = array();
 			if (!$this->_request->getParam('display_name')) {
-				$errorMessages[] = 'Please enter a display name';
+				$errorMessages[] = $this->translator->trans('Error.display-name-missing');
 			}
 			if (!$this->_request->getParam('country')) {
-				$errorMessages[] = 'Please select a country';
+				$errorMessages[] = $this->translator->trans('Error.select-country');
 			}
 
             $editingCountry->penetration = max(0, $editingCountry->penetration);
@@ -214,7 +214,7 @@ class CountryController extends CampaignController {
 					$this->_helper->redirector->gotoRoute(array('action' => 'view', 'id' => $editingCountry->id));
 				} catch (Exception $ex) {
 					if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->flashMessage('Display name already taken', 'error');
+                        $this->flashMessage($this->translator->trans('Error.display-name-exists'), 'error');
 					} else {
                         $this->flashMessage($ex->getMessage(), 'error');
 					}
@@ -262,7 +262,7 @@ class CountryController extends CampaignController {
 //		}
 
 		$this->view->editingCountry = $editingCountry;
-		$this->view->pageTitle = 'Edit Country';
+		$this->view->pageTitle = $this->translator->trans('Country.edit.page-title');
 	}
 
     /**
@@ -272,7 +272,7 @@ class CountryController extends CampaignController {
     public function editAllAction()
     {
 
-        $this->view->pageTitle = 'Edit All Countries';
+        $this->view->pageTitle = $this->translator->trans('Country.edit-all.page-title');
         $this->view->countries = Model_Country::fetchAll();
         $this->view->countryCodes = Model_Country::countryCodes();
 
@@ -316,16 +316,21 @@ class CountryController extends CampaignController {
                 }
             } else {
                 try {
-                    foreach($editedCountries as $country){
+					/** @var Model_Country $country */
+					foreach($editedCountries as $country){
                         $country->save();
                     }
 
-                    $this->flashMessage(count($editedCountries) . ' Countries saved');
+					$this->flashMessage(str_replace(
+						'[]',
+						count($editedCountries),
+						$this->translator->trans('Country.edit-all.success-message')
+					));
                     $this->_helper->redirector->gotoSimple('index');
 
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $this->flashMessage('Display name already taken', 'error');
+                        $this->flashMessage($this->translator->trans('Error.display-name-exists'), 'error');
                     } else {
                         $this->flashMessage($ex->getMessage(), 'error');
                     }
@@ -352,11 +357,11 @@ class CountryController extends CampaignController {
 				}
 			}
 			$country->assignPresences($presenceIds);
-            $this->flashMessage('Country presences updated');
+			$this->flashMessage($this->translator->trans('Country.manage.success-message'));
 			$this->_helper->redirector->gotoRoute(array('action'=>'view'));
 		}
 
-		$this->view->pageTitle = 'Manage Presences: ' . $country->display_name;
+		$this->view->pageTitle = $this->translator->trans('Country.manage.page-title').': ' . $country->display_name;
 		$this->view->country = $country;
 		$this->view->presences = $this->managePresencesList();
 	}

@@ -4,6 +4,7 @@ namespace Outlandish\SocialMonitor\Report;
 
 use Model_Presence;
 use Model_PresenceFactory;
+use Symfony\Component\Translation\Translator;
 
 class ReportablePresence implements Reportable
 {
@@ -12,15 +13,17 @@ class ReportablePresence implements Reportable
      * @var Model_Presence
      */
     private $presence;
+	private $type;
 
-    public function __construct(Model_Presence $presence)
+    public function __construct(Model_Presence $presence, Translator $translator)
     {
         $this->presence = $presence;
-    }
+		$this->type = $translator->trans('Global.presence');
+	}
 
     public function getType()
     {
-        return "Presence";
+        return $this->type;
     }
 
     public function getName()
