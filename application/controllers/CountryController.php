@@ -71,7 +71,7 @@ class CountryController extends CampaignController {
 		$this->view->badgePartial = $this->badgeDetails($country);
 		$this->view->chartOptions = self::chartOptions();
         $this->view->country = $country;
-        $this->view->pageTitle = 'Country: ' . $country->display_name;
+        $this->view->pageTitle = $this->translator->trans('Global.country'). ': ' . $country->display_name;
         $this->view->allCampaigns = Model_Country::fetchAll();
 	}
 
@@ -161,7 +161,7 @@ class CountryController extends CampaignController {
 	{
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
-		$this->view->pageTitle = 'New Country';
+		$this->view->pageTitle = $this->translator->trans('Country.new.page-title');
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 

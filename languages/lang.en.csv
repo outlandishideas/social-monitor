@@ -84,6 +84,7 @@
 "Region.buttons.delete-region";"Delete Region"
 "Region.buttons.view-region";"View Region"
 
+"Region.new.page-title";"New Region"
 "Region.edit.page-title";"Edit Region"
 "Region.edit.success-message";"Region saved"
 
@@ -105,6 +106,7 @@
 "Country.buttons.view-country";"View Country"
 
 "Country.edit.page-title";"Edit Country"
+"Country.new.page-title";"New Country"
 
 "Country.edit-all.page-title";"Edit All Countries"
 "Country.edit-all.success-message";"[] countries saved"

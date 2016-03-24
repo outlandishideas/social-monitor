@@ -150,9 +150,9 @@ class RegionController extends CampaignController
     {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
-        $this->view->pageTitle = 'New Region';
+		$this->view->pageTitle = $this->translator->trans('Region.new.page-title');
 
-        $presences = array();
+		$presences = array();
         $presenceIds = $this->_request->getParam('presences');
         if($presenceIds){
 	        $presenceIds = explode(',',html_entity_decode($presenceIds));
