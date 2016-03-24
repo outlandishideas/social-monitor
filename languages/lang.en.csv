@@ -17,6 +17,7 @@
 "Global.target-date";"Target date"
 "Global.gain-per-day";"Required gain per day"
 "Global.content";"Content"
+"Global.view";"View"
 
 "Global.home";"Home"
 "Global.audience-size";"Audience Size"
@@ -56,7 +57,8 @@
 "Global.new-user";"New User"
 "Global.population";"Population"
 "Global.edit-presence";"Edit presence"
-""
+"Global.no";"No"
+"Global.yes";"Yes"
 
 "Base.layout.feedback-button";"Feedback"
 "Base.layout.feedback-button";"Feedback"
@@ -170,6 +172,27 @@
 "Presence.view.info.daily-gains";"The following daily gains are required to meet the target audience size:"
 "Presence.buttons.edit-presence";"Edit Presence"
 "Presence.buttons.delete-presence";"Delete Presence"
+
+"Presence.edit.label.type";"Type"
+"Presence.edit.label.handle";"Handle"
+"Presence.edit.label.size";"Size"
+"Presence.edit.label.signed-off";"Signed Off"
+"Presence.edit.label.branding";"Branding"
+
+"Presence.edit.hint.connect-account";"Please connect your account to %$title%"
+"Presence.edit.hint.handle.facebook";"For www.facebook.com/<strong>platform</strong> the handle is '<strong>platform</strong>'<br/>For pages without vanity URLs, the handle is the long number in the URL, eg www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>"
+"Presence.edit.hint.handle.twitter";"For www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"Presence.edit.hint.handle.instagram";"For www.instagram.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"Presence.edit.hint.handle.youtube";"For www.youtube.com/channel/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"Presence.edit.hint.handle.linkedin";"Use the name of the company, as it appears on its page. E.g. for <a href=\"https://www.linkedin.com/company/1337\" target=\"_blank\">LinkedIn themselves</a>, the handle is '<strong>LinkedIn</strong>'"
+"Presence.edit.hint.handle.sinaweibo";"Use the name of the account, as it appears on its page. E.g. for <a href=\"http://www.weibo.com/u/2463797455\" target=\"_blank\">BBC World</a>, the handle is '<strong>BBCWorld</strong>'"
+"Presence.edit.hint.size";"Size will affect the weighting of a presence when calculating the target for its popularity.<br/>Size will only affect presences that belong to SBU.<br/>Large presences in an SBU will take a larger share of the SBU's target population, Medium presences a smaller share, and Small presences an even smaller share."
+
+"Presence.edit.access-token.title";"Access Token"
+"Presence.edit.access-token.message";"This type of presence requires an access token to fetch data."
+"Presence.edit.access-token.has-user.message";"This presence is currently using the access token from the following user: <strong>%name%</strong>"
+"Presence.edit.access-token.no-user.message";"This presence does not currently have an access token and so cannot be fetched."
+"Presence.edit.access-token.button";"Use your access token"
 
 "User.linkedin-title";"Login to LinkedIn"
 "User.saved";"User saved"

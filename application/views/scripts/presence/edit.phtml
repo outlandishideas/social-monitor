@@ -15,15 +15,15 @@ $types = $this->types;
 $user = $this->user;
 
 $topBar = $this->gatekeeper()->filterAll(array(
-	'<a href="%url%" class="button-bc button-view">View</a>' => array('action' => 'view', 'id' => $presence->id),
-	'<a href="%url%" class="button-bc button-delete">Delete</a>' => array('action' => 'delete', 'id' => $presence->id)
+	'<a href="%url%" class="button-bc button-view">'.$this->translate->trans('Global.view').'</a>' => array('action' => 'view', 'id' => $presence->id),
+	'<a href="%url%" class="button-bc button-delete">'.$this->translate->trans('Global.delete').'</a>' => array('action' => 'delete', 'id' => $presence->id)
 ));
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller' => 'presence', 'action' => 'view', 'id' => $presence->id), null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$this->translate->trans('Global.cancel').'</a>', array('controller' => 'presence', 'action' => 'view', 'id' => $presence->id), null, true);
 if ($cancel) {
 	$bottomBar[] = $cancel;
 }
-$bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button>';
+$bottomBar[] = '<button type="submit" class="button-bc button-save">'.$this->translate->trans('Global.save').'</button>';
 ?>
 
 <div id="presence-edit-form">
@@ -40,7 +40,7 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button
 		<fieldset class="inlineLabels">
 			<div class="row">
 				<div class="small-24 medium-6 large-4 columns">
-					<p class="label">Type<span class="asteriskField">*</span></p>
+					<p class="label"><?php $this->translate()->trans('Presence.edit.label.type'); ?><span class="asteriskField">*</span></p>
 				</div>
 				<div class="small-24 medium-18 large-20 end columns">
 					<ul class="blockLabels presence-types">
@@ -55,7 +55,7 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button
 									<span class="<?php echo $val->getSign(); ?>"></span>
 									<?php echo $title; ?>
 								</label><span
-									class="formHint"><?php echo $requiresAccessToken ? "(Please connect your account to {$title})" : ""; ?></span>
+									class="formHint"><?php echo $requiresAccessToken ? $this->translate()->trans('Presence.edit.hint.connect-account', ['%title%' => $title]) : ""; ?></span>
 								<?php if (!$this->editType && ($presence->type == $val)) : ?>
 									<input type="hidden" value="<?php echo $val->getValue(); ?>" name="type">
 								<?php endif; ?>
@@ -68,41 +68,26 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button
 			<div class="row">
 				<div class="small-24 medium-6 large-4 columns">
 					<label for="handle" class="requiredField">
-						Handle<span class="asteriskField">*</span>
+						<?php $this->translate()->trans('Presence.edit.label.handle'); ?><span class="asteriskField">*</span>
 					</label>
 				</div>
 				<div class="small-24 medium-8 large-8 columns">
 					<input name="handle" id="handle" type="text" value="<?php echo $presence->handle; ?>">
 				</div>
 				<div class="small-24 medium-10 large-12 end columns presence-handle-hints">
-					<p class="formHint hint-<?php echo FacebookType::NAME; ?>">
-						For www.facebook.com/<strong>platform</strong> the handle is '<strong>platform</strong>'
-						<br/>
-						For pages without vanity URLs, the handle is the long number in the URL, eg
-						www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>
-					</p>
-					<p class="formHint hint-<?php echo TwitterType::NAME; ?>">
-						For www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'
-					</p>
-					<p class="formHint hint-<?php echo InstagramType::NAME; ?>">
-						For www.instagram.com/<strong>platform</strong> the handle is '<strong>platform</strong>'
-					</p>
-					<p class="formHint hint-<?php echo YoutubeType::NAME; ?>">
-						For www.youtube.com/channel/<strong>platform</strong> the handle is '<strong>platform</strong>'
-					</p>
-					<p class="formHint hint-<?php echo LinkedinType::NAME; ?>">
-						Use the name of the company, as it appears on its page. E.g. for <a href="https://www.linkedin.com/company/1337" target="_blank">LinkedIn themselves</a>, the handle is '<strong>LinkedIn</strong>'
-					</p>
-					<p class="formHint hint-<?php echo SinaWeiboType::NAME; ?>">
-						Use the name of the account, as it appears on its page. E.g. for <a href="http://www.weibo.com/u/2463797455" target="_blank">BBC World</a>, the handle is '<strong>BBCWorld</strong>'
-					</p>
+					<p class="formHint hint-<?php echo FacebookType::NAME; ?>"><?php $this->translate()->trans('Presence.edit.hint.handle.facebook'); ?></p>
+					<p class="formHint hint-<?php echo TwitterType::NAME; ?>"><?php $this->translate()->trans('Presence.edit.hint.handle.twitter'); ?></p>
+					<p class="formHint hint-<?php echo InstagramType::NAME; ?>"><?php $this->translate()->trans('Presence.edit.hint.handle.instagram'); ?></p>
+					<p class="formHint hint-<?php echo YoutubeType::NAME; ?>"><?php $this->translate()->trans('Presence.edit.hint.handle.youtube'); ?></p>
+					<p class="formHint hint-<?php echo LinkedinType::NAME; ?>"><?php $this->translate()->trans('Presence.edit.hint.handle.linkedin'); ?></p>
+					<p class="formHint hint-<?php echo SinaWeiboType::NAME; ?>"><?php $this->translate()->trans('Presence.edit.hint.handle.sinaweibo'); ?></p>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="small-24 medium-6 large-4 columns">
 					<label for="size">
-						Size
+						<?php $this->translate()->trans('Presence.edit.label.size'); ?>
 					</label>
 				</div>
 				<div class="small-24 medium-8 large-8 columns">
@@ -115,30 +100,24 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button
 					</select>
 				</div>
 				<div class="small-24 medium-10 large-12 end columns">
-					<p class="formHint">
-						Size will affect the weighting of a presence when calculating the target for its
-						popularity.<br/>
-						Size will only affect presences that belong to SBU.<br/>
-						Large presences in an SBU will take a larger share of the SBU's target population, Medium
-						presences a smaller share, and Small presences an even smaller share.
-					</p>
+					<p class="formHint"><?php $this->translate()->trans('Presence.edit.hint.size'); ?></p>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="small-24 medium-6 large-4 columns">
-					<p class="label">Signed Off</p>
+					<p class="label"><?php $this->translate()->trans('Presence.edit.label.signed-off'); ?></p>
 				</div>
 				<div class="small-24 medium-18 large-20 end columns">
 					<ul class="blockLabels">
 						<li>
 							<label class="radio"><input name="sign_off" type="radio" value="0"
-									<?php if ($presence->sign_off < 1) echo 'checked'; ?>> No
+									<?php if ($presence->sign_off < 1) echo 'checked'; ?>> <?php $this->translate()->trans('Global.no'); ?>
 							</label>
 						</li>
 						<li>
 							<label class="radio"><input name="sign_off" type="radio" value="1"
-									<?php if ($presence->sign_off > 0) echo 'checked'; ?>> Yes
+									<?php if ($presence->sign_off > 0) echo 'checked'; ?>> <?php $this->translate()->trans('Global.yes'); ?>
 							</label>
 						</li>
 					</ul>
@@ -147,18 +126,18 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button
 
 			<div class="row">
 				<div class="small-24 medium-6 large-4 columns">
-					<p class="label">Branding</p>
+					<p class="label"><?php $this->translate()->trans('Presence.edit.label.branding'); ?></p>
 				</div>
 				<div class="small-24 medium-18 large-20 end columns">
 					<ul class="blockLabels">
 						<li>
 							<label class="radio"><input name="branding" type="radio" value="0"
-									<?php if ($presence->branding < 1) echo 'checked'; ?>> No
+									<?php if ($presence->branding < 1) echo 'checked'; ?>> <?php $this->translate()->trans('Global.no'); ?>
 							</label>
 						</li>
 						<li>
 							<label class="radio"><input name="branding" type="radio" value="1"
-									<?php if ($presence->branding > 0) echo 'checked'; ?>> Yes
+									<?php if ($presence->branding > 0) echo 'checked'; ?>> <?php $this->translate()->trans('Global.yes'); ?>
 							</label>
 						</li>
 					</ul>
@@ -171,17 +150,16 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">Save</button
 			<fieldset>
 				<div clas="row">
 					<div class="columns small-24">
-						<h2>Access Token</h2>
-						<p>This type of presence requires an access token to fetch data.</p>
+						<h2><?php $this->translate()->trans('Presence.edit.access-token.title'); ?></h2>
+						<p><?php $this->translate()->trans('Presence.edit.access-token.message'); ?></p>
 						<?php if ($presence->getUser()) : ?>
-							<p>This presence is currently using the access token from the following user:
-								<strong><?php echo $presence->getUser()->name; ?></strong></p>
+							<p><?php $this->translate()->trans('Presence.edit.access-token.has-user.message', ['%name%' => $presence->getUser()->name]); ?></p>
 						<?php else : ?>
-							<p>This presence does not currently have an access token and so cannot be fetched.</p>
+							<p><?php $this->translate()->trans('Presence.edit.access-token.no-user.message'); ?></p>
 						<?php endif; ?>
 
 						<?php if ($user->getAccessToken($presence->getType())) :
-							$accessButton = $this->gatekeeper()->filter('<a href="%url%" class="button-bc inline">Use your access token</a>', array('controller' => 'presence', 'action' => 'assign', 'id' => $presence->id), null, true); ?>
+							$accessButton = $this->gatekeeper()->filter('<a href="%url%" class="button-bc inline">'.$this->translate()->trans('Presence.edit.access-token.button').'</a>', array('controller' => 'presence', 'action' => 'assign', 'id' => $presence->id), null, true); ?>
 							<p><?php echo $accessButton; ?></p>
 						<?php endif; ?>
 
