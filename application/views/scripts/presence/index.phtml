@@ -16,7 +16,7 @@ if ($this->rows) {
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 <?php if (!$this->rows) : ?>
-	<h3 class="empty-table"><?php $this->translate()->trans('Presence.index.table-empty'); ?></h3>
+	<h3 class="empty-table"><?php echo $this->translate()->trans('Presence.index.table-empty'); ?></h3>
 	<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $buttons, 'dark' => true)); ?>
 <?php else :
 	echo $this->partial('partials/button-bar.phtml', array('buttons' => $buttons, 'dark' => true));
