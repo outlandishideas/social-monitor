@@ -19,13 +19,13 @@ class ErrorController extends BaseController
 
                 // 404 error -- controller or action not found
                 $this->getResponse()->setHttpResponseCode(404);
-                $this->view->pageTitle = $this->translator->trans('Error.404.title'); //'Page not found';
+                $this->view->pageTitle = $this->translator->trans('Error.404.page-title'); //'Page not found';
                 $this->view->text = $this->translator->trans('Error.404.message'); //'Please check the url';
                 break;
             default:
                 // application error
                 $this->getResponse()->setHttpResponseCode(500);
-                $this->view->pageTitle = $this->translator->trans('Error.500.title'); //'Application error';
+                $this->view->pageTitle = $this->translator->trans('Error.500.page-title'); //'Application error';
                 $this->view->text = $this->translator->trans('Error.500.message'); //'Sorry, something has gone wrong';
                 break;
         }
