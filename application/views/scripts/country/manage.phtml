@@ -2,16 +2,16 @@
 $country = $this->country;
 
 $topBar = $this->gatekeeper()->filterAll(array(
-        '<a class="button-bc button-view" href="%url%">View Country</a>' => array('controller'=>'country', 'action'=>'view', 'id'=>$country->id),
-        '<a class="button-bc button-edit" href="%url%">Edit Country</a>' => array('controller'=>'country', 'action'=>'edit', 'id'=>$country->id)
+        '<a class="button-bc button-view" href="%url%">'.$this->translate('Country.buttons.view-country').'</a>' => array('controller'=>'country', 'action'=>'view', 'id'=>$country->id),
+        '<a class="button-bc button-edit" href="%url%">'.$this->translate('Country.buttons.edit-country').'</a>' => array('controller'=>'country', 'action'=>'edit', 'id'=>$country->id)
     ));
 
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'country', 'action'=>'view', 'id'=>$country->id), null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$this->translate('Global.cancel').'</a>', array('controller'=>'country', 'action'=>'view', 'id'=>$country->id), null, true);
 if ($cancel) {
     $bottomBar[] = $cancel;
 }
-$bottomBar[] = '<button type="submit" class="button-bc">Save</button>';
+$bottomBar[] = '<button type="submit" class="button-bc">'.$this->translate('Global.save').'</button>';
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>

@@ -226,12 +226,12 @@
         <section class="top-information">
             <div class="row">
                 <div class="small-6 columns">
-                    <h1>Social Media Monitor Report</h1>
+                    <h1><?php echo $this->translate('Campaign.report.page-title')?></h1>
                 </div>
                 <div class="small-12 columns">
                     <div class="information">
                         <div><i class="fa fa-fw <?php echo $this->report->getIcon(); ?>"></i> <?php echo $this->report->getType(); ?>: <span class="darker"><?php echo $this->report->getName(); ?></span></div>
-                        <div><i class="fa fa-calendar fa-fw"></i> Date range: <span class="darker"><?php echo $this->report->getDateRange(); ?></span></div>
+                        <div><i class="fa fa-calendar fa-fw"></i> <?php echo $this->translate('Global.date-range')?>: <span class="darker"><?php echo $this->report->getDateRange(); ?></span></div>
                     </div>
                 </div>
                 <div class="small-6 columns">

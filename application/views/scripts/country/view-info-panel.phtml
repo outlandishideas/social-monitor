@@ -11,12 +11,17 @@ $region = $country->getRegion();
 </h4>
 
 <?php if ($region) : ?>
-    <p>Part of the <a href="<?php echo $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)); ?>"><?php echo $region->display_name; ?></a> region</p>
+    <p>
+		<?php echo str_replace('[]',
+			'<a href="' . $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)) . '">'.$region->display_name.'</a>',
+			$this->translate('Global.containing-region'));
+		?>
+	</p>
 <?php endif; ?>
 
-<p>Available audience size: <?php echo number_format($country->getTargetAudience()); ?></p>
-<p>Country population: <?php echo number_format($country->population); ?></p>
-<p>Digital population: <?php echo number_format(round($country->getDigitalPopulation())) . ' (' . $country->penetration . '% penetration)'; ?></p>
+<p><?php echo $this->translate('Global.available-audience-size')?>: <?php echo number_format($country->getTargetAudience()); ?></p>
+<p><?php echo $this->translate('Global.country-population')?>: <?php echo number_format($country->population); ?></p>
+<p><?php echo $this->translate('Global.digital-population')?>: <?php echo number_format(round($country->getDigitalPopulation())) . ' (' . $country->penetration . '% ' . $this->translate('Global.penetration') . ')'; ?></p>
 
 <h4>Presences: <?php echo count($presences); ?></h4>
 <?php if ($presences) : ?>

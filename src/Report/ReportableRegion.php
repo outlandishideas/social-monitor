@@ -3,6 +3,7 @@
 namespace Outlandish\SocialMonitor\Report;
 
 use Model_Region;
+use Symfony\Component\Translation\Translator;
 
 class ReportableRegion implements Reportable
 {
@@ -11,15 +12,17 @@ class ReportableRegion implements Reportable
      * @var Model_Region
      */
     private $region;
+	private $type;
 
-    public function __construct(Model_Region $region)
+    public function __construct(Model_Region $region, Translator $translator)
     {
         $this->region = $region;
+		$this->type = $translator->trans('Global.region');
     }
 
     public function getType()
     {
-        return "Region";
+        return $this->type;
     }
 
     public function getName()

@@ -7,12 +7,22 @@
 "Global.display-name";"Display name"
 "Global.delete";"Delete"
 "Global.download-csv";"Download CSV"
+"Global.penetration";"penetration"
+"Global.internet-penetration";"Internet Penetration"
+"Global.country-population";"Country Population"
+"Global.available-audience-size";"Available Audience Size"
+"Global.additional-info";"Additional Info"
+"Global.download-report";"Download Report"
+"Global.containing-region";"Part of the [] region"
 
 "Global.home";"Home"
+"Global.audience-size";"Audience Size"
+"Global.digital-population";"Digital Population"
 "Global.region";"Region"
 "Global.regions";"Regions"
 "Global.country";"Country"
 "Global.countries";"Countries"
+"Global.sbu";"SBU"
 "Global.sbus";"SBUs"
 "Global.presences";"Presences"
 "Global.domains";"Domains"
@@ -41,6 +51,7 @@
 "Global.change-password";"Change password"
 "Global.register-user";"Register user"
 "Global.new-user";"New User"
+"Global.population";"Population"
 
 "Base.layout.feedback-button";"Feedback"
 "Base.layout.feedback-button";"Feedback"
@@ -71,12 +82,10 @@
 "Region.buttons.edit-region";"Edit Region"
 "Region.buttons.manage-countries";"Manage Countries"
 "Region.buttons.delete-region";"Delete Region"
-"Region.buttons.download-report";"Download Report"
 "Region.buttons.view-region";"View Region"
 
+"Region.new.page-title";"New Region"
 "Region.edit.page-title";"Edit Region"
-"Region.edit.error.display-name-missing";"Please enter a display name"
-"Region.edit.error.display-name-exists";"Display name already taken"
 "Region.edit.success-message";"Region saved"
 
 "Region.edit-all.page-title";"Edit All Regions"
@@ -92,18 +101,29 @@
 "Country.index.region-filter.placeholder";"Filter by region"
 
 "Country.buttons.edit-country";"Edit Country"
+"Country.buttons.delete-country";"Delete Country"
 "Country.buttons.manage-presences";"Manage Presences"
 "Country.buttons.view-country";"View Country"
 
-"Country.edit.available-audience-size";"Available Audience Size"
-"Country.edit.country-population";"Country Population"
-"Country.edit.internet-penetration";"Internet Penetration"
+"Country.edit.page-title";"Edit Country"
+"Country.new.page-title";"New Country"
 
+"Country.edit-all.page-title";"Edit All Countries"
+"Country.edit-all.success-message";"[] countries saved"
+
+"Country.manage.page-title";"Manage Presences"
+"Country.manage.success-message";"Country presences updated"
 
 "Feedback.index.error.missing-name";"Please enter your name."
 "Feedback.index.error.missing-email";"Please enter a valid email address."
 "Feedback.index.error.missing-message";"Please enter your message."
 "Feedback.index.email-subject";"Social Monitor feedback from []"
+
+"Campaign.report.page-title";"Social Media Monitor Report"
+
+"Presence.compare.page-title";"Comparing %count% presences"
+"Presence.new.page-title";"New presence"
+"Presence.edit.page-title";"Edit presence"
 
 "User.linkedin-title";"Login to LinkedIn"
 "User.saved";"User saved"
@@ -115,6 +135,11 @@
 "User.register-email.message";"<p>Hi %name%,</p><p>Thank you for registering with the British Council Social Monitor</p><p>If you did not register for this service, please ignore this email.</p><p>Otherwise, click this link to confirm your email so that you can login with your new account <a href="%link%">Confirm email</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
 "User.reset-password.subject";"Password reset"
 "User.reset-password.message";"'<p>Hi %name%,</p><p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p><p>If you did not request a reset, please ignore this email.</p><p>Otherwise, click this link to reset your password <a href="%link%">Reset password</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
+
+"Error.404.page-title";"Page not found"
+"Error.404.message";"Please check the url"
+"Error.500.page-title";"Application error"
+"Error.500.message";"Sorry, something has gone wrong"
 
 "Fetch.log.finished";"Finished"
 "Fetch.log.updating-facebook-actors.start";"Updating facebook actors"
@@ -422,6 +447,15 @@
 "Error.username-in-use";"User name already in use"
 "Error.cant-confirm-email";"Something went wrong and we could'nt confirm your email address."
 "Error.invalid-confirm-email";"Incorrect user/key combination for email confirmation"
+"Error.display-name-missing";"Please enter a display name"
+"Error.display-name-exists";"Display name already taken"
+"Error.select-country";"Please select a country"
+"Error.display-name-missing";"Please enter a display name"
+"Error.display-name-exists";"Display name already taken"
+"Error.select-country";"Please select a country"
+"Error.missing-id";"Missing ID"
+"Error.missing-chart-type";"Missing chart type"
+"Error.chart-doesnt-exist";"Chart doesn't exist"
 
 "Success.email-confirmed";"Thank you for confirming your email. You can now login."
 "Success.linkedin-login";"Linkedin Account connected"
@@ -430,4 +464,7 @@
 "Success.logged-out";"Logged out"
 "Success.user-deleted";"User deleted"
 "Success.permissions-saved";"User permissions saved"
+"Success.presence-assigned-user";"Presence was assigned to user"
+"Success.presence-saved";"Presence saved"
+"Success.presence-deleted";"Presence deleted"
 // date range picker

@@ -3,6 +3,7 @@
 namespace Outlandish\SocialMonitor\Report;
 
 use Model_Group;
+use Symfony\Component\Translation\Translator;
 
 class ReportableGroup implements Reportable
 {
@@ -11,15 +12,17 @@ class ReportableGroup implements Reportable
      * @var Model_Group
      */
     private $group;
+	private $type;
 
-    public function __construct(Model_Group $group)
+    public function __construct(Model_Group $group, Translator $translator)
     {
         $this->group = $group;
+		$this->type = $translator->trans('Global.sbu');
     }
 
     public function getType()
     {
-        return "SBU";
+        return $this->type;
     }
 
     public function getName()
