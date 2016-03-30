@@ -197,7 +197,7 @@ class RegionController extends CampaignController
 
 					$this->invalidateTableCache();
 
-					$this->flashMessage($this->translator->trans('Region.edit.success-message'));
+					$this->flashMessage($this->translator->trans('route.region.edit.message.success'));
                     $this->_helper->redirector->gotoRoute(array('action' => 'view', 'id' => $editingRegion->id));
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
@@ -246,11 +246,7 @@ class RegionController extends CampaignController
                 $editingRegion->fromArray($g);
 
                 if (!$g['display_name']) {
-                    $errorMessages[] = str_replace(
-						'[]',
-						$display_name,
-						$this->translator->trans('Region.edit-all.error.display-name-missing')
-					);
+                    $errorMessages[] = $this->translator->trans('route.region.edit-all.message.display-name-missing', ['%region%' => $display_name]);
                 }
 
                 $editedRegions[] = $editingRegion;
@@ -269,16 +265,12 @@ class RegionController extends CampaignController
 
 					$this->invalidateTableCache();
 
-                    $this->flashMessage(str_replace(
-						'[]',
-						count($editedRegions),
-						$this->translator->trans('Region.edit-all.success-message')
-					));
+                    $this->flashMessage($this->translator->trans('route.region.edit-all.message.success', ['%count%' => count($editedRegions)]));
                     $this->_helper->redirector->gotoSimple('index');
 
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-						$this->flashMessage($this->translator->trans('Region.edit.error.display-name-exists'), 'error');
+						$this->flashMessage($this->translator->trans('Error.display-name-exists'), 'error');
                     } else {
                         $this->flashMessage($ex->getMessage(), 'error');
                     }
@@ -307,7 +299,7 @@ class RegionController extends CampaignController
 
 			$this->invalidateTableCache();
 
-            $this->flashMessage($this->translator->trans('Region.manage.success-message'));
+            $this->flashMessage($this->translator->trans('route.region.manage.message.success'));
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 
@@ -330,7 +322,7 @@ class RegionController extends CampaignController
 
 			$this->invalidateTableCache();
 
-            $this->flashMessage($this->translator->trans('Region.delete.success-message'));
+            $this->flashMessage($this->translator->trans('route.region.delete.message.success'));
     		$this->_helper->redirector->gotoSimple('index');
         } else {
             $this->flashMessage($this->translator->trans('Error.invalid-delete'));
@@ -356,7 +348,7 @@ class RegionController extends CampaignController
         /** @var $region Model_Region */
         $region = Model_Region::fetchById($this->_request->getParam('id'));
         if(!$region) {
-            $this->apiError($this->translator->trans('Region.graph-data.not-found'));
+            $this->apiError($this->translator->trans('route.region.graph-data.message.not-found'));
         }
 
         $dateRange = $this->getRequestDateRange();

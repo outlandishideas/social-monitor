@@ -21,7 +21,7 @@ if ($this->regions) {
 
 <?php if (!$this->regions) : ?>
 	<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $topBar, 'dark' => true)); ?>
-	<h3 class="empty-table"><?php echo $translator->trans('Region.index.empty-table')?></h3>
+	<h3 class="empty-table"><?php echo $translator->trans('route.region.index.empty-table')?></h3>
 <?php else : ?>
 	<form class="edit-all" method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-all-regions">
 

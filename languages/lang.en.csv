@@ -87,29 +87,31 @@
 "Campaign.index.new-index-table.click-to-expand";"Click to expand"
 "Campaign.view.charts-unavailable";"Sorry, charts are not available on your device"
 
-"Region.buttons.edit-region";"Edit Region"
-"Region.buttons.manage-countries";"Manage Countries"
-"Region.buttons.delete-region";"Delete Region"
-"Region.buttons.view-region";"View Region"
+"buttons.region.edit";"Edit Region"
+"buttons.region.manage";"Manage Countries"
+"buttons.region.edit";"Edit Region"
+"buttons.region.edit";"Edit Region"
 
 "route.region.index.page-title";"Regions"
+"route.region.index.empty-table";"No regions found"
+
 "route.region.new.page-title";"New Region"
-"route.region.edit.page-title";"Edit Region"
+
 "route.region.view.page-title";"Region: %region%"
-"Region.edit.success-message";"Region saved"
+
+"route.region.edit.page-title";"Edit Region"
+"route.region.edit.message.success";"Region saved"
 
 "route.region.edit-all.page-title";"Edit All Regions"
-"Region.edit-all.error.display-name-missing";"Please enter a display name for []"
-"Region.edit-all.success-message";"[] regions saved"
+"route.region.edit-all.message.display-name-missing";"Please enter a display name for %region%"
+"route.region.edit-all.message.success";"%count% regions saved"
 
-"Region.delete.success-message";"Region deleted"
+"route.region.delete.message.success";"Region deleted"
 
-"Region.graph-data.not-found";"Region could not be found"
+"route.region.graph-data.message.not-found";"Region could not be found"
 
 "route.region.manage.page-title";"Manage Countries: %region%"
-"Region.manage.success-message";"Region countries updated"
-
-"Region.index.empty-table";"No regions found"
+"route.region.manage.message.success";"Region countries updated"
 
 "route.country.index.page-title";"Countries"
 "Country.index.empty-table";"No countries found"
