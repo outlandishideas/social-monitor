@@ -44,7 +44,7 @@ class FetchController extends BaseController
 
 		$this->touchLock($lockName);
 
-		$this->log($this->translator->trans('Fetch.log.finished')); //'Finished');
+		$this->log($this->translator->trans('route.fetch.log.finished')); //'Finished');
 		$this->releaseLock($lockName);
 	}
 
@@ -81,7 +81,7 @@ class FetchController extends BaseController
      * @return array
      */
 	public function updateFacebookActors($limit = 250) {
-        $this->log($this->translator->trans('Fetch.log.updating-facebook-actors.start'));
+        $this->log($this->translator->trans('route.fetch.log.updating-facebook-actors.start'));
 
 		$db = self::db();
 		$actorQuery = $db->prepare('SELECT DISTINCT actor_id
@@ -111,7 +111,7 @@ class FetchController extends BaseController
                     'event'=>'SELECT eid, name, pic_square FROM event WHERE eid' . $actorIdsString
                 ));
             } catch (Exception_FacebookApi $ex) {
-                $this->log($this->translator->trans('Fetch.log.updating-facebook-actors.fail', ['%message%' => $ex->getMessage()]));
+                $this->log($this->translator->trans('route.fetch.log.updating-facebook-actors.fail', ['%message%' => $ex->getMessage()]));
                 return;
             }
 
@@ -175,12 +175,12 @@ class FetchController extends BaseController
 			}
 		}
 
-        $this->log($this->translator->trans('Fetch.log.updating-facebook-actors.success', ['%count%' => count($inserted)]));
+        $this->log($this->translator->trans('route.fetch.log.updating-facebook-actors.success', ['%count%' => count($inserted)]));
     }
 
 	public function updateDomains() {
 
-        $this->log($this->translator->trans('Fetch.log.updating-domains.start'));
+        $this->log($this->translator->trans('route.fetch.log.updating-domains.start'));
 
         $db = self::db();
 		$inserted = array();
@@ -202,7 +202,7 @@ class FetchController extends BaseController
 			} catch (Exception $ex) {}
 		}
 
-        $this->log($this->translator->trans('Fetch.log.updating-domains.success', ['%count%' => count($inserted)]));
+        $this->log($this->translator->trans('route.fetch.log.updating-domains.success', ['%count%' => count($inserted)]));
 
     }
 
@@ -222,7 +222,7 @@ class FetchController extends BaseController
 		$action = $action == 'index' ? 'fetch' : $action;
 		file_put_contents( $this->logFileName('fetch'), '');
 
-		$this->log($this->translator->trans('Fetch.log.start', ['%action%' => $action, '%start%' => date('Y-m-d')]) . "\n");
+		$this->log($this->translator->trans('route.fetch.log.start', ['%action%' => $action, '%start%' => date('Y-m-d')]) . "\n");
 	}
 
 	protected function log($message, $ignoreSilent = false) {
@@ -249,10 +249,10 @@ class FetchController extends BaseController
 			$seconds = time() - $lockTime;
 			if ($seconds < $lockTimeout) {
 				//show log message
-				$this->log($this->translator->trans('Fetch.log.lock-acquire', ['%seconds%' => $seconds]));
+				$this->log($this->translator->trans('route.fetch.log.lock-acquire', ['%seconds%' => $seconds]));
 			} else {
 				//force show message
-				$this->log($this->translator->trans('Fetch.log.lock-acquire.fail', ['%seconds%' => $seconds, '%lockname%' => $lockName]), true);
+				$this->log($this->translator->trans('route.fetch.log.lock-acquire.fail', ['%seconds%' => $seconds, '%lockname%' => $lockName]), true);
 				$lastFile = $this->logFileName('fetch') . '.last';
 				$staleFile = $this->logFileName('fetch') . '.stale';
 				if (file_exists($lastFile) && !file_exists($staleFile)) {
@@ -295,12 +295,12 @@ class FetchController extends BaseController
             $db->closeConnection();
             $db->getConnection();
             $index++;
-            $this->log($this->translator->trans('Fetch.log.presence-history.start') . " [{$index}/{$presenceCount}] [{$presence->getType()->getTitle()}] [{$presence->getId()}] [{$presence->getHandle()}] [{$presence->getName()}]");
+            $this->log($this->translator->trans('route.fetch.log.presence-history.start') . " [{$index}/{$presenceCount}] [{$presence->getType()->getTitle()}] [{$presence->getId()}] [{$presence->getHandle()}] [{$presence->getName()}]");
             try {
                 // add subset of properties into presence_history table
                 $presence->updateHistory();
             } catch (Exception $e) {
-                $this->log($this->translator->trans('Fetch.log.presence-history.error', ['%message%' => $e->getMessage()]));
+                $this->log($this->translator->trans('route.fetch.log.presence-history.error', ['%message%' => $e->getMessage()]));
             }
             if ($lockName) {
                 $this->touchLock($lockName);
@@ -337,23 +337,23 @@ class FetchController extends BaseController
             $now = time();
             $lastUpdatedString = $presence->getLastUpdated();
             $lastUpdated = strtotime($lastUpdatedString);
+			$message = " {$logPrefix} [{$presence->getHandle()}] [{$presence->getName()}] [{$presence->getEngagementValue()}]";
             if (!$lastUpdated || ($now - $lastUpdated > $infoInterval)) {
-				$message = " {$logPrefix} [{$presence->getHandle()}] [{$presence->getName()}] [{$presence->getEngagementValue()}]";
-                $this->log($this->translator->trans('Fetch.log.update-info.start', ['%message%' => $message]));
+                $this->log($this->translator->trans('route.fetch.log.update-info.start', ['%message%' => $message]));
                 try {
                     // update using provider
                     $presence->update();
                     // save to DB
                     $presence->save();
 
-					$this->log($this->translator->trans('Fetch.log.update-info.success', ['%message%' => $message]));
+					$this->log($this->translator->trans('route.fetch.log.update-info.success', ['%message%' => $message]));
                 } catch (Exception $e) {
-                    $this->log($this->translator->trans('Fetch.log.update-info.error', ['%message%' => $e->getMessage()]));
+                    $this->log($this->translator->trans('route.fetch.log.update-info.error', ['%message%' => $e->getMessage()]));
                 }
                 $this->touchLock($lockName);
                 $this->log('touchLock()');
             } else {
-				$this->log($this->translator->trans('Fetch.log.update-info.skip', ['%message%' => $message, '%lastupdated%' => $lastUpdatedString]));
+				$this->log($this->translator->trans('route.fetch.log.update-info.skip', ['%message%' => $message, '%lastupdated%' => $lastUpdatedString]));
 			}
         }
     }

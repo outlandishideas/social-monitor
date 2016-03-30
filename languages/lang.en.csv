@@ -321,24 +321,27 @@
 
 
 
-"Fetch.log.finished";"Finished"
-"Fetch.log.updating-facebook-actors.start";"Updating facebook actors"
-"Fetch.log.updating-facebook-actors.fail";"Failed to update facebook actors: %message%"
-"Fetch.log.updating-facebook-actors.success";"Updated %count% actors"
-"Fetch.log.updating-domains.start";"Updating linked domains"
-"Fetch.log.updating-domains.success";"Inserted %count% domains"
-"Fetch.log.start";"Starting %action% process on %start%"
-"Fetch.log.lock-acquire";"Process already running and last active %seconds% seconds ago"
-"Fetch.log.lock-acquire.fail";"Stale lock found last active %seconds% seconds ago: %lockname%"
-"Fetch.log.presence-history.start";"Updating presence history"
-"Fetch.log.presence-history.error";"Error: %message%"
-"Fetch.log.update-info.start";"Update info %message%"
-"Fetch.log.update-info.success";"Updated info %message%"
-"Fetch.log.update-info.error";"Error updating presence info: %message%"
-"Fetch.log.update-info.skip";"Not updating info %message% as last updated %lastupdated%"
-"Fetch.log.fetch-statues.start";"Fetch statuses %message%"
-"Fetch.log.fetch-statues.success";"Inserted %count%"
-"Fetch.log.fetch-statues.error";"Error: %message%"
+"route.fetch.log.finished";"Finished"
+"route.fetch.log.updating-facebook-actors.start";"Updating facebook actors"
+"route.fetch.log.updating-facebook-actors.fail";"Failed to update facebook actors: %message%"
+"route.fetch.log.updating-facebook-actors.success";"Updated %count% actors"
+"route.fetch.log.updating-domains.start";"Updating linked domains"
+"route.fetch.log.updating-domains.success";"Inserted %count% domains"
+"route.fetch.log.start";"Starting %action% process on %start%"
+"route.fetch.log.lock-acquire";"Process already running and last active %seconds% seconds ago"
+"route.fetch.log.lock-acquire.fail";"Stale lock found last active %seconds% seconds ago: %lockname%"
+"route.fetch.log.presence-history.start";"Updating presence history"
+"route.fetch.log.presence-history.error";"Error: %message%"
+"route.fetch.log.update-info.start";"Update info %message%"
+"route.fetch.log.update-info.success";"Updated info %message%"
+"route.fetch.log.update-info.error";"Error updating presence info: %message%"
+"route.fetch.log.update-info.skip";"Not updating info %message% as last updated %lastupdated%"
+"route.fetch.log.fetch-statues.start";"Fetch statuses %message%"
+"route.fetch.log.fetch-statues.success";"Inserted %count%"
+"route.fetch.log.fetch-statues.error";"Error: %message%"
+
+
+
 
 "route.config.index.page-title";"Settings"
 "route.config.index.introduction";"Configure each of the metrics and badges, then click save"
@@ -347,6 +350,7 @@
 "route.config.index.sections.general.feedback.title";"Feedback"
 "route.config.index.sections.general.feedback.description";"What email address should feedback be sent to?"
 "route.config.index.sections.general.feedback.email-address";"Email Address"
+
 "route.config.index.sections.reach.target-audience.title";"Target Audience"
 "route.config.index.sections.reach.target-audience.description";"Each presence has a target audience set against it. The score is given based on how close the presence is to its target"
 "route.config.index.sections.reach.target-audience.weighting";"Target Audience Weighting"
@@ -483,6 +487,9 @@
 "route.config.index.kpi-file-title";"Upload KPI File"
 "route.config.index.kpi-file-message";"Upload the KPI file that can be downloaded from the front page"
 "route.config.index.kpi-file-prompt";"Choose a file to upload:"
+
+
+
 
 "route.domain.index.page-title";"Domains"
 "Domain.index.paragraph-1";"This shows the list of all domains linked to by tweets or facebook statuses. Click the links to see more usage information and the specific URLs."
