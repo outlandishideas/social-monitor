@@ -104,6 +104,10 @@
 "buttons.group.manage";"Manage Presences"
 "buttons.group.view";"View SBU"
 
+"buttons.presence.edit";"Edit Presence"
+"buttons.presence.delete";"Delete Presence"
+
+
 
 
 "route.region.index.page-title";"Regions"
@@ -193,52 +197,48 @@
 
 
 
-"Presence.handle";"Handle"
-"Presence.type";"Type"
-
 "route.presence.index.page-title";"Presences"
-"route.presence.compare.page-title";"Comparing %count% presences"
+"route.presence.index.table-empty";"No presences found"
+
 "route.presence.new.page-title";"New presence"
+
+"route.presence.view.page-title";"Presence: %presence%"
+"route.presence.view.info.presence-type";"This is a %type% presence"
+"route.presence.view.info.presence.score";"Yesterday's %type% Engagement score: %score%%"
+"route.presence.view.info.presence.average-score";"Monthly Average %type% Engagement score: %score%%"
+"route.presence.view.info.twitter.score";"Yesterday's Klout score: %score%%"
+"route.presence.view.info.twitter.average-score";"Monthly Average Klout score: %score%%"
+"route.presence.view.info.owner-name";"This presence contributes to the statistics for %link%"
+"route.presence.view.info.target-audience";"The target audience size is %size%"
+"route.presence.view.info.current-audience";"The target audience size is %size%"
+"route.presence.view.info.time-to-target";"At the current rate, the target will be reached by %date%"
+"route.presence.view.info.daily-gains";"The following daily gains are required to meet the target audience size:"
+
+"route.presence.compare.page-title";"Comparing %count% presences"
+"route.presence.compare.presence-handle";"Handle"
+"route.presence.compare.table-empty";"No presences found"
+"route.presence.compare.button.create-sbu";"Create SBU"
+"route.presence.compare.chart-title";"Scores for the last 30 days:"
+
 "route.presence.edit.page-title";"Edit presence"
-"Presence.index.table-empty";"No presences found"
-
-"Presence.view.info.presence-type";"This is a %type% presence"
-
-"Presence.view.info.presence.score";"Yesterday's %type% Engagement score: %score%%"
-"Presence.view.info.presence.average-score";"Monthly Average %type% Engagement score: %score%%"
-"Presence.view.info.twitter.score";"Yesterday's Klout score: %score%%"
-"Presence.view.info.twitter.average-score";"Monthly Average Klout score: %score%%"
-
-"Presence.view.info.owner-name";"This presence contributes to the statistics for %link%"
-"Presence.view.info.target-audience";"The target audience size is %size%"
-"Presence.view.info.current-audience";"The target audience size is %size%"
-"Presence.view.info.time-to-target";"At the current rate, the target will be reached by %date%"
-"Presence.view.info.daily-gains";"The following daily gains are required to meet the target audience size:"
-"Presence.buttons.edit-presence";"Edit Presence"
-"Presence.buttons.delete-presence";"Delete Presence"
-
-"Presence.edit.label.type";"Type"
-"Presence.edit.label.size";"Size"
-"Presence.edit.label.signed-off";"Signed Off"
-"Presence.edit.label.branding";"Branding"
-
-"Presence.edit.hint.connect-account";"Please connect your account to %$title%"
-"Presence.edit.hint.handle.facebook";"For www.facebook.com/<strong>platform</strong> the handle is '<strong>platform</strong>'<br/>For pages without vanity URLs, the handle is the long number in the URL, eg www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>"
-"Presence.edit.hint.handle.twitter";"For www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
-"Presence.edit.hint.handle.instagram";"For www.instagram.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
-"Presence.edit.hint.handle.youtube";"For www.youtube.com/channel/<strong>platform</strong> the handle is '<strong>platform</strong>'"
-"Presence.edit.hint.handle.linkedin";"Use the name of the company, as it appears on its page. E.g. for <a href=\"https://www.linkedin.com/company/1337\" target=\"_blank\">LinkedIn themselves</a>, the handle is '<strong>LinkedIn</strong>'"
-"Presence.edit.hint.handle.sinaweibo";"Use the name of the account, as it appears on its page. E.g. for <a href=\"http://www.weibo.com/u/2463797455\" target=\"_blank\">BBC World</a>, the handle is '<strong>BBCWorld</strong>'"
-"Presence.edit.hint.size";"Size will affect the weighting of a presence when calculating the target for its popularity.<br/>Size will only affect presences that belong to SBU.<br/>Large presences in an SBU will take a larger share of the SBU's target population, Medium presences a smaller share, and Small presences an even smaller share."
-
-"Presence.edit.access-token.title";"Access Token"
-"Presence.edit.access-token.message";"This type of presence requires an access token to fetch data."
-"Presence.edit.access-token.has-user.message";"This presence is currently using the access token from the following user: <strong>%name%</strong>"
-"Presence.edit.access-token.no-user.message";"This presence does not currently have an access token and so cannot be fetched."
-"Presence.edit.access-token.button";"Use your access token"
-
-"Presence.compare.button.create-sbu";"Create SBU"
-"Presence.compare.chart-title";"Scores for the last 30 days:"
+"route.presence.edit.label.handle";"Handle"
+"route.presence.edit.label.type";"Type"
+"route.presence.edit.label.size";"Size"
+"route.presence.edit.label.signed-off";"Signed Off"
+"route.presence.edit.label.branding";"Branding"
+"route.presence.edit.hint.connect-account";"Please connect your account to %title%"
+"route.presence.edit.hint.handle.facebook";"For www.facebook.com/<strong>platform</strong> the handle is '<strong>platform</strong>'<br/>For pages without vanity URLs, the handle is the long number in the URL, eg www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>"
+"route.presence.edit.hint.handle.twitter";"For www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"route.presence.edit.hint.handle.instagram";"For www.instagram.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"route.presence.edit.hint.handle.youtube";"For www.youtube.com/channel/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"route.presence.edit.hint.handle.linkedin";"Use the name of the company, as it appears on its page. E.g. for <a href=\"https://www.linkedin.com/company/1337\" target=\"_blank\">LinkedIn themselves</a>, the handle is '<strong>LinkedIn</strong>'"
+"route.presence.edit.hint.handle.sinaweibo";"Use the name of the account, as it appears on its page. E.g. for <a href=\"http://www.weibo.com/u/2463797455\" target=\"_blank\">BBC World</a>, the handle is '<strong>BBCWorld</strong>'"
+"route.presence.edit.hint.size";"Size will affect the weighting of a presence when calculating the target for its popularity.<br/>Size will only affect presences that belong to SBU.<br/>Large presences in an SBU will take a larger share of the SBU's target population, Medium presences a smaller share, and Small presences an even smaller share."
+"route.presence.edit.access-token.title";"Access Token"
+"route.presence.edit.access-token.message";"This type of presence requires an access token to fetch data."
+"route.presence.edit.access-token.has-user.message";"This presence is currently using the access token from the following user: <strong>%name%</strong>"
+"route.presence.edit.access-token.no-user.message";"This presence does not currently have an access token and so cannot be fetched."
+"route.presence.edit.access-token.button";"Use your access token"
 
 "route.presence.report.page-title";"Social Media Monitor Report"
 

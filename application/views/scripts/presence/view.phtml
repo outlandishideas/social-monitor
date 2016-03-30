@@ -3,8 +3,8 @@
 $translator = $this->translate();
 
 $buttons = $this->gatekeeper()->filterAll(array(
-    '<a class="button-bc button-edit" href="%url%">'.$translator->trans('Presence.buttons.edit-presence').'</a>' => array('action'=>'edit', 'id'=>$this->presence->id),
-    '<a class="button-bc button-delete" href="%url%"></span>'.$translator->trans('Presence.buttons.delete-presence').'</a>' => array('action'=>'delete', 'id'=>$this->presence->id),
+    '<a class="button-bc button-edit" href="%url%">'.$translator->trans('buttons.presence.edit').'</a>' => array('action'=>'edit', 'id'=>$this->presence->id),
+    '<a class="button-bc button-delete" href="%url%"></span>'.$translator->trans('buttons.presence.delete').'</a>' => array('action'=>'delete', 'id'=>$this->presence->id),
     '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>'.$translator->trans('Global.download-report').'</a>' => array('action'=>'download-report', 'id'=>$this->presence->id),
 ));
 /** @var Model_Presence $presence */
@@ -102,24 +102,24 @@ if ($sizeDiff > 0) {
 					$type = strtolower($presenceType);
 					$typeLink = "<a href=\"{$presence->page_url}\" target=\"_blank\">{$type} <span class=\"icon-external-link\"></span></a>";
 				?>
-				<p><?php echo $translator->trans('Presence.view.info.presence-type', ['%type%' => $typeLink]); ?></p>
+				<p><?php echo $translator->trans('route.presence.view.info.presence-type', ['%type%' => $typeLink]); ?></p>
 				<?php if ($presence->isForTwitter()) : ?>
-					<p><?php echo $translator->trans('Presence.view.info.twitter.score', ['%score%' => $presence->klout_score]); ?></p>
-					<p><?php echo $translator->trans('Presence.view.info.twitter.average-score', ['%score%' => $presence->getMetricValue('klout_score')]); ?></p>
+					<p><?php echo $translator->trans('route.presence.view.info.twitter.score', ['%score%' => $presence->klout_score]); ?></p>
+					<p><?php echo $translator->trans('route.presence.view.info.twitter.average-score', ['%score%' => $presence->getMetricValue('klout_score')]); ?></p>
 				<?php else : ?>
-					<p><?php echo $translator->trans('Presence.view.info.presence.score', ['%type%' => $presenceType, '%score%' => $presence->getEngagementScore()->getScore()]); ?></p>
-					<p><?php echo $translator->trans('Presence.view.info.presence.average-score', ['%type%' => $presenceType, '%score%' => $presence->getEngagementScore(true)->getScore()]); ?></p>
+					<p><?php echo $translator->trans('route.presence.view.info.presence.score', ['%type%' => $presenceType, '%score%' => $presence->getEngagementScore()->getScore()]); ?></p>
+					<p><?php echo $translator->trans('route.presence.view.info.presence.average-score', ['%type%' => $presenceType, '%score%' => $presence->getEngagementScore(true)->getScore()]); ?></p>
 				<?php endif; ?>
                 <?php if ($ownerUrl) : ?>
 					<?php $ownerLink = "<a href=\"{$ownerUrl}\">{$owner->display_name}</a>"; ?>
-					<p><?php echo $translator->trans('Presence.view.info.owner-name', ['%link%' => $ownerLink]); ?></p>
-                    <p><?php echo $translator->trans('Presence.view.info.target-audience', ['%size%' => number_format($targetSize)]); ?></p>
-                    <p><?php echo $translator->trans('Presence.view.info.current-audience', ['%size%' => number_format($currentSize)]); ?></p>
+					<p><?php echo $translator->trans('route.presence.view.info.owner-name', ['%link%' => $ownerLink]); ?></p>
+                    <p><?php echo $translator->trans('route.presence.view.info.target-audience', ['%size%' => number_format($targetSize)]); ?></p>
+                    <p><?php echo $translator->trans('route.presence.view.info.current-audience', ['%size%' => number_format($currentSize)]); ?></p>
                     <?php if ($requiredRates) : ?>
                         <?php if ($timeToTarget) : ?>
-                        <p><?php echo $translator->trans('Presence.view.info.time-to-target', ['%date%' => $timeToTarget->format('F Y')]); ?></p>
+                        <p><?php echo $translator->trans('route.presence.view.info.time-to-target', ['%date%' => $timeToTarget->format('F Y')]); ?></p>
                         <?php endif; ?>
-                        <p><?php echo $translator->trans('Presence.view.info.daily-gains'); ?></p>
+                        <p><?php echo $translator->trans('route.presence.view.info.daily-gains'); ?></p>
                         <table id="audience-rates">
                             <tbody>
                             <tr>

@@ -89,6 +89,7 @@ class PresenceController extends GraphingController
             $allPresences[$group][] = $p;
         }
         $this->view->allPresences = $allPresences;
+		$this->updatePageTitle(['presence' => $presence->getName()]);
 	}
 
 	public function downloadReportAction()
