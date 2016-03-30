@@ -244,33 +244,82 @@
 
 
 
-"route.user.linkedin.page-title";"Login to LinkedIn"
+
 "route.user.index.page-title";"Users"
+
+"route.user.linkedin.page-title";"Login to LinkedIn"
+"route.user.linkedin.message.success";"Linkedin Account connected"
+
 "route.user.login.page-title";"Login"
+"route.user.login.message.cannot-login";"Incorrect username/password or email has not been confirmed"
+
+"route.user.logout.message.success";"Logged out"
+
+"route.user.delete.message.success";"User deleted"
+
 "route.user.forgotten.page-title";"Forgotten password"
+"route.user.forgotten.message.missing-username-email";"Please enter a username or email address"
+"route.user.forgotten.message.user-not-found";"User not found"
+"route.user.forgotten.message.password-reset-email-sent";"You should receive an email shortly with a password reset link"
+"route.user.forgotten.message.password-reset-failed-email";"Failed to send reset email.<br />Please ask an admin user to reset your password"
+
 "route.user.reset-password.page-title";"Change password"
+"route.user.reset-password.message.both-passwords-required";"Both passwords are required"
+"route.user.reset-password.message.password-mismatch";"Passwords do not match"
+"route.user.reset-password.message.passwords-too-short";"Password must be at least 4 characters"
+"route.user.reset-password.message.success";"Password changed successfully"
+"route.user.reset-password.message.incorrect-user-key";"Incorrect user/key combination for password reset"
+
 "route.user.register.page-title";"Register user"
 "route.user.register.registration-successful";"Registration successful"
+"route.user.register.email.subject";"You have successfully registered"
+"route.user.register.email.message";"<p>Hi %name%,</p><p>Thank you for registering with the British Council Social Monitor</p><p>If you did not register for this service, please ignore this email.</p><p>Otherwise, click this link to confirm your email so that you can login with your new account <a href="%link%">Confirm email</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
+"route.user.register.email.from";"The British Council Social Media Monitor team"
+"route.user.register.email.from-address";"do.not.reply@example.com"
+
 "route.user.new.page-title";"New User"
+
 "route.user.edit.page-title";"Edit User"
+"route.user.edit.saved";"User saved"
+"route.user.edit.created";"User created"
+"route.user.edit.registered";"User registered"
+"route.user.edit.message.both-passwords-required";"Both passwords are required"
+"route.user.edit.message.password-mismatch";"Passwords do not match"
+"route.user.edit.message.passwords-too-short";"Password must be at least 4 characters"
+"route.user.edit.message.missing-username";"Please enter a user name"
+"route.user.edit.message.missing-email";"Please enter an email address"
+"route.user.edit.message.invalid-email";"Please enter a valid email address"
+"route.user.edit.message.use-company-email";"To register, you must use a valid British Council email address"
+"route.user.edit.message.email-in-use";"Email already in use"
+"route.user.edit.message.username-in-use";"User name already in use"
+
 "route.user.edit-self.page-title";"Edit my details"
+
 "route.user.manage.page-title";"Edit access rights for %user%"
-"User.saved";"User saved"
-"User.created";"User created"
-"User.registered";"User registered"
-"User.edit-user";"Edit user"
-"User.edit-permissions";"Edit access rights for "
-"User.register-email.subject";"You have successfully registered"
-"User.register-email.message";"<p>Hi %name%,</p><p>Thank you for registering with the British Council Social Monitor</p><p>If you did not register for this service, please ignore this email.</p><p>Otherwise, click this link to confirm your email so that you can login with your new account <a href="%link%">Confirm email</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
-"User.reset-password.subject";"Password reset"
-"User.reset-password.message";"'<p>Hi %name%,</p><p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p><p>If you did not request a reset, please ignore this email.</p><p>Otherwise, click this link to reset your password <a href="%link%">Reset password</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
+"route.user.manage.message.permissions-saved";"User permissions saved"
+
+"route.user.forgotten.email.subject";"Password reset"
+"route.user.forgotten.email.message";"'<p>Hi %name%,</p><p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p><p>If you did not request a reset, please ignore this email.</p><p>Otherwise, click this link to reset your password <a href="%link%">Reset password</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
+"route.user.forgotten.email.from";"The British Council Social Media Monitor team"
+"route.user.forgotten.email.from-address";"do.not.reply@example.com"
+
+"route.user.confirm-email.message.success";"Thank you for confirming your email. You can now login."
+"route.user.confirm-email.message.fail";"Something went wrong and we couldn't confirm your email address."
+"route.user.confirm-email.message.invalid-email";"Incorrect user/key combination for email confirmation"
+
+
 
 "route.statuses.index.page-title";"Statuses"
 
+
+
 "route.error.error.page-title";"Application error"
 "route.error.error.page-title-404";"Page not found"
-"route.error.error.404.message";"Please check the url"
-"route.error.error.500.message";"Sorry, something has gone wrong"
+"route.error.error.message.404";"Please check the url"
+"route.error.error.message.500";"Sorry, something has gone wrong"
+
+
+
 
 "Fetch.log.finished";"Finished"
 "Fetch.log.updating-facebook-actors.start";"Updating facebook actors"
@@ -591,23 +640,7 @@
 
 // flash messages
 "Error.missing-date-range";"Missing date range"
-"Error.unconfirmed-username";"Incorrect username/password or email has not been confirmed"
-"Error.missing-username-email";"Please enter a username or email address"
-"Error.user-not-found";"User not found"
-"Error.password-reset-failed-email";"Failed to send reset email.<br />Please ask an admin user to reset your password"
-"Error.both-passwords-required";"Both passwords are required"
-"Error.passwords-dont-match";"Passwords do not match"
-"Error.passwords-too-short";"Password must be at least 4 characters"
-"Error.incorrect-user-key";"Incorrect user/key combination for password reset"
-"Error.missing-username";"Please enter a user name"
-"Error.missing-email";"Please enter an email address"
-"Error.invalid-email";"Please enter a valid email address"
 "Error.invalid-date-range";"Invalid date range"
-"Error.use-company-email";"To register, you must use a valid British Council email address"
-"Error.email-in-use";"Email already in use"
-"Error.username-in-use";"User name already in use"
-"Error.cant-confirm-email";"Something went wrong and we could'nt confirm your email address."
-"Error.invalid-confirm-email";"Incorrect user/key combination for email confirmation"
 "Error.display-name-missing";"Please enter a display name"
 "Error.display-name-exists";"Display name already taken"
 "Error.select-country";"Please select a country"
@@ -627,13 +660,6 @@
 "Error.lock-error.without-url";"Please log in to clear the lock."
 "Error.access-token.refresh";"One or more of your access tokens are set to expire soon. <a href="%url%">Click here</a> to refresh these tokens."
 
-"Success.email-confirmed";"Thank you for confirming your email. You can now login."
-"Success.linkedin-login";"Linkedin Account connected"
-"Success.password-reset-email-sent";"You should receive an email shortly with a password reset link"
-"Success.password-change";"Password changed successfully"
-"Success.logged-out";"Logged out"
-"Success.user-deleted";"User deleted"
-"Success.permissions-saved";"User permissions saved"
 "Success.presence-assigned-user";"Presence was assigned to user"
 "Success.presence-saved";"Presence saved"
 "Success.presence-deleted";"Presence deleted"
