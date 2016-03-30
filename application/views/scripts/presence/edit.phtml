@@ -54,8 +54,12 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">'.$this->tra
 										<?php if (!$this->editType || $requiresAccessToken) echo 'disabled'; ?>>
 									<span class="<?php echo $val->getSign(); ?>"></span>
 									<?php echo $title; ?>
-								</label><span
-									class="formHint"><?php echo $requiresAccessToken ? $this->translate()->trans('Presence.edit.hint.connect-account', ['%title%' => $title]) : ""; ?></span>
+								</label>
+								<?php if ($requiresAccessToken) : ?>
+								<span class="formHint">
+									 <?php echo $this->translate()->trans('Presence.edit.hint.connect-account', ['%title%' => $title]); ?>
+								</span>
+								<?php endif; ?>
 								<?php if (!$this->editType && ($presence->type == $val)) : ?>
 									<input type="hidden" value="<?php echo $val->getValue(); ?>" name="type">
 								<?php endif; ?>

@@ -418,6 +418,7 @@
 
 
 "Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay.label";"Actions per day"
+"Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\Branding.label";"Branding"
 "Outlandish\SocialMonitor\TableIndex\Header\Branding.description";"Branding shows whether a presence meets the British Council branding guidelines for social media presences."
@@ -429,15 +430,19 @@
 "Outlandish\SocialMonitor\TableIndex\Header\Countries.description";"The countries in this region."
 
 "Outlandish\SocialMonitor\TableIndex\Header\Country.label";"Country"
+"Outlandish\SocialMonitor\TableIndex\Header\Country.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\CountryCount.label";"Countries"
 "Outlandish\SocialMonitor\TableIndex\Header\CountryCount.description";"The number of countries."
 
 "Outlandish\SocialMonitor\TableIndex\Header\CurrentAudience.label";"Current Audience"
+"Outlandish\SocialMonitor\TableIndex\Header\CurrentAudience.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulation.label";"Digital Population"
+"Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulation.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulationHealth.label";"Digital Population Health"
+"Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulationHealth.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\EngagementRank.label";"Engagement Rank"
 "Outlandish\SocialMonitor\TableIndex\Header\EngagementRank.description";"Engagement Rank shows the rank of this presence or group when compared against others."
@@ -449,19 +454,25 @@
 "Outlandish\SocialMonitor\TableIndex\Header\Handle.description";"Select all the presences that you would like to compare, and then click on the Compare Button above"
 
 "Outlandish\SocialMonitor\TableIndex\Header\Name.label";"Name"
+"Outlandish\SocialMonitor\TableIndex\Header\Name.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\Options.label";"Options"
+"Outlandish\SocialMonitor\TableIndex\Header\Options.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\ParentName.label";"Country/SBU"
+"Outlandish\SocialMonitor\TableIndex\Header\ParentName.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\PercentTargetAudience.label";"Percentage of Target Audience"
+"Outlandish\SocialMonitor\TableIndex\Header\PercentTargetAudience.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\PresenceCount.label";"Presences"
 "Outlandish\SocialMonitor\TableIndex\Header\PresenceCount.description";"The number of presences."
 
 "Outlandish\SocialMonitor\TableIndex\Header\Presences.label";"Presences"
+"Outlandish\SocialMonitor\TableIndex\Header\Presences.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\PresenceType.label";"Presence Type"
+"Outlandish\SocialMonitor\TableIndex\Header\PresenceType.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\QualityRank.label";"Quality Rank"
 "Outlandish\SocialMonitor\TableIndex\Header\QualityRank.description";"Quality Rank shows the rank of this presence or group when compared against others."
@@ -476,13 +487,16 @@
 "Outlandish\SocialMonitor\TableIndex\Header\ReachScore.description";"Reach Score shows the score for the combined measures that measure a presences engagement"
 
 "Outlandish\SocialMonitor\TableIndex\Header\Region.label";"Region"
+"Outlandish\SocialMonitor\TableIndex\Header\Region.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\ResponseTime.label";"Response Time"
+"Outlandish\SocialMonitor\TableIndex\Header\ResponseTime.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\SignOff.label";"Sign Off"
 "Outlandish\SocialMonitor\TableIndex\Header\SignOff.description";"Sign Off shows whether a presence has been signed off by the Head of Digital."
 
 "Outlandish\SocialMonitor\TableIndex\Header\TargetAudience.label";"Target Audience"
+"Outlandish\SocialMonitor\TableIndex\Header\TargetAudience.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\TotalRank.label";"Overall Rank"
 "Outlandish\SocialMonitor\TableIndex\Header\TotalRank.description";"Overall Rank shows the rank of this presence or group when compared against others."

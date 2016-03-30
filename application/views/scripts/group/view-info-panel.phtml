@@ -8,7 +8,7 @@ $presences = $group->getPresences();
     <?php echo $group->display_name; ?>
 </h4>
 
-<h4><?php echo $this->translate('Global.presences')?>: <?php echo count($presences); ?></h4>
+<h4><?php echo $this->translate()->trans('Global.presences')?>: <?php echo count($presences); ?></h4>
 <?php if ($presences) : ?>
     <ul class="entity-list">
         <?php foreach ($presences as $p) : ?>

@@ -3,16 +3,16 @@
 $sbu = $this->editingGroup;
 $presences = $sbu->getPresences();
 $topBar = $this->gatekeeper()->filterAll(array(
-	'<a class="button-bc button-view" href="%url%">' . $this->translate('Group.buttons.edit-sbu') . '</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
-	'<a class="button-bc button-manage" href="%url%">' . $this->translate('Group.buttons.manage-presences') . '</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$sbu->id),
-    '<a class="button-bc button-delete" href="%url%">' . $this->translate('Global.delete') . '</a>' => array('controller'=>'group', 'action'=>'delete', 'id'=>$sbu->id)
+	'<a class="button-bc button-view" href="%url%">' . $this->translate()->trans('Group.buttons.edit-sbu') . '</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
+	'<a class="button-bc button-manage" href="%url%">' . $this->translate()->trans('Group.buttons.manage-presences') . '</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$sbu->id),
+    '<a class="button-bc button-delete" href="%url%">' . $this->translate()->trans('Global.delete') . '</a>' => array('controller'=>'group', 'action'=>'delete', 'id'=>$sbu->id)
 ));
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">' . $this->translate('Global.cancel') . '</a>', array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id), null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">' . $this->translate()->trans('Global.cancel') . '</a>', array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id), null, true);
 if ($cancel) {
     $bottomBar[] = $cancel;
 }
-$bottomBar[] = '<button type="submit" class="button-bc">' . $this->translate('Global.save') . '</button>';
+$bottomBar[] = '<button type="submit" class="button-bc">' . $this->translate()->trans('Global.save') . '</button>';
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
@@ -29,7 +29,7 @@ if ($topBar && $this->showButtons) {
         <div class="row">
             <div class="small-24 medium-8 large-8 columns">
                 <label for="display_name" class="requiredField">
-					<?php echo $this->translate('Global.display-name') ?><span class="asteriskField">*</span>
+					<?php echo $this->translate()->trans('Global.display-name') ?><span class="asteriskField">*</span>
                 </label>
             </div>
             <div class="small-24 medium-16 large-16 end columns">
@@ -41,7 +41,7 @@ if ($topBar && $this->showButtons) {
         <div class="row">
             <div class="small-24 medium-8 large-8 columns">
                 <label for="audience">
-					<?php echo $this->translate('Global.available-audience-size') ?>
+					<?php echo $this->translate()->trans('Global.available-audience-size') ?>
                 </label>
             </div>
             <div class="small-24 medium-16 large-16 end columns">

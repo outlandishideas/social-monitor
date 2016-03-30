@@ -1,11 +1,11 @@
 <?php
 $this->buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button-bc button-edit" href="%url%">' . $this->translate('Group.buttons.edit-sbu') . '</a>' => array('action'=>'edit', 'id'=>$this->group->id),
-	'<a class="button-bc button-manage" href="%url%">' . $this->translate('Group.buttons.manage-presences') . '</a>' => array('action'=>'manage', 'id'=>$this->group->id),
-	'<a class="button-bc button-delete" href="%url%">' . $this->translate('Group.buttons.delete-sbu') . '</a>' => array('action'=>'delete', 'id'=>$this->group->id),
-    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>' . $this->translate('Global.download-report') . '</a>' => array('action'=>'download-report', 'id'=>$this->group->id),
+	'<a class="button-bc button-edit" href="%url%">' . $this->translate()->trans('Group.buttons.edit-sbu') . '</a>' => array('action'=>'edit', 'id'=>$this->group->id),
+	'<a class="button-bc button-manage" href="%url%">' . $this->translate()->trans('Group.buttons.manage-presences') . '</a>' => array('action'=>'manage', 'id'=>$this->group->id),
+	'<a class="button-bc button-delete" href="%url%">' . $this->translate()->trans('Group.buttons.delete-sbu') . '</a>' => array('action'=>'delete', 'id'=>$this->group->id),
+    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>' . $this->translate()->trans('Global.download-report') . '</a>' => array('action'=>'download-report', 'id'=>$this->group->id),
 ));
 $this->campaign = $this->group;
 $this->controllerName = 'group';
-$this->campaignType = $this->translate('Global.sbu');
+$this->campaignType = $this->translate()->trans('Global.sbu');
 echo $this->render('partials/campaign-view.phtml');
