@@ -1,4 +1,9 @@
-<?php //print_r($this->presence); ?>
+<?php
+//print_r($this->presence);
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+?>
+
 <div id="pickers">
 	<?php echo $this->render('partials/chart-picker.phtml'); ?>
 	<?php echo $this->render('partials/daterange.phtml'); ?>
@@ -6,7 +11,7 @@
 
 <?php
     $links = $this->gatekeeper()->filterAll(array(
-        '<a class="button add" href="%url%"><span class="icon-plus"></span>  '.$this->translate()->trans('Presence.compare.button.create-sbu').'</a>' => array('controller'=>'group','action' => 'new', 'presences'=>implode(',', array_keys($this->compareData))),
+        '<a class="button add" href="%url%"><span class="icon-plus"></span>  '.$translator->trans('Presence.compare.button.create-sbu').'</a>' => array('controller'=>'group','action' => 'new', 'presences'=>implode(',', array_keys($this->compareData))),
     ), null, true);
     if ($links) {
         echo '<div class="buttons">' . implode('', $links) . '</div>';
@@ -15,7 +20,7 @@
 
 <?php if (empty($this->compareData)) : ?>
 
-    <h3><?php echo $this->translate()->trans('Presence.index.table-empty'); ?></h3>
+    <h3><?php echo $translator->trans('Presence.index.table-empty'); ?></h3>
 
 <?php else : ?>
 
@@ -39,13 +44,13 @@
     </div>
 
 	<div class="section-title">
-		<h2><span class="icon-bar-chart icon-large"></span> <?php echo $this->translate()->trans('Presence.compare.chart-title'); ?></h2>
+		<h2><span class="icon-bar-chart icon-large"></span> <?php echo $translator->trans('Presence.compare.chart-title'); ?></h2>
 	</div>
 
     <table class="text">
 
         <tr>
-            <th><?php echo $this->translate()->trans('Presence.handle'); ?></th>
+            <th><?php echo $translator->trans('Presence.handle'); ?></th>
             <?php foreach ($this->tableMetrics as $key=>$label) : ?>
                 <th><?php echo $label; ?></th>
             <?php endforeach; ?>

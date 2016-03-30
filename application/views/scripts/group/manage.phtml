@@ -1,17 +1,20 @@
 <?php
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
 $sbu = $this->group;
 
 $topBar = $this->gatekeeper()->filterAll(array(
-    '<a class="button-bc button-view" href="%url%">' . $this->translate()->trans('Group.buttons.view-sbu') . '</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
-    '<a class="button-bc button-edit" href="%url%">' . $this->translate()->trans('Group.buttons.edit-sbu') . '</a>' => array('controller'=>'group', 'action'=>'edit', 'id'=>$sbu->id)
+    '<a class="button-bc button-view" href="%url%">' . $translator->trans('Group.buttons.view-sbu') . '</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
+    '<a class="button-bc button-edit" href="%url%">' . $translator->trans('Group.buttons.edit-sbu') . '</a>' => array('controller'=>'group', 'action'=>'edit', 'id'=>$sbu->id)
 ));
 
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">' . $this->translate()->trans('Global.cancel') . '</a>', array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id), null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">' . $translator->trans('Global.cancel') . '</a>', array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id), null, true);
 if ($cancel) {
     $bottomBar[] = $cancel;
 }
-$bottomBar[] = '<button type="submit" class="button-bc">' . $this->translate()->trans('Global.save') . '</button>';
+$bottomBar[] = '<button type="submit" class="button-bc">' . $translator->trans('Global.save') . '</button>';
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>

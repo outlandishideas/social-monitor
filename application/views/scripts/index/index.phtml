@@ -1,6 +1,9 @@
 <?php
 use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
 /** @var Badge_Abstract[] $allBadges */
 $allBadges = $this->badges;
 $pageId = 'Index.index.';
@@ -11,7 +14,7 @@ $pageId = 'Index.index.';
         <h2 class="page-title"><?php echo $this->pageTitle ?></h2>
         <span class="help-text-toggle icon-question-sign icon-large">
             <div class="help-text">
-                <p><?php echo $this->translate()->trans($pageId . 'page-title-contextual-help')?></p>
+                <p><?php echo $translator->trans($pageId . 'page-title-contextual-help')?></p>
             </div>
         </span>
     </div>
@@ -32,12 +35,12 @@ $pageId = 'Index.index.';
     <div class="small-24 large-5 columns hide-for-small-down">
         <span class="help-text-toggle icon-question-sign icon-large">
             <div class="help-text">
-                <p><?php echo $this->translate()->trans($pageId . 'date-range-contextual-help')?></p>
+                <p><?php echo $translator->trans($pageId . 'date-range-contextual-help')?></p>
             </div>
         </span>
 
         <div id="map-date" class="bd-btm" data-current-date="<?php echo $this->currentDate; ?>" data-day-range="<?php echo $this->dayRange; ?>">
-            <h4><?php echo $this->translate()->trans($pageId . 'date-range')?></h4>
+            <h4><?php echo $translator->trans($pageId . 'date-range')?></h4>
             <div class="date-range-text"></div>
             <div class="range-slider" data-slider="<?php echo $this->dayRange; ?>" data-options="start: 1; end: <?php echo $this->dayRange; ?>; step: 1">
                 <span class="range-slider-handle" role="slider" tabindex="0"></span>
@@ -48,7 +51,7 @@ $pageId = 'Index.index.';
 
         <div class="find-country">
             <form onsubmit="return app.home.selectCountry()">
-                <label for="search-countries"><?php echo $this->translate()->trans($pageId . 'find-country')?></label>
+                <label for="search-countries"><?php echo $translator->trans($pageId . 'find-country')?></label>
                 <input type="text" id="search-countries" oninput="app.home.searchCountries()" />
             </form>
             <ul class="country-list">
@@ -66,7 +69,7 @@ $pageId = 'Index.index.';
         <div id="map">
             <span class="help-text-toggle icon-question-sign icon-large">
                 <div class="help-text">
-                    <p><?php echo $this->translate()->trans($pageId . 'map-contextual-help')?></p>
+                    <p><?php echo $translator->trans($pageId . 'map-contextual-help')?></p>
                 </div>
             </span>
             <div id="geo-map"></div>
@@ -80,7 +83,7 @@ $pageId = 'Index.index.';
 </div>
 
 <?php if(isset($this->groups) && count($this->groups) > 0): ?>
-    <h2><?php echo $this->translate()->trans('Global.sbus')?></h2>
+    <h2><?php echo $translator->trans('Global.sbus')?></h2>
     <div class="row">
         <div class="small-24 large-23 large-centered columns">
             <div class="row">
@@ -89,7 +92,7 @@ $pageId = 'Index.index.';
                         <div class="badge-small" data-group-id="<?php echo $group->id ?>" data-badge>
                             <h3><a href="<?php echo $this->url(array('controller'=>'group', 'action'=>'view', 'id'=>$group->id)); ?>"><?php echo $group->display_name; ?></a></h3>
                             <div class="badge-score bd-btm">
-                                <h4><span data-badge-title></span> <?php echo $this->translate()->trans('Global.score')?></h4>
+                                <h4><span data-badge-title></span> <?php echo $translator->trans('Global.score')?></h4>
                                 <div class="score-value" data-badge-score="%"></div>
                                 <div class="score-bar">
                                     <div data-badge-bar></div>
@@ -99,7 +102,7 @@ $pageId = 'Index.index.';
                                 <ul class="small-block-grid-3">
                                     <li>
                                         <a href="#all">
-                                            <h4><?php echo $this->translate()->trans('Global.presences')?></h4>
+                                            <h4><?php echo $translator->trans('Global.presences')?></h4>
                                             <div class="score-value"><?php echo count($group->getPresences()) ?></div>
                                         </a>
                                     </li>
@@ -144,17 +147,17 @@ $pageId = 'Index.index.';
 <div class="button-bc-bar pdflink">
     <div class="row bk-dark">
         <div class="small-24 columns" id="kpi-download">
-            <p><?php echo $this->translate()->trans($pageId.'pdf-download-description')?></p>
+            <p><?php echo $translator->trans($pageId.'pdf-download-description')?></p>
             <ul class="button-group">
                 <li>
                     <a
                         href="<?php echo $this->pdfLink; ?>"
                         target="_blank"
-                        title="<?php echo $this->translate()->trans($pageId.'pdf-download-link-title')?>"
+                        title="<?php echo $translator->trans($pageId.'pdf-download-link-title')?>"
                         class="button-bc"
                         download="metrics.pdf"
                     >
-                        <?php echo $this->translate()->trans($pageId.'pdf-download-link')?>
+                        <?php echo $translator->trans($pageId.'pdf-download-link')?>
                     </a>
                 </li>
             </ul>

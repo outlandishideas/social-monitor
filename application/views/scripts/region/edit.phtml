@@ -1,4 +1,7 @@
 <?php
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
 /** @var Model_Region $region */
 $region = $this->editingRegion;
 $presences = $region->getPresences();
@@ -11,16 +14,16 @@ if ($this->isNew) {
 	$cancelArgs['action'] = 'view';
 	$cancelArgs['id'] = $region->id;
 	$topBar = $this->gatekeeper()->filterAll(array(
-		'<a class="button-bc button-view" href="%url%">'.$this->translate()->trans('Region.buttons.view-region').'</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$region->id),
-		'<a class="button-bc button-manage" href="%url%">'.$this->translate()->trans('Region.buttons.manage-countries').'</a>' => array('controller'=>'region', 'action'=>'manage', 'id'=>$region->id),
-		'<a class="button-bc button-delete" href="%url%">'.$this->translate()->trans('Region.buttons.delete-region').'</a>' => array('controller'=>'region', 'action'=>'delete', 'id'=>$region->id)
+		'<a class="button-bc button-view" href="%url%">'.$translator->trans('Region.buttons.view-region').'</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$region->id),
+		'<a class="button-bc button-manage" href="%url%">'.$translator->trans('Region.buttons.manage-countries').'</a>' => array('controller'=>'region', 'action'=>'manage', 'id'=>$region->id),
+		'<a class="button-bc button-delete" href="%url%">'.$translator->trans('Region.buttons.delete-region').'</a>' => array('controller'=>'region', 'action'=>'delete', 'id'=>$region->id)
 	));
 }
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$this->translate()->trans('Global.cancel').'</a>', $cancelArgs, null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$translator->trans('Global.cancel').'</a>', $cancelArgs, null, true);
 if ($cancel) {
     $bottomBar[] = $cancel;
 }
-$bottomBar[] = '<button type="submit" class="button-bc button-save">'.$this->translate()->trans('Global.save').'</button>';
+$bottomBar[] = '<button type="submit" class="button-bc button-save">'.$translator->trans('Global.save').'</button>';
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>

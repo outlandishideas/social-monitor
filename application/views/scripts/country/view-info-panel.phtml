@@ -1,4 +1,7 @@
 <?php
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
 /** @var Model_Country $country */
 $country = $this->campaign;
 $presences = $country->getPresences();
@@ -12,16 +15,13 @@ $region = $country->getRegion();
 
 <?php if ($region) : ?>
     <p>
-		<?php echo str_replace('[]',
-			'<a href="' . $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)) . '">'.$region->display_name.'</a>',
-			$this->translate()->trans('Global.containing-region'));
-		?>
+		<?php echo $translator->trans('Global.containing-region', ['%region%' => '<a href="' . $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)) . '">'.$region->display_name.'</a>']); ?>
 	</p>
 <?php endif; ?>
 
-<p><?php echo $this->translate()->trans('Global.available-audience-size')?>: <?php echo number_format($country->getTargetAudience()); ?></p>
-<p><?php echo $this->translate()->trans('Global.country-population')?>: <?php echo number_format($country->population); ?></p>
-<p><?php echo $this->translate()->trans('Global.digital-population')?>: <?php echo number_format(round($country->getDigitalPopulation())) . ' (' . $country->penetration . '% ' . $this->translate()->trans('Global.penetration') . ')'; ?></p>
+<p><?php echo $translator->trans('Global.available-audience-size')?>: <?php echo number_format($country->getTargetAudience()); ?></p>
+<p><?php echo $translator->trans('Global.country-population')?>: <?php echo number_format($country->population); ?></p>
+<p><?php echo $translator->trans('Global.digital-population')?>: <?php echo number_format(round($country->getDigitalPopulation())) . ' (' . $country->penetration . '% ' . $translator->trans('Global.penetration') . ')'; ?></p>
 
 <h4>Presences: <?php echo count($presences); ?></h4>
 <?php if ($presences) : ?>

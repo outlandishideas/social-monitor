@@ -1,8 +1,11 @@
 <?php
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
 $buttons = $this->gatekeeper()->filterAll(array(
-    '<a class="button-bc button-edit" href="%url%">'.$this->translate()->trans('Presence.buttons.edit-presence').'</a>' => array('action'=>'edit', 'id'=>$this->presence->id),
-    '<a class="button-bc button-delete" href="%url%"></span>'.$this->translate()->trans('Presence.buttons.delete-presence').'</a>' => array('action'=>'delete', 'id'=>$this->presence->id),
-    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>'.$this->translate()->trans('Global.download-report').'</a>' => array('action'=>'download-report', 'id'=>$this->presence->id),
+    '<a class="button-bc button-edit" href="%url%">'.$translator->trans('Presence.buttons.edit-presence').'</a>' => array('action'=>'edit', 'id'=>$this->presence->id),
+    '<a class="button-bc button-delete" href="%url%"></span>'.$translator->trans('Presence.buttons.delete-presence').'</a>' => array('action'=>'delete', 'id'=>$this->presence->id),
+    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>'.$translator->trans('Global.download-report').'</a>' => array('action'=>'download-report', 'id'=>$this->presence->id),
 ));
 /** @var Model_Presence $presence */
 $presence = $this->presence;
@@ -66,9 +69,9 @@ if ($sizeDiff > 0) {
 	<div class="small-24 large-12 xlarge-16 columns">
 
         <dl class="tabs" data-tab id="model-tabs">
-            <dd class="active"><a href="#chart"><?php echo $this->translate()->trans('Global.charts'); ?></a></dd>
-            <dd><a href="#info"><?php echo $this->translate()->trans('Global.info'); ?></a></dd>
-            <dd><a href="#statuses"><?php echo $this->translate()->trans('Global.statuses'); ?></a></dd>
+            <dd class="active"><a href="#chart"><?php echo $translator->trans('Global.charts'); ?></a></dd>
+            <dd><a href="#info"><?php echo $translator->trans('Global.info'); ?></a></dd>
+            <dd><a href="#statuses"><?php echo $translator->trans('Global.statuses'); ?></a></dd>
         </dl>
         <div class="tabs-content" id="model-tabs-content">
             <div class="content active" id="chart">
@@ -84,7 +87,7 @@ if ($sizeDiff > 0) {
                     <div id="new-chart-values"></div>
                 </div>
                 <div class="hide-for-medium-up">
-                    <p><?php echo $this->translate()->trans('Campaign.view.charts-unavailable'); ?></p>
+                    <p><?php echo $translator->trans('Campaign.view.charts-unavailable'); ?></p>
                 </div>
             </div>
             <div class="content" id="info">
@@ -99,34 +102,34 @@ if ($sizeDiff > 0) {
 					$type = strtolower($presenceType);
 					$typeLink = "<a href=\"{$presence->page_url}\" target=\"_blank\">{$type} <span class=\"icon-external-link\"></span></a>";
 				?>
-				<p><?php echo $this->translate()->trans('Presence.view.info.presence-type', ['%type%' => $typeLink]); ?></p>
+				<p><?php echo $translator->trans('Presence.view.info.presence-type', ['%type%' => $typeLink]); ?></p>
 				<?php if ($presence->isForTwitter()) : ?>
-					<p><?php echo $this->translate()->trans('Presence.view.info.twitter.score', ['%score%' => $presence->klout_score]); ?></p>
-					<p><?php echo $this->translate()->trans('Presence.view.info.twitter.average-score', ['%score%' => $presence->getMetricValue('klout_score')]); ?></p>
+					<p><?php echo $translator->trans('Presence.view.info.twitter.score', ['%score%' => $presence->klout_score]); ?></p>
+					<p><?php echo $translator->trans('Presence.view.info.twitter.average-score', ['%score%' => $presence->getMetricValue('klout_score')]); ?></p>
 				<?php else : ?>
-					<p><?php echo $this->translate()->trans('Presence.view.info.presence.score', ['%type%' => $presenceType, '%score%' => $presence->getEngagementScore()->getScore()]); ?></p>
-					<p><?php echo $this->translate()->trans('Presence.view.info.presence.average-score', ['%type%' => $presenceType, '%score%' => $presence->getEngagementScore(true)->getScore()]); ?></p>
+					<p><?php echo $translator->trans('Presence.view.info.presence.score', ['%type%' => $presenceType, '%score%' => $presence->getEngagementScore()->getScore()]); ?></p>
+					<p><?php echo $translator->trans('Presence.view.info.presence.average-score', ['%type%' => $presenceType, '%score%' => $presence->getEngagementScore(true)->getScore()]); ?></p>
 				<?php endif; ?>
                 <?php if ($ownerUrl) : ?>
 					<?php $ownerLink = "<a href=\"{$ownerUrl}\">{$owner->display_name}</a>"; ?>
-					<p><?php echo $this->translate()->trans('Presence.view.info.owner-name', ['%link%' => $ownerLink]); ?></p>
-                    <p><?php echo $this->translate()->trans('Presence.view.info.target-audience', ['%size%' => number_format($targetSize)]); ?></p>
-                    <p><?php echo $this->translate()->trans('Presence.view.info.current-audience', ['%size%' => number_format($currentSize)]); ?></p>
+					<p><?php echo $translator->trans('Presence.view.info.owner-name', ['%link%' => $ownerLink]); ?></p>
+                    <p><?php echo $translator->trans('Presence.view.info.target-audience', ['%size%' => number_format($targetSize)]); ?></p>
+                    <p><?php echo $translator->trans('Presence.view.info.current-audience', ['%size%' => number_format($currentSize)]); ?></p>
                     <?php if ($requiredRates) : ?>
                         <?php if ($timeToTarget) : ?>
-                        <p><?php echo $this->translate()->trans('Presence.view.info.time-to-target', ['%date%' => $timeToTarget->format('F Y')]); ?></p>
+                        <p><?php echo $translator->trans('Presence.view.info.time-to-target', ['%date%' => $timeToTarget->format('F Y')]); ?></p>
                         <?php endif; ?>
-                        <p><?php echo $this->translate()->trans('Presence.view.info.daily-gains'); ?></p>
+                        <p><?php echo $translator->trans('Presence.view.info.daily-gains'); ?></p>
                         <table id="audience-rates">
                             <tbody>
                             <tr>
-                                <th><?php echo $this->translate()->trans('Global.target-date'); ?></th>
+                                <th><?php echo $translator->trans('Global.target-date'); ?></th>
                                 <?php foreach ($requiredRates as $rate) : ?>
                                 <td class="<?php echo $rate['type']; ?>">by <?php echo $rate['date']; ?></td>
                                 <?php endforeach; ?>
                             </tr>
                             <tr>
-                                <th><?php echo $this->translate()->trans('Global.gain-per-day'); ?></th>
+                                <th><?php echo $translator->trans('Global.gain-per-day'); ?></th>
                                 <?php foreach ($requiredRates as $rate) : ?>
                                 <td class="<?php echo $rate['type']; ?>"><?php echo $rate['rate']; ?></td>
                                 <?php endforeach; ?>
@@ -147,7 +150,7 @@ if ($sizeDiff > 0) {
                     <table>
                         <thead>
                             <tr>
-                                <th class="message"><?php echo $this->translate()->trans('Global.content'); ?></th>
+                                <th class="message"><?php echo $translator->trans('Global.content'); ?></th>
                             </tr>
                         </thead>
                         <tbody>

@@ -1,4 +1,7 @@
 <?php
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
 /** @var Model_Region $region */
 $region = $this->campaign;
 $presences = $region->getPresences();
@@ -9,7 +12,7 @@ $countries = $region->getCountries();
     <?php echo $region->display_name; ?>
 </h4>
 
-<h4><?php echo $this->translate()->trans('Global.countries') ?>: <?php echo count($countries); ?></h4>
+<h4><?php echo $translator->trans('Global.countries') ?>: <?php echo count($countries); ?></h4>
 <?php if ($countries) : ?>
 <ul class="entity-list">
     <?php foreach ($countries as $c) : ?>
@@ -18,7 +21,7 @@ $countries = $region->getCountries();
 </ul>
 <?php endif; ?>
 
-<h4><?php echo $this->translate()->trans('Global.presences') ?>: <?php echo count($presences); ?></h4>
+<h4><?php echo $translator->trans('Global.presences') ?>: <?php echo count($presences); ?></h4>
 <?php if ($presences) : ?>
     <ul class="entity-list">
         <?php foreach ($presences as $p) : ?>

@@ -1,11 +1,4 @@
 <?php
-/**
- * Need the following params
- * $tableId = id of the table that is being created
- * $tableHeaders = an array of Header_Abstract subclasses
- * $rows = an array of rows to show. Don't use this partial if no rows
- * $sortCol = Name of column to sort on, by default
- */
 use Outlandish\SocialMonitor\Helper\Gatekeeper;
 use Outlandish\SocialMonitor\TableIndex\Header\Countries;
 use Outlandish\SocialMonitor\TableIndex\Header\Handle;
@@ -14,6 +7,17 @@ use Outlandish\SocialMonitor\TableIndex\Header\Name;
 use Outlandish\SocialMonitor\TableIndex\Header\Options;
 use Outlandish\SocialMonitor\TableIndex\Header\ParentName;
 use Outlandish\SocialMonitor\TableIndex\Header\Presences;
+
+/**
+ * Need the following params
+ * $tableId = id of the table that is being created
+ * $tableHeaders = an array of Header_Abstract subclasses
+ * $rows = an array of rows to show. Don't use this partial if no rows
+ * $sortCol = Name of column to sort on, by default
+ */
+
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
 
 /** @var Header[] $headers */
 $headers = array_filter($this->tableHeaders, function(Header $h) {
@@ -56,14 +60,14 @@ $gatekeeper = $this->gatekeeper();
                         case Countries::getName():
                             $count = count((array)$cellValue);
                             if ($header->getName() == Countries::getName()) {
-								$countryText = $count == 1 ? $this->translate()->trans('Global.country') :
-									$this->translate()->trans('Global.countries');
+								$countryText = $count == 1 ? $translator->trans('Global.country') :
+									$translator->trans('Global.countries');
                                 $countText = $count . ' ' . $countryText;
                             } else {
                                 $countText = $count . ' presence' . ($count == 1 ? '' : 's');
                             }
                             if($count > 0) {
-								$clickToExpand = $this->translate()->trans('Campaign.index.new-index-table.click-to-expand');
+								$clickToExpand = $translator->trans('Campaign.index.new-index-table.click-to-expand');
                                 echo '<span class="entity-list-toggle" title="Click to expand">' . $countText . '</span>';
                                 echo '<ul class="entity-list">';
                                 foreach ($cellValue as $template=>$urlArgs) {

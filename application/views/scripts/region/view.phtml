@@ -1,15 +1,18 @@
 <?php
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
 $this->buttons = $this->gatekeeper()->filterAll(array(
-    '<a class="button-bc button-edit" href="%url%">'.$this->translate()->trans("Region.buttons.edit-region").'</a>' =>
+    '<a class="button-bc button-edit" href="%url%">'.$translator->trans("Region.buttons.edit-region").'</a>' =>
 		array('action'=>'edit', 'id'=>$this->region->id),
-    '<a class="button-bc button-manage" href="%url%">'.$this->translate()->trans("Region.buttons.manage-countries").'</a>' =>
+    '<a class="button-bc button-manage" href="%url%">'.$translator->trans("Region.buttons.manage-countries").'</a>' =>
 		array('action'=>'manage', 'id'=>$this->region->id),
-    '<a class="button-bc button-delete" href="%url%">'.$this->translate()->trans("Region.buttons.delete-region").'</a>' =>
+    '<a class="button-bc button-delete" href="%url%">'.$translator->trans("Region.buttons.delete-region").'</a>' =>
 		array('action'=>'delete', 'id'=>$this->region->id),
-    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%">'.$this->translate()->trans("Global.download-report").'</a>' =>
+    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%">'.$translator->trans("Global.download-report").'</a>' =>
 		array('action'=>'download-report', 'id'=>$this->region->id),
 ));
 $this->campaign = $this->region;
 $this->controllerName = 'region';
-$this->campaignType = $this->translate()->trans('Global.region');
+$this->campaignType = $translator->trans('Global.region');
 echo $this->render('partials/campaign-view.phtml');

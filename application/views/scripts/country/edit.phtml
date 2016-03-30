@@ -1,4 +1,6 @@
 <?php
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
 $country = $this->editingCountry;
 $topButtons = array();
 $bottomButtons = array();
@@ -9,16 +11,16 @@ if ($this->isNew) {
 	$cancelArgs['action'] = 'view';
 	$cancelArgs['id'] = $country->id;
 	$topButtons = $this->gatekeeper()->filterAll(array(
-		'<a class="button-bc button-view" href="%url%">'.$this->translate()->trans('Country.buttons.view-country').'</a>' => array('controller'=>'country', 'action'=>'view', 'id'=>$country->id),
-		'<a class="button-bc button-manage" href="%url%">'.$this->translate()->trans('Country.buttons.manage-presences').'</a>' => array('controller'=>'country', 'action'=>'manage', 'id'=>$country->id),
-		'<a class="button-bc button-delete" href="%url%">'.$this->translate()->trans('Global.delete').'</a>' => array('controller'=>'country', 'action'=>'delete', 'id'=>$country->id)
+		'<a class="button-bc button-view" href="%url%">'.$translator->trans('Country.buttons.view-country').'</a>' => array('controller'=>'country', 'action'=>'view', 'id'=>$country->id),
+		'<a class="button-bc button-manage" href="%url%">'.$translator->trans('Country.buttons.manage-presences').'</a>' => array('controller'=>'country', 'action'=>'manage', 'id'=>$country->id),
+		'<a class="button-bc button-delete" href="%url%">'.$translator->trans('Global.delete').'</a>' => array('controller'=>'country', 'action'=>'delete', 'id'=>$country->id)
 	));
 }
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$this->translate()->trans('Global.cancel').'</a>', $cancelArgs, null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$translator->trans('Global.cancel').'</a>', $cancelArgs, null, true);
 if ($cancel) {
     $bottomButtons[] = $cancel;
 }
-$bottomButtons[] = '<button type="submit" class="button-bc">'.$this->translate()->trans('Global.save').'</button>';
+$bottomButtons[] = '<button type="submit" class="button-bc">'.$translator->trans('Global.save').'</button>';
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
@@ -34,12 +36,12 @@ if ($topButtons) {
 	<div class="row">
 		<div class="small-24 medium-8 large-8 columns">
 			<label for="country" class="requiredField">
-				<?php echo $this->translate()->trans('Global.country')?><span class="asteriskField">*</span>
+				<?php echo $translator->trans('Global.country')?><span class="asteriskField">*</span>
 			</label>
 		</div>
 		<div class="small-24 medium-16 large-16 end columns">
 			<select name="country" id="country" class="selectInput">
-				<option value="">--<?php echo $this->translate()->trans('Global.select')?>--</option>
+				<option value="">--<?php echo $translator->trans('Global.select')?>--</option>
 				<?php foreach ($this->countryCodes as $code => $name) : ?>
 					<option value="<?php echo $code; ?>" <?php if ($country->country == $code) echo 'selected'; ?>><?php echo $name; ?></option>
 				<?php endforeach; ?>
@@ -51,7 +53,7 @@ if ($topButtons) {
 	<div class="row">
 		<div class="small-24 medium-8 large-8 columns">
 			<label for="display_name" class="requiredField">
-				<?php echo $this->translate()->trans('Global.display-name')?><span class="asteriskField">*</span>
+				<?php echo $translator->trans('Global.display-name')?><span class="asteriskField">*</span>
 			</label>
 		</div>
 		<div class="small-24 medium-16 large-16 end columns">
@@ -63,7 +65,7 @@ if ($topButtons) {
 	<div class="row">
 		<div class="small-24 medium-8 large-8 columns">
 			<label for="audience">
-				<?php echo $this->translate()->trans('Global.available-audience-size')?>
+				<?php echo $translator->trans('Global.available-audience-size')?>
 			</label>
 		</div>
 		<div class="small-24 medium-16 large-16 end columns">
@@ -75,7 +77,7 @@ if ($topButtons) {
 	<div class="row">
 		<div class="small-24 medium-8 large-8 columns">
 			<label for="population">
-				<?php echo $this->translate()->trans('Global.country-population')?>
+				<?php echo $translator->trans('Global.country-population')?>
 			</label>
 		</div>
 		<div class="small-24 medium-16 large-16 end columns">
@@ -87,7 +89,7 @@ if ($topButtons) {
 	<div class="row">
 		<div class="small-24 medium-8 large-8 columns">
 			<label for="penetration">
-				<?php echo $this->translate()->trans('Global.internet-penetration')?><span>&nbsp;(%)</span>
+				<?php echo $translator->trans('Global.internet-penetration')?><span>&nbsp;(%)</span>
 			</label>
 		</div>
 		<div class="small-24 medium-16 large-16 end columns">

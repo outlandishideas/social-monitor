@@ -1,11 +1,14 @@
 <?php
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
 $this->buttons = $this->gatekeeper()->filterAll(array(
-	'<a class="button-bc button-edit" href="%url%">' . $this->translate()->trans('Group.buttons.edit-sbu') . '</a>' => array('action'=>'edit', 'id'=>$this->group->id),
-	'<a class="button-bc button-manage" href="%url%">' . $this->translate()->trans('Group.buttons.manage-presences') . '</a>' => array('action'=>'manage', 'id'=>$this->group->id),
-	'<a class="button-bc button-delete" href="%url%">' . $this->translate()->trans('Group.buttons.delete-sbu') . '</a>' => array('action'=>'delete', 'id'=>$this->group->id),
-    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>' . $this->translate()->trans('Global.download-report') . '</a>' => array('action'=>'download-report', 'id'=>$this->group->id),
+	'<a class="button-bc button-edit" href="%url%">' . $translator->trans('Group.buttons.edit-sbu') . '</a>' => array('action'=>'edit', 'id'=>$this->group->id),
+	'<a class="button-bc button-manage" href="%url%">' . $translator->trans('Group.buttons.manage-presences') . '</a>' => array('action'=>'manage', 'id'=>$this->group->id),
+	'<a class="button-bc button-delete" href="%url%">' . $translator->trans('Group.buttons.delete-sbu') . '</a>' => array('action'=>'delete', 'id'=>$this->group->id),
+    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>' . $translator->trans('Global.download-report') . '</a>' => array('action'=>'download-report', 'id'=>$this->group->id),
 ));
 $this->campaign = $this->group;
 $this->controllerName = 'group';
-$this->campaignType = $this->translate()->trans('Global.sbu');
+$this->campaignType = $translator->trans('Global.sbu');
 echo $this->render('partials/campaign-view.phtml');

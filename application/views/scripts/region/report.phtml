@@ -1,27 +1,30 @@
 <?php
-    $countriesCount = count($this->countries);
-    $countries = array_map(function($c) {
-        /** @var Model_Country $c */
-        return $c->getName();
-    }, $this->countries);
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
 
-    $presences = array_map(function($c) {
-        /** @var Model_Country $c */
-        return $c->getName();
-    }, $this->region->getPresences());
-    $presenceCount = count($presences);
+$countriesCount = count($this->countries);
+$countries = array_map(function($c) {
+	/** @var Model_Country $c */
+	return $c->getName();
+}, $this->countries);
+
+$presences = array_map(function($c) {
+	/** @var Model_Country $c */
+	return $c->getName();
+}, $this->region->getPresences());
+$presenceCount = count($presences);
 ?>
 
 <div class="row">
     <div class="small-12 columns">
         <section class="border-section info-section">
-            <h2><?php echo $this->translate()->trans('Global.countries')?>: <?php echo $countriesCount; ?></h2>
+            <h2><?php echo $translator->trans('Global.countries')?>: <?php echo $countriesCount; ?></h2>
             <p><?php echo implode(", ", $countries) ?>.</p>
         </section>
     </div>
     <div class="small-12 columns">
         <section class="border-section info-section">
-            <h2><?php echo $this->translate()->trans('Global.presences')?>: <?php echo $presenceCount; ?></h2>
+            <h2><?php echo $translator->trans('Global.presences')?>: <?php echo $presenceCount; ?></h2>
             <p><?php echo implode(", ", $presences) ?>.</p>
         </section>
     </div>

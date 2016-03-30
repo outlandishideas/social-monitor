@@ -2,6 +2,9 @@
 
     <?php
 
+	/** @var \Symfony\Component\Translation\Translator $translator */
+	$translator = $this->translate();
+
     /** @var Zend_Navigation_Page_Mvc $page */
     foreach ($this->container as $page) :
 
@@ -23,11 +26,11 @@
 
                 if ($href) : ?>
                     <a href="<?php echo $href; ?>" class="<?php echo implode(' ', $classes); ?>">
-                        <span><?php echo $this->translate()->trans('Global.' . $page->getId()); ?></span>
+                        <span><?php echo $translator->trans('navigation-menu.' . $page->getId()); ?></span>
                     </a><?php
                 else : ?>
                     <span class="<?php echo implode(' ', $classes); ?>">
-                        <span><?php echo $this->translate()->trans('Global.' . $page->getId()); ?></span>
+                        <span><?php echo $translator->trans('navigation-menu.' . $page->getId()); ?></span>
                     </span><?php
                 endif;
 

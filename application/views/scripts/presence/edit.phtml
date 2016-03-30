@@ -7,6 +7,9 @@ use Outlandish\SocialMonitor\PresenceType\SinaWeiboType;
 use Outlandish\SocialMonitor\PresenceType\TwitterType;
 use Outlandish\SocialMonitor\PresenceType\YoutubeType;
 
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
 /** @var Model_Presence $presence */
 $presence = $this->presence;
 /** @var PresenceType[] $types */
@@ -23,15 +26,15 @@ if ($this->isNew) {
 	$cancelArgs['action'] = 'view';
 	$cancelArgs['id'] = $presence->id;
 	$topBar = $this->gatekeeper()->filterAll(array(
-		'<a href="%url%" class="button-bc button-view">'.$this->translate()->trans('Global.view').'</a>' => array('action' => 'view', 'id' => $presence->id),
-		'<a href="%url%" class="button-bc button-delete">'.$this->translate()->trans('Global.delete').'</a>' => array('action' => 'delete', 'id' => $presence->id)
+		'<a href="%url%" class="button-bc button-view">'.$translator->trans('Global.view').'</a>' => array('action' => 'view', 'id' => $presence->id),
+		'<a href="%url%" class="button-bc button-delete">'.$translator->trans('Global.delete').'</a>' => array('action' => 'delete', 'id' => $presence->id)
 	));
 }
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$this->translate()->trans('Global.cancel').'</a>', $cancelArgs, null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$translator->trans('Global.cancel').'</a>', $cancelArgs, null, true);
 if ($cancel) {
 	$bottomBar[] = $cancel;
 }
-$bottomBar[] = '<button type="submit" class="button-bc button-save">'.$this->translate()->trans('Global.save').'</button>';
+$bottomBar[] = '<button type="submit" class="button-bc button-save">'.$translator->trans('Global.save').'</button>';
 ?>
 
 <div id="presence-edit-form">
@@ -48,7 +51,7 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">'.$this->tra
 		<fieldset class="inlineLabels">
 			<div class="row">
 				<div class="small-24 medium-6 large-4 columns">
-					<p class="label"><?php echo $this->translate()->trans('Presence.type'); ?><span class="asteriskField">*</span></p>
+					<p class="label"><?php echo $translator->trans('Presence.type'); ?><span class="asteriskField">*</span></p>
 				</div>
 				<div class="small-24 medium-18 large-20 end columns">
 					<ul class="blockLabels presence-types">
@@ -65,7 +68,7 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">'.$this->tra
 								</label>
 								<?php if ($requiresAccessToken) : ?>
 								<span class="formHint">
-									 <?php echo $this->translate()->trans('Presence.edit.hint.connect-account', ['%title%' => $title]); ?>
+									 <?php echo $translator->trans('Presence.edit.hint.connect-account', ['%title%' => $title]); ?>
 								</span>
 								<?php endif; ?>
 								<?php if (!$this->editType && ($presence->type == $val)) : ?>
@@ -80,26 +83,26 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">'.$this->tra
 			<div class="row">
 				<div class="small-24 medium-6 large-4 columns">
 					<label for="handle" class="requiredField">
-						<?php echo $this->translate()->trans('Presence.handle'); ?><span class="asteriskField">*</span>
+						<?php echo $translator->trans('Presence.handle'); ?><span class="asteriskField">*</span>
 					</label>
 				</div>
 				<div class="small-24 medium-8 large-8 columns">
 					<input name="handle" id="handle" type="text" value="<?php echo $presence->handle; ?>">
 				</div>
 				<div class="small-24 medium-10 large-12 end columns presence-handle-hints">
-					<p class="formHint hint-<?php echo FacebookType::NAME; ?>"><?php echo $this->translate()->trans('Presence.edit.hint.handle.facebook'); ?></p>
-					<p class="formHint hint-<?php echo TwitterType::NAME; ?>"><?php echo $this->translate()->trans('Presence.edit.hint.handle.twitter'); ?></p>
-					<p class="formHint hint-<?php echo InstagramType::NAME; ?>"><?php echo $this->translate()->trans('Presence.edit.hint.handle.instagram'); ?></p>
-					<p class="formHint hint-<?php echo YoutubeType::NAME; ?>"><?php echo $this->translate()->trans('Presence.edit.hint.handle.youtube'); ?></p>
-					<p class="formHint hint-<?php echo LinkedinType::NAME; ?>"><?php echo $this->translate()->trans('Presence.edit.hint.handle.linkedin'); ?></p>
-					<p class="formHint hint-<?php echo SinaWeiboType::NAME; ?>"><?php echo $this->translate()->trans('Presence.edit.hint.handle.sinaweibo'); ?></p>
+					<p class="formHint hint-<?php echo FacebookType::NAME; ?>"><?php echo $translator->trans('Presence.edit.hint.handle.facebook'); ?></p>
+					<p class="formHint hint-<?php echo TwitterType::NAME; ?>"><?php echo $translator->trans('Presence.edit.hint.handle.twitter'); ?></p>
+					<p class="formHint hint-<?php echo InstagramType::NAME; ?>"><?php echo $translator->trans('Presence.edit.hint.handle.instagram'); ?></p>
+					<p class="formHint hint-<?php echo YoutubeType::NAME; ?>"><?php echo $translator->trans('Presence.edit.hint.handle.youtube'); ?></p>
+					<p class="formHint hint-<?php echo LinkedinType::NAME; ?>"><?php echo $translator->trans('Presence.edit.hint.handle.linkedin'); ?></p>
+					<p class="formHint hint-<?php echo SinaWeiboType::NAME; ?>"><?php echo $translator->trans('Presence.edit.hint.handle.sinaweibo'); ?></p>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="small-24 medium-6 large-4 columns">
 					<label for="size">
-						<?php echo $this->translate()->trans('Presence.edit.label.size'); ?>
+						<?php echo $translator->trans('Presence.edit.label.size'); ?>
 					</label>
 				</div>
 				<div class="small-24 medium-8 large-8 columns">
@@ -112,24 +115,24 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">'.$this->tra
 					</select>
 				</div>
 				<div class="small-24 medium-10 large-12 end columns">
-					<p class="formHint"><?php echo $this->translate()->trans('Presence.edit.hint.size'); ?></p>
+					<p class="formHint"><?php echo $translator->trans('Presence.edit.hint.size'); ?></p>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="small-24 medium-6 large-4 columns">
-					<p class="label"><?php echo $this->translate()->trans('Presence.edit.label.signed-off'); ?></p>
+					<p class="label"><?php echo $translator->trans('Presence.edit.label.signed-off'); ?></p>
 				</div>
 				<div class="small-24 medium-18 large-20 end columns">
 					<ul class="blockLabels">
 						<li>
 							<label class="radio"><input name="sign_off" type="radio" value="0"
-									<?php if ($presence->sign_off < 1) echo 'checked'; ?>> <?php echo $this->translate()->trans('Global.no'); ?>
+									<?php if ($presence->sign_off < 1) echo 'checked'; ?>> <?php echo $translator->trans('Global.no'); ?>
 							</label>
 						</li>
 						<li>
 							<label class="radio"><input name="sign_off" type="radio" value="1"
-									<?php if ($presence->sign_off > 0) echo 'checked'; ?>> <?php echo $this->translate()->trans('Global.yes'); ?>
+									<?php if ($presence->sign_off > 0) echo 'checked'; ?>> <?php echo $translator->trans('Global.yes'); ?>
 							</label>
 						</li>
 					</ul>
@@ -138,18 +141,18 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">'.$this->tra
 
 			<div class="row">
 				<div class="small-24 medium-6 large-4 columns">
-					<p class="label"><?php echo $this->translate()->trans('Presence.edit.label.branding'); ?></p>
+					<p class="label"><?php echo $translator->trans('Presence.edit.label.branding'); ?></p>
 				</div>
 				<div class="small-24 medium-18 large-20 end columns">
 					<ul class="blockLabels">
 						<li>
 							<label class="radio"><input name="branding" type="radio" value="0"
-									<?php if ($presence->branding < 1) echo 'checked'; ?>> <?php echo $this->translate()->trans('Global.no'); ?>
+									<?php if ($presence->branding < 1) echo 'checked'; ?>> <?php echo $translator->trans('Global.no'); ?>
 							</label>
 						</li>
 						<li>
 							<label class="radio"><input name="branding" type="radio" value="1"
-									<?php if ($presence->branding > 0) echo 'checked'; ?>> <?php echo $this->translate()->trans('Global.yes'); ?>
+									<?php if ($presence->branding > 0) echo 'checked'; ?>> <?php echo $translator->trans('Global.yes'); ?>
 							</label>
 						</li>
 					</ul>
@@ -162,16 +165,16 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">'.$this->tra
 			<fieldset>
 				<div clas="row">
 					<div class="columns small-24">
-						<h2><?php echo $this->translate()->trans('Presence.edit.access-token.title'); ?></h2>
-						<p><?php echo $this->translate()->trans('Presence.edit.access-token.message'); ?></p>
+						<h2><?php echo $translator->trans('Presence.edit.access-token.title'); ?></h2>
+						<p><?php echo $translator->trans('Presence.edit.access-token.message'); ?></p>
 						<?php if ($presence->getUser()) : ?>
-							<p><?php echo $this->translate()->trans('Presence.edit.access-token.has-user.message', ['%name%' => $presence->getUser()->name]); ?></p>
+							<p><?php echo $translator->trans('Presence.edit.access-token.has-user.message', ['%name%' => $presence->getUser()->name]); ?></p>
 						<?php else : ?>
-							<p><?php echo $this->translate()->trans('Presence.edit.access-token.no-user.message'); ?></p>
+							<p><?php echo $translator->trans('Presence.edit.access-token.no-user.message'); ?></p>
 						<?php endif; ?>
 
 						<?php if ($user->getAccessToken($presence->getType())) :
-							$accessButton = $this->gatekeeper()->filter('<a href="%url%" class="button-bc inline">'.$this->translate()->trans('Presence.edit.access-token.button').'</a>', array('controller' => 'presence', 'action' => 'assign', 'id' => $presence->id), null, true); ?>
+							$accessButton = $this->gatekeeper()->filter('<a href="%url%" class="button-bc inline">'.$translator->trans('Presence.edit.access-token.button').'</a>', array('controller' => 'presence', 'action' => 'assign', 'id' => $presence->id), null, true); ?>
 							<p><?php echo $accessButton; ?></p>
 						<?php endif; ?>
 

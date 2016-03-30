@@ -13,7 +13,7 @@
 "Global.available-audience-size";"Available Audience Size"
 "Global.additional-info";"Additional Info"
 "Global.download-report";"Download Report"
-"Global.containing-region";"Part of the [] region"
+"Global.containing-region";"Part of the %region% region"
 "Global.target-date";"Target date"
 "Global.gain-per-day";"Required gain per day"
 "Global.content";"Content"
