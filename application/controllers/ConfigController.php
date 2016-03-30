@@ -11,19 +11,19 @@ class ConfigController extends BaseController {
 		$qualityBadge = self::getContainer()->get('badge.quality');
 		$engagementBadge = self::getContainer()->get('badge.engagement');
 
-		$values = array(
+		$sections = array(
 
             (object)array(
-                'title' => $this->translator->trans('Config.index.sections.general.title'),
+                'title' => $this->translator->trans('route.config.index.sections.general.title'),
                 'description' => '',
                 'kpis' => array(
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.general.feedback.title'),
-                        'description' => $this->translator->trans('Config.index.sections.general.feedback.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.general.feedback.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.general.feedback.description'),
                         'values' => array(
                             'email-feedback-to-address'=>
 								array(
-									'label'=>$this->translator->trans('Global.email-address'),
+									'label'=>$this->translator->trans('route.config.index.sections.general.feedback.email-address'),
 									'type'=>'email'
 								)
                         )
@@ -35,101 +35,101 @@ class ConfigController extends BaseController {
                 'description' => $reachBadge->getDescription(),
                 'kpis' => array(
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.reach.target-audience.title'),
-						'description' => $this->translator->trans('Config.index.sections.reach.target-audience.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.reach.target-audience.title'),
+						'description' => $this->translator->trans('route.config.index.sections.reach.target-audience.description'),
 						'values' => array(
 							'popularity_weighting' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.weighting')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.weighting')
 							),
 
 							'fb_min' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.fb-min')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.fb-min')
 							),
 							'fb_opt' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.fb-opt')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.fb-opt')
 							),
 
 							'tw_min' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.tw-min')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.tw-min')
 							),
 							'tw_opt' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.tw-opt')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.tw-opt')
 							),
 
 							'sw_min' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.sw-min')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.sw-min')
 							),
 							'sw_opt' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.sw-opt')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.sw-opt')
 							),
 
 							'ig_min' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.ig-min')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.ig-min')
 							),
 							'ig_opt' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.ig-opt')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.ig-opt')
 							),
 
 							'yt_min' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.yt-min')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.yt-min')
 							),
 							'yt_opt' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.yt-opt')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.yt-opt')
 							),
 
 							'in_min' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.in-min')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.in-min')
 							),
 							'in_opt' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.in-opt')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.in-opt')
 							),
 							'size_3_presences' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.shared-audience-extra-large')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.shared-audience-extra-large')
 							),
 							'size_2_presences' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.shared-audience-large')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.shared-audience-large')
 							),
 							'size_1_presences' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.shared-audience-medium')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.shared-audience-medium')
 							),
 							'size_0_presences' => array(
-								'label' => $this->translator->trans('Config.index.sections.reach.target-audience.shared-audience-small')
+								'label' => $this->translator->trans('route.config.index.sections.reach.target-audience.shared-audience-small')
 							),
 						)
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.reach.time-to-target-audience.title'),
-                        'description' => $this->translator->trans('Config.index.sections.reach.time-to-target-audience.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.reach.time-to-target-audience.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.reach.time-to-target-audience.description'),
                         'values' => array(
                             'popularity_time_weighting'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.weighting'),
+								'label'=>$this->translator->trans('route.config.index.sections.reach.time-to-target-audience.weighting'),
 							),
                             'achieve_audience_best'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.best-score-label'),
-								'hint'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.best-score-hint'),
+								'label'=>$this->translator->trans('route.config.index.sections.reach.time-to-target-audience.best-score-label'),
+								'hint'=>$this->translator->trans('route.config.index.sections.reach.time-to-target-audience.best-score-hint'),
 							),
 							'achieve_audience_good'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.good-score-label'),
-								'hint'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.good-score-hint'),
+								'label'=>$this->translator->trans('route.config.index.sections.reach.time-to-target-audience.good-score-label'),
+								'hint'=>$this->translator->trans('route.config.index.sections.reach.time-to-target-audience.good-score-hint'),
 							),
 							'achieve_audience_bad'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.bad-score-label'),
-								'hint'=>$this->translator->trans('Config.index.sections.reach.time-to-target-audience.bad-score-hint'),
+								'label'=>$this->translator->trans('route.config.index.sections.reach.time-to-target-audience.bad-score-label'),
+								'hint'=>$this->translator->trans('route.config.index.sections.reach.time-to-target-audience.bad-score-hint'),
 							),
                         )
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.reach.sharing.title'),
-                        'description' => $this->translator->trans('Config.index.sections.reach.sharing.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.reach.sharing.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.reach.sharing.description'),
                         'values' => array(
                             'sharing_weighting'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.reach.sharing.weighting'),
+								'label'=>$this->translator->trans('route.config.index.sections.reach.sharing.weighting'),
 							),
                             'fb_share'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.reach.sharing.fb-target'),
+								'label'=>$this->translator->trans('route.config.index.sections.reach.sharing.fb-target'),
 							),
                             'tw_retweet'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.reach.sharing.tw-target'),
+								'label'=>$this->translator->trans('route.config.index.sections.reach.sharing.tw-target'),
 							),
                         )
                     ),
@@ -151,96 +151,96 @@ class ConfigController extends BaseController {
                         )
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.engagement.response-time.title'),
-                        'description' => $this->translator->trans('Config.index.sections.engagement.response-time.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.engagement.response-time.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.engagement.response-time.description'),
                         'values' => array(
                             'response_time_weighting'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.engagement.response-time.weighting'),
+								'label'=>$this->translator->trans('route.config.index.sections.engagement.response-time.weighting'),
 							),
                             'response_time_best'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.engagement.response-time.best-label'),
+								'label'=>$this->translator->trans('route.config.index.sections.engagement.response-time.best-label'),
 							),
                             'response_time_good'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.engagement.response-time.good-label'),
+								'label'=>$this->translator->trans('route.config.index.sections.engagement.response-time.good-label'),
 							),
                             'response_time_bad'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.engagement.response-time.bad-label'),
+								'label'=>$this->translator->trans('route.config.index.sections.engagement.response-time.bad-label'),
 							)
                         )
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.engagement.klout.title'),
-                        'description' => $this->translator->trans('Config.index.sections.engagement.klout.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.engagement.klout.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.engagement.klout.description'),
                         'values' => array(
                             'klout_score_weighting'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.engagement.klout.weighting'),
+								'label'=>$this->translator->trans('route.config.index.sections.engagement.klout.weighting'),
 							),
 							//TODO: remove this - we don't use a target for Klout
                             'klout_score_target'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.engagement.klout.target-label'),
-								'hint'=>$this->translator->trans('Config.index.sections.engagement.klout.target-hint')
+								'label'=>$this->translator->trans('route.config.index.sections.engagement.klout.target-label'),
+								'hint'=>$this->translator->trans('route.config.index.sections.engagement.klout.target-hint')
 							)
                         )
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.engagement.fb.title'),
-                        'description' => $this->translator->trans('Config.index.sections.engagement.fb.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.engagement.fb.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.engagement.fb.description'),
                         'values' => array(
                             'fb_active_user_percentage_small'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.engagement.fb.active-users-small')
+								'label'=>$this->translator->trans('route.config.index.sections.engagement.fb.active-users-small')
 							),
                             'fb_active_user_percentage_medium'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.engagement.fb.active-users-medium')
+								'label'=>$this->translator->trans('route.config.index.sections.engagement.fb.active-users-medium')
 							),
                             'fb_active_user_percentage_large'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.engagement.fb.active-users-large')
+								'label'=>$this->translator->trans('route.config.index.sections.engagement.fb.active-users-large')
 							),
                             'fb_active_user_percentage_xlarge'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.engagement.fb.active-users-extra-large')
+								'label'=>$this->translator->trans('route.config.index.sections.engagement.fb.active-users-extra-large')
 							),
                             'facebook_engagement_weighting'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.engagement.fb.weighting'),
+								'label'=>$this->translator->trans('route.config.index.sections.engagement.fb.weighting'),
 							)
                         )
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.engagement.sw.title'),
-                        'description' => $this->translator->trans('Config.index.sections.engagement.sw.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.engagement.sw.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.engagement.sw.description'),
                         'values' => array(
-                            'sw_active_user_percentage_small'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.sw.active-users-small')),
-                            'sw_active_user_percentage_medium'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.sw.active-users-medium')),
-                            'sw_active_user_percentage_large'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.sw.active-users-large')),
-                            'sina_weibo_engagement_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.sw.weighting')),
+                            'sw_active_user_percentage_small'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.sw.active-users-small')),
+                            'sw_active_user_percentage_medium'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.sw.active-users-medium')),
+                            'sw_active_user_percentage_large'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.sw.active-users-large')),
+                            'sina_weibo_engagement_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.sw.weighting')),
                         )
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.engagement.ig.title'),
-                        'description' => $this->translator->trans('Config.index.sections.engagement.ig.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.engagement.ig.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.engagement.ig.description'),
                         'values' => array(
-                            'ig_active_user_percentage_small'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.ig.active-users-small')),
-                            'ig_active_user_percentage_medium'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.ig.active-users-medium')),
-                            'ig_active_user_percentage_large'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.ig.active-users-large')),
-                            'instagram_engagement_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.ig.weighting'),)
+                            'ig_active_user_percentage_small'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.ig.active-users-small')),
+                            'ig_active_user_percentage_medium'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.ig.active-users-medium')),
+                            'ig_active_user_percentage_large'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.ig.active-users-large')),
+                            'instagram_engagement_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.ig.weighting'),)
                         )
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.engagement.yt.title'),
-                        'description' => $this->translator->trans('Config.index.sections.engagement.yt.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.engagement.yt.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.engagement.yt.description'),
                         'values' => array(
-                            'yt_active_user_percentage_small'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.yt.active-users-small')),
-                            'yt_active_user_percentage_medium'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.yt.active-users-medium')),
-                            'yt_active_user_percentage_large'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.yt.active-users-large')),
-                            'youtube_engagement_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.yt.weighting')),
+                            'yt_active_user_percentage_small'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.yt.active-users-small')),
+                            'yt_active_user_percentage_medium'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.yt.active-users-medium')),
+                            'yt_active_user_percentage_large'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.yt.active-users-large')),
+                            'youtube_engagement_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.yt.weighting')),
                         )
                     ),
                     (object)array(
-						'title' => $this->translator->trans('Config.index.sections.engagement.in.title'),
-                        'description' => $this->translator->trans('Config.index.sections.engagement.in.description'),
+						'title' => $this->translator->trans('route.config.index.sections.engagement.in.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.engagement.in.description'),
                         'values' => array(
-                            'in_active_user_percentage_small'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.in.active-users-small')),
-                            'in_active_user_percentage_medium'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.in.active-users-medium')),
-                            'in_active_user_percentage_large'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.in.active-users-large')),
-                            'linkedin_engagement_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.engagement.in.weighting'))
+                            'in_active_user_percentage_small'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.in.active-users-small')),
+                            'in_active_user_percentage_medium'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.in.active-users-medium')),
+                            'in_active_user_percentage_large'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.in.active-users-large')),
+                            'linkedin_engagement_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.in.weighting'))
                         )
                     )
                 )
@@ -250,17 +250,17 @@ class ConfigController extends BaseController {
                 'description' => $qualityBadge->getDescription(),
                 'kpis' => array(
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.quality.actions-per-day.title'),
-                        'description' => $this->translator->trans('Config.index.sections.quality.actions-per-day.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.quality.actions-per-day.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.quality.actions-per-day.description'),
                         'values' => array(
-                            'posts_per_day_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.quality.actions-per-day.weighting')),
-                            'updates_per_day'=>array('label'=>$this->translator->trans('Config.index.sections.quality.actions-per-day.target-label')),
+                            'posts_per_day_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.actions-per-day.weighting')),
+                            'updates_per_day'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.actions-per-day.target-label')),
                             'updates_per_day_ok_range'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.quality.actions-per-day.ok-range-label'),
-								'hint'=>$this->translator->trans('Config.index.sections.quality.actions-per-day.ok-range-hint')),
+								'label'=>$this->translator->trans('route.config.index.sections.quality.actions-per-day.ok-range-label'),
+								'hint'=>$this->translator->trans('route.config.index.sections.quality.actions-per-day.ok-range-hint')),
                             'updates_per_day_bad_range'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.quality.actions-per-day.bad-range-label'),
-								'hint'=>$this->translator->trans('Config.index.sections.quality.actions-per-day.bad-range-hint'))
+								'label'=>$this->translator->trans('route.config.index.sections.quality.actions-per-day.bad-range-label'),
+								'hint'=>$this->translator->trans('route.config.index.sections.quality.actions-per-day.bad-range-hint'))
                         )
                     ),
 					// TODO: Remove if we're not using this
@@ -275,66 +275,66 @@ class ConfigController extends BaseController {
                         )
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.quality.likes-per-post.title'),
-                        'description' => $this->translator->trans('Config.index.sections.quality.likes-per-post.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.quality.likes-per-post.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.quality.likes-per-post.description'),
                         'values' => array(
-                            'likes_per_post_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.quality.likes-per-post.weighting')),
+                            'likes_per_post_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.likes-per-post.weighting')),
                             'likes_per_post_best'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.quality.likes-per-post.best-label'),
-								'hint'=>$this->translator->trans('Config.index.sections.quality.likes-per-post.best-hint')),
+								'label'=>$this->translator->trans('route.config.index.sections.quality.likes-per-post.best-label'),
+								'hint'=>$this->translator->trans('route.config.index.sections.quality.likes-per-post.best-hint')),
                             'likes_per_post_good'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.quality.likes-per-post.good-label'),
-								'hint'=>$this->translator->trans('Config.index.sections.quality.likes-per-post.good-hint'))
+								'label'=>$this->translator->trans('route.config.index.sections.quality.likes-per-post.good-label'),
+								'hint'=>$this->translator->trans('route.config.index.sections.quality.likes-per-post.good-hint'))
                         )
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.quality.likes-per-view.title'),
-                        'description' => $this->translator->trans('Config.index.sections.quality.likes-per-view.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.quality.likes-per-view.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.quality.likes-per-view.description'),
                         'values' => array(
-                            'likes_per_view_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.quality.likes-per-view.weighting')),
+                            'likes_per_view_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.likes-per-view.weighting')),
                             'likes_per_view_best'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.quality.likes-per-view.best-label'),
-								'hint'=>$this->translator->trans('Config.index.sections.quality.likes-per-view.best-hint')),
+								'label'=>$this->translator->trans('route.config.index.sections.quality.likes-per-view.best-label'),
+								'hint'=>$this->translator->trans('route.config.index.sections.quality.likes-per-view.best-hint')),
                             'likes_per_view_good'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.quality.likes-per-view.good-label'),
-								'hint'=>$this->translator->trans('Config.index.sections.quality.likes-per-view.good-hint'))
+								'label'=>$this->translator->trans('route.config.index.sections.quality.likes-per-view.good-label'),
+								'hint'=>$this->translator->trans('route.config.index.sections.quality.likes-per-view.good-hint'))
                         )
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.quality.sign-off.title'),
-                        'description' => $this->translator->trans('Config.index.sections.quality.sign-off.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.quality.sign-off.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.quality.sign-off.description'),
                         'values' => array(
-                            'sign_off_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.quality.sign-off.weighting')),
+                            'sign_off_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.sign-off.weighting')),
                         )
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.quality.branding.title'),
-                        'description' => $this->translator->trans('Config.index.sections.quality.branding.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.quality.branding.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.quality.branding.description'),
                         'values' => array(
-                            'branding_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.quality.branding.weighting')),
+                            'branding_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.branding.weighting')),
                         )
                     ),
                     (object)array(
-                        'title' => $this->translator->trans('Config.index.sections.quality.relevance.title'),
-                        'description' => $this->translator->trans('Config.index.sections.quality.relevance.description'),
+                        'title' => $this->translator->trans('route.config.index.sections.quality.relevance.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.quality.relevance.description'),
                         'values' => array(
-                            'relevance_weighting'=>array('label'=>$this->translator->trans('Config.index.sections.quality.relevance.weighting')),
+                            'relevance_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.relevance.weighting')),
                             'facebook_relevance_percentage'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.quality.relevance.facebook-target'),
+								'label'=>$this->translator->trans('route.config.index.sections.quality.relevance.facebook-target'),
 							),
                             'twitter_relevance_percentage'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.quality.relevance.twitter-target'),
+								'label'=>$this->translator->trans('route.config.index.sections.quality.relevance.twitter-target'),
 							),
                             'sina_weibo_relevance_percentage'=>array(
-								'label'=>$this->translator->trans('Config.index.sections.quality.relevance.sina-weibo-target'),
+								'label'=>$this->translator->trans('route.config.index.sections.quality.relevance.sina-weibo-target'),
 							),
                         )
                     )
                 )
             ),
-
 		);
-        foreach($values as $section){
+
+        foreach($sections as $section){
             foreach ($section->kpis as $k=>$kpi) {
                 foreach ($kpi->values as $key=>$args) {
                     $kpi->values[$key] = (object)$kpi->values[$key];
@@ -345,11 +345,7 @@ class ConfigController extends BaseController {
 		                if (!$args->value) {
 			                $args->value = 1;
 		                }
-		                $args->hint = str_replace(
-							'[]',
-							$section->title,
-							$this->translator->trans('Config.index.sections.all.weighting-hint')
-						);
+		                $args->hint = $this->translator->trans('route.config.index.sections.all.weighting-hint', ['%section%' => $section->title]);
 	                }
                     $args->error = null;
                     if (!isset($args->type)) {
@@ -364,7 +360,7 @@ class ConfigController extends BaseController {
 
 		if ($this->_request->isPost()) {
 			$valid = true;
-            foreach($values as $section){
+            foreach($sections as $section){
                 foreach ($section->kpis as $k=>$kpi) {
                     foreach ($kpi->values as $args) {
                         if (array_key_exists($args->key, $_POST)) {
@@ -373,17 +369,13 @@ class ConfigController extends BaseController {
                         switch ($args->type) {
                             case 'numeric':
                                 if (!is_numeric($args->value)) {
-                                    $args->error = $this->translator->trans('Config.index.numeric-error');
+                                    $args->error = $this->translator->trans('route.config.index.numeric-error');
                                     $valid = false;
                                 }
                                 break;
                             case 'email':
                                 if (!filter_var($args->value, FILTER_VALIDATE_EMAIL)) {
-                                    $args->error = str_replace(
-										'[]',
-										'('.$args->value.')',
-										$this->translator->trans('Config.index.email-error')
-									);
+                                    $args->error = $this->translator->trans('route.config.index.email-error', ['%email%' => "({$args->value})"]);
                                     $valid = false;
                                 }
                                 break;
@@ -404,13 +396,13 @@ class ConfigController extends BaseController {
                         $this->flashMessage($message, 'error');
                     }
                 } else {
-                    $this->flashMessage($this->translator->trans('Config.index.upload-success'));
+                    $this->flashMessage($this->translator->trans('route.config.index.upload-success'));
                 }
             }
 
 			if ($valid) {
                 $args = array();
-                foreach($values as $section){
+                foreach($sections as $section){
                     foreach($section->kpis as $kpi){
                         foreach($kpi->values as $value) {
                             $args[$value->key] = $value->value;
@@ -418,12 +410,12 @@ class ConfigController extends BaseController {
                     }
                 }
                 self::setOptions($args);
-                $this->flashMessage($this->translator->trans('Config.index.settings-saved'));
+                $this->flashMessage($this->translator->trans('route.config.index.settings-saved'));
 				$this->_helper->redirector->gotoSimple('');
 			} else {
-                $this->flashMessage($this->translator->trans('Config.index.invalid-values'), 'error');
+                $this->flashMessage($this->translator->trans('route.config.index.invalid-values'), 'error');
 			}
 		}
-		$this->view->values = $values;
+		$this->view->sections = $sections;
 	}
 }

@@ -1,7 +1,21 @@
+<?php
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
+$buttons = $this->gatekeeper()->filterAll(array(
+	'<a class="button-bc" href="%url%">' . $translator->trans('Global.cancel') . '</a>' => array('controller'=>'index', 'action'=>'index')
+));
+$buttons[] = '<button type="submit" class="button-bc">Save</button>';
+?>
+
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
+<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $buttons, 'dark' => true)); ?>
+
+<p><?php echo $translator->trans('route.config.index.introduction'); ?></p>
+
 <form method="post" action="<?php echo $this->url(); ?>" enctype="multipart/form-data" id="settings">
-    <?php foreach ($this->values as $section) : ?>
+    <?php foreach ($this->sections as $section) : ?>
 		<fieldset>
             <h2><?php echo $section->title; ?></h2>
             <div class="row">
@@ -40,13 +54,11 @@
 		</fieldset>
     <?php endforeach; ?>
     <fieldset>
-        <h2>Upload KPI File</h2>
-        <p>Upload the KPI file that can be downloaded from the front page</p>
+        <h2><?php echo $translator->trans('route.config.index.kpi-file-title'); ?></h2>
+        <p><?php echo $translator->trans('route.config.index.kpi-file-message'); ?></p>
         <div class="row">
             <div class="small-24 medium-8 large-8 columns">
-                <label  for="uploadedfile">
-                    Choose a file to upload:
-                </label>
+                <label for="uploadedfile"><?php echo $translator->trans('route.config.index.kpi-file-prompt'); ?></label>
             </div>
             <div class="small-24 medium-16 large-16 end columns">
                 <input name="uploadedfile" id="uploadedfile" type="file" />
@@ -54,11 +66,5 @@
         </div>
     </fieldset>
 
-    <?php
-    $buttons = $this->gatekeeper()->filterAll(array(
-            '<a class="button-bc" href="%url%">Cancel</a>' => array('controller'=>'index', 'action'=>'index')
-        ));
-    $buttons[] = '<button type="submit" class="button-bc">Save</button>';
-    echo $this->partial('partials/button-bar.phtml', array('buttons' => $buttons, 'dark' => true));
-    ?>
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $buttons, 'dark' => true)); ?>
 </form>
