@@ -148,10 +148,10 @@
 
 
 
-"Feedback.index.error.missing-name";"Please enter your name."
-"Feedback.index.error.missing-email";"Please enter a valid email address."
-"Feedback.index.error.missing-message";"Please enter your message."
-"Feedback.index.email-subject";"Social Monitor feedback from []"
+"route.feedback.index.error.missing-name";"Please enter your name."
+"route.feedback.index.error.missing-email";"Please enter a valid email address."
+"route.feedback.index.error.missing-message";"Please enter your message."
+"route.feedback.index.email-subject";"Social Monitor feedback from %name%"
 
 "route.country.report.page-title";"Social Media Monitor Report"
 "route.group.report.page-title";"Social Media Monitor Report"

@@ -19,30 +19,29 @@ class FeedbackController extends BaseController {
                 $this->feedbackRecipient = BaseController::getOption('email-feedback-to-address');
             }
 
+			$name = $this->_request->getParam('name');
+			$from = $this->_request->getParam('from');
+			$body = $this->_request->getParam('body');
+			
             // Show an error if missing any parameters.
             // This is also enforced on the front end form.
-            if(!$this->_request->getParam('name')) {
-                $error = $this->translator->trans('Feedback.index.error.missing-name');
+            if(!$name) {
+                $error = $this->translator->trans('route.feedback.index.error.missing-name');
                 $valid = false;
-            } else if(!$this->_request->getParam('from') ||
-                !filter_var($this->_request->getParam('from') , FILTER_VALIDATE_EMAIL)) {
-				$error = $this->translator->trans('Feedback.index.error.missing-email');
+            } else if(!$from || !filter_var($from , FILTER_VALIDATE_EMAIL)) {
+				$error = $this->translator->trans('route.feedback.index.error.missing-email');
                 $valid = false;
-            } else if(!$this->_request->getParam('body')) {
-				$error = $this->translator->trans('Feedback.index.error.missing-message');
+            } else if(!$body) {
+				$error = $this->translator->trans('route.feedback.index.error.missing-message');
                 $valid = false;
             }
 
             // Limit body, from and name fields to 1000, 64 and 64 characters respectively.
             // This is also enforced on the front end.
-            $name = substr($this->_request->getParam('name'),0,64);
-            $from = substr($this->_request->getParam('from'),0,64);
-            $body = substr($this->_request->getParam('body'),0,1000);
-            $subject = $this->config->app->client_name . ' '.str_replace(
-					'[]',
-					$name,
-					$this->translator->trans('Feedback.index.email-subject')
-				);
+            $name = substr($name, 0, 64);
+            $from = substr($from, 0, 64);
+            $body = substr($body, 0, 1000);
+            $subject = $this->config->app->client_name . ' '.$this->translator->trans('route.feedback.index.email-subject', ['%name%' => $name]);
 
             if($valid) {
                 $success = (bool) $this->sendEmail($body, $from, $name, $this->feedbackRecipient, $subject, true);
