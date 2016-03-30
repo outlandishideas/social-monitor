@@ -14,6 +14,10 @@
 "Global.additional-info";"Additional Info"
 "Global.download-report";"Download Report"
 "Global.containing-region";"Part of the [] region"
+"Global.target-date";"Target date"
+"Global.gain-per-day";"Required gain per day"
+"Global.content";"Content"
+"Global.view";"View"
 
 "Global.home";"Home"
 "Global.audience-size";"Audience Size"
@@ -52,6 +56,9 @@
 "Global.register-user";"Register user"
 "Global.new-user";"New User"
 "Global.population";"Population"
+"Global.edit-presence";"Edit presence"
+"Global.no";"No"
+"Global.yes";"Yes"
 
 "Base.layout.feedback-button";"Feedback"
 "Base.layout.feedback-button";"Feedback"
@@ -146,9 +153,51 @@
 "Group.delete.success-message";"SBU deleted"
 "Group.graph-data.not-found";"SBU could not be found"
 
+"Presence.handle";"Handle"
+"Presence.type";"Type"
+
 "Presence.compare.page-title";"Comparing %count% presences"
 "Presence.new.page-title";"New presence"
 "Presence.edit.page-title";"Edit presence"
+"Presence.index.table-empty";"No presences found"
+
+"Presence.view.info.presence-type";"This is a %type% presence"
+
+"Presence.view.info.presence.score";"Yesterday's %type% Engagement score: %score%%"
+"Presence.view.info.presence.average-score";"Monthly Average %type% Engagement score: %score%%"
+"Presence.view.info.twitter.score";"Yesterday's Klout score: %score%%"
+"Presence.view.info.twitter.average-score";"Monthly Average Klout score: %score%%"
+
+"Presence.view.info.owner-name";"This presence contributes to the statistics for %link%"
+"Presence.view.info.target-audience";"The target audience size is %size%"
+"Presence.view.info.current-audience";"The target audience size is %size%"
+"Presence.view.info.time-to-target";"At the current rate, the target will be reached by %date%"
+"Presence.view.info.daily-gains";"The following daily gains are required to meet the target audience size:"
+"Presence.buttons.edit-presence";"Edit Presence"
+"Presence.buttons.delete-presence";"Delete Presence"
+
+"Presence.edit.label.type";"Type"
+"Presence.edit.label.size";"Size"
+"Presence.edit.label.signed-off";"Signed Off"
+"Presence.edit.label.branding";"Branding"
+
+"Presence.edit.hint.connect-account";"Please connect your account to %$title%"
+"Presence.edit.hint.handle.facebook";"For www.facebook.com/<strong>platform</strong> the handle is '<strong>platform</strong>'<br/>For pages without vanity URLs, the handle is the long number in the URL, eg www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>"
+"Presence.edit.hint.handle.twitter";"For www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"Presence.edit.hint.handle.instagram";"For www.instagram.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"Presence.edit.hint.handle.youtube";"For www.youtube.com/channel/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"Presence.edit.hint.handle.linkedin";"Use the name of the company, as it appears on its page. E.g. for <a href=\"https://www.linkedin.com/company/1337\" target=\"_blank\">LinkedIn themselves</a>, the handle is '<strong>LinkedIn</strong>'"
+"Presence.edit.hint.handle.sinaweibo";"Use the name of the account, as it appears on its page. E.g. for <a href=\"http://www.weibo.com/u/2463797455\" target=\"_blank\">BBC World</a>, the handle is '<strong>BBCWorld</strong>'"
+"Presence.edit.hint.size";"Size will affect the weighting of a presence when calculating the target for its popularity.<br/>Size will only affect presences that belong to SBU.<br/>Large presences in an SBU will take a larger share of the SBU's target population, Medium presences a smaller share, and Small presences an even smaller share."
+
+"Presence.edit.access-token.title";"Access Token"
+"Presence.edit.access-token.message";"This type of presence requires an access token to fetch data."
+"Presence.edit.access-token.has-user.message";"This presence is currently using the access token from the following user: <strong>%name%</strong>"
+"Presence.edit.access-token.no-user.message";"This presence does not currently have an access token and so cannot be fetched."
+"Presence.edit.access-token.button";"Use your access token"
+
+"Presence.compare.button.create-sbu";"Create SBU"
+"Presence.compare.chart-title";"Scores for the last 30 days:"
 
 "User.linkedin-title";"Login to LinkedIn"
 "User.saved";"User saved"
@@ -369,6 +418,7 @@
 
 
 "Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay.label";"Actions per day"
+"Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\Branding.label";"Branding"
 "Outlandish\SocialMonitor\TableIndex\Header\Branding.description";"Branding shows whether a presence meets the British Council branding guidelines for social media presences."
@@ -380,15 +430,19 @@
 "Outlandish\SocialMonitor\TableIndex\Header\Countries.description";"The countries in this region."
 
 "Outlandish\SocialMonitor\TableIndex\Header\Country.label";"Country"
+"Outlandish\SocialMonitor\TableIndex\Header\Country.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\CountryCount.label";"Countries"
 "Outlandish\SocialMonitor\TableIndex\Header\CountryCount.description";"The number of countries."
 
 "Outlandish\SocialMonitor\TableIndex\Header\CurrentAudience.label";"Current Audience"
+"Outlandish\SocialMonitor\TableIndex\Header\CurrentAudience.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulation.label";"Digital Population"
+"Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulation.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulationHealth.label";"Digital Population Health"
+"Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulationHealth.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\EngagementRank.label";"Engagement Rank"
 "Outlandish\SocialMonitor\TableIndex\Header\EngagementRank.description";"Engagement Rank shows the rank of this presence or group when compared against others."
@@ -400,19 +454,25 @@
 "Outlandish\SocialMonitor\TableIndex\Header\Handle.description";"Select all the presences that you would like to compare, and then click on the Compare Button above"
 
 "Outlandish\SocialMonitor\TableIndex\Header\Name.label";"Name"
+"Outlandish\SocialMonitor\TableIndex\Header\Name.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\Options.label";"Options"
+"Outlandish\SocialMonitor\TableIndex\Header\Options.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\ParentName.label";"Country/SBU"
+"Outlandish\SocialMonitor\TableIndex\Header\ParentName.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\PercentTargetAudience.label";"Percentage of Target Audience"
+"Outlandish\SocialMonitor\TableIndex\Header\PercentTargetAudience.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\PresenceCount.label";"Presences"
 "Outlandish\SocialMonitor\TableIndex\Header\PresenceCount.description";"The number of presences."
 
 "Outlandish\SocialMonitor\TableIndex\Header\Presences.label";"Presences"
+"Outlandish\SocialMonitor\TableIndex\Header\Presences.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\PresenceType.label";"Presence Type"
+"Outlandish\SocialMonitor\TableIndex\Header\PresenceType.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\QualityRank.label";"Quality Rank"
 "Outlandish\SocialMonitor\TableIndex\Header\QualityRank.description";"Quality Rank shows the rank of this presence or group when compared against others."
@@ -427,13 +487,16 @@
 "Outlandish\SocialMonitor\TableIndex\Header\ReachScore.description";"Reach Score shows the score for the combined measures that measure a presences engagement"
 
 "Outlandish\SocialMonitor\TableIndex\Header\Region.label";"Region"
+"Outlandish\SocialMonitor\TableIndex\Header\Region.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\ResponseTime.label";"Response Time"
+"Outlandish\SocialMonitor\TableIndex\Header\ResponseTime.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\SignOff.label";"Sign Off"
 "Outlandish\SocialMonitor\TableIndex\Header\SignOff.description";"Sign Off shows whether a presence has been signed off by the Head of Digital."
 
 "Outlandish\SocialMonitor\TableIndex\Header\TargetAudience.label";"Target Audience"
+"Outlandish\SocialMonitor\TableIndex\Header\TargetAudience.description";""
 
 "Outlandish\SocialMonitor\TableIndex\Header\TotalRank.label";"Overall Rank"
 "Outlandish\SocialMonitor\TableIndex\Header\TotalRank.description";"Overall Rank shows the rank of this presence or group when compared against others."
