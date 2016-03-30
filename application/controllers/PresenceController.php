@@ -313,7 +313,7 @@ class PresenceController extends GraphingController
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->groups = Model_Group::fetchAll();
 		$this->view->presence = $presence;
-		$this->view->pageTitle = $this->translator->trans('User.edit.page-title');//'Edit Presence';
+		$this->view->pageTitle = $this->translator->trans('Presence.edit.page-title');//'Edit Presence';
 	}
 
 	/**

@@ -202,9 +202,7 @@ class GroupController extends CampaignController {
                 try {
                     $editingGroup->save();
 
-					$objectCacheManager = $this->getContainer()->get('object-cache-manager');
-					$table = $objectCacheManager->getGroupsTable();
-					$objectCacheManager->invalidateObjectCache($table->getIndexName());
+					$this->invalidateTableCache();
 
 					$p = $this->_request->getParam('p');
                     if($p){
@@ -284,6 +282,8 @@ class GroupController extends CampaignController {
                         $group->save();
                     }
 
+					$this->invalidateTableCache();
+
                     $this->flashMessage(str_replace(
 						'[]',
 						count($editedGroups),
@@ -339,6 +339,7 @@ class GroupController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 			$group->delete();
+			$this->invalidateTableCache();
             $this->flashMessage($this->translator->trans('Group.delete.success-message'));
     		$this->_helper->redirector->gotoSimple('index');
         } else {
@@ -354,4 +355,10 @@ class GroupController extends CampaignController {
         exit;
 	}
 
+	protected function invalidateTableCache()
+	{
+		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
+		$table = $objectCacheManager->getGroupsTable();
+		$objectCacheManager->invalidateObjectCache($table->getIndexName());
+	}
 }
