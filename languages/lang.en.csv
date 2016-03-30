@@ -93,10 +93,16 @@
 "buttons.region.delete";"Delete Region"
 "buttons.region.manage";"Manage Countries"
 "buttons.region.view";"View Region"
+
 "buttons.country.edit";"Edit Country"
 "buttons.country.delete";"Delete Country"
 "buttons.country.manage";"Manage Presences"
 "buttons.country.view";"View Country"
+
+"buttons.group.edit";"Edit SBU"
+"buttons.group.delete";"Delete SBU"
+"buttons.group.manage";"Manage Presences"
+"buttons.group.view";"View SBU"
 
 
 
@@ -120,6 +126,8 @@
 
 "route.region.manage.page-title";"Manage Countries: %region%"
 "route.region.manage.message.success";"Region countries updated"
+
+"route.region.report.page-title";"Social Media Monitor Report"
 
 
 
@@ -146,6 +154,9 @@
 "route.country.manage.page-title";"Manage Presences"
 "route.country.manage.message.success";"Country presences updated"
 
+"route.country.report.page-title";"Social Media Monitor Report"
+
+
 
 
 "route.feedback.index.error.missing-name";"Please enter your name."
@@ -153,28 +164,34 @@
 "route.feedback.index.error.missing-message";"Please enter your message."
 "route.feedback.index.email-subject";"Social Monitor feedback from %name%"
 
-"route.country.report.page-title";"Social Media Monitor Report"
-"route.group.report.page-title";"Social Media Monitor Report"
-"route.presence.report.page-title";"Social Media Monitor Report"
-"route.region.report.page-title";"Social Media Monitor Report"
+
+
 
 "route.group.index.page-title";"SBUs"
+"route.group.index.empty-table";"No SBUs Found"
+
 "route.group.new.page-title";"New SBU"
-"route.group.edit.page-title";"Edit SBU"
+
 "route.group.view.page-title";"SBU: %group%"
-"Group.edit.success-message";"SBU saved"
-"Group.index.empty-table";"No SBUs Found"
+
+"route.group.edit.page-title";"Edit SBU"
+"route.group.edit.message.success";"SBU saved"
+
 "route.group.edit-all.page-title";"Edit All SBUs"
-"Group.edit-all.error.display-name-missing";"Please enter a display name for []"
-"Group.edit-all.success-message";"[] SBUs saved"
+"route.group.edit-all.message.display-name-missing";"Please enter a display name for %group%"
+"route.group.edit-all.message.success";"%count% SBUs saved"
+
+"route.group.delete.message.success";"SBU deleted"
+
+"route.group.graph-data.message.not-found";"SBU could not be found"
+
 "route.group.manage.page-title";"Manage Presences: %group%"
-"Group.manage.success-message";"SBU presences updated"
-"Group.buttons.edit-sbu";"Edit SBU"
-"Group.buttons.delete-sbu";"Delete SBU"
-"Group.buttons.manage-presences";"Manage Presences"
-"Group.buttons.view-sbu";"View SBU"
-"Group.delete.success-message";"SBU deleted"
-"Group.graph-data.not-found";"SBU could not be found"
+"route.group.manage.message.success";"SBU presences updated"
+
+"route.group.report.page-title";"Social Media Monitor Report"
+
+
+
 
 "Presence.handle";"Handle"
 "Presence.type";"Type"
@@ -222,6 +239,10 @@
 
 "Presence.compare.button.create-sbu";"Create SBU"
 "Presence.compare.chart-title";"Scores for the last 30 days:"
+
+"route.presence.report.page-title";"Social Media Monitor Report"
+
+
 
 "route.user.linkedin.page-title";"Login to LinkedIn"
 "route.user.index.page-title";"Users"

@@ -133,7 +133,7 @@ class GroupController extends CampaignController {
         /** @var $group Model_Presence */
         $group = Model_Group::fetchById($this->_request->getParam('id'));
         if(!$group) {
-			$this->apiError($this->translator->trans('Group.graph-data.not-found'));
+			$this->apiError($this->translator->trans('route.group.graph-data.message.not-found'));
         }
 
         $dateRange = $this->getRequestDateRange();
@@ -206,7 +206,7 @@ class GroupController extends CampaignController {
                     if($p){
                         $editingGroup->assignPresences($p);
                     }
-                    $this->flashMessage($this->translator->trans('Group.edit.success-message'));
+                    $this->flashMessage($this->translator->trans('route.group.edit.message.success'));
                     $this->_helper->redirector->gotoRoute(array('action' => 'view'));
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
@@ -256,11 +256,7 @@ class GroupController extends CampaignController {
                 $editingGroup->fromArray($g);
 
                 if (!$g['display_name']) {
-                    $errorMessages[] = str_replace(
-						'[]',
-						$display_name,
-						$this->translator->trans('Group.edit-all.error.display-name-missing')
-					);
+                    $errorMessages[] = $this->translator->trans('route.group.edit-all.message.display-name-missing', ['%group%' => $display_name]);
                 }
 
                 $editedGroups[] = $editingGroup;
@@ -279,11 +275,7 @@ class GroupController extends CampaignController {
 
 					$this->invalidateTableCache();
 
-                    $this->flashMessage(str_replace(
-						'[]',
-						count($editedGroups),
-						$this->translator->trans('Group.edit-all.success-message')
-					));
+                    $this->flashMessage($this->translator->trans('route.group.edit-all.message.success', ['%count%' => count($editedGroups)]));
                     $this->_helper->redirector->gotoSimple('index');
 
                 } catch (Exception $ex) {
@@ -315,7 +307,7 @@ class GroupController extends CampaignController {
                 }
             }
             $group->assignPresences($presenceIds);
-            $this->flashMessage($this->translator->trans('Group.manage.success-message'));
+            $this->flashMessage($this->translator->trans('route.group.manage.message.success'));
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 
@@ -335,7 +327,7 @@ class GroupController extends CampaignController {
 		if ($this->_request->isPost()) {
 			$group->delete();
 			$this->invalidateTableCache();
-            $this->flashMessage($this->translator->trans('Group.delete.success-message'));
+            $this->flashMessage($this->translator->trans('route.group.delete.message.success'));
     		$this->_helper->redirector->gotoSimple('index');
         } else {
             $this->flashMessage($this->translator->trans('Error.invalid-delete'));

@@ -14,8 +14,8 @@ if ($this->isNew) {
 	$cancelArgs['action'] = 'view';
 	$cancelArgs['id'] = $sbu->id;
 	$topBar = $this->gatekeeper()->filterAll(array(
-		'<a class="button-bc button-view" href="%url%">' . $translator->trans('Group.buttons.view-sbu') . '</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
-		'<a class="button-bc button-manage" href="%url%">' . $translator->trans('Group.buttons.manage-presences') . '</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$sbu->id),
+		'<a class="button-bc button-view" href="%url%">' . $translator->trans('buttons.group.view') . '</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
+		'<a class="button-bc button-manage" href="%url%">' . $translator->trans('buttons.group.manage') . '</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$sbu->id),
 		'<a class="button-bc button-delete" href="%url%">' . $translator->trans('Global.delete') . '</a>' => array('controller'=>'group', 'action'=>'delete', 'id'=>$sbu->id)
 	));
 }

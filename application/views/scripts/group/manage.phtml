@@ -5,8 +5,8 @@ $translator = $this->translate();
 $sbu = $this->group;
 
 $topBar = $this->gatekeeper()->filterAll(array(
-    '<a class="button-bc button-view" href="%url%">' . $translator->trans('Group.buttons.view-sbu') . '</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
-    '<a class="button-bc button-edit" href="%url%">' . $translator->trans('Group.buttons.edit-sbu') . '</a>' => array('controller'=>'group', 'action'=>'edit', 'id'=>$sbu->id)
+    '<a class="button-bc button-view" href="%url%">' . $translator->trans('buttons.group.view') . '</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
+    '<a class="button-bc button-edit" href="%url%">' . $translator->trans('buttons.group.edit') . '</a>' => array('controller'=>'group', 'action'=>'edit', 'id'=>$sbu->id)
 ));
 
 $bottomBar = array();
