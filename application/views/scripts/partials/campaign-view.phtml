@@ -32,8 +32,8 @@ if ($campaign instanceof Model_Country) {
     <div class="small-24 large-12 xlarge-16 columns">
 
         <dl class="tabs" data-tab id="model-tabs">
-            <dd class="active"><a href="#chart"><?php echo $this->translate('Global.charts') ?></a></dd>
-            <dd><a href="#info"><?php echo $this->translate('Global.info') ?></a></dd>
+            <dd class="active"><a href="#chart"><?php echo $this->translate()->trans('Global.charts') ?></a></dd>
+            <dd><a href="#info"><?php echo $this->translate()->trans('Global.info') ?></a></dd>
         </dl>
         <div class="tabs-content" id="model-tabs-content">
             <div class="content active" id="chart">
@@ -49,7 +49,7 @@ if ($campaign instanceof Model_Country) {
                     <div id="new-chart-values"></div>
                 </div>
                 <div class="hide-for-medium-up">
-                    <p><?php echo $this->translate('Campaign.view.charts-unavailable') ?></p>
+                    <p><?php echo $this->translate()->trans('Campaign.view.charts-unavailable') ?></p>
                 </div>
             </div>
             <div class="content" id="info">

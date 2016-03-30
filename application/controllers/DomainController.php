@@ -12,7 +12,7 @@ class DomainController extends BaseController {
 	function indexAction() {
 		if ($this->_request->isPost()) {
 			if (!$this->view->user->isManager) {
-                $this->flashMessage('You do not have sufficient access to change this data', 'error');
+                $this->flashMessage($this->translator->trans('Error.domain.access-error'), 'error'); //'You do not have sufficient access to change this data', 'error');
 			} else {
 				$bc = $this->_request->getParam('is_bc');
 				$db = self::db();
@@ -20,11 +20,11 @@ class DomainController extends BaseController {
 				if ($bc) {
 					$db->exec('UPDATE domains SET is_bc = 1 WHERE id IN (' . implode(',', array_keys($bc)) . ')');
 				}
-                $this->flashMessage('Domains updated');
+                $this->flashMessage($this->translator->trans('Success.domain.update')); //'Domains updated');
 			}
 			$this->_helper->redirector->gotoSimple('');
 		}
-		$this->view->pageTitle = 'Domains';
+		$this->view->pageTitle = $this->translator->trans('Global.domains');
 		$this->view->canEdit = $this->view->user->isManager;
 	}
 
@@ -179,8 +179,4 @@ class DomainController extends BaseController {
 		$this->view->links = $links;
 		$this->view->pageTitle = $domain->domain;
 	}
-
-//    function downloadAction() {
-//        die;
-//    }
 }

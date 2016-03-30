@@ -92,6 +92,10 @@
 "Region.edit-all.error.display-name-missing";"Please enter a display name for []"
 "Region.edit-all.success-message";"[] regions saved"
 
+"Region.delete.success-message";"Region deleted"
+
+"Region.graph-data.not-found";"Region could not be found"
+
 "Region.manage.page-title";"Manage Countries"
 "Region.manage.success-message";"Region countries updated"
 
@@ -105,14 +109,19 @@
 "Country.buttons.manage-presences";"Manage Presences"
 "Country.buttons.view-country";"View Country"
 
+"Country.edit.success-message";"Country saved"
 "Country.edit.page-title";"Edit Country"
 "Country.new.page-title";"New Country"
 
 "Country.edit-all.page-title";"Edit All Countries"
 "Country.edit-all.success-message";"[] countries saved"
+"Country.edit-all.error.display-name-missing";"Please enter a display name for []"
+"Country.edit-all.error.country-missing";"Please select a country for []"
 
 "Country.manage.page-title";"Manage Presences"
 "Country.manage.success-message";"Country presences updated"
+"Country.delete.success-message";"Country deleted"
+"Country.graph-data.not-found";"Country could not be found"
 
 "Feedback.index.error.missing-name";"Please enter your name."
 "Feedback.index.error.missing-email";"Please enter a valid email address."
@@ -120,6 +129,22 @@
 "Feedback.index.email-subject";"Social Monitor feedback from []"
 
 "Campaign.report.page-title";"Social Media Monitor Report"
+
+"Group.new.page-title";"New SBU"
+"Group.edit.page-title";"Edit SBU"
+"Group.edit.success-message";"SBU saved"
+"Group.index.empty-table";"No SBUs Found"
+"Group.edit-all.page-title";"Edit All SBUs"
+"Group.edit-all.error.display-name-missing";"Please enter a display name for []"
+"Group.edit-all.success-message";"[] SBUs saved"
+"Group.manage.page-title";"Manage Presences"
+"Group.manage.success-message";"SBU presences updated"
+"Group.buttons.edit-sbu";"Edit SBU"
+"Group.buttons.delete-sbu";"Delete SBU"
+"Group.buttons.manage-presences";"Manage Presences"
+"Group.buttons.view-sbu";"View SBU"
+"Group.delete.success-message";"SBU deleted"
+"Group.graph-data.not-found";"SBU could not be found"
 
 "Presence.compare.page-title";"Comparing %count% presences"
 "Presence.new.page-title";"New presence"
@@ -140,6 +165,25 @@
 "Error.404.message";"Please check the url"
 "Error.500.page-title";"Application error"
 "Error.500.message";"Sorry, something has gone wrong"
+
+"Fetch.log.finished";"Finished"
+"Fetch.log.updating-facebook-actors.start";"Updating facebook actors"
+"Fetch.log.updating-facebook-actors.fail";"Failed to update facebook actors: %message%"
+"Fetch.log.updating-facebook-actors.success";"Updated %count% actors"
+"Fetch.log.updating-domains.start";"Updating linked domains"
+"Fetch.log.updating-domains.success";"Inserted %count% domains"
+"Fetch.log.start";"Starting %action% process on %start%"
+"Fetch.log.lock-acquire";"Process already running and last active %seconds% seconds ago"
+"Fetch.log.lock-acquire.fail";"Stale lock found last active %seconds% seconds ago: %lockname%"
+"Fetch.log.presence-history.start";"Updating presence history"
+"Fetch.log.presence-history.error";"Error: %message%"
+"Fetch.log.update-info.start";"Update info %message%"
+"Fetch.log.update-info.success";"Updated info %message%"
+"Fetch.log.update-info.error";"Error updating presence info: %message%"
+"Fetch.log.update-info.skip";"Not updating info %message% as last updated %lastupdated%"
+"Fetch.log.fetch-statues.start";"Fetch statuses %message%"
+"Fetch.log.fetch-statues.success";"Inserted %count%"
+"Fetch.log.fetch-statues.error";"Error: %message%"
 
 "Config.index.page-title";"Settings"
 "Config.index.sections.general.title";"General"
@@ -277,6 +321,13 @@
 "Config.index.upload-success";"File Successfully uploaded"
 "Config.index.settings-saved";"Settings saved"
 "Config.index.invalid-values";"Invalid values. Please check before saving"
+
+"Domain.index.paragraph-1";"This shows the list of all domains linked to by tweets or facebook statuses. Click the links to see more usage information and the specific URLs."
+"Domain.index.paragraph-2";"You can say whether or not a domain belongs to the British Council by toggling the checkbox on the right, and clicking 'save'. Note that if you reorder the columns before saving, any changes will be lost."
+"Domain.table.header.domain";"Domain"
+"Domain.table.header.links";"Links"
+"Domain.table.header.relevant";"British Council"
+"Domain.view.linked-to-from";"%sites% linked to from %statuses%"
 
 
 "Badge_Engagement.title";"Engagement"
@@ -432,11 +483,20 @@
 "Error.display-name-exists";"Display name already taken"
 "Error.select-country";"Please select a country"
 "Error.display-name-missing";"Please enter a display name"
-"Error.display-name-exists";"Display name already taken"
 "Error.select-country";"Please select a country"
 "Error.missing-id";"Missing ID"
 "Error.missing-chart-type";"Missing chart type"
 "Error.chart-doesnt-exist";"Chart doesn't exist"
+"Error.invalid-delete";"Incorrect usage of delete"
+"Error.domain.access-error";"You do not have sufficient access to change this data"
+"Error.not-authorized";"Not authorised"
+"Error.not-logged-in";"Not logged in"
+"Error.not-allowed";"Not allowed: Insufficient access rights"
+"Error.data-not-found";"%type% not found"
+"Error.lock-error.message";"Fetch process has been inactive for %time%, indicating something has gone wrong."
+"Error.lock-error.with-url";"Click <a href="%url%">here</a> to clear the lock manually."
+"Error.lock-error.without-url";"Please log in to clear the lock."
+"Error.access-token.refresh";"One or more of your access tokens are set to expire soon. <a href="%url%">Click here</a> to refresh these tokens."
 
 "Success.email-confirmed";"Thank you for confirming your email. You can now login."
 "Success.linkedin-login";"Linkedin Account connected"
@@ -448,4 +508,6 @@
 "Success.presence-assigned-user";"Presence was assigned to user"
 "Success.presence-saved";"Presence saved"
 "Success.presence-deleted";"Presence deleted"
+"Success.domain.update";"Domains updated"
+
 // date range picker

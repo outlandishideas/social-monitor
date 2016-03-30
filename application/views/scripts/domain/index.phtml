@@ -2,25 +2,24 @@
 $bottomBar = array();
 if ($this->canEdit) {
     $bottomBar = $this->gatekeeper()->filterAll(array(
-            '<a class="button-bc" href="%url%">Cancel</a>' => array('controller'=>'index', 'action'=>'index'),
+            '<a class="button-bc" href="%url%">' . $this->translate()->trans('Global.cancel') .  '</a>' => array('controller'=>'index', 'action'=>'index'),
             //todo: reinstate this
 //          '<a class="button-bc" href="%url%">Download as CSV</a>' => array('action'=>'download')
         ));
-    $bottomBar[] = '<button type="submit" class="button-bc">Save</button>';
+    $bottomBar[] = '<button type="submit" class="button-bc">' . $this->translate()->trans('Global.save') . '</button>';
 }
 $topBar = $bottomBar;
-array_unshift($topBar, '<div id="search-table">Loading data...</div>');
+array_unshift($topBar, '<div id="search-table">'. $this->translate()->trans('Global.loading-data') . '</div>');
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 <div class="row">
     <div class="small-24 medium-12 columns">
-        <p>This shows the list of all domains linked to by tweets or facebook statuses. Click the links to see more usage information and the specific URLs.</p>
+		<p><?php echo $this->translate()->trans('Domain.index.paragraph-1'); ?></p>
     </div>
     <div class="small-24 medium-12 columns">
-        <p>You can say whether or not a domain belongs to the British Council by toggling the checkbox on the right, and clicking 'save'.
-            Note that if you reorder the columns before saving, any changes will be lost.</p>
+        <p><?php echo $this->translate()->trans('Domain.index.paragraph-2'); ?></p>
     </div>
 </div>
 
@@ -31,9 +30,9 @@ array_unshift($topBar, '<div id="search-table">Loading data...</div>');
 	<table class="text dtable" id="domains">
 		<thead>
 			<tr>
-				<th data-sort="auto">Domain</th>
-				<th data-sort="numeric">Links</th>
-				<th data-sort="checkbox">British Council</th>
+				<th data-sort="auto"><?php $this->translate()->trans('Domain.table.header.domain'); ?></th>
+				<th data-sort="numeric"><?php $this->translate()->trans('Domain.table.header.links'); ?></th>
+				<th data-sort="checkbox"><?php $this->translate()->trans('Domain.table.header.relevant'); ?></th>
 			</tr>
 		</thead>
 		<tbody>
