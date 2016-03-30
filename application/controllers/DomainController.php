@@ -24,7 +24,6 @@ class DomainController extends BaseController {
 			}
 			$this->_helper->redirector->gotoSimple('');
 		}
-		$this->view->pageTitle = $this->translator->trans('Global.domains');
 		$this->view->canEdit = $this->view->user->isManager;
 	}
 
@@ -177,6 +176,6 @@ class DomainController extends BaseController {
 		}
 		$this->view->domain = $domain;
 		$this->view->links = $links;
-		$this->view->pageTitle = $domain->domain;
+		$this->updatePageTitle(['domain' => $domain->domain]);
 	}
 }

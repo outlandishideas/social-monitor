@@ -38,7 +38,6 @@ class RegionController extends CampaignController
 
         $rows = $objectCacheManager->getRegionIndexRows($this->_request->getParam('force'));
 
-        $this->view->pageTitle = $this->translator->trans('Global.regions');
 		$this->view->regions = $table->getTableData();
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
@@ -59,7 +58,7 @@ class RegionController extends CampaignController
         $this->view->badgePartial = $this->badgeDetails($region);
         $this->view->chartOptions = $this->chartOptions();
         $this->view->region = $region;
-        $this->view->pageTitle = $this->translator->trans('Global.region'). ': ' . $region->display_name;
+        $this->updatePageTitle(['region' => $region->display_name]);
         $this->view->allCampaigns = Model_Region::fetchAll();
     }
 
@@ -96,7 +95,7 @@ class RegionController extends CampaignController
         $url = $downloader->getUrl(new ReportableRegion($region, $this->translator), $from, $to);
 
         do {
-            $content = file_get_contents($url);
+            $content = @file_get_contents($url);
         } while(empty($content));
 
         header('Content-type: application/pdf');
@@ -150,7 +149,6 @@ class RegionController extends CampaignController
     {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
-		$this->view->pageTitle = $this->translator->trans('Region.new.page-title');
 
 		$presences = array();
         $presenceIds = $this->_request->getParam('presences');
@@ -173,10 +171,10 @@ class RegionController extends CampaignController
     {
         if ($this->_request->getActionName() == 'edit') {
             $editingRegion = Model_Region::fetchById($this->_request->getParam('id'));
-            $this->view->showButtons = true;
+            $this->view->isNew = false;
         } else {
             $editingRegion = new Model_Region();
-            $this->view->showButtons = false;
+            $this->view->isNew = true;
         }
 
         $this->validateData($editingRegion);
@@ -213,7 +211,6 @@ class RegionController extends CampaignController
 
 
         $this->view->editingRegion = $editingRegion;
-        $this->view->pageTitle = $this->translator->trans('Region.edit.page-title');
     }
 
 
@@ -224,8 +221,6 @@ class RegionController extends CampaignController
      */
     public function editAllAction()
     {
-
-        $this->view->pageTitle = $this->translator->trans('Region.edit-all.page-title');
         $this->view->regions = Model_Region::fetchAll();
 
         if ($this->_request->isPost()) {
@@ -316,7 +311,7 @@ class RegionController extends CampaignController
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 
-        $this->view->pageTitle = $this->translator->trans('Region.manage.page-title').': ' . $region->display_name;
+        $this->updatePageTitle(['region' => $region->display_name]);
         $this->view->region = $region;
         $this->view->allCountries = Model_Country::fetchAll();
 	}

@@ -1,3 +1,4 @@
+<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 <p><?php echo $this->pluralise('site', count($this->links)); ?> linked to from <?php echo $this->pluralise('status', $this->domain->getLinkCount()); ?></p>
 <?php foreach ($this->links as $link) : ?>
 <div class="domain-link" data-domain-id="<?php echo $this->domain->id; ?>" data-url="<?php echo $link->url; ?>">

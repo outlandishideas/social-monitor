@@ -30,7 +30,7 @@ class ReportDownloader
     {
         $reportUrl = "{$this->baseUrl}/{$reportable->getBaseType()}/report/id/{$reportable->getId()}/from/{$then->format('Y-m-d')}/to/{$now->format('Y-m-d')}";
         $url = "{$this->pdfUrl}?urls[]={$reportUrl}";
-        $contents = file_get_contents($url);
+        $contents = @file_get_contents($url);
         $data = json_decode($contents);
         return $data[0];
     }

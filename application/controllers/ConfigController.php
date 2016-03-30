@@ -7,8 +7,6 @@ class ConfigController extends BaseController {
 	 * @user-level manager
 	 */
 	function indexAction() {
-		$this->view->pageTitle = $this->translator->trans('Config.index.page-title');
-
 		$reachBadge = self::getContainer()->get('badge.reach');
 		$qualityBadge = self::getContainer()->get('badge.quality');
 		$engagementBadge = self::getContainer()->get('badge.engagement');

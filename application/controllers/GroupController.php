@@ -19,7 +19,6 @@ class GroupController extends CampaignController {
 
         $rows = $objectCacheManager->getGroupIndexRows($this->_request->getParam('force'));
 
-		$this->view->pageTitle = $this->translator->trans('Global.sbus');
 		$this->view->groups = $table->getTableData();
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
@@ -41,7 +40,7 @@ class GroupController extends CampaignController {
 		$this->view->chartOptions = self::chartOptions();
 		$this->view->tableMetrics = $this->tableMetrics();
         $this->view->group = $group;
-        $this->view->pageTitle = $this->translator->trans('Global.sbu'). ': ' . $group->display_name;
+        $this->updatePageTitle(['group' => $group->display_name]);
         $this->view->allCampaigns = Model_Group::fetchAll();
 	}
 
@@ -78,7 +77,7 @@ class GroupController extends CampaignController {
         $url = $downloader->getUrl(new ReportableGroup($group, $this->translator), $from, $to);
 
         do {
-            $content = file_get_contents($url);
+            $content = @file_get_contents($url);
         } while(empty($content));
 
         header('Content-type: application/pdf');
@@ -154,7 +153,6 @@ class GroupController extends CampaignController {
     {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
-        $this->view->pageTitle = $this->translator->trans('Group.new.page-title');
 
         $presences = array();
         $presenceIds = $this->_request->getParam('presences');
@@ -177,10 +175,10 @@ class GroupController extends CampaignController {
     {
         if ($this->_request->getActionName() == 'edit') {
             $editingGroup = Model_Group::fetchById($this->_request->getParam('id'));
-            $this->view->showButtons = true;
+            $this->view->isNew = false;
         } else {
             $editingGroup = new Model_Group();
-            $this->view->showButtons = false;
+            $this->view->isNew = true;
         }
 
         $this->validateData($editingGroup);
@@ -222,7 +220,6 @@ class GroupController extends CampaignController {
 
 
         $this->view->editingGroup = $editingGroup;
-		$this->view->pageTitle = $this->translator->trans('Group.edit.page-title');
     }
 
 
@@ -233,8 +230,6 @@ class GroupController extends CampaignController {
      */
     public function editAllAction()
     {
-
-        $this->view->pageTitle = $this->translator->trans('Group.edit-all.page-title');
         $this->view->groups = Model_Group::fetchAll();
 
         if ($this->_request->isPost()) {
@@ -324,7 +319,7 @@ class GroupController extends CampaignController {
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 
-        $this->view->pageTitle = $this->translator->trans('Group.manage.page-title') . ': ' . $group->display_name;
+        $this->updatePageTitle(['group' => $group->display_name]);
         $this->view->group = $group;
         $this->view->presences = $this->managePresencesList();
 	}

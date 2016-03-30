@@ -11,9 +11,6 @@ class IndexController extends GraphingController
 		$old = clone $now;
 		$old->modify("-$dayRange days");
 
-		$translator = $this->getContainer()->get('translation.translator');
-
-		$this->view->pageTitle = $translator->trans("Index.index.page-title");
 		if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
 			$this->view->pdfLink = 'data/uploads/kpis.pdf';
 		} else {

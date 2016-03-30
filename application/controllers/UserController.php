@@ -15,17 +15,12 @@ class UserController extends BaseController
     {
         parent::init();
 
-        $this->linkedin = new LinkedIn([
-            'api_key' => '77412v04nudx5x',
-            'api_secret' => 'SpOZEGPlW0wi1FwO',
-            'callback_url' => 'http://socialmonitor.dev.outlandish.com/user/linkedin'
-        ]);
+        $this->linkedin = $this->getContainer()->get('linkedin.client');
         $this->view->linkedinUrl = $this->linkedin->getLoginUrl([LinkedIn::SCOPE_BASIC_PROFILE, 'rw_company_admin']);
     }
 
     public function linkedinAction()
     {
-		$this->view->pageTitle = $this->translator->trans('User.linkedin-title'); //'Login to LinkedIn';
         if (isset($_REQUEST['code'])) {
             $token = $this->linkedin->getAccessToken($_REQUEST['code']);
 
@@ -46,7 +41,6 @@ class UserController extends BaseController
      */
     public function indexAction()
     {
-        $this->view->pageTitle = $this->translator->trans('Global.users');
         $this->view->users = Model_User::fetchAll();
         $this->view->userLevels = Model_User::$userLevels;
     }
@@ -59,8 +53,6 @@ class UserController extends BaseController
         if ($this->auth->hasIdentity()) {
             $this->_helper->redirector->gotoSimple('index', 'index');
         }
-
-        $this->view->pageTitle = $this->translator->trans('Global.login');
 
         if ($this->_request->isPost()) {
             $authAdapter = new Model_User();
@@ -122,7 +114,6 @@ class UserController extends BaseController
                 }
             }
         }
-        $this->view->pageTitle = $this->translator->trans('Global.forgotten-password'); //'Forgotten password'
         $this->_helper->layout()->setLayout('notabs');
     }
 
@@ -171,7 +162,6 @@ class UserController extends BaseController
             $this->_helper->redirector->gotoSimple('index', 'index');
         }
 
-		$this->view->pageTitle = $this->translator->trams('Global.change-password') ; //'Change Password'
 		$this->_helper->layout()->setLayout('notabs');
     }
 
@@ -194,9 +184,7 @@ class UserController extends BaseController
         $this->editAction();
         $registerSuccessful = $this->_request->getParam('result') === 'success';
         if ($registerSuccessful) {
-            $this->view->pageTitle = $this->translator->trans('Success.registration'); //'Registration success';
-        } else {
-            $this->view->pageTitle = $this->translator->trans('Global.register-user'); //'Register user';
+            $this->view->pageTitle = $this->translator->trans('route.user.register.registration-successful'); //'Registration success';
         }
         $this->view->registerSuccessful = $registerSuccessful;
         $this->_helper->layout()->setLayout('notabs');
@@ -210,7 +198,6 @@ class UserController extends BaseController
     {
         // do exactly the same as in editAction, but with a different title
         $this->editAction();
-        $this->view->pageTitle = $this->translator->trans('Global.new-user'); //'New User';
         $this->_helper->viewRenderer->setScriptAction('edit');
     }
 
@@ -235,6 +222,7 @@ class UserController extends BaseController
     public function editAction()
     {
         $messageOnSave = $this->translator->trans('User.saved'); //'User saved';
+		$isRegistration = false;
         /** @var Model_User $editingUser */
         switch ($this->_request->getActionName()) {
             case 'new':
@@ -244,6 +232,7 @@ class UserController extends BaseController
             case 'register':
                 $editingUser = new Model_User(array());
                 $messageOnSave = $this->translator->trans('User.registered'); //'User registered';
+				$isRegistration = true;
                 break;
             case 'edit-self':
                 $editingUser = new Model_User($this->view->user->toArray(), true);
@@ -275,7 +264,7 @@ class UserController extends BaseController
                 $errorMessages[] = $this->translator->trans('Error.missing-email'); //'Please enter an email address';
             } else if (preg_match('/.*@.*/', $this->_request->getParam('email')) === 0) {
                 $errorMessages[] = $this->translator->trans('Error.invalid-email'); //'Please enter a valid email address';
-            } else if ($this->isRegistration() &&
+            } else if ($isRegistration &&
                 !$this->isBritishCouncilEmailAddress($this->_request->getParam('email'))
             ) {
                 $errorMessages[] = $this->translator->trans('Error.use-company-email'); //'To register, you must use a valid British Council email address';
@@ -294,7 +283,7 @@ class UserController extends BaseController
                 }
             }
 
-            if ($this->isRegistration()) {
+            if ($isRegistration) {
                 $code = $this->generateCode();
                 $editingUser->confirm_email_key = $code;
             }
@@ -309,7 +298,7 @@ class UserController extends BaseController
                     $this->flashMessage($messageOnSave);
                     if ($this->view->user->isManager) {
                         $this->_helper->redirector->gotoSimple('index');
-                    } else if ($this->isRegistration()) {
+                    } else if ($isRegistration) {
                         $this->sendRegisterEmail($editingUser);
                         $this->_helper->redirector->gotoRoute(['action' => 'register', 'result' => 'success']);
                     }
@@ -330,7 +319,6 @@ class UserController extends BaseController
 
         $this->view->userLevels = Model_User::$userLevels;
         $this->view->editingUser = $editingUser;
-        $this->view->pageTitle = $this->translator->trans('User.edit-user'); //'Edit User';
         $this->view->showAccessTokens = false;
     }
 
@@ -367,7 +355,7 @@ class UserController extends BaseController
             $this->_helper->redirector->gotoSimple('index');
         }
 
-        $this->view->pageTitle = $this->translator->trans('User.edit-permissions') . $user->safeName; // 'Edit access rights for ' . $user->safeName;
+        $this->updatePageTitle(['user' => $user->safeName]); // 'Edit access rights for ' . $user->safeName;
         $this->view->editingUser = $user;
         $this->view->twitterPresences = Model_PresenceFactory::getPresencesByType(PresenceType::TWITTER());
         $this->view->facebookPresences = Model_PresenceFactory::getPresencesByType(PresenceType::FACEBOOK());
@@ -395,7 +383,7 @@ class UserController extends BaseController
                 $user->confirm_email_key = null;
                 $user->save();
             } catch (Exception $ex) {
-                $this->flashMessage($this->translator->trans('Error.cant-confirm-email'), 'error'); //'Something went wrong and we could\'nt confirm your email address.'
+                $this->flashMessage($this->translator->trans('Error.cant-confirm-email'), 'error'); //'Something went wrong and we couldn't confirm your email address.'
                 $this->_helper->redirector->gotoSimple('index', 'index');
             }
             $this->flashMessage($this->translator->trans('Success.email-confirmed'), 'info');
@@ -452,14 +440,6 @@ class UserController extends BaseController
         $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         $code = substr(str_shuffle($chars), 0, 16);
         return $code;
-    }
-
-    /**
-     * @return bool
-     */
-    private function isRegistration()
-    {
-        return $this->_request->getActionName() === 'register';
     }
 
     /**

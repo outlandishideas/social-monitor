@@ -16,7 +16,7 @@
         <li class="<?php echo implode(' ', $classes); ?>">
             <a href="<?php echo $href; ?>">
                 <span class="<?php echo $page->icon; ?>"></span>
-                <span class="text"><?php echo $this->translate()->trans('Global.' . $page->getId()); ?></span>
+                <span class="text"><?php echo $this->translate()->trans('navigation-menu.' . $page->getId()); ?></span>
                 <div class="triangle hide-for-medium-down"></div>
             </a>
             <?php if(!empty($page->pages)) : ?>
@@ -24,7 +24,7 @@
                     <?php foreach($page->pages as $subPage) : /** @var Zend_Navigation_Page_Mvc $subPage */ ?>
                         <li>
                             <a href="<?php echo $subPage->getHref(); ?>">
-                                <?php echo $this->translate()->trans('Global.' . $subPage->getId()); ?>
+                                <?php echo $this->translate()->trans('navigation-menu.' . $subPage->getId()); ?>
                             </a>
                         </li>
                     <?php endforeach; ?>

@@ -35,7 +35,6 @@ class PresenceController extends GraphingController
 
 		$rows = $objectCacheManager->getPresenceIndexRows($this->_request->getParam('force'));
 
-        $this->view->pageTitle = $this->translator->trans('Global.presences');
         $this->view->presences = $table->getTableData();
         $this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
@@ -124,7 +123,7 @@ class PresenceController extends GraphingController
         $url = $downloader->getUrl(new ReportablePresence($presence, $this->translator), $from, $to);
 
         do {
-            $content = file_get_contents($url);
+            $content = @file_get_contents($url);
         } while(empty($content));
 
 		header('Content-type: application/pdf');
@@ -187,7 +186,7 @@ class PresenceController extends GraphingController
             );
         }
 
-        $this->view->pageTitle = $this->translator->trans('Presence.compare.page-title', ['%count%' => count($compareData)]);
+        $this->updatePageTitle(['count' => count($compareData)]);
 	    $this->view->chartOptions = $this->chartOptions();
 	    $this->view->tableMetrics = $this->tableMetrics();
         $this->view->compareData = $compareData;
@@ -202,7 +201,6 @@ class PresenceController extends GraphingController
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
         $this->view->editType = true;
-		$this->view->pageTitle = $this->translator->trans('Presence.new.page-title');
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -216,7 +214,6 @@ class PresenceController extends GraphingController
 
 		if ($this->_request->getActionName() == 'edit') {
             $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
-            $this->view->showButtons = true;
 			$this->view->isNew = false;
 		} else {
 			$presence = (object)array(
@@ -226,7 +223,6 @@ class PresenceController extends GraphingController
                 'sign_off' => null,
                 'branding' => null
             );
-            $this->view->showButtons = false;
 			$this->view->isNew = true;
 		}
 
@@ -313,7 +309,6 @@ class PresenceController extends GraphingController
 		$this->view->countries = Model_Country::fetchAll();
         $this->view->groups = Model_Group::fetchAll();
 		$this->view->presence = $presence;
-		$this->view->pageTitle = $this->translator->trans('Presence.edit.page-title');//'Edit Presence';
 	}
 
 	/**

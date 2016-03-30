@@ -42,7 +42,6 @@ class CountryController extends CampaignController {
         $this->view->tableHeaders = $objectCacheManager->getCountriesTable()->getHeaders();
         $this->view->sortCol = Name::getName();
 		$this->view->regions = Model_Region::fetchAll();
-		$this->view->pageTitle = $this->translator->trans('Global.countries');
 	}
 
     public function statsPanelAction()
@@ -71,7 +70,7 @@ class CountryController extends CampaignController {
 		$this->view->badgePartial = $this->badgeDetails($country);
 		$this->view->chartOptions = self::chartOptions();
         $this->view->country = $country;
-        $this->view->pageTitle = $this->translator->trans('Global.country'). ': ' . $country->display_name;
+		$this->updatePageTitle(['country' => $country->display_name]);
         $this->view->allCampaigns = Model_Country::fetchAll();
 	}
 
@@ -108,7 +107,7 @@ class CountryController extends CampaignController {
 		$url = $downloader->getUrl(new ReportableCountry($country, $this->translator), $from, $to);
 
 		do {
-			$content = file_get_contents($url);
+			$content = @file_get_contents($url);
 		} while(empty($content));
 
 		header('Content-type: application/pdf');
@@ -161,7 +160,6 @@ class CountryController extends CampaignController {
 	{
 		// do exactly the same as in editAction, but with a different title
 		$this->editAction();
-		$this->view->pageTitle = $this->translator->trans('Country.new.page-title');
 		$this->_helper->viewRenderer->setScriptAction('edit');
 	}
 
@@ -173,10 +171,10 @@ class CountryController extends CampaignController {
 	{
 		if ($this->_request->getActionName() == 'edit') {
 			$editingCountry = Model_Country::fetchById($this->_request->getParam('id'));
-            $this->view->showButtons = true;
+            $this->view->isNew = false;
 		} else {
 			$editingCountry = new Model_Country();
-            $this->view->showButtons = false;
+            $this->view->isNew = true;
 		}
 
 		$this->validateData($editingCountry);
@@ -262,7 +260,6 @@ class CountryController extends CampaignController {
 //		}
 
 		$this->view->editingCountry = $editingCountry;
-		$this->view->pageTitle = $this->translator->trans('Country.edit.page-title');
 	}
 
     /**
@@ -272,7 +269,6 @@ class CountryController extends CampaignController {
     public function editAllAction()
     {
 
-        $this->view->pageTitle = $this->translator->trans('Country.edit-all.page-title');
         $this->view->countries = Model_Country::fetchAll();
         $this->view->countryCodes = Model_Country::countryCodes();
 
@@ -369,7 +365,6 @@ class CountryController extends CampaignController {
 			$this->_helper->redirector->gotoRoute(array('action'=>'view'));
 		}
 
-		$this->view->pageTitle = $this->translator->trans('Country.manage.page-title').': ' . $country->display_name;
 		$this->view->country = $country;
 		$this->view->presences = $this->managePresencesList();
 	}

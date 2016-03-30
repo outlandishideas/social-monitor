@@ -2,13 +2,21 @@
 /** @var Model_Group $sbu */
 $sbu = $this->editingGroup;
 $presences = $sbu->getPresences();
-$topBar = $this->gatekeeper()->filterAll(array(
-	'<a class="button-bc button-view" href="%url%">' . $this->translate()->trans('Group.buttons.edit-sbu') . '</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
-	'<a class="button-bc button-manage" href="%url%">' . $this->translate()->trans('Group.buttons.manage-presences') . '</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$sbu->id),
-    '<a class="button-bc button-delete" href="%url%">' . $this->translate()->trans('Global.delete') . '</a>' => array('controller'=>'group', 'action'=>'delete', 'id'=>$sbu->id)
-));
+$topBar = array();
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">' . $this->translate()->trans('Global.cancel') . '</a>', array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id), null, true);
+$cancelArgs = array('controller'=>'group');
+if ($this->isNew) {
+	$cancelArgs['action'] = 'index';
+} else {
+	$cancelArgs['action'] = 'view';
+	$cancelArgs['id'] = $sbu->id;
+	$topBar = $this->gatekeeper()->filterAll(array(
+		'<a class="button-bc button-view" href="%url%">' . $this->translate()->trans('Group.buttons.view-sbu') . '</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
+		'<a class="button-bc button-manage" href="%url%">' . $this->translate()->trans('Group.buttons.manage-presences') . '</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$sbu->id),
+		'<a class="button-bc button-delete" href="%url%">' . $this->translate()->trans('Global.delete') . '</a>' => array('controller'=>'group', 'action'=>'delete', 'id'=>$sbu->id)
+	));
+}
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">' . $this->translate()->trans('Global.cancel') . '</a>', $cancelArgs, null, true);
 if ($cancel) {
     $bottomBar[] = $cancel;
 }
@@ -18,7 +26,7 @@ $bottomBar[] = '<button type="submit" class="button-bc">' . $this->translate()->
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 <?php
-if ($topBar && $this->showButtons) {
+if ($topBar) {
     echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true));
 }
 ?>

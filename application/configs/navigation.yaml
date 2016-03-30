@@ -1,42 +1,35 @@
 home:
   id: home
-  Title: World Map
   icon: icon-home icon-large
   controller: index
   action: index
 region:
   id: regions
-  Title: Index of Regions
   icon: icon-globe icon-large
   controller: region
   action: index
 country:
   id: countries
-  Title: Index of Countries
   icon: icon-flag icon-large
   controller: country
   action: index
 group:
   id: sbus
-  Title: Index of SBUs, Projects & Products
   icon: icon-th-large icon-large
   controller: group
   action: index
 presence:
   id: presences
-  title: Index of Presences
   icon: icon-bar-chart icon-large
   controller: presence
   action: index
 domain:
   id: domains
-  title: Index of Domains
   icon: icon-laptop icon-large
   controller: domain
   action: index
 statuses:
   id: statuses
-  title: All Statuses
   icon: icon-comment-alt icon-large
   controller: statuses
   action: index

@@ -96,9 +96,19 @@ class BaseController extends Zend_Controller_Action
     {
         $this->config = Zend_Registry::get('config');
 
+		$translator = $this->getContainer()->get('translation.translator');
+		
         $this->view->bodyClass = $this->_request->getActionName() . 'Action '.$this->_request->getControllerName().'Controller';
         // provide a default page title
-        $this->view->pageTitle = ucfirst($this->_request->getControllerName()) . ' > ' . ucfirst($this->_request->getActionName());
+		$controllerName = $this->_request->getControllerName();
+		$actionName = $this->_request->getActionName();
+		$pageTitleKey = 'route.' . $controllerName . '.' . $actionName . '.page-title';
+		$pageTitle = $translator->trans($pageTitleKey);
+		if ($pageTitle && $pageTitle != $pageTitleKey) {
+			$this->view->pageTitle = $pageTitle;
+		} else {
+			$this->view->pageTitle = ucfirst($controllerName) . ' > ' . ucfirst($actionName);
+		}
         $this->view->subtitle = '';
         $this->view->titleImage = '';
 
@@ -129,9 +139,28 @@ class BaseController extends Zend_Controller_Action
         $this->view->jsConfig = $configArray['jsConfig'];
         $this->view->jsConfig['apiEndpoint'] = $this->view->baseUrl('/');
 
-		$this->translator = $this->getContainer()->get('translation.translator');
+		$this->translator = $translator;
     }
 
+	/**
+	 * Fills in any placeholders in the page title
+	 * @param array $params
+	 */
+	protected function updatePageTitle($params)
+	{
+		$newParams = array();
+		foreach ($params as $key=>$value) {
+			if ($key[0] != '%') {
+				$key = '%' . $key;
+			}
+			if ($key[strlen($key)-1] != '%') {
+				$key .= '%';
+			}
+			$newParams[$key] = $value;
+		}
+		$this->view->pageTitle = strtr($this->view->pageTitle, $newParams);
+	}
+		
     /**
      * Recursively set each page's active state, depending on whether they or their children are currently being shown
      * @param $pages Zend_Navigation_Page[]

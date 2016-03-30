@@ -2,13 +2,21 @@
 /** @var Model_Region $region */
 $region = $this->editingRegion;
 $presences = $region->getPresences();
-$topBar = $this->gatekeeper()->filterAll(array(
-	'<a class="button-bc button-view" href="%url%">'.$this->translate()->trans('Region.buttons.view-region').'</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$region->id),
-	'<a class="button-bc button-manage" href="%url%">'.$this->translate()->trans('Region.buttons.manage-countries').'</a>' => array('controller'=>'region', 'action'=>'manage', 'id'=>$region->id),
-    '<a class="button-bc button-delete" href="%url%">'.$this->translate()->trans('Region.buttons.delete-region').'</a>' => array('controller'=>'region', 'action'=>'delete', 'id'=>$region->id)
-));
+$topBar = array();
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$this->translate()->trans('Global.cancel').'</a>', array('controller'=>'region', 'action'=>'view', 'id'=>$region->id), null, true);
+$cancelArgs = array('controller' => 'region');
+if ($this->isNew) {
+	$cancelArgs['action'] = 'index';
+} else {
+	$cancelArgs['action'] = 'view';
+	$cancelArgs['id'] = $region->id;
+	$topBar = $this->gatekeeper()->filterAll(array(
+		'<a class="button-bc button-view" href="%url%">'.$this->translate()->trans('Region.buttons.view-region').'</a>' => array('controller'=>'region', 'action'=>'view', 'id'=>$region->id),
+		'<a class="button-bc button-manage" href="%url%">'.$this->translate()->trans('Region.buttons.manage-countries').'</a>' => array('controller'=>'region', 'action'=>'manage', 'id'=>$region->id),
+		'<a class="button-bc button-delete" href="%url%">'.$this->translate()->trans('Region.buttons.delete-region').'</a>' => array('controller'=>'region', 'action'=>'delete', 'id'=>$region->id)
+	));
+}
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$this->translate()->trans('Global.cancel').'</a>', $cancelArgs, null, true);
 if ($cancel) {
     $bottomBar[] = $cancel;
 }
@@ -18,7 +26,7 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">'.$this->tra
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 <?php
-if ($topBar && $this->showButtons) {
+if ($topBar) {
     echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true));
 }
 ?>

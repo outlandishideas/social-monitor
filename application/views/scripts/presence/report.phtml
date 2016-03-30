@@ -1,0 +1,12 @@
+<?php
+    /** @var Model_Presence $presence */
+    $presence = $this->presence;
+?>
+
+<div class="row">
+    <div class="small-12 columns">
+        <section class="border-section info-section">
+            <h2><?php echo $this->translate()->trans('Global.presence')?>: <?php echo $presence->name; ?></h2>
+        </section>
+    </div>
+</div>

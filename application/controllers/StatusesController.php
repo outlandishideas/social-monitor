@@ -40,7 +40,6 @@ class StatusesController extends GraphingController
         Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
         $presences = Model_PresenceFactory::getPresences();
 
-        $this->view->pageTitle = $this->translator->trans('Global.statuses');
         $this->view->presences = $presences;
         $this->view->sortCol = Handle::getName();
         $this->view->queryOptions = [
