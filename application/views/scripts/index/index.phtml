@@ -6,7 +6,6 @@ $translator = $this->translate();
 
 /** @var Badge_Abstract[] $allBadges */
 $allBadges = $this->badges;
-$pageId = 'Index.index.';
 ?>
 
 <div class="row">
@@ -14,7 +13,7 @@ $pageId = 'Index.index.';
         <h2 class="page-title"><?php echo $this->pageTitle ?></h2>
         <span class="help-text-toggle icon-question-sign icon-large">
             <div class="help-text">
-                <p><?php echo $translator->trans($pageId . 'page-title-contextual-help')?></p>
+                <p><?php echo $translator->trans('route.index.index.contextual-help.page-title')?></p>
             </div>
         </span>
     </div>
@@ -35,12 +34,12 @@ $pageId = 'Index.index.';
     <div class="small-24 large-5 columns hide-for-small-down">
         <span class="help-text-toggle icon-question-sign icon-large">
             <div class="help-text">
-                <p><?php echo $translator->trans($pageId . 'date-range-contextual-help')?></p>
+                <p><?php echo $translator->trans('route.index.index.contextual-help.date-range')?></p>
             </div>
         </span>
 
         <div id="map-date" class="bd-btm" data-current-date="<?php echo $this->currentDate; ?>" data-day-range="<?php echo $this->dayRange; ?>">
-            <h4><?php echo $translator->trans($pageId . 'date-range')?></h4>
+            <h4><?php echo $translator->trans('Global.date-range')?></h4>
             <div class="date-range-text"></div>
             <div class="range-slider" data-slider="<?php echo $this->dayRange; ?>" data-options="start: 1; end: <?php echo $this->dayRange; ?>; step: 1">
                 <span class="range-slider-handle" role="slider" tabindex="0"></span>
@@ -51,7 +50,7 @@ $pageId = 'Index.index.';
 
         <div class="find-country">
             <form onsubmit="return app.home.selectCountry()">
-                <label for="search-countries"><?php echo $translator->trans($pageId . 'find-country')?></label>
+                <label for="search-countries"><?php echo $translator->trans('route.index.index.find-country')?></label>
                 <input type="text" id="search-countries" oninput="app.home.searchCountries()" />
             </form>
             <ul class="country-list">
@@ -69,7 +68,7 @@ $pageId = 'Index.index.';
         <div id="map">
             <span class="help-text-toggle icon-question-sign icon-large">
                 <div class="help-text">
-                    <p><?php echo $translator->trans($pageId . 'map-contextual-help')?></p>
+                    <p><?php echo $translator->trans('route.index.index.contextual-help.map')?></p>
                 </div>
             </span>
             <div id="geo-map"></div>
@@ -147,17 +146,17 @@ $pageId = 'Index.index.';
 <div class="button-bc-bar pdflink">
     <div class="row bk-dark">
         <div class="small-24 columns" id="kpi-download">
-            <p><?php echo $translator->trans($pageId.'pdf-download-description')?></p>
+            <p><?php echo $translator->trans('route.index.index.pdf-download-description')?></p>
             <ul class="button-group">
                 <li>
                     <a
                         href="<?php echo $this->pdfLink; ?>"
                         target="_blank"
-                        title="<?php echo $translator->trans($pageId.'pdf-download-link-title')?>"
+                        title="<?php echo $translator->trans('route.index.index.pdf-download-link-title')?>"
                         class="button-bc"
                         download="metrics.pdf"
                     >
-                        <?php echo $translator->trans($pageId.'pdf-download-link')?>
+                        <?php echo $translator->trans('route.index.index.pdf-download-link')?>
                     </a>
                 </li>
             </ul>
