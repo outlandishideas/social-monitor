@@ -87,10 +87,18 @@
 "Campaign.index.new-index-table.click-to-expand";"Click to expand"
 "Campaign.view.charts-unavailable";"Sorry, charts are not available on your device"
 
+
+
 "buttons.region.edit";"Edit Region"
+"buttons.region.delete";"Delete Region"
 "buttons.region.manage";"Manage Countries"
-"buttons.region.edit";"Edit Region"
-"buttons.region.edit";"Edit Region"
+"buttons.region.view";"View Region"
+"buttons.country.edit";"Edit Country"
+"buttons.country.delete";"Delete Country"
+"buttons.country.manage";"Manage Presences"
+"buttons.country.view";"View Country"
+
+
 
 "route.region.index.page-title";"Regions"
 "route.region.index.empty-table";"No regions found"
@@ -113,29 +121,32 @@
 "route.region.manage.page-title";"Manage Countries: %region%"
 "route.region.manage.message.success";"Region countries updated"
 
+
+
 "route.country.index.page-title";"Countries"
-"Country.index.empty-table";"No countries found"
-"Country.index.region-filter.placeholder";"Filter by region"
+"route.country.index.empty-table";"No countries found"
+"route.country.index.region-filter.placeholder";"Filter by region"
 
-"Country.buttons.edit-country";"Edit Country"
-"Country.buttons.delete-country";"Delete Country"
-"Country.buttons.manage-presences";"Manage Presences"
-"Country.buttons.view-country";"View Country"
-
-"Country.edit.success-message";"Country saved"
-"route.country.edit.page-title";"Edit Country"
 "route.country.new.page-title";"New Country"
+
 "route.country.view.page-title";"Country: %country%"
 
+"route.country.edit.page-title";"Edit Country"
+"route.country.edit.message.success";"Country saved"
+
 "route.country.edit-all.page-title";"Edit All Countries"
-"Country.edit-all.success-message";"[] countries saved"
-"Country.edit-all.error.display-name-missing";"Please enter a display name for []"
-"Country.edit-all.error.country-missing";"Please select a country for []"
+"route.country.edit-all.message.success";"%count% countries saved"
+"route.country.edit-all.message.display-name-missing";"Please enter a display name for %country%"
+"route.country.edit-all.message.country-missing";"Please select a country for %country%"
+
+"route.country.delete.message.success";"Country deleted"
+
+"route.country.graph-data.message.not-found";"Country could not be found"
 
 "route.country.manage.page-title";"Manage Presences"
-"Country.manage.success-message";"Country presences updated"
-"Country.delete.success-message";"Country deleted"
-"Country.graph-data.not-found";"Country could not be found"
+"route.country.manage.message.success";"Country presences updated"
+
+
 
 "Feedback.index.error.missing-name";"Please enter your name."
 "Feedback.index.error.missing-email";"Please enter a valid email address."

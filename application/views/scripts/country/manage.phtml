@@ -5,8 +5,8 @@ $translator = $this->translate();
 $country = $this->country;
 
 $topBar = $this->gatekeeper()->filterAll(array(
-        '<a class="button-bc button-view" href="%url%">'.$translator->trans('Country.buttons.view-country').'</a>' => array('controller'=>'country', 'action'=>'view', 'id'=>$country->id),
-        '<a class="button-bc button-edit" href="%url%">'.$translator->trans('Country.buttons.edit-country').'</a>' => array('controller'=>'country', 'action'=>'edit', 'id'=>$country->id)
+        '<a class="button-bc button-view" href="%url%">'.$translator->trans('buttons.country.view').'</a>' => array('controller'=>'country', 'action'=>'view', 'id'=>$country->id),
+        '<a class="button-bc button-edit" href="%url%">'.$translator->trans('buttons.country.edit').'</a>' => array('controller'=>'country', 'action'=>'edit', 'id'=>$country->id)
     ));
 
 $bottomBar = array();

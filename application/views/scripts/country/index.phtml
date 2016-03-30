@@ -1,7 +1,6 @@
 <?php
 /** @var \Symfony\Component\Translation\Translator $translator */
 $translator = $this->translate();
-$pageId = "Country.index.";
 $buttons = array(
 	'<a class="button-bc" href="%url%">' . $translator->trans('Global.add-new') . '</a>' => array('action'=>'new'),
 );
@@ -21,7 +20,7 @@ if ($this->rows) {
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
 <?php if (!$this->rows) : ?>
-	<h3 class="empty-table"><?php echo $translator->trans($pageId . 'empty-table') ?></h3>
+	<h3 class="empty-table"><?php echo $translator->trans('route.country.index.empty-table') ?></h3>
 	<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
 <?php else :
 	echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true));

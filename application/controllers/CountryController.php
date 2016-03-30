@@ -208,7 +208,7 @@ class CountryController extends CampaignController {
 					$table = $objectCacheManager->getCountriesTable();
 					$objectCacheManager->invalidateObjectCache($table->getIndexName());
 
-                    $this->flashMessage($this->translator->trans('Country.edit.success-message'));
+                    $this->flashMessage($this->translator->trans('route.country.edit.message.success'));
 					$this->_helper->redirector->gotoRoute(array('action' => 'view', 'id' => $editingCountry->id));
 				} catch (Exception $ex) {
 					if (strpos($ex->getMessage(), '23000') !== false) {
@@ -296,18 +296,10 @@ class CountryController extends CampaignController {
                 $editingCountry->fromArray($c);
 
                 if (!$c['display_name']) {
-                    $errorMessages[] = str_replace(
-						'[]',
-						$display_name,
-						$this->translator->trans('Country.edit-all.error.display-name-missing')
-					);
+                    $errorMessages[] = $this->translator->trans('route.country.edit-all.message.display-name-missing', ['%country%' => $display_name]);
                 }
                 if (!$c['country']) {
-                    $errorMessages[] = str_replace(
-						'[]',
-						$display_name,
-						$this->translator->trans('Country.edit-all.error.country-missing')
-					);
+                    $errorMessages[] = $this->translator->trans('route.country.edit-all.message.country-missing', ['%country%' => $display_name]);
                 }
 
                 $editedCountries[] = $editingCountry;
@@ -325,11 +317,7 @@ class CountryController extends CampaignController {
                         $country->save();
                     }
 
-					$this->flashMessage(str_replace(
-						'[]',
-						count($editedCountries),
-						$this->translator->trans('Country.edit-all.success-message')
-					));
+					$this->flashMessage($this->translator->trans('route.country.edit-all.message.success', ['%count%' => count($editedCountries)]));
                     $this->_helper->redirector->gotoSimple('index');
 
                 } catch (Exception $ex) {
@@ -361,7 +349,7 @@ class CountryController extends CampaignController {
 				}
 			}
 			$country->assignPresences($presenceIds);
-			$this->flashMessage($this->translator->trans('Country.manage.success-message'));
+			$this->flashMessage($this->translator->trans('route.country.manage.message.success'));
 			$this->_helper->redirector->gotoRoute(array('action'=>'view'));
 		}
 
@@ -379,7 +367,7 @@ class CountryController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 			$country->delete();
-            $this->flashMessage($this->translator->trans('Country.delete.success-message'));
+            $this->flashMessage($this->translator->trans('route.country.delete.message.success'));
     		$this->_helper->redirector->gotoSimple('index');
         } else {
             $this->flashMessage($this->translator->trans('Error.invalid-delete'));
@@ -398,7 +386,7 @@ class CountryController extends CampaignController {
 		/** @var $presence Model_Presence */
 		$presence = Model_Country::fetchById($this->_request->getParam('id'));
 		if(!$presence) {
-			$this->apiError($this->translator->trans('Country.graph-data.not-found'));
+			$this->apiError($this->translator->trans('route.country.graph-data.message.not-found'));
 		}
 
 		$dateRange = $this->getRequestDateRange();
