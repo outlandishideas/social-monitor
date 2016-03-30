@@ -40,6 +40,8 @@ class StatusesController extends GraphingController
         Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
         $presences = Model_PresenceFactory::getPresences();
 
+		$engagementBadge = $this->getContainer()->get('badge.engagement');
+
         $this->view->presences = $presences;
         $this->view->sortCol = Handle::getName();
         $this->view->queryOptions = [
@@ -50,7 +52,7 @@ class StatusesController extends GraphingController
             ['name' => 'sort', 'label' => $this->translator->trans('Global.sort'), 'options' =>
                 [
                     ['value' => 'date', 'title' => $this->translator->trans('Global.date')],
-                    ['value' => 'engagement', 'title' => $this->translator->trans('Badge_Engagement.title')]
+                    ['value' => 'engagement', 'title' => $engagementBadge->getTitle()]
                 ]
             ]
         ];

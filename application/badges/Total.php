@@ -7,9 +7,9 @@ class Badge_Total extends Badge_Abstract
 	/** @var Badge_Abstract[] */
 	protected $badges = array();
 
-	public function __construct(PDO $db, $badges)
+	public function __construct(PDO $db, $translator, $badges)
 	{
-		parent::__construct(self::NAME, $db);
+		parent::__construct($translator, self::NAME, $db);
 		$this->badges = $badges;
 	}
 

@@ -422,16 +422,16 @@ services:
     # badges
     badge.engagement:
         class: Badge_Engagement
-        arguments: [@pdo, %badge.engagement.metrics%]
+        arguments: [@pdo, @translation.translator, %badge.engagement.metrics%]
 
     badge.quality:
         class: Badge_Quality
-        arguments: [@pdo, %badge.quality.metrics%]
+        arguments: [@pdo, @translation.translator, %badge.quality.metrics%]
 
     badge.reach:
         class: Badge_Reach
-        arguments: [@pdo, %badge.reach.metrics%]
+        arguments: [@pdo, @translation.translator, %badge.reach.metrics%]
 
     badge.total:
         class: Badge_Total
-        arguments: [@pdo, %badge.total.badges%]
+        arguments: [@pdo, @translation.translator, %badge.total.badges%]

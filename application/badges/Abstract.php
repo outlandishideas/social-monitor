@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\Translation\Translator;
+
 abstract class Badge_Abstract
 {
 	protected $name = '';
@@ -10,19 +12,23 @@ abstract class Badge_Abstract
 	protected $metrics = array();
 	protected $metricsWeighting = array();
 
-    public function __construct($name, PDO $db = null, $metrics = array())
+	/**
+	 * @param Translator $translator
+	 * @param $name
+	 * @param PDO|null $db
+	 * @param array $metrics
+	 */
+    public function __construct($translator, $name, PDO $db = null, $metrics = array())
 	{
 		if (is_null($db)) {
 			$db = Zend_Registry::get('db')->getConnection();
 		}
 		$this->db = $db;
 
-		// populate $name, $title, $description from transation files
-		$translate = Zend_Registry::get('translate');
-		$className = get_class($this);
+		// populate $title and $description from translation files
 		$this->name = $name;
-		$this->title = $translate->_($className.'.title');
-		$this->description = $translate->_($className.'.description');
+		$this->title = $translator->trans('badge.' . $name . '.title');
+		$this->description = $translator->trans('badge.' . $name . '.description');
 		$this->metrics = $metrics;
 	}
 
