@@ -1,5 +1,13 @@
+<?php
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
+$sites = $this->pluralise($translator->trans('route.domain.view.site.single'), count($this->links), $translator->trans('route.domain.view.site.plural'));
+$statuses = $this->pluralise($translator->trans('route.domain.view.status.single'), $this->domain->getLinkCount(), $translator->trans('route.domain.view.status.plural'));
+$summary = $translator->trans('route.domain.view.linked-to-from', ['%sites%' => $sites, '%statuses%' => $statuses]);
+?>
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
-<p><?php echo $this->pluralise('site', count($this->links)); ?> linked to from <?php echo $this->pluralise('status', $this->domain->getLinkCount()); ?></p>
+<p><?php echo $summary; ?></p>
 <?php foreach ($this->links as $link) : ?>
 <div class="domain-link" data-domain-id="<?php echo $this->domain->id; ?>" data-url="<?php echo $link->url; ?>">
     <div class="link-title">
