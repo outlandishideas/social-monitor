@@ -1,5 +1,6 @@
 # default values; should be overridden in parameters.yml to be non-empty
 parameters:
+    app.locale: en
     presence-type.twitter.metrics: []
     presence-type.facebook.metrics: []
     presence-type.instagram.metrics: []
@@ -30,11 +31,11 @@ services:
         class: Symfony\Component\Translation\Loader\CsvFileLoader
 
     translation.translator:
-        class: Symfony\Component\Translation\Translator
-        arguments: ["en", @translation.message-selector]
+        class: Outlandish\SocialMonitor\Translation\Translator
+        arguments: [%app.locale%, @translation.message-selector]
         calls:
             - [addLoader, ["csv", @translation.csv-loader]]
-            - [addResource, ["csv", "languages/lang.en.csv", 'en']]
+            - [loadFromDirectory, ['csv', 'languages']]
 
     guzzle.client:
         class: GuzzleHttp\Client

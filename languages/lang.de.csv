@@ -1,0 +1,711 @@
+"Global.score";"Score"
+"Global.loading-data";"Loading data..."
+"Global.add-new";"Add New"
+"Global.edit-all";"Edit All"
+"Global.edit";"Edit"
+"Global.display-name";"Display name"
+"Global.delete";"Delete"
+"Global.download-csv";"Download CSV"
+"Global.penetration";"penetration"
+"Global.internet-penetration";"Internet Penetration"
+"Global.country-population";"Country Population"
+"Global.available-audience-size";"Available Audience Size"
+"Global.download-report";"Download Report"
+"Global.containing-region";"Part of the %region% region"
+"Global.target-date";"Target date"
+"Global.content";"Content"
+"Global.charts-unavailable";"Sorry, charts are not available on your device"
+"Global.click-to-expand";"Click to expand"
+"Global.audience-size";"Audience Size"
+"Global.digital-population";"Digital Population"
+"Global.region";"Region"
+"Global.regions";"Regions"
+"Global.country";"Country"
+"Global.countries";"Countries"
+"Global.group";"SBU"
+"Global.groups";"SBUs"
+"Global.presence";"Presence"
+"Global.presences";"Presences"
+"Global.statuses";"Statuses"
+"Global.select";"Select"
+"Global.charts";"Charts"
+"Global.chart";"Chart"
+"Global.info";"Info"
+"Global.date-range";"Date range"
+"Global.sort";"Sort"
+"Global.date";"Date"
+"Global.time";"Time"
+"Global.cancel";"Cancel"
+"Global.save";"Save"
+"Global.population";"Population"
+"Global.no";"No"
+"Global.yes";"Yes"
+
+
+
+
+"navigation-menu.users";"Users"
+"navigation-menu.account";"Account"
+"navigation-menu.edit-users";"Edit Users"
+"navigation-menu.sign-out";"Sign Out"
+"navigation-menu.settings";"Settings"
+"navigation-menu.user";"User"
+"navigation-menu.home";"Home"
+"navigation-menu.regions";"Regions"
+"navigation-menu.countries";"Countries"
+"navigation-menu.sbus";"SBUs"
+"navigation-menu.presences";"Presences"
+"navigation-menu.domains";"Domains"
+"navigation-menu.statuses";"Statuses"
+"navigation-menu.login";"Login"
+"navigation-menu.register";"Register"
+
+
+
+
+"Base.layout.feedback-button";"Feedback"
+"Base.layout.feedback-modal.title";"Feedback form"
+"Base.layout.feedback-modal.subtitle";"All feedback is welcome. Please let us know your thoughts and suggestions."
+"Base.layout.feedback-modal.name-label";"Your name"
+"Base.layout.feedback-modal.name-placeholder";"Enter your first and last name"
+"Base.layout.feedback-modal.email-label";"Your email"
+"Base.layout.feedback-modal.email-placeholder";"Enter your email address"
+"Base.layout.feedback-modal.message-label";"Your message"
+"Base.layout.feedback-modal.message-placeholder";"Enter your message (max. 1000 characters)"
+"Base.layout.feedback-modal.submit";"Send form"
+"Base.layout.feedback-modal.close";"Cancel"
+
+
+
+
+"route.index.index.page-title";"Social Media Monitor"
+"route.index.index.find-country";"Find country"
+"route.index.index.pdf-download-description";"These scores are derived from the organisation's social media metrics.<br />You can download a copy of the PDF that explains them here:"
+"route.index.index.pdf-download-link";"Download metrics"
+"route.index.index.pdf-download-link-title";"Download metrics PDF"
+"route.index.index.contextual-help.page-title";"Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU."
+"route.index.index.contextual-help.date-range";"Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU."
+"route.index.index.contextual-help.map";"Click on the map to select a country and preview the individual social media presences."
+
+
+
+
+"buttons.region.edit";"Edit Region"
+"buttons.region.delete";"Delete Region"
+"buttons.region.manage";"Manage Countries"
+"buttons.region.view";"View Region"
+
+"buttons.country.edit";"Edit Country"
+"buttons.country.delete";"Delete Country"
+"buttons.country.manage";"Manage Presences"
+"buttons.country.view";"View Country"
+
+"buttons.group.edit";"Edit SBU"
+"buttons.group.delete";"Delete SBU"
+"buttons.group.manage";"Manage Presences"
+"buttons.group.view";"View SBU"
+
+"buttons.presence.edit";"Edit Presence"
+"buttons.presence.delete";"Delete Presence"
+"buttons.presence.view";"View Presence"
+
+
+
+"route.region.index.page-title";"Regions"
+"route.region.index.empty-table";"No regions found"
+
+"route.region.new.page-title";"New Region"
+
+"route.region.view.page-title";"Region: %region%"
+
+"route.region.edit.page-title";"Edit Region"
+"route.region.edit.message.success";"Region saved"
+"route.region.edit.message.display-name-missing";"Please enter a display name"
+
+"route.region.edit-all.page-title";"Edit All Regions"
+"route.region.edit-all.message.display-name-missing";"Please enter a display name for %region%"
+"route.region.edit-all.message.success";"%count% regions saved"
+
+"route.region.delete.message.success";"Region deleted"
+
+"route.region.graph-data.message.not-found";"Region could not be found"
+
+"route.region.manage.page-title";"Manage Countries: %region%"
+"route.region.manage.message.success";"Region countries updated"
+
+"route.region.report.page-title";"Social Media Monitor Report"
+
+
+
+"route.country.index.page-title";"Countries"
+"route.country.index.empty-table";"No countries found"
+"route.country.index.region-filter.placeholder";"Filter by region"
+
+"route.country.new.page-title";"New Country"
+
+"route.country.view.page-title";"Country: %country%"
+
+"route.country.edit.page-title";"Edit Country"
+"route.country.edit.message.success";"Country saved"
+"route.country.edit.message.display-name-missing";"Please enter a display name"
+"route.country.edit.message.country-missing";"Please select a country"
+
+"route.country.edit-all.page-title";"Edit All Countries"
+"route.country.edit-all.message.success";"%count% countries saved"
+"route.country.edit-all.message.display-name-missing";"Please enter a display name for %country%"
+"route.country.edit-all.message.country-missing";"Please select a country for %country%"
+
+"route.country.delete.message.success";"Country deleted"
+
+"route.country.graph-data.message.not-found";"Country could not be found"
+
+"route.country.manage.page-title";"Manage Presences"
+"route.country.manage.message.success";"Country presences updated"
+
+"route.country.report.page-title";"Social Media Monitor Report"
+"route.country.report.label.additional-info";"Additional Info"
+
+
+
+
+"route.feedback.index.error.missing-name";"Please enter your name."
+"route.feedback.index.error.missing-email";"Please enter a valid email address."
+"route.feedback.index.error.missing-message";"Please enter your message."
+"route.feedback.index.email-subject";"Social Monitor feedback from %name%"
+
+
+
+
+"route.group.index.page-title";"SBUs"
+"route.group.index.empty-table";"No SBUs Found"
+
+"route.group.new.page-title";"New SBU"
+
+"route.group.view.page-title";"SBU: %group%"
+
+"route.group.edit.page-title";"Edit SBU"
+"route.group.edit.message.success";"SBU saved"
+"route.group.edit.message.display-name-missing";"Please enter a display name"
+
+"route.group.edit-all.page-title";"Edit All SBUs"
+"route.group.edit-all.message.display-name-missing";"Please enter a display name for %group%"
+"route.group.edit-all.message.success";"%count% SBUs saved"
+
+"route.group.delete.message.success";"SBU deleted"
+
+"route.group.graph-data.message.not-found";"SBU could not be found"
+
+"route.group.manage.page-title";"Manage Presences: %group%"
+"route.group.manage.message.success";"SBU presences updated"
+
+"route.group.report.page-title";"Social Media Monitor Report"
+
+
+
+
+"route.presence.index.page-title";"Presences"
+"route.presence.index.table-empty";"No presences found"
+
+"route.presence.new.page-title";"New presence"
+
+"route.presence.delete.message.success";"Presence deleted"
+
+"route.presence.assign.message.success";"Presence was assigned to user"
+
+"route.presence.view.page-title";"Presence: %presence%"
+"route.presence.view.info.presence-type";"This is a %type% presence"
+"route.presence.view.info.presence.score";"Yesterday's %type% Engagement score: %score%%"
+"route.presence.view.info.presence.average-score";"Monthly Average %type% Engagement score: %score%%"
+"route.presence.view.info.twitter.score";"Yesterday's Klout score: %score%%"
+"route.presence.view.info.twitter.average-score";"Monthly Average Klout score: %score%%"
+"route.presence.view.info.owner-name";"This presence contributes to the statistics for %link%"
+"route.presence.view.info.target-audience";"The target audience size is %size%"
+"route.presence.view.info.current-audience";"The target audience size is %size%"
+"route.presence.view.info.time-to-target";"At the current rate, the target will be reached by %date%"
+"route.presence.view.info.daily-gains";"The following daily gains are required to meet the target audience size:"
+"route.presence.view.info.gain-per-day";"Required gain per day"
+
+"route.presence.compare.page-title";"Comparing %count% presences"
+"route.presence.compare.presence-handle";"Handle"
+"route.presence.compare.table-empty";"No presences found"
+"route.presence.compare.button.create-sbu";"Create SBU"
+"route.presence.compare.chart-title";"Scores for the last 30 days:"
+
+"route.presence.edit.page-title";"Edit presence"
+"route.presence.edit.message.success";"Presence saved"
+"route.presence.edit.label.handle";"Handle"
+"route.presence.edit.label.type";"Type"
+"route.presence.edit.label.size";"Size"
+"route.presence.edit.label.signed-off";"Signed Off"
+"route.presence.edit.label.branding";"Branding"
+"route.presence.edit.hint.connect-account";"Please connect your account to %title%"
+"route.presence.edit.hint.handle.facebook";"For www.facebook.com/<strong>platform</strong> the handle is '<strong>platform</strong>'<br/>For pages without vanity URLs, the handle is the long number in the URL, eg www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>"
+"route.presence.edit.hint.handle.twitter";"For www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"route.presence.edit.hint.handle.instagram";"For www.instagram.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"route.presence.edit.hint.handle.youtube";"For www.youtube.com/channel/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"route.presence.edit.hint.handle.linkedin";"Use the name of the company, as it appears on its page. E.g. for <a href=\"https://www.linkedin.com/company/1337\" target=\"_blank\">LinkedIn themselves</a>, the handle is '<strong>LinkedIn</strong>'"
+"route.presence.edit.hint.handle.sinaweibo";"Use the name of the account, as it appears on its page. E.g. for <a href=\"http://www.weibo.com/u/2463797455\" target=\"_blank\">BBC World</a>, the handle is '<strong>BBCWorld</strong>'"
+"route.presence.edit.hint.size";"Size will affect the weighting of a presence when calculating the target for its popularity.<br/>Size will only affect presences that belong to SBU.<br/>Large presences in an SBU will take a larger share of the SBU's target population, Medium presences a smaller share, and Small presences an even smaller share."
+"route.presence.edit.access-token.title";"Access Token"
+"route.presence.edit.access-token.message";"This type of presence requires an access token to fetch data."
+"route.presence.edit.access-token.has-user.message";"This presence is currently using the access token from the following user: <strong>%name%</strong>"
+"route.presence.edit.access-token.no-user.message";"This presence does not currently have an access token and so cannot be fetched."
+"route.presence.edit.access-token.button";"Use your access token"
+
+"route.presence.report.page-title";"Social Media Monitor Report"
+
+
+
+
+"route.user.index.page-title";"Users"
+
+"route.user.linkedin.page-title";"Login to LinkedIn"
+"route.user.linkedin.message.success";"Linkedin Account connected"
+
+"route.user.login.page-title";"Login"
+"route.user.login.message.cannot-login";"Incorrect username/password or email has not been confirmed"
+
+"route.user.logout.message.success";"Logged out"
+
+"route.user.delete.message.success";"User deleted"
+
+"route.user.forgotten.page-title";"Forgotten password"
+"route.user.forgotten.message.missing-username-email";"Please enter a username or email address"
+"route.user.forgotten.message.user-not-found";"User not found"
+"route.user.forgotten.message.password-reset-email-sent";"You should receive an email shortly with a password reset link"
+"route.user.forgotten.message.password-reset-failed-email";"Failed to send reset email.<br />Please ask an admin user to reset your password"
+
+"route.user.reset-password.page-title";"Change password"
+"route.user.reset-password.message.both-passwords-required";"Both passwords are required"
+"route.user.reset-password.message.password-mismatch";"Passwords do not match"
+"route.user.reset-password.message.passwords-too-short";"Password must be at least 4 characters"
+"route.user.reset-password.message.success";"Password changed successfully"
+"route.user.reset-password.message.incorrect-user-key";"Incorrect user/key combination for password reset"
+
+"route.user.register.page-title";"Register user"
+"route.user.register.registration-successful";"Registration successful"
+"route.user.register.email.subject";"You have successfully registered"
+"route.user.register.email.message";"<p>Hi %name%,</p><p>Thank you for registering with the British Council Social Monitor</p><p>If you did not register for this service, please ignore this email.</p><p>Otherwise, click this link to confirm your email so that you can login with your new account <a href="%link%">Confirm email</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
+"route.user.register.email.from";"The British Council Social Media Monitor team"
+"route.user.register.email.from-address";"do.not.reply@example.com"
+
+"route.user.new.page-title";"New User"
+
+"route.user.edit.page-title";"Edit User"
+"route.user.edit.saved";"User saved"
+"route.user.edit.created";"User created"
+"route.user.edit.registered";"User registered"
+"route.user.edit.message.both-passwords-required";"Both passwords are required"
+"route.user.edit.message.password-mismatch";"Passwords do not match"
+"route.user.edit.message.passwords-too-short";"Password must be at least 4 characters"
+"route.user.edit.message.missing-username";"Please enter a user name"
+"route.user.edit.message.missing-email";"Please enter an email address"
+"route.user.edit.message.invalid-email";"Please enter a valid email address"
+"route.user.edit.message.use-company-email";"To register, you must use a valid British Council email address"
+"route.user.edit.message.email-in-use";"Email already in use"
+"route.user.edit.message.username-in-use";"User name already in use"
+
+"route.user.edit-self.page-title";"Edit my details"
+
+"route.user.manage.page-title";"Edit access rights for %user%"
+"route.user.manage.message.permissions-saved";"User permissions saved"
+
+"route.user.forgotten.email.subject";"Password reset"
+"route.user.forgotten.email.message";"'<p>Hi %name%,</p><p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p><p>If you did not request a reset, please ignore this email.</p><p>Otherwise, click this link to reset your password <a href="%link%">Reset password</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
+"route.user.forgotten.email.from";"The British Council Social Media Monitor team"
+"route.user.forgotten.email.from-address";"do.not.reply@example.com"
+
+"route.user.confirm-email.message.success";"Thank you for confirming your email. You can now login."
+"route.user.confirm-email.message.fail";"Something went wrong and we couldn't confirm your email address."
+"route.user.confirm-email.message.invalid-email";"Incorrect user/key combination for email confirmation"
+
+
+
+"route.statuses.index.page-title";"Statuses"
+"route.statuses.index.label.social-media";"Social Media"
+
+
+
+"route.error.error.page-title";"Application error"
+"route.error.error.page-title-404";"Page not found"
+"route.error.error.message.404";"Please check the url"
+"route.error.error.message.500";"Sorry, something has gone wrong"
+
+
+
+
+"route.fetch.log.finished";"Finished"
+"route.fetch.log.updating-facebook-actors.start";"Updating facebook actors"
+"route.fetch.log.updating-facebook-actors.fail";"Failed to update facebook actors: %message%"
+"route.fetch.log.updating-facebook-actors.success";"Updated %count% actors"
+"route.fetch.log.updating-domains.start";"Updating linked domains"
+"route.fetch.log.updating-domains.success";"Inserted %count% domains"
+"route.fetch.log.start";"Starting %action% process on %start%"
+"route.fetch.log.lock-acquire";"Process already running and last active %seconds% seconds ago"
+"route.fetch.log.lock-acquire.fail";"Stale lock found last active %seconds% seconds ago: %lockname%"
+"route.fetch.log.presence-history.start";"Updating presence history"
+"route.fetch.log.presence-history.error";"Error: %message%"
+"route.fetch.log.update-info.start";"Update info %message%"
+"route.fetch.log.update-info.success";"Updated info %message%"
+"route.fetch.log.update-info.error";"Error updating presence info: %message%"
+"route.fetch.log.update-info.skip";"Not updating info %message% as last updated %lastupdated%"
+"route.fetch.log.fetch-statues.start";"Fetch statuses %message%"
+"route.fetch.log.fetch-statues.success";"Inserted %count%"
+"route.fetch.log.fetch-statues.error";"Error: %message%"
+
+
+
+
+"route.config.index.page-title";"Settings"
+"route.config.index.introduction";"Configure each of the metrics and badges, then click save"
+
+"route.config.index.sections.general.title";"General"
+"route.config.index.sections.general.feedback.title";"Feedback"
+"route.config.index.sections.general.feedback.description";"What email address should feedback be sent to?"
+"route.config.index.sections.general.feedback.email-address";"Email Address"
+
+"route.config.index.sections.reach.target-audience.title";"Target Audience"
+"route.config.index.sections.reach.target-audience.description";"Each presence has a target audience set against it. The score is given based on how close the presence is to its target"
+"route.config.index.sections.reach.target-audience.weighting";"Target Audience Weighting"
+"route.config.index.sections.reach.target-audience.fb-min";"Facebook Minimum Audience (% of total)"
+"route.config.index.sections.reach.target-audience.fb-opt";"Facebook Optimum Audience (% of total)"
+"route.config.index.sections.reach.target-audience.tw-min";"Twitter Minimum Audience (% of total)"
+"route.config.index.sections.reach.target-audience.tw-opt";"Twitter Optimum Audience (% of total)"
+"route.config.index.sections.reach.target-audience.sw-min";"Sina Weibo Minimum Audience (% of total)"
+"route.config.index.sections.reach.target-audience.sw-opt";"Sina Weibo Optimum Audience (% of total)"
+"route.config.index.sections.reach.target-audience.ig-min";"Instagram Minimum Audience (% of total)"
+"route.config.index.sections.reach.target-audience.ig-opt";"Instagram Optimum Audience (% of total)"
+"route.config.index.sections.reach.target-audience.yt-min";"Youtube Minimum Audience (% of total)"
+"route.config.index.sections.reach.target-audience.yt-opt";"Youtube Optimum Audience (% of total)"
+"route.config.index.sections.reach.target-audience.in-min";"LinkedIn Minimum Audience (% of total)"
+"route.config.index.sections.reach.target-audience.in-opt";"LinkedIn Optimum Audience (% of total)"
+"route.config.index.sections.reach.target-audience.shared-audience-extra-large";"% of owner Target Audience that is shared amongst extra large presences"
+"route.config.index.sections.reach.target-audience.shared-audience-large";"% of owner Target Audience that is shared amongst large presences"
+"route.config.index.sections.reach.target-audience.shared-audience-medium";"% of owner Target Audience that is shared amongst medium presences"
+"route.config.index.sections.reach.target-audience.shared-audience-small";"% of owner Target Audience that is shared amongst small presences"
+"route.config.index.sections.reach.time-to-target-audience.title";"Time to Target Audience"
+"route.config.index.sections.reach.time-to-target-audience.description";"Each presence has a target audience set against it. The score is given based on how close the presence is to its target"
+"route.config.index.sections.reach.time-to-target-audience.weighting";"Time to Target Audience Weighting"
+"route.config.index.sections.reach.time-to-target-audience.best-score-label";"Target audience best score (months)"
+"route.config.index.sections.reach.time-to-target-audience.best-score-hint";"The number of months the target audience should be reached within to get the best score"
+"route.config.index.sections.reach.time-to-target-audience.good-score-label";"Target audience good score (months)"
+"route.config.index.sections.reach.time-to-target-audience.good-score-hint";"The number of months the target audience should be reached within to get a good score"
+"route.config.index.sections.reach.time-to-target-audience.bad-score-label";"Target audience bad score (months)"
+"route.config.index.sections.reach.time-to-target-audience.bad-score-hint";"If the target audience will be reached after this number of months, the presence will get a bad score"
+"route.config.index.sections.reach.sharing.title";"Retweets/Shares"
+"route.config.index.sections.reach.sharing.description";"How often each presence's posts are shared (Facebook) or retweeted (Twitter)"
+"route.config.index.sections.reach.sharing.weighting";"Retweets/Shares Weighting"
+"route.config.index.sections.reach.sharing.fb-target";"Average shares per post target (% of total audience)"
+"route.config.index.sections.reach.sharing.tw-target";"Average retweets target (% of total audience)"
+
+"route.config.index.sections.engagement.response-time.title";"Response Time"
+"route.config.index.sections.engagement.response-time.description";"The response time score measures how quickly the presence responds to individual posts"
+"route.config.index.sections.engagement.response-time.weighting";"Response Time Weighting"
+"route.config.index.sections.engagement.response-time.best-label";"Perfect response time (hours)"
+"route.config.index.sections.engagement.response-time.good-label";"Good response time (hours)"
+"route.config.index.sections.engagement.response-time.bad-label";"Bad response time (hours)"
+"route.config.index.sections.engagement.klout.title";"Klout Score (Twitter only)"
+"route.config.index.sections.engagement.klout.description";"The Klout Score is a third party measurement of your engagement with your audience (Twitter only)"
+"route.config.index.sections.engagement.klout.weighting";"Klout Score Weighting"
+"route.config.index.sections.engagement.klout.target-label";"Klout Score Target"
+"route.config.index.sections.engagement.klout.target-hint";"The presence will score 100% if it meets or exceeds this target, but will only receive 0% if it does not meet it."
+
+"route.config.index.sections.engagement.fb.title";"Facebook Engagement Score (Facebook only)"
+"route.config.index.sections.engagement.fb.description";"The Facebook Engagement Score is an aggregation of likes, comments and shares."
+"route.config.index.sections.engagement.fb.weighting";"Facebook Engagement Score Weighting"
+"route.config.index.sections.engagement.fb.active-users-small";"Percentage of users assumed to be active for small presences"
+"route.config.index.sections.engagement.fb.active-users-medium";"...medium presences"
+"route.config.index.sections.engagement.fb.active-users-large";"...large presences"
+"route.config.index.sections.engagement.fb.active-users-extra-large";"...and extra large presences"
+
+"route.config.index.sections.engagement.ig.title";"Instagram Engagement Score (Instagram only)"
+"route.config.index.sections.engagement.ig.description";"The Instagram Engagement Score is an aggregation of favourites and comments."
+"route.config.index.sections.engagement.ig.weighting";"Instagram Engagement Score Weighting"
+"route.config.index.sections.engagement.ig.active-users-small";"Percentage of users assumed to be active for small presences"
+"route.config.index.sections.engagement.ig.active-users-medium";"...medium presences"
+"route.config.index.sections.engagement.ig.active-users-large";"...large presences"
+"route.config.index.sections.engagement.ig.active-users-extra-large";"...and extra large presences"
+
+"route.config.index.sections.engagement.sw.title";"Sina Weibo Engagement Score (Sina Weibo only)"
+"route.config.index.sections.engagement.sw.description";"The Sina Weibo Engagement Score is an aggregation of likes, comments and shares."
+"route.config.index.sections.engagement.sw.weighting";"Sina Weibo Engagement Score Weighting"
+"route.config.index.sections.engagement.sw.active-users-small";"Percentage of users assumed to be active for small presences"
+"route.config.index.sections.engagement.sw.active-users-medium";"...medium presences"
+"route.config.index.sections.engagement.sw.active-users-large";"...large presences"
+"route.config.index.sections.engagement.sw.active-users-extra-large";"...and extra large presences"
+
+"route.config.index.sections.engagement.in.title";"LinkedIn Engagement Score (Facebook only)"
+"route.config.index.sections.engagement.in.description";"The LinkedIn Engagement Score is an aggregation of likes and comments."
+"route.config.index.sections.engagement.in.weighting";"LinkedIn Engagement Score Weighting"
+"route.config.index.sections.engagement.in.active-users-small";"Percentage of users assumed to be active for small presences"
+"route.config.index.sections.engagement.in.active-users-medium";"...medium presences"
+"route.config.index.sections.engagement.in.active-users-large";"...large presences"
+"route.config.index.sections.engagement.in.active-users-extra-large";"...and extra large presences"
+
+"route.config.index.sections.engagement.yt.title";"Youtube Engagement Score (Facebook only)"
+"route.config.index.sections.engagement.yt.description";"The Youtube Engagement Score is an aggregation of likes, dislikes, comments and subscriptions."
+"route.config.index.sections.engagement.yt.weighting";"Youtube Engagement Score Weighting"
+"route.config.index.sections.engagement.yt.active-users-small";"Percentage of users assumed to be active for small presences"
+"route.config.index.sections.engagement.yt.active-users-medium";"...medium presences"
+"route.config.index.sections.engagement.yt.active-users-large";"...large presences"
+"route.config.index.sections.engagement.yt.active-users-extra-large";"...and extra large presences"
+
+"route.config.index.sections.quality.actions-per-day.title";"Actions per Day"
+"route.config.index.sections.quality.actions-per-day.description";"A measurement of the average number of actions per day against the benchmark"
+"route.config.index.sections.quality.actions-per-day.weighting";"Actions per Day Weighting"
+"route.config.index.sections.quality.actions-per-day.target-label";"Actions per Day"
+"route.config.index.sections.quality.actions-per-day.ok-range-label";"Actions Per Day OK range"
+"route.config.index.sections.quality.actions-per-day.ok-range-hint";"Number above or below [actions per day] that is considered OK"
+"route.config.index.sections.quality.actions-per-day.bad-range-label";"Actions Per Day bad range"
+"route.config.index.sections.quality.actions-per-day.bad-range-hint";"Number above or below [actions per day] that is considered too much or too little"
+
+"route.config.index.sections.quality.likes-per-post.title";"Likes per Post"
+"route.config.index.sections.quality.likes-per-post.description";"Measures the average number of likes from users on each post"
+"route.config.index.sections.quality.likes-per-post.weighting";"Likes per Post Weighting"
+"route.config.index.sections.quality.likes-per-post.good-label";"Good Likes per Post"
+"route.config.index.sections.quality.likes-per-post.good-hint";"The presence will get a good score if the average likes per post is equal to or more than this"
+"route.config.index.sections.quality.likes-per-post.best-label";"Best Likes per Post"
+"route.config.index.sections.quality.likes-per-post.best-hint";"The presence will get the best score if the average likes per post is equal to or more than this"
+
+"route.config.index.sections.quality.likes-per-view.title";"Likes per View"
+"route.config.index.sections.quality.likes-per-view.description";"Measures the average number of likes from users for each video view"
+"route.config.index.sections.quality.likes-per-view.weighting";"Likes per View Weighting"
+"route.config.index.sections.quality.likes-per-view.good-label";"Good Likes per View"
+"route.config.index.sections.quality.likes-per-view.good-hint";"The presence will get a good score if the average likes per view is equal to or more than this"
+"route.config.index.sections.quality.likes-per-view.best-label";"Best Likes per View"
+"route.config.index.sections.quality.likes-per-view.best-hint";"The presence will get the best score if the average likes per view is equal to or more than this"
+
+"route.config.index.sections.quality.sign-off.title";"Sign Off"
+"route.config.index.sections.quality.sign-off.description";"The presence has been signed off by key stakeholders"
+"route.config.index.sections.quality.sign-off.weighting";"Sign Off Weighting"
+
+"route.config.index.sections.quality.branding.title";"Branding"
+"route.config.index.sections.quality.branding.description";"The presence has the correct branding implemented"
+"route.config.index.sections.quality.branding.weighting";"Branding Weighting"
+
+"route.config.index.sections.quality.relevance.title";"Relevance"
+"route.config.index.sections.quality.relevance.description";"How relevant the presence's actions have been. This is currently based on the number of relevant, British Council domains that have been linked to in their actions per day."
+"route.config.index.sections.quality.relevance.weighting";"Relevance Weighting"
+"route.config.index.sections.quality.relevance.facebook-target";"Percent of Actions Per Day that should be relevant for Facebook"
+"route.config.index.sections.quality.relevance.twitter-target";"Percent of Actions Per Day that should be relevant for Twitter"
+"route.config.index.sections.quality.relevance.sina-weibo-target";"Percent of Actions Per Day that should be relevant for Sina Weibo"
+
+"route.config.index.sections.all.weighting-hint";"A higher weighting will make this metric more important when calculating the score for the %section% Badge"
+"route.config.index.numeric-error";"Value must be numeric"
+"route.config.index.email-error";"This email address %email% is considered invalid."
+"route.config.index.upload-success";"File Successfully uploaded"
+"route.config.index.settings-saved";"Settings saved"
+"route.config.index.invalid-values";"Invalid values. Please check before saving"
+
+"route.config.index.kpi-file-title";"Upload KPI File"
+"route.config.index.kpi-file-message";"Upload the KPI file that can be downloaded from the front page"
+"route.config.index.kpi-file-prompt";"Choose a file to upload:"
+
+
+
+
+"route.domain.index.page-title";"Domains"
+"route.domain.index.paragraph-1";"This shows the list of all domains linked to by tweets or facebook statuses. Click the links to see more usage information and the specific URLs."
+"route.domain.index.paragraph-2";"You can say whether or not a domain belongs to the British Council by toggling the checkbox on the right, and clicking 'save'. Note that if you reorder the columns before saving, any changes will be lost."
+"route.domain.index.table-header.domain";"Domain"
+"route.domain.index.table-header.links";"Links"
+"route.domain.index.table-header.relevant";"British Council"
+"route.domain.index.message.success";"Domains updated"
+"route.domain.index.message.access-error";"You do not have sufficient access to change this data"
+
+"route.domain.view.page-title";"%domain%"
+"route.domain.view.site.single";"site"
+"route.domain.view.site.plural";"sites"
+"route.domain.view.status.single";"status"
+"route.domain.view.status.plural";"statuses"
+"route.domain.view.linked-to-from";"%sites% linked to from %statuses%"
+
+
+
+
+"badge.engagement.title";"Engagement"
+"badge.engagement.description";"<p>The Engagement KPI provides an overall score for how well the presence, country or SBU engages with its audience. This score combines the following metrics:</p><ul><li>The Klout Score for this presence (Twitter Only).</li><li>The Facebook Engagement score for this presence (Facebook Only).</li><li>The Sina Weibo Engagement score for this presence (Sina Weibo Only).</li><li>The Instagram Engagement score for this presence (Instagram Only).</li><li>The Youtube Engagement score for this presence (Youtube Only).</li><li>The Linkedin Engagement score for this presence (Linkedin Only).</li></ul>"
+
+"badge.reach.title";"Reach"
+"badge.reach.description";"<p>The Reach KPI provides an overall score for how well the presence, country or SBU reaches its audience. This score combines the following metrics:</p><ul><li>Current number of Fans / Followers</li><li>Number of months to reach the Target number of Fans / Followers</li><li>Average number of shares / retweets for each post / tweet</li></ul>"
+
+"badge.quality.title";"Quality"
+"badge.quality.description";"<p>The Quality KPI provides an overall score for the quality of the posts produced by the presence or presences in a Country or SBU. This score combines the following metrics:</p><ul><li>The average number of posts / tweets per day.</li><li>The average number of links per day.</li><li>The average number of likes / retweets per post / tweet / video view.</li><li>The Sign Off status of the presence.</li><li>The Branding status of the presence.</li><li>The number of relevant posts made each day.</li><li>The Average Response Time to comments for this presence.</li></ul>"
+
+"badge.total.title";"Overall"
+"badge.total.description";"<p>The overall score KPI provides an overall score for how well a social media presence, country or SBU is doing in the other three KPIs. The score combines the total score of the following three KPIs:</p><ul><li>Reach KPI</li><li>Engagement KPI</li><li>Quality KPI</li></ul>"
+
+
+
+
+"chart.actionsPerDay.title";"Measure: Actions per Day"
+"chart.actionsPerDay.description";""
+"chart.actionsPerDay.x-axis-label";"Date"
+"chart.actionsPerDay.y-axis-label";"Number of Actions Per Day"
+"chart.actionsPerDay.relevant-links";"Relevant links per day"
+
+"chart.compare.title";"Compare: KPIs"
+"chart.compare.description";""
+"chart.compare.x-axis-label";"Time"
+"chart.compare.y-axis-label";"KPI Score"
+
+"chart.engagement.title";"KPI: Engagement"
+"chart.engagement.description";""
+"chart.engagement.x-axis-label";"Time"
+"chart.engagement.y-axis-label";"Engagement Score"
+
+"chart.popularity.title";"Measure: Popularity"
+"chart.popularity.description";""
+"chart.popularity.x-axis-label";"Date"
+"chart.popularity.y-axis-label";"Number of Fans/Followers"
+
+"chart.popularity-trend.title";"Measure: Popularity Trend"
+"chart.popularity-trend.description";""
+"chart.popularity-trend.x-axis-label";"Date"
+"chart.popularity-trend.y-axis-label";"Number of Fans/Followers Gained Per Day"
+
+"chart.quality.title";"KPI: Quality"
+"chart.quality.description";""
+"chart.quality.x-axis-label";"Time"
+"chart.quality.y-axis-label";"Quality Score"
+
+"chart.reach.title";"KPI: Reach"
+"chart.reach.description";""
+"chart.reach.x-axis-label";"Time"
+"chart.reach.y-axis-label";"Reach Score"
+
+"chart.response-time.title";"Measure: Response Time"
+"chart.response-time.description";""
+"chart.response-time.x-axis-label";"Date"
+"chart.response-time.y-axis-label";"Response time in hours"
+
+
+
+
+"table-header.actions-per-day.label";"Actions per day"
+"table-header.actions-per-day.description";""
+
+"table-header.branding.label";"Branding"
+"table-header.branding.description";"Branding shows whether a presence meets the British Council branding guidelines for social media presences."
+
+"table-header.compare.label";"<span class="icon-check"></span>"
+"table-header.compare.description";"Select all the presences that you would like to compare, and then click on the Compare Button above';"
+
+"table-header.countries.label";"Countries"
+"table-header.countries.description";"The countries in this region."
+
+"table-header.country.label";"Country"
+"table-header.country.description";""
+
+"table-header.country-count.label";"Countries"
+"table-header.country-count.description";"The number of countries."
+
+"table-header.current-audience.label";"Current Audience"
+"table-header.current-audience.description";""
+
+"table-header.digital-population.label";"Digital Population"
+"table-header.digital-population.description";""
+
+"table-header.digital_population_health.label";"Digital Population Health"
+"table-header.digital_population_health.description";""
+
+"table-header.engagement-rank.label";"Engagement Rank"
+"table-header.engagement-rank.description";"Engagement Rank shows the rank of this presence or group when compared against others."
+
+"table-header.engagement-score.label";"Engagement Score"
+"table-header.engagement-score.description";"Engagement Score shows the score for the combined measures that measure a presences engagement"
+
+"table-header.handle.label";"Handle"
+"table-header.handle.description";"Select all the presences that you would like to compare, and then click on the Compare Button above"
+
+"table-header.name.label";"Name"
+"table-header.name.description";""
+
+"table-header.options.label";"Options"
+"table-header.options.description";""
+
+"table-header.parent-name.label";"Country/SBU"
+"table-header.parent-name.description";""
+
+"table-header.percent-target-audience.label";"Percentage of Target Audience"
+"table-header.percent-target-audience.description";""
+
+"table-header.presence-count.label";"Presences"
+"table-header.presence-count.description";"The number of presences."
+
+"table-header.presences.label";"Presences"
+"table-header.presences.description";""
+
+"table-header.presence-type.label";"Presence Type"
+"table-header.presence-type.description";""
+
+"table-header.quality-rank.label";"Quality Rank"
+"table-header.quality-rank.description";"Quality Rank shows the rank of this presence or group when compared against others."
+
+"table-header.quality-score.label";"Quality Score"
+"table-header.quality-score.description";"Quality Score shows the score for the combined measures that measure a presences engagement"
+
+"table-header.reach-rank.label";"Reach Rank"
+"table-header.reach-rank.description";"Reach Rank shows the rank of this presence or group when compared against others."
+
+"table-header.reach-score.label";"Reach Score"
+"table-header.reach-score.description";"Reach Score shows the score for the combined measures that measure a presences engagement"
+
+"table-header.region.label";"Region"
+"table-header.region.description";""
+
+"table-header.response-time.label";"Response Time"
+"table-header.response-time.description";""
+
+"table-header.sign-off.label";"Sign Off"
+"table-header.sign-off.description";"Sign Off shows whether a presence has been signed off by the Head of Digital."
+
+"table-header.target-audience.label";"Target Audience"
+"table-header.target-audience.description";""
+
+"table-header.total-rank.label";"Overall Rank"
+"table-header.total-rank.description";"Overall Rank shows the rank of this presence or group when compared against others."
+
+"table-header.total-score.label";"Overall Score"
+"table-header.total-score.description";"Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality."
+
+
+
+
+"metric.posts_per_day.title";"Actions Per Day"
+"metric.branding.title";"Correct Branding"
+"metric.facebook_engagement.title";"Facebook Engagement Score"
+"metric.instagram_engagement.title";"Instagram Engagement Score"
+"metric.klout_score.title";"Klout Score"
+"metric.likes_per_post.title";"Likes per post"
+"metric.likes_per_view.title";"Actions per view"
+"metric.linkedin_engagement.title";"LinkedIn Engagement Score"
+"metric.popularity.title";"Popularity"
+"metric.popularity_time.title";"Popularity Trend"
+"metric.relevance.title";"Relevance"
+"metric.response_ratio.title";"Replies"
+"metric.response_time.title";"Responsiveness"
+"metric.sign_off.title";"Signed Off"
+"metric.sina_weibo_engagement.title";"Sina Weibo Engagement Score"
+"metric.youtube_engagement.title";"Youtube Engagement Score"
+
+
+
+
+"Error.missing-date-range";"Missing date range"
+"Error.invalid-date-range";"Invalid date range"
+"Error.display-name-exists";"Display name already taken"
+"Error.missing-id";"Missing ID"
+"Error.missing-chart-type";"Missing chart type"
+"Error.chart-does-not-exist";"Chart doesn't exist"
+"Error.invalid-delete";"Incorrect usage of delete"
+"Error.not-authorized";"Not authorised"
+"Error.not-logged-in";"Not logged in"
+"Error.not-allowed";"Not allowed: Insufficient access rights"
+"Error.data-not-found";"%type% not found"
+"Error.lock-error.message";"Fetch process has been inactive for %time%, indicating something has gone wrong."
+"Error.lock-error.with-url";"Click <a href="%url%">here</a> to clear the lock manually."
+"Error.lock-error.without-url";"Please log in to clear the lock."
+"Error.access-token.refresh";"One or more of your access tokens are set to expire soon. <a href="%url%">Click here</a> to refresh these tokens."
+
+
