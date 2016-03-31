@@ -4,9 +4,9 @@ class Metric_PopularityTime extends Metric_Abstract {
 
 	const NAME = "popularity_time";
 	
-	public function __construct()
+	public function __construct($translator)
 	{
-		parent::__construct(self::NAME, "fa fa-line-chart", false);
+		parent::__construct($translator, self::NAME, "fa fa-line-chart", false);
         $this->target = floatval(BaseController::getOption('achieve_audience_good'));
     }
 

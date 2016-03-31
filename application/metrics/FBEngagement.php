@@ -4,9 +4,11 @@ use Outlandish\SocialMonitor\Engagement\Query\Query;
 
 class Metric_FBEngagement extends Metric_AbstractEngagement {
 
-	public function __construct(Query $query)
+	const NAME = "facebook_engagement";
+	
+	public function __construct($translator, Query $query)
 	{
-		parent::__construct("facebook_engagement", "fa fa-facebook-square", $query, 0.15);
+		parent::__construct($translator, self::NAME, "fa fa-facebook-square", $query, 0.15);
 	}
 
 

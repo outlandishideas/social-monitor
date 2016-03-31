@@ -17,12 +17,17 @@ abstract class GraphingController extends BaseController {
 	}
 
 	protected function tableMetrics(){
-		return array(
-            Metric_Popularity::NAME => $this->translator->trans('Metric_Popularity.title'),
-            Metric_PopularityTime::NAME => $this->translator->trans('Metric_PopularityTime.title'),
-            Metric_ActionsPerDay::NAME => $this->translator->trans('Metric_ActionsPerDay.title'),
-            Metric_ResponseTime::NAME => $this->translator->trans('Metric_ResponseTime.title'),
+		$keys = array(
+			Metric_Popularity::NAME,
+			Metric_PopularityTime::NAME,
+			Metric_ActionsPerDay::NAME,
+			Metric_ResponseTime::NAME,
 		);
+		$metrics = array();
+		foreach ($keys as $key) {
+			$metrics[$key] = $this->translator->trans('metric.' . $key . '.title');
+		}
+		return $metrics;
 	}
 
 	protected function validateChartRequest()

@@ -2,9 +2,11 @@
 
 class Metric_SignOff extends Metric_Abstract {
 
-	public function __construct()
+	const NAME = "sign_off";
+	
+	public function __construct($translator)
 	{
-		parent::__construct("sign_off", "fa fa-check-square", false);
+		parent::__construct($translator, self::NAME, "fa fa-check-square", false);
 	}
 
 

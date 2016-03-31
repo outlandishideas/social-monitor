@@ -12,14 +12,15 @@ abstract class Metric_AbstractEngagement extends Metric_Abstract {
 
 
 	/**
+	 * @param \Symfony\Component\Translation\Translator $translator
 	 * @param string $name
 	 * @param string $icon
 	 * @param Query $query
 	 * @param float $engagementTarget
 	 */
-    function __construct($name, $icon, $query, $engagementTarget)
+    function __construct($translator, $name, $icon, $query, $engagementTarget)
     {
-		parent::__construct($name, $icon, false);
+		parent::__construct($translator, $name, $icon, false);
 		$this->engagementTarget = $engagementTarget;
         $this->query = $query;
     }

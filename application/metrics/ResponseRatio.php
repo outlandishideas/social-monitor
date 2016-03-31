@@ -2,9 +2,11 @@
 
 class Metric_ResponseRatio extends Metric_Abstract {
 
-    function __construct()
+	const NAME = "response_ratio";
+	
+    function __construct($translator)
     {
-		parent::__construct("response_ratio", "fa fa-reply");
+		parent::__construct($translator, self::NAME, "fa fa-reply");
         $this->target = BaseController::getOption('replies_to_number_posts_best');
     }
 

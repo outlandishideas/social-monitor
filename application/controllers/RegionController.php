@@ -20,11 +20,16 @@ class RegionController extends CampaignController
     }
 
     protected function tableMetrics(){
-        return array(
-            Metric_PopularityTime::NAME => 'Time to Target Audience',
-            Metric_ActionsPerDay::NAME => 'Actions Per Day',
-            Metric_ResponseTime::NAME => 'Response Time',
-        );
+		$keys = array(
+			Metric_PopularityTime::NAME,
+			Metric_ActionsPerDay::NAME,
+			Metric_ResponseTime::NAME,
+		);
+		$metrics = array();
+		foreach ($keys as $key) {
+			$metrics[$key] = $this->translator->trans('metric.' . $key . '.title');
+		}
+		return $metrics;
     }
 
 	/**

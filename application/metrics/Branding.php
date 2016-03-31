@@ -2,9 +2,11 @@
 
 class Metric_Branding extends Metric_Abstract {
 
-	public function __construct()
+	const NAME = 'branding';
+	
+	public function __construct($translator)
 	{
-		parent::__construct("branding", "fa fa-tag", false);
+		parent::__construct($translator, self::NAME, "fa fa-tag", false);
 	}
 
 

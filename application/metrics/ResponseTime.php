@@ -4,9 +4,9 @@ class Metric_ResponseTime extends Metric_Abstract {
 
 	const NAME = "response_time";
 	
-    function __construct()
+    function __construct($translator)
     {
-		parent::__construct(self::NAME, "fa fa-clock-o");
+		parent::__construct($translator, self::NAME, "fa fa-clock-o");
         $this->target = BaseController::getOption('response_time_bad');
     }
 

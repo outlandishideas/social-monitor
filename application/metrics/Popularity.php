@@ -4,9 +4,9 @@ class Metric_Popularity extends Metric_Abstract {
 
 	const NAME = "popularity";
 	
-	public function __construct()
+	public function __construct($translator)
 	{
-		parent::__construct(self::NAME, "fa fa-users", false);
+		parent::__construct($translator, self::NAME, "fa fa-users", false);
 	}
 
 

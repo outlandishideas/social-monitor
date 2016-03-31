@@ -22,7 +22,7 @@ class Chart_PopularityTrend extends Chart_Abstract {
             $data = $model->getPopularityData($start, $end);
             if ($data) {
                 $key = Metric_Popularity::NAME;
-                $names[$key] = $this->translate->trans('Metric_Popularity.title');
+                $names[$key] = $this->translate->trans('metric.' . $key . '.title');
                 $dataSets[$key] = $data;
             }
         } else if ($model instanceof Model_Country || $model instanceof Model_Group || $model instanceof Model_Region) {

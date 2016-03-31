@@ -2,9 +2,11 @@
 
 class Metric_LikesPerView extends Metric_Abstract {
 
-    function __construct()
+	const NAME = "likes_per_view";
+	
+    function __construct($translator)
     {
-		parent::__construct("likes_per_view", "fa fa-thumbs-o-up");
+		parent::__construct($translator, self::NAME, "fa fa-thumbs-o-up");
         $this->target = floatval(BaseController::getOption('likes_per_view_best'));
     }
 

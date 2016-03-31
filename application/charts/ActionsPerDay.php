@@ -23,7 +23,7 @@ class Chart_ActionsPerDay extends Chart_Abstract {
         if ($data) {
             $key = Metric_ActionsPerDay::NAME;
             $key2 = 'relevant';
-            $names[$key] = $this->translate->trans('Metric_ActionsPerDay.title');
+            $names[$key] = $this->translate->trans('metric.' . $key . '.title');
             $names[$key2] = $this->translate->trans('chart.' . self::NAME . '.relevant-links');
             $dataSets[$key] = $data;
         }

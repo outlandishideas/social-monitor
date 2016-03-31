@@ -346,41 +346,52 @@ services:
     # metrics
     metric.actions-per-day:
         class: Metric_ActionsPerDay
+        arguments: [@translation.translator]
     metric.branding:
         class: Metric_Branding
+        arguments: [@translation.translator]
     metric.facebook-engagement:
         class: Metric_FBEngagement
-        arguments: [@engagement-query.facebook]
+        arguments: [@translation.translator, @engagement-query.facebook]
     metric.instagram-engagement:
         class: Metric_InstagramEngagement
-        arguments: [@engagement-query.instagram]
+        arguments: [@translation.translator, @engagement-query.instagram]
     metric.klout:
         class: Metric_Klout
+        arguments: [@translation.translator]
     metric.likes-per-post:
         class: Metric_LikesPerPost
+        arguments: [@translation.translator]
     metric.likes-per-view:
         class: Metric_LikesPerView
+        arguments: [@translation.translator]
     metric.linkedin-engagement:
         class: Metric_LinkedinEngagement
-        arguments: [@engagement-query.linkedin]
+        arguments: [@translation.translator, @engagement-query.linkedin]
     metric.popularity:
         class: Metric_Popularity
+        arguments: [@translation.translator]
     metric.popularity-time:
         class: Metric_PopularityTime
+        arguments: [@translation.translator]
     metric.relevance:
         class: Metric_Relevance
+        arguments: [@translation.translator]
     metric.response-ratio:
         class: Metric_ResponseRatio
+        arguments: [@translation.translator]
     metric.response-time:
         class: Metric_ResponseTime
+        arguments: [@translation.translator]
     metric.sign-off:
         class: Metric_SignOff
+        arguments: [@translation.translator]
     metric.sina-weibo-engagement:
         class: Metric_SinaWeiboEngagement
-        arguments: [@engagement-query.sina-weibo]
+        arguments: [@translation.translator, @engagement-query.sina-weibo]
     metric.youtube-engagement:
         class: Metric_YoutubeEngagement
-        arguments: [@engagement-query.youtube]
+        arguments: [@translation.translator, @engagement-query.youtube]
 
     # presence types
     presence-type.twitter:

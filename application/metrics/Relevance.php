@@ -6,9 +6,9 @@ class Metric_Relevance extends Metric_Abstract {
 	
     protected $updatesPerDay;
 
-    function __construct()
+    function __construct($translator)
     {
-		parent::__construct(self::NAME, "fa fa-tags", false);
+		parent::__construct($translator, self::NAME, "fa fa-tags", false);
         $this->updatesPerDay = floatval(BaseController::getOption('updates_per_day'));
     }
 

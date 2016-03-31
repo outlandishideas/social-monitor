@@ -4,9 +4,9 @@ class Metric_ActionsPerDay extends Metric_Abstract {
 
 	const NAME = "posts_per_day";
 	
-    function __construct()
+    function __construct($translator)
     {
-		parent::__construct(self::NAME, "fa fa-tachometer", false);
+		parent::__construct($translator, self::NAME, "fa fa-tachometer", false);
         $this->target = floatval(BaseController::getOption('updates_per_day'));
     }
 

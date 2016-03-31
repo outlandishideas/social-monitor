@@ -2,9 +2,11 @@
 
 class Metric_Klout extends Metric_Abstract {
 
-    function __construct()
+	const NAME = "klout_score";
+	
+    function __construct($translator)
     {
-		parent::__construct("klout_score", "fa fa-hand-o-right", false);
+		parent::__construct($translator, self::NAME, "fa fa-hand-o-right", false);
         $this->target = floatval(BaseController::getOption('klout_score_target'));
     }
 

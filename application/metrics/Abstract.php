@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\Translation\Translator;
+
 abstract class Metric_Abstract {
 
     protected $name;
@@ -36,13 +38,16 @@ abstract class Metric_Abstract {
      */
     abstract public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end);
 
-	public function __construct($name, $icon, $gliding = true)
+	/**
+	 * @param Translator $translator
+	 * @param string $name
+	 * @param string $icon
+	 * @param bool $gliding
+	 */
+	public function __construct($translator, $name, $icon, $gliding = true)
 	{
-		$translate = Zend_Registry::get('translate');
-		$className = get_class($this);
-
 		$this->name = $name;
-		$this->title = $translate->_($className.'.title');
+		$this->title = $translator->trans('metric.' . $name . '.title');
 		$this->icon = $icon;
 		$this->gliding = $gliding;
 	}
