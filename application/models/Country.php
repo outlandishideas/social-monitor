@@ -116,7 +116,7 @@ class Model_Country extends Model_Campaign {
 			foreach ($countryCodes as $code) {
 				self::$countryNames[$code] = $translate->trans('country.' . $code);
 			}
-			asort(self::$countryNames);
+			asort(self::$countryNames, SORT_LOCALE_STRING);
 		}
 		return self::$countryNames;
 	}
