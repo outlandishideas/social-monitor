@@ -43,7 +43,7 @@ class StatusesController extends GraphingController
 		$engagementBadge = $this->getContainer()->get('badge.engagement');
 
         $this->view->presences = $presences;
-        $this->view->sortCol = Handle::getName();
+        $this->view->sortCol = Handle::NAME;
         $this->view->queryOptions = [
             ['name' => 'type', 'label' => $this->translator->trans('Global.social-media'), 'options' => PresenceType::getAll()],
             ['name' => 'country', 'label' => $this->translator->trans('Global.countries'), 'options' => Model_Country::fetchAll()],

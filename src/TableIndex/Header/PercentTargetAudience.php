@@ -6,11 +6,11 @@ use Model_Region;
 
 class PercentTargetAudience extends Header {
 
-    protected static $name = "percent-target-audience";
+	const NAME = "percent-target-audience";
 
-    function __construct($translator)
+	public function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->sort = self::SORT_TYPE_NUMERIC_FUZZY;
         $this->allowedTypes = array(self::MODEL_TYPE_REGION);
     }

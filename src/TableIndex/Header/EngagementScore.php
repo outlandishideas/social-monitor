@@ -4,14 +4,11 @@ namespace Outlandish\SocialMonitor\TableIndex\Header;
 
 class EngagementScore extends BadgeScore {
 
-    protected static $name = "engagement-score";
+	const NAME = "engagement-score";
 
-    /**
-     * @return mixed
-     */
-    public function getBadgeName()
-    {
-        return \Badge_Engagement::NAME;
-    }
+	public function __construct($translator)
+	{
+		parent::__construct($translator, self::NAME, \Badge_Engagement::NAME);
+	}
 
 }

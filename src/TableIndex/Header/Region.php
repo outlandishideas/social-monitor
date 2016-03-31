@@ -8,11 +8,11 @@ use Model_Region;
 
 class Region extends Header {
 
-    protected static $name = "region";
+    const NAME = "region";
 
-    function __construct($translator)
+	public function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->allowedTypes = array(self::MODEL_TYPE_COUNTRY, self::MODEL_TYPE_PRESENCE);
     }
 

@@ -6,11 +6,11 @@ use Model_Presence;
 
 class Compare extends Header {
 
-    protected static $name = "compare";
+	const NAME = "compare";
 
     function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->sort = self::SORT_TYPE_CHECKBOX;;
         $this->display = self::DISPLAY_TYPE_SCREEN;
     }

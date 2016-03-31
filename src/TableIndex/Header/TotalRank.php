@@ -4,15 +4,11 @@ namespace Outlandish\SocialMonitor\TableIndex\Header;
 
 class TotalRank extends BadgeRank {
 
-    protected static $name = "total-rank";
+	const NAME = "total-rank";
 
-    /**
-     * @return mixed
-     */
-    public function getBadgeName()
-    {
-        return \Badge_Total::NAME . "_rank";
-    }
-
+	public function __construct($translator)
+	{
+		parent::__construct($translator, self::NAME, \Badge_Total::NAME . "_rank");
+	}
 
 }

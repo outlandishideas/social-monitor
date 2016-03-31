@@ -6,11 +6,11 @@ use Model_Country;
 
 class DigitalPopulation extends Header {
 
-    protected static $name = "digital-population";
+	const NAME = "digital-population";
 
     function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->sort = self::SORT_TYPE_NUMERIC_DATA_VALUE;
         $this->allowedTypes = array(self::MODEL_TYPE_COUNTRY);
     }

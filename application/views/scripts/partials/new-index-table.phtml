@@ -46,7 +46,7 @@ $gatekeeper = $this->gatekeeper();
                     $name = $header->getName();
                     $cellValue = $row->{$name};
                     switch($name) {
-                        case Options::getName():
+                        case Options::NAME:
                             $links = $gatekeeper->filterAll((array)$cellValue);
                             if(count($links) > 0) {
                                 echo "<ul>";
@@ -56,10 +56,10 @@ $gatekeeper = $this->gatekeeper();
                                 echo "</ul>";
                             }
                             break;
-                        case Presences::getName():
-                        case Countries::getName():
+                        case Presences::NAME:
+                        case Countries::NAME:
                             $count = count((array)$cellValue);
-                            if ($header->getName() == Countries::getName()) {
+                            if ($header->getName() == Countries::NAME) {
 								$countryText = $count == 1 ? $translator->trans('Global.country') :
 									$translator->trans('Global.countries');
                                 $countText = $count . ' ' . $countryText;
@@ -67,7 +67,7 @@ $gatekeeper = $this->gatekeeper();
                                 $countText = $count . ' presence' . ($count == 1 ? '' : 's');
                             }
                             if($count > 0) {
-								$clickToExpand = $translator->trans('Campaign.index.new-index-table.click-to-expand');
+								$clickToExpand = $translator->trans('Global.click-to-expand');
                                 echo '<span class="entity-list-toggle" title="Click to expand">' . $countText . '</span>';
                                 echo '<ul class="entity-list">';
                                 foreach ($cellValue as $template=>$urlArgs) {
@@ -88,8 +88,8 @@ $gatekeeper = $this->gatekeeper();
                                 echo '<span>' . $countText . '</span>';
                             }
                             break;
-                        case Handle::getName():
-                        case Name::getName():
+                        case Handle::NAME:
+                        case Name::NAME:
                             $url = $gatekeeper->filter('%url%', array("action" => "view", "id" => $row->id));
                             if ($url) {
                                 echo '<a href="' . $url . '" class="view-link">' . $cellValue . '</a>';
@@ -97,7 +97,7 @@ $gatekeeper = $this->gatekeeper();
                                 echo $cellValue;
                             }
                             break;
-                        case ParentName::getName():
+                        case ParentName::NAME:
                             if (!$cellValue) {
                                 echo "N/A";
                                 break;

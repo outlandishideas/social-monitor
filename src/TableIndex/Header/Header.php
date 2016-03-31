@@ -3,6 +3,9 @@
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 use Symfony\Component\Translation\Translator;
 
+/**
+ * Base class of all table headers
+ */
 abstract class Header {
 
     const MODEL_TYPE_NONE = 'none';
@@ -25,7 +28,7 @@ abstract class Header {
 
     const NO_VALUE = 'N/A';
 
-    protected static $name;
+    protected $name;
 
     protected $label;
     protected $width;
@@ -36,12 +39,15 @@ abstract class Header {
     protected $cellClasses = array();
 	protected $translator;
 
-    public function __construct($translator) {
-        /** @var Translator $translator */
+	/**
+	 * @param Translator $translator
+	 * @param string $name
+	 */
+    public function __construct($translator, $name) {
 		$this->translator = $translator;
-        $className = get_class($this);
-        $this->label = $translator->trans($className.'.label');
-        $this->description = $translator->trans($className.'.description');
+		$this->name = $name;
+        $this->label = $translator->trans('table-header.' . $name . '.label');
+        $this->description = $translator->trans('table-header.' . $name . '.description');
     }
 
     /**
@@ -86,9 +92,9 @@ abstract class Header {
     /**
      * @return mixed
      */
-    public static function getName()
+    public function getName()
     {
-        return static::$name;
+        return $this->name;
     }
 
     /**
@@ -157,7 +163,7 @@ abstract class Header {
      */
     public function getCellClasses()
     {
-        return array_merge(array('cell-' . self::getName()), $this->cellClasses);
+        return array_merge(array('cell-' . $this->getName()), $this->cellClasses);
     }
 
     function getValue($model = null)

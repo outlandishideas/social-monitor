@@ -40,7 +40,7 @@ class CountryController extends CampaignController {
 		$this->view->countries = $countries;
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $objectCacheManager->getCountriesTable()->getHeaders();
-        $this->view->sortCol = Name::getName();
+        $this->view->sortCol = Name::NAME;
 		$this->view->regions = Model_Region::fetchAll();
 	}
 

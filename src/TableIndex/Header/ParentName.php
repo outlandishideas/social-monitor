@@ -6,11 +6,11 @@ use Model_Presence;
 
 class ParentName extends Header {
 
-    protected static $name = "parent-name";
+    const NAME = "parent-name";
 
-    function __construct($translator)
+	public function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->allowedTypes = array(self::MODEL_TYPE_CAMPAIGN);
         $this->cellClasses[] = 'left-align';
     }

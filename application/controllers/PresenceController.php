@@ -44,7 +44,7 @@ class PresenceController extends GraphingController
         $this->view->presences = $table->getTableData();
         $this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
-        $this->view->sortCol = Handle::getName();
+        $this->view->sortCol = Handle::NAME;
 		$this->view->regions = Model_Region::fetchAll();
 	}
 

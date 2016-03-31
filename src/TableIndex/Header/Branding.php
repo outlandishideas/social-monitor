@@ -6,11 +6,11 @@ use Model_Presence;
 
 class Branding extends Header {
 
-    protected static $name = "branding";
+    const NAME = "branding";
 
     function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->sort = self::SORT_TYPE_NUMERIC_DATA_VALUE;
         $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE);
     }

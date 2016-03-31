@@ -6,11 +6,11 @@ use Outlandish\SocialMonitor\Helper\Gatekeeper;
 
 class Countries extends Header {
 
-    protected static $name = "countries";
+    const NAME = "countries";
 
     function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->sort = self::SORT_TYPE_NONE;
         $this->allowedTypes = array(self::MODEL_TYPE_REGION);
         $this->display = self::DISPLAY_TYPE_SCREEN;

@@ -4,14 +4,11 @@ namespace Outlandish\SocialMonitor\TableIndex\Header;
 
 class QualityScore extends BadgeScore {
 
-    protected static $name = "quality-score";
+	const NAME = "quality-score";
 
-    /**
-     * @return mixed
-     */
-    public function getBadgeName()
-    {
-        return \Badge_Quality::NAME;
-    }
+	public function __construct($translator)
+	{
+		parent::__construct($translator, self::NAME, \Badge_Quality::NAME);
+	}
 
 }

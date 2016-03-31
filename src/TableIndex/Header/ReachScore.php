@@ -4,15 +4,11 @@ namespace Outlandish\SocialMonitor\TableIndex\Header;
 
 class ReachScore extends BadgeScore {
 
-    protected static $name = "reach-score";
+	const NAME = "reach-score";
 
-    /**
-     * @return mixed
-     */
-    public function getBadgeName()
-    {
-        return \Badge_Reach::NAME;
-    }
-
+	public function __construct($translator)
+	{
+		parent::__construct($translator, self::NAME, \Badge_Reach::NAME);
+	}
 
 }

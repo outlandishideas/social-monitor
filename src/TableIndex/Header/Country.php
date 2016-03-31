@@ -6,11 +6,11 @@ use Model_Country;
 
 class Country extends Header {
 
-    protected static $name = "country";
+	const NAME = "country";
 
     function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->allowedTypes = array(self::MODEL_TYPE_COUNTRY);
     }
 

@@ -7,11 +7,11 @@ use Model_Presence;
 
 class TargetAudience extends Header {
 
-    protected static $name = "target-audience";
+    const NAME = "target-audience";
 
-    function __construct($translator)
+    public function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->sort = self::SORT_TYPE_NUMERIC_FUZZY;
         $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE, self::MODEL_TYPE_CAMPAIGN);
     }

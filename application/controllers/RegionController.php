@@ -42,7 +42,7 @@ class RegionController extends CampaignController
 		$this->view->regions = $table->getTableData();
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
-        $this->view->sortCol = Name::getName();
+        $this->view->sortCol = Name::NAME;
 	}
 
     /**

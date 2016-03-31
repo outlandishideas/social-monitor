@@ -2,18 +2,13 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
-use Badge_Quality;
-
 class QualityRank extends BadgeRank {
 
-    protected static $name = "quality-rank";
+	const NAME = "quality-rank";
 
-    /**
-     * @return mixed
-     */
-    public function getBadgeName()
-    {
-        return Badge_Quality::NAME . "_rank";
-    }
+	public function __construct($translator)
+	{
+		parent::__construct($translator, self::NAME, \Badge_Quality::NAME . "_rank");
+	}
 
 }

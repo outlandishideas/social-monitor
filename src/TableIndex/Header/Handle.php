@@ -6,11 +6,11 @@ use Model_Presence;
 
 class Handle extends Header {
 
-    protected static $name = "handle";
+    const NAME = "handle";
 
-    function __construct($translator)
+	public function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE);
         $this->cellClasses[] = 'left-align';
     }

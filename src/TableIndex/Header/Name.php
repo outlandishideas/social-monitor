@@ -8,11 +8,11 @@ use Zend_Controller_Front;
 
 class Name extends Header {
 
-    protected static $name = "name";
+    const NAME = "name";
 
-    function __construct($translator)
+	public function __construct($translator)
     {
-        parent::__construct($translator);
+        parent::__construct($translator, self::NAME);
         $this->allowedTypes = array(self::MODEL_TYPE_CAMPAIGN);
         $this->cellClasses[] = 'left-align';
     }

@@ -6,11 +6,11 @@ use Model_Presence;
 
 class PresenceType extends Header {
 
-    protected static $name = "presence-type";
+	const NAME = "presence-type";
 
-    function __construct($translator)
+	public function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->allowedTypes = array(self::MODEL_TYPE_COUNTRY, self::MODEL_TYPE_PRESENCE);
     }
 

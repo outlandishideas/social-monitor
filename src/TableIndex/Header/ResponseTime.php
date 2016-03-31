@@ -4,11 +4,11 @@ namespace Outlandish\SocialMonitor\TableIndex\Header;
 
 class ResponseTime extends Header {
 
-    protected static $name = "response-time";
+	const NAME = "response-time";
 
-    function __construct($translator)
+	public function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->sort = self::SORT_TYPE_NUMERIC_FUZZY;
         $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE, self::MODEL_TYPE_CAMPAIGN);
     }

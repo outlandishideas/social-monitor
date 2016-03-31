@@ -2,18 +2,13 @@
 
 namespace Outlandish\SocialMonitor\TableIndex\Header;
 
-use Badge_Engagement;
-
 class EngagementRank extends BadgeRank {
 
-    protected static $name = "engagement-rank";
+	const NAME = "engagement-rank";
 
-    /**
-     * @return mixed
-     */
-    public function getBadgeName()
-    {
-        return Badge_Engagement::NAME . "_rank";
-    }
+	public function __construct($translator)
+	{
+		parent::__construct($translator, self::NAME, \Badge_Engagement::NAME . "_rank");
+	}
 
 }

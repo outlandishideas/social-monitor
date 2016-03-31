@@ -6,11 +6,11 @@ use Outlandish\SocialMonitor\Helper\Gatekeeper;
 
 class Options extends Header {
 
-    protected static $name = "options";
+    const NAME = "options";
 
-    function __construct($translator)
+	public function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->sort = self::SORT_TYPE_NONE;
         $this->display = self::DISPLAY_TYPE_SCREEN;
         $this->width = "160px";

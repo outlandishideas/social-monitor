@@ -18,6 +18,8 @@
 "Global.content";"Content"
 "Global.view";"View"
 
+"Global.charts-unavailable";"Sorry, charts are not available on your device"
+"Global.click-to-expand";"Click to expand"
 "Global.audience-size";"Audience Size"
 "Global.digital-population";"Digital Population"
 "Global.region";"Region"
@@ -45,6 +47,9 @@
 "Global.no";"No"
 "Global.yes";"Yes"
 
+
+
+
 "navigation-menu.users";"Users"
 "navigation-menu.account";"Account"
 "navigation-menu.edit-users";"Edit Users"
@@ -61,7 +66,9 @@
 "navigation-menu.login";"Login"
 "navigation-menu.register";"Register"
 
-"Base.layout.feedback-button";"Feedback"
+
+
+
 "Base.layout.feedback-button";"Feedback"
 "Base.layout.feedback-modal.title";"Feedback form"
 "Base.layout.feedback-modal.subtitle";"All feedback is welcome. Please let us know your thoughts and suggestions."
@@ -74,6 +81,9 @@
 "Base.layout.feedback-modal.submit";"Send form"
 "Base.layout.feedback-modal.close";"Cancel"
 
+
+
+
 "route.index.index.page-title";"Social Media Monitor"
 "route.index.index.find-country";"Find country"
 "route.index.index.pdf-download-description";"These scores are derived from the organisation's social media metrics.<br />You can download a copy of the PDF that explains them here:"
@@ -83,8 +93,6 @@
 "route.index.index.contextual-help.date-range";"Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU."
 "route.index.index.contextual-help.map";"Click on the map to select a country and preview the individual social media presences."
 
-"Campaign.index.new-index-table.click-to-expand";"Click to expand"
-"Campaign.view.charts-unavailable";"Sorry, charts are not available on your device"
 
 
 
@@ -564,94 +572,98 @@
 "chart.response-time.y-axis-label";"Response time in hours"
 
 
-"Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay.label";"Actions per day"
-"Outlandish\SocialMonitor\TableIndex\Header\ActionsPerDay.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\Branding.label";"Branding"
-"Outlandish\SocialMonitor\TableIndex\Header\Branding.description";"Branding shows whether a presence meets the British Council branding guidelines for social media presences."
 
-"Outlandish\SocialMonitor\TableIndex\Header\Compare.label";"<span class="icon-check"></span>"
-"Outlandish\SocialMonitor\TableIndex\Header\Compare.description";"Select all the presences that you would like to compare, and then click on the Compare Button above';"
+"table-header.actions-per-day.label";"Actions per day"
+"table-header.actions-per-day.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\Countries.label";"Countries"
-"Outlandish\SocialMonitor\TableIndex\Header\Countries.description";"The countries in this region."
+"table-header.branding.label";"Branding"
+"table-header.branding.description";"Branding shows whether a presence meets the British Council branding guidelines for social media presences."
 
-"Outlandish\SocialMonitor\TableIndex\Header\Country.label";"Country"
-"Outlandish\SocialMonitor\TableIndex\Header\Country.description";""
+"table-header.compare.label";"<span class="icon-check"></span>"
+"table-header.compare.description";"Select all the presences that you would like to compare, and then click on the Compare Button above';"
 
-"Outlandish\SocialMonitor\TableIndex\Header\CountryCount.label";"Countries"
-"Outlandish\SocialMonitor\TableIndex\Header\CountryCount.description";"The number of countries."
+"table-header.countries.label";"Countries"
+"table-header.countries.description";"The countries in this region."
 
-"Outlandish\SocialMonitor\TableIndex\Header\CurrentAudience.label";"Current Audience"
-"Outlandish\SocialMonitor\TableIndex\Header\CurrentAudience.description";""
+"table-header.country.label";"Country"
+"table-header.country.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulation.label";"Digital Population"
-"Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulation.description";""
+"table-header.country-count.label";"Countries"
+"table-header.country-count.description";"The number of countries."
 
-"Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulationHealth.label";"Digital Population Health"
-"Outlandish\SocialMonitor\TableIndex\Header\DigitalPopulationHealth.description";""
+"table-header.current-audience.label";"Current Audience"
+"table-header.current-audience.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\EngagementRank.label";"Engagement Rank"
-"Outlandish\SocialMonitor\TableIndex\Header\EngagementRank.description";"Engagement Rank shows the rank of this presence or group when compared against others."
+"table-header.digital-population.label";"Digital Population"
+"table-header.digital-population.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\EngagementScore.label";"Engagement Score"
-"Outlandish\SocialMonitor\TableIndex\Header\EngagementScore.description";"Engagement Score shows the score for the combined measures that measure a presences engagement"
+"table-header.digital_population_health.label";"Digital Population Health"
+"table-header.digital_population_health.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\Handle.label";"Handle"
-"Outlandish\SocialMonitor\TableIndex\Header\Handle.description";"Select all the presences that you would like to compare, and then click on the Compare Button above"
+"table-header.engagement-rank.label";"Engagement Rank"
+"table-header.engagement-rank.description";"Engagement Rank shows the rank of this presence or group when compared against others."
 
-"Outlandish\SocialMonitor\TableIndex\Header\Name.label";"Name"
-"Outlandish\SocialMonitor\TableIndex\Header\Name.description";""
+"table-header.engagement-score.label";"Engagement Score"
+"table-header.engagement-score.description";"Engagement Score shows the score for the combined measures that measure a presences engagement"
 
-"Outlandish\SocialMonitor\TableIndex\Header\Options.label";"Options"
-"Outlandish\SocialMonitor\TableIndex\Header\Options.description";""
+"table-header.handle.label";"Handle"
+"table-header.handle.description";"Select all the presences that you would like to compare, and then click on the Compare Button above"
 
-"Outlandish\SocialMonitor\TableIndex\Header\ParentName.label";"Country/SBU"
-"Outlandish\SocialMonitor\TableIndex\Header\ParentName.description";""
+"table-header.name.label";"Name"
+"table-header.name.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\PercentTargetAudience.label";"Percentage of Target Audience"
-"Outlandish\SocialMonitor\TableIndex\Header\PercentTargetAudience.description";""
+"table-header.options.label";"Options"
+"table-header.options.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\PresenceCount.label";"Presences"
-"Outlandish\SocialMonitor\TableIndex\Header\PresenceCount.description";"The number of presences."
+"table-header.parent-name.label";"Country/SBU"
+"table-header.parent-name.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\Presences.label";"Presences"
-"Outlandish\SocialMonitor\TableIndex\Header\Presences.description";""
+"table-header.percent-target-audience.label";"Percentage of Target Audience"
+"table-header.percent-target-audience.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\PresenceType.label";"Presence Type"
-"Outlandish\SocialMonitor\TableIndex\Header\PresenceType.description";""
+"table-header.presence-count.label";"Presences"
+"table-header.presence-count.description";"The number of presences."
 
-"Outlandish\SocialMonitor\TableIndex\Header\QualityRank.label";"Quality Rank"
-"Outlandish\SocialMonitor\TableIndex\Header\QualityRank.description";"Quality Rank shows the rank of this presence or group when compared against others."
+"table-header.presences.label";"Presences"
+"table-header.presences.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\QualityScore.label";"Quality Score"
-"Outlandish\SocialMonitor\TableIndex\Header\QualityScore.description";"Quality Score shows the score for the combined measures that measure a presences engagement"
+"table-header.presence-type.label";"Presence Type"
+"table-header.presence-type.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\ReachRank.label";"Reach Rank"
-"Outlandish\SocialMonitor\TableIndex\Header\ReachRank.description";"Reach Rank shows the rank of this presence or group when compared against others."
+"table-header.quality-rank.label";"Quality Rank"
+"table-header.quality-rank.description";"Quality Rank shows the rank of this presence or group when compared against others."
 
-"Outlandish\SocialMonitor\TableIndex\Header\ReachScore.label";"Reach Score"
-"Outlandish\SocialMonitor\TableIndex\Header\ReachScore.description";"Reach Score shows the score for the combined measures that measure a presences engagement"
+"table-header.quality-score.label";"Quality Score"
+"table-header.quality-score.description";"Quality Score shows the score for the combined measures that measure a presences engagement"
 
-"Outlandish\SocialMonitor\TableIndex\Header\Region.label";"Region"
-"Outlandish\SocialMonitor\TableIndex\Header\Region.description";""
+"table-header.reach-rank.label";"Reach Rank"
+"table-header.reach-rank.description";"Reach Rank shows the rank of this presence or group when compared against others."
 
-"Outlandish\SocialMonitor\TableIndex\Header\ResponseTime.label";"Response Time"
-"Outlandish\SocialMonitor\TableIndex\Header\ResponseTime.description";""
+"table-header.reach-score.label";"Reach Score"
+"table-header.reach-score.description";"Reach Score shows the score for the combined measures that measure a presences engagement"
 
-"Outlandish\SocialMonitor\TableIndex\Header\SignOff.label";"Sign Off"
-"Outlandish\SocialMonitor\TableIndex\Header\SignOff.description";"Sign Off shows whether a presence has been signed off by the Head of Digital."
+"table-header.region.label";"Region"
+"table-header.region.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\TargetAudience.label";"Target Audience"
-"Outlandish\SocialMonitor\TableIndex\Header\TargetAudience.description";""
+"table-header.response-time.label";"Response Time"
+"table-header.response-time.description";""
 
-"Outlandish\SocialMonitor\TableIndex\Header\TotalRank.label";"Overall Rank"
-"Outlandish\SocialMonitor\TableIndex\Header\TotalRank.description";"Overall Rank shows the rank of this presence or group when compared against others."
+"table-header.sign-off.label";"Sign Off"
+"table-header.sign-off.description";"Sign Off shows whether a presence has been signed off by the Head of Digital."
 
-"Outlandish\SocialMonitor\TableIndex\Header\TotalScore.label";"Overall Score"
-"Outlandish\SocialMonitor\TableIndex\Header\TotalScore.description";"Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality."
+"table-header.target-audience.label";"Target Audience"
+"table-header.target-audience.description";""
 
-// metrics
+"table-header.total-rank.label";"Overall Rank"
+"table-header.total-rank.description";"Overall Rank shows the rank of this presence or group when compared against others."
+
+"table-header.total-score.label";"Overall Score"
+"table-header.total-score.description";"Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality."
+
+
+
+
 "Metric_ActionsPerDay.title";"Actions Per Day"
 "Metric_Branding.title";"Correct Branding"
 "Metric_FBEngagement.title";"Facebook Engagement Score"
@@ -670,7 +682,6 @@
 "Metric_YoutubeEngagement.title";"Youtube Engagement Score"
 
 
-// flash messages
 "Error.missing-date-range";"Missing date range"
 "Error.invalid-date-range";"Invalid date range"
 "Error.display-name-missing";"Please enter a display name"
@@ -697,4 +708,3 @@
 "Success.presence-deleted";"Presence deleted"
 "Success.domain.update";"Domains updated"
 
-// date range picker

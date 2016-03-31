@@ -5,19 +5,20 @@ namespace Outlandish\SocialMonitor\TableIndex\Header;
 use Model_Campaign;
 use Model_Presence;
 
+/**
+ * Base class for quality, reach, engagement and total rank headers
+ */
 abstract class BadgeRank extends Header {
 
-    function __construct($translator)
+	protected $badgeName;
+	
+    function __construct($translator, $name, $badgeName)
     {
-        parent::__construct($translator);
+        parent::__construct($translator, $name);
+		$this->badgeName = $badgeName;
         $this->sort = self::SORT_TYPE_NUMERIC;
         $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE, self::MODEL_TYPE_CAMPAIGN);
     }
-
-    /**
-     * @return string
-     */
-    abstract public function getBadgeName();
 
     /**
      * @param Model_Presence|Model_Campaign $model
@@ -33,7 +34,7 @@ abstract class BadgeRank extends Header {
         } else {
             throw new \RuntimeException('invalid model');
         }
-        $badgeName = $this->getBadgeName();
+        $badgeName = $this->badgeName;
         if (is_array($badges) && array_key_exists($badgeName, $badges)) {
             return floatval($badges[$badgeName]);
         }

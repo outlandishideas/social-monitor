@@ -4,12 +4,11 @@ namespace Outlandish\SocialMonitor\TableIndex\Header;
 
 class TotalScore extends BadgeScore {
 
-    protected static $name = "total-score";
+	const NAME = "total-score";
 
-    public function getBadgeName()
-    {
-        return \Badge_Total::NAME;
-    }
-
+	public function __construct($translator)
+	{
+		parent::__construct($translator, self::NAME, \Badge_Total::NAME);
+	}
 
 }

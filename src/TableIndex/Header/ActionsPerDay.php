@@ -6,11 +6,11 @@ use RuntimeException;
 
 class ActionsPerDay extends Header {
 
-    protected static $name = "actions-per-day";
+    const NAME = "actions-per-day";
 
     function __construct($translator)
     {
-        parent::__construct($translator);
+		parent::__construct($translator, self::NAME);
         $this->sort = self::SORT_TYPE_NUMERIC_FUZZY;
         $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE, self::MODEL_TYPE_CAMPAIGN);
     }

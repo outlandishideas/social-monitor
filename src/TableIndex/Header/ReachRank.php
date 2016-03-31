@@ -4,14 +4,11 @@ namespace Outlandish\SocialMonitor\TableIndex\Header;
 
 class ReachRank extends BadgeRank {
 
-    protected static $name = "reach-rank";
+	const NAME = "reach-rank";
 
-    /**
-     * @return mixed
-     */
-    public function getBadgeName()
-    {
-        return \Badge_Reach::NAME . "_rank";
-    }
+	public function __construct($translator)
+	{
+		parent::__construct($translator, self::NAME, \Badge_Reach::NAME . "_rank");
+	}
 
 }
