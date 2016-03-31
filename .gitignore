@@ -17,3 +17,4 @@ parameters.yml
 /public/css/social-monitor.css
 /public/css/*.map
 /node_modules
+/assets/build
