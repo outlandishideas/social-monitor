@@ -55,7 +55,6 @@ module.exports = function(opt) {
 			replacementValues.forEach(function(replacement) {
 				var regex = new RegExp(replacement.key + ':.*', 'm');
 				var newValue = replacement.key + ': ' + replacement.value + ';';
-				console.log(regex + ' -> ' + newValue);
 				fileContents = fileContents.replace(regex, newValue);
 			});
 			src.contents = new Buffer(fileContents);

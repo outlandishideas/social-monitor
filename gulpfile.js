@@ -32,7 +32,7 @@ gulp.task('app:styles', ['app:styles:preprocess'], function() {
 });
 
 gulp.task('watch:app:styles', function() {
-	gulp.watch(['assets/*.scss', ['application/configs/config.yml']], ['app:styles']);
+	gulp.watch(['assets/*.scss', ['application/configs/config.yaml']], ['app:styles']);
 });
 
 gulp.task('build', ['app:styles']);
