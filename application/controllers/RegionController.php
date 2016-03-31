@@ -10,12 +10,13 @@ class RegionController extends CampaignController
     protected static $publicActions = array('report');
 
     protected function chartOptions() {
-        return array(
-            Chart_Compare::getInstance(),
-            Chart_Reach::getInstance(),
-            Chart_Engagement::getInstance(),
-            Chart_Quality::getInstance()
-        );
+		$container = $this->getContainer();
+		return array(
+			$container->get('chart.compare'),
+			$container->get('chart.reach'),
+			$container->get('chart.engagement'),
+			$container->get('chart.quality')
+		);
     }
 
     protected function tableMetrics(){
@@ -355,7 +356,8 @@ class RegionController extends CampaignController
         $start = $dateRange[0];
         $end = $dateRange[1];
 
-        $chartObject = Chart_Factory::getChart($this->_request->getParam('chart'));
+		$chartName = $this->_request->getParam('chart');
+		$chartObject = $this->getContainer()->get('chart.' . $chartName);
 
         $this->apiSuccess($chartObject->getChart($region, $start, $end));
     }

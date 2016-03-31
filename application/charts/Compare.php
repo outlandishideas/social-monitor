@@ -2,16 +2,15 @@
 
 class Chart_Compare extends Chart_Abstract {
 
-    protected static $name = "compare";
+    const NAME = "compare";
 
     protected $dataColumns;
     protected $xColumn;
 
-    public function __construct(PDO $db = null)
+    public function __construct(PDO $db, $translator, $name = null)
     {
-        parent::__construct($db);
-        $this->xLabel = $this->translate->_("Global.time");
-        $this->yLabel = $this->translate->_("Global.kpi-score");
+        parent::__construct($db, $translator, $name ?: self::NAME);
+
         $this->xColumn = 'date';
         $this->dataColumns = array(
             Badge_Quality::NAME,
@@ -133,15 +132,6 @@ class Chart_Compare extends Chart_Abstract {
             "names" => $names
         );
 
-    }
-
-    public function getXAxis()
-    {
-        return array(
-            "type" => 'timeseries',
-            "label" => $this->xLabel,
-            "position" => 'outer-center'
-        );
     }
 
     public function getYAxis()

@@ -2,24 +2,12 @@
 
 class Chart_Popularity extends Chart_Abstract {
 
-    protected static $name = "popularity";
+    const NAME = "popularity";
 
-    protected function getXAxis()
-    {
-        return array(
-            "type" => 'timeseries',
-            "label" => $this->translate->_("Global.date"),
-            "position" => 'outer-center'
-        );
-    }
-
-    protected function getYAxis()
-    {
-        return array(
-            "label" => $this->translate->_(get_class($this).".y-axis-label"),
-            "position" => 'outer-middle',
-         );
-    }
+	public function __construct(PDO $db, $translator)
+	{
+		parent::__construct($db, $translator, self::NAME);
+	}
 
     protected function getData($model, DateTime $start, DateTime $end)
     {
@@ -30,7 +18,7 @@ class Chart_Popularity extends Chart_Abstract {
             $data = $model->getPopularityData($start, $end);
             if ($data) {
                 $key = Metric_Popularity::NAME;
-                $names[$key] = $this->translate->_('Metric_Popularity.title');
+                $names[$key] = $this->translate->trans('Metric_Popularity.title');
                 $dataSets[$key] = $data;
             }
         } else if ($model instanceof Model_Country || $model instanceof Model_Group || $model instanceof Model_Region) {

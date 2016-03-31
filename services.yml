@@ -435,3 +435,37 @@ services:
     badge.total:
         class: Badge_Total
         arguments: [@pdo, @translation.translator, %badge.total.badges%]
+
+    # charts
+    chart.compare:
+        class: Chart_Compare
+        arguments: [@pdo, @translation.translator]
+
+    chart.popularity:
+        class: Chart_Popularity
+        arguments: [@pdo, @translation.translator]
+
+    chart.popularity-trend:
+        class: Chart_PopularityTrend
+        arguments: [@pdo, @translation.translator]
+
+    chart.reach:
+        class: Chart_Reach
+        arguments: [@pdo, @translation.translator]
+
+    chart.engagement:
+        class: Chart_Engagement
+        arguments: [@pdo, @translation.translator]
+
+    chart.quality:
+        class: Chart_Quality
+        arguments: [@pdo, @translation.translator]
+
+    # note: this would ideally be actions-per-day, but for the time being needs to match the 'name' property of the class
+    chart.actionsPerDay:
+        class: Chart_ActionsPerDay
+        arguments: [@pdo, @translation.translator]
+
+    chart.response-time:
+        class: Chart_ResponseTime
+        arguments: [@pdo, @translation.translator]

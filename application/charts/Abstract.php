@@ -2,27 +2,36 @@
 
 abstract class Chart_Abstract {
 
-    protected static $name;
-
     protected $xLabel;
     protected $yLabel;
+	protected $name;
 	protected $title;
 	protected $description;
-	/** @var Zend_Translate */
+	/** @var \Symfony\Component\Translation\Translator */
 	protected $translate;
 
-    public function __construct(PDO $db = null)
+    protected function __construct(PDO $db, $translator, $name)
     {
         if (is_null($db)) {
             $db = Zend_Registry::get('db')->getConnection();
         }
+        $this->name = $name;
         $this->db = $db;
-		// populate $name, $title, $description from transation files
-		$translate = Zend_Registry::get('translate');
-		$className = get_class($this);
-		$this->translate = $translate;
-		$this->title = $this->translate->_($className.'.title');
-		$this->description = $this->translate->_($className.'.description');
+		$this->translate = $translator;
+		$this->title = $this->translate->trans('chart.' . $name . '.title');
+		$this->description = $this->translate->trans('chart.' . $name . '.description');
+
+		$xAxisKey = 'chart.' . $name . '.x-axis-label';
+		$xAxis = $this->translate->trans($xAxisKey);
+		if ($xAxis != $xAxisKey) {
+			$this->xLabel = $xAxis;
+		}
+
+		$yAxisKey = 'chart.' . $name . '.y-axis-label';
+		$yAxis = $this->translate->trans($yAxisKey);
+		if ($yAxis != $yAxisKey) {
+			$this->yLabel = $yAxis;
+		}
     }
 
     public function getChart($model, DateTime $start, DateTime $end)
@@ -68,9 +77,9 @@ abstract class Chart_Abstract {
     /**
      * @return mixed
      */
-    public static function getName()
+    public function getName()
     {
-        return static::$name;
+        return $this->name;
     }
 
     /**
@@ -78,16 +87,31 @@ abstract class Chart_Abstract {
      * See c3.js documentation for what to return
      * @return array
      */
-    abstract protected function getXAxis();
+	protected function getXAxis()
+	{
+		return array(
+			"type" => 'timeseries',
+			"label" => $this->xLabel,
+			"position" => 'outer-center'
+		);
+	}
 
-    /**
+
+	/**
      * Return parameters for the y axis
      * See c3.js documentation for what to return
      * @return mixed
      */
-    abstract protected function getYAxis();
+	protected function getYAxis()
+	{
+		return array(
+			"label" => $this->yLabel,
+			"position" => 'outer-middle',
+		);
+	}
 
-    protected function getTooltip() {
+
+	protected function getTooltip() {
         return array(
             'show' => false
         );
@@ -97,10 +121,6 @@ abstract class Chart_Abstract {
         return array(
             'show' => false
         );
-    }
-
-    static function getInstance() {
-        return Chart_Factory::getChart(self::getName());
     }
 
 }

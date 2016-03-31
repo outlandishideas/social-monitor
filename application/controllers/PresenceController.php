@@ -11,17 +11,23 @@ class PresenceController extends GraphingController
 	protected static $publicActions = array('update-kpi-cache', 'report');
 
 	protected function chartOptions(Model_Presence $presence = null) {
+		$options = array();
 		if($presence) {
-			return $presence->chartOptions();
+			$names = $presence->chartOptionNames();
 		} else {
-			return array(
-				Chart_Compare::getInstance(),
-				Chart_Popularity::getInstance(),
-				Chart_PopularityTrend::getInstance(),
-				Chart_ActionsPerDay::getInstance(),
-				Chart_ResponseTime::getInstance()
+			$names = array(
+				'chart.compare',
+				'chart.popularity',
+				'chart.popularity-trend',
+				'chart.actionsPerDay',
+				'chart.response-time'
 			);
 		}
+		$container = $this->getContainer();
+		foreach ($names as $chartName) {
+			$options[] = $container->get($chartName);
+		}
+		return $options;
 	}
 
 	/**
@@ -348,7 +354,8 @@ class PresenceController extends GraphingController
 		$start = $dateRange[0];
 		$end = $dateRange[1];
 
-		$chartObject = Chart_Factory::getChart($this->_request->getParam('chart'));
+		$chartName = $this->_request->getParam('chart');
+		$chartObject = $this->getContainer()->get('chart.' . $chartName);
 
 		$this->apiSuccess($chartObject->getChart($presence, $start, $end));
 	}

@@ -2,24 +2,12 @@
 
 class Chart_ResponseTime extends Chart_Abstract {
 
-    protected static $name = "response-time";
+    const NAME = "response-time";
 
-    protected function getXAxis()
-    {
-        return array(
-            "type" => 'timeseries',
-            "label" => $this->translate->_("Global.date"),
-            "position" => 'outer-center'
-        );
-    }
-
-    protected function getYAxis()
-    {
-        return array(
-            "label" => $this->translate->_(get_class($this).".y-axis-label"),
-            "position" => 'outer-middle',
-         );
-    }
+	public function __construct(PDO $db, $translator)
+	{
+		parent::__construct($db, $translator, self::NAME);
+	}
 
     protected function getData($model, DateTime $start, DateTime $end)
     {
@@ -30,7 +18,7 @@ class Chart_ResponseTime extends Chart_Abstract {
             $data = $model->getResponseData($start, $end);
             if ($data) {
                 $key = Metric_ResponseTime::NAME;
-                $names[$key] = $this->translate->_('Metric_ResponseTime.title');
+                $names[$key] = $this->translate->trans('Metric_ResponseTime.title');
                 $dataSets[$key] = $data;
             }
         } else if ($model instanceof Model_Country || $model instanceof Model_Group || $model instanceof Model_Region) {

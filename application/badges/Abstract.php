@@ -123,7 +123,7 @@ abstract class Badge_Abstract
 
         $defaultRank = count(Model_PresenceFactory::getPresences());
 
-		$name = static::getName();
+		$name = $this->getName();
 
 		$sql = "
 			SELECT

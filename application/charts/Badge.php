@@ -2,13 +2,6 @@
 
 abstract class Chart_Badge extends Chart_Compare {
 
-    public function __construct(PDO $db = null)
-    {
-        parent::__construct($db);
-
-        $this->xLabel = $this->translate->_("Global.time");
-    }
-
     /**
      * Gets the names of the presences, keyed by id
      * @param array $data

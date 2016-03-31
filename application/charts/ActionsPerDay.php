@@ -2,24 +2,13 @@
 
 class Chart_ActionsPerDay extends Chart_Abstract {
 
-    protected static $name = "actionsPerDay";
+	const NAME = "actionsPerDay";
 
-    protected function getXAxis()
-    {
-        return array(
-            "type" => 'timeseries',
-            "label" => $this->translate->_('Global.date'),
-            "position" => 'outer-center'
-        );
-    }
+	public function __construct(PDO $db, $translator)
+	{
+		parent::__construct($db, $translator, self::NAME);
+	}
 
-    protected function getYAxis()
-    {
-        return array(
-            "label" => $this->translate->_(get_class($this).'.y-axis'),
-            "position" => 'outer-middle',
-         );
-    }
 
     protected function getData($model, DateTime $start, DateTime $end)
     {
@@ -34,8 +23,8 @@ class Chart_ActionsPerDay extends Chart_Abstract {
         if ($data) {
             $key = Metric_ActionsPerDay::NAME;
             $key2 = 'relevant';
-            $names[$key] = $this->translate->_('Metric_ActionsPerDay.title');
-            $names[$key2] = $this->translate->_(get_class($this).'.relevant-links');
+            $names[$key] = $this->translate->trans('Metric_ActionsPerDay.title');
+            $names[$key2] = $this->translate->trans('chart.' . self::NAME . '.relevant-links');
             $dataSets[$key] = $data;
         }
 

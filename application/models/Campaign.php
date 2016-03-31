@@ -378,7 +378,7 @@ class Model_Campaign extends Model_Base {
 				$value /= $badgeCount; // average out the badges
 				$total[$day] = (object)array('s'=>round($value*10)/10, 'l'=>round($value).'%');
 			}
-			$campaign->b->{Badge_Total::getInstance()->getName()} = $total;
+			$campaign->b->{Badge_Total::NAME} = $total;
 		}
 
 		// fill in any holes by copying the closest day

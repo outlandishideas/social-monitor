@@ -140,7 +140,8 @@ class GroupController extends CampaignController {
         $start = $dateRange[0];
         $end = $dateRange[1];
 
-        $chartObject = Chart_Factory::getChart($this->_request->getParam('chart'));
+		$chartName = $this->_request->getParam('chart');
+		$chartObject = $this->getContainer()->get('chart.' . $chartName);
 
         $this->apiSuccess($chartObject->getChart($group, $start, $end));
     }

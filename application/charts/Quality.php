@@ -2,12 +2,11 @@
 
 class Chart_Quality extends Chart_Badge {
 
-    protected static $name = "quality";
+    const NAME = "quality";
 
-    public function __construct(PDO $db = null)
+    public function __construct(PDO $db, $translator)
     {
-        parent::__construct($db);
-        $this->yLabel = $this->translate->_(get_class($this).".y-axis-label");
+        parent::__construct($db, $translator, self::NAME);
         $this->dataColumns = array(
             Badge_Quality::NAME
         );

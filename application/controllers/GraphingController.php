@@ -4,14 +4,15 @@
 abstract class GraphingController extends BaseController {
 
 	protected function chartOptions() {
+		$container = $this->getContainer();
 		return array(
-			Chart_Compare::getInstance(),
-			Chart_Reach::getInstance(),
-			Chart_Engagement::getInstance(),
-			Chart_Quality::getInstance(),
-			Chart_Popularity::getInstance(),
-			Chart_PopularityTrend::getInstance(),
-			Chart_ResponseTime::getInstance()
+			$container->get('chart.compare'),
+			$container->get('chart.reach'),
+			$container->get('chart.engagement'),
+			$container->get('chart.quality'),
+			$container->get('chart.popularity'),
+			$container->get('chart.popularity-trend'),
+			$container->get('chart.response-time')
 		);
 	}
 
@@ -36,12 +37,13 @@ abstract class GraphingController extends BaseController {
 			$this->apiError($this->translator->trans('Error.missing-date-range'));
 		}
 
-		$chart = $this->_request->getParam('chart');
-		if (!$chart) {
+		$chartName = $this->_request->getParam('chart');
+		if (!$chartName) {
 			$this->apiError($this->translator->trans('Error.missing-chart-type'));//'Missing chart type');
 		}
 
-		if(!in_array($chart, Chart_Factory::getChartNames())) {
+		$chart = $this->getContainer()->get('chart.' . $chartName);
+		if(!$chart) {
 			$this->apiError($this->translator->trans('Error.chart-doesnt-exist')); //'Chart type doesn\'t exist');
 		}
 	}

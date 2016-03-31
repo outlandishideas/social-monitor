@@ -143,13 +143,6 @@ class Model_Presence
         return $this->type;
     }
 
-    public function getCharts()
-    {
-        return array(
-            Chart_Compare::getName() => Chart_Compare::getInstance()->getTitle()
-        );
-    }
-
     public function setType($typeName)
     {
         $this->type = PresenceType::get($typeName);
@@ -827,7 +820,11 @@ class Model_Presence
         return $this->provider->getHistoryData($this, $start, $end, $types);
     }
 
-    public function chartOptions()
+	/**
+	 * Gets the symfony service IDs of the applicable charts for this presence
+	 * @return array
+	 */
+    public function chartOptionNames()
     {
         switch ($this->getType()) {
             case InstagramType::NAME:
@@ -835,20 +832,20 @@ class Model_Presence
             case LinkedinType::NAME:
             case SinaWeiboType::NAME:
                 return array(
-                    Chart_Compare::getInstance(),
-                    Chart_Popularity::getInstance(),
-                    Chart_PopularityTrend::getInstance(),
-                    Chart_ActionsPerDay::getInstance(),
+                    'chart.compare',
+                    'chart.popularity',
+                    'chart.popularity-trend',
+                    'chart.actionsPerDay'
                 );
             case TwitterType::NAME:
 			case FacebookType::NAME:
             default:
                 return array(
-                    Chart_Compare::getInstance(),
-                    Chart_Popularity::getInstance(),
-                    Chart_PopularityTrend::getInstance(),
-                    Chart_ActionsPerDay::getInstance(),
-                    Chart_ResponseTime::getInstance()
+                    'chart.compare',
+                    'chart.popularity',
+                    'chart.popularity-trend',
+                    'chart.actionsPerDay',
+                    'chart.response-time'
                 );
         }
     }
