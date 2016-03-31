@@ -15,7 +15,7 @@ $region = $country->getRegion();
 <div class="row">
     <div class="small-12 columns">
         <section class="border-section info-section">
-            <h2><?php echo $translator->trans('Global.additional-info'); ?></h2>
+            <h2><?php echo $translator->trans('route.country.report.label.additional-info'); ?></h2>
             <p><?php echo $translator->trans('Global.containing-region', ['%region%' => $region->display_name]); ?></p>
             <p><?php echo $translator->trans('Global.available-audience-size')?>: <?php $country->getTargetAudience(); ?></p>
             <p><?php echo $translator->trans('Global.country-population')?>: <?php echo number_format($country->population); ?></p>

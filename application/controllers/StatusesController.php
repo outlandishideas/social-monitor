@@ -45,10 +45,10 @@ class StatusesController extends GraphingController
         $this->view->presences = $presences;
         $this->view->sortCol = Handle::NAME;
         $this->view->queryOptions = [
-            ['name' => 'type', 'label' => $this->translator->trans('Global.social-media'), 'options' => PresenceType::getAll()],
+            ['name' => 'type', 'label' => $this->translator->trans('route.statuses.index.label.social-media'), 'options' => PresenceType::getAll()],
             ['name' => 'country', 'label' => $this->translator->trans('Global.countries'), 'options' => Model_Country::fetchAll()],
             ['name' => 'region', 'label' => $this->translator->trans('Global.regions'), 'options' => Model_Region::fetchAll()],
-            ['name' => 'sbu', 'label' => $this->translator->trans('Global.sbus'), 'options' => Model_Group::fetchAll()],
+            ['name' => 'sbu', 'label' => $this->translator->trans('Global.groups'), 'options' => Model_Group::fetchAll()],
             ['name' => 'sort', 'label' => $this->translator->trans('Global.sort'), 'options' =>
                 [
                     ['value' => 'date', 'title' => $this->translator->trans('Global.date')],

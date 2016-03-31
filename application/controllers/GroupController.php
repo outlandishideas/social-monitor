@@ -190,7 +190,7 @@ class GroupController extends CampaignController {
 
             $errorMessages = array();
             if (!$this->_request->getParam('display_name')) {
-                $errorMessages[] = $this->translator->trans('Error.display-name-missing');
+                $errorMessages[] = $this->translator->trans('route.group.edit.message.display-name-missing');
             }
 
             if ($errorMessages) {

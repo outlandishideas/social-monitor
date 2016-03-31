@@ -65,7 +65,7 @@ class PresenceController extends GraphingController
 		if ($accessToken) {
 			$presence->user = $user;
 			$presence->save();
-			$message = $this->translator->trans('Success.presence-assigned-user');
+			$message = $this->translator->trans('route.presence.assign.message.success');
 		} else {
 			$message = $this->translator->trans('Error.presence-not-assigned-user');
 		}
@@ -299,7 +299,7 @@ class PresenceController extends GraphingController
 				$table = $objectCacheManager->getPresencesTable();
 				$objectCacheManager->invalidateObjectCache($table->getIndexName());
 
-				$this->flashMessage($this->translator->trans('Success.presence-saved')); //'Presence saved');
+				$this->flashMessage($this->translator->trans('route.presence.edit.message.success')); //'Presence saved');
 
 				//if new presence created, update presence index cache so that it will appear in the presence index page
 				if ($this->view->isNew) {
@@ -329,7 +329,7 @@ class PresenceController extends GraphingController
 
 		if ($this->_request->isPost()) {
 			$presence->delete();
-            $this->flashMessage($this->translator->trans('Success.presence-deleted')); //'Presence deleted');
+            $this->flashMessage($this->translator->trans('route.presence.delete.message.success')); //'Presence deleted');
             $this->_helper->redirector->gotoSimple('index');
 		} else {
             $this->flashMessage($this->translator->trans('Error.presence-deleted'));

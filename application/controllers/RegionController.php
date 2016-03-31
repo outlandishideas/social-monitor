@@ -190,7 +190,7 @@ class RegionController extends CampaignController
 
             $errorMessages = array();
             if (!$this->_request->getParam('display_name')) {
-                $errorMessages[] = $this->translator->trans('Error.display-name-missing');
+                $errorMessages[] = $this->translator->trans('route.region.edit.message.display-name-missing');
             }
 
             if ($errorMessages) {

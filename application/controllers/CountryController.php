@@ -187,10 +187,10 @@ class CountryController extends CampaignController {
 
 			$errorMessages = array();
 			if (!$this->_request->getParam('display_name')) {
-				$errorMessages[] = $this->translator->trans('Error.display-name-missing');
+				$errorMessages[] = $this->translator->trans('route.country.edit.message.display-name-missing');
 			}
 			if (!$this->_request->getParam('country')) {
-				$errorMessages[] = $this->translator->trans('Error.select-country');
+				$errorMessages[] = $this->translator->trans('route.country.edit.message.country-missing');
 			}
 
             $editingCountry->penetration = max(0, $editingCountry->penetration);

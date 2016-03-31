@@ -10,14 +10,10 @@
 "Global.internet-penetration";"Internet Penetration"
 "Global.country-population";"Country Population"
 "Global.available-audience-size";"Available Audience Size"
-"Global.additional-info";"Additional Info"
 "Global.download-report";"Download Report"
 "Global.containing-region";"Part of the %region% region"
 "Global.target-date";"Target date"
-"Global.gain-per-day";"Required gain per day"
 "Global.content";"Content"
-"Global.view";"View"
-
 "Global.charts-unavailable";"Sorry, charts are not available on your device"
 "Global.click-to-expand";"Click to expand"
 "Global.audience-size";"Audience Size"
@@ -26,8 +22,8 @@
 "Global.regions";"Regions"
 "Global.country";"Country"
 "Global.countries";"Countries"
-"Global.sbu";"SBU"
-"Global.sbus";"SBUs"
+"Global.group";"SBU"
+"Global.groups";"SBUs"
 "Global.presence";"Presence"
 "Global.presences";"Presences"
 "Global.statuses";"Statuses"
@@ -36,13 +32,11 @@
 "Global.chart";"Chart"
 "Global.info";"Info"
 "Global.date-range";"Date range"
-"Global.social-media";"Social Media"
 "Global.sort";"Sort"
 "Global.date";"Date"
 "Global.time";"Time"
 "Global.cancel";"Cancel"
 "Global.save";"Save"
-"Global.email-address";"Email address"
 "Global.population";"Population"
 "Global.no";"No"
 "Global.yes";"Yes"
@@ -113,7 +107,7 @@
 
 "buttons.presence.edit";"Edit Presence"
 "buttons.presence.delete";"Delete Presence"
-
+"buttons.presence.view";"View Presence"
 
 
 
@@ -126,6 +120,7 @@
 
 "route.region.edit.page-title";"Edit Region"
 "route.region.edit.message.success";"Region saved"
+"route.region.edit.message.display-name-missing";"Please enter a display name"
 
 "route.region.edit-all.page-title";"Edit All Regions"
 "route.region.edit-all.message.display-name-missing";"Please enter a display name for %region%"
@@ -152,6 +147,8 @@
 
 "route.country.edit.page-title";"Edit Country"
 "route.country.edit.message.success";"Country saved"
+"route.country.edit.message.display-name-missing";"Please enter a display name"
+"route.country.edit.message.country-missing";"Please select a country"
 
 "route.country.edit-all.page-title";"Edit All Countries"
 "route.country.edit-all.message.success";"%count% countries saved"
@@ -166,6 +163,7 @@
 "route.country.manage.message.success";"Country presences updated"
 
 "route.country.report.page-title";"Social Media Monitor Report"
+"route.country.report.label.additional-info";"Additional Info"
 
 
 
@@ -187,6 +185,7 @@
 
 "route.group.edit.page-title";"Edit SBU"
 "route.group.edit.message.success";"SBU saved"
+"route.group.edit.message.display-name-missing";"Please enter a display name"
 
 "route.group.edit-all.page-title";"Edit All SBUs"
 "route.group.edit-all.message.display-name-missing";"Please enter a display name for %group%"
@@ -209,6 +208,10 @@
 
 "route.presence.new.page-title";"New presence"
 
+"route.presence.delete.message.success";"Presence deleted"
+
+"route.presence.assign.message.success";"Presence was assigned to user"
+
 "route.presence.view.page-title";"Presence: %presence%"
 "route.presence.view.info.presence-type";"This is a %type% presence"
 "route.presence.view.info.presence.score";"Yesterday's %type% Engagement score: %score%%"
@@ -220,6 +223,7 @@
 "route.presence.view.info.current-audience";"The target audience size is %size%"
 "route.presence.view.info.time-to-target";"At the current rate, the target will be reached by %date%"
 "route.presence.view.info.daily-gains";"The following daily gains are required to meet the target audience size:"
+"route.presence.view.info.gain-per-day";"Required gain per day"
 
 "route.presence.compare.page-title";"Comparing %count% presences"
 "route.presence.compare.presence-handle";"Handle"
@@ -228,6 +232,7 @@
 "route.presence.compare.chart-title";"Scores for the last 30 days:"
 
 "route.presence.edit.page-title";"Edit presence"
+"route.presence.edit.message.success";"Presence saved"
 "route.presence.edit.label.handle";"Handle"
 "route.presence.edit.label.type";"Type"
 "route.presence.edit.label.size";"Size"
@@ -317,6 +322,7 @@
 
 
 "route.statuses.index.page-title";"Statuses"
+"route.statuses.index.label.social-media";"Social Media"
 
 
 
@@ -504,6 +510,8 @@
 "route.domain.index.table-header.domain";"Domain"
 "route.domain.index.table-header.links";"Links"
 "route.domain.index.table-header.relevant";"British Council"
+"route.domain.index.message.success";"Domains updated"
+"route.domain.index.message.access-error";"You do not have sufficient access to change this data"
 
 "route.domain.view.page-title";"%domain%"
 "route.domain.view.site.single";"site"
@@ -686,16 +694,11 @@
 
 "Error.missing-date-range";"Missing date range"
 "Error.invalid-date-range";"Invalid date range"
-"Error.display-name-missing";"Please enter a display name"
 "Error.display-name-exists";"Display name already taken"
-"Error.select-country";"Please select a country"
-"Error.display-name-missing";"Please enter a display name"
-"Error.select-country";"Please select a country"
 "Error.missing-id";"Missing ID"
 "Error.missing-chart-type";"Missing chart type"
-"Error.chart-doesnt-exist";"Chart doesn't exist"
+"Error.chart-does-not-exist";"Chart doesn't exist"
 "Error.invalid-delete";"Incorrect usage of delete"
-"Error.domain.access-error";"You do not have sufficient access to change this data"
 "Error.not-authorized";"Not authorised"
 "Error.not-logged-in";"Not logged in"
 "Error.not-allowed";"Not allowed: Insufficient access rights"
@@ -705,8 +708,4 @@
 "Error.lock-error.without-url";"Please log in to clear the lock."
 "Error.access-token.refresh";"One or more of your access tokens are set to expire soon. <a href="%url%">Click here</a> to refresh these tokens."
 
-"Success.presence-assigned-user";"Presence was assigned to user"
-"Success.presence-saved";"Presence saved"
-"Success.presence-deleted";"Presence deleted"
-"Success.domain.update";"Domains updated"
 

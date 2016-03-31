@@ -17,7 +17,7 @@ class ReportableGroup implements Reportable
     public function __construct(Model_Group $group, Translator $translator)
     {
         $this->group = $group;
-		$this->type = $translator->trans('Global.sbu');
+		$this->type = $translator->trans('Global.group');
     }
 
     public function getType()

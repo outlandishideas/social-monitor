@@ -49,7 +49,7 @@ abstract class GraphingController extends BaseController {
 
 		$chart = $this->getContainer()->get('chart.' . $chartName);
 		if(!$chart) {
-			$this->apiError($this->translator->trans('Error.chart-doesnt-exist')); //'Chart type doesn\'t exist');
+			$this->apiError($this->translator->trans('Error.chart-does-not-exist')); //'Chart type doesn\'t exist');
 		}
 	}
 
