@@ -1,10 +1,11 @@
+@import 'variables';
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,300,700);
 
 body {
   font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
-  background-color: #0a3542;
+  background-color: $colour-background;
   letter-spacing: 0.03rem;
 }
 
@@ -21,7 +22,7 @@ body {
 
   button {
     margin-bottom: 0;
-    background-color: #0071bc;
+    background-color: $colour-highlight;
     padding: 10px;
     font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
     font-size: 0.8125rem;
@@ -55,7 +56,7 @@ body {
   position: relative;
   width: 800px;
   margin: 100px auto;
-  background-color: #0a3542;
+  background-color: $colour-background;
   padding: 15px;
 
   h2 {
@@ -198,7 +199,7 @@ fieldset {
 }
 
 .title-area li.name h1 a {
-  background: url('../img/British-Council-stacked-negative.png') center center no-repeat;
+  background: url('../img/#{$site-logo}') center center no-repeat;
   background-size: contain;
   height: 45px;
   width: 120px;
@@ -211,7 +212,7 @@ fieldset {
   max-width: 0;
   transition: max-width .7s ease-in-out;
   overflow: hidden;
-  background-color: #0071bc;
+  background-color: $colour-highlight;
   color: white;
   position: absolute;
   left: 16px;
@@ -416,7 +417,7 @@ h3 {
 
 #nav {
   padding: 0 42px;
-  background: #065284;
+  background: $colour-nav-background;
   background: -webkit-gradient(0deg, #0f70a3, #097fcd);
   background: linear-gradient(0deg, #0f70a3, #097fcd);
   height: 56px;
@@ -469,7 +470,7 @@ h3 {
 
     &.enabled:hover a,
     &.active a {
-      background-color: #065284;
+      background-color: $colour-nav-background;
     }
     &.disabled a {
       color: #999;
@@ -479,7 +480,7 @@ h3 {
       padding: 0;
       position: absolute;
       display: none;
-      background-color: #065284;
+      background-color: $colour-nav-background;
       min-width: 140%;
       right: 0;
       box-shadow: 2px 2px 4px #666;
@@ -1299,69 +1300,69 @@ body .compare.list li {
 /* presences */
 
 .entity.twitter .icon-large {
-  color: #4099FF;
+  color: $colour-twitter;
 }
 
 .entity.instagram .icon-large {
-  color: #3f729b;
+  color: $colour-instagram;
 }
 
 .entity.linkedin .icon-large {
-  color: #007bb5;
+  color: $colour-linkedin;
 }
 
 .entity.youtube .icon-large {
-  color: #e52d27;
+  color: $colour-youtube;
 }
 
 .entity.facebook .icon-large {
-  color: #3B5998;
+  color: $colour-facebook;
 }
 
 .entity.sina_weibo .icon-large {
-  color: #e6162d;
+  color: $colour-sina-weibo;
 }
 
 .entity.country .icon-large {
-  color: #009600;
+  color: $colour-country;
 }
 
 .entity.group .icon-large {
-  color: #960000;
+  color: $colour-group;
 }
 
 a.presence.twitter .icon-large,
 .icon-twitter-sign {
-  /*color: #4099FF;*/
+  /*color: $colour-twitter;*/
   color: #FFF;
 }
 
 a.presence.instagram .icon-large,
 .icon-instagram-sign {
-  /*color: #3f729b;*/
+  /*color: $colour-instagram;*/
   color: #FFF;
 }
 
 a.presence.linkedin .icon-large {
-  /*color: #3f729b;*/
+  /*color: $colour-instagram;*/
   color: #FFF;
 }
 
 a.presence.youtube .icon-large,
 .icon-youtube-sign {
-  /*color: #3f729b;*/
+  /*color: $colour-instagram;*/
   color: #FFF;
 }
 
 a.presence.sina_weibo .icon-large,
 .icon-sina_weibo-sign {
-  /*color: #e6162d;*/
+  /*color: $colour-sina-weibo;*/
   color: #FFF;
 }
 
 a.presence.facebook .icon-large,
 .icon-facebook-sign {
-  /*color: #3B5998;*/
+  /*color: $colour-facebook;*/
   color: #FFF;
 }
 
@@ -1404,74 +1405,74 @@ a.presence.facebook .icon-large,
   }
 
   &.facebook a {
-    background-color: #8b9dc3;
+    background-color: $colour-facebook-light;
 
     &:hover,
     &:focus {
-      background-color: #3B5998;
+      background-color: $colour-facebook;
     }
   }
 
   &.twitter a {
-    background-color: #63B3FF;
+    background-color: $colour-twitter-light;
 
     &:hover,
     &:focus {
-      background-color: #4099FF;
+      background-color: $colour-twitter;
     }
   }
 
   &.instagram a {
-    background-color: #3f729b;
+    background-color: $colour-instagram;
 
     &:hover,
     &:focus {
-      background-color: #386589;
+      background-color: $colour-instagram-dark;
     }
   }
 
   &.linkedin a {
-    background-color: #007bb5;
+    background-color: $colour-linkedin;
 
     &:hover,
     &:focus {
-      background-color: #005882;
+      background-color: $colour-linkedin-dark;
     }
   }
 
   &.youtube a {
-    background-color: #e52d27;
+    background-color: $colour-youtube;
 
     &:hover,
     &:focus {
-      background-color: #b31217;
+      background-color: $colour-youtube-dark;
     }
   }
 
   &.sina_weibo a {
-    background-color: #ed4255;
+    background-color: $colour-sina-weibo-light;
 
     &:hover,
     &:focus {
-      background-color: #e6162d;
+      background-color: $colour-sina-weibo;
     }
   }
 
   &.country a {
-    background-color: #00bb00;
+    background-color: $colour-country-light;
 
     &:hover,
     &:focus {
-      background-color: #009600;
+      background-color: $colour-country;
     }
   }
 
   &.group a {
-    background-color: #bb0000;
+    background-color: $colour-group-light;
 
     &:hover,
     &:focus {
-      background-color: #960000;
+      background-color: $colour-group;
     }
   }
 }
@@ -1563,8 +1564,8 @@ li.link.box {
   padding-bottom: 0;
   list-style: none;
   height: 42px;
-  border-bottom: 2px solid #4e869f;
-  border-top: 2px solid #4e869f;
+  border-bottom: 2px solid $colour-tabs;
+  border-top: 2px solid $colour-tabs;
   background-color: #fff;
   margin-bottom: 10px;
 }
@@ -1583,13 +1584,13 @@ ul.tabs li {
   font-weight: bold;
   position: relative;
   top: -2px;
-  border-bottom: 2px solid #4e869f;
-  border-top: 2px solid #4e869f;
+  border-bottom: 2px solid $colour-tabs;
+  border-top: 2px solid $colour-tabs;
 
   &.active {
     cursor: default;
     background-color: #c3e9fe;
-    color: #4e869f;
+    color: $colour-tabs;
     border-bottom-color: #c3e9fe;
   }
 
@@ -1700,7 +1701,7 @@ body.errorController.errorAction {
 .top-bar-section li:not(.has-form) a:not(.button),
 .top-bar-section ul li,
 .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button) {
-  background: #0071bc;
+  background: $colour-highlight;
 }
 
 .top-bar {
@@ -1745,13 +1746,13 @@ body.errorController.errorAction {
 
 h2 {
   font-family: 'Open Sans', sans-serif;
-  color: #0071bc;
+  color: $colour-highlight;
   font-size: 1.5rem;
   font-weight: 400;
   margin: 0;
   margin-bottom: 1rem;
   padding: 0.25rem 0;
-  border-bottom: 1px solid #0071bc;
+  border-bottom: 1px solid $colour-highlight;
 }
 
 h2.page-title {
@@ -1895,7 +1896,7 @@ h4 {
 
 .badge-presences-buttons li a.active h4,
 .badge-presences-buttons li a:hover h4 {
-  color: #0071bc;
+  color: $colour-highlight;
 }
 
 .badge-presences-buttons li a.active .score-value,
@@ -2020,7 +2021,7 @@ h4 {
 #chart-picker:focus,
 #date-picker:focus {
   border-color: #fff;
-  background-color: #051b21;
+  background-color: $colour-dark;
   background-color: rgba(0, 0, 0, 0.5);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.45s, border-color 0.45s ease-in-out;
@@ -2030,7 +2031,7 @@ h4 {
 
 body .ui-daterangepickercontain .ui-daterangepicker {
   border: 1px solid #fff;
-  background-color: #051b21;
+  background-color: $colour-dark;
   background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
 }
@@ -2049,7 +2050,7 @@ body .ui-daterangepicker li a {
 body .ui-daterangepicker li.ui-state-hover,
 body .ui-daterangepicker li.ui-state-active {
   background-image: none;
-  background-color: #051b21;
+  background-color: $colour-dark;
   background-color: rgba(0, 0, 0, 0.1);
   border-color: transparent;
 
@@ -2114,11 +2115,11 @@ body .ui-daterangepicker li.ui-state-active {
 #new-chart-values table {
   color: #FFF;
   width: 100%;
-  background-color: #0A3542;
+  background-color: $colour-background;
 }
 
 #new-chart-values table tr {
-  background-color: #0A3542;
+  background-color: $colour-background;
 }
 
 #new-chart-values table th {
@@ -2127,7 +2128,7 @@ body .ui-daterangepicker li.ui-state-active {
   border-bottom: 1px solid #AAA;
   transition: opacity .4s ease-in-out;
   font-weight: normal;
-  background-color: #0A3542;
+  background-color: $colour-background;
 }
 
 #new-chart-values table td {
@@ -2136,12 +2137,12 @@ body .ui-daterangepicker li.ui-state-active {
   border-bottom: 1px solid #AAA;
   transition: opacity .2s ease-in-out;
   font-weight: bold;
-  background-color: #0A3542;
+  background-color: $colour-background;
 }
 
 #new-chart-values table th.header {
   border: 1px solid white;
-  background-color: #0A3542;
+  background-color: $colour-background;
 }
 
 #new-chart-values span.color-block {
@@ -2190,19 +2191,19 @@ body .ui-daterangepicker li.ui-state-active {
 }
 
 .fa.fa-twitter {
-  color: #4099FF;
+  color: $colour-twitter;
 }
 
 .fa.fa-instagram {
-  color: #3f729b;
+  color: $colour-instagram;
 }
 
 .fa.fa-linkedin {
-  color: #007bb5;
+  color: $colour-linkedin;
 }
 
 .fa.fa-youtube {
-  color: #e52d27;
+  color: $colour-youtube;
 }
 
 .fa.fa-facebook {
@@ -2210,7 +2211,7 @@ body .ui-daterangepicker li.ui-state-active {
 }
 
 .fa.fa-weibo {
-  color: #e6162d;
+  color: $colour-sina-weibo;
 }
 
 .fa.fa-white {
@@ -2250,8 +2251,8 @@ body .ui-daterangepicker li.ui-state-active {
 .button-bc:hover,
 .button-bc.active {
   color: #fff;
-  background-color: #0071bc;
-  border-color: #0071bc;
+  background-color: $colour-highlight;
+  border-color: $colour-highlight;
 }
 
 table .cell-options ul {
@@ -2302,7 +2303,7 @@ table .cell-handle .missing {
 }
 
 .button-bc-bar .button-group > li > select option {
-  background-color: #051b21;
+  background-color: $colour-dark;
 }
 
 /* forms */
@@ -2352,7 +2353,7 @@ form.management select {
 form select:focus,
 form input[type="text"]:focus,
 form input[type="password"]:focus {
-  border-color: #0071bc;
+  border-color: $colour-highlight;
   transition: border-color 200ms ease-in, box-shadow 200ms ease-in;
 }
 
@@ -2360,7 +2361,7 @@ form input[type="password"]:focus {
 .picker select {
   color: #fff;
   border: 1px solid #44656f;
-  background-color: #051b21;
+  background-color: $colour-dark;
   background-color: rgba(0, 0, 0, 0.5);
   font-weight: 300;
   font-family: 'Open Sans', sans-serif;
@@ -2590,7 +2591,7 @@ td.countries a {
 }
 
 #country-stats {
-  background-color: #0a3542;
+  background-color: $colour-background;
   position: relative;
 }
 
@@ -2631,7 +2632,7 @@ td.countries a {
 }
 
 .dataTable thead select option {
-  background: #051b21;
+  background: $colour-dark;
   color: white;
   font-family: FontAwesome;
 }
@@ -2643,37 +2644,37 @@ td.countries a {
 
 .dataTable thead select option.facebook,
 .dataTable thead select[data-selected="facebook"] {
-  color: #3B5998;
+  color: $colour-facebook;
   font-family: FontAwesome;
 }
 
 .dataTable thead select option.twitter,
 .dataTable thead select[data-selected="twitter"] {
-  color: #4099FF;
+  color: $colour-twitter;
   font-family: FontAwesome;
 }
 
 .dataTable thead select option.sina_weibo,
 .dataTable thead select[data-selected="sina_weibo"] {
-  color: #e6162d;
+  color: $colour-sina-weibo;
   font-family: FontAwesome;
 }
 
 .dataTable thead select option.linkedin,
 .dataTable thead select[data-selected="linkedin"] {
-  color: #007bb5;
+  color: $colour-linkedin;
   font-family: FontAwesome;
 }
 
 .dataTable thead select option.youtube,
 .dataTable thead select[data-selected="youtube"] {
-  color: #e52d27;
+  color: $colour-youtube;
   font-family: FontAwesome;
 }
 
 .dataTable thead select option.instagram,
 .dataTable thead select[data-selected="instagram"] {
-  color: #3f729b;
+  color: $colour-instagram;
   font-family: FontAwesome;
 }
 

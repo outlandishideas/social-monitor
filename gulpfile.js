@@ -2,13 +2,24 @@
 
 var gulp = require('gulp');
 var loadPlugins = require('gulp-load-plugins');
+var injectVariables = require('./gulp/inject-variables');
 var plugins = loadPlugins();
 
-gulp.task('app:styles', function() {
-	var appStylesheet = 'assets/social-monitor.scss';
-	var dest = 'public/css';
+gulp.task('app:styles:preprocess', function() {
+	return gulp.src('assets/*.scss')
+		.pipe(injectVariables({
+			configFile: 'application/configs/config.yaml',
+			replacements: {
+				'site-logo': 'prod.app.client_logo'
+			}
+		}))
+		.pipe(gulp.dest('assets/build'));
+});
+
+
+gulp.task('app:styles', ['app:styles:preprocess'], function() {
 	var errorHandler = plugins.notify.onError("Error: <%= error.message %>");
-	return gulp.src(appStylesheet)
+	return gulp.src('assets/build/social-monitor.scss')
 		.pipe(plugins.plumber({errorHandler: errorHandler}))
 		.pipe(plugins.sourcemaps.init())
 		.pipe(plugins.sass({
@@ -16,12 +27,12 @@ gulp.task('app:styles', function() {
 			// outputStyle: 'compressed'
 		}))
 		.pipe(plugins.sourcemaps.write('.'))
-		.pipe(gulp.dest(dest));
+		.pipe(gulp.dest('public/css'));
+	//todo: clean up temp build files?
 });
 
 gulp.task('watch:app:styles', function() {
-	var scssGlob = 'assets/social-monitor.scss';
-	gulp.watch(scssGlob, ['app:styles']);
+	gulp.watch(['assets/*.scss', ['application/configs/config.yml']], ['app:styles']);
 });
 
 gulp.task('build', ['app:styles']);
