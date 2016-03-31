@@ -88,6 +88,7 @@ $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
 $loader->load('services.yml');
 $loader->load('parameters.yml');
 
+setlocale(LC_COLLATE, $container->getParameter('app.locale'));
 
 // give Zend components access to symfony
 
