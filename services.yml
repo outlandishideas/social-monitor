@@ -36,6 +36,7 @@ services:
         calls:
             - [addLoader, ["csv", @translation.csv-loader]]
             - [loadFromDirectory, ['csv', 'languages']]
+            - [setFallbackLocale, ['en']]
 
     guzzle.client:
         class: GuzzleHttp\Client
