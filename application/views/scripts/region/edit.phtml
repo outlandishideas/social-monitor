@@ -38,7 +38,7 @@ if ($topBar) {
     <div class="row">
         <div class="small-24 medium-8 large-8 columns">
             <label for="display_name" class="requiredField">
-                Display name<span class="asteriskField">*</span>
+                <<?php echo $translator->trans('Global.display-name'); ?>span class="asteriskField">*</span>
             </label>
         </div>
         <div class="small-24 medium-16 large-16 end columns">
@@ -48,10 +48,10 @@ if ($topBar) {
 
     <?php if(!empty($presences)) : ?>
     <fieldset class="inlineLabels">
-        <h2>Presence details</h2>
+        <h2><?php echo $translator->trans('views.scripts.region.edit.presence-details.heading'); ?></h2>
         <div class="row">
             <div class="small-24 medium-8 large-8 columns">
-                <p>These presences will be automatically added to this region:</p>
+                <p><?php echo $translator->trans('views.scripts.region.edit.presence-details.content'); ?></p>
             </div>
             <div class="small-24 medium-16 large-16 end columns">
                 <ul id="added-presences">

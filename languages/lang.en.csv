@@ -1,5 +1,21 @@
 "Global.score";"Score"
 "Global.loading-data";"Loading data..."
+"Global.add-new";"Add New"
+"Global.add";"Add"
+"Global.edit-all";"Edit All"
+"Global.edit";"Edit"
+"Global.display-name";"Display name"
+"Global.delete";"Delete"
+"Global.download-csv";"Download CSV"
+"Global.penetration";"penetration"
+"Global.internet-penetration";"Internet Penetration"
+"Global.country-population";"Country Population"
+"Global.available-audience-size";"Available Audience Size"
+"Global.download-report";"Download Report"
+"Global.containing-region";"Part of the %region% region"
+"Global.target-date";"Target date"
+"Global.content";"Content"
+"Global.charts-unavailable";"Sorry, charts are not available on your device"
 "Global.click-to-expand";"Click to expand"
 "Global.audience-size";"Audience Size"
 "Global.region";"Region"
@@ -11,15 +27,26 @@
 "Global.presence";"Presence"
 "Global.presences";"Presences"
 "Global.select";"Select"
+"Global.select-placeholder";"-- Select --"
+"Global.charts";"Charts"
+"Global.chart";"Chart"
+"Global.info";"Info"
+"Global.date-range";"Date range"
 "Global.sort";"Sort"
 "Global.date";"Date"
 "Global.time";"Time"
 "Global.population";"Population"
 "Global.no";"No"
 "Global.yes";"Yes"
-
-
-
+"Global.country-penetration";"penetration"
+"Global.password";"Password"
+"Global.send";"Send"
+"Global.name";"Name"
+"Global.user";"User name"
+"Global.email";"Email"
+"Global.password-confirm";"Password (again)"
+"Global.available-countries";"Available countries"
+"Global.rank";"Rank"
 
 "Global.tabs.info.label";"Info"
 
@@ -753,6 +780,83 @@
 "Error.lock-error.without-url";"Please log in to clear the lock."
 "Error.access-token.refresh";"One or more of your access tokens are set to expire soon. <a href="%url%">Click here</a> to refresh these tokens."
 
+"models.presence.sizes.small";"Small"
+"models.presence.sizes.medium";"Medium"
+"models.presence.sizes.large";"Large"
+"models.presence.sizes.extra-large";"Extra Large"
+"models.presence.engagement-score-name";"Klout score"
+
+"views.helpers.traffic-light.label.already-reached";"Target already reached"
+"views.helpers.traffic-light.label.hours";"hours"
+
+"views.scripts.partials.badges.metric-attributes.score-title";"This presence has scored %score% for %title% based on an average of the last 30 days of data."
+"views.scripts.partials.badges.metric-attributes.no-data";"There is no data available to calculate %title%.";
+"views.scripts.partials.badges.metric-attributes.score-zero";"This presence has scored 0% for %title%."
+"views.scripts.partials.badges.metric-attributes.title-not-applicable";"%title% is not applicable for this presence"
+"views.scripts.partials.badges.badge-rank.heading";"Rank"
+
+"views.scripts.statuses.index.search-table.loading-message";"Loading data..."
+
+"views.scripts.notabs.small-heading";"Social Media Monitor"
+
+"views.scripts.user.edit.title";"On this page you can edit your user information, such as updating your email address or changing your password."
+"views.scripts.user.edit.label.user.email";"Email address"
+"views.scripts.user.edit.label.user.level";"User Level"
+"views.scripts.user.edit.label.linkedin-expires";"You will be logged out of Linkedin in "
+
+"views.scripts.user.forgotten.username.label";"Name/Email"
+"views.scripts.user.forgotten.button.back-to-login";"Back to login"
+
+"views.scripts.user.index.add-new";"Add new"
+"views.scripts.user.index.loading-prompt";"Loading data..."
+"views.scripts.user.index.user-table.heading.email";"Email Address"
+"views.scripts.user.index.user-table.heading.user-level";"User Level"
+"views.scripts.user.index.user-table.heading.access";"Access rights"
+"views.scripts.user.index.user-table.heading.last-sign-in";"Last Sign In"
+"views.scripts.user.index.user-table.heading.options";"Options"
+"views.scripts.user.index.user-level.unknown";"Unknown (%user_level%)"
+"views.scripts.user.index.last-sign-in.never";"Never signed in"
+
+"views.scripts.user.index.cell-options.access-rights";"Access Rights"
+"views.scripts.user.index.cell-options.confirm-mail";"Confirm Email"
+
+"views.scripts.user.linkedin.login-button";"Login to LinkedIn"
+"views.scripts.user.linkedin.token";"Token"
+
+"views.scripts.user.login.button.submit";"Log in"
+"views.scripts.user.login.button.forgot-password";"Forgot password?"
+"views.scripts.user.login.form.label.username";"Name/Email"
+
+"views.scripts.user.manage.automatic-access";"This user automatically has access to all parts of the monitor."
+"views.scripts.user.manage.form.form-hint";"Adding a country or SBU automatically adds any presences belonging to it to the user."
+"views.scripts.user.manage.label.available-sbus";"Available SBUs"
+"views.scripts.user.manage.label.twitter";"Available twitter presence"
+"views.scripts.user.manage.label.facebook";"Available facebook presences"
+"views.scripts.user.manage.assigned.label";"Currently assigned"
+"views.scripts.user.manage.assigned.none";"None assigned"
+
+"views.scripts.user.register.button.already-registered";"Already have an account?"
+"views.scripts.user.register.register-successful.first-line";"Your registration was successful. In order to log into your account, you will first need to verify your email."
+"views.scripts.user.register.register-successful.second-line";"An email was sent to the email address that you provided, and this will include instructions to complete user registration."
+
+"views.scripts.user.reset-password.log-in";"Log in"
+"views.scripts.user.reset-password.new-password";"New password"
+"views.scripts.user.reset-password.new-password-confirm";"New password (again)"
+
+"views.scripts.partials.assign-countries.heading.currently-assigned";"Currently assigned countries"
+"views.scripts.partials.assign-countries.heading.none-assigned";"No countries assigned"
+
+"views.scripts.partials.assign-presences.available-presences";"Available presences"
+"views.scripts.partials.assign-presences.assigned-presences";"Currently assigned presences"
+"views.scripts.partials.assign-presences.no-presences";"No presences assigned"
+
+"views.scripts.partials.presence-summary.quality-score";"Quality score: "
+
+"views.scripts.region.edit.presence-details.heading";"Presence details"
+"views.scripts.region.edit.presence-details.content";"These presences will be automatically added to this region:"
+
+"views.scripts.partials.new-index-table.entity-list-toggle.title";"Click to expand"
+"views.scripts.partials.new-index-table.not-available";"N/A"
 
 
 "report.label.date-range";"Date range"

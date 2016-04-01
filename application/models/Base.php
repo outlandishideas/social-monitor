@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+
 use Outlandish\SocialMonitor\Database\Database;
 
 abstract class Model_Base
@@ -333,4 +335,8 @@ abstract class Model_Base
 		self::$db = $db;
 	}
 
+	public static function setTranslator(Translator $translator)
+	{
+		self::$translator = $translator;
+	}
 }

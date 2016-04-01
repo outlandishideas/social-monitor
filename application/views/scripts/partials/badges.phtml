@@ -1,9 +1,13 @@
 <?php
+/** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+$translator = $this->translate();
 
 $locale = 'en_US';
 $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
 
-function metricAttributes($metric) {
+function metricAttributes($metric, $translator) {
+    /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+    
     $attrs = array();
     $title = $metric['title'];
     if (array_key_exists('score', $metric)) {
@@ -11,16 +15,16 @@ function metricAttributes($metric) {
         $attrs['style'] = "color: " . $metric['color'];
         if ($score > 0) {
             $score = round($score*10)/10; // use 1 decimal place maximum
-            $attrs['title'] = "This presence has scored {$score}% for {$title} based on an average of the last 30 days of data.";
+            $attrs['title'] = $translator->trans('views.scripts.partials.badges.metric-attributes.score-title', ['%score%'=>$score, '%title%'=>$title]);
         } else {
             if ($metric['gliding'] || $score === null) {
-                $attrs['title'] = "There is no data available to calculate {$title}.";
+                $attrs['title'] = $translator->trans('views.scripts.partials.badges.metric-attributes.no-data', ['%title%', $title]);
             } else {
-                $attrs['title'] = "This presence has scored 0% for {$title}.";
+                $attrs['title'] = $translator->trans("views.scripts.partials.badges.metric-attributes.score-zero", ['%title%', $title]);
             }
         }
     } else {
-        $attrs['title'] = "{$title} is not applicable for this presence";
+        $attrs['title'] = $translator->trans("views.scripts.partials.badges.metric-attributes.title-not-applicable", ['%title%', $title]);
     }
 
     $attrStrings = [];
@@ -40,7 +44,7 @@ function metricAttributes($metric) {
             <div class="small-24 medium-12 columns">
 
                 <div class="badge-rank">
-                    <h3>Rank</h3>
+                    <h3><?php echo $translator->trans('Global.rank'); ?></h3>
                     <div class="rank-value">
                         <span class="numerator"><?php echo $badge['rank']['value']; ?><span><?php echo trim(str_replace(range(0,9),'',$nf->format($badge['rank']['value'])));?></span></span><span class="denominator">/<?php echo $badge['rank']['denominator']; ?></span>
                     </div>
@@ -50,7 +54,7 @@ function metricAttributes($metric) {
             <div class="small-24 medium-12 columns">
 
                 <div class="badge-score">
-                    <h3>Score</h3>
+                    <h3><?php echo $translator->trans('Global.score'); ?></h3>
                     <div class="score-value" style="color:<?php echo $badge['score']['color']; ?>;">
                         <?php echo $badge['score']['value']; ?>%
                     </div>
@@ -75,7 +79,7 @@ function metricAttributes($metric) {
                     </div>
 
                     <div class="badge-score bd-btm">
-                        <h3>Score</h3>
+                        <h3><?php echo $translator->trans('Global.score'); ?></h3>
                         <div class="score-value" style="color:<?php echo $badge['score']['color']; ?>;">
                             <?php echo $badge['score']['value']; ?>%
                         </div>
@@ -88,7 +92,7 @@ function metricAttributes($metric) {
                         <ul class="badge-metrics show-for-large-up">
                             <?php foreach($badge['metrics'] as $metric): ?>
                                 <li class="bd-btm"
-                                    <?php if (!empty($this->titles)) { echo metricAttributes($metric); } ?> >
+                                    <?php if (!empty($this->titles)) { echo metricAttributes($metric, $translator); } ?> >
                                     <span class="<?php echo $metric['icon']; ?> fa-fw"></span> <?php echo $metric['title']; ?>
                                 </li>
                             <?php endforeach; ?>

@@ -3,12 +3,16 @@
 
 class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
 {
-	public function trafficLight() {
+    /** @var \Symfony\Component\Translation\Translator */
+    private $translator;
+
+    public function trafficLight() {
 		return $this;
 	}
 
 	public function __construct($view = null) {
 		$this->view = $view;
+        $this->translator = Zend_Registry::get('symfony_translator');
 	}
 
 	/**
@@ -71,7 +75,7 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
             switch ($metric) {
                 case Metric_PopularityTime::NAME:
                     if ($value == 0) {
-                        $label = 'Target already reached';
+                        $label = $this->translator->trans('views.helpers.traffic-light.label.already-reached');
                     } else {
                         $tmp = floor($value);
                         $fraction = $value - $tmp;
@@ -79,6 +83,7 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
                         $years = ($tmp - $months)/12;
                         $months = round(($months + $fraction)*10)/10;
                         $components = array();
+                        // TODO this translation relies on the pluralization feature
                         if ($years != 0) {
                             $components[] = $years . ' year' . ($years == 1 ? '' : 's');
                         }
@@ -95,7 +100,7 @@ class Zend_View_Helper_TrafficLight extends Zend_View_Helper_Abstract
                     $label .= '%';
                     break;
                 case Metric_ResponseTime::NAME:
-                    $label .= ' hours';
+                    $label .= ' ' . $this->translator->trans("views.helpers.traffic-light.label.hours");
                     break;
             }
         }
