@@ -1,13 +1,7 @@
 "Global.score";"Score"
 "Global.loading-data";"Loading data..."
-"Global.add-new";"Add New"
-"Global.edit-all";"Edit All"
-"Global.edit";"Edit"
 "Global.display-name";"Display name"
-"Global.delete";"Delete"
-"Global.download-csv";"Download CSV"
 "Global.available-audience-size";"Available Audience Size"
-"Global.download-report";"Download Report"
 "Global.target-date";"Target date"
 "Global.content";"Content"
 "Global.charts-unavailable";"Sorry, charts are not available on your device"
@@ -30,8 +24,6 @@
 "Global.sort";"Sort"
 "Global.date";"Date"
 "Global.time";"Time"
-"Global.cancel";"Cancel"
-"Global.save";"Save"
 "Global.population";"Population"
 "Global.no";"No"
 "Global.yes";"Yes"
@@ -84,6 +76,14 @@
 
 
 
+"buttons.common.delete";"Delete"
+"buttons.common.edit";"Edit"
+"buttons.common.edit-all";"Edit All"
+"buttons.common.download-csv";"Download CSV"
+"buttons.common.download-report";"Download Report"
+"buttons.common.save";"Save"
+"buttons.common.cancel";"Cancel"
+"buttons.common.add-new";"Add New"
 
 "buttons.region.edit";"Edit Region"
 "buttons.region.delete";"Delete Region"

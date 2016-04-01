@@ -5,7 +5,7 @@ $translator = $this->translate();
 $buttons = $this->gatekeeper()->filterAll(array(
     '<a class="button-bc button-edit" href="%url%">'.$translator->trans('buttons.presence.edit').'</a>' => array('action'=>'edit', 'id'=>$this->presence->id),
     '<a class="button-bc button-delete" href="%url%"></span>'.$translator->trans('buttons.presence.delete').'</a>' => array('action'=>'delete', 'id'=>$this->presence->id),
-    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>'.$translator->trans('Global.download-report').'</a>' => array('action'=>'download-report', 'id'=>$this->presence->id),
+    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>'.$translator->trans('buttons.common.download-report').'</a>' => array('action'=>'download-report', 'id'=>$this->presence->id),
 ));
 /** @var Model_Presence $presence */
 $presence = $this->presence;

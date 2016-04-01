@@ -16,14 +16,14 @@ if ($this->isNew) {
 	$topBar = $this->gatekeeper()->filterAll(array(
 		'<a class="button-bc button-view" href="%url%">' . $translator->trans('buttons.group.view') . '</a>' => array('controller'=>'group', 'action'=>'view', 'id'=>$sbu->id),
 		'<a class="button-bc button-manage" href="%url%">' . $translator->trans('buttons.group.manage') . '</a>' => array('controller'=>'group', 'action'=>'manage', 'id'=>$sbu->id),
-		'<a class="button-bc button-delete" href="%url%">' . $translator->trans('Global.delete') . '</a>' => array('controller'=>'group', 'action'=>'delete', 'id'=>$sbu->id)
+		'<a class="button-bc button-delete" href="%url%">' . $translator->trans('buttons.common.delete') . '</a>' => array('controller'=>'group', 'action'=>'delete', 'id'=>$sbu->id)
 	));
 }
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">' . $translator->trans('Global.cancel') . '</a>', $cancelArgs, null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">' . $translator->trans('buttons.common.cancel') . '</a>', $cancelArgs, null, true);
 if ($cancel) {
     $bottomBar[] = $cancel;
 }
-$bottomBar[] = '<button type="submit" class="button-bc">' . $translator->trans('Global.save') . '</button>';
+$bottomBar[] = '<button type="submit" class="button-bc">' . $translator->trans('buttons.common.save') . '</button>';
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>

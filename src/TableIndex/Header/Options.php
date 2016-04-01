@@ -19,8 +19,8 @@ class Options extends Header {
 
     public function getTableCellValue($model)
     {
-		$editStr = $this->translator->trans("Global.edit");
-		$deleteStr = $this->translator->trans("Global.delete");
+		$editStr = $this->translator->trans("buttons.common.edit");
+		$deleteStr = $this->translator->trans("buttons.common.delete");
 		$presencesStr = $this->translator->trans("Global.presences");
 
 		if ($model instanceof \Model_Presence) {

@@ -27,14 +27,14 @@ if ($this->isNew) {
 	$cancelArgs['id'] = $presence->id;
 	$topBar = $this->gatekeeper()->filterAll(array(
 		'<a href="%url%" class="button-bc button-view">'.$translator->trans('buttons.presence.view').'</a>' => array('action' => 'view', 'id' => $presence->id),
-		'<a href="%url%" class="button-bc button-delete">'.$translator->trans('Global.delete').'</a>' => array('action' => 'delete', 'id' => $presence->id)
+		'<a href="%url%" class="button-bc button-delete">'.$translator->trans('buttons.common.delete').'</a>' => array('action' => 'delete', 'id' => $presence->id)
 	));
 }
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$translator->trans('Global.cancel').'</a>', $cancelArgs, null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$translator->trans('buttons.common.cancel').'</a>', $cancelArgs, null, true);
 if ($cancel) {
 	$bottomBar[] = $cancel;
 }
-$bottomBar[] = '<button type="submit" class="button-bc button-save">'.$translator->trans('Global.save').'</button>';
+$bottomBar[] = '<button type="submit" class="button-bc button-save">'.$translator->trans('buttons.common.save').'</button>';
 ?>
 
 <div id="presence-edit-form">

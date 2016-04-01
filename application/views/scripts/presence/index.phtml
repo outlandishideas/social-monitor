@@ -3,10 +3,10 @@
 $translator = $this->translate();
 
 $buttons = array(
-	'<a class="button-bc" href="%url%">'.$translator->trans('Global.add-new').'</a>' => array('action' => 'new')
+	'<a class="button-bc" href="%url%">'.$translator->trans('buttons.common.add-new').'</a>' => array('action' => 'new')
 );
 if ($this->rows) {
-	$buttons['<a class="button-bc" href="%url%">'.$translator->trans('Global.download-csv').'</a>'] = array('action' => 'download');
+	$buttons['<a class="button-bc" href="%url%">'.$translator->trans('buttons.common.download-csv').'</a>'] = array('action' => 'download');
 }
 $buttons = $this->gatekeeper()->filterAll($buttons);
 if ($this->rows) {

@@ -9,7 +9,7 @@ $this->buttons = $this->gatekeeper()->filterAll(array(
 		array('action'=>'manage', 'id'=>$this->region->id),
     '<a class="button-bc button-delete" href="%url%">'.$translator->trans("buttons.region.delete").'</a>' =>
 		array('action'=>'delete', 'id'=>$this->region->id),
-    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%">'.$translator->trans("Global.download-report").'</a>' =>
+    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%">'.$translator->trans("buttons.common.download-csv").'</a>' =>
 		array('action'=>'download-report', 'id'=>$this->region->id),
 ));
 $this->campaign = $this->region;

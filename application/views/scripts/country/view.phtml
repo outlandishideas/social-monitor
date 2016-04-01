@@ -6,7 +6,7 @@ $this->buttons = $this->gatekeeper()->filterAll(array(
 	'<a class="button-bc button-edit" href="%url%">'.$translator->trans('buttons.country.edit').'</a>' => array('action'=>'edit', 'id'=>$this->country->id),
 	'<a class="button-bc button-manage" href="%url%">'.$translator->trans('buttons.country.manage').'</a>' => array('action'=>'manage', 'id'=>$this->country->id),
 	'<a class="button-bc button-delete" href="%url%">'.$translator->trans('buttons.country.delete').'</a>' => array('action'=>'delete', 'id'=>$this->country->id),
-    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>'.$translator->trans('Global.download-report').'</a>' => array('action'=>'download-report', 'id'=>$this->country->id),
+    '<a id="report-download" class="button-bc button-download" href="%url%" data-href="%url%"></span>'.$translator->trans('buttons.common.download-report').'</a>' => array('action'=>'download-report', 'id'=>$this->country->id),
 ));
 $this->campaign = $this->country;
 $this->controllerName = 'country';
