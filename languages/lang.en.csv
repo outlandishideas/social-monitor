@@ -125,8 +125,10 @@
 "route.region.edit.message.display-name-missing";"Please enter a display name"
 
 "route.region.edit-all.page-title";"Edit All Regions"
+"route.region.edit-all.empty-table";"No regions found"
 "route.region.edit-all.message.display-name-missing";"Please enter a display name for %region%"
 "route.region.edit-all.message.success";"%count% regions saved"
+"route.region.edit-all.table-header.display-name";"Display name"
 
 "route.region.delete.message.success";"Region deleted"
 
@@ -165,6 +167,7 @@
 "route.country.edit.label.internet-penetration";"Internet Penetration (%)"
 
 "route.country.edit-all.page-title";"Edit All Countries"
+"route.country.edit-all.empty-table";"No countries found"
 "route.country.edit-all.message.success";"%count% countries saved"
 "route.country.edit-all.message.display-name-missing";"Please enter a display name for %country%"
 "route.country.edit-all.message.country-missing";"Please select a country for %country%"
@@ -218,6 +221,7 @@
 "route.group.edit.label.audience-size";"Available Audience Size"
 
 "route.group.edit-all.page-title";"Edit All SBUs"
+"route.group.edit-all.empty-table";"No SBUs Found"
 "route.group.edit-all.message.display-name-missing";"Please enter a display name for %group%"
 "route.group.edit-all.message.success";"%count% SBUs saved"
 "route.group.edit-all.table-header.display-name";"Display name"

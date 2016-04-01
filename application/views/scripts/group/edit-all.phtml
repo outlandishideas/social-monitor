@@ -3,45 +3,54 @@
 $translator = $this->translate();
 
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a class="button-bc" href="%url%">' . $translator->trans('buttons.common.cancel') . '</a>', array('controller'=>'group', 'action'=>'index'), null, true);
+$cancel = $this->gatekeeper()->filter('<a class="button-bc" href="%url%">' . $translator->trans('buttons.common.cancel') . '</a>', array('controller' => 'group', 'action' => 'index'), null, true);
 if ($cancel) {
-    $bottomBar[] = $cancel;
+	$bottomBar[] = $cancel;
 }
 $bottomBar[] = '<button type="submit" class="button-bc">' . $translator->trans('buttons.common.save') . '</button>';
 $topBar = $bottomBar;
 array_unshift($topBar, '<div id="search-table">' . $translator->trans('Global.loading-data') . '</div>');
 ?>
 
-<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
+	<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
-<form class="edit-all" method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-all-groups">
+<?php if (!$this->groups) : ?>
+	<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $topBar, 'dark' => true)); ?>
+	<h3 class="empty-table"><?php echo $translator->trans('route.group.edit-all.empty-table') ?></h3>
+<?php else : ?>
+	<form class="edit-all" method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-all-groups">
 
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true)); ?>
+		<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $topBar, 'dark' => true)); ?>
 
-    <table class="text dtable standard" id="all-groups">
-        <thead>
-            <tr>
-                <th data-name="name" data-sort="forminput"><?php echo $translator->trans('route.group.edit-all.table-header.display-name') ?></th>
-                <th data-name="audience" data-sort="fuzzy-numeric"><?php echo $translator->trans('route.group.edit-all.table-header.audience-size') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php /** @var $group Model_Group */ ?>
-        <?php foreach ($this->groups as $group) : ?>
-            <tr>
-                <td>
-                    <input name="<?php echo $group->id; ?>_display_name" value="<?php echo htmlspecialchars($group->display_name); ?>" class="textInput"
-                           type="text" id="<?php echo $group->id; ?>_display_name">
-                </td>
-                <td>
-                    <input name="<?php echo $group->id; ?>_audience" value="<?php echo htmlspecialchars($group->audience); ?>" class="textInput"
-                           type="text" id="<?php echo $group->id; ?>_audience">
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
+		<table class="text dtable standard" id="all-groups">
+			<thead>
+			<tr>
+				<th data-name="name"
+					data-sort="forminput"><?php echo $translator->trans('route.group.edit-all.table-header.display-name') ?></th>
+				<th data-name="audience"
+					data-sort="fuzzy-numeric"><?php echo $translator->trans('route.group.edit-all.table-header.audience-size') ?></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php /** @var $group Model_Group */ ?>
+			<?php foreach ($this->groups as $group) : ?>
+				<tr>
+					<td>
+						<input name="<?php echo $group->id; ?>_display_name"
+							   value="<?php echo htmlspecialchars($group->display_name); ?>" class="textInput"
+							   type="text" id="<?php echo $group->id; ?>_display_name">
+					</td>
+					<td>
+						<input name="<?php echo $group->id; ?>_audience"
+							   value="<?php echo htmlspecialchars($group->audience); ?>" class="textInput"
+							   type="text" id="<?php echo $group->id; ?>_audience">
+					</td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
 
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$bottomBar, 'dark'=>true)); ?>
-</form>
+		<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $bottomBar, 'dark' => true)); ?>
+	</form>
 
+<?php endif; ?>

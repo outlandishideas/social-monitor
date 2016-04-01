@@ -2,65 +2,81 @@
 /** @var \Symfony\Component\Translation\Translator $translator */
 $translator = $this->translate();
 $bottomBar = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$translator->trans('buttons.common.cancel').'</a>', array('controller'=>'country', 'action'=>'index'), null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">' . $translator->trans('buttons.common.cancel') . '</a>', array('controller' => 'country', 'action' => 'index'), null, true);
 if ($cancel) {
-    $bottomBar[] = $cancel;
+	$bottomBar[] = $cancel;
 }
-$bottomBar[] = '<button type="submit" class="button-bc">'.$translator->trans('buttons.common.save').'</button>';
+$bottomBar[] = '<button type="submit" class="button-bc">' . $translator->trans('buttons.common.save') . '</button>';
 $topBar = $bottomBar;
-array_unshift($topBar, '<div id="search-table">'.$translator->trans('Global.loading-data').'</div>');
+array_unshift($topBar, '<div id="search-table">' . $translator->trans('Global.loading-data') . '</div>');
 ?>
 
-<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
+	<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
-<form class="edit-all" method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-all-countries">
+<?php if (!$this->countries) : ?>
+	<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $topBar, 'dark' => true)); ?>
+	<h3 class="empty-table"><?php echo $translator->trans('route.country.edit-all.empty-table') ?></h3>
+<?php else : ?>
+	<form class="edit-all" method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-all-countries">
 
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true)); ?>
+		<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $topBar, 'dark' => true)); ?>
 
-    <table class="text dtable" id="all-countries">
-        <thead>
-            <tr>
-                <th data-name="name" data-sort="forminput"><?php echo $translator->trans('route.country.edit-all.table-header.display-name')?></th>
-                <th data-name="country" data-sort="forminput"><?php echo $translator->trans('route.country.edit-all.table-header.country')?></th>
-                <th data-name="audience" data-sort="fuzzy-numeric"><?php echo $translator->trans('route.country.edit-all.table-header.audience-size')?></th>
-                <th data-name="population" data-sort="fuzzy-numeric"><?php echo $translator->trans('route.country.edit-all.table-header.country-population')?></th>
-                <th data-name="penetration" data-sort="fuzzy-numeric"><?php echo $translator->trans('route.country.edit-all.table-header.internet-penetration')?></th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php /** @var $country Model_Country */ ?>
-        <?php foreach ($this->countries as $country) : ?>
-            <tr>
-                <td>
-                    <input name="<?php echo $country->id; ?>_display_name" value="<?php echo htmlspecialchars($country->display_name); ?>" class="textInput"
-                           type="text" id="<?php echo $country->id; ?>_display_name">
-                </td>
-                <td>
-                    <select name="<?php echo $country->id; ?>_country" id="<?php echo $country->id; ?>_country" class="selectInput">
-                        <option value="">--Select--</option>
-                        <?php foreach ($this->countryCodes as $code => $name) : ?>
-                            <option value="<?php echo $code; ?>" <?php if ($country->country == $code) echo 'selected'; ?>><?php echo $name; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </td>
-                <td>
-                    <input name="<?php echo $country->id; ?>_audience" value="<?php echo htmlspecialchars($country->audience); ?>" class="textInput"
-                           type="text" id="<?php echo $country->id; ?>_audience">
-                </td>
-                <td>
-                    <input name="<?php echo $country->id; ?>_population" value="<?php echo htmlspecialchars($country->population); ?>" class="textInput"
-                           type="text" id="<?php echo $country->id; ?>_population">
-                </td>
-                <td>
-                    <input name="<?php echo $country->id; ?>_penetration" value="<?php echo htmlspecialchars($country->penetration); ?>" class="textInput"
-                           type="text" id="<?php echo $country->id; ?>_penetration">
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
+		<table class="text dtable" id="all-countries">
+			<thead>
+			<tr>
+				<th data-name="name"
+					data-sort="forminput"><?php echo $translator->trans('route.country.edit-all.table-header.display-name') ?></th>
+				<th data-name="country"
+					data-sort="forminput"><?php echo $translator->trans('route.country.edit-all.table-header.country') ?></th>
+				<th data-name="audience"
+					data-sort="fuzzy-numeric"><?php echo $translator->trans('route.country.edit-all.table-header.audience-size') ?></th>
+				<th data-name="population"
+					data-sort="fuzzy-numeric"><?php echo $translator->trans('route.country.edit-all.table-header.country-population') ?></th>
+				<th data-name="penetration"
+					data-sort="fuzzy-numeric"><?php echo $translator->trans('route.country.edit-all.table-header.internet-penetration') ?></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php /** @var $country Model_Country */ ?>
+			<?php foreach ($this->countries as $country) : ?>
+				<tr>
+					<td>
+						<input name="<?php echo $country->id; ?>_display_name"
+							   value="<?php echo htmlspecialchars($country->display_name); ?>" class="textInput"
+							   type="text" id="<?php echo $country->id; ?>_display_name">
+					</td>
+					<td>
+						<select name="<?php echo $country->id; ?>_country" id="<?php echo $country->id; ?>_country"
+								class="selectInput">
+							<option value="">--Select--</option>
+							<?php foreach ($this->countryCodes as $code => $name) : ?>
+								<option
+									value="<?php echo $code; ?>" <?php if ($country->country == $code) echo 'selected'; ?>><?php echo $name; ?></option>
+							<?php endforeach; ?>
+						</select>
+					</td>
+					<td>
+						<input name="<?php echo $country->id; ?>_audience"
+							   value="<?php echo htmlspecialchars($country->audience); ?>" class="textInput"
+							   type="text" id="<?php echo $country->id; ?>_audience">
+					</td>
+					<td>
+						<input name="<?php echo $country->id; ?>_population"
+							   value="<?php echo htmlspecialchars($country->population); ?>" class="textInput"
+							   type="text" id="<?php echo $country->id; ?>_population">
+					</td>
+					<td>
+						<input name="<?php echo $country->id; ?>_penetration"
+							   value="<?php echo htmlspecialchars($country->penetration); ?>" class="textInput"
+							   type="text" id="<?php echo $country->id; ?>_penetration">
+					</td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
 
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$bottomBar, 'dark'=>true)); ?>
+		<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $bottomBar, 'dark' => true)); ?>
 
-</form>
+	</form>
 
+<?php endif; ?>

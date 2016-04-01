@@ -21,7 +21,7 @@ if ($this->regions) {
 
 <?php if (!$this->regions) : ?>
 	<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $topBar, 'dark' => true)); ?>
-	<h3 class="empty-table"><?php echo $translator->trans('route.region.index.empty-table')?></h3>
+	<h3 class="empty-table"><?php echo $translator->trans('route.region.edit-all.empty-table')?></h3>
 <?php else : ?>
 	<form class="edit-all" method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-all-regions">
 
@@ -30,7 +30,7 @@ if ($this->regions) {
 		<table class="text dtable" id="all-regions">
 			<thead>
 			<tr>
-				<th data-name="name">Display name</th>
+				<th data-name="name"><?php echo $translator->trans('route.region.edit-all.table-header.display-name'); ?></th>
 			</tr>
 			</thead>
 			<tbody>
