@@ -69,9 +69,9 @@ if ($sizeDiff > 0) {
 	<div class="small-24 large-12 xlarge-16 columns">
 
         <dl class="tabs" data-tab id="model-tabs">
-            <dd class="active"><a href="#chart"><?php echo $translator->trans('Global.charts'); ?></a></dd>
-            <dd><a href="#info"><?php echo $translator->trans('Global.info'); ?></a></dd>
-            <dd><a href="#statuses"><?php echo $translator->trans('Global.statuses'); ?></a></dd>
+            <dd class="active"><a href="#chart"><?php echo $translator->trans('Global.tabs.charts.label'); ?></a></dd>
+            <dd><a href="#info"><?php echo $translator->trans('Global.tabs.info.label'); ?></a></dd>
+            <dd><a href="#statuses"><?php echo $translator->trans('Global.tabs.statuses.label'); ?></a></dd>
         </dl>
         <div class="tabs-content" id="model-tabs-content">
             <div class="content active" id="chart">
@@ -87,7 +87,7 @@ if ($sizeDiff > 0) {
                     <div id="new-chart-values"></div>
                 </div>
                 <div class="hide-for-medium-up">
-                    <p><?php echo $translator->trans('Global.charts-unavailable'); ?></p>
+                    <p><?php echo $translator->trans('Global.tabs.charts.unavailable'); ?></p>
                 </div>
             </div>
             <div class="content" id="info">
@@ -123,7 +123,7 @@ if ($sizeDiff > 0) {
                         <table id="audience-rates">
                             <tbody>
                             <tr>
-                                <th><?php echo $translator->trans('Global.target-date'); ?></th>
+                                <th><?php echo $translator->trans('route.presence.view.info.target-date'); ?></th>
                                 <?php foreach ($requiredRates as $rate) : ?>
                                 <td class="<?php echo $rate['type']; ?>">by <?php echo $rate['date']; ?></td>
                                 <?php endforeach; ?>

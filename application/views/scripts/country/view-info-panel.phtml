@@ -19,7 +19,7 @@ $region = $country->getRegion();
 	</p>
 <?php endif; ?>
 
-<p><?php echo $translator->trans('route.country.view.info-panel.available-audience-size', ['%size%' => number_format($country->getTargetAudience())]); ?></p>
+<p><?php echo $translator->trans('route.country.view.info-panel.audience-size', ['%size%' => number_format($country->getTargetAudience())]); ?></p>
 <p><?php echo $translator->trans('route.country.view.info-panel.country-population', ['%population%' => number_format($country->population)]); ?></p>
 <p><?php echo $translator->trans('route.country.view.info-panel.digital-population', ['%population%' => number_format(round($country->getDigitalPopulation())), '%percent%' => $country->penetration])?></p>
 

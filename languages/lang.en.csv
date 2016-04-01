@@ -1,10 +1,6 @@
 "Global.score";"Score"
 "Global.loading-data";"Loading data..."
-"Global.display-name";"Display name"
-"Global.available-audience-size";"Available Audience Size"
-"Global.target-date";"Target date"
 "Global.content";"Content"
-"Global.charts-unavailable";"Sorry, charts are not available on your device"
 "Global.click-to-expand";"Click to expand"
 "Global.audience-size";"Audience Size"
 "Global.region";"Region"
@@ -15,11 +11,8 @@
 "Global.groups";"SBUs"
 "Global.presence";"Presence"
 "Global.presences";"Presences"
-"Global.statuses";"Statuses"
 "Global.select";"Select"
-"Global.charts";"Charts"
 "Global.chart";"Chart"
-"Global.info";"Info"
 "Global.date-range";"Date range"
 "Global.sort";"Sort"
 "Global.date";"Date"
@@ -27,6 +20,15 @@
 "Global.population";"Population"
 "Global.no";"No"
 "Global.yes";"Yes"
+
+
+
+"Global.tabs.info.label";"Info"
+
+"Global.tabs.charts.label";"Charts"
+"Global.tabs.charts.unavailable";"Sorry, charts are not available on your device"
+
+"Global.tabs.statuses.label";"Statuses"
 
 
 
@@ -112,6 +114,8 @@
 "route.region.new.page-title";"New Region"
 
 "route.region.view.page-title";"Region: %region%"
+"route.region.view.info.countries.header";"Countries: %count%"
+"route.region.view.info.presences.header";"Presences: %count%"
 
 "route.region.edit.page-title";"Edit Region"
 "route.region.edit.message.success";"Region saved"
@@ -140,7 +144,7 @@
 
 "route.country.view.page-title";"Country: %country%"
 "route.country.view.info-panel.containing-region";"Part of the %region% region"
-"route.country.view.info-panel.available-audience-size";"Available Audience Size: %size%"
+"route.country.view.info-panel.audience-size";"Available Audience Size: %size%"
 "route.country.view.info-panel.country-population";"Country Population: %population%"
 "route.country.view.info-panel.digital-population";"Digital Population: %population% (%percent%%)"
 
@@ -150,7 +154,7 @@
 "route.country.edit.message.country-missing";"Please select a country"
 "route.country.edit.label.country";"Country"
 "route.country.edit.label.display-name";"Display name"
-"route.country.edit.label.available-audience-size";"Available Audience Size"
+"route.country.edit.label.audience-size";"Available Audience Size"
 "route.country.edit.label.country-population";"Country Population"
 "route.country.edit.label.internet-penetration";"Internet Penetration (%)"
 
@@ -160,7 +164,7 @@
 "route.country.edit-all.message.country-missing";"Please select a country for %country%"
 "route.country.edit-all.table-header.country";"Country"
 "route.country.edit-all.table-header.display-name";"Display name"
-"route.country.edit-all.table-header.available-audience-size";"Audience Size"
+"route.country.edit-all.table-header.audience-size";"Audience Size"
 "route.country.edit-all.table-header.country-population";"Population"
 "route.country.edit-all.table-header.internet-penetration";"Internet Penetration"
 
@@ -174,7 +178,7 @@
 "route.country.report.page-title";"Social Media Monitor Report"
 "route.country.report.label.additional-info";"Additional Info"
 "route.country.report.label.containing-region";"Part of the %region% region"
-"route.country.report.label.available-audience-size";"Available Audience Size"
+"route.country.report.label.audience-size";"Available Audience Size"
 "route.country.report.label.country-population";"Country Population"
 "route.country.report.label.digital-population";"Digital Population"
 "route.country.report.label.presence-count";"Presences: %count%"
@@ -200,10 +204,14 @@
 "route.group.edit.page-title";"Edit SBU"
 "route.group.edit.message.success";"SBU saved"
 "route.group.edit.message.display-name-missing";"Please enter a display name"
+"route.group.edit.label.display-name";"Display name"
+"route.group.edit.label.audience-size";"Available Audience Size"
 
 "route.group.edit-all.page-title";"Edit All SBUs"
 "route.group.edit-all.message.display-name-missing";"Please enter a display name for %group%"
 "route.group.edit-all.message.success";"%count% SBUs saved"
+"route.group.edit-all.table-header.display-name";"Display name"
+"route.group.edit-all.table-header.audience-size";"Audience Size"
 
 "route.group.delete.message.success";"SBU deleted"
 
@@ -237,6 +245,7 @@
 "route.presence.view.info.current-audience";"The target audience size is %size%"
 "route.presence.view.info.time-to-target";"At the current rate, the target will be reached by %date%"
 "route.presence.view.info.daily-gains";"The following daily gains are required to meet the target audience size:"
+"route.presence.view.info.target-date";"Target date"
 "route.presence.view.info.gain-per-day";"Required gain per day"
 
 "route.presence.compare.page-title";"Comparing %count% presences"
