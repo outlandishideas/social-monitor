@@ -6,17 +6,13 @@
 "Global.display-name";"Display name"
 "Global.delete";"Delete"
 "Global.download-csv";"Download CSV"
-"Global.penetration";"penetration"
-"Global.country-population";"Country Population"
 "Global.available-audience-size";"Available Audience Size"
 "Global.download-report";"Download Report"
-"Global.containing-region";"Part of the %region% region"
 "Global.target-date";"Target date"
 "Global.content";"Content"
 "Global.charts-unavailable";"Sorry, charts are not available on your device"
 "Global.click-to-expand";"Click to expand"
 "Global.audience-size";"Audience Size"
-"Global.digital-population";"Digital Population"
 "Global.region";"Region"
 "Global.regions";"Regions"
 "Global.country";"Country"
@@ -143,6 +139,10 @@
 "route.country.new.page-title";"New Country"
 
 "route.country.view.page-title";"Country: %country%"
+"route.country.view.info-panel.containing-region";"Part of the %region% region"
+"route.country.view.info-panel.available-audience-size";"Available Audience Size: %size%"
+"route.country.view.info-panel.country-population";"Country Population: %population%"
+"route.country.view.info-panel.digital-population";"Digital Population: %population% (%percent%%)"
 
 "route.country.edit.page-title";"Edit Country"
 "route.country.edit.message.success";"Country saved"
@@ -173,6 +173,11 @@
 
 "route.country.report.page-title";"Social Media Monitor Report"
 "route.country.report.label.additional-info";"Additional Info"
+"route.country.report.label.containing-region";"Part of the %region% region"
+"route.country.report.label.available-audience-size";"Available Audience Size"
+"route.country.report.label.country-population";"Country Population"
+"route.country.report.label.digital-population";"Digital Population"
+"route.country.report.label.presence-count";"Presences: %count%"
 
 
 

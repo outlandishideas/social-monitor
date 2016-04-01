@@ -16,17 +16,17 @@ $region = $country->getRegion();
     <div class="small-12 columns">
         <section class="border-section info-section">
             <h2><?php echo $translator->trans('route.country.report.label.additional-info'); ?></h2>
-            <p><?php echo $translator->trans('Global.containing-region', ['%region%' => $region->display_name]); ?></p>
-            <p><?php echo $translator->trans('Global.available-audience-size')?>: <?php $country->getTargetAudience(); ?></p>
-            <p><?php echo $translator->trans('Global.country-population')?>: <?php echo number_format($country->population); ?></p>
-            <p><?php echo $translator->trans('Global.digital-population')?>:
+            <p><?php echo $translator->trans('route.country.report.label.containing-region', ['%region%' => $region->display_name]); ?></p>
+            <p><?php echo $translator->trans('route.country.report.label.available-audience-size')?>: <?php $country->getTargetAudience(); ?></p>
+            <p><?php echo $translator->trans('route.country.report.label.country-population')?>: <?php echo number_format($country->population); ?></p>
+            <p><?php echo $translator->trans('route.country.report.label.digital-population')?>:
 				<?php echo number_format(round($country->getDigitalPopulation())) . ' (' . $country->penetration . '% penetration)'; ?>
 			</p>
         </section>
     </div>
     <div class="small-12 columns">
         <section class="border-section info-section">
-            <h2><?php echo $translator->trans('Global.presences')?>: <?php echo $presenceCount; ?></h2>
+            <h2><?php echo $translator->trans('route.country.report.label.presence-count', ['%count%' => $presenceCount])?></h2>
             <p><?php echo implode(", ", $presences) ?>.</p>
         </section>
     </div>

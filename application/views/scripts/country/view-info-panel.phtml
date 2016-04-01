@@ -15,13 +15,13 @@ $region = $country->getRegion();
 
 <?php if ($region) : ?>
     <p>
-		<?php echo $translator->trans('Global.containing-region', ['%region%' => '<a href="' . $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)) . '">'.$region->display_name.'</a>']); ?>
+		<?php echo $translator->trans('route.country.view.info-panel.containing-region', ['%region%' => '<a href="' . $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)) . '">'.$region->display_name.'</a>']); ?>
 	</p>
 <?php endif; ?>
 
-<p><?php echo $translator->trans('Global.available-audience-size')?>: <?php echo number_format($country->getTargetAudience()); ?></p>
-<p><?php echo $translator->trans('Global.country-population')?>: <?php echo number_format($country->population); ?></p>
-<p><?php echo $translator->trans('Global.digital-population')?>: <?php echo number_format(round($country->getDigitalPopulation())) . ' (' . $country->penetration . '% ' . $translator->trans('Global.penetration') . ')'; ?></p>
+<p><?php echo $translator->trans('route.country.view.info-panel.available-audience-size', ['%size%' => number_format($country->getTargetAudience())]); ?></p>
+<p><?php echo $translator->trans('route.country.view.info-panel.country-population', ['%population%' => number_format($country->population)]); ?></p>
+<p><?php echo $translator->trans('route.country.view.info-panel.digital-population', ['%population%' => number_format(round($country->getDigitalPopulation())), '%percent%' => $country->penetration])?></p>
 
 <h4>Presences: <?php echo count($presences); ?></h4>
 <?php if ($presences) : ?>
