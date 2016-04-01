@@ -11,7 +11,7 @@
 <div class="row">
     <div class="small-12 columns">
         <section class="border-section info-section">
-            <h2><?php echo $this->translate()->trans('Global.presences')?>: <?php echo $presenceCount; ?></h2>
+            <h2><?php echo $this->translate()->trans('route.group.report.presence.header', ['%count%' => $presenceCount]); ?></h2>
             <p><?php echo implode(", ", $presences) ?>.</p>
         </section>
     </div>

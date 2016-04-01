@@ -87,6 +87,8 @@
 "buttons.common.save";"Save"
 "buttons.common.cancel";"Cancel"
 "buttons.common.add-new";"Add New"
+"buttons.common.manage-presences";"Presences"
+"buttons.common.manage-countries";"Countries"
 
 "buttons.region.edit";"Edit Region"
 "buttons.region.delete";"Delete Region"
@@ -207,6 +209,7 @@
 "route.group.new.page-title";"New SBU"
 
 "route.group.view.page-title";"SBU: %group%"
+"route.group.view.info-panel.presences";"Presences: %count%"
 
 "route.group.edit.page-title";"Edit SBU"
 "route.group.edit.message.success";"SBU saved"
@@ -228,6 +231,7 @@
 "route.group.manage.message.success";"SBU presences updated"
 
 "route.group.report.page-title";"Social Media Monitor Report"
+"route.group.report.presence.header";"Presences: %count%"
 
 
 
@@ -354,7 +358,15 @@
 
 
 "route.statuses.index.page-title";"Statuses"
-"route.statuses.index.label.social-media";"Social Media"
+"route.statuses.index.filter.social-media";"Social Media"
+"route.statuses.index.filter.countries";"Countries"
+"route.statuses.index.filter.regions";"Regions"
+"route.statuses.index.filter.groups";"SBUs"
+"route.statuses.index.sort-by";"Sort"
+"route.statuses.index.sort-by.date";"Date"
+"route.statuses.index.you-are-viewing";"You are viewing:"
+"route.statuses.index.table-header.content";"Content"
+
 
 
 

@@ -21,7 +21,7 @@ class Options extends Header {
     {
 		$editStr = $this->translator->trans("buttons.common.edit");
 		$deleteStr = $this->translator->trans("buttons.common.delete");
-		$presencesStr = $this->translator->trans("Global.presences");
+		$presencesStr = $this->translator->trans("buttons.common.manage-presences");
 
 		if ($model instanceof \Model_Presence) {
             $options = array(
@@ -41,7 +41,7 @@ class Options extends Header {
 				$deleteStr => array('controller'=>'group', 'action'=>'delete', 'id'=>$model->id)
             );
         } else if ($model instanceof \Model_Region) {
-			$countriesStr = $this->translator->trans("Global.countries");
+			$countriesStr = $this->translator->trans("buttons.common.manage-countries");
 			$options = array(
 				$editStr => array('controller'=>'region', 'action'=>'edit', 'id'=>$model->id),
 				$countriesStr => array('controller'=>'region', 'action'=>'manage', 'id'=>$model->id),

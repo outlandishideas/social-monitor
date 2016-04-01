@@ -1,19 +1,20 @@
+<?php
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
+$buttons = array('<div id="search-table">' . $translator->trans('Global.loading-data') . '</div>');
+
+?>
 <div class="content" id="statuses">
     <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
     <div class="statusesDisplay all">
-        <?php
-        $buttons = array('<div id="search-table">Loading data...</div>');
-
-        echo $this->partial('partials/button-bar.phtml', array('buttons' => $buttons, 'dark' => true));
-
-        ?>
+        <?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $buttons, 'dark' => true)); ?>
 
         <div class="filters" style="display:none;"> <!-- show when data is returned -->
             <div class="date-filter-container">
-                <?php
-                echo $this->partial('partials/daterange.phtml', array('dateRangeString' => $this->dateRangeString));
-                echo '<label>You are viewing:</label>'; ?>
+                <?php echo $this->partial('partials/daterange.phtml', array('dateRangeString' => $this->dateRangeString)); ?>
+                <label><?php echo $translator->trans('route.statuses.index.you-are-viewing'); ?></label>
             </div>
             <?php
             foreach ($this->queryOptions as $option) {
@@ -34,7 +35,7 @@
             <table>
                 <thead>
                 <tr>
-                    <th class="message">Content</th>
+                    <th class="message"><?php echo $translator->trans('route.statuses.index.table-header.content'); ?></th>
                 </tr>
                 </thead>
                 <tbody>
