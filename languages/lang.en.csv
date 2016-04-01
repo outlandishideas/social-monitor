@@ -1,6 +1,5 @@
 "Global.score";"Score"
 "Global.loading-data";"Loading data..."
-"Global.content";"Content"
 "Global.click-to-expand";"Click to expand"
 "Global.audience-size";"Audience Size"
 "Global.region";"Region"
@@ -12,8 +11,6 @@
 "Global.presence";"Presence"
 "Global.presences";"Presences"
 "Global.select";"Select"
-"Global.chart";"Chart"
-"Global.date-range";"Date range"
 "Global.sort";"Sort"
 "Global.date";"Date"
 "Global.time";"Time"
@@ -23,10 +20,13 @@
 
 
 
+
 "Global.tabs.info.label";"Info"
 
 "Global.tabs.charts.label";"Charts"
 "Global.tabs.charts.unavailable";"Sorry, charts are not available on your device"
+"Global.tabs.charts.chart.label";"Chart"
+"Global.tabs.charts.date-range.label";"Date range"
 
 "Global.tabs.statuses.label";"Statuses"
 
@@ -69,6 +69,7 @@
 
 "route.index.index.page-title";"Social Media Monitor"
 "route.index.index.find-country";"Find country"
+"route.index.index.date-range";"Date range"
 "route.index.index.pdf-download-description";"These scores are derived from the organisation's social media metrics.<br />You can download a copy of the PDF that explains them here:"
 "route.index.index.pdf-download-link";"Download metrics"
 "route.index.index.pdf-download-link-title";"Download metrics PDF"
@@ -133,6 +134,9 @@
 "route.region.manage.message.success";"Region countries updated"
 
 "route.region.report.page-title";"Social Media Monitor Report"
+"route.region.report.countries.header";"Countries: %count%"
+"route.region.report.presences.header";"Presences: %count%"
+
 
 
 
@@ -182,6 +186,9 @@
 "route.country.report.label.country-population";"Country Population"
 "route.country.report.label.digital-population";"Digital Population"
 "route.country.report.label.presence-count";"Presences: %count%"
+
+"route.country.stats-panel.header.score";"Score"
+"route.country.stats-panel.header.presences";"Presences"
 
 
 
@@ -247,6 +254,7 @@
 "route.presence.view.info.daily-gains";"The following daily gains are required to meet the target audience size:"
 "route.presence.view.info.target-date";"Target date"
 "route.presence.view.info.gain-per-day";"Required gain per day"
+"route.presence.view.statuses.table-header.content";"Content"
 
 "route.presence.compare.page-title";"Comparing %count% presences"
 "route.presence.compare.presence-handle";"Handle"
@@ -276,6 +284,7 @@
 "route.presence.edit.access-token.button";"Use your access token"
 
 "route.presence.report.page-title";"Social Media Monitor Report"
+"route.presence.report.presence.header";"Presence: %presence%"
 
 
 
@@ -731,6 +740,9 @@
 "Error.lock-error.without-url";"Please log in to clear the lock."
 "Error.access-token.refresh";"One or more of your access tokens are set to expire soon. <a href="%url%">Click here</a> to refresh these tokens."
 
+
+
+"report.label.date-range";"Date range"
 
 
 "country.AF";"Afghanistan"

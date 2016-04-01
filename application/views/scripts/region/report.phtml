@@ -18,13 +18,13 @@ $presenceCount = count($presences);
 <div class="row">
     <div class="small-12 columns">
         <section class="border-section info-section">
-            <h2><?php echo $translator->trans('Global.countries')?>: <?php echo $countriesCount; ?></h2>
+            <h2><?php echo $translator->trans('route.region.report.countries.header', ['%count%' => $countriesCount]); ?></h2>
             <p><?php echo implode(", ", $countries) ?>.</p>
         </section>
     </div>
     <div class="small-12 columns">
         <section class="border-section info-section">
-            <h2><?php echo $translator->trans('Global.presences')?>: <?php echo $presenceCount; ?></h2>
+            <h2><?php echo $translator->trans('route.region.report.presences.header', ['%count%' => $presenceCount]); ?></h2>
             <p><?php echo implode(", ", $presences) ?>.</p>
         </section>
     </div>

@@ -1,6 +1,9 @@
 <?php
 use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
 /** @var Model_Country $country */
 $country = $this->country;
 /** @var Model_Presence[] $presences */
@@ -9,40 +12,29 @@ $countryLink = $this->gatekeeper()->filter('<a href="%url%">' . $country->displa
 if (!$countryLink) {
     $countryLink = $country->display_name;
 }
-$presenceGroups = array();
-foreach (PresenceType::getAll() as $type) {
-    $typePresences = $country->getPresencesByType($type);
-    $presenceGroups[] = array(
-        'type' => $type,
-        'presences' => $typePresences
-    );
-}
 ?>
 
 <div class="badge-small" data-country-id="<?php echo $country->id; ?>" data-badge>
     <h3><?php echo $countryLink; ?></h3>
     <div class="badge-score bd-btm">
-        <h4><span data-badge-title></span> <?php echo $this->translate()->trans('Global.score')?></h4>
+        <h4><span data-badge-title></span> <?php echo $translator->trans('route.country.stats-panel.header.score')?></h4>
         <div class="score-value" data-badge-score></div>
         <div class="score-bar">
             <div data-badge-bar></div>
         </div>
     </div>
     <div class="bd-btm">
-        <h4><?php echo $this->translate()->trans('Global.presences')?></h4>
+        <h4><?php echo $translator->trans('route.country.stats-panel.header.presences')?></h4>
         <div class="score-value"><?php echo count($presences); ?></div>
     </div>
 
-    <?php foreach ($presenceGroups as $group) : ?>
-        <?php if($group['presences'] && count($group['presences'])): ?>
-            <div class="bd-btm presence-list">
-            <h4><?php
-                /** @var PresenceType $type */
-                $type = $group['type']; echo $type->getTitle();
-                ?>
-            </h4>
+    <?php foreach (PresenceType::getAll() as $type) : ?>
+		<?php $presences = $country->getPresencesByType($type); ?>
+        <?php if($presences && count($presences)): ?>
+		<div class="bd-btm presence-list">
+            <h4><?php echo $type->getTitle(); ?></h4>
             <ul class="badge-presences">
-                <?php foreach ($group['presences'] as $presence): ?>
+                <?php foreach ($presences as $presence): ?>
                     <li>
                         <?php echo $this->partial('partials/presence-summary.phtml', array('presence'=>$presence)); ?>
                     </li>
