@@ -2,7 +2,7 @@
 
 namespace Outlandish\SocialMonitor\Command;
 
-use PDO;
+use Outlandish\SocialMonitor\Database\Database;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -41,8 +41,8 @@ class PopulatePopulationFromCurrentCommand extends ContainerAwareCommand
         $end = date_create_from_format('Y-m-d', $input->getArgument('end-date'));
         $current = clone $start;
 
-        /** @var PDO $db */
-        $db = $this->getContainer()->get('pdo');
+        /** @var Database $db */
+        $db = $this->getContainer()->get('db');
         $sql = "INSERT INTO
                 presence_history (`presence_id`, `datetime`, `type`, `value`)
                 VALUES(:id, :datetime, :type, :value)

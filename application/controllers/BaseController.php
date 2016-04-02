@@ -1,5 +1,6 @@
 <?php
 
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Helper\Gatekeeper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -378,7 +379,7 @@ class BaseController extends Zend_Controller_Action
     }
 
     /**
-     * @return Zend_Db_Adapter_Pdo_Abstract
+     * @return Database
      */
     public static function db()
     {

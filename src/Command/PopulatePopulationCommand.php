@@ -40,8 +40,7 @@ class PopulatePopulationCommand extends ContainerAwareCommand
         $previousDate = clone $date;
         $previousDate->modify("-1 day");
 
-        /** @var \PDO $db */
-        $db = \Zend_Registry::get('db')->getConnection();
+        $db = $this->getContainer()->get('db');
 
         $sql = "
                 SELECT

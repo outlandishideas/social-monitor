@@ -1,29 +1,30 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 30/04/2015
- * Time: 13:57
- */
 
 namespace Outlandish\SocialMonitor\Engagement\Query;
 
 use DateTime;
-use PDO;
+use Outlandish\SocialMonitor\Database\Database;
 
 abstract class Query {
 
-    /** @var PDO */
+	const PRESENCES_TABLE = 'presences';
+	const POPULARITY = 'popularity';
+	const CREATED_COLUMN = 'created_time';
+	const PRESENCE_STREAM_TABLE = 'presence_history';
+	const STATUS_TABLE = '';
+
+    /** @var Database */
     protected $db;
     protected $engagementWeighting = array();
     protected $activeUserProportion = array();
-    const PRESENCES_TABLE = 'presences';
-    const POPULARITY = 'popularity';
-    const CREATED_COLUMN = 'created_time';
-    const PRESENCE_STREAM_TABLE = 'presence_history';
-    const STATUS_TABLE = '';
 
-    /**
+	public function __construct(Database $db)
+	{
+		$this->db = $db;
+	}
+
+
+	/**
      * @param DateTime $now
      * @param DateTime $then
      *
@@ -74,7 +75,7 @@ abstract class Query {
             ':then' => $then->format('Y-m-d')
         ]);
 
-        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $data = $statement->fetchAll(\PDO::FETCH_ASSOC);
         // create key => value array, scaling by the active user proportion
         foreach ($data as &$d) {
             $scale = $this->activeUserProportion[$d['size']] ? $this->activeUserProportion[$d['size']] : 1;

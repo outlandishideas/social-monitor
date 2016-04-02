@@ -1,5 +1,7 @@
 <?php
 
+use Outlandish\SocialMonitor\Database\Database;
+
 class Chart_Compare extends Chart_Abstract {
 
     const NAME = "compare";
@@ -7,7 +9,7 @@ class Chart_Compare extends Chart_Abstract {
     protected $dataColumns;
     protected $xColumn;
 
-    public function __construct(PDO $db, $translator, $name = null)
+    public function __construct(Database $db, $translator, $name = null)
     {
         parent::__construct($db, $translator, $name ?: self::NAME);
 

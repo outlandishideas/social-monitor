@@ -1,6 +1,6 @@
 <?php
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Models\Status;
-use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 require_once(__DIR__ . '/../../lib/sina_weibo/sinaweibo.php');
@@ -11,7 +11,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 
 	protected $connection = null;
 
-	public function __construct(PDO $db, PresenceType $type) {
+	public function __construct(Database $db, PresenceType $type) {
 		parent::__construct($db, null, $type, 'sina_weibo_posts');
 		$this->connection = new SaeTClientV2('1247980630', 'cfcd7c7170b70420d7e1c00628d639c2', '2.00cBChiFql593B4e223582cb04rzB6');
 		if (!array_key_exists('REMOTE_ADDR', $_SERVER)) {
@@ -26,7 +26,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 	{
 		$stmt = $this->db->prepare("SELECT MAX(`remote_id`) AS `since_id` FROM `{$this->tableName}` WHERE `presence_id` = ".$presence->getId());
 		$stmt->execute();
-		$data = $stmt->fetch(PDO::FETCH_ASSOC);
+		$data = $stmt->fetch(\PDO::FETCH_ASSOC);
 		$since_id = $data['since_id'];
 		$popularity = null;
 		$page = 0;
@@ -85,7 +85,7 @@ class Provider_SinaWeibo extends Provider_Abstract
                 )
             ");
             $stmt->execute($postIds);
-            $r = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $r = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($r as $retweet) {
                 $retweets[$retweet['remote_id']] = $retweet;
             }
@@ -141,7 +141,7 @@ class Provider_SinaWeibo extends Provider_Abstract
 			':start'	=> $start->format('Y-m-d H:i:s'),
 			':end'	=> $end->format('Y-m-d H:i:s')
 		));
-		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$ret = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
 		return count($ret) ? $ret : null;
 	}

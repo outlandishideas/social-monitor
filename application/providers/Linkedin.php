@@ -1,6 +1,7 @@
 <?php
 
 use Outlandish\SocialMonitor\Adapter\LinkedinAdapter;
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\Models\LinkedinStatus;
@@ -11,7 +12,7 @@ class Provider_Linkedin extends Provider_Abstract
 {
 	protected $connection = null;
 
-    public function __construct(PDO $db, LinkedinAdapter $adapter, PresenceType $type) {
+    public function __construct(Database $db, LinkedinAdapter $adapter, PresenceType $type) {
 		parent::__construct($db, $adapter, $type, 'linkedin_stream');
     }
 
@@ -78,7 +79,7 @@ class Provider_Linkedin extends Provider_Abstract
 			':start'	=> $start->format('Y-m-d H:i:s'),
 			':end'	=> $end->format('Y-m-d H:i:s')
 		));
-		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
 	public function update(Model_Presence $presence)

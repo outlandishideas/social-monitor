@@ -1,20 +1,22 @@
 <?php
 
+use Outlandish\SocialMonitor\Database\Database;
+use Symfony\Component\Translation\Translator;
+
 abstract class Chart_Abstract {
 
+	/** @var Database */
+    protected $db;
     protected $xLabel;
     protected $yLabel;
 	protected $name;
 	protected $title;
 	protected $description;
-	/** @var \Symfony\Component\Translation\Translator */
+	/** @var Translator */
 	protected $translate;
 
-    protected function __construct(PDO $db, $translator, $name)
+    protected function __construct(Database $db, $translator, $name)
     {
-        if (is_null($db)) {
-            $db = Zend_Registry::get('db')->getConnection();
-        }
         $this->name = $name;
         $this->db = $db;
 		$this->translate = $translator;

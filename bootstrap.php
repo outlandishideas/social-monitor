@@ -66,10 +66,6 @@ $config = new Zend_Config_Yaml(
 );
 Zend_Registry::set('config', $config);
 
-$db = Zend_Db::factory($config->db);
-Zend_Db_Table::setDefaultAdapter($db);
-Zend_Registry::set('db', $db);
-
 
 
 // initialise Symfony
@@ -101,4 +97,5 @@ Zend_Registry::set('symfony_translate', $container->get('translation.translator'
 
 
 //set db for PresenceFactory
-Model_PresenceFactory::setDatabase($db->getConnection());
+Model_PresenceFactory::setDatabase($container->get('db'));
+Zend_Registry::set('db', $container->get('db'));

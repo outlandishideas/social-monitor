@@ -1,16 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: outlander
- * Date: 29/04/2015
- * Time: 14:33
- */
 
 namespace Outlandish\SocialMonitor\Command;
 
-use Outlandish\SocialMonitor\Engagement\EngagementMetric;
-use PDO;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -42,9 +33,8 @@ class PopulateEngagementCommand extends ContainerAwareCommand
         $end = date_create_from_format('Y-m-d', $input->getArgument('end-date'));
         $startStr = $start->format('Y-m-d');
         $endStr = $end->format('Y-m-d');
-        /** @var PDO $pdo */
-        $pdo = $this->getContainer()->get('pdo');
-        $deleteStmt = $pdo->prepare(
+        $db = $this->getContainer()->get('db');
+        $deleteStmt = $db->prepare(
             "DELETE FROM presence_history
                      WHERE DATE(datetime)>'$startStr'
                      AND DATE(datetime)<'$endStr'
@@ -65,7 +55,7 @@ class PopulateEngagementCommand extends ContainerAwareCommand
                 $current->modify('+1 day');
             } while ($current <= $end);
             $values = implode(",",$values);
-            $insertStmt = $pdo->prepare(
+            $insertStmt = $db->prepare(
                 "INSERT INTO presence_history (presence_id,datetime,type,value) VALUES
                       $values"
             );

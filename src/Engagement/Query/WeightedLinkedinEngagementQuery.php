@@ -3,7 +3,7 @@
 namespace Outlandish\SocialMonitor\Engagement\Query;
 
 use BaseController;
-use PDO;
+use Outlandish\SocialMonitor\Database\Database;
 
 class WeightedLinkedinEngagementQuery extends Query
 {
@@ -11,9 +11,9 @@ class WeightedLinkedinEngagementQuery extends Query
 
     protected $engagementWeighting = ['likes'=>1,'comments'=>4];
 
-    public function __construct(PDO $db)
+    public function __construct(Database $db)
     {
-        $this->db = $db;
+		parent::__construct($db);
         $this->activeUserProportion = array();
         $this->activeUserProportion[0] = BaseController::getOption('in_active_user_percentage_small') / 100;
         $this->activeUserProportion[1] = BaseController::getOption('in_active_user_percentage_medium') / 100;

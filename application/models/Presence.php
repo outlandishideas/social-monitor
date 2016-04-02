@@ -1,6 +1,7 @@
 <?php
 
 use Outlandish\SocialMonitor\Cache\KpiCacheEntry;
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\AccessToken;
 use Outlandish\SocialMonitor\Models\PresenceMetadata;
@@ -66,13 +67,13 @@ class Model_Presence
     /**
      * Creates a new presence
      * Provider and metrics are passed in so that they can be mocked out for testing
-     * @param PDO $db
+     * @param Database $db
      * @param array $internals
      * @param Provider_Abstract $provider
      * @param array $metrics
      * @throws InvalidArgumentException
      */
-    public function __construct(PDO $db, array $internals, Provider_Abstract $provider, array $metrics = array())
+    public function __construct(Database $db, array $internals, Provider_Abstract $provider, array $metrics = array())
     {
         $this->db = $db;
         $this->provider = $provider;
@@ -466,7 +467,7 @@ class Model_Presence
 				':end' => $cacheEntry->endString
 			);
 			$selectStmt->execute($args);
-			$cachedValues = $selectStmt->fetchAll(PDO::FETCH_KEY_PAIR);
+			$cachedValues = $selectStmt->fetchAll(\PDO::FETCH_KEY_PAIR);
 		}
 
 		foreach($this->getMetrics() as $metric) {
@@ -582,7 +583,7 @@ class Model_Presence
         );
         $stmt = $this->db->prepare("SELECT * FROM `badge_history` WHERE `presence_id` = :id AND `date` = :date AND `daterange` = :range");
         $stmt->execute($args);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         if ($results) {
             return $results[0];
         }

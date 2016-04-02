@@ -3,6 +3,7 @@
 namespace Outlandish\SocialMonitor\Command;
 
 use DateTime;
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,8 +40,8 @@ class UpdateFacebookEngagementCommand extends ContainerAwareCommand
 
         /** @var EngagementMetric $engagementMetric */
         $engagementMetric = $this->getContainer()->get('facebook_engagement.weighted');
-        /** @var \PDO $db */
-        $db = $this->getContainer()->get('pdo');
+        /** @var Database $db */
+        $db = $this->getContainer()->get('db');
 
         //update presence history data
         $sqlHistory = "UPDATE `presence_history`

@@ -2,9 +2,8 @@
 
 namespace Outlandish\SocialMonitor\Engagement\Query;
 
-
 use BaseController;
-use PDO;
+use Outlandish\SocialMonitor\Database\Database;
 
 class WeightedSinaWeiboEngagementQuery extends Query
 {
@@ -13,9 +12,9 @@ class WeightedSinaWeiboEngagementQuery extends Query
 
     protected $engagementWeighting = ['attitude_count'=>1,'comment_count'=>4,'repost_count'=>7];
 
-    public function __construct(PDO $db)
+    public function __construct(Database $db)
     {
-        $this->db = $db;
+		parent::__construct($db);
         $this->activeUserProportion = array();
         $this->activeUserProportion[0] = BaseController::getOption('sw_active_user_percentage_small') / 100;
         $this->activeUserProportion[1] = BaseController::getOption('sw_active_user_percentage_medium') / 100;

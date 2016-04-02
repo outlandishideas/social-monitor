@@ -1,5 +1,6 @@
 <?php
 
+use Outlandish\SocialMonitor\Database\Database;
 use Symfony\Component\Translation\Translator;
 
 abstract class Badge_Abstract
@@ -13,16 +14,13 @@ abstract class Badge_Abstract
 	protected $metricsWeighting = array();
 
 	/**
+	 * @param Database $db
 	 * @param Translator $translator
 	 * @param $name
-	 * @param PDO|null $db
 	 * @param array $metrics
 	 */
-    public function __construct($translator, $name, PDO $db = null, $metrics = array())
+    public function __construct($db, $translator, $name, $metrics = array())
 	{
-		if (is_null($db)) {
-			$db = Zend_Registry::get('db')->getConnection();
-		}
 		$this->db = $db;
 
 		// populate $title and $description from translation files

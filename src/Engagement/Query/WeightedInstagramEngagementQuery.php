@@ -2,17 +2,16 @@
 
 namespace Outlandish\SocialMonitor\Engagement\Query;
 
-
 use BaseController;
-use PDO;
+use Outlandish\SocialMonitor\Database\Database;
 
 class WeightedInstagramEngagementQuery extends Query
 {
     const STATUS_TABLE = 'instagram_stream';
 
-    public function __construct(PDO $db)
+    public function __construct(Database $db)
     {
-        $this->db = $db;
+		parent::__construct($db);
         $this->activeUserProportion = array();
         $this->activeUserProportion[0] = BaseController::getOption('ig_active_user_percentage_small') / 100;
         $this->activeUserProportion[1] = BaseController::getOption('ig_active_user_percentage_medium') / 100;

@@ -1,5 +1,6 @@
 <?php
 
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 abstract class Model_PresenceFactory
@@ -7,7 +8,7 @@ abstract class Model_PresenceFactory
     const TABLE_PRESENCES = 'presences';
     const TABLE_CAMPAIGN_PRESENCES = 'campaign_presences';
 
-    /** @var PDO */
+    /** @var Database */
 	protected static $db;
 
 	protected static $defaultQueryOptions = array(
@@ -114,7 +115,7 @@ abstract class Model_PresenceFactory
         return $presence;
 	}
 
-	public static function setDatabase(PDO $db)
+	public static function setDatabase(Database $db)
 	{
 		static::$db = $db;
 	}
@@ -127,15 +128,21 @@ abstract class Model_PresenceFactory
     protected static function fetchPresences($sql, $args = array()) {
         $stmt = self::$db->prepare($sql);
         $stmt->execute($args);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!$results) {
             return array();
         }
 
-        $presences = array_map('self::instantiatePresence', $results);
+        $presences = array();
+		foreach ($results as $internals) {
+			$presence = self::instantiatePresence($internals);
+			if ($presence) {
+				$presences[] = $presence;
+			}
+		}
 
-        return array_filter($presences);
+        return $presences;
     }
 
 	protected static function instantiatePresence($internals)

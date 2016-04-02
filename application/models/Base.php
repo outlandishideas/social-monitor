@@ -1,5 +1,7 @@
 <?php
 
+use Outlandish\SocialMonitor\Database\Database;
+
 abstract class Model_Base
 {
 	protected static $tableColumns = array();
@@ -9,12 +11,12 @@ abstract class Model_Base
 
 
 	/**
-	 * @var PDO
+	 * @var Database
 	 */
 	protected static $db;
 
 	/**
-	 * @var PDO
+	 * @var Database
 	 */
 	protected $_db;
 
@@ -23,7 +25,7 @@ abstract class Model_Base
 	public function __construct($data = null, $fromDb = false)
 	{
 		if(empty(self::$db)){
-			$this->_db = Zend_Registry::get('db')->getConnection();
+			$this->_db = Zend_Registry::get('db');
 		} else {
 			$this->_db = self::$db;
 		}
@@ -40,7 +42,7 @@ abstract class Model_Base
 		if (empty(self::$tableColumns)) {
 			$statement = $this->_db->prepare('SELECT table_name, column_name FROM information_schema.columns WHERE table_schema=database()');
 			$statement->execute();
-			foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
+			foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $row) {
 				if (!isset(Model_Base::$tableColumns[$row['table_name']])){
 					Model_Base::$tableColumns[$row['table_name']] = array();
 				}
@@ -208,7 +210,7 @@ abstract class Model_Base
 		$statement = $this->_db->prepare($sql);
 		$statement->execute($args);
 
-		$stmt = $statement->fetchAll(PDO::FETCH_ASSOC);
+		$stmt = $statement->fetchAll(\PDO::FETCH_ASSOC);
 		return intval($stmt[0]['count']);
 	}
 
@@ -234,7 +236,7 @@ abstract class Model_Base
 		$statement = $this->_db->prepare($sql);
 		$statement->execute($args);
 
-		return $this->objectify($statement->fetchAll(PDO::FETCH_ASSOC));
+		return $this->objectify($statement->fetchAll(\PDO::FETCH_ASSOC));
 	}
 
 	/**
@@ -326,7 +328,7 @@ abstract class Model_Base
 		return $date->format('d M | H:i');
 	}
 
-	public static function setDb(PDO $db)
+	public static function setDb(Database $db)
 	{
 		self::$db = $db;
 	}

@@ -1,31 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 30/04/2015
- * Time: 13:57
- */
 
 namespace Outlandish\SocialMonitor\Engagement\Query;
 
-
 use DateTime;
-use PDO;
 
 class StandardFacebookEngagementQuery extends Query
 {
     const POPULARITY = 'popularity';
     const FACEBOOK_STREAM_TABLE = 'facebook_stream';
     const PRESENCE_STREAM_TABLE = 'presence_history';
-    /**
-     * @var
-     */
-    private $db;
-
-    public function __construct(PDO $db)
-    {
-        $this->db = $db;
-    }
 
     /**
      * @param DateTime $now
@@ -83,7 +66,7 @@ class StandardFacebookEngagementQuery extends Query
             ':now' => $now->format('Y-m-d'),
             ':then' => $then->format('Y-m-d')
         ]);
-        return $statement->fetchAll(PDO::FETCH_KEY_PAIR);
+        return $statement->fetchAll(\PDO::FETCH_KEY_PAIR);
     }
 
 }

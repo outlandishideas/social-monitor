@@ -8,7 +8,7 @@ namespace Outlandish\SocialMonitor\Query;
 class PresencePopularityHistoryDataQuery extends HistoryDataQuery
 {
 
-    public function get(\Datetime $startDate, \DateTime $endDate)
+    public function get(\DateTime $startDate, \DateTime $endDate)
     {
         $sql = "SELECT
                   presence_id,

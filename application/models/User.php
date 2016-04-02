@@ -34,7 +34,7 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 			$db = BaseController::db();
 			$statement = $db->prepare('SELECT permission FROM user_permissions WHERE user_level = ?');
 			$statement->execute(array($userLevel));
-			self::$permissions[$userLevel] = $statement->fetchAll(PDO::FETCH_COLUMN);
+			self::$permissions[$userLevel] = $statement->fetchAll(\PDO::FETCH_COLUMN);
 		}
 		return self::$permissions[$userLevel];
 	}
@@ -128,7 +128,7 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 		if (!isset($this->entities)) {
 			$stmt = $this->_db->prepare('SELECT * FROM user_access WHERE user_id = :id ORDER BY entity_type ASC, id ASC');
 			$stmt->execute(array(':id'=>$this->id));
-			$entities = $stmt->fetchAll(PDO::FETCH_OBJ);
+			$entities = $stmt->fetchAll(\PDO::FETCH_OBJ);
 			foreach ($entities as $i=>$e) {
 				$entity = null;
 				$e->controller = $e->entity_type;
@@ -194,7 +194,7 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 		$result = $stmt->execute(array(':user_id'=>$this->id, ':presence_type' => $type->getValue()));
 
 		if ($result) {
-			list($token, $expires) = $stmt->fetch(PDO::FETCH_NUM);
+			list($token, $expires) = $stmt->fetch(\PDO::FETCH_NUM);
 			return new AccessToken($token, $expires);
 		} else {
 			return null;

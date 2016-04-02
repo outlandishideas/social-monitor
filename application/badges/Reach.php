@@ -4,9 +4,9 @@ class Badge_Reach extends Badge_Abstract
 {
 	const NAME = 'reach';
 
-	public function __construct(PDO $db, $translator, $metrics)
+	public function __construct($db, $translator, $metrics)
 	{
-		parent::__construct($translator, self::NAME, $db, $metrics);
+		parent::__construct($db, $translator, self::NAME, $metrics);
 	}
 
 }

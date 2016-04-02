@@ -1,29 +1,22 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 07/05/2015
- * Time: 17:00
- */
 
 namespace Outlandish\SocialMonitor\Query;
-
 
 use Badge_Abstract;
 use Badge_Factory;
 use Badge_Total;
 use DateTime;
-use PDO;
+use Outlandish\SocialMonitor\Database\Database;
 
 class BadgeRankDataQuery
 {
     /**
-     * @var PDO
+     * @var Database
      */
     private $db;
     private $cache = [];
 
-    public function __construct(PDO $db)
+    public function __construct(Database $db)
     {
         $this->db = $db;
         $this->badges = Badge_Factory::getBadges();

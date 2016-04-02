@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 30/04/2015
- * Time: 13:57
- */
 
 namespace Outlandish\SocialMonitor\Engagement\Query;
 
 
 use BaseController;
 use DateTime;
-use PDO;
+use Outlandish\SocialMonitor\Database\Database;
 
 class WeightedYoutubeEngagementQuery extends Query
 {
@@ -21,9 +15,9 @@ class WeightedYoutubeEngagementQuery extends Query
     const PRESENCE_TABLE = 'presences';
     private $typeWeightMap = ['views' => 0, 'likes' => 1,'dislikes' => 1,'comments' => 4,'subscriptions'=>50];
 
-    public function __construct(PDO $db)
+    public function __construct(Database $db)
     {
-        $this->db = $db;
+		parent::__construct($db);
         $this->activeUserProportion = array();
         $this->activeUserProportion[0] = BaseController::getOption('yt_active_user_percentage_small') / 100;
         $this->activeUserProportion[1] = BaseController::getOption('yt_active_user_percentage_medium') / 100;
@@ -75,7 +69,7 @@ class WeightedYoutubeEngagementQuery extends Query
         $presenceIdQuery = "SELECT id,size FROM $presenceTable WHERE type='youtube'";
         $statement = $this->db->prepare($presenceIdQuery);
         $statement->execute();
-        $presenceSizes = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
+        $presenceSizes = $statement->fetchAll(\PDO::FETCH_KEY_PAIR);
 
         foreach($presenceSizes as $presenceId=>$size) {
 
@@ -98,13 +92,13 @@ class WeightedYoutubeEngagementQuery extends Query
             $statement->execute([
                 ':now' => $nowStr
             ]);
-            $presencePopularity = $statement->fetchAll(PDO::FETCH_COLUMN);
+            $presencePopularity = $statement->fetchAll(\PDO::FETCH_COLUMN);
             $presencePopularity = array_key_exists(0,$presencePopularity) ? $presencePopularity[0] : 0;
 
             $statement->execute([
                 ':now' => $thenStr
             ]);
-            $prevPopularity = $statement->fetchAll(PDO::FETCH_COLUMN);
+            $prevPopularity = $statement->fetchAll(\PDO::FETCH_COLUMN);
             $prevPopularity = array_key_exists(0,$prevPopularity) ? $prevPopularity[0] : $presencePopularity;
 
             $presenceData['popularity'] = intval($presencePopularity,10);
@@ -136,14 +130,14 @@ class WeightedYoutubeEngagementQuery extends Query
                 ':date' => $nowStr
             ]);
 
-            $videoEndValues = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
+            $videoEndValues = $statement->fetchAll(\PDO::FETCH_KEY_PAIR);
 
             $statement = $this->db->prepare($videoHistoryQuery);
             $statement->execute([
                 ':date' => $thenStr
             ]);
 
-            $videoStartValues = $statement->fetchAll(PDO::FETCH_KEY_PAIR);
+            $videoStartValues = $statement->fetchAll(\PDO::FETCH_KEY_PAIR);
 
             // in this loop we calculate the change in each type of engagement and save in $presenceEngagementMap
             foreach(array_keys($this->typeWeightMap) as $type) {

@@ -73,7 +73,7 @@ class Model_Region extends Model_Campaign {
                         )
                 ');
                 $statement->execute(array(':cid'=>$this->id));
-                $this->presenceIds = $statement->fetchAll(PDO::FETCH_COLUMN);
+                $this->presenceIds = $statement->fetchAll(\PDO::FETCH_COLUMN);
             }
         }
         return $this->presenceIds;

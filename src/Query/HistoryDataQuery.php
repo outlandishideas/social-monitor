@@ -2,21 +2,21 @@
 
 namespace Outlandish\SocialMonitor\Query;
 
-use PDO;
+use Outlandish\SocialMonitor\Database\Database;
 
 abstract class HistoryDataQuery
 {
     /**
-     * @var PDO
+     * @var Database
      */
     protected $db;
 
     /**
-     * @param \PDO $db
+     * @param Database $db
      */
-    public function __construct(\PDO $db) {
+    public function __construct(Database $db) {
         $this->db = $db;
     }
 
-    abstract function get(\Datetime $startDate, \DateTime $endDate);
+    abstract function get(\DateTime $startDate, \DateTime $endDate);
 }

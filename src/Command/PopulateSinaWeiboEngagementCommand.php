@@ -2,8 +2,8 @@
 
 namespace Outlandish\SocialMonitor\Command;
 
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Engagement\EngagementMetric;
-use PDO;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -44,8 +44,8 @@ class PopulateSinaWeiboEngagementCommand extends ContainerAwareCommand
         /** @var EngagementMetric $metric */
         $metric = $this->getContainer()->get('sina_weibo.engagement.weighted');
 
-        /** @var PDO $db */
-        $db = $this->getContainer()->get('pdo');
+        /** @var Database $db */
+        $db = $this->getContainer()->get('db');
         $sql = "INSERT INTO
                 presence_history (`presence_id`, `datetime`, `type`, `value`)
                 VALUES(:id, :datetime, :type, :value)

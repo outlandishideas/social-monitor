@@ -1,6 +1,7 @@
 <?php
 
 use Outlandish\SocialMonitor\Adapter\TwitterAdapter;
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\Tweet;
@@ -14,7 +15,7 @@ class Provider_Twitter extends Provider_Abstract
 
     const KLOUT_API_ENDPOINT = 'http://api.klout.com/v2/';
 
-    public function __construct(PDO $db, TwitterAdapter $adapter, PresenceType $type)
+    public function __construct(Database $db, TwitterAdapter $adapter, PresenceType $type)
     {
         parent::__construct($db, $adapter, $type, 'twitter_tweets');
         $this->engagementStatement = '(retweet_count)';
@@ -160,7 +161,7 @@ class Provider_Twitter extends Provider_Abstract
             ':start' => $start->format('Y-m-d H:i:s'),
             ':end' => $end->format('Y-m-d H:i:s')
         ));
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
 
@@ -269,7 +270,7 @@ class Provider_Twitter extends Provider_Abstract
             INNER JOIN {$this->tableName} AS r ON t.tweet_id = r.in_reply_to_status_uid
             WHERE " . implode(' AND ', $clauses) . "");
         $stmt->execute($args);
-        foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
+        foreach ($stmt->fetchAll(\PDO::FETCH_OBJ) as $r) {
             $key = $r->id;
             if (!array_key_exists($key, $responseData)) {
                 $responseData[$key] = (object)array('diff' => null, 'created' => null);

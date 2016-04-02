@@ -37,7 +37,6 @@ class StatusesController extends GraphingController
      */
     public function indexAction()
     {
-        Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
         $presences = Model_PresenceFactory::getPresences();
 
 		$engagementBadge = $this->getContainer()->get('badge.engagement');

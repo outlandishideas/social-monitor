@@ -1,6 +1,7 @@
 <?php
 
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
@@ -15,7 +16,7 @@ class Provider_Youtube extends Provider_Abstract
     private $commentTableName;
     public static $historyTableName = 'youtube_video_history';
 
-    public function __construct(PDO $db, YoutubeAdapter $adapter, PresenceType $type)
+    public function __construct(Database $db, YoutubeAdapter $adapter, PresenceType $type)
     {
         parent::__construct($db, $adapter, $type, 'youtube_video_stream');
         $this->commentTableName = 'youtube_comment_stream';
@@ -109,7 +110,7 @@ class Provider_Youtube extends Provider_Abstract
     {
         $query = $this->db->prepare("SELECT * FROM `youtube_video_stream` WHERE `presence_id`=" . $presence->getId());
         $query->execute();
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        $result = $query->fetchAll(\PDO::FETCH_ASSOC);
 
         $insertStmt = $this->db->prepare("
         	INSERT INTO `youtube_video_history`
@@ -168,7 +169,7 @@ class Provider_Youtube extends Provider_Abstract
             ':start' => $start->format('Y-m-d H:i:s'),
             ':end' => $end->format('Y-m-d H:i:s')
         ));
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function update(Model_Presence $presence)
@@ -284,7 +285,7 @@ class Provider_Youtube extends Provider_Abstract
                 AND b.in_response_to = a.post_id
             WHERE b.id IS NULL");
         $stmt->execute($args);
-        $postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $postIds = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
         return $postIds;
     }
@@ -395,9 +396,9 @@ class Provider_Youtube extends Provider_Abstract
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($args);
-        $ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $ret = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $objects = $this->parseStatuses($ret);
-        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
+        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(\PDO::FETCH_COLUMN);
 
         return (object)array(
             'stream' => count($objects) ? $objects : null,
@@ -426,7 +427,7 @@ class Provider_Youtube extends Provider_Abstract
             return [];
         }
 
-        $videoIds = $statement->fetchAll(PDO::FETCH_COLUMN);
+        $videoIds = $statement->fetchAll(\PDO::FETCH_COLUMN);
 
         $arguments = [
             ':start_date' => $start->format("Y-m-d"),
@@ -444,7 +445,7 @@ class Provider_Youtube extends Provider_Abstract
         $statement = $this->db->prepare($sql);
         $result = $statement->execute($arguments);
         if ($result) {
-            $data = $statement->fetchAll(PDO::FETCH_OBJ);
+            $data = $statement->fetchAll(\PDO::FETCH_OBJ);
         } else {
             $data = [];
         }

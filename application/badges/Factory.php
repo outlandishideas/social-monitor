@@ -1,5 +1,6 @@
 <?php
 
+use Outlandish\SocialMonitor\Database\Database;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class Badge_Factory
@@ -8,7 +9,7 @@ abstract class Badge_Factory
 	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
 	protected static $container = null;
 
-    /** @var PDO */
+    /** @var \Outlandish\SocialMonitor\Database\Database */
 	protected static $db = null;
 
 	public static function setContainer($container)
@@ -291,18 +292,18 @@ abstract class Badge_Factory
 		return $data;
 	}
 
-	public static function setDB(PDO $db)
+	public static function setDB(Database $db)
 	{
 		self::$db = $db;
 	}
 
     /**
-     * @return PDO
+     * @return Database
      */
     protected static function getDb()
 	{
 		if (is_null(self::$db)) {
-			self::$db = $db = Zend_Registry::get('db')->getConnection();
+			self::$db = Zend_Registry::get('db');
 		}
 		return self::$db;
 	}

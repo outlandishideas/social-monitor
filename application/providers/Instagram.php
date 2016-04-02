@@ -2,6 +2,7 @@
 
 
 use Outlandish\SocialMonitor\Adapter\InstagramAdapter;
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\InstagramStatus;
 use Outlandish\SocialMonitor\Models\Status;
@@ -11,7 +12,7 @@ class Provider_Instagram extends Provider_Abstract
 {
 	protected $connection = null;
 
-    public function __construct(PDO $db, InstagramAdapter $adapter, PresenceType $type) {
+    public function __construct(Database $db, InstagramAdapter $adapter, PresenceType $type) {
 		parent::__construct($db, $adapter, $type, 'instagram_stream');
     }
 
@@ -117,7 +118,7 @@ class Provider_Instagram extends Provider_Abstract
 			':start'	=> $start->format('Y-m-d H:i:s'),
 			':end'	=> $end->format('Y-m-d H:i:s')
 		));
-		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
 	public function update(Model_Presence $presence)
@@ -176,7 +177,7 @@ class Provider_Instagram extends Provider_Abstract
             INNER JOIN {$this->tableName} AS r ON t.post_id = r.in_response_to
             WHERE " . implode(' AND ', $clauses) ."");
         $stmt->execute($args);
-        foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
+        foreach ($stmt->fetchAll(\PDO::FETCH_OBJ) as $r) {
             $key = $r->id;
             if(!array_key_exists($key, $responseData)) {
                 $responseData[$key] = (object)array('diff' => null, 'created' => null);
@@ -232,7 +233,7 @@ class Provider_Instagram extends Provider_Abstract
                 AND b.in_response_to = a.post_id
             WHERE b.id IS NULL");
         $stmt->execute($args);
-        $postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $postIds = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
         return $postIds;
     }

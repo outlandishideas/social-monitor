@@ -6,9 +6,9 @@ use Badge_Factory;
 use Enum_Period;
 use Model_Country;
 use Model_Group;
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Query\TotalPopularityHistoryDataQuery;
 use Outlandish\SocialMonitor\TableIndex\TableIndex;
-use PDO;
 
 class ObjectCacheManager
 {
@@ -21,12 +21,12 @@ class ObjectCacheManager
     /** @var TableIndex */
     protected $regionsTable;
 
-    /** @var PDO */
+    /** @var Database */
     protected $db;
 
     protected $popularityQuery;
 
-    function __construct(PDO $db, TotalPopularityHistoryDataQuery $querier)
+    function __construct(Database $db, TotalPopularityHistoryDataQuery $querier)
     {
         $this->db = $db;
         $this->popularityQuery = $querier;
@@ -343,7 +343,7 @@ class ObjectCacheManager
         $sql = 'SELECT * FROM object_cache WHERE `key` = :key ORDER BY last_modified DESC LIMIT 1';
         $statement = $this->db->prepare($sql);
         $statement->execute(array(':key' => $key));
-        $result = $statement->fetch(PDO::FETCH_OBJ);
+        $result = $statement->fetch(\PDO::FETCH_OBJ);
         if ($result) {
             if ((time() - strtotime($result->last_modified)) < $expires && ( $allowTemp || $result->temporary == 0)) {
                 return json_decode(gzuncompress( $result->value));

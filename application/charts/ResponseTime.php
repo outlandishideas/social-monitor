@@ -1,10 +1,12 @@
 <?php
 
+use Outlandish\SocialMonitor\Database\Database;
+
 class Chart_ResponseTime extends Chart_Abstract {
 
     const NAME = "response-time";
 
-	public function __construct(PDO $db, $translator)
+	public function __construct(Database $db, $translator)
 	{
 		parent::__construct($db, $translator, self::NAME);
 	}

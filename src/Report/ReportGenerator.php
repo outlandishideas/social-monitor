@@ -19,7 +19,7 @@ class ReportGenerator {
         $end = $this->ensureEnd($end);
         $start = $this->ensureStart($start, $end);
 
-        return new Report(new BadgeRankDataQuery(\Zend_Registry::get('db')->getConnection()), $reportable, $start, $end);
+        return new Report(new BadgeRankDataQuery(\Zend_Registry::get('db')), $reportable, $start, $end);
     }
 
     /**

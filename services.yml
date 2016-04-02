@@ -17,8 +17,8 @@ parameters:
     table.presences.headers: []
 
 services:
-    pdo:
-        class: PDO
+    db:
+        class: Outlandish\SocialMonitor\Database\Database
         arguments:
             dsn: "mysql:host=%db.host%;dbname=%db.name%"
             user: %db.username%
@@ -76,27 +76,27 @@ services:
     ###################################
     provider.twitter:
         class: Provider_Twitter
-        arguments: [@pdo, @adapter.twitter, @presence-type.twitter]
+        arguments: [@db, @adapter.twitter, @presence-type.twitter]
 
     provider.facebook:
         class: Provider_Facebook
-        arguments: [@pdo, @adapter.facebook, @facebook_engagement.weighted, @presence-type.facebook]
+        arguments: [@db, @adapter.facebook, @facebook_engagement.weighted, @presence-type.facebook]
 
     provider.instagram:
         class: Provider_Instagram
-        arguments: [@pdo, @adapter.instagram, @presence-type.instagram]
+        arguments: [@db, @adapter.instagram, @presence-type.instagram]
 
     provider.youtube:
         class: Provider_Youtube
-        arguments: [@pdo, @adapter.youtube, @presence-type.youtube]
+        arguments: [@db, @adapter.youtube, @presence-type.youtube]
 
     provider.linkedin:
         class: Provider_Linkedin
-        arguments: [@pdo, @adapter.linkedin, @presence-type.linkedin]
+        arguments: [@db, @adapter.linkedin, @presence-type.linkedin]
 
     provider.sinaweibo:
         class: Provider_SinaWeibo
-        arguments: [@pdo, @presence-type.sina-weibo]
+        arguments: [@db, @presence-type.sina-weibo]
 
     ###################################
     # instagram engagement services
@@ -107,7 +107,7 @@ services:
 
     instagram.query.weighted:
         class:     Outlandish\SocialMonitor\Engagement\Query\WeightedInstagramEngagementQuery
-        arguments: [@pdo]
+        arguments: [@db]
 
 
     ###################################
@@ -141,7 +141,7 @@ services:
     ###################################
     sina_weibo.engagement.query.weighted:
         class: Outlandish\SocialMonitor\Engagement\Query\WeightedSinaWeiboEngagementQuery
-        arguments: [@pdo]
+        arguments: [@db]
 
     sina_weibo.engagement.weighted:
         class:     Outlandish\SocialMonitor\Engagement\EngagementMetric
@@ -152,11 +152,11 @@ services:
     ###################################
     facebook_engagement.query.standard:
         class:     Outlandish\SocialMonitor\Engagement\Query\StandardFacebookEngagementQuery
-        arguments: [@pdo]
+        arguments: [@db]
 
     facebook_engagement.query.weighted:
         class:     Outlandish\SocialMonitor\Engagement\Query\WeightedFacebookEngagementQuery
-        arguments: [@pdo]
+        arguments: [@db]
 
     facebook_engagement.standard:
         class:     Outlandish\SocialMonitor\Engagement\EngagementMetric
@@ -317,11 +317,11 @@ services:
 
     history-query.total-population:
         class: Outlandish\SocialMonitor\Query\TotalPopularityHistoryDataQuery
-        arguments: [@pdo]
+        arguments: [@db]
 
     object-cache-manager:
         class: Outlandish\SocialMonitor\Cache\ObjectCacheManager
-        arguments: [@pdo, @history-query.total-population]
+        arguments: [@db, @history-query.total-population]
         calls:
             - [setPresencesTable, [@table.presence-index]]
             - [setCountriesTable, [@table.country-index]]
@@ -331,19 +331,19 @@ services:
     # engagement metric query classes
     engagement-query.facebook:
         class: Outlandish\SocialMonitor\Engagement\Query\WeightedFacebookEngagementQuery
-        arguments: [@pdo]
+        arguments: [@db]
     engagement-query.instagram:
         class: Outlandish\SocialMonitor\Engagement\Query\WeightedInstagramEngagementQuery
-        arguments: [@pdo]
+        arguments: [@db]
     engagement-query.linkedin:
         class: Outlandish\SocialMonitor\Engagement\Query\WeightedLinkedinEngagementQuery
-        arguments: [@pdo]
+        arguments: [@db]
     engagement-query.sina-weibo:
         class: Outlandish\SocialMonitor\Engagement\Query\WeightedSinaWeiboEngagementQuery
-        arguments: [@pdo]
+        arguments: [@db]
     engagement-query.youtube:
         class: Outlandish\SocialMonitor\Engagement\Query\WeightedYoutubeEngagementQuery
-        arguments: [@pdo]
+        arguments: [@db]
 
     # metrics
     metric.actions-per-day:
@@ -435,50 +435,50 @@ services:
     # badges
     badge.engagement:
         class: Badge_Engagement
-        arguments: [@pdo, @translation.translator, %badge.engagement.metrics%]
+        arguments: [@db, @translation.translator, %badge.engagement.metrics%]
 
     badge.quality:
         class: Badge_Quality
-        arguments: [@pdo, @translation.translator, %badge.quality.metrics%]
+        arguments: [@db, @translation.translator, %badge.quality.metrics%]
 
     badge.reach:
         class: Badge_Reach
-        arguments: [@pdo, @translation.translator, %badge.reach.metrics%]
+        arguments: [@db, @translation.translator, %badge.reach.metrics%]
 
     badge.total:
         class: Badge_Total
-        arguments: [@pdo, @translation.translator, %badge.total.badges%]
+        arguments: [@db, @translation.translator, %badge.total.badges%]
 
     # charts
     chart.compare:
         class: Chart_Compare
-        arguments: [@pdo, @translation.translator]
+        arguments: [@db, @translation.translator]
 
     chart.popularity:
         class: Chart_Popularity
-        arguments: [@pdo, @translation.translator]
+        arguments: [@db, @translation.translator]
 
     chart.popularity-trend:
         class: Chart_PopularityTrend
-        arguments: [@pdo, @translation.translator]
+        arguments: [@db, @translation.translator]
 
     chart.reach:
         class: Chart_Reach
-        arguments: [@pdo, @translation.translator]
+        arguments: [@db, @translation.translator]
 
     chart.engagement:
         class: Chart_Engagement
-        arguments: [@pdo, @translation.translator]
+        arguments: [@db, @translation.translator]
 
     chart.quality:
         class: Chart_Quality
-        arguments: [@pdo, @translation.translator]
+        arguments: [@db, @translation.translator]
 
     # note: this would ideally be actions-per-day, but for the time being needs to match the 'name' property of the class
     chart.actionsPerDay:
         class: Chart_ActionsPerDay
-        arguments: [@pdo, @translation.translator]
+        arguments: [@db, @translation.translator]
 
     chart.response-time:
         class: Chart_ResponseTime
-        arguments: [@pdo, @translation.translator]
+        arguments: [@db, @translation.translator]

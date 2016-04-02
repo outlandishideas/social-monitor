@@ -107,7 +107,7 @@ class Model_Campaign extends Model_Base {
 			} else {
 				$statement = $this->_db->prepare('SELECT presence_id FROM campaign_presences WHERE campaign_id = :cid');
 				$statement->execute(array(':cid'=>$this->id));
-				$this->presenceIds = $statement->fetchAll(PDO::FETCH_COLUMN);
+				$this->presenceIds = $statement->fetchAll(\PDO::FETCH_COLUMN);
 			}
 		}
 		return $this->presenceIds;

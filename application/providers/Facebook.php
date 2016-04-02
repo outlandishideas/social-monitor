@@ -1,6 +1,7 @@
 <?php
 
 use Outlandish\SocialMonitor\Adapter\FacebookAdapter;
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Engagement\EngagementScore;
 use Outlandish\SocialMonitor\Models\FacebookStatus;
 use Outlandish\SocialMonitor\Engagement\EngagementMetric;
@@ -12,7 +13,7 @@ class Provider_Facebook extends Provider_Abstract
 	protected $connection = null;
     private $engagementMetric;
 
-    public function __construct(PDO $db, FacebookAdapter $adapter, EngagementMetric $metric, PresenceType $type) {
+    public function __construct(Database $db, FacebookAdapter $adapter, EngagementMetric $metric, PresenceType $type) {
 		parent::__construct($db, $adapter, $type, 'facebook_stream');
         $this->engagementMetric = $metric;
         $this->engagementStatement = '(likes + comments * 4 + share_count * 7)';
@@ -244,7 +245,7 @@ class Provider_Facebook extends Provider_Abstract
             $idString = implode(',', $idString);
             $stmt = $this->db->prepare("SELECT * FROM facebook_stream WHERE presence_id = :pid AND in_response_to IN ($idString)");
             $stmt->execute(array(':pid'=>$presenceId));
-            foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $response) {
+            foreach ($stmt->fetchAll(\PDO::FETCH_OBJ) as $response) {
                 $key = $response->in_response_to;
                 if (!array_key_exists($key, $responses) || ($response->created_time < $responses[$key]->created_time)) {
                     $responses[$key] = $response;
@@ -266,7 +267,7 @@ class Provider_Facebook extends Provider_Abstract
             $actorIdsString = implode(',', array_unique($actorIds));
             $stmt = $this->db->prepare("SELECT * FROM facebook_actors WHERE id IN ( $actorIdsString )");
             $stmt->execute();
-            foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
+            foreach($stmt->fetchAll(\PDO::FETCH_OBJ) as $row) {
                 $actors[$row->id] = $row;
             }
             // create blanks for any missing ones
@@ -332,7 +333,7 @@ class Provider_Facebook extends Provider_Abstract
 			':start'	=> $start->format('Y-m-d H:i:s'),
 			':end'	=> $end->format('Y-m-d H:i:s')
 		));
-		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
 	public function update(Model_Presence $presence)
@@ -383,7 +384,7 @@ class Provider_Facebook extends Provider_Abstract
 
 		$stmt = $this->db->prepare($sql);
 		$stmt->execute($args);
-		return $stmt->fetchAll(PDO::FETCH_OBJ);
+		return $stmt->fetchAll(\PDO::FETCH_OBJ);
 	}
 
     public function updateMetadata(Model_Presence $presence) {
@@ -442,7 +443,7 @@ class Provider_Facebook extends Provider_Abstract
           WHERE {$clauseString};";
         $stmt = $this->db->prepare($sql);
         $stmt->execute($args);
-        foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $r) {
+        foreach ($stmt->fetchAll(\PDO::FETCH_OBJ) as $r) {
             $key = $r->id;
             if(!array_key_exists($key, $responseData)) {
                 $responseData[$key] = (object)array('diff' => null, 'created' => null);
@@ -494,7 +495,7 @@ class Provider_Facebook extends Provider_Abstract
         $stmt = $this->db->prepare($sql);
         $stmt->execute($args);
 
-        $postIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $postIds = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
         return $postIds;
     }

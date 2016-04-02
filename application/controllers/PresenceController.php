@@ -204,8 +204,6 @@ class PresenceController extends GraphingController
 	 */
 	public function editAction()
 	{
-        Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
-
 		if ($this->_request->getActionName() == 'edit') {
 			$presence = $this->getRequestedPresence();
 			$this->view->isNew = false;

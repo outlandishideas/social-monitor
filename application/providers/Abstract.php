@@ -1,6 +1,6 @@
 <?php
 
-use Outlandish\SocialMonitor\Engagement\EngagementScore;
+use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 abstract class Provider_Abstract
@@ -16,7 +16,7 @@ abstract class Provider_Abstract
 	/** @var Outlandish\SocialMonitor\Adapter\AbstractAdapter|Outlandish\SocialMonitor\Adapter\LinkedinAdapter|Outlandish\SocialMonitor\Adapter\YoutubeAdapter|Outlandish\SocialMonitor\Adapter\TwitterAdapter */
 	protected $adapter;
 
-	public function __construct(PDO $db, $adapter, $type, $tableName)
+	public function __construct(Database $db, $adapter, $type, $tableName)
 	{
 		$this->db = $db;
 		$this->adapter = $adapter;
@@ -114,9 +114,9 @@ abstract class Provider_Abstract
         if(!$success) {
             error_log('error fetching statuses:'.implode(',',$stmt->errorInfo()));
         }
-        $ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $ret = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $objects = $this->parseStatuses($ret);
-        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
+        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(\PDO::FETCH_COLUMN);
 
         $this->decorateStreamData($ret);
 
@@ -174,7 +174,7 @@ abstract class Provider_Abstract
             ORDER BY datetime DESC
         ");
 		$stmt->execute($args);
-		$ret = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$ret = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
 		return $ret;
 	}
@@ -322,7 +322,7 @@ abstract class Provider_Abstract
                     AND type = '{$type}'
                 ORDER BY is_bc DESC");
             $linksStmt->execute($statusIds);
-            foreach ($linksStmt->fetchAll(PDO::FETCH_ASSOC) as $link) {
+            foreach ($linksStmt->fetchAll(\PDO::FETCH_ASSOC) as $link) {
                 $statusId = $link['status_id'];
                 if (!isset($links[$statusId])) {
                     $links[$statusId] = array();

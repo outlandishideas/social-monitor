@@ -1,11 +1,4 @@
 prod:
-  db:
-    adapter: Pdo_Mysql
-    params:
-      host: 212.13.212.66
-      dbname: bcmonitor
-      username: a_bcmonitor
-      password:
   presence:
     cache_data_hours: 4
   twitter:
@@ -34,17 +27,9 @@ prod:
 
 stage:
   _extends: prod
-  db:
-    params:
-      dbname: staging
 
 devel:
   _extends: prod
 
 alpha:
   _extends: prod
-  db:
-    params:
-      host: 127.0.0.1
-      username: root
-      password:

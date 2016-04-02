@@ -4,7 +4,7 @@ namespace Outlandish\SocialMonitor\Query;
 
 class TotalPopularityHistoryDataQuery extends HistoryDataQuery {
 
-    public function get(\Datetime $startDate, \DateTime $endDate)
+    public function get(\DateTime $startDate, \DateTime $endDate)
     {
         // need to use MAX(value) as DB schema allows multiple entries per day
         $subTable = "SELECT
