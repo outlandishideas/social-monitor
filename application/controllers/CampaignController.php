@@ -1,6 +1,8 @@
 <?php
 
+use Outlandish\SocialMonitor\Cache\ObjectCacheManager;
 use Outlandish\SocialMonitor\PresenceType\PresenceType;
+use Outlandish\SocialMonitor\TableIndex\TableIndex;
 
 abstract class CampaignController extends GraphingController
 {
@@ -17,5 +19,18 @@ abstract class CampaignController extends GraphingController
         }
         return $presences;
     }
+
+	protected function invalidateTableCache()
+	{
+		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
+		$table = $this->getIndexTable($objectCacheManager);
+		$objectCacheManager->invalidateObjectCache($table->getIndexName());
+	}
+
+	/**
+	 * @param ObjectCacheManager $objectCacheManager
+	 * @return TableIndex
+	 */
+	abstract function getIndexTable($objectCacheManager);
 }
 

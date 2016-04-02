@@ -376,13 +376,13 @@ class FetchController extends BaseController
             $db->getConnection();
             $index++;
 			$message = "[{$index}/{$presenceCount}] [{$presence->getType()->getTitle()}] [{$presence->getId()}] [{$presence->getHandle()}] [{$presence->getName()}]";
-            $this->log($this->translator->trans('Fetch.log.fetch-statues.start', ['%message%' => $message]));
+            $this->log($this->translator->trans('route.fetch.log.fetch-statuses.start', ['%message%' => $message]));
             try {
                 $count = $presence->fetch();
                 $presence->save();
-                $this->log($this->translator->trans('Fetch.log.fetch-statues.success',['%count%' => $count]));
+                $this->log($this->translator->trans('route.fetch.log.fetch-statuses.success',['%count%' => $count]));
             } catch (Exception $e) {
-                $this->log($this->translator->trans('Fetch.log.fetch-statues.error', ['%message%' => $e->getMessage()]));
+                $this->log($this->translator->trans('route.fetch.log.fetch-statuses.error', ['%message%' => $e->getMessage()]));
             }
             $this->touchLock($lockName);
         }

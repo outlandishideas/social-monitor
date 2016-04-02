@@ -226,28 +226,6 @@ app.init = {
 			} );
 		},
 
-        '.button.compare': function ($button) {
-	        var updateComparison = function() {
-		        var $list = $('.compare.list');
-		        var $checked = $('input.compare-checkbox:checked');
-
-		        $list.empty().addClass('empty');
-		        $button.hide();
-
-		        var ids = [];
-		        $checked.each(function() {
-			        var id = $(this).val();
-			        ids.push(id);
-			        $button.show();
-			        $list.removeClass('empty');
-			        $list.append('<li data-id="'+ id +'">'+$(this).data("name")+'</li>')
-		        });
-		        $button.attr('href', $button.data('href') + '/id/' + ids.join(','));
-	        };
-	        updateComparison();
-	        $('input.compare-checkbox').on('change', updateComparison);
-        },
-
         '.accordion-btn': function ($item) {
 
             $item.on('click', function(event){

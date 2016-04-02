@@ -9,7 +9,20 @@ class RegionController extends CampaignController
 
     protected static $publicActions = array('report');
 
-    protected function chartOptions() {
+	/**
+	 * @param bool $validate
+	 * @return Model_Region
+	 */
+	protected function getRequestedRegion($validate = true)
+	{
+		$region = Model_Region::fetchById($this->_request->getParam('id'));
+		if ($validate) {
+			$this->validateData($region);
+		}
+		return $region;
+	}
+
+	protected function chartOptions() {
 		$container = $this->getContainer();
 		return array(
 			$container->get('chart.compare'),
@@ -56,9 +69,7 @@ class RegionController extends CampaignController
      */
     public function viewAction()
     {
-        /** @var Model_Region $region */
-        $region = Model_Region::fetchById($this->_request->getParam('id'));
-        $this->validateData($region);
+        $region = $this->getRequestedRegion();
 
 		$this->view->titleIcon = Model_Region::ICON_TYPE;
         $this->view->badgePartial = $this->badgeDetails($region);
@@ -70,9 +81,7 @@ class RegionController extends CampaignController
 
     public function downloadReportAction()
     {
-        /** @var Model_Region $region */
-        $region = Model_Region::fetchById($this->_request->getParam('id'));
-        $this->validateData($region);
+		$region = $this->getRequestedRegion();
 
         //if we don't have a now parameter create a DateTime now
         //else create a date from the now parameter
@@ -112,9 +121,7 @@ class RegionController extends CampaignController
 
     public function reportAction()
     {
-        /** @var Model_Region $region */
-        $region = Model_Region::fetchById($this->_request->getParam('id'));
-        $this->validateData($region);
+		$region = $this->getRequestedRegion();
 
         //if we don't have a now parameter create a DateTime now
         //else create a date from the now parameter
@@ -176,14 +183,12 @@ class RegionController extends CampaignController
     public function editAction()
     {
         if ($this->_request->getActionName() == 'edit') {
-            $editingRegion = Model_Region::fetchById($this->_request->getParam('id'));
+			$editingRegion = $this->getRequestedRegion();
             $this->view->isNew = false;
         } else {
             $editingRegion = new Model_Region();
             $this->view->isNew = true;
         }
-
-        $this->validateData($editingRegion);
 
         if ($this->_request->isPost()) {
             $editingRegion->fromArray($this->_request->getParams());
@@ -292,9 +297,7 @@ class RegionController extends CampaignController
 	 */
 	public function manageAction()
     {
-        /** @var Model_Region $region */
-        $region = Model_Region::fetchById($this->_request->getParam('id'));
-        $this->validateData($region);
+		$region = $this->getRequestedRegion();
 
         if ($this->_request->isPost()) {
             $countryIds = array();
@@ -320,8 +323,7 @@ class RegionController extends CampaignController
 	 */
 	public function deleteAction()
     {
-		$region = Model_Region::fetchById($this->_request->getParam('id'));
-		$this->validateData($region);
+		$region = $this->getRequestedRegion();
 
 		if ($this->_request->isPost()) {
 			$region->delete();
@@ -351,8 +353,7 @@ class RegionController extends CampaignController
 
         $this->validateChartRequest();
 
-        /** @var $region Model_Region */
-        $region = Model_Region::fetchById($this->_request->getParam('id'));
+		$region = $this->getRequestedRegion(false);
         if(!$region) {
             $this->apiError($this->translator->trans('route.region.graph-data.message.not-found'));
         }
@@ -367,10 +368,9 @@ class RegionController extends CampaignController
         $this->apiSuccess($chartObject->getChart($region, $start, $end));
     }
 
-	protected function invalidateTableCache()
+	function getIndexTable($objectCacheManager)
 	{
-		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
-		$table = $objectCacheManager->getRegionsTable();
-		$objectCacheManager->invalidateObjectCache($table->getIndexName());
+		return $objectCacheManager->getRegionsTable();
 	}
+
 }

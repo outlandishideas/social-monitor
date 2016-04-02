@@ -9,6 +9,19 @@ class GroupController extends CampaignController {
     protected static $publicActions = array('report');
 
 	/**
+	 * @param bool $validate
+	 * @return Model_Group
+	 */
+	protected function getRequestedGroup($validate = true)
+	{
+		$group = Model_Group::fetchById($this->_request->getParam('id'));
+		if ($validate) {
+			$this->validateData($group);
+		}
+		return $group;
+	}
+
+	/**
 	 * Lists all groups
 	 * @user-level user
 	 */
@@ -31,9 +44,7 @@ class GroupController extends CampaignController {
 	 */
 	public function viewAction()
 	{
-		/** @var Model_Group $group */
-		$group = Model_Group::fetchById($this->_request->getParam('id'));
-		$this->validateData($group);
+		$group = $this->getRequestedGroup();
 
 		$this->view->titleIcon = Model_Group::ICON_TYPE;
         $this->view->badgePartial = $this->badgeDetails($group);
@@ -46,9 +57,7 @@ class GroupController extends CampaignController {
 
     public function downloadReportAction()
     {
-        /** @var Model_Group $group */
-        $group = Model_Group::fetchById($this->_request->getParam('id'));
-        $this->validateData($group);
+		$group = $this->getRequestedGroup();
 
         //if we don't have a now parameter create a DateTime now
         //else create a date from the now parameter
@@ -88,9 +97,7 @@ class GroupController extends CampaignController {
 
     public function reportAction()
     {
-        /** @var Model_Group $group */
-        $group = Model_Group::fetchById($this->_request->getParam('id'));
-        $this->validateData($group);
+		$group = $this->getRequestedGroup();
 
         //if we don't have a now parameter create a DateTime now
         //else create a date from the now parameter
@@ -130,8 +137,7 @@ class GroupController extends CampaignController {
 
         $this->validateChartRequest();
 
-        /** @var $group Model_Presence */
-        $group = Model_Group::fetchById($this->_request->getParam('id'));
+		$group = $this->getRequestedGroup(false);
         if(!$group) {
 			$this->apiError($this->translator->trans('route.group.graph-data.message.not-found'));
         }
@@ -175,14 +181,12 @@ class GroupController extends CampaignController {
     public function editAction()
     {
         if ($this->_request->getActionName() == 'edit') {
-            $editingGroup = Model_Group::fetchById($this->_request->getParam('id'));
+			$editingGroup = $this->getRequestedGroup();
             $this->view->isNew = false;
         } else {
             $editingGroup = new Model_Group();
             $this->view->isNew = true;
         }
-
-        $this->validateData($editingGroup);
 
         if ($this->_request->isPost()) {
 //			$oldTimeZone = $editingGroup->timezone;
@@ -296,9 +300,7 @@ class GroupController extends CampaignController {
 	 * @user-level manager
 	 */
 	public function manageAction() {
-        /** @var Model_Group $group */
-        $group = Model_Group::fetchById($this->_request->getParam('id'));
-        $this->validateData($group);
+		$group = $this->getRequestedGroup();
 
         if ($this->_request->isPost()) {
             $presenceIds = array();
@@ -308,6 +310,9 @@ class GroupController extends CampaignController {
                 }
             }
             $group->assignPresences($presenceIds);
+
+			$this->invalidateTableCache();
+
             $this->flashMessage($this->translator->trans('route.group.manage.message.success'));
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
@@ -322,12 +327,13 @@ class GroupController extends CampaignController {
 	 * @user-level manager
 	 */
 	public function deleteAction() {
-		$group = Model_Group::fetchById($this->_request->getParam('id'));
-		$this->validateData($group);
+		$group = $this->getRequestedGroup();
 
 		if ($this->_request->isPost()) {
 			$group->delete();
+
 			$this->invalidateTableCache();
+
             $this->flashMessage($this->translator->trans('route.group.delete.message.success'));
     		$this->_helper->redirector->gotoSimple('index');
         } else {
@@ -343,10 +349,10 @@ class GroupController extends CampaignController {
         exit;
 	}
 
-	protected function invalidateTableCache()
+	function getIndexTable($objectCacheManager)
 	{
-		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
-		$table = $objectCacheManager->getGroupsTable();
-		$objectCacheManager->invalidateObjectCache($table->getIndexName());
+		return $objectCacheManager->getGroupsTable();
 	}
+
+
 }

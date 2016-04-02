@@ -9,6 +9,19 @@ class CountryController extends CampaignController {
     protected static $publicActions = array('stats-panel', 'report');
 
 	/**
+	 * @param bool $validate
+	 * @return Model_Country
+	 */
+	protected function getRequestedCountry($validate = true)
+	{
+		$country = Model_Country::fetchById($this->_request->getParam('id'));
+		if ($validate) {
+			$this->validateData($country);
+		}
+		return $country;
+	}
+
+	/**
 	 * Lists all countries
 	 * @user-level user
 	 */
@@ -39,7 +52,7 @@ class CountryController extends CampaignController {
 
 		$this->view->countries = $countries;
 		$this->view->rows = $rows;
-        $this->view->tableHeaders = $objectCacheManager->getCountriesTable()->getHeaders();
+        $this->view->tableHeaders = $table->getHeaders();
         $this->view->sortCol = Name::NAME;
 		$this->view->regions = Model_Region::fetchAll();
 	}
@@ -62,9 +75,7 @@ class CountryController extends CampaignController {
 	 */
 	public function viewAction()
 	{
-		/** @var Model_Country $country */
-		$country = Model_Country::fetchById($this->_request->getParam('id'));
-		$this->validateData($country);
+		$country = $this->getRequestedCountry();
 
 		$this->view->titleIcon = Model_Country::ICON_TYPE;
 		$this->view->badgePartial = $this->badgeDetails($country);
@@ -76,9 +87,7 @@ class CountryController extends CampaignController {
 
 	public function downloadReportAction()
 	{
-		/** @var Model_Country $country */
-		$country = Model_Country::fetchById($this->_request->getParam('id'));
-		$this->validateData($country);
+		$country = $this->getRequestedCountry();
 
 		//if we don't have a now parameter create a DateTime now
 		//else create a date from the now parameter
@@ -118,9 +127,7 @@ class CountryController extends CampaignController {
 
 	public function reportAction()
 	{
-		/** @var Model_Country $country */
-		$country = Model_Country::fetchById($this->_request->getParam('id'));
-		$this->validateData($country);
+		$country = $this->getRequestedCountry();
 
 		//if we don't have a now parameter create a DateTime now
 		//else create a date from the now parameter
@@ -170,14 +177,12 @@ class CountryController extends CampaignController {
 	public function editAction()
 	{
 		if ($this->_request->getActionName() == 'edit') {
-			$editingCountry = Model_Country::fetchById($this->_request->getParam('id'));
+			$country = $this->getRequestedCountry();
             $this->view->isNew = false;
 		} else {
 			$editingCountry = new Model_Country();
             $this->view->isNew = true;
 		}
-
-		$this->validateData($editingCountry);
 
 		$this->view->countryCodes = Model_Country::countryCodes();
 
@@ -204,9 +209,7 @@ class CountryController extends CampaignController {
 				try {
 					$editingCountry->save();
 
-					$objectCacheManager = $this->getContainer()->get('object-cache-manager');
-					$table = $objectCacheManager->getCountriesTable();
-					$objectCacheManager->invalidateObjectCache($table->getIndexName());
+					$this->invalidateTableCache();
 
                     $this->flashMessage($this->translator->trans('route.country.edit.message.success'));
 					$this->_helper->redirector->gotoRoute(array('action' => 'view', 'id' => $editingCountry->id));
@@ -317,6 +320,8 @@ class CountryController extends CampaignController {
                         $country->save();
                     }
 
+					$this->invalidateTableCache();
+
 					$this->flashMessage($this->translator->trans('route.country.edit-all.message.success', ['%count%' => count($editedCountries)]));
                     $this->_helper->redirector->gotoSimple('index');
 
@@ -337,9 +342,7 @@ class CountryController extends CampaignController {
 	 * @user-level manager
 	 */
 	public function manageAction() {
-		/** @var Model_Country $country */
-		$country = Model_Country::fetchById($this->_request->getParam('id'));
-		$this->validateData($country);
+		$country = $this->getRequestedCountry();
 
 		if ($this->_request->isPost()) {
 			$presenceIds = array();
@@ -349,6 +352,9 @@ class CountryController extends CampaignController {
 				}
 			}
 			$country->assignPresences($presenceIds);
+
+			$this->invalidateTableCache();
+
 			$this->flashMessage($this->translator->trans('route.country.manage.message.success'));
 			$this->_helper->redirector->gotoRoute(array('action'=>'view'));
 		}
@@ -362,11 +368,13 @@ class CountryController extends CampaignController {
 	 * @user-level manager
 	 */
 	public function deleteAction() {
-		$country = Model_Country::fetchById($this->_request->getParam('id'));
-		$this->validateData($country);
+		$country = $this->getRequestedCountry();
 
 		if ($this->_request->isPost()) {
 			$country->delete();
+
+			$this->invalidateTableCache();
+
             $this->flashMessage($this->translator->trans('route.country.delete.message.success'));
     		$this->_helper->redirector->gotoSimple('index');
         } else {
@@ -383,9 +391,8 @@ class CountryController extends CampaignController {
 
 		$this->validateChartRequest();
 
-		/** @var $presence Model_Presence */
-		$presence = Model_Country::fetchById($this->_request->getParam('id'));
-		if(!$presence) {
+		$country = $this->getRequestedCountry(false);
+		if(!$country) {
 			$this->apiError($this->translator->trans('route.country.graph-data.message.not-found'));
 		}
 
@@ -396,7 +403,7 @@ class CountryController extends CampaignController {
 		$chartName = $this->_request->getParam('chart');
 		$chartObject = $this->getContainer()->get('chart.' . $chartName);
 
-		$this->apiSuccess($chartObject->getChart($presence, $start, $end));
+		$this->apiSuccess($chartObject->getChart($country, $start, $end));
 	}
 
 	public function downloadAction() {
@@ -404,6 +411,11 @@ class CountryController extends CampaignController {
         $csvData = Util_Csv::generateCsvData($table);
         Util_Csv::outputCsv($csvData, 'countries');
         exit;
+	}
+
+	function getIndexTable($objectCacheManager)
+	{
+		return $objectCacheManager->getCountriesTable();
 	}
 
 }

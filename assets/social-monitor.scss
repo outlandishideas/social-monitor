@@ -1255,31 +1255,6 @@ form.management button.add-item {
   font-weight: normal;
 }
 
-/* buttons */
-
-body .button.compare {
-  display: none;
-}
-
-body .compare.list.empty {
-  display: none;
-}
-
-body .compare.list {
-  display: inline-block;
-  margin: 0;
-  background-color: #065284;
-  color: #fff;
-  border-radius: 5px;
-  padding: 10px 15px;
-}
-
-body .compare.list li {
-  display: inline-block;
-  list-style: none;
-  padding: 0 10px;
-}
-
 /* group_editAction #added-presences */
 
 #added-presences {
@@ -1299,71 +1274,47 @@ body .compare.list li {
 
 /* presences */
 
-.entity.twitter .icon-large {
-  color: $colour-twitter;
+.entity {
+  &.twitter .icon-large {
+    color: $colour-twitter;
+  }
+
+  &.instagram .icon-large {
+    color: $colour-instagram;
+  }
+
+  &.linkedin .icon-large {
+    color: $colour-linkedin;
+  }
+
+  &.youtube .icon-large {
+    color: $colour-youtube;
+  }
+
+  &.facebook .icon-large {
+    color: $colour-facebook;
+  }
+
+  &.sina_weibo .icon-large {
+    color: $colour-sina-weibo;
+  }
+
+  &.country .icon-large {
+    color: $colour-country;
+  }
+
+  &.group .icon-large {
+    color: $colour-group;
+  }
 }
 
-.entity.instagram .icon-large {
-  color: $colour-instagram;
-}
+$social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
-.entity.linkedin .icon-large {
-  color: $colour-linkedin;
-}
-
-.entity.youtube .icon-large {
-  color: $colour-youtube;
-}
-
-.entity.facebook .icon-large {
-  color: $colour-facebook;
-}
-
-.entity.sina_weibo .icon-large {
-  color: $colour-sina-weibo;
-}
-
-.entity.country .icon-large {
-  color: $colour-country;
-}
-
-.entity.group .icon-large {
-  color: $colour-group;
-}
-
-a.presence.twitter .icon-large,
-.icon-twitter-sign {
-  /*color: $colour-twitter;*/
-  color: #FFF;
-}
-
-a.presence.instagram .icon-large,
-.icon-instagram-sign {
-  /*color: $colour-instagram;*/
-  color: #FFF;
-}
-
-a.presence.linkedin .icon-large {
-  /*color: $colour-instagram;*/
-  color: #FFF;
-}
-
-a.presence.youtube .icon-large,
-.icon-youtube-sign {
-  /*color: $colour-instagram;*/
-  color: #FFF;
-}
-
-a.presence.sina_weibo .icon-large,
-.icon-sina_weibo-sign {
-  /*color: $colour-sina-weibo;*/
-  color: #FFF;
-}
-
-a.presence.facebook .icon-large,
-.icon-facebook-sign {
-  /*color: $colour-facebook;*/
-  color: #FFF;
+@each $type in $social-media {
+  a.presence.#{$type} .icon-large,
+  .icon-#{$type}-sign {
+    color: #FFF;
+  }
 }
 
 /* link box */
@@ -2550,10 +2501,10 @@ td.countries a {
 
 .entity-list-toggle {
   cursor: pointer;
-}
 
-.entity-list-toggle:hover {
-  color: #ddd;
+  &:hover {
+    color: #ddd;
+  }
 }
 
 .inlineLabels #assigned {

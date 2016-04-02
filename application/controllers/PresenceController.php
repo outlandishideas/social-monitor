@@ -178,28 +178,6 @@ class PresenceController extends GraphingController
     }
 
 	/**
-	 * Compares multiple presences
-	 * @user-level user
-	 */
-	public function compareAction()
-    {
-        $compareData = array();
-        foreach(explode(',',$this->_request->getParam('id')) as $id){
-            $presence = Model_PresenceFactory::getPresenceById($id);
-            $this->validateData($presence);
-            $compareData[$id] = (object)array(
-	            'presence'=>$presence,
-	            'graphs'=>$this->graphs($presence)
-            );
-        }
-
-        $this->updatePageTitle(['count' => count($compareData)]);
-	    $this->view->chartOptions = $this->chartOptions();
-	    $this->view->tableMetrics = $this->tableMetrics();
-        $this->view->compareData = $compareData;
-    }
-
-	/**
 	 * Creates a new presence
 	 * @user-level manager
 	 */

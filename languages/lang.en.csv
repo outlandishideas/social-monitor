@@ -264,12 +264,6 @@
 "route.presence.view.info.gain-per-day";"Required gain per day"
 "route.presence.view.statuses.table-header.content";"Content"
 
-"route.presence.compare.page-title";"Comparing %count% presences"
-"route.presence.compare.presence-handle";"Handle"
-"route.presence.compare.table-empty";"No presences found"
-"route.presence.compare.button.create-sbu";"Create SBU"
-"route.presence.compare.chart-title";"Scores for the last 30 days:"
-
 "route.presence.edit.page-title";"Edit presence"
 "route.presence.edit.message.success";"Presence saved"
 "route.presence.edit.label.handle";"Handle"
@@ -397,9 +391,9 @@
 "route.fetch.log.update-info.success";"Updated info %message%"
 "route.fetch.log.update-info.error";"Error updating presence info: %message%"
 "route.fetch.log.update-info.skip";"Not updating info %message% as last updated %lastupdated%"
-"route.fetch.log.fetch-statues.start";"Fetch statuses %message%"
-"route.fetch.log.fetch-statues.success";"Inserted %count%"
-"route.fetch.log.fetch-statues.error";"Error: %message%"
+"route.fetch.log.fetch-statuses.start";"Fetch statuses %message%"
+"route.fetch.log.fetch-statuses.success";"Inserted %count%"
+"route.fetch.log.fetch-statuses.error";"Error: %message%"
 
 
 
@@ -635,9 +629,6 @@
 
 "table-header.branding.label";"Branding"
 "table-header.branding.description";"Branding shows whether a presence meets the British Council branding guidelines for social media presences."
-
-"table-header.compare.label";"<span class="icon-check"></span>"
-"table-header.compare.description";"Select all the presences that you would like to compare, and then click on the Compare Button above';"
 
 "table-header.countries.label";"Countries"
 "table-header.countries.description";"The countries in this region."
