@@ -101,7 +101,7 @@ class DomainController extends BaseController {
 		$query = $db->prepare($sql);
 		$query->execute($args);
 		$domains = $query->fetchAll(PDO::FETCH_OBJ);
-		$totalCount = $db->query('SELECT FOUND_ROWS()')->fetch(PDO::FETCH_COLUMN);
+		$totalCount = $db->lastRowCount();
 
 		$tableData = array();
 		foreach ($domains as $domain) {

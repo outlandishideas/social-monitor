@@ -1,5 +1,7 @@
 <?php
 
+use Outlandish\SocialMonitor\Database\Database;
+
 class FetchController extends BaseController
 {
 	protected static $publicActions = array('index', 'populate-presence-history');
@@ -282,7 +284,7 @@ class FetchController extends BaseController
      * used in the metrics/badges etc, which doesn't happen if the presence didn't update for whatever reason
      *
      * @param $presences
-     * @param $db
+     * @param Database $db
      * @param $lockName
      */
     private function updatePresenceHistory($presences, $db, $lockName = null)
@@ -310,7 +312,7 @@ class FetchController extends BaseController
 
     /**
      * @param $presences
-     * @param $db
+     * @param Database $db
      * @param $lockName
      * @return array
      */
@@ -358,6 +360,11 @@ class FetchController extends BaseController
         }
     }
 
+	/**
+	 * @param $presences
+	 * @param Database $db
+	 * @param $lockName
+	 */
     private function fetchStatuses($presences, $db, $lockName)
     {
         $presenceCount = count($presences);

@@ -398,7 +398,7 @@ class Provider_Youtube extends Provider_Abstract
         $stmt->execute($args);
         $ret = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $objects = $this->parseStatuses($ret);
-        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(\PDO::FETCH_COLUMN);
+        $total = $this->db->lastRowCount();
 
         return (object)array(
             'stream' => count($objects) ? $objects : null,

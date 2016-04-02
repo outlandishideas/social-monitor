@@ -114,9 +114,9 @@ abstract class Provider_Abstract
         if(!$success) {
             error_log('error fetching statuses:'.implode(',',$stmt->errorInfo()));
         }
+		$total = $this->db->lastRowCount();
         $ret = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $objects = $this->parseStatuses($ret);
-        $total = $this->db->query('SELECT FOUND_ROWS()')->fetch(\PDO::FETCH_COLUMN);
 
         $this->decorateStreamData($ret);
 
