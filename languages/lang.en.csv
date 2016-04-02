@@ -248,6 +248,9 @@
 "route.presence.delete.message.success";"Presence deleted"
 
 "route.presence.assign.message.success";"Presence was assigned to user"
+"route.presence.assign.message.failure";"Presence could not be assigned to user"
+
+"route.presence.graph-data.message.not-found";"Presence could not be found"
 
 "route.presence.view.page-title";"Presence: %presence%"
 "route.presence.view.info.presence-type";"This is a %type% presence"
@@ -266,6 +269,9 @@
 
 "route.presence.edit.page-title";"Edit presence"
 "route.presence.edit.message.success";"Presence saved"
+"route.presence.edit.message.already-exists";"Presence already exists"
+"route.presence.edit.message.missing-handle";"Please enter a handle"
+"route.presence.edit.message.missing-type";"Please choose a type"
 "route.presence.edit.label.handle";"Handle"
 "route.presence.edit.label.type";"Type"
 "route.presence.edit.label.size";"Size"

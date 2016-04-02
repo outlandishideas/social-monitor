@@ -10,6 +10,19 @@ class PresenceController extends GraphingController
 {
 	protected static $publicActions = array('update-kpi-cache', 'report');
 
+	/**
+	 * @param bool $validate
+	 * @return Model_Presence
+	 */
+	protected function getRequestedPresence($validate = true)
+	{
+		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+		if ($validate) {
+			$this->validateData($presence);
+		}
+		return $presence;
+	}
+
 	protected function chartOptions(Model_Presence $presence = null) {
 		$options = array();
 		if($presence) {
@@ -49,13 +62,12 @@ class PresenceController extends GraphingController
 	}
 
 	/**
-	 * Lists all presences
+	 * Assigns an access token to the current user
 	 * @user-level user
 	 */
 	public function assignAction()
 	{
-		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
-		$this->validateData($presence);
+		$presence = $this->getRequestedPresence();
 
 		/** @var Model_User $user */
 		$user = $this->view->user;
@@ -67,7 +79,7 @@ class PresenceController extends GraphingController
 			$presence->save();
 			$message = $this->translator->trans('route.presence.assign.message.success');
 		} else {
-			$message = $this->translator->trans('Error.presence-not-assigned-user');
+			$message = $this->translator->trans('route.presence.assign.message.failure');
 		}
 		$this->flashMessage($message);
 
@@ -80,8 +92,7 @@ class PresenceController extends GraphingController
 	 */
 	public function viewAction()
 	{
-		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
-		$this->validateData($presence);
+		$presence = $this->getRequestedPresence();
 
 		$this->view->presence = $presence;
 		$this->view->badgePartial = $this->badgeDetails($presence);
@@ -100,8 +111,7 @@ class PresenceController extends GraphingController
 
 	public function downloadReportAction()
 	{
-        $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
-        $this->validateData($presence);
+		$presence = $this->getRequestedPresence();
 
         //if we don't have a now parameter create a DateTime now
         //else create a date from the now parameter
@@ -141,8 +151,7 @@ class PresenceController extends GraphingController
 
     public function reportAction()
     {
-        $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
-        $this->validateData($presence);
+		$presence = $this->getRequestedPresence();
 
         $presence->getTargetAudience();
 
@@ -198,7 +207,7 @@ class PresenceController extends GraphingController
         Model_PresenceFactory::setDatabase(Zend_Registry::get('db')->getConnection());
 
 		if ($this->_request->getActionName() == 'edit') {
-            $presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+			$presence = $this->getRequestedPresence();
 			$this->view->isNew = false;
 		} else {
 			$presence = (object)array(
@@ -211,8 +220,6 @@ class PresenceController extends GraphingController
 			$this->view->isNew = true;
 		}
 
-		$this->validateData($presence);
-
 		if ($this->_request->isPost()) {
 
 			$errorMessages = array();
@@ -223,10 +230,10 @@ class PresenceController extends GraphingController
             $size = $this->_request->getParam('size');
 			$userId = $this->_request->getParam('user_id');
 			if (!$type) {
-				$errorMessages[] = $this->translator->trans('Error.missing-presence-type'); //'Please choose a type';
+				$errorMessages[] = $this->translator->trans('route.presence.edit.message.missing-type'); //'Please choose a type';
 			}
 			if (!$handle) {
-				$errorMessages[] = $this->translator->trans('Error.missing-presence-handle'); //'Please enter a handle';
+				$errorMessages[] = $this->translator->trans('route.presence.edit.message.missing-handle'); //'Please enter a handle';
 			}
 
             if (!$presence->id) {
@@ -261,7 +268,7 @@ class PresenceController extends GraphingController
 					$errorMessages[] = $ex->getMessage();
 				} catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
-                        $errorMessages[] = $this->translator->trans('Error.presence-exists'); //'Presence already exists';
+                        $errorMessages[] = $this->translator->trans('route.presence.edit.message.already-exists'); //'Presence already exists';
                     } else {
                         $errorMessages[] = $ex->getMessage();
                     }
@@ -273,9 +280,7 @@ class PresenceController extends GraphingController
                     $this->flashMessage($message, 'error');
 				}
 			} else {
-				$objectCacheManager = $this->getContainer()->get('object-cache-manager');
-				$table = $objectCacheManager->getPresencesTable();
-				$objectCacheManager->invalidateObjectCache($table->getIndexName());
+				$this->invalidateTableCache();
 
 				$this->flashMessage($this->translator->trans('route.presence.edit.message.success')); //'Presence saved');
 
@@ -302,15 +307,17 @@ class PresenceController extends GraphingController
 	 */
 	public function deleteAction()
 	{
-		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
-		$this->validateData($presence);
+		$presence = $this->getRequestedPresence();
 
 		if ($this->_request->isPost()) {
 			$presence->delete();
+			
+			$this->invalidateTableCache();
+			
             $this->flashMessage($this->translator->trans('route.presence.delete.message.success')); //'Presence deleted');
             $this->_helper->redirector->gotoSimple('index');
 		} else {
-            $this->flashMessage($this->translator->trans('Error.presence-deleted'));
+            $this->flashMessage($this->translator->trans('Error.invalid-delete'));
             $this->_helper->redirector->gotoRoute(array('action'=>'view'));
         }
 	}
@@ -323,9 +330,9 @@ class PresenceController extends GraphingController
 
 		$this->validateChartRequest();
 
-		$presence = Model_PresenceFactory::getPresenceById($this->_request->getParam('id'));
+		$presence = $this->getRequestedPresence(false);
 		if(!$presence) {
-			$this->apiError($this->translator->trans('Error.presence-not-found')); //'Presence could not be found');
+			$this->apiError($this->translator->trans('route.presence.graph-data.message.not-found')); //'Presence could not be found');
 		}
 
 		$dateRange = $this->getRequestDateRange();
@@ -367,4 +374,10 @@ class PresenceController extends GraphingController
 	    exit;
     }
 
+	protected function invalidateTableCache()
+	{
+		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
+		$table = $objectCacheManager->getPresencesTable();
+		$objectCacheManager->invalidateObjectCache($table->getIndexName());
+	}
 }

@@ -177,7 +177,7 @@ class CountryController extends CampaignController {
 	public function editAction()
 	{
 		if ($this->_request->getActionName() == 'edit') {
-			$country = $this->getRequestedCountry();
+			$editingCountry = $this->getRequestedCountry();
             $this->view->isNew = false;
 		} else {
 			$editingCountry = new Model_Country();
