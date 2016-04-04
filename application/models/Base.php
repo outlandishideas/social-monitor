@@ -335,8 +335,4 @@ abstract class Model_Base
 		self::$db = $db;
 	}
 
-	public static function setTranslator(Translator $translator)
-	{
-		self::$translator = $translator;
-	}
 }
