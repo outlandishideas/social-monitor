@@ -1,4 +1,4 @@
-<?php $translator = $this->trans(); ?>
+<?php $translator = $this->translate(); ?>
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 <?php if ($this->editingUser->isManager) : ?>
 	<?php $buttons = $this->gatekeeper()->filterAll(array(

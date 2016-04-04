@@ -1,5 +1,5 @@
 <?php
-$translator = $this->trans();
+$translator = $this->translate();
 $buttons = array(
     '<input type="submit" class="button-bc primary" value="'.$translator->trans('views.scripts.user.login.button.submit').'" />',
     '<a href="' . $this->url(array('controller'=>'user', 'action'=>'forgotten'), null, true) . '">'.$translator->trans('views.scripts.user.login.button.forgot-password').'</a>'
@@ -15,7 +15,7 @@ $buttons = array(
             <input id="username" name="username" type="text" size="26">
 		</div>
         <div>
-            <label for="password"><?php echo $translator->trans('Global.password'); ?><</label>
+            <label for="password"><?php echo $translator->trans('Global.password'); ?></label>
             <input id="password" name="password" type="password" size="26">
         </div>
 	</fieldset>

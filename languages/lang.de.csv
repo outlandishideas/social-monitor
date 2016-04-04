@@ -345,28 +345,28 @@
 
 
 "route.fetch.log.finished";"Abgeschlossen"
-"route.fetch.log.updating-facebook-actors.start";"Updating facebook actors"
-"route.fetch.log.updating-facebook-actors.fail";"Failed to update facebook actors: %message%"
-"route.fetch.log.updating-facebook-actors.success";"Updated %count% actors"
-"route.fetch.log.updating-domains.start";"Updating linked domains"
-"route.fetch.log.updating-domains.success";"Inserted %count% domains"
+"route.fetch.log.updating-facebook-actors.start";"Facebook Akteure werden aktualisiert"
+"route.fetch.log.updating-facebook-actors.fail";"Updaten der Facebook Akteure ist fehlgeschlagen: %message%"
+"route.fetch.log.updating-facebook-actors.success";"%count% Akteuere aktualisiert"
+"route.fetch.log.updating-domains.start";"Aktualisiere verknüpfte Domains"
+"route.fetch.log.updating-domains.success";"%count% Domains eingefügt"
 "route.fetch.log.start";"Starting %action% process on %start%"
-"route.fetch.log.lock-acquire";"Process already running and last active %seconds% seconds ago"
+"route.fetch.log.lock-acquire";"Der Prozess ist bereits am laufen und war zuletzt vor %seconds% Sekunden aktiv"
 "route.fetch.log.lock-acquire.fail";"Stale lock found last active %seconds% seconds ago: %lockname%"
-"route.fetch.log.presence-history.start";"Updating presence history"
+"route.fetch.log.presence-history.start";"Aktualisiere Verlauf des Standort"
 "route.fetch.log.presence-history.error";"Error: %message%"
-"route.fetch.log.update-info.start";"Update info %message%"
-"route.fetch.log.update-info.success";"Updated info %message%"
-"route.fetch.log.update-info.error";"Error updating presence info: %message%"
-"route.fetch.log.update-info.skip";"Not updating info %message% as last updated %lastupdated%"
-"route.fetch.log.fetch-statues.start";"Fetch statuses %message%"
-"route.fetch.log.fetch-statues.success";"Inserted %count%"
+"route.fetch.log.update-info.start";"Information aktualisieren %message%"
+"route.fetch.log.update-info.success";"Information aktualisiert %message%"
+"route.fetch.log.update-info.error";"Fehler beim aktualisieren der Standort Information: %message%"
+"route.fetch.log.update-info.skip";"Information wird nicht aktualisiert %message% da Sie bereits aktualisiert wurde %lastupdated%"
+"route.fetch.log.fetch-statues.start";"Status %message%"
+"route.fetch.log.fetch-statues.success";"%count% hinzugefügt"
 "route.fetch.log.fetch-statues.error";"Error: %message%"
 
 
 
 
-"route.config.index.page-title";"Settings"
+"route.config.index.page-title";"Einstellungen"
 "route.config.index.introduction";"Configure each of the metrics and badges, then click save"
 
 "route.config.index.sections.general.title";"General"

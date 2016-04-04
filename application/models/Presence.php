@@ -20,6 +20,7 @@ class Model_Presence
     protected $metrics;
     protected static $badges = array();
     protected $kpiData = array();
+    private $translate;
 
     protected $presenceHistoryColumns = array(
         'popularity', 'klout_score', 'facebook_engagement', 'sina_weibo_engagement',
@@ -102,6 +103,7 @@ class Model_Presence
         $this->last_fetched = $internals['last_fetched'];
         $this->setUserFromId($internals['user_id']);
         if (array_key_exists('size', $internals)) $this->size = $internals['size'];
+        $this->translate = Zend_Registry::get('symfony_translate');
     }
 
     public function getId()
@@ -206,10 +208,10 @@ class Model_Presence
     public static function getSizes()
     {
         return array(
-            0 => self::$translator->trans('models.presence.sizes.small'),
-            1 => self::$translator->trans('models.presence.sizes.medium'),
-            2 => self::$translator->trans('models.presence.sizes.large'),
-            3 => self::$translator->trans('models.presence.sizes.extra-large')
+            0 => self::$translate->trans('models.presence.sizes.small'),
+            1 => self::$translate->trans('models.presence.sizes.medium'),
+            2 => self::$translate->trans('models.presence.sizes.large'),
+            3 => self::$translate->trans('models.presence.sizes.extra-large')
         );
     }
 
@@ -877,7 +879,7 @@ class Model_Presence
 	public function getEngagementScore($monthlyAverage = false)
 	{
 		if ($this->isForTwitter()) {
-			return new EngagementScore(self::$translator->trans('models.presence.engagement-score-name'), 'klout', $this->getKloutScore());
+			return new EngagementScore($this->translate->trans('models.presence.engagement-score-name'), 'klout', $this->getKloutScore());
 		}
 
 		$engagementMetric = null;

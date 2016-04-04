@@ -1,6 +1,6 @@
 <?php
 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-$translator = $this->trans();
+$translator = $this->translate();
 $buttons = array();
 $new = $this->gatekeeper()->filter('<a class="button-bc" href="%url%">'.$translator->trans('views.scripts.user.index.add-new').'</a>', array('controller'=>'user', 'action'=>'new'), null, true);
 if ($new) {

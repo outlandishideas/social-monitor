@@ -99,7 +99,7 @@ $gatekeeper = $this->gatekeeper();
                             break;
                         case ParentName::NAME:
                             if (!$cellValue) {
-                                echo "'.$translator->trans('views.scripts.partials.new-index-table.not-available').'";
+                                echo $translator->trans('views.scripts.partials.new-index-table.not-available');
                                 break;
                             }
                             $url = $gatekeeper->filter('%url%', array("controller" => $cellValue->controller, "action" => "view", "id" => $cellValue->id));
