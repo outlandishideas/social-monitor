@@ -1,9 +1,10 @@
+<?php $translator = $this->translate();?>
 <fieldset class="inlineLabels">
-    <h2>Available countries</h2>
+    <h2><?php echo $translator->trans('Global.available-countries'); ?></h2>
 	<div class="row">
         <div class="small-24 medium-21 large-19 columns">
 			<select id="countries" class="selectInput">
-				<option value="">-- Select --</option>
+				<option value=""><?php echo $translator->trans('Global.select-placeholder'); ?></option>
 				<?php foreach ($this->allCountries as $c) : /** @var $c Model_Country */ ?>
 					<option value="<?php echo $c->id; ?>"
 							data-url="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$c->id)); ?>"
@@ -16,11 +17,11 @@
 			</select>
         </div>
         <div class="small-24 medium-3 large-5 end columns">
-            <button type="button" class="button-bc add-item">Add</button>
+            <button type="button" class="button-bc add-item"><?php echo $translator->trans('Global.add'); ?></button>
         </div>
     </div>
 
-    <h2>Currently assigned countries</h2>
+    <h2><?php echo $translator->trans('views.scripts.partials.assign-countries.heading.currently-assigned'); ?></h2>
     <div class="row">
         <div class="small-24 columns">
 			<ul id="assigned">
@@ -30,7 +31,7 @@
 				}
 				?>
 				<li class="none-found">
-					No countries assigned
+					<?php echo $translator->trans('views.scripts.partials.assign-countries.heading.none-assigned'); ?>
 				</li>
 			</ul>
         </div>

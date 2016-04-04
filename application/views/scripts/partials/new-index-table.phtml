@@ -68,7 +68,7 @@ $gatekeeper = $this->gatekeeper();
                             }
                             if($count > 0) {
 								$clickToExpand = $translator->trans('Global.click-to-expand');
-                                echo '<span class="entity-list-toggle" title="Click to expand">' . $countText . '</span>';
+                                echo '<span class="entity-list-toggle" title="'.$translator->trans('views.scripts.partials.new-index-table.entity-list-toggle.title').'">' . $countText . '</span>';
                                 echo '<ul class="entity-list">';
                                 foreach ($cellValue as $template=>$urlArgs) {
                                     $link = $gatekeeper->filter($template, (array)$urlArgs);
@@ -99,7 +99,7 @@ $gatekeeper = $this->gatekeeper();
                             break;
                         case ParentName::NAME:
                             if (!$cellValue) {
-                                echo "N/A";
+                                echo $translator->trans('views.scripts.partials.new-index-table.not-available');
                                 break;
                             }
                             $url = $gatekeeper->filter('%url%', array("controller" => $cellValue->controller, "action" => "view", "id" => $cellValue->id));

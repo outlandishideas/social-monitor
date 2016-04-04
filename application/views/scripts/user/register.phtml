@@ -1,6 +1,7 @@
 <?php
+$translator = $this->translate();
 $buttons = array(
-    '<a href="' . $this->url(array('controller'=>'user', 'action'=>'login'), null, true) . '">Already have an account?</a>',
+    '<a href="' . $this->url(array('controller'=>'user', 'action'=>'login'), null, true) . '">'.$translator->trans('views.scripts.user.register.button.already-registered').'</a>',
     '<input type="submit" class="button-bc primary" value="Register" />'
 );
 ?>
@@ -8,27 +9,27 @@ $buttons = array(
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 <?php if ($this->registerSuccessful) : ?>
 
-    <p>Your registration was successful. In order to log into your account, you will first need to verify your email.</p>
-    <p>An email was sent to the email address that you provided, and this will include instructions to complete user registration.</p>
+    <p><?php echo $translator->trans('views.scripts.user.register.register-successful.first-line'); ?></p>
+    <p><?php echo $translator->trans('views.scripts.user.register.register-successful.second-line'); ?></p>
 
 <?php else : ?>
 
     <form method="post" action="<?php echo $this->url(array('controller'=>'user', 'action'=>'register')); ?>">
         <fieldset>
             <div>
-                <label for="name">User name*</label>
+                <label for="name"><?php echo $translator->trans('Global.user'); ?>*</label>
                 <input id="name" name="name" type="text" size="26" required>
             </div>
             <div>
-                <label for="email">Email*</label>
+                <label for="email"><?php echo $translator->trans('Global.email'); ?>*</label>
                 <input id="email" name="email" type="email" required>
             </div>
             <div>
-                <label for="password">Password*</label>
+                <label for="password"><?php echo $translator->trans('Global.password'); ?>*</label>
                 <input id="password" name="password" type="password" size="26" required>
             </div>
             <div>
-                <label for="password_confirm">Password (again)*</label>
+                <label for="password_confirm"><?php echo $translator->trans('Global.password-confirm'); ?>*</label>
                 <input id="password_confirm" name="password_confirm" type="password" size="26" required>
             </div>
         </fieldset>

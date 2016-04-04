@@ -1,7 +1,8 @@
 <?php
+$translator = $this->translate();
 $buttons = array(
-    '<a href="' . $this->url(array('controller'=>'user', 'action'=>'login')) . '" class="button-bc">Back to login</a>',
-    '<button type="submit" class="button-bc">Send</button>'
+    '<a href="' . $this->url(array('controller'=>'user', 'action'=>'login')) . '" class="button-bc">'.$translator->trans('views.scripts.user.forgotten.button.back-to-login').'</a>',
+    '<button type="submit" class="button-bc">'.$translator->trans('Global.send').'</button>'
 );
 ?>
 
@@ -10,7 +11,7 @@ $buttons = array(
     <input type="hidden" name="redirect_to" value="<?php echo $this->redirect_to; ?>" />
     <fieldset>
         <div>
-            <label for="username">Name/Email</label>
+            <label for="username"><?php $translator->trans('views.scripts.user.forgotten.username.label'); ?></label>
             <input id="username" name="username" type="text" size="26">
         </div>
 

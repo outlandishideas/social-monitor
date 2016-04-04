@@ -1,11 +1,12 @@
 <?php
+$translator = $this->translate();
 $buttons = [
-    "<a href=\"{$this->loginUrl}\" class=\"button\">Login to LinkedIn</a>",
+    "<a href=\"{$this->loginUrl}\" class=\"button\">".$translator->trans('views.scripts.user.linkedin.login-button')."</a>",
 ];
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
-<p>Token: <?php echo $this->token; ?></p>
+<p><?php echo $translator->trans('views.scripts.user.linkedin.token'); ?>: <?php echo $this->token; ?></p>
 
 <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>

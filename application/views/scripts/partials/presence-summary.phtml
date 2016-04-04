@@ -14,7 +14,7 @@ $presence = $this->presence
     <?php echo floor($presence->getReachScore()); ?>
 </span>
 <span class="flag-score quality <?php echo $presence->getType(); ?>"
-      title="Quality score: <?php echo $presence->getQualityScore(); ?>">
+      title="<?php echo $translator->trans('views.scripts.partials.presence-summary.quality-score'); ?><?php echo $presence->getQualityScore(); ?>">
     <?php echo floor($presence->getQualityScore()); ?>
 </span>
 </a>

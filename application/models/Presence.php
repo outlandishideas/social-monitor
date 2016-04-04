@@ -12,9 +12,11 @@ use Outlandish\SocialMonitor\PresenceType\PresenceType;
 use Outlandish\SocialMonitor\PresenceType\SinaWeiboType;
 use Outlandish\SocialMonitor\PresenceType\TwitterType;
 use Outlandish\SocialMonitor\PresenceType\YoutubeType;
+use Symfony\Component\Translation\Translator;
 
 class Model_Presence
 {
+    protected static $translator = null;
     protected $provider;
     protected $db;
     protected $metrics;
@@ -54,13 +56,6 @@ class Model_Presence
      * @var Model_User|null
      */
     public $user;
-
-    protected static $sizes = array(
-        0 => "Small",
-        1 => "Medium",
-        2 => "Large",
-        3 => "Extra Large"
-    );
 
     protected $accessToken;
 
@@ -212,7 +207,17 @@ class Model_Presence
      */
     public static function getSizes()
     {
-        return self::$sizes;
+        return array(
+            0 => self::$translator->trans('models.presence.sizes.small'),
+            1 => self::$translator->trans('models.presence.sizes.medium'),
+            2 => self::$translator->trans('models.presence.sizes.large'),
+            3 => self::$translator->trans('models.presence.sizes.extra-large')
+        );
+    }
+
+    public static function setTranslator(Translator $translator)
+    {
+        self::$translator = $translator;
     }
 
     /**
@@ -879,7 +884,7 @@ class Model_Presence
 	public function getEngagementScore($monthlyAverage = false)
 	{
 		if ($this->isForTwitter()) {
-			return new EngagementScore('Klout score', 'klout', $this->getKloutScore());
+			return new EngagementScore(self::$translator->trans('models.presence.engagement-score-name'), 'klout', $this->getKloutScore());
 		}
 
 		$engagementMetric = null;

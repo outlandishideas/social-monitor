@@ -1,16 +1,384 @@
+"Global.score";"Wertung"
+"Global.loading-data";"Lade daten..."
+"Global.add-new";"Neu hinzufügen"
+"Global.add";"Hinzufügen"
+"Global.edit-all";"Alle editieren"
+"Global.edit";"Editieren"
+"Global.display-name";"Namen anzeigen"
+"Global.delete";"Löschen"
+"Global.download-csv";"CSV herunterladen"
+"Global.penetration";"penetration"
+"Global.internet-penetration";"Internet Penetration"
+"Global.country-population";"Bevölkerungszahl"
+"Global.available-audience-size";"Verfügbare Reichweite"
+"Global.download-report";"Bericht herunterladen"
+"Global.containing-region";"Teil der Region %region%"
+"Global.target-date";"Zieldatum"
+"Global.content";"Inhalt"
+"Global.charts-unavailable";"Es tut uns leid, aber die Tabellen sind für ihr Gerät nicht verfügbar"
+"Global.click-to-expand";"Zum Ausklappen klicken"
+"Global.audience-size";"Reichweite"
 "Global.region";"Region"
 "Global.regions";"Regionen"
 "Global.country";"Land"
 "Global.countries";"Länder"
-
-
-
+"Global.group";"SBU"
+"Global.groups";"SBUs"
+"Global.presence";"Auftritt"
+"Global.presences";"Auftritte"
+"Global.select";"Auswahl"
+"Global.select-placeholder";"-- Auswahl --"
+"Global.charts";"Tabellen"
+"Global.chart";"Tabelle"
+"Global.info";"Info"
+"Global.date-range";"Zeitraum"
+"Global.sort";"Sort"
+"Global.date";"Datum"
+"Global.time";"Zeit"
+"Global.cancel";"Abbrechen"
+"Global.save";"Speichern"
+"Global.population";"Bevölkerung"
+"Global.no";"Nein"
+"Global.yes";"Ja"
+"Global.country-penetration";"penetration"
+"Global.password";"Passwort"
+"Global.send";"Senden"
+"Global.name";"Name"
+"Global.user";"Benutzername"
+"Global.email";"Email"
+"Global.password-confirm";"Passwort (nochmal)"
+"Global.available-countries";"Verfügbare Länder"
+"Global.rank";"Rang"
 
 "navigation-menu.users";"Benutzer"
+"navigation-menu.account";"Account"
+"navigation-menu.edit-users";"Benutzer bearbeiten"
+"navigation-menu.sign-out";"Ausloggen"
+"navigation-menu.settings";"Einstellungen"
 "navigation-menu.user";"Benutzer"
 "navigation-menu.home";"Startseite"
+"navigation-menu.regions";"Regionen"
 "navigation-menu.countries";"Länder"
+"navigation-menu.sbus";"SBUs"
+"navigation-menu.presences";"Auftritte"
+"navigation-menu.domains";"Domains"
+"navigation-menu.statuses";"Status"
+"navigation-menu.login";"Einloggen"
+"navigation-menu.register";"Registrieren"
 
 
 
-"country.DE";"Deutschland"
+
+"Base.layout.feedback-button";"Feedback"
+"Base.layout.feedback-modal.title";"Feedback Formular"
+"Base.layout.feedback-modal.subtitle";"Ihr Feedback ist uns wichtig. Bitte teilen Sie uns ihre Wünsche und Vorschläge mit."
+"Base.layout.feedback-modal.name-label";"Ihr Name"
+"Base.layout.feedback-modal.name-placeholder";"Geben Sie ihren Vor- und Nachnamen ein"
+"Base.layout.feedback-modal.email-label";"Ihre Email"
+"Base.layout.feedback-modal.email-placeholder";"Bitte geben Sie ihre Email ein"
+"Base.layout.feedback-modal.message-label";"Ihre Nachricht"
+"Base.layout.feedback-modal.message-placeholder";"Bitte geben Sie ihre Nachricht ein (max. 1000 Buchstaben)"
+"Base.layout.feedback-modal.submit";"Absenden"
+"Base.layout.feedback-modal.close";"Abbrechen"
+
+
+
+
+"route.index.index.page-title";"Social Media Monitor"
+"route.index.index.find-country";"Nach Land suchen"
+"route.index.index.pdf-download-description";"Diese Statistiken sind von den Social Media Metriken des Unternehmens bezogen.<br />Sie könnnen eine PDF zur Erklärung hier herunterladen:"
+"route.index.index.pdf-download-link";"Metriken herunterladen"
+"route.index.index.pdf-download-link-title";"PDF mit Metriken herunterladen"
+"route.index.index.contextual-help.page-title";"Wählen sie aus Reichweite, Engagement, Qualität oder Gesamt um zu sehen wie verschiedene Länder abschneiden."
+"route.index.index.contextual-help.date-range";"Wählen sie aus Reichweite, Engagement, Qualität oder Gesamt um zu sehen wie verschiedene Länder abschneiden."
+"route.index.index.contextual-help.map";"Click on the map to select a country and preview the individual social media presences."
+"route.index.index.contextual-help.map";"Wählen Sie ein Land auf der Karte aus um die unterschiedlichen Social Media Auftritte anzuzeigen"
+
+
+
+
+"buttons.region.edit";"Region bearbeiten"
+"buttons.region.delete";"Region löschen"
+"buttons.region.manage";"Länder verwalten"
+"buttons.region.view";"Region anzeigen"
+
+"buttons.country.edit";"Land bearbeiten"
+"buttons.country.delete";"Land löschen"
+"buttons.country.manage";"Auftritte verwalten"
+"buttons.country.view";"Land anzeigen"
+
+"buttons.group.edit";"SBU bearbeiten"
+"buttons.group.delete";"SBU löschen"
+"buttons.group.manage";"SBU verwalten"
+"buttons.group.view";"SBU anzeigen"
+
+"buttons.presence.edit";"Auftritt editieren"
+"buttons.presence.delete";"Auftritt löschen"
+"buttons.presence.view";"Präsenz anzeigen"
+
+
+
+"route.region.index.page-title";"Regionen"
+"route.region.index.empty-table";"Es konnten keine Regionen gefunden werden"
+
+"route.region.new.page-title";"Neue Region"
+
+"route.region.view.page-title";"Region: %region%"
+
+"route.region.edit.page-title";"Region bearbeiten"
+"route.region.edit.message.success";"Region gespeichert"
+"route.region.edit.message.display-name-missing";"Bitte geben Sie einen Namen an"
+
+"route.region.edit-all.page-title";"Alle Regionen bearbeiten"
+"route.region.edit-all.message.display-name-missing";"Bitte geben sie einen Namen für die Region %region% an"
+"route.region.edit-all.message.success";"%count% Regionen gespeichert"
+
+"route.region.delete.message.success";"Region gelöscht"
+
+"route.region.graph-data.message.not-found";"Region konnte nicht gefunden werden"
+
+"route.region.manage.page-title";"Länder verwalten: %region%"
+"route.region.manage.message.success";"Region countries updated"
+
+"route.region.report.page-title";"Social Media Monitor Bericht"
+
+
+
+"route.country.index.page-title";"Länder"
+"route.country.index.empty-table";"Es konnten keine Länder gefunden werden"
+"route.country.index.region-filter.placeholder";"Nach Region filtern"
+
+"route.country.new.page-title";"Neues Land"
+
+"route.country.view.page-title";"Land: %country%"
+
+"route.country.edit.page-title";"Land bearbeiten"
+"route.country.edit.message.success";"Land gespeichert"
+"route.country.edit.message.display-name-missing";"Bitte geben Sie einen Namen an"
+"route.country.edit.message.country-missing";"Bitte wählen Sie ein Land aus"
+
+"route.country.edit-all.page-title";"Alle Länder bearbeiten"
+"route.country.edit-all.message.success";"%count% Länder gespeichert"
+"route.country.edit-all.message.display-name-missing";"Bitte wählen Sie einen Namen für %country%"
+"route.country.edit-all.message.country-missing";"Bitte wählen Sie ein Land für %country%"
+
+"route.country.delete.message.success";"Land gelöscht"
+
+"route.country.graph-data.message.not-found";"Land konnte nicht gefunden werden"
+
+"route.country.manage.page-title";"Auftritte verwalten"
+"route.country.manage.message.success";"Auftritt des Landes aktualisiert"
+
+"route.country.report.page-title";"Social Media Monitor Bericht"
+"route.country.report.label.additional-info";"Zusätzliche Informationen"
+
+
+
+
+"route.feedback.index.error.missing-name";"Bitte geben Sie ihren Namen ein."
+"route.feedback.index.error.missing-email";"Bitte geben Sie eine gültige Email Addresse ein."
+"route.feedback.index.error.missing-message";"Bitte geben Sie ihre Nachricht ein."
+"route.feedback.index.email-subject";"Social Monitor Rückmeldung von %name%"
+
+
+
+
+"route.group.index.page-title";"SBUs"
+"route.group.index.empty-table";"Keine SBUs gefunden"
+
+"route.group.new.page-title";"Neue SBU"
+
+"route.group.view.page-title";"SBU: %group%"
+
+"route.group.edit.page-title";"SBU bearbeiten"
+"route.group.edit.message.success";"SBU gespeichert"
+"route.group.edit.message.display-name-missing";"Bitte geben Sie einen Namen ein"
+
+"route.group.edit-all.page-title";"Alle SBUs bearbeiten"
+"route.group.edit-all.message.display-name-missing";"Bitte geben Sie einen Namen für %group% ein"
+"route.group.edit-all.message.success";"%count% SBUs gespeichert"
+
+"route.group.delete.message.success";"SBU gelöscht"
+
+"route.group.graph-data.message.not-found";"SBU konnte nicht gefunden werden"
+
+"route.group.manage.page-title";"Auftritte verwalten: %group%"
+"route.group.manage.message.success";"SBU Auftritt aktualisiert"
+
+"route.group.report.page-title";"Social Media Monitor Report"
+
+
+
+
+"route.presence.index.page-title";"Auftritte"
+"route.presence.index.table-empty";"Es konnten keine Auftritte gefunden werden"
+
+"route.presence.new.page-title";"Neuer Auftritt"
+
+"route.presence.delete.message.success";"Auftritt gelöscht"
+
+"route.presence.assign.message.success";"Der Auftritt wurde dem Benutzer zugewiesen"
+
+"route.presence.view.page-title";"Auftritt: %presence%"
+"route.presence.view.info.presence-type";"Dies ist ein %type% Auftritt"
+"route.presence.view.info.presence.score";"Die %type% Engagement Wertung von gestern: %score%%"
+"route.presence.view.info.presence.average-score";"Monatlich durchschnittliche %type% Wertung: %score%%"
+"route.presence.view.info.twitter.score";"Klout Wertung von gestern: %score%%"
+"route.presence.view.info.twitter.average-score";"Monatlich durchschnittliche Klout Wertung von: %score%%"
+"route.presence.view.info.owner-name";"Dieser Auftritt trägt zu der Statistik für %link% bei"
+"route.presence.view.info.target-audience";"Die Größe der Zielgruppe beträgt %size%"
+"route.presence.view.info.current-audience";"Die Größe der Zielgruppe beträgt %size%"
+"route.presence.view.info.time-to-target";"Bei der aktuellen Rate wird das Ziel am %date% erreicht sein"
+"route.presence.view.info.daily-gains";"Der folgende Zuwachs pro Tag ist nötig um die geplante Zielgruppengröße zu erreichen:"
+"route.presence.view.info.gain-per-day";"Benötigter Zuwachs pro Tag"
+
+"route.presence.compare.page-title";"Vergleichen von %count% Auftritten"
+"route.presence.compare.presence-handle";"Handle"
+"route.presence.compare.table-empty";"Keine Auftritte gefunden"
+"route.presence.compare.button.create-sbu";"SBU erstellen"
+"route.presence.compare.chart-title";"Wertung der letzten 30 Tage:"
+
+"route.presence.edit.page-title";"Auftritt bearbeiten"
+"route.presence.edit.message.success";"Auftritt gespeichert"
+"route.presence.edit.label.handle";"Name"
+"route.presence.edit.label.type";"Typ"
+"route.presence.edit.label.size";"Größe"
+"route.presence.edit.label.signed-off";"Signed Off"
+"route.presence.edit.label.branding";"Branding"
+"route.presence.edit.hint.connect-account";"Bitte verbinden Sie ihren Account mit %title%"
+"route.presence.edit.hint.handle.facebook";"For www.facebook.com/<strong>platform</strong> the handle is '<strong>platform</strong>'<br/>For pages without vanity URLs, the handle is the long number in the URL, eg www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>"
+"route.presence.edit.hint.handle.twitter";"For www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"route.presence.edit.hint.handle.instagram";"For www.instagram.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"route.presence.edit.hint.handle.youtube";"For www.youtube.com/channel/<strong>platform</strong> the handle is '<strong>platform</strong>'"
+"route.presence.edit.hint.handle.linkedin";"Use the name of the company, as it appears on its page. E.g. for <a href=\"https://www.linkedin.com/company/1337\" target=\"_blank\">LinkedIn themselves</a>, the handle is '<strong>LinkedIn</strong>'"
+"route.presence.edit.hint.handle.sinaweibo";"Use the name of the account, as it appears on its page. E.g. for <a href=\"http://www.weibo.com/u/2463797455\" target=\"_blank\">BBC World</a>, the handle is '<strong>BBCWorld</strong>'"
+"route.presence.edit.hint.size";"Size will affect the weighting of a presence when calculating the target for its popularity.<br/>Size will only affect presences that belong to SBU.<br/>Large presences in an SBU will take a larger share of the SBU's target population, Medium presences a smaller share, and Small presences an even smaller share."
+"route.presence.edit.access-token.title";"Access Token"
+"route.presence.edit.access-token.message";"Diese Art von Auftritt benötigt ein Access Token um die Daten zu laden"
+"route.presence.edit.access-token.has-user.message";"Dieser Auftritt nutzt aktuell ein Access Token des folgenden Benutzers: <strong>%name%</strong>"
+"route.presence.edit.access-token.no-user.message";"Dieser Auftritt hat aktuell kein Access Token und kann deshalb nicht geladen werden."
+"route.presence.edit.access-token.button";"Use your access token"
+
+"route.presence.report.page-title";"Social Media Monitor Bericht"
+
+
+
+
+"route.user.index.page-title";"Benutzer"
+
+"route.user.linkedin.page-title";"Bei LinkedIn einloggen"
+"route.user.linkedin.message.success";"Linkedin Account wurde verknüpft"
+
+"route.user.login.page-title";"Einloggen"
+"route.user.login.message.cannot-login";"Incorrect username/password or email has not been confirmed"
+"route.user.login.message.cannot-login";"Passwort und Nutzername waren nicht korrekt oder die Email wurde noch nicht bestätigt"
+
+"route.user.logout.message.success";"Ausgeloggt"
+
+"route.user.delete.message.success";"Benutzer wurde gelöscht"
+
+"route.user.forgotten.page-title";"Passwort vergessen"
+"route.user.forgotten.message.missing-username-email";"Benutzername oder Email eingeben"
+"route.user.forgotten.message.user-not-found";"Benutzer konnte nicht gefunden werden"
+"route.user.forgotten.message.password-reset-email-sent";"Sie erhalten in kürze eine Email mit einem Link zum Zurücksetzen ihres Passwortes"
+"route.user.forgotten.message.password-reset-failed-email";"Email kontte nicht gesendet werden.<br />Bitte benachrichtigen Sie einen Administrator um ihr Passwort zurückzusetzen"
+
+"route.user.reset-password.page-title";"Passwort ändern"
+"route.user.reset-password.message.both-passwords-required";"Beide Passwörter sind erforderlich"
+"route.user.reset-password.message.password-mismatch";"Die Passwörter stimmen nicht überein"
+"route.user.reset-password.message.passwords-too-short";"Das Passwort muss mindestens 4 Buchstaben enthalten"
+"route.user.reset-password.message.success";"Passwort wurde erfolgreich geändert"
+"route.user.reset-password.message.incorrect-user-key";"Falsche Kombination von Name und Schlüssel"
+
+"route.user.register.page-title";"Benutzer registrieren"
+"route.user.register.registration-successful";"Registrierung erfolgreich"
+"route.user.register.email.subject";"Sie haben sich erfolgreich registriert"
+"route.user.register.email.message";"<p>Hi %name%,</p><p>Thank you for registering with the British Council Social Monitor</p><p>If you did not register for this service, please ignore this email.</p><p>Otherwise, click this link to confirm your email so that you can login with your new account <a href="%link%">Confirm email</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
+"route.user.register.email.from";"The British Council Social Media Monitor team"
+"route.user.register.email.from-address";"do.not.reply@example.com"
+
+"route.user.new.page-title";"Neuer Benutzer"
+
+"route.user.edit.page-title";"Benutzer bearbeiten"
+"route.user.edit.saved";"Benutzer gespeichert"
+"route.user.edit.created";"Benutzer erstellt"
+"route.user.edit.registered";"Benutzer registriert"
+"route.user.edit.message.both-passwords-required";"Beide Passwörter sind erforderlich"
+"route.user.edit.message.password-mismatch";"Die Passwörter stimmen nicht überei"
+"route.user.edit.message.passwords-too-short";"Das Passwort muss mindestens 4 Buchstaben enthalten"
+"route.user.edit.message.missing-username";"Bitte geben Sie einen Benutzernamen an"
+"route.user.edit.message.missing-email";"Bitte geben Sie eine Email Addresse an"
+"route.user.edit.message.invalid-email";"Bitte geben Sie eine gültige Email Addresse an"
+"route.user.edit.message.use-company-email";"Um sich zu registrieren benötigen Sie eine gültige Email Addresse des Goethe-Instituts"
+"route.user.edit.message.email-in-use";"Diese Email wird bereits verwendet"
+"route.user.edit.message.username-in-use";"Dieser Benutzername wird bereits verwendet"
+
+"route.user.edit-self.page-title";"Meine Angaben bearbeiten"
+
+"route.user.manage.page-title";"Zugangsrechte für den Benutzer %user% bearbeiten"
+"route.user.manage.message.permissions-saved";"Zugangsrechte gespeichert"
+
+"route.user.forgotten.email.subject";"Passwort zurücksetzen"
+"route.user.forgotten.email.message";"'<p>Hi %name%,</p><p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p><p>If you did not request a reset, please ignore this email.</p><p>Otherwise, click this link to reset your password <a href="%link%">Reset password</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
+"route.user.forgotten.email.from";"The British Council Social Media Monitor team"
+"route.user.forgotten.email.from-address";"do.not.reply@example.com"
+
+"route.user.confirm-email.message.success";"Thank you for confirming your email. You can now login."
+"route.user.confirm-email.message.fail";"Something went wrong and we couldn't confirm your email address."
+"route.user.confirm-email.message.invalid-email";"Incorrect user/key combination for email confirmation"
+
+
+
+"route.statuses.index.page-title";"Status"
+"route.statuses.index.label.social-media";"Social Media"
+
+
+
+"route.error.error.page-title";"Application error"
+"route.error.error.page-title-404";"Seite konnte nicht gefunden werden"
+"route.error.error.message.404";"Bitte überprüfen Sie die URL"
+"route.error.error.message.500";"Es tut uns leid, da ist wohl etwas schief gegangen"
+
+
+
+
+"route.fetch.log.finished";"Abgeschlossen"
+"route.fetch.log.updating-facebook-actors.start";"Facebook Akteure werden aktualisiert"
+"route.fetch.log.updating-facebook-actors.fail";"Updaten der Facebook Akteure ist fehlgeschlagen: %message%"
+"route.fetch.log.updating-facebook-actors.success";"%count% Akteuere aktualisiert"
+"route.fetch.log.updating-domains.start";"Aktualisiere verknüpfte Domains"
+"route.fetch.log.updating-domains.success";"%count% Domains eingefügt"
+"route.fetch.log.start";"Starting %action% process on %start%"
+"route.fetch.log.lock-acquire";"Der Prozess ist bereits am laufen und war zuletzt vor %seconds% Sekunden aktiv"
+"route.fetch.log.lock-acquire.fail";"Stale lock found last active %seconds% seconds ago: %lockname%"
+"route.fetch.log.presence-history.start";"Aktualisiere Verlauf des Standort"
+"route.fetch.log.presence-history.error";"Error: %message%"
+"route.fetch.log.update-info.start";"Information aktualisieren %message%"
+"route.fetch.log.update-info.success";"Information aktualisiert %message%"
+"route.fetch.log.update-info.error";"Fehler beim aktualisieren der Standort Information: %message%"
+"route.fetch.log.update-info.skip";"Information wird nicht aktualisiert %message% da Sie bereits aktualisiert wurde %lastupdated%"
+"route.fetch.log.fetch-statues.start";"Status %message%"
+"route.fetch.log.fetch-statues.success";"%count% hinzugefügt"
+"route.fetch.log.fetch-statues.error";"Error: %message%"
+
+
+
+
+"route.config.index.page-title";"Einstellungen"
+
+
+"route.index.index.date-range";"Datumsbereich"
+
+
+"badge.engagement.title";"Engagement"
+"badge.engagement.description";"<p>Der Engagement KPI erstellt eine Wertung darüber, wie gut sich ein Standort, ein Land oder eine SBU mit ihrem Publikum beschäftigt. Diese Wertung setzt sich aus folgenden Metriken zusammen:</p><ul><li>Klout Wertung für diesen Standort (nur Twitter).</li><li>Facebook Engagement Wertung für diesen Standort (nur Facebook).</li><li>Sina Weibo Engagement Wertnug für diesen Standort (nur Sina Weibo).</li><li>Instagram Engagement Wertung für diesen Standort (nur Instagram).</li><li>Youtube Engagement Wertung für diesen Standort (nur Youtube).</li><li>Linkedin Engagement Wertung für diesen Standort (nur LinkedIn).</li></ul>"
+
+"badge.reach.title";"Reichweite"
+"badge.reach.description";"<p>Der Reichweite KPI erstellt eine Wertung darüber, wie gut ein Standort, ein Land oder eine SBU sein Publikum erreicht. Diese Wertung setzt sich aus folgenden Metriken zusammen:</p><ul><li>Aktuelle Anzahl der Fans / Follower.</li><li>Anzahl der Monate die benötigt werden um die geplante Anzahl an Fans / Follower zu erreichen.</li><li>Durchschnittliche Anzahl der geteilten Inhalte / Retweets für jeden Post / Tweet.</li></ul>"
+
+
+"badge.quality.title";"Qualität"
+"badge.quality.description";"<p>Der Qualitäts KPI erstellt eine Wertung über die Qualität der erstellten Posts von den jeweiligen Standorten eines Landes oder einer SBU. Diese Wertung setzt sich aus folgenden Metriken zusammen:</p><ul><li>Durchschnittliche Anzahl an Posts / Tweets pro Tag.</li><li>Durchschnittliche Anzahl an Links pro Tag.</li><li>Durchschnittliche Anzahl an Likes / Retweets pro Post / Tweet / abgespieltem Video.</li><li>Genehmigungsstatus des Standortes.</li><li>Markenstatus des Standortes.</li><li>Anzahl einschlägiger Posts die täglich gemacht werden.</li><li>Die durchschnittlich Reaktionszeit auf Kommentare für diesen Standort.</li></ul>"
+
+"badge.total.title";"Insgesamt"
+"badge.total.description";"<p>Die insgesamte Wertung gibt einen Überblick darüber wie gut ein Social Media Auftritt, ein Land oder eine SBU abschneidet. Die Wertung fasst die Gesamtwertungen der folgenden KPIs zusammen:</p><ul><li>Reichweite KPI</li><li>Engagement KPI</li><li>Qualitäts KPI</li></ul>"

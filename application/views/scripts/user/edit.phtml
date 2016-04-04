@@ -1,14 +1,16 @@
 <?php
+/** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+$translator = $this->translate();
 $buttons = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">Cancel</a>', array('controller'=>'user', 'action'=>'index'), null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$translator->trans('Global.cancel').'</a>', array('controller'=>'user', 'action'=>'index'), null, true);
 if ($cancel) {
     $buttons[] = $cancel;
 }
-$buttons[] = '<button type="submit" class="button-bc">Save</button>';
+$buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('Global.save').'</button>';
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
-<p>On this page you can edit your user information, such as updating your email address or changing your password.</p>
+<p><?php echo $translator->trans('views.scripts.user.edit.title'); ?></p>
 
 <form class="edit" method="post" action="<?php echo $this->url(array('controller'=>'user')); ?>">
 
@@ -18,7 +20,7 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 				<div class="row">
 					<div class="small-24 medium-8 large-8 columns">
 						<label for="name" class="requiredField">
-							User name<span class="asteriskField">*</span>
+							<?php echo $translator->trans('Global.user'); ?><span class="asteriskField">*</span>
 						</label>
 					</div>
 					<div class="small-24 medium-16 large-16 end columns">
@@ -29,7 +31,7 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 				<div class="row">
 					<div class="small-24 medium-8 large-8 columns">
 						<label for="email" class="requiredField">
-							Email address<span class="asteriskField">*</span>
+							<?php echo $translator->trans('views.scripts.user.edit.label.user.email'); ?><span class="asteriskField">*</span>
 						</label>
 					</div>
 					<div class="small-24 medium-16 large-16 end columns">
@@ -40,7 +42,7 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 				<div class="row">
 					<div class="small-24 medium-8 large-8 columns">
 						<label for="user_level" class="requiredField">
-							User Level<span class="asteriskField">*</span>
+							<?php echo $translator->trans('views.scripts.user.edit.label.user.level'); ?><span class="asteriskField">*</span>
 						</label>
 					</div>
 					<div class="small-24 medium-16 large-16 end columns">
@@ -55,7 +57,7 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 				<div class="row">
 					<div class="small-24 medium-8 large-8 columns">
 						<label for="password" class="requiredField">
-							Password<span class="asteriskField">*</span>
+							<?php echo $translator->trans('Global.password'); ?><span class="asteriskField">*</span>
 						</label>
 					</div>
 					<div class="small-24 medium-16 large-16 end columns">
@@ -66,7 +68,7 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 				<div class="row">
 					<div class="small-24 medium-8 large-8 columns">
 						<label for="password_confirm" class="requiredField">
-							Password (again)<span class="asteriskField">*</span>
+							<?php echo $translator->trans('Global.password-confirm'); ?><span class="asteriskField">*</span>
 						</label>
 					</div>
 					<div class="small-24 medium-16 large-16 end columns">
@@ -86,7 +88,7 @@ $buttons[] = '<button type="submit" class="button-bc">Save</button>';
 						<a href="<?php echo $this->linkedinUrl ?>"
 						   class="button-bc inline"><?php echo $this->linkedinToken ? 'Refresh account' : 'Connect account'; ?></a>
 						<?php if ($this->linkedinToken && !$this->linkedinToken->isExpired()) : ?>
-							<div>You will be logged out of Linkedin in <?php echo $this->linkedinToken->getExpires()->diffForHumans(); ?></div>
+							<div><?php echo $translator->trans('views.scripts.user.edit.label.linkedin-expires'); ?><?php echo $this->linkedinToken->getExpires()->diffForHumans(); ?></div>
 						<?php endif; ?>
 					</div>
 				</div>
