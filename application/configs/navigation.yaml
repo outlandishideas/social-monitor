@@ -23,11 +23,6 @@ presence:
   icon: icon-bar-chart icon-large
   controller: presence
   action: index
-domain:
-  id: domains
-  icon: icon-laptop icon-large
-  controller: domain
-  action: index
 statuses:
   id: statuses
   icon: icon-comment-alt icon-large
