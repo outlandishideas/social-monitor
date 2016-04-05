@@ -311,7 +311,7 @@
 "route.presence.edit.hint.handle.youtube";"For www.youtube.com/channel/<strong>platform</strong> the handle is '<strong>platform</strong>'"
 "route.presence.edit.hint.handle.linkedin";"Use the name of the company, as it appears on its page. E.g. for <a href=\"https://www.linkedin.com/company/1337\" target=\"_blank\">LinkedIn themselves</a>, the handle is '<strong>LinkedIn</strong>'"
 "route.presence.edit.hint.handle.sinaweibo";"Use the name of the account, as it appears on its page. E.g. for <a href=\"http://www.weibo.com/u/2463797455\" target=\"_blank\">BBC World</a>, the handle is '<strong>BBCWorld</strong>'"
-"route.presence.edit.hint.size";"Size will affect the weighting of a channel when calculating the target for its popularity.<br/>Size will only affect presences that belong to SBU.<br/>Large channels in an SBU will take a larger share of the SBU's target population, Medium channels a smaller share, and Small channels an even smaller share."
+"route.presence.edit.hint.size";"Size will affect the weighting of a channel when calculating the target for its popularity.<br/>Size will only affect channels that belong to SBU.<br/>Large channels in an SBU will take a larger share of the SBU's target population, Medium channels a smaller share, and Small channels an even smaller share."
 "route.presence.edit.access-token.title";"Access Token"
 "route.presence.edit.access-token.message";"This type of channel requires an access token to fetch data."
 "route.presence.edit.access-token.has-user.message";"This channel is currently using the access token from the following user: <strong>%name%</strong>"
