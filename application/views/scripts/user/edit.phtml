@@ -2,11 +2,11 @@
 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
 $translator = $this->translate();
 $buttons = array();
-$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$translator->trans('Global.cancel').'</a>', array('controller'=>'user', 'action'=>'index'), null, true);
+$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$translator->trans('buttons.common.cancel').'</a>', array('controller'=>'user', 'action'=>'index'), null, true);
 if ($cancel) {
     $buttons[] = $cancel;
 }
-$buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('Global.save').'</button>';
+$buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('buttons.common.save').'</button>';
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
