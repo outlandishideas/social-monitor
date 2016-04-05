@@ -24,8 +24,8 @@
 "Global.countries";"Countries"
 "Global.group";"SBU"
 "Global.groups";"SBUs"
-"Global.presence";"Presence"
-"Global.presences";"Presences"
+"Global.presence";"Channel"
+"Global.presences";"Channels"
 "Global.select";"Select"
 "Global.select-placeholder";"-- Select --"
 "Global.charts";"Charts"
@@ -70,7 +70,7 @@
 "navigation-menu.regions";"Regions"
 "navigation-menu.countries";"Countries"
 "navigation-menu.sbus";"SBUs"
-"navigation-menu.presences";"Presences"
+"navigation-menu.presences";"Channels"
 "navigation-menu.domains";"Domains"
 "navigation-menu.statuses";"Statuses"
 "navigation-menu.login";"Login"
@@ -102,7 +102,7 @@
 "route.index.index.pdf-download-link-title";"Download metrics PDF"
 "route.index.index.contextual-help.page-title";"Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU."
 "route.index.index.contextual-help.date-range";"Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU."
-"route.index.index.contextual-help.map";"Click on the map to select a country and preview the individual social media presences."
+"route.index.index.contextual-help.map";"Click on the map to select a country and preview the individual social media channels."
 
 
 
@@ -114,7 +114,7 @@
 "buttons.common.save";"Save"
 "buttons.common.cancel";"Cancel"
 "buttons.common.add-new";"Add New"
-"buttons.common.manage-presences";"Presences"
+"buttons.common.manage-presences";"Channels"
 "buttons.common.manage-countries";"Countries"
 
 "buttons.region.edit";"Edit Region"
@@ -124,17 +124,17 @@
 
 "buttons.country.edit";"Edit Country"
 "buttons.country.delete";"Delete Country"
-"buttons.country.manage";"Manage Presences"
+"buttons.country.manage";"Manage Channels"
 "buttons.country.view";"View Country"
 
 "buttons.group.edit";"Edit SBU"
 "buttons.group.delete";"Delete SBU"
-"buttons.group.manage";"Manage Presences"
+"buttons.group.manage";"Manage Channels"
 "buttons.group.view";"View SBU"
 
-"buttons.presence.edit";"Edit Presence"
-"buttons.presence.delete";"Delete Presence"
-"buttons.presence.view";"View Presence"
+"buttons.presence.edit";"Edit Channel"
+"buttons.presence.delete";"Delete Channel"
+"buttons.presence.view";"View Channel"
 
 
 
@@ -145,7 +145,7 @@
 
 "route.region.view.page-title";"Region: %region%"
 "route.region.view.info.countries.header";"Countries: %count%"
-"route.region.view.info.presences.header";"Presences: %count%"
+"route.region.view.info.presences.header";"Channels: %count%"
 
 "route.region.edit.page-title";"Edit Region"
 "route.region.edit.message.success";"Region saved"
@@ -166,7 +166,7 @@
 
 "route.region.report.page-title";"Social Media Monitor Report"
 "route.region.report.countries.header";"Countries: %count%"
-"route.region.report.presences.header";"Presences: %count%"
+"route.region.report.presences.header";"Channels: %count%"
 
 
 
@@ -208,8 +208,8 @@
 
 "route.country.graph-data.message.not-found";"Country could not be found"
 
-"route.country.manage.page-title";"Manage Presences"
-"route.country.manage.message.success";"Country presences updated"
+"route.country.manage.page-title";"Manage Channels"
+"route.country.manage.message.success";"Country channels updated"
 
 "route.country.report.page-title";"Social Media Monitor Report"
 "route.country.report.label.additional-info";"Additional Info"
@@ -217,10 +217,10 @@
 "route.country.report.label.audience-size";"Available Audience Size"
 "route.country.report.label.country-population";"Country Population"
 "route.country.report.label.digital-population";"Digital Population"
-"route.country.report.label.presence-count";"Presences: %count%"
+"route.country.report.label.presence-count";"Channels: %count%"
 
 "route.country.stats-panel.header.score";"Score"
-"route.country.stats-panel.header.presences";"Presences"
+"route.country.stats-panel.header.presences";"Channels"
 
 
 
@@ -239,7 +239,7 @@
 "route.group.new.page-title";"New SBU"
 
 "route.group.view.page-title";"SBU: %group%"
-"route.group.view.info-panel.presences";"Presences: %count%"
+"route.group.view.info-panel.presences";"Channels: %count%"
 
 "route.group.edit.page-title";"Edit SBU"
 "route.group.edit.message.success";"SBU saved"
@@ -258,34 +258,34 @@
 
 "route.group.graph-data.message.not-found";"SBU could not be found"
 
-"route.group.manage.page-title";"Manage Presences: %group%"
-"route.group.manage.message.success";"SBU presences updated"
+"route.group.manage.page-title";"Manage Channels: %group%"
+"route.group.manage.message.success";"SBU channels updated"
 
 "route.group.report.page-title";"Social Media Monitor Report"
-"route.group.report.presence.header";"Presences: %count%"
+"route.group.report.presence.header";"Channels: %count%"
 
 
 
 
-"route.presence.index.page-title";"Presences"
-"route.presence.index.table-empty";"No presences found"
+"route.presence.index.page-title";"Channels"
+"route.presence.index.table-empty";"No channels found"
 
-"route.presence.new.page-title";"New presence"
+"route.presence.new.page-title";"New channel"
 
-"route.presence.delete.message.success";"Presence deleted"
+"route.presence.delete.message.success";"Channel deleted"
 
-"route.presence.assign.message.success";"Presence was assigned to user"
-"route.presence.assign.message.failure";"Presence could not be assigned to user"
+"route.presence.assign.message.success";"Channel was assigned to user"
+"route.presence.assign.message.failure";"Channel could not be assigned to user"
 
-"route.presence.graph-data.message.not-found";"Presence could not be found"
+"route.presence.graph-data.message.not-found";"Channel could not be found"
 
-"route.presence.view.page-title";"Presence: %presence%"
-"route.presence.view.info.presence-type";"This is a %type% presence"
+"route.presence.view.page-title";"Channel: %presence%"
+"route.presence.view.info.presence-type";"This is a %type% channel"
 "route.presence.view.info.presence.score";"Yesterday's %type% Engagement score: %score%%"
 "route.presence.view.info.presence.average-score";"Monthly Average %type% Engagement score: %score%%"
 "route.presence.view.info.twitter.score";"Yesterday's Klout score: %score%%"
 "route.presence.view.info.twitter.average-score";"Monthly Average Klout score: %score%%"
-"route.presence.view.info.owner-name";"This presence contributes to the statistics for %link%"
+"route.presence.view.info.owner-name";"This channel contributes to the statistics for %link%"
 "route.presence.view.info.target-audience";"The target audience size is %size%"
 "route.presence.view.info.current-audience";"The target audience size is %size%"
 "route.presence.view.info.time-to-target";"At the current rate, the target will be reached by %date%"
@@ -294,12 +294,12 @@
 "route.presence.view.info.gain-per-day";"Required gain per day"
 "route.presence.view.statuses.table-header.content";"Content"
 
-"route.presence.edit.page-title";"Edit presence"
-"route.presence.edit.message.success";"Presence saved"
-"route.presence.edit.message.already-exists";"Presence already exists"
+"route.presence.edit.page-title";"Edit channel"
+"route.presence.edit.message.success";"Channel saved"
+"route.presence.edit.message.already-exists";"Channel already exists"
 "route.presence.edit.message.missing-handle";"Please enter a handle"
 "route.presence.edit.message.missing-type";"Please choose a type"
-"route.presence.edit.label.handle";"Handle"
+"route.presence.edit.label.handle";"Channel"
 "route.presence.edit.label.type";"Type"
 "route.presence.edit.label.size";"Size"
 "route.presence.edit.label.signed-off";"Signed Off"
@@ -311,15 +311,15 @@
 "route.presence.edit.hint.handle.youtube";"For www.youtube.com/channel/<strong>platform</strong> the handle is '<strong>platform</strong>'"
 "route.presence.edit.hint.handle.linkedin";"Use the name of the company, as it appears on its page. E.g. for <a href=\"https://www.linkedin.com/company/1337\" target=\"_blank\">LinkedIn themselves</a>, the handle is '<strong>LinkedIn</strong>'"
 "route.presence.edit.hint.handle.sinaweibo";"Use the name of the account, as it appears on its page. E.g. for <a href=\"http://www.weibo.com/u/2463797455\" target=\"_blank\">BBC World</a>, the handle is '<strong>BBCWorld</strong>'"
-"route.presence.edit.hint.size";"Size will affect the weighting of a presence when calculating the target for its popularity.<br/>Size will only affect presences that belong to SBU.<br/>Large presences in an SBU will take a larger share of the SBU's target population, Medium presences a smaller share, and Small presences an even smaller share."
+"route.presence.edit.hint.size";"Size will affect the weighting of a channel when calculating the target for its popularity.<br/>Size will only affect presences that belong to SBU.<br/>Large channels in an SBU will take a larger share of the SBU's target population, Medium channels a smaller share, and Small channels an even smaller share."
 "route.presence.edit.access-token.title";"Access Token"
-"route.presence.edit.access-token.message";"This type of presence requires an access token to fetch data."
-"route.presence.edit.access-token.has-user.message";"This presence is currently using the access token from the following user: <strong>%name%</strong>"
-"route.presence.edit.access-token.no-user.message";"This presence does not currently have an access token and so cannot be fetched."
+"route.presence.edit.access-token.message";"This type of channel requires an access token to fetch data."
+"route.presence.edit.access-token.has-user.message";"This channel is currently using the access token from the following user: <strong>%name%</strong>"
+"route.presence.edit.access-token.no-user.message";"This channel does not currently have an access token and so cannot be fetched."
 "route.presence.edit.access-token.button";"Use your access token"
 
 "route.presence.report.page-title";"Social Media Monitor Report"
-"route.presence.report.presence.header";"Presence: %presence%"
+"route.presence.report.presence.header";"Channel: %presence%"
 
 
 
@@ -418,11 +418,11 @@
 "route.fetch.log.start";"Starting %action% process on %start%"
 "route.fetch.log.lock-acquire";"Process already running and last active %seconds% seconds ago"
 "route.fetch.log.lock-acquire.fail";"Stale lock found last active %seconds% seconds ago: %lockname%"
-"route.fetch.log.presence-history.start";"Updating presence history"
+"route.fetch.log.presence-history.start";"Updating channel history"
 "route.fetch.log.presence-history.error";"Error: %message%"
 "route.fetch.log.update-info.start";"Update info %message%"
 "route.fetch.log.update-info.success";"Updated info %message%"
-"route.fetch.log.update-info.error";"Error updating presence info: %message%"
+"route.fetch.log.update-info.error";"Error updating channel info: %message%"
 "route.fetch.log.update-info.skip";"Not updating info %message% as last updated %lastupdated%"
 "route.fetch.log.fetch-statuses.start";"Fetch statuses %message%"
 "route.fetch.log.fetch-statuses.success";"Inserted %count%"
@@ -440,7 +440,7 @@
 "route.config.index.sections.general.feedback.email-address";"Email Address"
 
 "route.config.index.sections.reach.target-audience.title";"Target Audience"
-"route.config.index.sections.reach.target-audience.description";"Each presence has a target audience set against it. The score is given based on how close the presence is to its target"
+"route.config.index.sections.reach.target-audience.description";"Each channel has a target audience set against it. The score is given based on how close the channel is to its target"
 "route.config.index.sections.reach.target-audience.weighting";"Target Audience Weighting"
 "route.config.index.sections.reach.target-audience.fb-min";"Facebook Minimum Audience (% of total)"
 "route.config.index.sections.reach.target-audience.fb-opt";"Facebook Optimum Audience (% of total)"
@@ -454,27 +454,27 @@
 "route.config.index.sections.reach.target-audience.yt-opt";"Youtube Optimum Audience (% of total)"
 "route.config.index.sections.reach.target-audience.in-min";"LinkedIn Minimum Audience (% of total)"
 "route.config.index.sections.reach.target-audience.in-opt";"LinkedIn Optimum Audience (% of total)"
-"route.config.index.sections.reach.target-audience.shared-audience-extra-large";"% of owner Target Audience that is shared amongst extra large presences"
-"route.config.index.sections.reach.target-audience.shared-audience-large";"% of owner Target Audience that is shared amongst large presences"
-"route.config.index.sections.reach.target-audience.shared-audience-medium";"% of owner Target Audience that is shared amongst medium presences"
-"route.config.index.sections.reach.target-audience.shared-audience-small";"% of owner Target Audience that is shared amongst small presences"
+"route.config.index.sections.reach.target-audience.shared-audience-extra-large";"% of owner Target Audience that is shared amongst extra large channels"
+"route.config.index.sections.reach.target-audience.shared-audience-large";"% of owner Target Audience that is shared amongst large channels"
+"route.config.index.sections.reach.target-audience.shared-audience-medium";"% of owner Target Audience that is shared amongst medium channels"
+"route.config.index.sections.reach.target-audience.shared-audience-small";"% of owner Target Audience that is shared amongst small channels"
 "route.config.index.sections.reach.time-to-target-audience.title";"Time to Target Audience"
-"route.config.index.sections.reach.time-to-target-audience.description";"Each presence has a target audience set against it. The score is given based on how close the presence is to its target"
+"route.config.index.sections.reach.time-to-target-audience.description";"Each channel has a target audience set against it. The score is given based on how close the channel is to its target"
 "route.config.index.sections.reach.time-to-target-audience.weighting";"Time to Target Audience Weighting"
 "route.config.index.sections.reach.time-to-target-audience.best-score-label";"Target audience best score (months)"
 "route.config.index.sections.reach.time-to-target-audience.best-score-hint";"The number of months the target audience should be reached within to get the best score"
 "route.config.index.sections.reach.time-to-target-audience.good-score-label";"Target audience good score (months)"
 "route.config.index.sections.reach.time-to-target-audience.good-score-hint";"The number of months the target audience should be reached within to get a good score"
 "route.config.index.sections.reach.time-to-target-audience.bad-score-label";"Target audience bad score (months)"
-"route.config.index.sections.reach.time-to-target-audience.bad-score-hint";"If the target audience will be reached after this number of months, the presence will get a bad score"
+"route.config.index.sections.reach.time-to-target-audience.bad-score-hint";"If the target audience will be reached after this number of months, the channel will get a bad score"
 "route.config.index.sections.reach.sharing.title";"Retweets/Shares"
-"route.config.index.sections.reach.sharing.description";"How often each presence's posts are shared (Facebook) or retweeted (Twitter)"
+"route.config.index.sections.reach.sharing.description";"How often each channel's posts are shared (Facebook) or retweeted (Twitter)"
 "route.config.index.sections.reach.sharing.weighting";"Retweets/Shares Weighting"
 "route.config.index.sections.reach.sharing.fb-target";"Average shares per post target (% of total audience)"
 "route.config.index.sections.reach.sharing.tw-target";"Average retweets target (% of total audience)"
 
 "route.config.index.sections.engagement.response-time.title";"Response Time"
-"route.config.index.sections.engagement.response-time.description";"The response time score measures how quickly the presence responds to individual posts"
+"route.config.index.sections.engagement.response-time.description";"The response time score measures how quickly the channel responds to individual posts"
 "route.config.index.sections.engagement.response-time.weighting";"Response Time Weighting"
 "route.config.index.sections.engagement.response-time.best-label";"Perfect response time (hours)"
 "route.config.index.sections.engagement.response-time.good-label";"Good response time (hours)"
@@ -483,47 +483,47 @@
 "route.config.index.sections.engagement.klout.description";"The Klout Score is a third party measurement of your engagement with your audience (Twitter only)"
 "route.config.index.sections.engagement.klout.weighting";"Klout Score Weighting"
 "route.config.index.sections.engagement.klout.target-label";"Klout Score Target"
-"route.config.index.sections.engagement.klout.target-hint";"The presence will score 100% if it meets or exceeds this target, but will only receive 0% if it does not meet it."
+"route.config.index.sections.engagement.klout.target-hint";"The channel will score 100% if it meets or exceeds this target, but will only receive 0% if it does not meet it."
 
 "route.config.index.sections.engagement.fb.title";"Facebook Engagement Score (Facebook only)"
 "route.config.index.sections.engagement.fb.description";"The Facebook Engagement Score is an aggregation of likes, comments and shares."
 "route.config.index.sections.engagement.fb.weighting";"Facebook Engagement Score Weighting"
-"route.config.index.sections.engagement.fb.active-users-small";"Percentage of users assumed to be active for small presences"
-"route.config.index.sections.engagement.fb.active-users-medium";"...medium presences"
-"route.config.index.sections.engagement.fb.active-users-large";"...large presences"
-"route.config.index.sections.engagement.fb.active-users-extra-large";"...and extra large presences"
+"route.config.index.sections.engagement.fb.active-users-small";"Percentage of users assumed to be active for small channels"
+"route.config.index.sections.engagement.fb.active-users-medium";"...medium channels"
+"route.config.index.sections.engagement.fb.active-users-large";"...large channels"
+"route.config.index.sections.engagement.fb.active-users-extra-large";"...and extra large channels"
 
 "route.config.index.sections.engagement.ig.title";"Instagram Engagement Score (Instagram only)"
 "route.config.index.sections.engagement.ig.description";"The Instagram Engagement Score is an aggregation of favourites and comments."
 "route.config.index.sections.engagement.ig.weighting";"Instagram Engagement Score Weighting"
-"route.config.index.sections.engagement.ig.active-users-small";"Percentage of users assumed to be active for small presences"
-"route.config.index.sections.engagement.ig.active-users-medium";"...medium presences"
-"route.config.index.sections.engagement.ig.active-users-large";"...large presences"
-"route.config.index.sections.engagement.ig.active-users-extra-large";"...and extra large presences"
+"route.config.index.sections.engagement.ig.active-users-small";"Percentage of users assumed to be active for small channels"
+"route.config.index.sections.engagement.ig.active-users-medium";"...medium channels"
+"route.config.index.sections.engagement.ig.active-users-large";"...large channels"
+"route.config.index.sections.engagement.ig.active-users-extra-large";"...and extra large channels"
 
 "route.config.index.sections.engagement.sw.title";"Sina Weibo Engagement Score (Sina Weibo only)"
 "route.config.index.sections.engagement.sw.description";"The Sina Weibo Engagement Score is an aggregation of likes, comments and shares."
 "route.config.index.sections.engagement.sw.weighting";"Sina Weibo Engagement Score Weighting"
-"route.config.index.sections.engagement.sw.active-users-small";"Percentage of users assumed to be active for small presences"
-"route.config.index.sections.engagement.sw.active-users-medium";"...medium presences"
-"route.config.index.sections.engagement.sw.active-users-large";"...large presences"
-"route.config.index.sections.engagement.sw.active-users-extra-large";"...and extra large presences"
+"route.config.index.sections.engagement.sw.active-users-small";"Percentage of users assumed to be active for small channels"
+"route.config.index.sections.engagement.sw.active-users-medium";"...medium channels"
+"route.config.index.sections.engagement.sw.active-users-large";"...large channels"
+"route.config.index.sections.engagement.sw.active-users-extra-large";"...and extra large channels"
 
 "route.config.index.sections.engagement.in.title";"LinkedIn Engagement Score (Facebook only)"
 "route.config.index.sections.engagement.in.description";"The LinkedIn Engagement Score is an aggregation of likes and comments."
 "route.config.index.sections.engagement.in.weighting";"LinkedIn Engagement Score Weighting"
-"route.config.index.sections.engagement.in.active-users-small";"Percentage of users assumed to be active for small presences"
-"route.config.index.sections.engagement.in.active-users-medium";"...medium presences"
-"route.config.index.sections.engagement.in.active-users-large";"...large presences"
-"route.config.index.sections.engagement.in.active-users-extra-large";"...and extra large presences"
+"route.config.index.sections.engagement.in.active-users-small";"Percentage of users assumed to be active for small channels"
+"route.config.index.sections.engagement.in.active-users-medium";"...medium channels"
+"route.config.index.sections.engagement.in.active-users-large";"...large channels"
+"route.config.index.sections.engagement.in.active-users-extra-large";"...and extra large channels"
 
 "route.config.index.sections.engagement.yt.title";"Youtube Engagement Score (Facebook only)"
 "route.config.index.sections.engagement.yt.description";"The Youtube Engagement Score is an aggregation of likes, dislikes, comments and subscriptions."
 "route.config.index.sections.engagement.yt.weighting";"Youtube Engagement Score Weighting"
-"route.config.index.sections.engagement.yt.active-users-small";"Percentage of users assumed to be active for small presences"
-"route.config.index.sections.engagement.yt.active-users-medium";"...medium presences"
-"route.config.index.sections.engagement.yt.active-users-large";"...large presences"
-"route.config.index.sections.engagement.yt.active-users-extra-large";"...and extra large presences"
+"route.config.index.sections.engagement.yt.active-users-small";"Percentage of users assumed to be active for small channels"
+"route.config.index.sections.engagement.yt.active-users-medium";"...medium channels"
+"route.config.index.sections.engagement.yt.active-users-large";"...large channels"
+"route.config.index.sections.engagement.yt.active-users-extra-large";"...and extra large channels"
 
 "route.config.index.sections.quality.actions-per-day.title";"Actions per Day"
 "route.config.index.sections.quality.actions-per-day.description";"A measurement of the average number of actions per day against the benchmark"
@@ -538,28 +538,28 @@
 "route.config.index.sections.quality.likes-per-post.description";"Measures the average number of likes from users on each post"
 "route.config.index.sections.quality.likes-per-post.weighting";"Likes per Post Weighting"
 "route.config.index.sections.quality.likes-per-post.good-label";"Good Likes per Post"
-"route.config.index.sections.quality.likes-per-post.good-hint";"The presence will get a good score if the average likes per post is equal to or more than this"
+"route.config.index.sections.quality.likes-per-post.good-hint";"The channel will get a good score if the average likes per post is equal to or more than this"
 "route.config.index.sections.quality.likes-per-post.best-label";"Best Likes per Post"
-"route.config.index.sections.quality.likes-per-post.best-hint";"The presence will get the best score if the average likes per post is equal to or more than this"
+"route.config.index.sections.quality.likes-per-post.best-hint";"The channel will get the best score if the average likes per post is equal to or more than this"
 
 "route.config.index.sections.quality.likes-per-view.title";"Likes per View"
 "route.config.index.sections.quality.likes-per-view.description";"Measures the average number of likes from users for each video view"
 "route.config.index.sections.quality.likes-per-view.weighting";"Likes per View Weighting"
 "route.config.index.sections.quality.likes-per-view.good-label";"Good Likes per View"
-"route.config.index.sections.quality.likes-per-view.good-hint";"The presence will get a good score if the average likes per view is equal to or more than this"
+"route.config.index.sections.quality.likes-per-view.good-hint";"The channel will get a good score if the average likes per view is equal to or more than this"
 "route.config.index.sections.quality.likes-per-view.best-label";"Best Likes per View"
-"route.config.index.sections.quality.likes-per-view.best-hint";"The presence will get the best score if the average likes per view is equal to or more than this"
+"route.config.index.sections.quality.likes-per-view.best-hint";"The channel will get the best score if the average likes per view is equal to or more than this"
 
 "route.config.index.sections.quality.sign-off.title";"Sign Off"
-"route.config.index.sections.quality.sign-off.description";"The presence has been signed off by key stakeholders"
+"route.config.index.sections.quality.sign-off.description";"The channel has been signed off by key stakeholders"
 "route.config.index.sections.quality.sign-off.weighting";"Sign Off Weighting"
 
 "route.config.index.sections.quality.branding.title";"Branding"
-"route.config.index.sections.quality.branding.description";"The presence has the correct branding implemented"
+"route.config.index.sections.quality.branding.description";"The channel has the correct branding implemented"
 "route.config.index.sections.quality.branding.weighting";"Branding Weighting"
 
 "route.config.index.sections.quality.relevance.title";"Relevance"
-"route.config.index.sections.quality.relevance.description";"How relevant the presence's actions have been. This is currently based on the number of relevant, British Council domains that have been linked to in their actions per day."
+"route.config.index.sections.quality.relevance.description";"How relevant the channel's actions have been. This is currently based on the number of relevant, British Council domains that have been linked to in their actions per day."
 "route.config.index.sections.quality.relevance.weighting";"Relevance Weighting"
 "route.config.index.sections.quality.relevance.facebook-target";"Percent of Actions Per Day that should be relevant for Facebook"
 "route.config.index.sections.quality.relevance.twitter-target";"Percent of Actions Per Day that should be relevant for Twitter"
@@ -599,16 +599,16 @@
 
 
 "badge.engagement.title";"Engagement"
-"badge.engagement.description";"<p>The Engagement KPI provides an overall score for how well the presence, country or SBU engages with its audience. This score combines the following metrics:</p><ul><li>The Klout Score for this presence (Twitter Only).</li><li>The Facebook Engagement score for this presence (Facebook Only).</li><li>The Sina Weibo Engagement score for this presence (Sina Weibo Only).</li><li>The Instagram Engagement score for this presence (Instagram Only).</li><li>The Youtube Engagement score for this presence (Youtube Only).</li><li>The Linkedin Engagement score for this presence (Linkedin Only).</li></ul>"
+"badge.engagement.description";"<p>The Engagement KPI provides an overall score for how well the channel, country or SBU engages with its audience. This score combines the following metrics:</p><ul><li>The Klout Score for this channel (Twitter Only).</li><li>The Facebook Engagement score for this channel (Facebook Only).</li><li>The Sina Weibo Engagement score for this channel (Sina Weibo Only).</li><li>The Instagram Engagement score for this channel (Instagram Only).</li><li>The Youtube Engagement score for this channel (Youtube Only).</li><li>The Linkedin Engagement score for this channel (Linkedin Only).</li></ul>"
 
 "badge.reach.title";"Reach"
-"badge.reach.description";"<p>The Reach KPI provides an overall score for how well the presence, country or SBU reaches its audience. This score combines the following metrics:</p><ul><li>Current number of Fans / Followers</li><li>Number of months to reach the Target number of Fans / Followers</li><li>Average number of shares / retweets for each post / tweet</li></ul>"
+"badge.reach.description";"<p>The Reach KPI provides an overall score for how well the channel, country or SBU reaches its audience. This score combines the following metrics:</p><ul><li>Current number of Fans / Followers</li><li>Number of months to reach the Target number of Fans / Followers</li><li>Average number of shares / retweets for each post / tweet</li></ul>"
 
 "badge.quality.title";"Quality"
-"badge.quality.description";"<p>The Quality KPI provides an overall score for the quality of the posts produced by the presence or presences in a Country or SBU. This score combines the following metrics:</p><ul><li>The average number of posts / tweets per day.</li><li>The average number of links per day.</li><li>The average number of likes / retweets per post / tweet / video view.</li><li>The Sign Off status of the presence.</li><li>The Branding status of the presence.</li><li>The number of relevant posts made each day.</li><li>The Average Response Time to comments for this presence.</li></ul>"
+"badge.quality.description";"<p>The Quality KPI provides an overall score for the quality of the posts produced by the channel or channels in a Country or SBU. This score combines the following metrics:</p><ul><li>The average number of posts / tweets per day.</li><li>The average number of links per day.</li><li>The average number of likes / retweets per post / tweet / video view.</li><li>The Sign Off status of the channel.</li><li>The Branding status of the channel.</li><li>The number of relevant posts made each day.</li><li>The Average Response Time to comments for this channel.</li></ul>"
 
 "badge.total.title";"Overall"
-"badge.total.description";"<p>The overall score KPI provides an overall score for how well a social media presence, country or SBU is doing in the other three KPIs. The score combines the total score of the following three KPIs:</p><ul><li>Reach KPI</li><li>Engagement KPI</li><li>Quality KPI</li></ul>"
+"badge.total.description";"<p>The overall score KPI provides an overall score for how well a social media channel, country or SBU is doing in the other three KPIs. The score combines the total score of the following three KPIs:</p><ul><li>Reach KPI</li><li>Engagement KPI</li><li>Quality KPI</li></ul>"
 
 
 
@@ -661,7 +661,7 @@
 "table-header.actions-per-day.description";""
 
 "table-header.branding.label";"Branding"
-"table-header.branding.description";"Branding shows whether a presence meets the British Council branding guidelines for social media presences."
+"table-header.branding.description";"Branding shows whether a channel meets the British Council branding guidelines for social media channels."
 
 "table-header.countries.label";"Countries"
 "table-header.countries.description";"The countries in this region."
@@ -682,13 +682,13 @@
 "table-header.digital_population_health.description";""
 
 "table-header.engagement-rank.label";"Engagement Rank"
-"table-header.engagement-rank.description";"Engagement Rank shows the rank of this presence or group when compared against others."
+"table-header.engagement-rank.description";"Engagement Rank shows the rank of this channel or group when compared against others."
 
 "table-header.engagement-score.label";"Engagement Score"
-"table-header.engagement-score.description";"Engagement Score shows the score for the combined measures that measure a presences engagement"
+"table-header.engagement-score.description";"Engagement Score shows the score for the combined measures that measure a channels engagement"
 
-"table-header.handle.label";"Handle"
-"table-header.handle.description";"Select all the presences that you would like to compare, and then click on the Compare Button above"
+"table-header.handle.label";"Channel"
+"table-header.handle.description";"Select all the channels that you would like to compare, and then click on the Compare Button above"
 
 "table-header.name.label";"Name"
 "table-header.name.description";""
@@ -702,26 +702,26 @@
 "table-header.percent-target-audience.label";"Percentage of Target Audience"
 "table-header.percent-target-audience.description";""
 
-"table-header.presence-count.label";"Presences"
-"table-header.presence-count.description";"The number of presences."
+"table-header.presence-count.label";"Channels"
+"table-header.presence-count.description";"The number of channels."
 
-"table-header.presences.label";"Presences"
+"table-header.presences.label";"Channels"
 "table-header.presences.description";""
 
-"table-header.presence-type.label";"Presence Type"
+"table-header.presence-type.label";"Channel Type"
 "table-header.presence-type.description";""
 
 "table-header.quality-rank.label";"Quality Rank"
-"table-header.quality-rank.description";"Quality Rank shows the rank of this presence or group when compared against others."
+"table-header.quality-rank.description";"Quality Rank shows the rank of this channel or group when compared against others."
 
 "table-header.quality-score.label";"Quality Score"
-"table-header.quality-score.description";"Quality Score shows the score for the combined measures that measure a presences engagement"
+"table-header.quality-score.description";"Quality Score shows the score for the combined measures that measure a channels engagement"
 
 "table-header.reach-rank.label";"Reach Rank"
-"table-header.reach-rank.description";"Reach Rank shows the rank of this presence or group when compared against others."
+"table-header.reach-rank.description";"Reach Rank shows the rank of this channel or group when compared against others."
 
 "table-header.reach-score.label";"Reach Score"
-"table-header.reach-score.description";"Reach Score shows the score for the combined measures that measure a presences engagement"
+"table-header.reach-score.description";"Reach Score shows the score for the combined measures that measure a channels engagement"
 
 "table-header.region.label";"Region"
 "table-header.region.description";""
@@ -730,13 +730,13 @@
 "table-header.response-time.description";""
 
 "table-header.sign-off.label";"Sign Off"
-"table-header.sign-off.description";"Sign Off shows whether a presence has been signed off by the Head of Digital."
+"table-header.sign-off.description";"Sign Off shows whether a channel has been signed off by the Head of Digital."
 
 "table-header.target-audience.label";"Target Audience"
 "table-header.target-audience.description";""
 
 "table-header.total-rank.label";"Overall Rank"
-"table-header.total-rank.description";"Overall Rank shows the rank of this presence or group when compared against others."
+"table-header.total-rank.description";"Overall Rank shows the rank of this channel or group when compared against others."
 
 "table-header.total-score.label";"Overall Score"
 "table-header.total-score.description";"Overall Score shows the combined scores of the three badges, Reach, Engagement and Quality."
@@ -789,10 +789,10 @@
 "views.helpers.traffic-light.label.already-reached";"Target already reached"
 "views.helpers.traffic-light.label.hours";"hours"
 
-"views.scripts.partials.badges.metric-attributes.score-title";"This presence has scored %score% for %title% based on an average of the last 30 days of data."
+"views.scripts.partials.badges.metric-attributes.score-title";"This channel has scored %score% for %title% based on an average of the last 30 days of data."
 "views.scripts.partials.badges.metric-attributes.no-data";"There is no data available to calculate %title%.";
-"views.scripts.partials.badges.metric-attributes.score-zero";"This presence has scored 0% for %title%."
-"views.scripts.partials.badges.metric-attributes.title-not-applicable";"%title% is not applicable for this presence"
+"views.scripts.partials.badges.metric-attributes.score-zero";"This channel has scored 0% for %title%."
+"views.scripts.partials.badges.metric-attributes.title-not-applicable";"%title% is not applicable for this channel"
 "views.scripts.partials.badges.badge-rank.heading";"Rank"
 
 "views.scripts.statuses.index.search-table.loading-message";"Loading data..."
@@ -828,10 +828,10 @@
 "views.scripts.user.login.form.label.username";"Name/Email"
 
 "views.scripts.user.manage.automatic-access";"This user automatically has access to all parts of the monitor."
-"views.scripts.user.manage.form.form-hint";"Adding a country or SBU automatically adds any presences belonging to it to the user."
+"views.scripts.user.manage.form.form-hint";"Adding a country or SBU automatically adds any channels belonging to it to the user."
 "views.scripts.user.manage.label.available-sbus";"Available SBUs"
-"views.scripts.user.manage.label.twitter";"Available twitter presence"
-"views.scripts.user.manage.label.facebook";"Available facebook presences"
+"views.scripts.user.manage.label.twitter";"Available twitter channel"
+"views.scripts.user.manage.label.facebook";"Available facebook channels"
 "views.scripts.user.manage.assigned.label";"Currently assigned"
 "views.scripts.user.manage.assigned.none";"None assigned"
 
@@ -846,14 +846,14 @@
 "views.scripts.partials.assign-countries.heading.currently-assigned";"Currently assigned countries"
 "views.scripts.partials.assign-countries.heading.none-assigned";"No countries assigned"
 
-"views.scripts.partials.assign-presences.available-presences";"Available presences"
-"views.scripts.partials.assign-presences.assigned-presences";"Currently assigned presences"
-"views.scripts.partials.assign-presences.no-presences";"No presences assigned"
+"views.scripts.partials.assign-presences.available-presences";"Available channels"
+"views.scripts.partials.assign-presences.assigned-presences";"Currently assigned channels"
+"views.scripts.partials.assign-presences.no-presences";"No channels assigned"
 
 "views.scripts.partials.presence-summary.quality-score";"Quality score: "
 
-"views.scripts.region.edit.presence-details.heading";"Presence details"
-"views.scripts.region.edit.presence-details.content";"These presences will be automatically added to this region:"
+"views.scripts.region.edit.presence-details.heading";"Channel details"
+"views.scripts.region.edit.presence-details.content";"These channels will be automatically added to this region:"
 
 "views.scripts.partials.new-index-table.entity-list-toggle.title";"Click to expand"
 "views.scripts.partials.new-index-table.not-available";"N/A"
