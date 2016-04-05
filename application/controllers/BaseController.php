@@ -98,7 +98,7 @@ class BaseController extends Zend_Controller_Action
         $this->config = Zend_Registry::get('config');
 
 		$translator = $this->getContainer()->get('translation.translator');
-		
+
         $this->view->bodyClass = $this->_request->getActionName() . 'Action '.$this->_request->getControllerName().'Controller';
         // provide a default page title
 		$controllerName = $this->_request->getControllerName();
@@ -161,7 +161,7 @@ class BaseController extends Zend_Controller_Action
 		}
 		$this->view->pageTitle = strtr($this->view->pageTitle, $newParams);
 	}
-		
+
     /**
      * Recursively set each page's active state, depending on whether they or their children are currently being shown
      * @param $pages Zend_Navigation_Page[]
@@ -574,11 +574,10 @@ class BaseController extends Zend_Controller_Action
         $url = $this->view->gatekeeper()->filter('%url%', $urlArgs);
         if ($url) {
             $message .= ' ' . $this->translator->trans('Error.lock-error.with-url', ['%url%' => $url]);
-            return $message;
         } else {
             $message .= ' ' . $this->translator->trans('Error.lock-error.without-url');
-            return $message;
         }
+		return $message;
     }
 
     /**
