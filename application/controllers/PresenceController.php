@@ -58,7 +58,6 @@ class PresenceController extends GraphingController
         $this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
         $this->view->sortCol = Handle::NAME;
-		$this->view->regions = Model_Region::fetchAll();
 	}
 
 	/**
@@ -309,9 +308,9 @@ class PresenceController extends GraphingController
 
 		if ($this->_request->isPost()) {
 			$presence->delete();
-			
+
 			$this->invalidateTableCache();
-			
+
             $this->flashMessage($this->translator->trans('route.presence.delete.message.success')); //'Presence deleted');
             $this->_helper->redirector->gotoSimple('index');
 		} else {

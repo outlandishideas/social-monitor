@@ -54,7 +54,6 @@ class CountryController extends CampaignController {
 		$this->view->rows = $rows;
         $this->view->tableHeaders = $table->getHeaders();
         $this->view->sortCol = Name::NAME;
-		$this->view->regions = Model_Region::fetchAll();
 	}
 
     public function statsPanelAction()

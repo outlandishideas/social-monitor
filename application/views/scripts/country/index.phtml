@@ -10,9 +10,7 @@ if ($this->rows) {
 }
 $buttons = $this->gatekeeper()->filterAll($buttons);
 if ($this->rows) {
-	if ($this->regions) {
-		array_unshift($buttons, $this->partial('partials/region-filter.phtml', ['regions' => $this->regions]));
-	}
+	array_unshift($buttons, '<span id="filter-region"></span>');
 	array_unshift($buttons, '<div id="search-table">' . $translator->trans('Global.loading-data') . '</div>');
 }
 ?>
