@@ -176,6 +176,10 @@ app.init = {
 			});
 		},
 
+		"#joyride-home": function($item) {
+			$(document).foundation('joyride', 'start')
+		},
+
 		'#feedback button': function($item) {
 		    $item.on('click', app.modal.show);
 		},
