@@ -14,12 +14,16 @@
     "dot-object": "^1.4.1",
     "event-stream": "^3.3.2",
     "gulp": "^3.9.1",
+    "gulp-csv2json": "^0.2.5",
     "gulp-load-plugins": "^1.0.0-rc.1",
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.0.1",
+    "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.0.1",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-util": "^3.0.7",
-    "js-yaml": "^3.5.5"
+    "js-yaml": "^3.5.5",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-translator": "^0.2.0"
   }
 }
