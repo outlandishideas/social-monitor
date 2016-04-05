@@ -2224,7 +2224,11 @@ table .cell-handle .missing {
 }
 
 .pdflink {
-  margin-top: 0;
+   margin-top: 0;
+   margin-bottom: 0;
+ }
+
+.button-bc-bar.pdflink {
   margin-bottom: 0;
 }
 
