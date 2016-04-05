@@ -77,7 +77,7 @@ $allBadges = $this->badges;
         </div>
 
         <?php foreach($allBadges as $badge): ?>
-        <div class="badge-description" data-badge-name="<?php echo $badge->getName(); ?>">
+        <div class="badge-description animated fadeInLeft" data-badge-name="<?php echo $badge->getName(); ?>">
             <?php echo $badge->getDescription(); ?>
         </div>
         <?php endforeach; ?>
