@@ -11,12 +11,12 @@ use Model_Presence;
 abstract class BadgeRank extends Header {
 
 	protected $badgeName;
-	
+
     function __construct($translator, $name, $badgeName)
     {
         parent::__construct($translator, $name);
 		$this->badgeName = $badgeName;
-        $this->sort = self::SORT_TYPE_NUMERIC;
+        $this->sort = self::SORT_TYPE_NUMERIC_FUZZY;
         $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE, self::MODEL_TYPE_CAMPAIGN);
     }
 
