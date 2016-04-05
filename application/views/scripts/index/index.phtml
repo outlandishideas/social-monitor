@@ -185,36 +185,39 @@ $allBadges = $this->badges;
 </div>
 <?php endif; ?>
 
-<ol id="joyride-home" class="joyride-list" data-joyride>
-	<li data-text="Next" data-options="tip_location: top; prev_button: false">
-		<p>Hello and welcome to the British Council Social Monitor.</p>
-	</li>
-	<li data-id="map-top" data-class="custom so-awesome" data-options="tip_location: bottom;" data-text="Next" data-prev-text="Prev">
-		<h4>A world view</h4>
-		<p>This map gives you an overview of all the countries that the British Council has Social Media channels in.<br/>
-			If you the country is grey, that means the British Council doesn't have any Social Media channels there.</p>
-	</li>
-	<li data-id="find-country" data-button="Next" data-prev-text="Prev" data-options="tip_location:top;tip_animation:fade">
-		<h4>Can't find what you're looking for?</h4>
-		<p>You can search for any country here. Great for those small countries that can be a bit difficult to click on.</p>
-	</li>
-	<li data-id="map-date" data-button="Next" data-prev-text="Prev" data-options="tip_location:top;tip_animation:fade">
-		<h4>Zoom into the past!</h4>
-		<p>You can find out how the Social Media channels have changed over time using this Date Range slider.</p>
-	</li>
-	<li data-id="kpi-tabs" data-button="Next" data-prev-text="Prev" data-options="tip_location:top;tip_animation:fade">
-		<h4>How we measure Social Media</h4>
-		<p>We've broken up the scores of each of the Social Media channels into three different KPIs: Reach, Engagement and Quality. You can use the tabs here to see the scores for that individual KPI.</p>
-	</li>
-	<li data-id="kpi-download-button" data-button="Next" data-prev-text="Prev" data-options="tip_location:top;tip_animation:fade">
-		<h4>Find out more</h4>
-		<p>To find out more about the different KPIs that we use to measure the Social Media channels, you can download the accompanying PDF here.</p>
-	</li>
-	<li data-button="End" data-prev-text="Prev">
-		<h4>The End</h4>
-		<p>Please send us any feedback.</p>
-	</li>
-</ol>
+<?php echo $this->joyride->renderHtml(); ?>
+
+<!---->
+<!--<ol id="joyride-home" class="joyride-list" data-joyride>-->
+<!--	<li data-text="Next" data-options="tip_location: top; prev_button: false">-->
+<!--		<p>Hello and welcome to the British Council Social Monitor.</p>-->
+<!--	</li>-->
+<!--	<li data-id="map-top" data-class="custom so-awesome" data-options="tip_location: bottom;" data-text="Next" data-prev-text="Prev">-->
+<!--		<h4>A world view</h4>-->
+<!--		<p>This map gives you an overview of all the countries that the British Council has Social Media channels in.<br/>-->
+<!--			If you the country is grey, that means the British Council doesn't have any Social Media channels there.</p>-->
+<!--	</li>-->
+<!--	<li data-id="find-country" data-button="Next" data-prev-text="Prev" data-options="tip_location:top;tip_animation:fade">-->
+<!--		<h4>Can't find what you're looking for?</h4>-->
+<!--		<p>You can search for any country here. Great for those small countries that can be a bit difficult to click on.</p>-->
+<!--	</li>-->
+<!--	<li data-id="map-date" data-button="Next" data-prev-text="Prev" data-options="tip_location:top;tip_animation:fade">-->
+<!--		<h4>Zoom into the past!</h4>-->
+<!--		<p>You can find out how the Social Media channels have changed over time using this Date Range slider.</p>-->
+<!--	</li>-->
+<!--	<li data-id="kpi-tabs" data-button="Next" data-prev-text="Prev" data-options="tip_location:top;tip_animation:fade">-->
+<!--		<h4>How we measure Social Media</h4>-->
+<!--		<p>We've broken up the scores of each of the Social Media channels into three different KPIs: Reach, Engagement and Quality. You can use the tabs here to see the scores for that individual KPI.</p>-->
+<!--	</li>-->
+<!--	<li data-id="kpi-download-button" data-button="Next" data-prev-text="Prev" data-options="tip_location:top;tip_animation:fade">-->
+<!--		<h4>Find out more</h4>-->
+<!--		<p>To find out more about the different KPIs that we use to measure the Social Media channels, you can download the accompanying PDF here.</p>-->
+<!--	</li>-->
+<!--	<li data-button="End" data-prev-text="Prev">-->
+<!--		<h4>The End</h4>-->
+<!--		<p>Please send us any feedback.</p>-->
+<!--	</li>-->
+<!--</ol>-->
 
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>

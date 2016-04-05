@@ -15,6 +15,8 @@ parameters:
     table.groups.headers: []
     table.countries.headers: []
     table.presences.headers: []
+    joyride.home.steps: []
+    joyride.presence.steps: []
 
 services:
     db:
@@ -482,3 +484,7 @@ services:
     chart.response-time:
         class: Chart_ResponseTime
         arguments: [@db, @translation.translator]
+
+    joyride.home:
+        class: Outlandish\SocialMonitor\Joyride\JoyrideService
+        arguments: ["joyride-home", %joyride.home.steps%]
