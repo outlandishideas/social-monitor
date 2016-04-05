@@ -53,6 +53,7 @@ class GroupController extends CampaignController {
         $this->view->group = $group;
         $this->updatePageTitle(['group' => $group->display_name]);
         $this->view->allCampaigns = Model_Group::fetchAll();
+		$this->view->pdfLink = $this->getContainer()->get('kpi_download_linker')->link();
 	}
 
     public function downloadReportAction()

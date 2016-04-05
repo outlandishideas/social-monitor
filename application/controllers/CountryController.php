@@ -82,6 +82,7 @@ class CountryController extends CampaignController {
         $this->view->country = $country;
 		$this->updatePageTitle(['country' => $country->display_name]);
         $this->view->allCampaigns = Model_Country::fetchAll();
+		$this->view->pdfLink = $this->getContainer()->get('kpi_download_linker')->link();
 	}
 
 	public function downloadReportAction()
