@@ -17,7 +17,7 @@ $allBadges = $this->badges;
             </div>
         </span>
     </div>
-    <div class="small-24 large-19 columns">
+    <div class="small-24 large-14 columns">
         <div id="homepage-tabs">
             <dl class="tabs">
             <?php foreach($allBadges as $badge) : ?>
@@ -28,6 +28,26 @@ $allBadges = $this->badges;
             </dl>
         </div>
     </div>
+
+    <?php if ($this->pdfLink) : ?>
+        <div class="small-24 large-5 show-for-large-only columns pdflink">
+                <div id="kpi-download">
+                    <ul class="button-group">
+                        <li>
+                            <a
+                                href="<?php echo $this->pdfLink; ?>"
+                                target="_blank"
+                                title="<?php echo $translator->trans('route.index.index.pdf-download-link-title')?>"
+                                class="button-bc"
+                                download="metrics.pdf"
+                            >
+                                <?php echo $translator->trans('route.index.index.pdf-download-link')?>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+        </div>
+    <?php endif; ?>
 </div>
 
 <div class="row">
