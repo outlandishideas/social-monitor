@@ -77,7 +77,8 @@ class RegionController extends CampaignController
         $this->view->region = $region;
         $this->updatePageTitle(['region' => $region->display_name]);
         $this->view->allCampaigns = Model_Region::fetchAll();
-    }
+		$this->view->pdfLink = $this->getContainer()->get('kpi_download_linker')->link();
+	}
 
     public function downloadReportAction()
     {

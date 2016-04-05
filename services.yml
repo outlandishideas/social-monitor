@@ -482,3 +482,7 @@ services:
     chart.response-time:
         class: Chart_ResponseTime
         arguments: [@db, @translation.translator]
+
+
+    kpi_download_linker:
+        class: Outlandish\SocialMonitor\KpiPdfLinker
