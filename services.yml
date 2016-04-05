@@ -488,3 +488,7 @@ services:
     joyride.home:
         class: Outlandish\SocialMonitor\Joyride\JoyrideService
         arguments: ["joyride-home", %joyride.home.steps%]
+
+    joyride.presence:
+        class: Outlandish\SocialMonitor\Joyride\JoyrideService
+        arguments: ["joyride-presence", %joyride.presence.steps%]

@@ -180,6 +180,10 @@ app.init = {
 			$(document).foundation('joyride', 'start')
 		},
 
+		"#joyride-presence": function($item) {
+			$(document).foundation('joyride', 'start')
+		},
+
 		'#feedback button': function($item) {
 		    $item.on('click', app.modal.show);
 		},

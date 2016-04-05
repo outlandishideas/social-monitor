@@ -106,6 +106,7 @@ class PresenceController extends GraphingController
         }
         $this->view->allPresences = $allPresences;
 		$this->updatePageTitle(['presence' => $presence->getName()]);
+		$this->view->joyride = $this->getContainer()->get('joyride.presence');
 	}
 
 	public function downloadReportAction()
