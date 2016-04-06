@@ -177,21 +177,13 @@ app.init = {
 		},
 
 		"#joyride-presence": function($item) {
-			$(document).foundation('joyride', {
-				post_ride_callback: function() {
-					$.post('/user/joyride/ride/joyride-home');
-				}
-			});
-			$(document).foundation('joyride', 'start')
+			var id = $item.attr('id');
+			$item.foundation('joyride', 'start', app.joyride.config(id));
 		},
 
 		"#joyride-home": function($item) {
-			$(document).foundation('joyride', {
-				post_ride_callback: function() {
-					$.post('/user/joyride/ride/joyride-home');
-				}
-			});
-			$(document).foundation('joyride', 'start')
+			var id = $item.attr('id');
+			$(document).foundation('joyride', 'start', app.joyride.config(id));
 		},
 
 		'#feedback button': function($item) {
@@ -837,6 +829,20 @@ app.modal = {
 		$('#modal-container,#modal-backdrop').fadeOut();
 	}
 };
+
+app.joyride = {
+	config: function(id) {
+		return {
+			cookie_monster: !$.cookie(id) ? false : true,
+			cookie_name: id,
+			cookie_domain: true,
+			post_ride_callback: function() {
+				$.post('/user/joyride/ride/' + id);
+				!$.cookie(id) ? $.cookie(id, 'ridden', { expires: 365 }) : null;
+			}
+		}
+	}
+}
 
 app.table = {
 	filter: function () {

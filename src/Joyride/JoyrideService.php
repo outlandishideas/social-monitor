@@ -21,7 +21,7 @@ class JoyrideService
 
 	/**
 	 * Returns boolean whether the user has completed this joyride
-	 * 
+	 *
 	 * @param \Model_User|null $user
 	 * @return bool
 	 */
@@ -30,13 +30,13 @@ class JoyrideService
 		if (!$user) {
 			return false;
 		}
-		
+
 		return $user->hasCompletedJoyride($this->id);
 	}
 
 	/**
 	 * returns HTML string to produce joyride for ZURB Foundation
-	 * 
+	 *
 	 * @return string
 	 */
 	public function renderHtml()
@@ -46,13 +46,15 @@ class JoyrideService
 			return "";
 		}
 
-		$html = "<ol id=\"{$this->id}\" class=\"joyride-list\" data-joyride>";
+		$html = "<div id=\"{$this->id}\">";
+		$html .= "<ol class=\"joyride-list\" data-joyride>";
 
 		foreach ($this->steps as $index => $step) {
 			$html .= $this->addStep($index, $step);
 		}
 
 		$html .= "</ol>";
+		$html .= "</div>";
 
 		return $html;
 	}
