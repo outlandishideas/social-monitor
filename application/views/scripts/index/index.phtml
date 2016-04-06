@@ -68,10 +68,7 @@ $allBadges = $this->badges;
         </div>
 
         <div class="find-country">
-            <form onsubmit="return app.home.selectCountry()">
-                <label for="search-countries"><?php echo $translator->trans('route.index.index.find-country')?></label>
-                <input type="text" id="search-countries" oninput="app.home.searchCountries()" />
-            </form>
+            <h4 id="search-result-label"><?php echo $translator->trans('route.index.index.search-result-label'); ?></h4>
             <ul class="country-list">
             </ul>
         </div>
@@ -85,6 +82,13 @@ $allBadges = $this->badges;
     </div>
     <div class="small-24 large-14 columns">
         <div id="map">
+            <div class="find-country">
+                <form onsubmit="return app.home.selectCountry()">
+                    <label for="search-countries"><?php echo $translator->trans('route.index.index.find-country')?></label>
+                    <input type="text" id="search-countries" oninput="app.home.searchCountries()" />
+                </form>
+            </div>
+
             <span class="help-text-toggle icon-question-sign icon-large">
                 <div class="help-text">
                     <p><?php echo $translator->trans('route.index.index.contextual-help.map')?></p>

@@ -373,11 +373,14 @@ app.home = {
 		var search = $('.find-country #search-countries').val();
 		var $list = $('.find-country .country-list');
 		$list.empty();
+		$('#search-result-label').hide();
 
 		if(search) {
 			var foundCountries = _.filter(app.home.countryData, function(c) {
 				return c.n.substring(0,search.length).toLowerCase() === search.toLowerCase();
 			}).slice(0,3);
+
+			$('#search-result-label').show();
 
 			_.forEach(foundCountries, function(c) {
 				var $el = $(_.template(app.templates.countryListItem, c));
