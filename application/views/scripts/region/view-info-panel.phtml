@@ -12,15 +12,6 @@ $countries = $region->getCountries();
     <?php echo $region->display_name; ?>
 </h4>
 
-<h4><?php echo $translator->trans('route.region.view.info.countries.header', ['%count%' => count($countries)]); ?></h4>
-<?php if ($countries) : ?>
-<ul class="entity-list">
-    <?php foreach ($countries as $c) : ?>
-        <?php echo $this->partial('partials/country_box.phtml', array('country'=>$c)); ?>
-    <?php endforeach; ?>
-</ul>
-<?php endif; ?>
-
 <h4><?php echo $translator->trans('route.region.view.info.presences.header', ['%count%' => count($presences)]); ?></h4>
 <?php if ($presences) : ?>
     <ul class="entity-list">

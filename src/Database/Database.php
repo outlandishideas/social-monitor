@@ -25,7 +25,7 @@ class Database
 
 	public function getConnection() {
 		if (!$this->pdo) {
-			$this->pdo = new \PDO($this->dsn, $this->username, $this->password);
+			$this->pdo = new \PDO($this->dsn, $this->username, $this->password, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
 		}
 		return $this->pdo;
 	}
