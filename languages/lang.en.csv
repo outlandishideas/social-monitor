@@ -101,7 +101,7 @@
 "route.index.index.pdf-download-link";"Download metrics"
 "route.index.index.pdf-download-link-title";"Download metrics PDF"
 "route.index.index.contextual-help.page-title";"Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU."
-"route.index.index.contextual-help.date-range";"Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU."
+"route.index.index.contextual-help.date-range";"Move the date slider to view the historic trend of the score for each country and SBU."
 "route.index.index.contextual-help.map";"Click on the map to select a country and preview the individual social media channels."
 "route.index.index.search-result-label";"Search Results:"
 
@@ -389,7 +389,12 @@
 
 
 "route.statuses.index.page-title";"Posts"
-"route.statuses.index.filter.social-media";"Social Media"
+"route.statuses.index.filter.campaign-type";"Channels"
+"route.statuses.index.filter.campaign-type.all";"Show all channels"
+"route.statuses.index.filter.campaign-type.country";"Filter by country"
+"route.statuses.index.filter.campaign-type.group";"Filter by SBU"
+"route.statuses.index.filter.campaign-type.region";"Filter by region"
+"route.statuses.index.filter.presence-type";"Social Media"
 "route.statuses.index.filter.countries";"Countries"
 "route.statuses.index.filter.regions";"Regions"
 "route.statuses.index.filter.groups";"SBUs"
@@ -397,6 +402,12 @@
 "route.statuses.index.sort-by.date";"Date"
 "route.statuses.index.you-are-viewing";"You are viewing:"
 "route.statuses.index.table-header.content";"Content"
+"route.statuses.index.multi-select.select-all";"Select all"
+"route.statuses.index.multi-select.all-selected";"All selected"
+"route.statuses.index.multi-select.all-selected.all-presences";"All channels"
+"route.statuses.index.multi-select.count-selected";"# of % selected"
+"route.statuses.index.multi-select.no-matches";"No matches found"
+"route.statuses.index.multi-select.placeholder";"None selected"
 
 
 
@@ -790,7 +801,7 @@
 "views.helpers.traffic-light.label.hours";"hours"
 
 "views.scripts.partials.badges.metric-attributes.score-title";"This channel has scored %score% for %title% based on an average of the last 30 days of data."
-"views.scripts.partials.badges.metric-attributes.no-data";"There is no data available to calculate %title%.";
+"views.scripts.partials.badges.metric-attributes.no-data";"There is no data available to calculate %title%."
 "views.scripts.partials.badges.metric-attributes.score-zero";"This channel has scored 0% for %title%."
 "views.scripts.partials.badges.metric-attributes.title-not-applicable";"%title% is not applicable for this channel"
 "views.scripts.partials.badges.badge-rank.heading";"Rank"

@@ -9,22 +9,23 @@ function metricAttributes($metric, $translator) {
     /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
 
     $attrs = array();
-    $title = $metric['title'];
+    $params = array('%title%' => $metric['title']);
     if (array_key_exists('score', $metric)) {
         $score = $metric['score'];
         $attrs['style'] = "color: " . $metric['color'];
         if ($score > 0) {
-            $score = round($score*10)/10; // use 1 decimal place maximum
-            $attrs['title'] = $translator->trans('views.scripts.partials.badges.metric-attributes.score-title', ['%score%'=>$score, '%title%'=>$title]);
+            $params['%score%'] = round($score*10)/10; // use 1 decimal place maximum
+            $attrs['title'] = $translator->trans('views.scripts.partials.badges.metric-attributes.score-title', $params);
         } else {
             if ($metric['gliding'] || $score === null) {
-                $attrs['title'] = $translator->trans('views.scripts.partials.badges.metric-attributes.no-data', ['%title%', $title]);
+                $attrs['title'] = $translator->trans('views.scripts.partials.badges.metric-attributes.no-data', $params);
             } else {
-                $attrs['title'] = $translator->trans("views.scripts.partials.badges.metric-attributes.score-zero", ['%title%', $title]);
+				//todo: this doesn't like the '0%' in the translation string
+                $attrs['title'] = $translator->trans("views.scripts.partials.badges.metric-attributes.score-zero", $params);
             }
         }
     } else {
-        $attrs['title'] = $translator->trans("views.scripts.partials.badges.metric-attributes.title-not-applicable", ['%title%', $title]);
+        $attrs['title'] = $translator->trans("views.scripts.partials.badges.metric-attributes.title-not-applicable", $params);
     }
 
     $attrStrings = [];

@@ -8,7 +8,7 @@ $buttons = array('<div id="search-table">' . $translator->trans('Global.loading-
 <div class="content" id="statuses">
     <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 
-    <div class="statusesDisplay all">
+    <div class="statusesDisplay combined-statuses">
         <?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $buttons, 'dark' => true)); ?>
 
         <div class="filters" style="display:none;"> <!-- show when data is returned -->
@@ -17,19 +17,30 @@ $buttons = array('<div id="search-table">' . $translator->trans('Global.loading-
                 <label><?php echo $translator->trans('route.statuses.index.you-are-viewing'); ?></label>
             </div>
             <?php
-            foreach ($this->queryOptions as $option) {
-				if ($option['options']) {
-					echo $this->partial(
-						'partials/multi-select-box.phtml',
-						array(
-							'label' => $option['label'],
-							'queryParamName' => $option['name'],
-							'options' => $option['options']
-						)
-					);
-				}
-            }
-            ?>
+            foreach ($this->queryOptions as $queryOption) : /** @var $queryOption \Outlandish\SocialMonitor\Models\MultiSelectFilter */
+				if (!$queryOption->options) { continue; } ?>
+				<div class="social-monitor-multi-select-box">
+					<label for="<?php echo $queryOption->id ?>"><?php echo $queryOption->label ?></label>
+					<select id="<?php echo $queryOption->id; ?>"
+							name="<?php echo $queryOption->name; ?>"
+							class="social-monitor-multi-select"
+							data-label="<?php echo $queryOption->label; ?>"
+							data-show-filters="<?php echo htmlentities(json_encode($queryOption->showFilters)); ?>"
+							data-select-all-text="<?php echo $queryOption->selectAllText; ?>"
+							data-all-selected="<?php echo $queryOption->allSelectedText; ?>"
+							data-count-selected="<?php echo $queryOption->countSelectedText; ?>"
+							data-no-matches-found="<?php echo $queryOption->noMatchesFoundText; ?>"
+							data-placeholder="<?php echo $queryOption->placeholderText; ?>"
+							<?php if ($queryOption->multiple) echo 'multiple="multiple"'; ?>
+							<?php if (!$queryOption->enabled) echo 'disabled'; ?>
+					>
+						<?php foreach($queryOption->options as $option) : ?>
+							<option value="<?php echo $option['value']; ?>" <?php if ($option['selected']) echo 'selected="selected"'; ?>><?php echo $option['title']; ?></option>
+						<?php endforeach; ?>
+					</select>
+					<div class="selected-summary"></div>
+				</div>
+			<?php endforeach; ?>
         </div>
         <div class="table-container">
             <table>

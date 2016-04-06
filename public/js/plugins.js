@@ -62,10 +62,10 @@
   * Author: Ollie Relph
   * http://github.com/BBB/jquery-canvasspinner
   * Copyright: Copyright 2010 Ollie Relph
-  */ 
+  */
 (function($) {
 	$.fn.spinner = function(settings) {
-		
+
 		settings = $.extend({
 			sqr: undefined,
 			framerate : 10,
@@ -80,9 +80,9 @@
 			backup : 'images/spinner.gif',
 			centered : true
 		}, settings || {});
- 
+
 		return this.each(function () {
- 
+
 			var $this = $(this),
 				width = $this.width(),
 				height = $this.height(),
@@ -90,28 +90,28 @@
 				hsqr,
 				$wrap,
 				$canv;
-						
+
 			settings.sqr = Math.round(width >= height ? height : width);
 			hsqr = settings.sqr/2;
 			// convert from deg to rad
 			settings.rotation = settings.rotation/180 * Math.PI
 			settings.spokeOffset.inner = settings.spokeOffset.inner || hsqr * 0.3;
-			settings.spokeOffset.outer = settings.spokeOffset.outer || hsqr * 0.6;	
-			
+			settings.spokeOffset.outer = settings.spokeOffset.outer || hsqr * 0.6;
+
 			$wrap = $('<div id="spinner-' + $.fn.spinner.count + '" class="spinner" />')
 			if (settings.centered) {
 				$wrap.css({'position' : 'absolute', 'z-index' : 999, 'left' : '50%', 'top' : '50%', 'margin' : hsqr * -1 + 'px 0 0 ' + hsqr * -1 + 'px', 'width' : settings.sqr, 'height' : settings.sqr })
 			}
 			$canv = $('<canvas />').attr({ 'width' : settings.sqr, 'height' : settings.sqr });
-			
+
 			if ( $this.css('position') === 'static' && settings.centered ) {
 				$this.css({ 'position' : 'relative' });
 			}
-			
+
 			$canv.appendTo($wrap);
 			$wrap.appendTo($this);
-					
-			if ( $canv[0].getContext ){  
+
+			if ( $canv[0].getContext ){
 				ctx = $canv[0].getContext('2d');
 				ctx.translate(hsqr, hsqr);
 				ctx.lineWidth = settings.spokeWidth || Math.ceil(settings.sqr * 0.025);
@@ -134,13 +134,13 @@
 					ctx.lineTo(0, settings.spokeOffset.outer);
 					ctx.stroke();
 				}
-			}  
+			}
 			$.fn.spinner.count++;
 		});
 	};
 	$.fn.spinner.count = 0;
 	$.fn.spinner.loop;
- 
+
 	$.fn.clearSpinner = function() {
 		return this.each(function () {
 			clearTimeout($.fn.spinner.loop);
@@ -222,49 +222,8 @@ Scotty.prototype = {
 	}
 };
 
-function getStatusRowRenderFunction(showResponses) {
-	return function(o, type, row, meta) {
-		if (typeof row.message != 'string') {
-			row.message = '';
-		}
-		row.date = moment(row.created_time).format('D MMM');
-		var message = parseTemplate(app.templates.post, row);
-		if(showResponses) {
-			message = appendResponseTemplate(message, row);
-		} else {
-			message = convertTitleToLink(message, row);
-		}
-		return message;
-	}
-}
-
 function parseTemplate(str, data) {
 	return _.template(str, data);
-}
-
-function convertTitleToLink(message, data) {
-	var $el = $(message);
-	var title = $el.find('h4').text();
-	title = '<a href="/presence/view/id/' + data.presence_id + '">' + title + '</a>';
-	$el.find('h4').html(title);
-	return $el.html();
-}
-
-function appendResponseTemplate(message,aData) {
-	var response = aData.first_response;
-	var rTitle, rMessage, rIcon;
-	if (aData.needs_response == '1') {
-		rTitle = 'Does not require a response';
-		rMessage = 'Awaiting response (' + response.date_diff + ')...';
-		rIcon = 'icon-comment-alt';
-	} else {
-		rTitle = 'Requires a response';
-		rMessage = 'No response required';
-		rIcon = 'icon-comments';
-	}
-	message += '<p class="more"><a href="#" class="require-response" title="' + rTitle + '"><span class="' + rIcon + ' icon-large"></span></a></p>' +
-		'<p class="no-response">' + rMessage + '</p>';
-	return message;
 }
 
 var Base64 = {

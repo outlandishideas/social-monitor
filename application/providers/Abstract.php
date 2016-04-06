@@ -203,7 +203,6 @@ abstract class Provider_Abstract
      * Override this method if this needs to be run before creating a new presence.
      *
      * @param Model_Presence $presence
-     * @throws SocialMonitorException
      * @return null
      */
     public function testAdapter(Model_Presence $presence)

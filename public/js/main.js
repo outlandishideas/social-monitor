@@ -37,7 +37,9 @@ $.extend(app, {
 			    <p class="more"><a href="<%=permalink%>" target="_blank" title="View update"><span class="icon-external-link icon-large"></span></a></p>\
 				<div class="<%=icon%>"></div>\
 				<div class="content">\
-					<h4 class="presence-name" data-presence="<%=presence_id%>"><%=presence_name%></h4>\
+					<%if(!showResponses){%><a href="/presence/view/id/<%=presence_id%>"><%}%>\
+						<h4 class="presence-name" data-presence="<%=presence_id%>"><%=presence_name%></h4>\
+					<%if(!showResponses){%></a><%}%>\
 					<%=message.replace(/\\n/g, "<br />")%>\
 					<p class="date"><%=date%></p>\
 				</div>\
@@ -47,6 +49,20 @@ $.extend(app, {
 					<% if(!_.isUndefined(engagement.shares)) { %><p>Shares: <%=engagement.shares%></p><% } %>\
 				</div>\
 			</div>',
+		postResponse_needed: '\
+			<p class="more">\
+				<a href="#" class="require-response" title="Does not require a response">\
+					<span class="icon-comment-alt icon-large"></span>\
+				</a>\
+			</p>\
+			<p class="no-response">Awaiting response (<%=date_diff%>)...</p>',
+		postResponse_notNeeded: '\
+			<p class="more">\
+				<a href="#" class="require-response" title="Requires a response">\
+					<span class="icon-comments icon-large"></span>\
+				</a>\
+			</p>\
+			<p class="no-response">No response required</p>',
 		searchArea: '<li class="area">\
 						<div class="marker <%=className%>"></div>\
 						<input type="hidden" class="lat" name="lat[]" value="<%=lat%>" />\
@@ -154,7 +170,9 @@ app.init = {
 		//run conditional init functions if selector exists on page
 		for (var selector in app.init.selectors) {
 			var $item = $(selector);
-			if ($item.length) app.init.selectors[selector]($item);
+			if ($item.length) {
+				app.init.selectors[selector]($item);
+			}
 		}
 
 	},
@@ -278,39 +296,66 @@ app.init = {
             });
         },
 
-		'.social-monitor-multi-select': function($items) {
+		'.social-monitor-multi-select-box': function($items) {
 			$items.each(function() {
-				var $item = $(this);
-				var single = ($item.attr('id') === 'sort'); // sort isn't multi select
-				$item.multipleSelect({
-					placeholder: 'None selected',
-					single: single,
+				var $box = $(this);
+				var $select = $box.find('select.social-monitor-multi-select');
+				var multiple = ($select.attr('multiple') === 'multiple');
+				var showFilters = $select.data('show-filters');
+
+				var onChange = function() {
+					if(multiple) { // we don't need to show the summary for single value selects
+						var summary = app.utils.summariseSelectedOptions($select);
+						$box.find('.selected-summary').html(summary);
+					}
+
+					var value = $select.val();
+					if (value && value.length == $select.find('option').length) {
+						value = 'all';
+					}
+					if (showFilters) {
+						// only show the corresponding other filter
+						_.each(showFilters, function(filterId, key) {
+							var active = key == value;
+							var $otherSelect = $('#' + filterId);
+							$otherSelect.closest('.social-monitor-multi-select-box').toggle(active);
+							if (active) {
+								var otherValue = $otherSelect.val();
+								if (otherValue && otherValue.length == $otherSelect.find('option').length) {
+									otherValue = 'all';
+								}
+								app.statuses.search($otherSelect.attr('name'), otherValue);
+							}
+						});
+					}
+					app.statuses.search($select.attr('name'), value);
+				};
+
+				$select.multipleSelect({
+					single: !multiple,
 					onClose: function() {
-						if(single) { // we don't need to show the summary for single value selects
-							setTimeout(function() { // bug with multi-select component – wait for $item.val() to update
-								app.statuses.search($item.attr('id'), $item.val());
-							},1);
-						} else {
-							var summary = app.utils.summariseSelectedOptions($item,'All '+$item.parent().find('label').first().text());
-							$item.parent().find('.selected-summary').html(summary);
-							app.statuses.search($item.attr('id'), $item.val());
-						}
+						// bug with multi-select component – wait for $select.val() to update
+						setTimeout(onChange, 1);
 					}
 				});
-				if(!single) {
-					$item.multipleSelect('checkAll');
-					var $button = $(document.createElement('button'));
+				if(multiple) {
+					$select.multipleSelect('checkAll');
+					var $button = $('<button></button>');
 					$button.text('Done');
 					$button.click(function() {
-						$item.multipleSelect('close');
+						$select.multipleSelect('close');
 					});
-					var $component = $item.parent().find('.ms-drop');
+					var $component = $box.find('.ms-drop');
 					$component.append($button);
 
-					var summary = app.utils.summariseSelectedOptions($item,'All '+$item.parent().find('label').first().text());
-					$item.parent().find('.selected-summary').html(summary);
+					var summary = app.utils.summariseSelectedOptions($select);
+					$box.find('.selected-summary').html(summary);
 				}
-			})
+
+				onChange();
+			});
+
+			$(document).trigger('dataChanged');
 		},
 
 		'#date-picker': function($item) {
@@ -753,11 +798,15 @@ app.utils = {
         var p = Math.pow(10,n);
         return parseFloat(Math.round(x * p) / p).toFixed(n);
     },
-	summariseSelectedOptions: function($select,placeholder) {
+	summariseSelectedOptions: function($select) {
 		var texts = $select.multipleSelect('getSelects', 'text');
-		var summary = $(document.createElement('div'));
+		var summary = $('<div></div>');
 		var total = $select.find('option').length;
 		if(texts && texts.length > 0 && texts.length < total) { // don't show a summary when all selected
+			texts = texts.map(function(text) {
+				return text.trim();
+			});
+
 			// if we have selected options, we know that the summary starts with the first option
 			var summaryText = texts[0];
 			var summaryAnchor = '';
@@ -806,7 +855,7 @@ app.utils = {
 		} else if(texts && texts.length===0) {
 			summary = '';
 		} else {
-			summary = placeholder || '';
+			summary = 'All ' + $select.data('label');
 		}
 		return summary;
 	},
@@ -834,9 +883,18 @@ app.utils = {
 };
 
 app.statuses = {
+	init: function($div) {
+		// setup query
+		var types = $div.find('select#type').val();
+		if(types) {
+			app.datatables.query['presence-type'] = types.join();
+		}
+	},
 	search: function(queryParam, value) {
-        app.datatables.query[queryParam] = value;
-        $(document).trigger('dataChanged');
+		if (value != app.datatables.query[queryParam]) {
+			app.datatables.query[queryParam] = value;
+			$(document).trigger('dataChanged');
+		}
     }
 };
 

@@ -56,7 +56,9 @@ app.datatables = {
 		//run conditional init functions if selector exists on page
 		for (var selector in app.datatables.selectors) {
 			var $item = $(selector);
-			if ($item.length) app.datatables.selectors[selector]($item);
+			if ($item.length) {
+				app.datatables.selectors[selector]($item);
+			}
 		}
 
 		if (typeof app.datatables.statusesTable == 'object' && app.datatables.statusesTable != null) {
@@ -87,6 +89,36 @@ app.datatables = {
 	},
 	numberRender: function(o, val) {
 		return app.utils.numberFormat(val);
+	},
+	getStatusColumns: function(showResponses) {
+		return [{
+			mDataProp:'message',
+			render: function(o, type, row, meta) {
+				if (typeof row.message != 'string') {
+					row.message = '';
+				}
+				row.date = moment(row.created_time).format('D MMM');
+				row.showResponses = showResponses;
+				var message = parseTemplate(app.templates.post, row);
+				if(showResponses) {
+					var templateName = row.needs_response == '1' ? 'postResponse_needed' : 'postResponse_notNeeded';
+					message += parseTemplate(app.templates[templateName], row.first_response || {});
+				}
+				return message;
+			},
+			sClass: 'message',
+			bSortable:false,
+			bUseRendered:false
+		}];
+	},
+	listenForResponseNeededToggle: function($div) {
+		$div.on('click', '.require-response', function(e) {
+			e.preventDefault();
+			app.api.post('presence/toggle-response-needed', { id: $(this).closest('tr').data('id') })
+				.always(function() {
+					$(document).trigger('dataChanged');
+				});
+		});
 	},
 	// dynamically constructs columns from the table html
 	generateColumns: function($table) {
@@ -227,119 +259,33 @@ app.datatables = {
 
 			app.datatables.moveSearchBox();
 		},
-		'#statuses .all': function($div) {
-			// setup query
-			var types = $div.find('select#type').val();
-			if(types) {
-				app.datatables.query.type = types.join();
-			}
-			app.datatables.initStatusList($div, 'statuses', [
-				{
-					mDataProp:'message',
-					render: getStatusRowRenderFunction(false),
-					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				}
-			]);
-		},
-		'#statuses .youtube': function($div) {
-			app.datatables.initStatusList($div, 'presence', [
-				{
-					mDataProp:'message',
-					render: getStatusRowRenderFunction(true),
-					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				}
-			]);
 
-			$div.on('click', '.require-response', function(e) {
-				e.preventDefault();
-				app.api.post('presence/toggle-response-needed', { id: $(this).closest('tr').data('id') })
-					.always(function() {
-						$(document).trigger('dataChanged');
-					});
-			});
+		// combined statuses on status controller
+		'#statuses .combined-statuses': function($div) {
+			app.statuses.init($div);
+			app.datatables.initStatusList($div, 'post', app.datatables.getStatusColumns(false));
 		},
-		'#statuses .linkedin': function($div) {
-			app.datatables.initStatusList($div, 'presence', [
-				{
-					mDataProp: 'message',
-					render: getStatusRowRenderFunction(true),
-					sClass: 'message',
-					bSortable: false,
-					bUseRendered: false
-				}
-			]);
 
-			$div.on('click', '.require-response', function(e) {
-				e.preventDefault();
-				app.api.post('presence/toggle-response-needed', { id: $(this).closest('tr').data('id') })
-					.always(function() {
-						$(document).trigger('dataChanged');
-					});
-			});
+		// status tables on info tab on presence pages
+		'#statuses .youtube, #statuses .facebook': function($div) {
+			app.datatables.initStatusList($div, 'post', app.datatables.getStatusColumns(true));
+			app.datatables.listenForResponseNeededToggle($div);
 		},
-		'#statuses .facebook': function($div) {
-			app.datatables.initStatusList($div, 'presence', [
-				{
-					mDataProp:'message',
-					render: getStatusRowRenderFunction(true),
-					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				}
-			]);
-
-			$div.on('click', '.require-response', function(e) {
-				e.preventDefault();
-				app.api.post('presence/toggle-response-needed', { id: $(this).closest('tr').data('id') })
-					.always(function() {
-						$(document).trigger('dataChanged');
-					});
-			});
-		},
-		'#statuses .twitter': function($div) {
-			app.datatables.initStatusList($div, 'presence', [
-				{
-					mDataProp:'message',
-					render: getStatusRowRenderFunction(false),
-					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				}
-			]);
-		},
-		'#statuses .instagram': function($div) {
-			app.datatables.initStatusList($div, 'presence', [
-				{
-					mDataProp:'message',
-					render: getStatusRowRenderFunction(false),
-					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				}
-			]);
-		},
-		'#statuses .sina_weibo': function($div) {
-			app.datatables.initStatusList($div, 'post', [
-				{
-					mDataProp:'message',
-					render: getStatusRowRenderFunction(false),
-					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				}
-			]);
+		'#statuses .linkedin, #statuses .twitter, #statuses .instagram, #statuses .sina_weibo': function($div) {
+			app.datatables.initStatusList($div, 'post', app.datatables.getStatusColumns(false));
+			app.datatables.listenForResponseNeededToggle($div);
 		}
 	},
-	initStatusList: function($container, fnRowCallback, columns, sortColumn) {
-		if (typeof sortColumn == 'undefined') {
-			sortColumn = 'date';
-		}
+	/**
+	 * Creates a dataTable for an AJAX-backed list of statuses/messages/posts
+	 * @param {object} $container
+	 * @param {string} statusName What sort of status this table contains
+	 * @param {object[]} columns The columns to display
+	 * @param {string} [sortColumn]
+     */
+	initStatusList: function($container, statusName, columns, sortColumn) {
 		// default to any sortable column, but try to match the given one
-		var sortColumnIndex = 0;
+		var sortColumnIndex = undefined;
 		for (var i=0; i<columns.length; i++) {
 			if (columns[i].bSortable !== false) {
 				sortColumnIndex = i;
@@ -371,6 +317,11 @@ app.datatables = {
 		}
 
 		var args = {
+			oFeatures: {
+				bSort: false,
+				bSortClasses: false
+			},
+			bProcessing: true,
 			sAjaxSource:jsConfig.apiEndpoint + "statuses/list",
 			fnServerParams: function(aoData) {
 				if($container.data('presence-id')) {
@@ -384,22 +335,19 @@ app.datatables = {
 					aoData.push({name: queryParams[i], value: app.datatables.query[queryParams[i]]});
 				}
 			},
-			aaSorting:[
-				[sortColumnIndex, 'desc']
-			],
 			fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-
+				var $el = $(nRow);
+				$el.data('id', aData.id);
 			},
+			aaSorting:[],
 			aoColumns:columns,
-			oLanguage:app.datatables.generateLanguage('post')
+			oLanguage:app.datatables.generateLanguage(statusName)
 		};
+		if (typeof sortColumnIndex !== 'undefined') {
+			args.aaSorting.push([sortColumnIndex, 'desc']);
+		}
 
 		args = $.extend({}, app.datatables.serverSideArgs(), args);
-		app.datatables.statusesTable = $container.find('table')
-			.dataTable(args)
-			.fnSetFilteringDelay(250);
-
-		app.datatables.moveSearchBox('Search by content');
 
 		// fix header cells when switching to the statuses tab
 		$(document).foundation({
@@ -411,35 +359,11 @@ app.datatables = {
 				}
 			}
 		});
-	},
-	linksColumn: function() {
-		return {
-			mDataProp:'links',
-			render:function (o, links) {
-				var linkStrings = [];
-				if (links) {
-					for (var i=0; i<links.length; i++) {
-						var link = links[i];
-						linkStrings.push('<a href="' + link.url + '" target="_blank">' + link.domain + '</a> (' + (link.is_bc == '1' ? 'BC' : 'non-BC') + ')');
-					}
-				}
-				return linkStrings.join(', ');
-			},
-			sClass: 'links',
-			bSortable: false,
-			bUseRendered: false
-		};
-	},
-	dateColumn: function() {
-		return {
-			mDataProp:'date',
-			render:function (o, val) {
-				return Date.parse(val).toString('d MMM<br>HH:mm');
-			},
-			bUseRendered:false,
-			sClass:'date',
-			asSorting:['desc', 'asc']
-		};
+
+		app.datatables.statusesTable = $container.find('table')
+			.dataTable(args)
+			.fnSetFilteringDelay(250);
+		app.datatables.moveSearchBox('Search by content');
 	},
 	moveSearchBox: function(placeholder) {
 		var $search = $('div.dataTables_filter');
@@ -456,7 +380,8 @@ app.datatables = {
 			sZeroRecords:'No matching ' + type + 's',
 			sInfo:'Showing ' + type + 's: _START_ to _END_',
 			sInfoEmpty:'No ' + type + 's to show',
-			sInfoFiltered:''// (from _MAX_ ' + type + 's)'
+			sInfoFiltered:'',// (from _MAX_ ' + type + 's)'
+			sProcessing:'<span class="fa fa-refresh fa-spin"></span> Loading...'
 		};
 	},
 	serverSideArgs: function() {
@@ -464,21 +389,12 @@ app.datatables = {
 			bProcessing:false,
 			bServerSide:true,
 			bAutoWidth:false,
-			fnServerData:function (sSource, aoData, fnCallback) {
-				var $wrapper = $(this).parent();
-				//$wrapper.showLoader();
+			// debounce the request function, to allow multiple rapid changes that only trigger one request
+			fnServerData: _.debounce(function (sSource, aoData, fnCallback) {
 				$.getJSON(sSource, aoData,
 					function (e) {
 						//display data
 						fnCallback(e.data);
-						//remove start and length parameters
-						aoData = $.grep(aoData, function (param) {
-							return param.name != 'iDisplayLength' && param.name != 'iDisplayStart';
-						});
-						aoData.push({name:'format', value:'csv'});
-						//update CSV download URL
-						$wrapper.find('.dataTables_info a').attr('href', sSource + '?' + $.param(aoData));
-						//$wrapper.hideLoader();
 					}).error(function (e) {
 						var data = null;
 						try {
@@ -495,12 +411,8 @@ app.datatables = {
 								console.log('AJAX error (no JSON found)', e);
 							}
 						}
-						$wrapper.hideLoader();
 					});
-			},
-//			fnInfoCallback:function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-//				return sPre + ' <a href="">Download as CSV</a>';
-//			},
+			}, 500),
 			bPaginate:true,
 			iDisplayLength:parseInt(jsConfig.pageSize),
 			bInfo:true,
