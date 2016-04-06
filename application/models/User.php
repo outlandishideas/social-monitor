@@ -228,7 +228,7 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 		foreach (PresenceType::getAll() as $type) {
 			if ($type->getRequiresAccessToken()) {
 				$accessToken = $this->getAccessToken($type);
-				if ($accessToken->expiresSoon()) {
+				if (!$accessToken || $accessToken->expiresSoon()) {
 					return true;
 				}
 			}

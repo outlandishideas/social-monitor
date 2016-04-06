@@ -106,6 +106,7 @@ class PresenceController extends GraphingController
         }
         $this->view->allPresences = $allPresences;
 		$this->updatePageTitle(['presence' => $presence->getName()]);
+		$this->view->pdfLink = $this->getContainer()->get('kpi_download_linker')->link();
 		$this->view->joyride = $this->getContainer()->get('joyride.presence');
 	}
 

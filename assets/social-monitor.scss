@@ -2416,6 +2416,18 @@ table td ul li a:hover {
   color: #fff;
 }
 
+#search-result-label{
+  display: none;
+}
+
+#map > .find-country{
+  position: absolute;
+  top: 10px;
+  left: 35px;
+  width: 280px;
+  z-index: 100;
+}
+
 .find-country label {
   font-size: 1rem;
   font-weight: 300;
@@ -2700,7 +2712,7 @@ ul.blockLabels {
   list-style: none;
 }
 
-#kpi-download {
+.kpi-download {
   text-align: center;
   padding-top: 20px;
 }

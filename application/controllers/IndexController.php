@@ -11,11 +11,7 @@ class IndexController extends GraphingController
 		$old = clone $now;
 		$old->modify("-$dayRange days");
 
-		if(file_exists(APPLICATION_PATH . '/../data/uploads/kpis.pdf')) {
-			$this->view->pdfLink = 'data/uploads/kpis.pdf';
-		} else {
-			$this->view->pdfLink = null;
-		}
+		$this->view->pdfLink = $this->getContainer()->get('kpi_download_linker')->link();
 
 		$objectCacheManager = $this->getContainer()->get('object-cache-manager');
 		list($mapData, $groupData, $fanData) = $objectCacheManager->getFrontPageData($dayRange, true);
