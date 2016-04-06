@@ -206,6 +206,25 @@ app.init = {
 
 			} );
 		},
+		
+		'#filter-sbu' : function ($item) {
+			var $table = $('table.dataTable').dataTable();
+			$table.api().columns().every( function () {
+				var column = this;
+				if ($(column.header()).data('name') == 'region') {
+
+					var options = [];
+					column.data().unique().sort().each( function ( d ) {
+						if (d !== '') {
+							options.push(d);
+						}
+					} );
+
+					app.utils.setupTableFilter(column, $item, options, 'filter-sbu', 'Filter by SBU');
+				}
+
+			} );
+		},
 
 		'#filter-presence-type': function ($item) {
 			var $table = $('table.dataTable').dataTable();

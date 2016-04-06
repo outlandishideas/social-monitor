@@ -288,6 +288,10 @@ services:
         class: Outlandish\SocialMonitor\TableIndex\Header\PresenceType
         arguments: [@translation.translator]
 
+    table.header.sbu:
+        class: Outlandish\SocialMonitor\TableIndex\Header\SBU
+        arguments: [@translation.translator]
+
     # Index table data sources
     table.source.region:
         class: Outlandish\SocialMonitor\TableIndex\TableSource\RegionSource
