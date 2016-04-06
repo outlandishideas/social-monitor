@@ -23,7 +23,7 @@
 				</div>
 				<div class="small-24 medium-13 large-11 columns">
 					<select id="country" class="selectInput" data-icon="<?php echo Model_Country::ICON_TYPE; ?>" data-type="country">
-						<option value=""><?php echo $translator->trans('views.scripts.user.manage.select.default-value'); ?><</option>
+						<option value=""><?php echo $translator->trans('Global.select-placeholder'); ?></option>
 						<?php foreach ($this->countries as $c) : ?>
 							<option value="<?php echo $c->id; ?>"
 							        data-url="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$c->id)); ?>"
@@ -35,14 +35,14 @@
 					</select>
 				</div>
                 <div class="small-24 medium-3 large-5 end columns">
-					<button type="button" class="button-bc add-item"><?php echo $translator->trans('views.scripts.user.manage.form.button.add'); ?></button>
+					<button type="button" class="button-bc add-item"><?php echo $translator->trans('Global.add'); ?></button>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="small-24 medium-8 large-8 columns">
 					<label for="group">
-						<?php echo $translator->trans('views.scripts.user.manage.available-sbus'); ?>
+						<?php echo $translator->trans('views.scripts.user.manage.label.available-groups'); ?>
 					</label>
 				</div>
 				<div class="small-24 medium-13 large-11 columns">
@@ -90,7 +90,7 @@
 			<div class="row">
 				<div class="small-24 medium-8 large-8 columns">
 					<label for="facebook">
-
+						<?php echo $translator->trans('views.scripts.user.manage.label.facebook'); ?>
 					</label>
 				</div>
 				<div class="small-24 medium-13 large-11 columns">
@@ -132,7 +132,7 @@
 							</li>
 						<?php endforeach; ?>
 						<li class="none-found">
-							<?php echo $translator->trans('views.scripts.user.manage.assigned.none'); ?>
+							<?php echo $translator->trans('views.scripts.user.manage.none-assigned'); ?>
 						</li>
 					</ul>
 				</div>
@@ -140,7 +140,7 @@
 		</fieldset>
 		<?php
 		$buttons = $this->gatekeeper()->filterAll(array(
-			'<p><a href="%url%" class="button-bc">'.$translator->trans('Global.cancel').'</a></p>' => array('controller'=>'user', 'action'=>'index')
+			'<p><a href="%url%" class="button-bc">'.$translator->trans('buttons.common.cancel').'</a></p>' => array('controller'=>'user', 'action'=>'index')
 		));
 		$buttons[] = '<input type="submit" value="Save" class="primaryAction button-bc">';
 		?>
