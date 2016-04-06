@@ -7,7 +7,7 @@ use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 class UserController extends BaseController
 {
-    protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register', 'confirm-email');
+    protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register', 'confirm-email', 'joyride');
     /** @var LinkedIn */
     protected $linkedin;
 
@@ -458,6 +458,32 @@ class UserController extends BaseController
         ]);
         return "{$scheme}://{$host}{$url}?{$paramString}";
     }
+
+	/**
+	 */
+	public function joyrideAction()
+	{
+		if (!$this->_request->isPost()) {
+			return $this->apiError("Only accepts POST");
+		}
+
+		$ride = $this->_request->getParam('ride', null);
+		if (!$ride) {
+			return $this->apiError("Missing parameter ride");
+		}
+
+		/** @var Model_User $user */
+		$user = $this->view->user;
+		$user = Model_User::fetchById(99);
+
+		if (!$user) {
+			return $this->apiError("Must be logged in");
+		}
+
+		$user->setCompletedJoyrides($this->_request->getParam('ride', null), true);
+
+		return $this->apiSuccess([], ["Updated User with joyride"]);
+	}
 
     /**
      * Tests whether email is a british council email address

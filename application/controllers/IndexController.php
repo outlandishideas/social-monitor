@@ -28,6 +28,7 @@ class IndexController extends GraphingController
 		$this->view->dayRange = $dayRange;
 		$this->view->badges = Badge_Factory::getBadges();
 		$this->view->groups = Model_Group::fetchAll();
+		$this->view->joyride = $this->getContainer()->get('joyride.home');
 	}
 
 	public function dateRangeAction()

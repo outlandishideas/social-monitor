@@ -19,7 +19,7 @@ $allBadges = $this->badges;
     </div>
     <div class="columns large-19" id="homepage-tabs">
         <div class="small-24 large-17 columns">
-                <dl class="tabs">
+                <dl id="kpi-tabs" class="tabs">
                 <?php foreach($allBadges as $badge) : ?>
                     <dd data-badge="<?php echo $badge->getName(); ?>" data-title="<?php echo $badge->getTitle(); ?>">
                         <a href="#<?php echo $badge->getName(); ?>"><?php echo $badge->getTitle(); ?></a>
@@ -29,7 +29,7 @@ $allBadges = $this->badges;
         </div>
     <?php if ($this->pdfLink) : ?>
         <div class="small-24 large-7 show-for-large-up columns pdflink">
-                <div class="kpi-download">
+                <div id="kpi-download-button" class="kpi-download">
                     <ul class="button-group">
                         <li>
                             <a
@@ -81,8 +81,9 @@ $allBadges = $this->badges;
 
     </div>
     <div class="small-24 large-14 columns">
+		<div id="map-top"></div>
         <div id="map">
-            <div class="find-country">
+            <div id="find-country" class="find-country">
                 <form onsubmit="return app.home.selectCountry()">
                     <label for="search-countries"><?php echo $translator->trans('route.index.index.find-country')?></label>
                     <input type="text" id="search-countries" oninput="app.home.searchCountries()" />
@@ -187,6 +188,8 @@ $allBadges = $this->badges;
     </div>
 </div>
 <?php endif; ?>
+
+<?php echo !$this->joyride->userHasSeen($this->user) ? $this->joyride->renderHtml() : ""; ?>
 
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>

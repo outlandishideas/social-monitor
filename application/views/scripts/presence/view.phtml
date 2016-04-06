@@ -162,3 +162,5 @@ if ($sizeDiff > 0) {
 
 	</div>
 </div>
+
+<?php echo !$this->joyride->userHasSeen($this->user) ? $this->joyride->renderHtml() : ""; ?>
