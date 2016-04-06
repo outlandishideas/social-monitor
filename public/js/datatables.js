@@ -262,21 +262,17 @@ app.datatables = {
 
 		// combined statuses on status controller
 		'#statuses .combined-statuses': function($div) {
-			// setup query
-			var types = $div.find('select#type').val();
-			if(types) {
-				app.datatables.query.type = types.join();
-			}
-			app.datatables.initStatusList($div, 'post', app.datatables.getStatusColumns(false));
+			app.statuses.init($div);
+			app.datatables.initStatusList($div, 'post', false, app.datatables.getStatusColumns(false));
 		},
 
 		// status tables on info tab on presence pages
 		'#statuses .youtube, #statuses .facebook': function($div) {
-			app.datatables.initStatusList($div, 'post', app.datatables.getStatusColumns(true));
+			app.datatables.initStatusList($div, 'post', true, app.datatables.getStatusColumns(true));
 			app.datatables.listenForResponseNeededToggle($div);
 		},
 		'#statuses .linkedin, #statuses .twitter, #statuses .instagram, #statuses .sina_weibo': function($div) {
-			app.datatables.initStatusList($div, 'post', app.datatables.getStatusColumns(false));
+			app.datatables.initStatusList($div, 'post', true, app.datatables.getStatusColumns(false));
 			app.datatables.listenForResponseNeededToggle($div);
 		}
 	},
@@ -284,10 +280,11 @@ app.datatables = {
 	 * Creates a dataTable for an AJAX-backed list of statuses/messages/posts
 	 * @param {object} $container
 	 * @param {string} statusName What sort of status this table contains
+	 * @param {boolean} fetchOnLoad Fetch the data straight away
 	 * @param {object[]} columns The columns to display
 	 * @param {string} [sortColumn]
      */
-	initStatusList: function($container, statusName, columns, sortColumn) {
+	initStatusList: function($container, statusName, fetchOnLoad, columns, sortColumn) {
 		// default to any sortable column, but try to match the given one
 		var sortColumnIndex = undefined;
 		for (var i=0; i<columns.length; i++) {
@@ -350,13 +347,11 @@ app.datatables = {
 		if (typeof sortColumnIndex !== 'undefined') {
 			args.aaSorting.push([sortColumnIndex, 'desc']);
 		}
+		if (!fetchOnLoad) {
+			args.deferLoading = 0;			
+		}
 
 		args = $.extend({}, app.datatables.serverSideArgs(), args);
-		app.datatables.statusesTable = $container.find('table')
-			.dataTable(args)
-			.fnSetFilteringDelay(250);
-
-		app.datatables.moveSearchBox('Search by content');
 
 		// fix header cells when switching to the statuses tab
 		$(document).foundation({
@@ -368,6 +363,11 @@ app.datatables = {
 				}
 			}
 		});
+
+		app.datatables.statusesTable = $container.find('table')
+			.dataTable(args)
+			.fnSetFilteringDelay(250);
+		app.datatables.moveSearchBox('Search by content');
 	},
 	linksColumn: function() {
 		return {

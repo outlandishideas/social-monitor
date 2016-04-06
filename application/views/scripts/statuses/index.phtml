@@ -17,18 +17,25 @@ $buttons = array('<div id="search-table">' . $translator->trans('Global.loading-
                 <label><?php echo $translator->trans('route.statuses.index.you-are-viewing'); ?></label>
             </div>
             <?php
-            foreach ($this->queryOptions as $option) {
-				if ($option['options']) {
-					echo $this->partial(
-						'partials/multi-select-box.phtml',
-						array(
-							'label' => $option['label'],
-							'queryParamName' => $option['name'],
-							'options' => $option['options']
-						)
-					);
-				}
-            }
+            foreach ($this->queryOptions as $queryOption) :
+				if ($queryOption['options']) : ?>
+					<div class="social-monitor-multi-select-box">
+						<label for="statuses-<?php echo $queryOption['name'] ?>"><?php echo $queryOption['label'] ?></label>
+						<select name="<?php echo $queryOption['name']; ?>" 
+								id="statuses-<?php echo $queryOption['name']; ?>" 
+								class="social-monitor-multi-select"
+								data-label="<?php echo $queryOption['label']; ?>"
+								<?php if ($queryOption['multiple']) echo 'multiple="multiple"'; ?>>
+							<?php foreach($queryOption['options'] as $option) : ?>
+								<option value="<?php echo $option['value']; ?>" <?php if ($option['selected']) echo 'selected="selected"'; ?>>
+									<?php echo $option['title']; ?>
+								</option>
+							<?php endforeach; ?>
+						</select>
+						<div class="selected-summary"></div>
+					</div>
+				<?php endif;
+            endforeach;
             ?>
         </div>
         <div class="table-container">

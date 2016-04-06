@@ -42,37 +42,65 @@ class StatusesController extends GraphingController
 		$engagementBadge = $this->getContainer()->get('badge.engagement');
 
         $this->view->presences = $presences;
-        $this->view->sortCol = Handle::NAME;
-        $this->view->queryOptions = [
-            [
-				'name' => 'type',
-				'label' => $this->translator->trans('route.statuses.index.filter.social-media'),
-				'options' => PresenceType::getAll()
-			],
-            [
-				'name' => 'country',
-				'label' => $this->translator->trans('route.statuses.index.filter.countries'),
-				'options' => Model_Country::fetchAll()
-			],
-            [
-				'name' => 'region',
-				'label' => $this->translator->trans('route.statuses.index.filter.regions'),
-				'options' => Model_Region::fetchAll()
-			],
-            [
-				'name' => 'sbu',
-				'label' => $this->translator->trans('route.statuses.index.filter.groups'),
-				'options' => Model_Group::fetchAll()
-			],
-            [
-				'name' => 'sort',
-				'label' => $this->translator->trans('route.statuses.index.sort-by'),
-				'options' => [
-					['value' => 'date', 'title' => $this->translator->trans('route.statuses.index.sort-by.date')],
-					['value' => 'engagement', 'title' => $engagementBadge->getTitle()]
-				]
-            ]
+        $queryOptions = [];
+		$queryOptions[] = [
+			'name' => 'presence-type',
+			'multiple' => true,
+			'label' => $this->translator->trans('route.statuses.index.filter.social-media'),
+			'options' => array_map(function(PresenceType $type) {
+				return [
+					'title' => $type->getTitle(),
+					'value' => $type->getValue(),
+					'selected' => false
+				];
+			}, PresenceType::getAll())
+		];
+        $queryOptions[] = [
+			'name' => 'country',
+			'multiple' => true,
+			'label' => $this->translator->trans('route.statuses.index.filter.countries'),
+			'options' => array_map(function(Model_Country $country) {
+				return [
+					'title' => $country->getName(),
+					'value' => $country->id,
+					'selected' => false
+				];
+			}, Model_Country::fetchAll())
+		];
+        $queryOptions[] = [
+			'name' => 'region',
+			'multiple' => true,
+			'label' => $this->translator->trans('route.statuses.index.filter.regions'),
+			'options' => array_map(function(Model_Region $region) {
+				return [
+					'title' => $region->getName(),
+					'value' => $region->id,
+					'selected' => false
+				];
+			}, Model_Region::fetchAll())
+		];
+        $queryOptions[] = [
+			'name' => 'group',
+			'multiple' => true,
+			'label' => $this->translator->trans('route.statuses.index.filter.groups'),
+			'options' => array_map(function(Model_Group $group) {
+				return [
+					'title' => $group->getName(),
+					'value' => $group->id,
+					'selected' => false
+				];
+			}, Model_Group::fetchAll())
+		];
+        $queryOptions[] = [
+			'name' => 'sort',
+			'multiple' => false,
+			'label' => $this->translator->trans('route.statuses.index.sort-by'),
+			'options' => [
+				['value' => 'date', 'selected' => true, 'title' => $this->translator->trans('route.statuses.index.sort-by.date')],
+				['value' => 'engagement', 'selected' => false, 'title' => $engagementBadge->getTitle()]
+			]
         ];
+        $this->view->queryOptions = $queryOptions;
     }
 
     /**
@@ -90,68 +118,60 @@ class StatusesController extends GraphingController
         $types = null;
 
         /** If id is set, we only want statuses for this presence */
-        if ($this->_request->getParam('id')) {
-            $presences = [Model_PresenceFactory::getPresenceById($this->_request->getParam('id'))];
+		$presenceId = $this->_request->getParam('id');
+        if ($presenceId) {
+            $presences = [Model_PresenceFactory::getPresenceById($presenceId)];
         } else {
             /** Otherwise we build an array of presence Ids */
 
             $countryParamString = $this->_request->getParam('country');
+			if ($countryParamString == 'all') {
+				$countries = Model_Country::fetchAll();
+				$countryIds = array_map(function ($c) {
+					return $c->id;
+				}, $countries);
+			} else {
+				$countryIds = array_filter(explode(',', $countryParamString));
+			}
+
             $regionParamString = $this->_request->getParam('region');
-            $groupParamString = $this->_request->getParam('sbu');
-            $typeParamString = $this->_request->getParam('type');
-
-            /** Update $presences to include all presences in specified countries */
-            if (isset($countryParamString)) {
-                $countryIds = explode(',', $countryParamString);
-            } else {
-                $countries = Model_Country::fetchAll();
-                $countryIds = array_map(function ($c) {
-                    return $c->id;
-                }, $countries);
-
-            }
-
-            /** Add presences in specified regions */
-            if (isset($regionParamString)) {
-                $regionIds = explode(',', $regionParamString);
-            } else {
+            if ($regionParamString == 'all') {
                 $regions = Model_Region::fetchAll();
                 $regionIds = array_map(function ($c) {
                     return $c->id;
                 }, $regions);
-            }
+            } else {
+				$regionIds = array_filter(explode(',', $regionParamString));
+			}
 			$regionCountryIds = array();
             foreach ($regionIds as $rid) {
-                if ($rid) {
-                    $countries = Model_Country::getCountriesByRegion($rid);
-                    foreach ($countries as $c) {
-						$regionCountryIds[] = $c->id;
-                    }
-                }
+				$countries = Model_Country::getCountriesByRegion($rid);
+				foreach ($countries as $c) {
+					$regionCountryIds[] = $c->id;
+				}
             }
 
-            /** Add presences in groups */
-            if (isset($groupParamString)) {
-                $groupIds = explode(',', $groupParamString);
-            } else {
+			$groupParamString = $this->_request->getParam('group');
+            if ($groupParamString == 'all') {
                 $groups = Model_Group::fetchAll();
                 $groupIds = array_map(function ($c) {
                     return $c->id;
                 }, $groups);
-            }
+            } else {
+				$groupIds = array_filter(explode(',', $groupParamString));
+			}
 
 			$campaignIds = array_filter(array_unique(array_merge($countryIds, $groupIds, $regionCountryIds)));
 			$presences = Model_PresenceFactory::getPresencesByCampaigns($campaignIds);
 
             /** Filter presences by type */
-            if (isset($typeParamString)) {
+			$typeParamString = $this->_request->getParam('presence-type');
+            if ($typeParamString != 'all') {
+				$typeNames = array_filter(explode(',', $typeParamString));
                 $types = array();
-                if ($typeParamString) {
-                    $typeParams = explode(',', $typeParamString);
-                    foreach ($typeParams as $type) {
-                        $types[] = PresenceType::get($type);
-                    }
-                }
+				foreach ($typeNames as $type) {
+					$types[] = PresenceType::get($type);
+				}
             }
         }
 
