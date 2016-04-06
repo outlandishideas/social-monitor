@@ -389,7 +389,12 @@
 
 
 "route.statuses.index.page-title";"Posts"
-"route.statuses.index.filter.social-media";"Social Media"
+"route.statuses.index.filter.campaign-type";"Channels"
+"route.statuses.index.filter.campaign-type.all";"Show all channels"
+"route.statuses.index.filter.campaign-type.country";"Filter by country"
+"route.statuses.index.filter.campaign-type.group";"Filter by SBU"
+"route.statuses.index.filter.campaign-type.region";"Filter by region"
+"route.statuses.index.filter.presence-type";"Social Media"
 "route.statuses.index.filter.countries";"Countries"
 "route.statuses.index.filter.regions";"Regions"
 "route.statuses.index.filter.groups";"SBUs"
@@ -397,6 +402,12 @@
 "route.statuses.index.sort-by.date";"Date"
 "route.statuses.index.you-are-viewing";"You are viewing:"
 "route.statuses.index.table-header.content";"Content"
+"route.statuses.index.multi-select.select-all";"Select all"
+"route.statuses.index.multi-select.all-selected";"All selected"
+"route.statuses.index.multi-select.all-selected.all-presences";"All channels"
+"route.statuses.index.multi-select.count-selected";"# of % selected"
+"route.statuses.index.multi-select.no-matches";"No matches found"
+"route.statuses.index.multi-select.placeholder";"None selected"
 
 
 

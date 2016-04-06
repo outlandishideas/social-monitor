@@ -263,16 +263,16 @@ app.datatables = {
 		// combined statuses on status controller
 		'#statuses .combined-statuses': function($div) {
 			app.statuses.init($div);
-			app.datatables.initStatusList($div, 'post', false, app.datatables.getStatusColumns(false));
+			app.datatables.initStatusList($div, 'post', app.datatables.getStatusColumns(false));
 		},
 
 		// status tables on info tab on presence pages
 		'#statuses .youtube, #statuses .facebook': function($div) {
-			app.datatables.initStatusList($div, 'post', true, app.datatables.getStatusColumns(true));
+			app.datatables.initStatusList($div, 'post', app.datatables.getStatusColumns(true));
 			app.datatables.listenForResponseNeededToggle($div);
 		},
 		'#statuses .linkedin, #statuses .twitter, #statuses .instagram, #statuses .sina_weibo': function($div) {
-			app.datatables.initStatusList($div, 'post', true, app.datatables.getStatusColumns(false));
+			app.datatables.initStatusList($div, 'post', app.datatables.getStatusColumns(false));
 			app.datatables.listenForResponseNeededToggle($div);
 		}
 	},
@@ -280,11 +280,10 @@ app.datatables = {
 	 * Creates a dataTable for an AJAX-backed list of statuses/messages/posts
 	 * @param {object} $container
 	 * @param {string} statusName What sort of status this table contains
-	 * @param {boolean} fetchOnLoad Fetch the data straight away
 	 * @param {object[]} columns The columns to display
 	 * @param {string} [sortColumn]
      */
-	initStatusList: function($container, statusName, fetchOnLoad, columns, sortColumn) {
+	initStatusList: function($container, statusName, columns, sortColumn) {
 		// default to any sortable column, but try to match the given one
 		var sortColumnIndex = undefined;
 		for (var i=0; i<columns.length; i++) {
@@ -347,9 +346,6 @@ app.datatables = {
 		if (typeof sortColumnIndex !== 'undefined') {
 			args.aaSorting.push([sortColumnIndex, 'desc']);
 		}
-		if (!fetchOnLoad) {
-			args.deferLoading = 0;			
-		}
 
 		args = $.extend({}, app.datatables.serverSideArgs(), args);
 
@@ -368,24 +364,6 @@ app.datatables = {
 			.dataTable(args)
 			.fnSetFilteringDelay(250);
 		app.datatables.moveSearchBox('Search by content');
-	},
-	linksColumn: function() {
-		return {
-			mDataProp:'links',
-			render:function (o, links) {
-				var linkStrings = [];
-				if (links) {
-					for (var i=0; i<links.length; i++) {
-						var link = links[i];
-						linkStrings.push('<a href="' + link.url + '" target="_blank">' + link.domain + '</a> (' + (link.is_bc == '1' ? 'BC' : 'non-BC') + ')');
-					}
-				}
-				return linkStrings.join(', ');
-			},
-			sClass: 'links',
-			bSortable: false,
-			bUseRendered: false
-		};
 	},
 	moveSearchBox: function(placeholder) {
 		var $search = $('div.dataTables_filter');
@@ -411,21 +389,12 @@ app.datatables = {
 			bProcessing:false,
 			bServerSide:true,
 			bAutoWidth:false,
-			fnServerData:function (sSource, aoData, fnCallback) {
-				var $wrapper = $(this).parent();
-				//$wrapper.showLoader();
+			// debounce the request function, to allow multiple rapid changes that only trigger one request
+			fnServerData: _.debounce(function (sSource, aoData, fnCallback) {
 				$.getJSON(sSource, aoData,
 					function (e) {
 						//display data
 						fnCallback(e.data);
-						//remove start and length parameters
-						aoData = $.grep(aoData, function (param) {
-							return param.name != 'iDisplayLength' && param.name != 'iDisplayStart';
-						});
-						aoData.push({name:'format', value:'csv'});
-						//update CSV download URL
-						$wrapper.find('.dataTables_info a').attr('href', sSource + '?' + $.param(aoData));
-						//$wrapper.hideLoader();
 					}).error(function (e) {
 						var data = null;
 						try {
@@ -442,12 +411,8 @@ app.datatables = {
 								console.log('AJAX error (no JSON found)', e);
 							}
 						}
-						$wrapper.hideLoader();
 					});
-			},
-//			fnInfoCallback:function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-//				return sPre + ' <a href="">Download as CSV</a>';
-//			},
+			}, 500),
 			bPaginate:true,
 			iDisplayLength:parseInt(jsConfig.pageSize),
 			bInfo:true,

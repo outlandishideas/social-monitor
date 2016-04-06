@@ -1,6 +1,7 @@
 <?php
 
 use mikehaertl\wkhtmlto\Pdf;
+use Outlandish\SocialMonitor\Models\MultiSelectFilter;
 use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\PresenceType\PresenceType;
 use Outlandish\SocialMonitor\Report\ReportablePresence;
@@ -42,65 +43,83 @@ class StatusesController extends GraphingController
 		$engagementBadge = $this->getContainer()->get('badge.engagement');
 
         $this->view->presences = $presences;
-        $queryOptions = [];
-		$queryOptions[] = [
-			'name' => 'presence-type',
-			'multiple' => true,
-			'label' => $this->translator->trans('route.statuses.index.filter.social-media'),
-			'options' => array_map(function(PresenceType $type) {
-				return [
-					'title' => $type->getTitle(),
-					'value' => $type->getValue(),
-					'selected' => false
-				];
-			}, PresenceType::getAll())
+
+		$presenceTypeFilter = new MultiSelectFilter('status-filter-presence-type', 'presence-type', $this->translator->trans('route.statuses.index.filter.presence-type'));
+		foreach (PresenceType::getAll() as $presenceType) {
+			$presenceTypeFilter->addOption($presenceType->getTitle(), $presenceType->getValue());
+		}
+
+		$campaignTypeFilter = new MultiSelectFilter('status-filter-campaign-type', 'campaign-type', $this->translator->trans('route.statuses.index.filter.campaign-type'));
+		$campaignTypeFilter->multiple = false;
+		$campaignTypeFilter->showFilters = [
+			'all' => 'status-filter-all-presences',
+			'country' => 'status-filter-country',
+			'region' => 'status-filter-region',
+			'group' => 'status-filter-group'
 		];
-        $queryOptions[] = [
-			'name' => 'country',
-			'multiple' => true,
-			'label' => $this->translator->trans('route.statuses.index.filter.countries'),
-			'options' => array_map(function(Model_Country $country) {
-				return [
-					'title' => $country->getName(),
-					'value' => $country->id,
-					'selected' => false
-				];
-			}, Model_Country::fetchAll())
+		$campaignTypeFilter->addOption($this->translator->trans('route.statuses.index.filter.campaign-type.all'), 'all', true);
+		$campaignTypeFilter->addOption($this->translator->trans('route.statuses.index.filter.campaign-type.country'), 'country');
+		$campaignTypeFilter->addOption($this->translator->trans('route.statuses.index.filter.campaign-type.region'), 'region');
+		$campaignTypeFilter->addOption($this->translator->trans('route.statuses.index.filter.campaign-type.group'), 'group');
+
+		// a pseudo-filter to show when 'all presences' has been selected
+		$allPresencesFilter = new MultiSelectFilter('status-filter-all-presences', 'campaign-ids');
+		$allPresencesFilter->multiple = false;
+		$allPresencesFilter->enabled = false;
+		$allPresencesFilter->addOption($this->translator->trans('route.statuses.index.filter.campaign-type.all'), 'all', true);
+
+		$countryFilter = new MultiSelectFilter('status-filter-country', 'campaign-ids', $this->translator->trans('route.statuses.index.filter.countries'));
+		foreach (Model_Country::fetchAll() as $country) {
+			/** @var $country Model_Country */
+			$countryFilter->addOption($country->getName(), $country->id);
+		}
+
+		$regionFilter = new MultiSelectFilter('status-filter-region', 'campaign-ids', $this->translator->trans('route.statuses.index.filter.regions'));
+		foreach (Model_Region::fetchAll() as $region) {
+			/** @var $region Model_Region */
+			$regionFilter->addOption($region->getName(), $region->id);
+		}
+
+		$groupFilter = new MultiSelectFilter('status-filter-group', 'campaign-ids', $this->translator->trans('route.statuses.index.filter.groups'));
+		foreach (Model_Group::fetchAll() as $group) {
+			/** @var $group Model_Group */
+			$groupFilter->addOption($group->getName(), $group->id);
+		}
+
+		$sortFilter = new MultiSelectFilter('status-filter-sort', 'sort', $this->translator->trans('route.statuses.index.sort-by'));
+		$sortFilter->multiple = false;
+		$sortFilter->addOption($this->translator->trans('route.statuses.index.sort-by.date'), 'date', true);
+		$sortFilter->addOption($engagementBadge->getTitle(), 'engagement');
+
+		/** @var MultiSelectFilter[] $queryFilters */
+        $queryFilters = [
+			$presenceTypeFilter,
+			$campaignTypeFilter,
+			$allPresencesFilter,
+			$countryFilter,
+			$regionFilter,
+			$groupFilter,
+			$sortFilter
 		];
-        $queryOptions[] = [
-			'name' => 'region',
-			'multiple' => true,
-			'label' => $this->translator->trans('route.statuses.index.filter.regions'),
-			'options' => array_map(function(Model_Region $region) {
-				return [
-					'title' => $region->getName(),
-					'value' => $region->id,
-					'selected' => false
-				];
-			}, Model_Region::fetchAll())
-		];
-        $queryOptions[] = [
-			'name' => 'group',
-			'multiple' => true,
-			'label' => $this->translator->trans('route.statuses.index.filter.groups'),
-			'options' => array_map(function(Model_Group $group) {
-				return [
-					'title' => $group->getName(),
-					'value' => $group->id,
-					'selected' => false
-				];
-			}, Model_Group::fetchAll())
-		];
-        $queryOptions[] = [
-			'name' => 'sort',
-			'multiple' => false,
-			'label' => $this->translator->trans('route.statuses.index.sort-by'),
-			'options' => [
-				['value' => 'date', 'selected' => true, 'title' => $this->translator->trans('route.statuses.index.sort-by.date')],
-				['value' => 'engagement', 'selected' => false, 'title' => $engagementBadge->getTitle()]
-			]
-        ];
-        $this->view->queryOptions = $queryOptions;
+
+		// set default translation text for each option
+		$selectAllText = $this->translator->trans('route.statuses.index.multi-select.select-all');
+		$allSelectedText = $this->translator->trans('route.statuses.index.multi-select.all-selected');
+		$countSelectedText = $this->translator->trans('route.statuses.index.multi-select.count-selected');
+		$noMatchesText = $this->translator->trans('route.statuses.index.multi-select.no-matches');
+		$placeholderText = $this->translator->trans('route.statuses.index.multi-select.placeholder');
+		foreach ($queryFilters as $queryFilter) {
+			$queryFilter->selectAllText = $selectAllText;
+			$queryFilter->allSelectedText = $allSelectedText;
+			$queryFilter->countSelectedText = $countSelectedText;
+			$queryFilter->noMatchesFoundText = $noMatchesText;
+			$queryFilter->placeholderText = $placeholderText;
+		}
+
+		// override some specific ones
+		$allPresencesFilter->allSelectedText = $this->translator->trans('route.statuses.index.multi-select.all-selected.all-presences');
+
+		$this->view->queryOptions = $queryFilters;
     }
 
     /**
@@ -124,45 +143,50 @@ class StatusesController extends GraphingController
         } else {
             /** Otherwise we build an array of presence Ids */
 
-            $countryParamString = $this->_request->getParam('country');
-			if ($countryParamString == 'all') {
-				$countries = Model_Country::fetchAll();
-				$countryIds = array_map(function ($c) {
-					return $c->id;
-				}, $countries);
+			$campaignType = $this->_request->getParam('campaign-type');
+			$campaignIdsString = $this->_request->getParam('campaign-ids');
+			$campaigns = array();
+
+			if ($campaignType == 'all') {
+				$presences = Model_PresenceFactory::getPresences();
 			} else {
-				$countryIds = array_filter(explode(',', $countryParamString));
-			}
+				$campaignIds = array_filter(explode(',', $campaignIdsString));
 
-            $regionParamString = $this->_request->getParam('region');
-            if ($regionParamString == 'all') {
-                $regions = Model_Region::fetchAll();
-                $regionIds = array_map(function ($c) {
-                    return $c->id;
-                }, $regions);
-            } else {
-				$regionIds = array_filter(explode(',', $regionParamString));
-			}
-			$regionCountryIds = array();
-            foreach ($regionIds as $rid) {
-				$countries = Model_Country::getCountriesByRegion($rid);
-				foreach ($countries as $c) {
-					$regionCountryIds[] = $c->id;
+				switch ($campaignType) {
+					case 'region':
+						if ($campaignIdsString == 'all') {
+							$regions = Model_Region::fetchAll();
+							$regionIds = array_map(function ($c) {
+								return $c->id;
+							}, $regions);
+						} else {
+							$regionIds = $campaignIds;
+						}
+						foreach ($regionIds as $rid) {
+							$countries = Model_Country::getCountriesByRegion($rid);
+							$campaigns = array_merge($campaigns, $countries);
+						}
+						break;
+					case 'country':
+						if ($campaignIdsString == 'all') {
+							$campaigns = Model_Country::fetchAll();
+						}
+						break;
+					case 'group':
+						if ($campaignIdsString == 'all') {
+							$campaigns = Model_Group::fetchAll();
+						}
+						break;
 				}
-            }
 
-			$groupParamString = $this->_request->getParam('group');
-            if ($groupParamString == 'all') {
-                $groups = Model_Group::fetchAll();
-                $groupIds = array_map(function ($c) {
-                    return $c->id;
-                }, $groups);
-            } else {
-				$groupIds = array_filter(explode(',', $groupParamString));
+				if ($campaigns) {
+					$campaignIds = array_map(function (Model_Campaign $campaign) {
+						return $campaign->id;
+					}, $campaigns);
+				}
+
+				$presences = Model_PresenceFactory::getPresencesByCampaigns($campaignIds);
 			}
-
-			$campaignIds = array_filter(array_unique(array_merge($countryIds, $groupIds, $regionCountryIds)));
-			$presences = Model_PresenceFactory::getPresencesByCampaigns($campaignIds);
 
             /** Filter presences by type */
 			$typeParamString = $this->_request->getParam('presence-type');

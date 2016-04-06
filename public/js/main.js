@@ -272,21 +272,41 @@ app.init = {
 				var $box = $(this);
 				var $select = $box.find('select.social-monitor-multi-select');
 				var multiple = ($select.attr('multiple') === 'multiple');
+				var showFilters = $select.data('show-filters');
+
+				var onChange = function() {
+					if(multiple) { // we don't need to show the summary for single value selects
+						var summary = app.utils.summariseSelectedOptions($select);
+						$box.find('.selected-summary').html(summary);
+					}
+
+					var value = $select.val();
+					if (value && value.length == $select.find('option').length) {
+						value = 'all';
+					}
+					if (showFilters) {
+						// only show the corresponding other filter
+						_.each(showFilters, function(filterId, key) {
+							var active = key == value;
+							var $otherSelect = $('#' + filterId);
+							$otherSelect.closest('.social-monitor-multi-select-box').toggle(active);
+							if (active) {
+								var otherValue = $otherSelect.val();
+								if (otherValue && otherValue.length == $otherSelect.find('option').length) {
+									otherValue = 'all';
+								}
+								app.statuses.search($otherSelect.attr('name'), otherValue);
+							}
+						});
+					}
+					app.statuses.search($select.attr('name'), value);
+				};
+
 				$select.multipleSelect({
-					placeholder: 'None selected',
 					single: !multiple,
 					onClose: function() {
-						setTimeout(function() { // bug with multi-select component – wait for $select.val() to update
-							if(multiple) { // we don't need to show the summary for single value selects
-								var summary = app.utils.summariseSelectedOptions($select);
-								$box.find('.selected-summary').html(summary);
-							}
-							var value = $select.val();
-							if (value && value.length == $select.find('option').length) {
-								value = 'all';
-							}
-							app.statuses.search($select.attr('name'), value);
-						},1);
+						// bug with multi-select component – wait for $select.val() to update
+						setTimeout(onChange, 1);
 					}
 				});
 				if(multiple) {
@@ -301,10 +321,9 @@ app.init = {
 
 					var summary = app.utils.summariseSelectedOptions($select);
 					$box.find('.selected-summary').html(summary);
-					app.datatables.query[$select.attr('name')] = 'all';
-				} else {
-					app.datatables.query[$select.attr('name')] = $select.val();
 				}
+
+				onChange();
 			});
 
 			$(document).trigger('dataChanged');
