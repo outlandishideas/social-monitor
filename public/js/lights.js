@@ -89,7 +89,6 @@ app.lights = {
             .enter()
             .append("rect")
             .attr("x", function(d, i){
-                console.log(d);
                 return bar.x(d.y0);
             })
             .attr("y", function(d, i){
