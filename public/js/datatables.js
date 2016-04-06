@@ -56,7 +56,9 @@ app.datatables = {
 		//run conditional init functions if selector exists on page
 		for (var selector in app.datatables.selectors) {
 			var $item = $(selector);
-			if ($item.length) app.datatables.selectors[selector]($item);
+			if ($item.length) {
+				app.datatables.selectors[selector]($item);
+			}
 		}
 
 		if (typeof app.datatables.statusesTable == 'object' && app.datatables.statusesTable != null) {
@@ -87,6 +89,36 @@ app.datatables = {
 	},
 	numberRender: function(o, val) {
 		return app.utils.numberFormat(val);
+	},
+	getStatusColumns: function(showResponses) {
+		return [{
+			mDataProp:'message',
+			render: function(o, type, row, meta) {
+				if (typeof row.message != 'string') {
+					row.message = '';
+				}
+				row.date = moment(row.created_time).format('D MMM');
+				row.showResponses = showResponses;
+				var message = parseTemplate(app.templates.post, row);
+				if(showResponses) {
+					var templateName = row.needs_response == '1' ? 'postResponse_needed' : 'postResponse_notNeeded';
+					message += parseTemplate(app.templates[templateName], row.first_response || {});
+				}
+				return message;
+			},
+			sClass: 'message',
+			bSortable:false,
+			bUseRendered:false
+		}];
+	},
+	listenForResponseNeededToggle: function($div) {
+		$div.on('click', '.require-response', function(e) {
+			e.preventDefault();
+			app.api.post('presence/toggle-response-needed', { id: $(this).closest('tr').data('id') })
+				.always(function() {
+					$(document).trigger('dataChanged');
+				});
+		});
 	},
 	// dynamically constructs columns from the table html
 	generateColumns: function($table) {
@@ -227,119 +259,37 @@ app.datatables = {
 
 			app.datatables.moveSearchBox();
 		},
-		'#statuses .all': function($div) {
+
+		// combined statuses on status controller
+		'#statuses .combined-statuses': function($div) {
 			// setup query
 			var types = $div.find('select#type').val();
 			if(types) {
 				app.datatables.query.type = types.join();
 			}
-			app.datatables.initStatusList($div, 'statuses', [
-				{
-					mDataProp:'message',
-					render: getStatusRowRenderFunction(false),
-					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				}
-			]);
+			app.datatables.initStatusList($div, 'post', app.datatables.getStatusColumns(false));
 		},
-		'#statuses .youtube': function($div) {
-			app.datatables.initStatusList($div, 'presence', [
-				{
-					mDataProp:'message',
-					render: getStatusRowRenderFunction(true),
-					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				}
-			]);
 
-			$div.on('click', '.require-response', function(e) {
-				e.preventDefault();
-				app.api.post('presence/toggle-response-needed', { id: $(this).closest('tr').data('id') })
-					.always(function() {
-						$(document).trigger('dataChanged');
-					});
-			});
+		// status tables on info tab on presence pages
+		'#statuses .youtube, #statuses .facebook': function($div) {
+			app.datatables.initStatusList($div, 'post', app.datatables.getStatusColumns(true));
+			app.datatables.listenForResponseNeededToggle($div);
 		},
-		'#statuses .linkedin': function($div) {
-			app.datatables.initStatusList($div, 'presence', [
-				{
-					mDataProp: 'message',
-					render: getStatusRowRenderFunction(true),
-					sClass: 'message',
-					bSortable: false,
-					bUseRendered: false
-				}
-			]);
-
-			$div.on('click', '.require-response', function(e) {
-				e.preventDefault();
-				app.api.post('presence/toggle-response-needed', { id: $(this).closest('tr').data('id') })
-					.always(function() {
-						$(document).trigger('dataChanged');
-					});
-			});
-		},
-		'#statuses .facebook': function($div) {
-			app.datatables.initStatusList($div, 'presence', [
-				{
-					mDataProp:'message',
-					render: getStatusRowRenderFunction(true),
-					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				}
-			]);
-
-			$div.on('click', '.require-response', function(e) {
-				e.preventDefault();
-				app.api.post('presence/toggle-response-needed', { id: $(this).closest('tr').data('id') })
-					.always(function() {
-						$(document).trigger('dataChanged');
-					});
-			});
-		},
-		'#statuses .twitter': function($div) {
-			app.datatables.initStatusList($div, 'presence', [
-				{
-					mDataProp:'message',
-					render: getStatusRowRenderFunction(false),
-					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				}
-			]);
-		},
-		'#statuses .instagram': function($div) {
-			app.datatables.initStatusList($div, 'presence', [
-				{
-					mDataProp:'message',
-					render: getStatusRowRenderFunction(false),
-					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				}
-			]);
-		},
-		'#statuses .sina_weibo': function($div) {
-			app.datatables.initStatusList($div, 'post', [
-				{
-					mDataProp:'message',
-					render: getStatusRowRenderFunction(false),
-					sClass: 'message',
-					bSortable:false,
-					bUseRendered:false
-				}
-			]);
+		'#statuses .linkedin, #statuses .twitter, #statuses .instagram, #statuses .sina_weibo': function($div) {
+			app.datatables.initStatusList($div, 'post', app.datatables.getStatusColumns(false));
+			app.datatables.listenForResponseNeededToggle($div);
 		}
 	},
-	initStatusList: function($container, fnRowCallback, columns, sortColumn) {
-		if (typeof sortColumn == 'undefined') {
-			sortColumn = 'date';
-		}
+	/**
+	 * Creates a dataTable for an AJAX-backed list of statuses/messages/posts
+	 * @param {object} $container
+	 * @param {string} statusName What sort of status this table contains
+	 * @param {object[]} columns The columns to display
+	 * @param {string} [sortColumn]
+     */
+	initStatusList: function($container, statusName, columns, sortColumn) {
 		// default to any sortable column, but try to match the given one
-		var sortColumnIndex = 0;
+		var sortColumnIndex = undefined;
 		for (var i=0; i<columns.length; i++) {
 			if (columns[i].bSortable !== false) {
 				sortColumnIndex = i;
@@ -371,6 +321,11 @@ app.datatables = {
 		}
 
 		var args = {
+			oFeatures: {
+				bSort: false,
+				bSortClasses: false
+			},
+			bProcessing: true,
 			sAjaxSource:jsConfig.apiEndpoint + "statuses/list",
 			fnServerParams: function(aoData) {
 				if($container.data('presence-id')) {
@@ -384,15 +339,17 @@ app.datatables = {
 					aoData.push({name: queryParams[i], value: app.datatables.query[queryParams[i]]});
 				}
 			},
-			aaSorting:[
-				[sortColumnIndex, 'desc']
-			],
 			fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-
+				var $el = $(nRow);
+				$el.data('id', aData.id);
 			},
+			aaSorting:[],
 			aoColumns:columns,
-			oLanguage:app.datatables.generateLanguage('post')
+			oLanguage:app.datatables.generateLanguage(statusName)
 		};
+		if (typeof sortColumnIndex !== 'undefined') {
+			args.aaSorting.push([sortColumnIndex, 'desc']);
+		}
 
 		args = $.extend({}, app.datatables.serverSideArgs(), args);
 		app.datatables.statusesTable = $container.find('table')
@@ -430,17 +387,6 @@ app.datatables = {
 			bUseRendered: false
 		};
 	},
-	dateColumn: function() {
-		return {
-			mDataProp:'date',
-			render:function (o, val) {
-				return Date.parse(val).toString('d MMM<br>HH:mm');
-			},
-			bUseRendered:false,
-			sClass:'date',
-			asSorting:['desc', 'asc']
-		};
-	},
 	moveSearchBox: function(placeholder) {
 		var $search = $('div.dataTables_filter');
 		$search.find('input').first().attr('placeholder', placeholder || 'Search');
@@ -456,7 +402,8 @@ app.datatables = {
 			sZeroRecords:'No matching ' + type + 's',
 			sInfo:'Showing ' + type + 's: _START_ to _END_',
 			sInfoEmpty:'No ' + type + 's to show',
-			sInfoFiltered:''// (from _MAX_ ' + type + 's)'
+			sInfoFiltered:'',// (from _MAX_ ' + type + 's)'
+			sProcessing:'<span class="fa fa-refresh fa-spin"></span> Loading...'
 		};
 	},
 	serverSideArgs: function() {

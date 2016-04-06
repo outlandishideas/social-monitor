@@ -101,7 +101,7 @@
 "route.index.index.pdf-download-link";"Download metrics"
 "route.index.index.pdf-download-link-title";"Download metrics PDF"
 "route.index.index.contextual-help.page-title";"Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU."
-"route.index.index.contextual-help.date-range";"Choose from Reach, Engagement, Quality or Overall to see the health of each country and SBU."
+"route.index.index.contextual-help.date-range";"Move the date slider to view the historic trend of the score for each country and SBU."
 "route.index.index.contextual-help.map";"Click on the map to select a country and preview the individual social media channels."
 
 
@@ -790,7 +790,7 @@
 "views.helpers.traffic-light.label.hours";"hours"
 
 "views.scripts.partials.badges.metric-attributes.score-title";"This channel has scored %score% for %title% based on an average of the last 30 days of data."
-"views.scripts.partials.badges.metric-attributes.no-data";"There is no data available to calculate %title%.";
+"views.scripts.partials.badges.metric-attributes.no-data";"There is no data available to calculate %title%."
 "views.scripts.partials.badges.metric-attributes.score-zero";"This channel has scored 0% for %title%."
 "views.scripts.partials.badges.metric-attributes.title-not-applicable";"%title% is not applicable for this channel"
 "views.scripts.partials.badges.badge-rank.heading";"Rank"

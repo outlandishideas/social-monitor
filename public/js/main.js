@@ -37,7 +37,9 @@ $.extend(app, {
 			    <p class="more"><a href="<%=permalink%>" target="_blank" title="View update"><span class="icon-external-link icon-large"></span></a></p>\
 				<div class="<%=icon%>"></div>\
 				<div class="content">\
-					<h4 class="presence-name" data-presence="<%=presence_id%>"><%=presence_name%></h4>\
+					<%if(!showResponses){%><a href="/presence/view/id/<%=presence_id%>"><%}%>\
+						<h4 class="presence-name" data-presence="<%=presence_id%>"><%=presence_name%></h4>\
+					<%if(!showResponses){%></a><%}%>\
 					<%=message.replace(/\\n/g, "<br />")%>\
 					<p class="date"><%=date%></p>\
 				</div>\
@@ -47,6 +49,20 @@ $.extend(app, {
 					<% if(!_.isUndefined(engagement.shares)) { %><p>Shares: <%=engagement.shares%></p><% } %>\
 				</div>\
 			</div>',
+		postResponse_needed: '\
+			<p class="more">\
+				<a href="#" class="require-response" title="Does not require a response">\
+					<span class="icon-comment-alt icon-large"></span>\
+				</a>\
+			</p>\
+			<p class="no-response">Awaiting response (<%=date_diff%>)...</p>',
+		postResponse_notNeeded: '\
+			<p class="more">\
+				<a href="#" class="require-response" title="Requires a response">\
+					<span class="icon-comments icon-large"></span>\
+				</a>\
+			</p>\
+			<p class="no-response">No response required</p>',
 		searchArea: '<li class="area">\
 						<div class="marker <%=className%>"></div>\
 						<input type="hidden" class="lat" name="lat[]" value="<%=lat%>" />\

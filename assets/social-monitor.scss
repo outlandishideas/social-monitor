@@ -1,4 +1,5 @@
 @import 'variables';
+@import 'mixins';
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,300,700);
 
 body {
@@ -669,21 +670,21 @@ form .formError {
     float: left;
   }
 
-  &.all .button-bc-bar .button-group > li {
+  &.combined-statuses .button-bc-bar .button-group > li {
     float: none;
   }
 
-  &.all .picker input {
+  &.combined-statuses .picker input {
     background-color: #000;
     border: 1px solid #fff;
     height: 40px;
   }
 
-  &.all .filters {
+  &.combined-statuses .filters {
     text-align: center;
   }
 
-  &.all .filters > div:last-child {
+  &.combined-statuses .filters > div:last-child {
     margin-right: 0;
   }
 
@@ -773,8 +774,9 @@ form .formError {
 
   .dataTables_info {
     position: absolute;
-    top: 20px;
-    right: 0;
+    top: 0;
+    right: 30px;
+    color: white;
   }
 
   .dataTable p.more {
@@ -801,7 +803,7 @@ form .formError {
     }
   }
 
-  &.all .table-container {
+  &.combined-statuses .table-container {
     width: 80%;
     margin: 1rem auto;
   }
@@ -813,6 +815,17 @@ form .formError {
 /* hide datatables until fully loaded, to avoid jerky loading */
 table.dtable {
   display: none;
+}
+
+.dataTables_wrapper {
+  .dataTables_processing {
+    top: 10px;
+    @include gradient-horizontal-three-colors(transparent, rgba(255, 255, 255, 0.9), transparent);
+    font-weight: bold;
+    height: auto;
+    padding: 20px;
+    margin-top: -10px;
+  }
 }
 
 table.dtable.dataTable {

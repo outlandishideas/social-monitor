@@ -11,23 +11,28 @@ abstract class Model_PresenceFactory
     /** @var Database */
 	protected static $db;
 
-	protected static $defaultQueryOptions = array(
-		'orderColumn'		=> '`p`.`handle`',
-		'orderDirection'	=> 'ASC',
-		'offset'				=> 0,
-		'limit'				=> 0
-	);
-
-	public static function getPresences(array $queryOptions = array())
+	protected static function appendSqlOptions($sql, $queryOptions)
 	{
-		$queryOptions = array_merge(self::$defaultQueryOptions, $queryOptions);
-		$sql = "SELECT * FROM `" . self::TABLE_PRESENCES . "` AS `p`";
+		$defaultOptions = array(
+			'orderColumn'		=> '`p`.`handle`',
+			'orderDirection'	=> 'ASC',
+			'offset'			=> 0,
+			'limit'				=> 0
+		);
+		$queryOptions = array_merge($defaultOptions, $queryOptions);
 		if (strlen($queryOptions['orderColumn'])) {
 			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
 		}
 		if ($queryOptions['limit'] > 0) {
 			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
 		}
+		return $sql;
+	}
+
+	public static function getPresences(array $queryOptions = array())
+	{
+		$sql = "SELECT * FROM `" . self::TABLE_PRESENCES . "` AS `p`";
+		$sql = self::appendSqlOptions($sql, $queryOptions);
 
         return self::fetchPresences($sql);
 	}
@@ -50,45 +55,33 @@ abstract class Model_PresenceFactory
 
     public static function getPresencesByType(PresenceType $type, array $queryOptions = array())
 	{
-		$queryOptions = array_merge(static::$defaultQueryOptions, $queryOptions);
 		$sql = "SELECT * FROM `" . self::TABLE_PRESENCES . "` AS `p` WHERE `type` = :type";
-		if (strlen($queryOptions['orderColumn'])) {
-			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
-		}
-		if ($queryOptions['limit'] > 0) {
-			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
-		}
+		$sql = self::appendSqlOptions($sql, $queryOptions);
 
         return self::fetchPresences($sql, array(':type'=>$type));
 	}
 
 	public static function getPresencesById(array $ids, array $queryOptions = array())
 	{
-		$queryOptions = array_merge(static::$defaultQueryOptions, $queryOptions);
 		$inQuery = implode(',', array_fill(0, count($ids), '?'));
 		$sql = "SELECT * FROM `" . self::TABLE_PRESENCES . "` AS `p` WHERE `id` IN ({$inQuery})";
-		if (strlen($queryOptions['orderColumn'])) {
-			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
-		}
-		if ($queryOptions['limit'] > 0) {
-			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
-		}
+		$sql = self::appendSqlOptions($sql, $queryOptions);
 
         return self::fetchPresences($sql, $ids);
 	}
 
-	public static function getPresencesByCampaign($campaign, array $queryOptions = array())
+	public static function getPresencesByCampaigns($campaignIds, array $queryOptions = array())
 	{
-		$queryOptions = array_merge(static::$defaultQueryOptions, $queryOptions);
-		$sql = "SELECT `p`.* FROM `" . self::TABLE_CAMPAIGN_PRESENCES . "` AS `cp` INNER JOIN `" . self::TABLE_PRESENCES . "` AS `p` ON (`cp`.`presence_id` = `p`.`id`) WHERE `cp`.`campaign_id` = :cid";
-		if (strlen($queryOptions['orderColumn'])) {
-			$sql .= " ORDER BY ".$queryOptions['orderColumn'].' '.$queryOptions['orderDirection'];
-		}
-		if ($queryOptions['limit'] > 0) {
-			$sql .= " LIMIT ".$queryOptions['offset'].','.$queryOptions['limit'];
-		}
+		$presencesTable = self::TABLE_PRESENCES;
+		$campaignPresencesTable = self::TABLE_CAMPAIGN_PRESENCES;
+		$placeholders = implode(', ', array_fill(0, count($campaignIds), '?'));
+		$sql = "SELECT p.* 
+			FROM $campaignPresencesTable AS cp 
+			INNER JOIN $presencesTable AS p ON (cp.presence_id = p.id) 
+			WHERE `cp`.`campaign_id` IN ($placeholders)";
+		$sql = self::appendSqlOptions($sql, $queryOptions);
 
-        return self::fetchPresences($sql, array(":cid" => $campaign));
+        return self::fetchPresences($sql, $campaignIds);
 	}
 
 	public static function createNewPresence(PresenceType $type, $handle, $signed_off, $branding)
