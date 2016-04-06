@@ -211,7 +211,7 @@ app.init = {
 			var $table = $('table.dataTable').dataTable();
 			$table.api().columns().every( function () {
 				var column = this;
-				if ($(column.header()).data('name') == 'region') {
+				if ($(column.header()).data('name') == 'sbu') {
 
 					var options = [];
 					column.data().unique().sort().each( function ( d ) {
