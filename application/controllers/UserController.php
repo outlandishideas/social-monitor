@@ -474,7 +474,6 @@ class UserController extends BaseController
 
 		/** @var Model_User $user */
 		$user = $this->view->user;
-		$user = Model_User::fetchById(99);
 
 		if (!$user) {
 			return $this->apiError("Must be logged in");
