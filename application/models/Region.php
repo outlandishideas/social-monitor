@@ -161,6 +161,12 @@ class Model_Region extends Model_Campaign {
     public function assignCountries($countryIds)
     {
         $db = $this->_db;
+
+		// remove any existing ones
+        $stmt = $db->prepare("UPDATE campaigns SET parent = 0 WHERE parent = :id");
+		$stmt->execute(array(':id' => $this->id));
+
+		// add the new ones
         $stmt = $db->prepare("UPDATE campaigns SET parent = :id WHERE id = :cid");
         foreach($countryIds as $cid) {
             $stmt->execute(array(':id' => $this->id, ':cid' => $cid));

@@ -301,10 +301,7 @@ class RegionController extends CampaignController
 		$region = $this->getRequestedRegion();
 
         if ($this->_request->isPost()) {
-            $countryIds = array();
-            foreach ($this->_request->getParam('assigned') as $id) {
-                $countryIds[] = $id;
-            }
+            $countryIds = $this->_request->getParam('assigned');
             $region->assignCountries($countryIds);
 
 			$this->invalidateTableCache();
