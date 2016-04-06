@@ -19,6 +19,26 @@ class JoyrideService
 		$this->id = $id;
 	}
 
+	/**
+	 * Returns boolean whether the user has completed this joyride
+	 * 
+	 * @param \Model_User|null $user
+	 * @return bool
+	 */
+	public function userHasSeen(\Model_User $user = null)
+	{
+		if (!$user) {
+			return false;
+		}
+		
+		return $user->hasCompletedJoyride($this->id);
+	}
+
+	/**
+	 * returns HTML string to produce joyride for ZURB Foundation
+	 * 
+	 * @return string
+	 */
 	public function renderHtml()
 	{
 		//if no steps return an empty string

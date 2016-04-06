@@ -176,11 +176,21 @@ app.init = {
 			});
 		},
 
-		"#joyride-home": function($item) {
+		"#joyride-presence": function($item) {
+			$(document).foundation('joyride', {
+				post_ride_callback: function() {
+					$.post('/user/joyride/ride/joyride-home');
+				}
+			});
 			$(document).foundation('joyride', 'start')
 		},
 
-		"#joyride-presence": function($item) {
+		"#joyride-home": function($item) {
+			$(document).foundation('joyride', {
+				post_ride_callback: function() {
+					$.post('/user/joyride/ride/joyride-home');
+				}
+			});
 			$(document).foundation('joyride', 'start')
 		},
 

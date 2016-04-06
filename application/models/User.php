@@ -42,11 +42,11 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	function setAuthPassword($p) {
 		$this->_authPassword = $p;
 	}
-	
+
 	function setAuthName($p) {
 		$this->_authName = $p;
 	}
-	
+
 	function fromArray($data)
 	{
 		parent::fromArray($data);
@@ -56,7 +56,7 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 			$this->password_hash = sha1(self::PASSWORD_SALT.$data['password']);
 		}
 	}
-	
+
 	// required by Zend_Auth_Adapter_Interface. Used by Zend for authenticating users
 	function authenticate()
 	{
@@ -235,5 +235,58 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Gets all the completed joyrides as an array
+	 *
+	 * @return array
+	 */
+	public function getCompletedJoyrides()
+	{
+		$stmt = $this->_db->prepare("SELECT joyride FROM user_joyrides
+						WHERE user_id = :user_id
+						AND been_ridden = 1");
+		$results = $stmt->execute([':user_id' => $this->id]);
+
+		if (!$results) {
+			return [];
+		}
+
+		return $stmt->fetchAll(PDO::FETCH_COLUMN);
+	}
+
+	/**
+	 * Checks whether the user has completed the given joyride
+	 *
+	 * @param string $joyride
+	 * @return bool
+	 */
+	public function hasCompletedJoyride($joyride)
+	{
+		return in_array($joyride, $this->getCompletedJoyrides());
+	}
+
+	/**
+	 * Sets the given joyride as ridden/completed
+	 *
+	 * @param string $joyride
+	 * @param bool $hasRidden
+	 * @return bool
+	 */
+	public function setCompletedJoyrides($joyride, $hasRidden = true)
+	{
+		$stmt = $this->_db->prepare("INSERT INTO user_joyrides 
+			(`user_id`, `joyride`, `been_ridden`) 
+			VALUES (:user_id, :joyride, :been_ridden)
+			ON DUPLICATE KEY UPDATE
+			joyride = VALUES(joyride),
+			been_ridden = VALUES(been_ridden);");
+
+			return $stmt->execute([
+				':user_id' => $this->id,
+				':joyride' => $joyride,
+				':been_ridden' => intval($hasRidden)
+			]);
 	}
 }

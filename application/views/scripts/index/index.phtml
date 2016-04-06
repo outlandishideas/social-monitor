@@ -185,7 +185,7 @@ $allBadges = $this->badges;
 </div>
 <?php endif; ?>
 
-<?php echo $this->joyride->renderHtml(); ?>
+<?php echo !$this->joyride->userHasSeen($this->user) ? $this->joyride->renderHtml() : ""; ?>
 
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>
