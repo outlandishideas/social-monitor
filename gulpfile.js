@@ -15,13 +15,13 @@ gulp.task('app:styles:preprocess', function() {
 				'site-logo': 'prod.app.client_logo'
 			}
 		}))
-		.pipe(gulp.dest('assets/build'));
+		.pipe(gulp.dest('assets/build/scss'));
 });
 
 
 gulp.task('app:styles', ['app:styles:preprocess'], function() {
 	var errorHandler = plugins.notify.onError("Error: <%= error.message %>");
-	return gulp.src('assets/build/social-monitor.scss')
+	return gulp.src('assets/build/scss/social-monitor.scss')
 		.pipe(plugins.plumber({errorHandler: errorHandler}))
 		.pipe(plugins.sourcemaps.init())
 		.pipe(plugins.sass({
@@ -46,27 +46,29 @@ gulp.task('app:lang:csv2json', function () {
 		.pipe(plugins.csv2json({delimiter: ';'}))
 		.pipe(plugins.rename({extname: '.json'}))
 		.pipe(reshapeJsonStream())
-		.pipe(gulp.dest('languages/json'));
+		.pipe(gulp.dest('assets/build/lang'));
 });
 
 gulp.task('app:lang', ['app:lang:csv2json'], function () {
-	var langDir = 'languages/json';
+	var langDir = 'assets/build/lang';
 	var files = fs.readdirSync(langDir);
 	// var translations = ['en'];
 	files.forEach(function (file) {
 		var matches = file.match(/lang\.(.{2})\.json/);
 		if (matches.length > 1) {
 			var lang = matches[1];
-				return gulp.src('assets/js/*.js')
-					.pipe(
-						plugins.translator({
-							localePath: langDir + '/' + file,
-							lang: lang
-						}).on('error', function () {
-							console.error(arguments);
-						})
-					)
-					.pipe(gulp.dest('public/js/' + lang));
+			return gulp.src('assets/js/*.js')
+				.pipe(
+					plugins.translator({
+						localePath: langDir + '/' + file,
+						lang: lang
+					}).on('end', function() {
+						plugins.util.log('app:lang:', plugins.util.colors.green('✔ ') + file);
+					}).on('error', function () {
+						console.error(arguments);
+					})
+				)
+				.pipe(gulp.dest('public/js/' + lang));
 		}
 	});
 });

@@ -43,6 +43,7 @@ class BaseController extends Zend_Controller_Action
         $this->auth = Zend_Auth::getInstance();
         $this->view->user = null;
 		$this->view->clientName = $this->config->app->client_name;
+		$this->view->locale = $this->getContainer()->getParameter('app.locale');
 
         //try to load the user
         if ($this->auth->hasIdentity()) {

@@ -1,5 +1,5 @@
 "key";"value"
-"do.not.remove.or.edit.row.above";""
+"do not remove or edit row above";""
 
 "Global.score";"Score"
 "Global.loading-data";"Loading data..."
@@ -396,8 +396,8 @@
 
 "route.error.error.page-title";"Application error"
 "route.error.error.page-title-404";"Page not found"
-"route.error.error.message.404";"Please check the url"
-"route.error.error.message.500";"Sorry, something has gone wrong"
+"route.error.error.message-404";"Please check the url"
+"route.error.error.message-500";"Sorry, something has gone wrong"
 
 
 

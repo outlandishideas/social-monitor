@@ -32,12 +32,15 @@ services:
     translation.csv-loader:
         class: Symfony\Component\Translation\Loader\CsvFileLoader
 
+    translation.json-loader:
+        class: Symfony\Component\Translation\Loader\JsonFileLoader
+
     translation.translator:
         class: Outlandish\SocialMonitor\Translation\Translator
         arguments: [%app.locale%, @translation.message-selector]
         calls:
-            - [addLoader, ["csv", @translation.csv-loader]]
-            - [loadFromDirectory, ['csv', 'languages']]
+            - [addLoader, ["json", @translation.json-loader]]
+            - [loadFromDirectory, ['json', 'assets/build/lang']]
             - [setFallbackLocale, ['en']]
 
     guzzle.client:

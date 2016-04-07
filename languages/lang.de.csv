@@ -1,5 +1,5 @@
 "key";"value"
-"do.not.remove.or.edit.row.above";""
+"do not remove or edit row above";""
 
 "Global.score";"Wertung"
 "Global.loading-data";"Lade daten..."
@@ -316,8 +316,8 @@
 
 "route.error.error.page-title";"Application error"
 "route.error.error.page-title-404";"Seite konnte nicht gefunden werden"
-"route.error.error.message.404";"Bitte überprüfen Sie die URL"
-"route.error.error.message.500";"Es tut uns leid, da ist wohl etwas schief gegangen"
+"route.error.error.message-404";"Bitte überprüfen Sie die URL"
+"route.error.error.message-500";"Es tut uns leid, da ist wohl etwas schief gegangen"
 
 
 
