@@ -6,7 +6,8 @@ class MultiSelectFilter
 {
 	public $id;
 	public $name;
-	public $label;
+	public $label = '&nbsp;';
+	public $translationSuffix;
 	public $multiple = true;
 	public $enabled = true;
 	public $showFilters = null;
@@ -17,11 +18,11 @@ class MultiSelectFilter
 	public $noMatchesFoundText;
 	public $placeholderText;
 
-	public function __construct($id, $name, $label = '&nbsp;')
+	public function __construct($id, $name, $translationSuffix)
 	{
 		$this->id = $id;
 		$this->name = $name;
-		$this->label = $label;
+		$this->translationSuffix = $translationSuffix;
 	}
 
 	public function addOption($title, $value, $selected = false)
