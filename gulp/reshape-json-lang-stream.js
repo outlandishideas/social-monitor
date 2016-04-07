@@ -10,7 +10,6 @@ module.exports = function(opt) {
 	return eventStream.map(function (src, cb) {
 		var retVal;
 
-		console.log('reshaping', src);
 		if (src.isStream()) {
 			retVal = cb(new gutil.PluginError('gulp-jslint', 'bad input file ' + src.path));
 		} else if (src.isNull()) {
