@@ -234,7 +234,7 @@ app.init = {
 
 			} );
 		},
-		
+
 		'#filter-sbu' : function ($item) {
 			var $table = $('table.dataTable').dataTable();
 			$table.api().columns().every( function () {
@@ -333,6 +333,7 @@ app.init = {
 
 				$select.multipleSelect({
 					single: !multiple,
+					selectAllDelimiter: ['<span>', '</span>'],
 					onClose: function() {
 						// bug with multi-select component – wait for $select.val() to update
 						setTimeout(onChange, 1);

@@ -201,21 +201,22 @@
             if (this.options.filter) {
                 this.$drop.append([
                         '<div class="ms-search">',
-                        '<input type="text" autocomplete="off" autocorrect="off" autocapitilize="off" spellcheck="false">',
+                        '<input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">',
                         '</div>'].join('')
                 );
             }
 
             if (this.options.selectAll && !this.options.single) {
-                $ul.append([
-                    '<li class="ms-select-all">',
+				// MOD RW: adding to $drop instead of $ul
+				this.$drop.append([
+                    '<div class="ms-select-all">',
                     '<label>',
                     sprintf('<input type="checkbox" %s /> ', this.selectAllName),
                     this.options.selectAllDelimiter[0],
                     this.options.selectAllText,
                     this.options.selectAllDelimiter[1],
                     '</label>',
-                    '</li>'
+                    '</div>'
                 ].join(''));
             }
 

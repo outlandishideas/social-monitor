@@ -1926,11 +1926,18 @@ h4 {
   }
 
   .ms-parent {
+
     button.ms-choice.disabled {
       background-color: black;
     }
 
     .ms-drop {
+
+      .ms-select-all {
+        padding: 5px 8px;
+        border-bottom: 1px solid white;
+      }
+
       li {
         clear: both;
 

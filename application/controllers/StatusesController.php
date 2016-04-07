@@ -44,12 +44,12 @@ class StatusesController extends GraphingController
 
         $this->view->presences = $presences;
 
-		$presenceTypeFilter = new MultiSelectFilter('status-filter-presence-type', 'presence-type', $this->translator->trans('route.statuses.index.filter.presence-type'));
+		$presenceTypeFilter = new MultiSelectFilter('status-filter-presence-type', 'presence-type', 'presence-type');
 		foreach (PresenceType::getAll() as $presenceType) {
 			$presenceTypeFilter->addOption($presenceType->getTitle(), $presenceType->getValue());
 		}
 
-		$campaignTypeFilter = new MultiSelectFilter('status-filter-campaign-type', 'campaign-type', $this->translator->trans('route.statuses.index.filter.campaign-type'));
+		$campaignTypeFilter = new MultiSelectFilter('status-filter-campaign-type', 'campaign-type', 'campaign-type');
 		$campaignTypeFilter->multiple = false;
 		$campaignTypeFilter->showFilters = [
 			'all' => 'status-filter-all-presences',
@@ -63,32 +63,32 @@ class StatusesController extends GraphingController
 		$campaignTypeFilter->addOption($this->translator->trans('route.statuses.index.filter.campaign-type.group'), 'group');
 
 		// a pseudo-filter to show when 'all presences' has been selected
-		$allPresencesFilter = new MultiSelectFilter('status-filter-all-presences', 'campaign-ids');
+		$allPresencesFilter = new MultiSelectFilter('status-filter-all-presences', 'campaign-ids', 'all-presences');
 		$allPresencesFilter->multiple = false;
 		$allPresencesFilter->enabled = false;
 		$allPresencesFilter->addOption($this->translator->trans('route.statuses.index.filter.campaign-type.all'), 'all', true);
 
-		$countryFilter = new MultiSelectFilter('status-filter-country', 'campaign-ids', $this->translator->trans('route.statuses.index.filter.countries'));
+		$countryFilter = new MultiSelectFilter('status-filter-country', 'campaign-ids', 'countries');
 		foreach (Model_Country::fetchAll() as $country) {
 			/** @var $country Model_Country */
 			$countryFilter->addOption($country->getName(), $country->id);
 		}
 
-		$regionFilter = new MultiSelectFilter('status-filter-region', 'campaign-ids', $this->translator->trans('route.statuses.index.filter.regions'));
+		$regionFilter = new MultiSelectFilter('status-filter-region', 'campaign-ids', 'regions');
 		foreach (Model_Region::fetchAll() as $region) {
 			/** @var $region Model_Region */
 			$regionFilter->addOption($region->getName(), $region->id);
 		}
 
-		$groupFilter = new MultiSelectFilter('status-filter-group', 'campaign-ids', $this->translator->trans('route.statuses.index.filter.groups'));
+		$groupFilter = new MultiSelectFilter('status-filter-group', 'campaign-ids', 'groups');
 		foreach (Model_Group::fetchAll() as $group) {
 			/** @var $group Model_Group */
 			$groupFilter->addOption($group->getName(), $group->id);
 		}
 
-		$sortFilter = new MultiSelectFilter('status-filter-sort', 'sort', $this->translator->trans('route.statuses.index.sort-by'));
+		$sortFilter = new MultiSelectFilter('status-filter-sort', 'sort', 'sort-by');
 		$sortFilter->multiple = false;
-		$sortFilter->addOption($this->translator->trans('route.statuses.index.sort-by.date'), 'date', true);
+		$sortFilter->addOption($this->translator->trans('route.statuses.index.filter.sort-by.date'), 'date', true);
 		$sortFilter->addOption($engagementBadge->getTitle(), 'engagement');
 
 		/** @var MultiSelectFilter[] $queryFilters */
@@ -102,22 +102,29 @@ class StatusesController extends GraphingController
 			$sortFilter
 		];
 
-		// set default translation text for each option
-		$selectAllText = $this->translator->trans('route.statuses.index.multi-select.select-all');
-		$allSelectedText = $this->translator->trans('route.statuses.index.multi-select.all-selected');
-		$countSelectedText = $this->translator->trans('route.statuses.index.multi-select.count-selected');
-		$noMatchesText = $this->translator->trans('route.statuses.index.multi-select.no-matches');
-		$placeholderText = $this->translator->trans('route.statuses.index.multi-select.placeholder');
+		// set the labels using specific ones if present, but falling back on defaults
+		$textMap = [
+			'selectAllText' => 'route.statuses.index.multi-select.select-all',
+			'allSelectedText' => 'route.statuses.index.multi-select.all-selected',
+			'countSelectedText' => 'route.statuses.index.multi-select.count-selected',
+			'noMatchesFoundText' => 'route.statuses.index.multi-select.no-matches',
+			'placeholderText' => 'route.statuses.index.multi-select.placeholder'
+		];
 		foreach ($queryFilters as $queryFilter) {
-			$queryFilter->selectAllText = $selectAllText;
-			$queryFilter->allSelectedText = $allSelectedText;
-			$queryFilter->countSelectedText = $countSelectedText;
-			$queryFilter->noMatchesFoundText = $noMatchesText;
-			$queryFilter->placeholderText = $placeholderText;
+			$labelKey = 'route.statuses.index.filter.' . $queryFilter->translationSuffix;
+			$label = $this->translator->trans($labelKey);
+			if ($label != $labelKey) {
+				$queryFilter->label = $label;
+			}
+			foreach ($textMap as $property => $transKey) {
+				$specificKey = $transKey . '.' . $queryFilter->translationSuffix;
+				$text = $this->translator->trans($specificKey);
+				if ($text == $specificKey) {
+					$text = $this->translator->trans($transKey);
+				}
+				$queryFilter->$property = $text;
+			}
 		}
-
-		// override some specific ones
-		$allPresencesFilter->allSelectedText = $this->translator->trans('route.statuses.index.multi-select.all-selected.all-presences');
 
 		$this->view->queryOptions = $queryFilters;
     }
@@ -134,7 +141,8 @@ class StatusesController extends GraphingController
             $this->apiError($this->translator->trans('Error.missing-date-range'));
         }
 
-        $types = null;
+        $types = PresenceType::getAll();
+		$presences = array();
 
         /** If id is set, we only want statuses for this presence */
 		$presenceId = $this->_request->getParam('id');
@@ -185,7 +193,9 @@ class StatusesController extends GraphingController
 					}, $campaigns);
 				}
 
-				$presences = Model_PresenceFactory::getPresencesByCampaigns($campaignIds);
+				if ($campaignIds) {
+					$presences = Model_PresenceFactory::getPresencesByCampaigns($campaignIds);
+				}
 			}
 
             /** Filter presences by type */
@@ -196,7 +206,7 @@ class StatusesController extends GraphingController
 				foreach ($typeNames as $type) {
 					$types[] = PresenceType::get($type);
 				}
-            }
+			}
         }
 
 		$search = $this->getRequestSearchQuery();
@@ -272,12 +282,16 @@ class StatusesController extends GraphingController
     private function getStatusStream($presences, $types = null, \DateTime $start, \DateTime $end, $search = null,
                                      $order = null, $limit = null, $offset = null)
     {
+		if ($types === null) {
+			$types = PresenceType::getAll();
+		}
+
         $statuses = array();
         if($presences && count($presences)) {
 			/** @var Provider_Abstract $provider */
 			foreach ($this->providers as $provider) {
 				$providerType = $provider->getType();
-				if (is_array($types) && count($types) && !in_array($providerType, $types)) {
+				if (!in_array($providerType, $types)) {
 					continue;
 				}
 
