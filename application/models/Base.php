@@ -46,7 +46,7 @@ abstract class Model_Base
 		foreach ($data as $key => $value){
 			$searchIndex = array_search($key, $columnNames);
 			if(!$searchIndex){
-				throw new \InvalidArgumentException("Column does not exist in this table");
+				throw new \InvalidArgumentException(ucfirst($key) . ' does not exist in this table');
 			}
 			if(!$value && !$columnInfos[$searchIndex]['nullable'] && !$columnInfos[$searchIndex]['default']){
 				throw new \InvalidArgumentException(ucfirst($key) . ' must not be null');
