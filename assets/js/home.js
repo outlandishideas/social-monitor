@@ -4,7 +4,7 @@
 
 var app = app || {};
 
-var test = '{{ Global.regions | translate }}';
+var test = '{{ Global.group | translate }}';
 
 var a = { "global" : {"regions":"" } }
 

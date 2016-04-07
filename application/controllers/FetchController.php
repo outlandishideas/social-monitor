@@ -251,10 +251,10 @@ class FetchController extends BaseController
 			$seconds = time() - $lockTime;
 			if ($seconds < $lockTimeout) {
 				//show log message
-				$this->log($this->translator->trans('route.fetch.log.lock-acquire', ['%seconds%' => $seconds]));
+				$this->log($this->translator->trans('route.fetch.log.lock-acquire.already-running', ['%seconds%' => $seconds]));
 			} else {
 				//force show message
-				$this->log($this->translator->trans('route.fetch.log.lock-acquire.fail', ['%seconds%' => $seconds, '%lockname%' => $lockName]), true);
+				$this->log($this->translator->trans('route.fetch.log.lock-acquire.stale', ['%seconds%' => $seconds, '%lockname%' => $lockName]), true);
 				$lastFile = $this->logFileName('fetch') . '.last';
 				$staleFile = $this->logFileName('fetch') . '.stale';
 				if (file_exists($lastFile) && !file_exists($staleFile)) {
