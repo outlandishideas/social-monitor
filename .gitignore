@@ -18,3 +18,5 @@ parameters.yml
 /public/css/*.map
 /node_modules
 /assets/build
+/languages/json
+/public/js

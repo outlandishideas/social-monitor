@@ -7,7 +7,7 @@ var reshapeJsonStream = require('./gulp/reshape-json-lang-stream');
 var plugins = loadPlugins();
 
 gulp.task('app:styles:preprocess', function() {
-	return gulp.src('assets/*.scss')
+	return gulp.src('assets/scss/*.scss')
 		.pipe(injectVariables({
 			configFile: 'application/configs/config.yaml',
 			replacements: {
