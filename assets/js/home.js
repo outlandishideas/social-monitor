@@ -63,7 +63,7 @@ app.home = {
 	    app.home.countryData = mapArgs.mapData;
 	    app.home.geochartMetrics = mapArgs.geochartMetrics;
 	    app.home.fanData = mapArgs.fanData;
-		app.home.totalPresences = mapArgs.totalPresences
+		app.home.totalPresences = mapArgs.totalPresences;
 
 		app.home.searchResults = $('.find-country .country-list');
 		app.home.searchBox = $('.find-country #search-countries');

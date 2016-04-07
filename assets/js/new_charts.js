@@ -8,7 +8,7 @@ app.newCharts = {
 
     setup: function() {
         $(document)
-            .on('dateRangeUpdated', app.newCharts.loadData)
+            .on('dateRangeUpdated', app.newCharts.loadData);
         var $chartPicker = $('#chart-picker');
         if ($chartPicker.length > 0) {
             $chartPicker.on('change', app.newCharts.refreshCharts);
@@ -164,7 +164,7 @@ app.newCharts = {
                 var socialMediaType = new RegExp(/^(\[(.+)\])/);
                 $('.series-toggle').each(function() {
                     var $toggle = $(this);
-                    var text = $toggle.text()
+                    var text = $toggle.text();
                     var matches = text.match(socialMediaType);
 
                     if (matches.length == 3) {
