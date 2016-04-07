@@ -4,13 +4,14 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 use Outlandish\SocialMonitor\Database\Database;
 
+use Outlandish\SocialMonitor\Helper\Verification;
+
 abstract class Model_Base
 {
 	protected static $tableColumns = array();
+
 	protected static $tableName;
 	protected static $sortColumn = 'id';
-
-
 
 	/**
 	 * @var Database
@@ -39,16 +40,38 @@ abstract class Model_Base
 		}
 	}
 
-	public function getColumnNames()
+	public function verify($data){
+		$columnInfos = $this->getColumnInfos();
+		$columnNames = Verification::pluck('name', $this->getColumnInfos());
+		foreach ($data as $key => $value){
+			$searchIndex = array_search($key, $columnNames);
+			if(!$searchIndex){
+				throw new \InvalidArgumentException("Column does not exist in this table");
+			}
+			if(!$value && !$columnInfos[$searchIndex]['nullable'] && !$columnInfos[$searchIndex]['default']){
+				throw new \InvalidArgumentException(ucfirst($key) . ' must not be null');
+			}
+		}
+	}
+
+	public function getColumnNames(){
+		return Verification::pluck('name', $this->getColumnInfos());
+	}
+
+	public function getColumnInfos()
 	{
 		if (empty(self::$tableColumns)) {
-			$statement = $this->_db->prepare('SELECT table_name, column_name FROM information_schema.columns WHERE table_schema=database()');
+			$statement = $this->_db->prepare('SELECT table_name, column_name, is_nullable, column_default, data_type FROM information_schema.columns WHERE table_schema=database()');
 			$statement->execute();
 			foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $row) {
 				if (!isset(Model_Base::$tableColumns[$row['table_name']])){
 					Model_Base::$tableColumns[$row['table_name']] = array();
 				}
-				Model_Base::$tableColumns[$row['table_name']][] = $row['column_name'];
+				Model_Base::$tableColumns[$row['table_name']][] = [
+					"name"=>$row['column_name'],
+					"nullable"=>($row['is_nullable'] === 'YES'),
+					"default"=>$row['column_default'],
+					"type"=>$row['data_type']];
 			}
 		}
 		if (isset(Model_Base::$tableColumns[static::$tableName])) {
@@ -84,6 +107,7 @@ abstract class Model_Base
 	{
 		$data = $this->_row;
 
+		$this->verify($data);
 		if ($this->_isNew) {
 			$query = 'INSERT INTO '.static::$tableName.' '.
 				'(`'.implode('`,`', array_keys($data)).'`) '.
