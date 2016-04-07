@@ -1,4 +1,5 @@
-key;value
+"key header";"value header. do not remove this row"
+
 "Global.score";"Score"
 "Global.loading-data";"Loading data..."
 "Global.add";"Add"
@@ -115,50 +116,25 @@ key;value
 "buttons.presence.view";"View Channel"
 
 
-
 "route.region.index.page-title";"Regions"
 "route.region.index.empty-table";"No regions found"
 
 "route.region.new.page-title";"New Region"
 
+"route.region.delete.message.success";"Region deleted"
+
 "route.region.view.page-title";"Region: %region%"
 "route.region.view.info.presences.header";"Channels: %count%"
 
-"User.linkedin-title";"Login to LinkedIn"
-"User.saved";"User saved"
-"User.created";"User created"
-"User.registered";"User registered"
-"User.edit-user";"Edit user"
-"User.edit-permissions";"Edit access rights for "
-"User.register-email.subject";"You have successfully registered"
-"User.register-email.message";"<p>Hi %name%,</p><p>Thank you for registering with the British Council Social Monitor</p><p>If you did not register for this service, please ignore this email.</p><p>Otherwise, click this link to confirm your email so that you can login with your new account <a href=""%link%"">Confirm email</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
-"User.reset-password.subject";"Password reset"
-"User.reset-password.message";"'<p>Hi %name%,</p><p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p><p>If you did not request a reset, please ignore this email.</p><p>Otherwise, click this link to reset your password <a href=""%link%"">Reset password</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
+"route.region.edit.page-title";"Edit Region"
+"route.region.edit.message.success";"Region saved"
+"route.region.edit.message.display-name-missing";"Please enter a display name"
 
 "route.region.edit-all.page-title";"Edit All Regions"
 "route.region.edit-all.empty-table";"No regions found"
 "route.region.edit-all.message.display-name-missing";"Please enter a display name for %region%"
 "route.region.edit-all.message.success";"%count% regions saved"
 "route.region.edit-all.table-header.display-name";"Display name"
-
-"Fetch.log.finished";"Finished"
-"Fetch.log.updating-facebook-actors.start";"Updating facebook actors"
-"Fetch.log.updating-facebook-actors.fail";"Failed to update facebook actors: %message%"
-"Fetch.log.updating-facebook-actors.success";"Updated %count% actors"
-"Fetch.log.updating-domains.start";"Updating linked domains"
-"Fetch.log.updating-domains.success";"Inserted %count% domains"
-"Fetch.log.start";"Starting %action% process on %start%"
-"Fetch.log.lock-acquire.running";"Process already running and last active %seconds% seconds ago"
-"Fetch.log.lock-acquire.fail";"Stale lock found last active %seconds% seconds ago: %lockname%"
-"Fetch.log.presence-history.start";"Updating presence history"
-"Fetch.log.presence-history.error";"Error: %message%"
-"Fetch.log.update-info.start";"Update info %message%"
-"Fetch.log.update-info.success";"Updated info %message%"
-"Fetch.log.update-info.error";"Error updating presence info: %message%"
-"Fetch.log.update-info.skip";"Not updating info %message% as last updated %lastupdated%"
-"Fetch.log.fetch-statues.start";"Fetch statuses %message%"
-"Fetch.log.fetch-statues.success";"Inserted %count%"
-"Fetch.log.fetch-statues.error";"Error: %message%"
 
 "route.region.graph-data.message.not-found";"Region could not be found"
 
@@ -234,8 +210,9 @@ key;value
 
 
 
-"Outlandish\SocialMonitor\TableIndex\Header\Compare.label";"<span class=""icon-check""></span>"
-"Outlandish\SocialMonitor\TableIndex\Header\Compare.description";"Select all the presences that you would like to compare, and then click on the Compare Button above';"
+
+"route.group.index.page-title";"SBUs"
+"route.group.index.empty-table";"No SBUs Found"
 
 "route.group.new.page-title";"New SBU"
 
@@ -875,7 +852,7 @@ key;value
 
 
 "country.AF";"Afghanistan"
-"country.AX";"Åland Islands"
+"country.AX";"Ã…land Islands"
 "country.AL";"Albania"
 "country.DZ";"Algeria"
 "country.AS";"American Samoa"
@@ -928,10 +905,10 @@ key;value
 "country.CD";"Congo, the Democratic Republic of the"
 "country.CK";"Cook Islands"
 "country.CR";"Costa Rica"
-"country.CI";"Côte d'Ivoire"
+"country.CI";"CÃ´te d'Ivoire"
 "country.HR";"Croatia"
 "country.CU";"Cuba"
-"country.CW";"Curaçao"
+"country.CW";"CuraÃ§ao"
 "country.CY";"Cyprus"
 "country.CZ";"Czech Republic"
 "country.DK";"Denmark"
@@ -1055,11 +1032,11 @@ key;value
 "country.PT";"Portugal"
 "country.PR";"Puerto Rico"
 "country.QA";"Qatar"
-"country.RE";"Réunion"
+"country.RE";"RÃ©union"
 "country.RO";"Romania"
 "country.RU";"Russian Federation"
 "country.RW";"Rwanda"
-"country.BL";"Saint Barthélemy"
+"country.BL";"Saint BarthÃ©lemy"
 "country.SH";"Saint Helena, Ascension and Tristan da Cunha"
 "country.KN";"Saint Kitts and Nevis"
 "country.LC";"Saint Lucia"
