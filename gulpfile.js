@@ -4,6 +4,7 @@ var gulp = require('gulp');
 var loadPlugins = require('gulp-load-plugins');
 var injectVariables = require('./gulp/inject-variables');
 var reshapeJsonStream = require('./gulp/reshape-json-lang-stream');
+var fs = require('fs');
 var plugins = loadPlugins();
 
 gulp.task('app:styles:preprocess', function() {
@@ -36,7 +37,11 @@ gulp.task('watch:app:styles', function() {
 	gulp.watch(['assets/*.scss', ['application/configs/config.yaml']], ['app:styles']);
 });
 
-gulp.task('csv2json', function () {
+gulp.task('watch:app:lang', function() {
+	gulp.watch(['languages/*.csv'], ['app:lang']);
+});
+
+gulp.task('app:lang:csv2json', function () {
 	return gulp.src('languages/*.csv')
 		.pipe(plugins.csv2json({delimiter: ';'}))
 		.pipe(plugins.rename({extname: '.json'}))
@@ -44,26 +49,30 @@ gulp.task('csv2json', function () {
 		.pipe(gulp.dest('languages/json'));
 });
 
-gulp.task('translate', ['csv2json'], function () {
+gulp.task('app:lang', ['app:lang:csv2json'], function () {
+	var langDir = 'languages/json';
+	var files = fs.readdirSync(langDir);
 	// var translations = ['en'];
-	// translations.forEach(function (translation) {
-	// 	var source = 'languages/json/lang.' + translation + '.json';
-	// 	console.log(source);
-		return gulp.src('assets/js/*.js')
-			.pipe(
-				plugins.translator({
-					localePath: 'languages/json/lang.' + 'en' + '.json',
-					lang: 'en'
-				}).on('error', function () {
-					console.error(arguments);
-				})
-			)
-			.pipe(gulp.dest('public/js/' + 'en'));
-	// });
+	files.forEach(function (file) {
+		var matches = file.match(/lang\.(.{2})\.json/);
+		if (matches.length > 1) {
+			var lang = matches[1];
+				return gulp.src('assets/js/*.js')
+					.pipe(
+						plugins.translator({
+							localePath: langDir + '/' + file,
+							lang: lang
+						}).on('error', function () {
+							console.error(arguments);
+						})
+					)
+					.pipe(gulp.dest('public/js/' + lang));
+		}
+	});
 });
 
-gulp.task('build', ['app:styles']);
-gulp.task('watch', ['watch:app:styles']);
+gulp.task('build', ['app:styles', 'app:lang']);
+gulp.task('watch', ['watch:app:styles', 'watch:app:lang']);
 gulp.task('default', ['build'], function() {
 	gulp.start('watch');
 });
