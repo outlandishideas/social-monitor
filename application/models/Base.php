@@ -50,20 +50,34 @@ abstract class Model_Base
 		}
 		
 		$columnDefiniton = $tableDefinition[$searchIndex];
-		
-		if(!$colValue && !$columnDefiniton['nullable'] && !$columnDefiniton['default']){
+		$type = Verification::getType($columnDefiniton['type']);
+
+		$isNullable = $columnDefiniton['nullable'];
+		$hasDefault = Verification::truthyOrZero($columnDefiniton['default']);
+
+		if (!$isNullable && !$hasDefault && !Verification::truthyOrZero($colValue)){
 			throw new \InvalidArgumentException(ucfirst($colName) . ' must not be null');
 		}
-		
-		$type = Verification::getType($columnDefiniton['type']);
-		
-		if(($type === 'integer' || $type === 'double') && !is_numeric($colValue)){
-			throw new \InvalidArgumentException(ucfirst($colValue) . ' is not a valid number');
+
+		if(Verification::isNumericType($type) && !is_numeric($colValue)){
+			if(!$colValue){
+				if($isNullable && !$hasDefault){
+					return null;
+				}
+				if(!$isNullable && $hasDefault){
+					return $columnDefiniton['default'];
+				}
+			}
+			else{
+				throw new \InvalidArgumentException(ucfirst($colValue) . ' is not a valid number');
+			}
 		}
 
 		if($type === 'string' && strlen($colValue) > $columnDefiniton['maxLength']){
 			throw new \InvalidArgumentException(ucfirst($colName) . ' is too long');
 		}
+
+		return $colValue;
 	}
 
 	public function getColumnNames(){
@@ -111,7 +125,8 @@ abstract class Model_Base
 		if (method_exists($this, $methodName)) {
 			return $this->$methodName($value);
 		} elseif (in_array($name, $this->getColumnNames())) {
-			return $this->_row[$name] = $value;
+			$validatedValue = $this->verify($name, $value);
+			return $this->_row[$name] = $validatedValue;
 		} else {
 			return $this->$name = $value;
 		}
@@ -121,9 +136,6 @@ abstract class Model_Base
 	{
 		$data = $this->_row;
 
-		foreach ($data as $colName => $colValue){
-			$this->verify($colName, $colValue);
-		}
 		if ($this->_isNew) {
 			$query = 'INSERT INTO '.static::$tableName.' '.
 				'(`'.implode('`,`', array_keys($data)).'`) '.

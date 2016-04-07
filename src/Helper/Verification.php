@@ -19,9 +19,21 @@ class Verification
         'mediumBlob' => 'blob'
     ];
     
-    public static function getType($sqlType, $value){
+    public static function getType($sqlType){
         return self::$sqlTypeMappings[$sqlType];
     }
+
+    public static function isNumericType($type){
+        return ($type === 'integer' || $type === 'double');
+    }
+
+    public static function truthyOrZero($value){
+       if($value || $value === 0 || $value === '0'){
+           return true;
+       }
+        return false;
+    }
+
 
     public static function pluck($key, $data) {
         return array_reduce($data, function($result, $array) use($key){
