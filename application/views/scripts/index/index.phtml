@@ -67,12 +67,6 @@ $allBadges = $this->badges;
             </div>
         </div>
 
-        <div class="find-country">
-            <h4 id="search-result-label"><?php echo $translator->trans('route.index.index.search-result-label'); ?></h4>
-            <ul class="country-list">
-            </ul>
-        </div>
-
         <?php foreach($allBadges as $badge): ?>
         <div class="badge-description animated fadeInLeft" data-badge-name="<?php echo $badge->getName(); ?>">
             <?php echo $badge->getDescription(); ?>
@@ -88,6 +82,8 @@ $allBadges = $this->badges;
                     <label for="search-countries"><?php echo $translator->trans('route.index.index.find-country')?></label>
                     <input type="text" id="search-countries" oninput="app.home.searchCountries()" />
                 </form>
+				<ul class="country-list">
+				</ul>
             </div>
 
             <span class="help-text-toggle icon-question-sign icon-large">
