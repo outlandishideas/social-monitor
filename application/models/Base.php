@@ -61,8 +61,8 @@ abstract class Model_Base
 			throw new \InvalidArgumentException(ucfirst($colValue) . ' is not a valid number');
 		}
 
-		if($type === 'string' && strlen($colValue) <= $tableDefinition['maxLength']){
-			throw new \InvalidArgumentException(ucfirst($colValue) . ' is not long');
+		if($type === 'string' && strlen($colValue) > $tableDefinition['maxLength']){
+			throw new \InvalidArgumentException(ucfirst($colValue) . ' is too long');
 		}
 	}
 
