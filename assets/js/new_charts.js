@@ -8,7 +8,7 @@ app.newCharts = {
 
     setup: function() {
         $(document)
-            .on('dateRangeUpdated', app.newCharts.loadData)
+            .on('dateRangeUpdated', app.newCharts.loadData);
         var $chartPicker = $('#chart-picker');
         if ($chartPicker.length > 0) {
             $chartPicker.on('change', app.newCharts.refreshCharts);
@@ -95,14 +95,14 @@ app.newCharts = {
                 if (numCols > 3) {
                     numCols = 3;
                 }
-                currentCol = 0;
+                var currentCol = 0;
                 var createRow = function(name, color, id, value) {
                     return '<th data-series="'+id+'" class="series-toggle"><span class="color-block" style="background-color:'+color+'"></span>'+name+'</th><td id="chart-table-value-'+id+'">'+value+'</td>';
                 };
                 // create table
                 date = new Date(targets[0].values[0].x);
-                var html = '<p>Click on each item to toggle them on or off the graph</p>';
-                html += '<table class="size-'+numCols+'"><tr><th colspan="'+((numCols * 2) - 1)+'" class="header" id="current-chart-date">'+date.toDateString()+'</th><th class="header"><span id="uncheck-all">Hide all</span></th></tr>';
+                var html = '<p>{{ js.chart.message.toggle | translate }}</p>';
+                html += '<table class="size-'+numCols+'"><tr><th colspan="'+((numCols * 2) - 1)+'" class="header" id="current-chart-date">'+date.toDateString()+'</th><th class="header"><span id="uncheck-all">{{ js.chart.message.toggle-all | translate }}</span></th></tr>';
                 var startRow = true;
                 for (var i = 0, l = targets.length; i < l; i++) {
                     var id = targets[i].id;
@@ -164,7 +164,7 @@ app.newCharts = {
                 var socialMediaType = new RegExp(/^(\[(.+)\])/);
                 $('.series-toggle').each(function() {
                     var $toggle = $(this);
-                    var text = $toggle.text()
+                    var text = $toggle.text();
                     var matches = text.match(socialMediaType);
 
                     if (matches.length == 3) {
@@ -177,9 +177,6 @@ app.newCharts = {
                     }
 
                 });
-            })
-            .always(function() {
-                //$('.chart-container').hideLoader();
             });
     }
 

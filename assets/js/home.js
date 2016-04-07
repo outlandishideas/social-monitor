@@ -236,10 +236,10 @@ app.home = {
 	buildDataTable: function(mapData){
 		// define the columns
 		var data = new google.visualization.DataTable();
-		data.addColumn('string', 'Country');
-		data.addColumn('string', 'Display Name');
-		data.addColumn('number', 'Presences');
-		data.addColumn('number', 'id');
+		data.addColumn('string', '{{ js.home.map-data.column.country | translate }}');
+		data.addColumn('string', '{{ js.home.map-data.column.display-name | translate }}');
+		data.addColumn('number', '{{ js.home.map-data.column.presences | translate }}');
+		data.addColumn('number', '{{ js.home.map-data.column.id | translate }}');
 
 		if (typeof mapData == 'undefined' || mapData.length == 0) {
 			return data;
@@ -282,9 +282,9 @@ app.home = {
 		}
 
 		// apply the tooltip formatters for each metric
-		var titleFormatter = new google.visualization.PatternFormat('{1} (Presences: {2})');
+		var titleFormatter = new google.visualization.PatternFormat('{{ js.home.map-data.metric.title | translate }}');
 		titleFormatter.format(data, [0, 1, 2], 0);
-		var kpiFormatter = new google.visualization.PatternFormat('{1}');
+		var kpiFormatter = new google.visualization.PatternFormat('{{ js.home.map-data.metric.kpi | translate }}');
 		for (m in app.home.metrics) {
 			metric = app.home.metrics[m];
 			for(i = 1; i < 31; i++ ){
@@ -416,7 +416,10 @@ function updateElement($el, d) {
 	$el.find('.flag-score').hide();
 	$el.find('.flag-score.'+badge).show();
 
-	var score = d.b[badge][day] ? d.b[badge][day].s : 0;
+	var score = 0;
+	if (d.b && d.b[badge] && d.b[badge][day]) {
+		score = d.b[badge][day].s;
+	}
 	$el.data('score', numberWithCommas(Math.round(score)));
 	var color = colorArgs.colors[0];
 	for (var j=0; j<colorArgs.colors.length-1; j++) {

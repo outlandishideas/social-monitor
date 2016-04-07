@@ -34,11 +34,11 @@ gulp.task('app:styles', ['app:styles:preprocess'], function() {
 });
 
 gulp.task('watch:app:styles', function() {
-	gulp.watch(['assets/*.scss', ['application/configs/config.yaml']], ['app:styles']);
+	gulp.watch(['assets/scss/*.scss', ['application/configs/config.yaml']], ['app:styles']);
 });
 
 gulp.task('watch:app:lang', function() {
-	gulp.watch(['languages/*.csv'], ['app:lang']);
+	gulp.watch(['languages/*.csv', 'assets/js/*.js'], ['app:lang']);
 });
 
 gulp.task('app:lang:csv2json', function () {
@@ -61,7 +61,8 @@ gulp.task('app:lang', ['app:lang:csv2json'], function () {
 					plugins.transformer({
 						path: langDir + '/' + file,
 						strictDictionary: false,
-						defaultDictionary: langDir + '/lang.en.json'
+						defaultDictionary: langDir + '/lang.en.json',
+						pattern: /\{{2}([-_\w\.\s\"\']+\s?\|\s?translate[\w\s\|]*)\}{2}/g // our keys can have hyphens and underscores
 					}).on('end', function() {
 						plugins.util.log('app:lang:', plugins.util.colors.green('✔ ') + file);
 					}).on('error', function () {

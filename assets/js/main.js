@@ -24,14 +24,6 @@ $.extend(app, {
 		}
 	},
 	templates: {
-		legendLabel: '<div class="dataset <%=className%>" data-line-id="<%=line_id%>">\
-				<span class="icon" style="background-color: <%=color%>"></span>\
-				<span class="text"><%=name%><% if(count) {%> (<%=count%>)<% } %></span>\
-				<div class="buttons"><span class="choose"></span><span class="close"></span></div></div>',
-		statusOverlay: '<div id="status-overlay"><b>Twitter API status for <%=type%></b><br>'+
-				'<%if(status!="unknown"){%><%=hits%> hits remaining<br>Reset in <%=reset%> minutes<%}else{%>Status is unknown because there have been no recent requests<%}%><br>' +
-				'<a href="<%=url%>">Deauthorise <%=type%></a></div>',
-		addTextSearch: '<tr><td valign="top" colspan="<%=colspan%>" class="dataTables_empty"><span class="add-manual-search link">Add manual search</span></td></tr>',
 		post: '\
 			<div>\
 			    <p class="more"><a href="<%=permalink%>" target="_blank" title="View update"><span class="icon-external-link icon-large"></span></a></p>\
@@ -44,25 +36,25 @@ $.extend(app, {
 					<p class="date"><%=date%></p>\
 				</div>\
 				<div class="engagement">\
-					<% if(!_.isUndefined(engagement.likes)) { %><p>Likes: <%=engagement.likes%></p><% } %>\
-					<% if(!_.isUndefined(engagement.comments)) { %><p>Comments: <%=engagement.comments%></p><% } %>\
-					<% if(!_.isUndefined(engagement.shares)) { %><p>Shares: <%=engagement.shares%></p><% } %>\
+					<% if(!_.isUndefined(engagement.likes)) { %><p>{{ js.templates.post.likes | translate }}: <%=engagement.likes%></p><% } %>\
+					<% if(!_.isUndefined(engagement.comments)) { %><p>{{ js.templates.post.comments | translate }}: <%=engagement.comments%></p><% } %>\
+					<% if(!_.isUndefined(engagement.shares)) { %><p>{{ js.templates.post.shares | translate }}: <%=engagement.shares%></p><% } %>\
 				</div>\
 			</div>',
 		postResponse_needed: '\
 			<p class="more">\
-				<a href="#" class="require-response" title="Does not require a response">\
+				<a href="#" class="require-response" title="{{ js.templates.postResponse_needed.title | translate }}">\
 					<span class="icon-comment-alt icon-large"></span>\
 				</a>\
 			</p>\
-			<p class="no-response">Awaiting response (<%=date_diff%>)...</p>',
+			<p class="no-response">{{ js.templates.postResponse_needed.message | translate }} (<%=date_diff%>)...</p>',
 		postResponse_notNeeded: '\
 			<p class="more">\
-				<a href="#" class="require-response" title="Requires a response">\
+				<a href="#" class="require-response" title="{{ js.templates.postResponse_notNeeded.title | translate }}">\
 					<span class="icon-comments icon-large"></span>\
 				</a>\
 			</p>\
-			<p class="no-response">No response required</p>',
+			<p class="no-response">{{ js.templates.postResponse_notNeeded.message | translate }}</p>',
 		searchArea: '<li class="area">\
 						<div class="marker <%=className%>"></div>\
 						<input type="hidden" class="lat" name="lat[]" value="<%=lat%>" />\
@@ -72,7 +64,7 @@ $.extend(app, {
 					</li>',
 		errorPopup: '<div id="popup-holder">\
 						<div class="error-popup">\
-							<h2>Error</h2>\
+							<h2>{{ js.templates.errorPopup.message | translate }}</h2>\
 							<p class="error-message"><%=message%></p>\
 						</div>\
 					</div>',
@@ -99,11 +91,6 @@ $.extend(app, {
 					<span class="icon-remove"></span>\
 				</a>\
 			</li>',
-		audienceTargetRates:
-			'<table>\
-				<tr><th>Target date</th><% _.each(requiredRates, function(r){ %><td><%=r.date%></td><%})%></tr>\
-				<tr><th>Required gain<br />per day</th><% _.each(requiredRates, function(r){ %><td><%=app.utils.numberFixedDecimal(r.rate)%></td><%})%></tr>\
-			</table>',
 		countryListItem:
 			'<li data-id="<%= id %>" data-badge>\
 				<a href="#"><span class="name"><%= n %></span> <span class="score" data-badge-score="%"></span></a>\
@@ -112,37 +99,37 @@ $.extend(app, {
 			'<div class="badge-small" data-badge>\
 			    <h3><%= name %></h3>\
                 <div class="badge-score bd-btm">\
-	                <h4><span data-badge-title></span> Score</h4>\
+	                <h4><span data-badge-title></span> {{ Global.score | translate }}</h4>\
                     <div class="score-value">0</div>\
                         <div class="score-bar"></div>\
                     </div>\
                     <div class="bd-btm">\
-	                <h4>Presences</h4>\
-	                <p>This country has no presences.</p>\
+	                <h4>{{ Global.presences | translate }}</h4>\
+	                <p>{{ js.templates.emptyCountryBadge.message | translate }}</p>\
                 </div>\
             </div>',
 		globalScore:
 			'<div id="overall-score" class="badge-small" data-country-id="0" data-badge data-score="0" data-color="#fff">\
-				<h3>British Council around the web</h3>\
+				<h3>{{ js.templates.globalScore.title | translate }}</h3>\
 				<div class="badge-score bd-btm">\
-					<h4><span data-badge-title>Overall</span> Score</h4>\
+					<h4><span data-badge-title>{{ badge.total.title | translate }}</span> {{ Global.score | translate }}</h4>\
 					<div class="score-value" data-badge-score="%"></div>\
 				</div>\
 			</div>\
 			<div id="overall-fans" class="badge-small" data-country-id="0" data-badge data-score="0" data-color="#fff">\
 				<div class="badge-score">\
-					<h4><span data-badge-title>Overall</span> Fans/Followers</h4>\
+					<h4><span data-badge-title>{{ badge.total.title | translate }}</span> {{ js.templates.globalScore.fans | translate }}</h4>\
 					<div class="score-value" data-badge-score></div>\
 				</div>\
 				<div class="bd-btm">\
 					<div>\
-						This is built up from the total scores from all British Council presences around the world.\
+						{{ js.templates.globalScore.description | translate }}\
 					</div>\
 				</div>\
 			</div>\
 			<div id="total-presences" class="badge-small" data-country-id="0" data-badge data-score="N/A" data-color="#fff">\
 				<div class="badge-score bd-btm">\
-					<h4>Total Presences</h4>\
+					<h4>{{ js.templates.globalScore.total-presences-description | translate }}</h4>\
 					<div class="score-value" data-badge-score></div>\
 				</div>\
 			</div>'
@@ -217,60 +204,15 @@ app.init = {
 		},
 
 		'#filter-region': function ($item) {
-			var $table = $('table.dataTable').dataTable();
-			$table.api().columns().every( function () {
-				var column = this;
-				if ($(column.header()).data('name') == 'region') {
-
-					var options = [];
-					column.data().unique().sort().each( function ( d ) {
-						if (d !== 'No Region' && d !== '') {
-							options.push(d);
-						}
-					} );
-
-					app.utils.setupTableFilter(column, $item, options, 'filter-region', 'Filter by region');
-				}
-
-			} );
+			app.utils.setupTableFilter($item, 'region', 'filter-region', ['', 'No Region'], '{{ js.datatables.filter.region | translate }}');
 		},
 
-		'#filter-sbu' : function ($item) {
-			var $table = $('table.dataTable').dataTable();
-			$table.api().columns().every( function () {
-				var column = this;
-				if ($(column.header()).data('name') == 'sbu') {
-
-					var options = [];
-					column.data().unique().sort().each( function ( d ) {
-						if (d !== '') {
-							options.push(d);
-						}
-					} );
-
-					app.utils.setupTableFilter(column, $item, options, 'filter-sbu', 'Filter by SBU');
-				}
-
-			} );
+		'#filter-group' : function ($item) {
+			app.utils.setupTableFilter($item, 'group', 'filter-group', [''], '{{ js.datatables.filter.group | translate }}');
 		},
 
 		'#filter-presence-type': function ($item) {
-			var $table = $('table.dataTable').dataTable();
-			$table.api().columns().every( function () {
-				var column = this;
-				if ($(column.header()).data('name') == 'presence-type') {
-
-					var options = [];
-					column.data().unique().sort().each( function ( d ) {
-						if (d !== 'N/A' && d !== '') {
-							options.push(d);
-						}
-					} );
-
-					app.utils.setupTableFilter(column, $item, options, 'filter-presence-type', 'Filter by presence');
-				}
-
-			} );
+			app.utils.setupTableFilter($item, 'presence-type', 'filter-presence-type', ['', 'N/A'], '{{ js.datatables.filter.presence-type | translate }}');
 		},
 
         '.accordion-btn': function ($item) {
@@ -365,29 +307,29 @@ app.init = {
 				dateFormat:jsConfig.dateFormat,
 				onClose:app.date.updated,
 				presets: {
-					specificDate: 'Specific date',
-					dateRange: 'Date range'
+					specificDate: '{{ js.date-picker.specific-date | translate }}',
+					dateRange: '{{ js.date-picker.date-range | translate }}'
 				},
 				presetRanges: [
 					{
-						text:'Last 30 days',
+						text:'{{ js.date-picker.last-30-days | translate }}',
 						dateStart:function () {
 							return Date.today().addMonths(-1);
 						},
 						dateEnd:'Today'
 					},
 					{
-						text:'Last 7 days',
+						text:'{{ js.date-picker.last-7-days | translate }}',
 						dateStart:'-6 days',
 						dateEnd:'Today'
 					},
 					{
-						text:'Month to date',
+						text:'{{ js.date-picker.month-to-date | translate }}',
 						dateStart:'1',
 						dateEnd:'Today'
 					},
 					{
-						text:'Last month',
+						text:'{{ js.date-picker.last-month | translate }}',
 						dateStart:function () {
 							return Date.today().moveToFirstDayOfMonth().addMonths(-1);
 						},
@@ -396,7 +338,7 @@ app.init = {
 						}
 					},
                     {
-                        text: 'Last Quarter',
+                        text: '{{ js.date-picker.last-quarter | translate }}',
                         dateStart: function() {
                             return quarter[0];
                         },
@@ -423,10 +365,6 @@ app.init = {
 			$item.blur(function () {
 				$('#name:text[value=""]').val($(this).val())
 			});
-		},
-
-		'#api-status': function($item) {
-			$item.find('span').mouseover(app.apiStatus.show).mouseout(app.apiStatus.hide);
 		},
 
 		'.toggler': function($items) {
@@ -592,38 +530,6 @@ app.init = {
 };
 
 
-/**
- * Twitter API status display
- */
-app.apiStatus = {
-	/**
-	 * Show API status overlay
-	 */
-	show: function () {
-		$('#status-overlay').remove();
-		clearTimeout(app.state.apiOverlayTimer);
-
-		var $span = $(this);
-		var data = $span.data();
-		data.url = app.utils.baseUrl() + data.type+'/deauth?return_url='+location;
-		var $overlay = $(parseTemplate(app.templates.statusOverlay, data))
-				.appendTo('body')
-				.css($span.position())
-				.mouseover(function () { clearTimeout(app.state.apiOverlayTimer); })
-				.mouseout(app.apiStatus.hide);
-	},
-
-	/**
-	 * Hide API status overlay after a half second delay
-	 */
-	hide: function() {
-		app.state.apiOverlayTimer = setTimeout(function(){
-			$('#status-overlay').remove();
-		}, 500);
-	}
-};
-
-
 app.date = {
     lastQuarter: function() {
         var month = Date.parse('today').toString('MM');
@@ -744,8 +650,8 @@ app.autoConfirm = {
 			title = '';
 		}
 		var $form = $('<form method="post" action="'+$(this).attr('href')+'">' +
-			'Are you sure? <input type="submit" value="'+$(this).text()+'"'+title+' class="button-bc inline"> ' +
-			'<a href="#">Cancel</a>' +
+			'{{ js.auto-confirm.are-you-sure | translate }} <input type="submit" value="'+$(this).text()+'"'+title+' class="button-bc inline"> ' +
+			'<a href="#">{{buttons.common.cancel | translate}}</a>' +
 			'</form>');
 		$form.on('click', 'a', app.autoConfirm.cancel);
 		$(this).hide().after($form);
@@ -860,9 +766,25 @@ app.utils = {
 		}
 		return summary;
 	},
-	setupTableFilter: function(column, $parent, options, name, defaultValue) {
+	setupTableFilter: function($parent, dataName, selectName, emptyValues, defaultValue) {
+		var $table = $('table.dataTable').dataTable();
+		var options = [];
+		var column = null;
+
+		$table.api().columns().every( function () {
+			if ($(this.header()).data('name') == dataName) {
+				column = this;
+
+				column.data().unique().sort().each( function ( d ) {
+					if (emptyValues.indexOf(d) < 0) {
+						options.push(d);
+					}
+				} );
+			}
+		} );
+
 		if (options.length > 1) {
-			var $select = $('<select class="button-bc" name="' + name + '"></select>');
+			var $select = $('<select class="button-bc" name="' + selectName + '"></select>');
 			$select.on('change', function () {
 				var val = $.fn.dataTable.util.escapeRegex(
 					$(this).val()
@@ -920,7 +842,7 @@ app.joyride = {
 			}
 		}
 	}
-}
+};
 
 app.table = {
 	filter: function () {
@@ -956,9 +878,7 @@ app.feedbackForm = {
 	clear: function() {
 		var form = $('#feedback-form');
 
-		var name = form.find('#name').val('');
-		var from = form.find('#from').val('');
-		var body = form.find('#body').val('');
+		form.find('#name, #from, #body').val('');
 	},
 	validate: function() {
 		var form = $('#feedback-form');
@@ -968,13 +888,13 @@ app.feedbackForm = {
 		var body = form.find('#body').val();
 
 		if(!name) {
-			return 'Please enter your name';
+			return '{{ js.feedbackForm.missing.name | translate }}';
 		}
 		if(!from) {
-			return 'Please enter your email address';
+			return '{{ js.feedbackForm.missing.email | translate }}';
 		}
 		if(!body) {
-			return 'Please enter your message';
+			return '{{ js.feedbackForm.missing.body | translate }}';
 		}
 		return null;
 	},
@@ -994,11 +914,11 @@ app.feedbackForm = {
 
 		$.post(url, {name: name, body: body, from: from}, function(response) {
 			if(response.data.success) {
-				app.flashMessenger.show('Feedback sent. Thanks!');
+				app.flashMessenger.show('{{ js.feedbackForm.message.success | translate }}');
 				app.feedbackForm.clear();
 				app.modal.hide();
 			} else {
-				app.flashMessenger.show(response.data.error || 'Error sending feedback, please try again','error');
+				app.flashMessenger.show(response.data.error || '{{ js.feedbackForm.message.error | translate }}','error');
 			}
 		});
 	}
