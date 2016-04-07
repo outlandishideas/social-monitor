@@ -1,5 +1,5 @@
-"key";"value"
-"do not remove or edit row above";""
+"key";"plural1";"plural2";"plural3";"plural4";"plural5";"plural6";"value"
+"do not remove or edit row above, even though it looks wrong"
 
 "Global.score";"Score"
 "Global.loading-data";"Loading data..."
@@ -70,6 +70,14 @@
 "Base.layout.feedback-modal.message-placeholder";"Enter your message (max. 1000 characters)"
 "Base.layout.feedback-modal.submit";"Send form"
 "Base.layout.feedback-modal.close";"Cancel"
+
+
+
+
+"route.base.fetch-lock.day";"one:1 day";"more:%amount% days"
+"route.base.fetch-lock.hour";"one:1 hour";"more:%amount% hours"
+"route.base.fetch-lock.min";"one:1 min";"more:%amount% mins"
+"route.base.fetch-lock.sec";"one:1 sec";"more:%amount% secs"
 
 
 
@@ -582,10 +590,9 @@
 "route.domain.index.message.access-error";"You do not have sufficient access to change this data"
 
 "route.domain.view.page-title";"%domain%"
-"route.domain.view.site.single";"site"
-"route.domain.view.site.plural";"sites"
-"route.domain.view.status.single";"post"
-"route.domain.view.status.plural";"posts"
+"route.domain.view.site-count";"one:1 site";"many:%count% sites"
+"route.domain.view.status-count";"one:1 post";"many:%count% posts"
+"route.domain.view.mention-count";"one:1 mention";"many:%count% mentions"
 "route.domain.view.linked-to-from";"%sites% linked to from %statuses%"
 
 
@@ -779,9 +786,6 @@
 "models.presence.sizes.extra-large";"Extra Large"
 "models.presence.engagement-score-name";"Klout score"
 
-"views.helpers.traffic-light.label.already-reached";"Target already reached"
-"views.helpers.traffic-light.label.hours";"hours"
-
 "views.scripts.partials.badges.metric-attributes.score-title";"This channel has scored %score% for %title% based on an average of the last 30 days of data."
 "views.scripts.partials.badges.metric-attributes.no-data";"There is no data available to calculate %title%."
 "views.scripts.partials.badges.metric-attributes.score-zero";"This channel has scored 0% for %title%."
@@ -847,7 +851,8 @@
 
 "views.scripts.partials.new-index-table.entity-list-toggle.title";"Click to expand"
 "views.scripts.partials.new-index-table.not-available";"N/A"
-
+"views.scripts.partials.new-index-table.country-count";"one:1 country";"more:%count% countries"
+"views.scripts.partials.new-index-table.presence-count";"one:1 channel";"more:%count% channels"
 
 "report.label.date-range";"Date range"
 

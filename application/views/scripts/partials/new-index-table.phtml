@@ -60,11 +60,9 @@ $gatekeeper = $this->gatekeeper();
                         case Countries::NAME:
                             $count = count((array)$cellValue);
                             if ($header->getName() == Countries::NAME) {
-								$countryText = $count == 1 ? $translator->trans('Global.country') :
-									$translator->trans('Global.countries');
-                                $countText = $count . ' ' . $countryText;
+								$countText = $translator->transChoice('views.scripts.partials.new-index-table.country-count', $count, ['%count%' => $count]);
                             } else {
-                                $countText = $count . ' presence' . ($count == 1 ? '' : 's');
+                                $countText = $translator->transChoice('views.scripts.partials.new-index-table.presence-count', $count, ['%count%' => $count]);
                             }
                             if($count > 0) {
 								$clickToExpand = $translator->trans('Global.click-to-expand');
