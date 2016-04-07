@@ -820,11 +820,12 @@ table.dtable {
 .dataTables_wrapper {
   .dataTables_processing {
     top: 10px;
-    @include gradient-horizontal-three-colors(transparent, rgba(255, 255, 255, 0.9), transparent);
+    @include gradient-horizontal-three-colors($colour-background, rgba(255, 255, 255, 0.9), $colour-background);
     font-weight: bold;
     height: auto;
     padding: 20px;
     margin-top: -10px;
+    z-index: 10;
   }
 }
 
