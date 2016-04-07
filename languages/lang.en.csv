@@ -1,3 +1,6 @@
+"key";"value"
+"do not remove or edit row above";""
+
 "Global.score";"Score"
 "Global.loading-data";"Loading data..."
 "Global.add";"Add"
@@ -114,11 +117,12 @@
 "buttons.presence.view";"View Channel"
 
 
-
 "route.region.index.page-title";"Regions"
 "route.region.index.empty-table";"No regions found"
 
 "route.region.new.page-title";"New Region"
+
+"route.region.delete.message.success";"Region deleted"
 
 "route.region.view.page-title";"Region: %region%"
 "route.region.view.info.presences.header";"Channels: %count%"
@@ -132,8 +136,6 @@
 "route.region.edit-all.message.display-name-missing";"Please enter a display name for %region%"
 "route.region.edit-all.message.success";"%count% regions saved"
 "route.region.edit-all.table-header.display-name";"Display name"
-
-"route.region.delete.message.success";"Region deleted"
 
 "route.region.graph-data.message.not-found";"Region could not be found"
 
@@ -205,6 +207,7 @@
 "route.feedback.index.error.missing-email";"Please enter a valid email address."
 "route.feedback.index.error.missing-message";"Please enter your message."
 "route.feedback.index.email-subject";"Social Monitor feedback from %name%"
+
 
 
 
@@ -365,36 +368,36 @@
 
 
 "route.statuses.index.page-title";"Posts"
-"route.statuses.index.filter.campaign-type";"Channels"
+"route.statuses.index.filter.campaign-type.label";"Channels"
 "route.statuses.index.filter.campaign-type.all";"Show all channels"
 "route.statuses.index.filter.campaign-type.country";"Filter by country"
 "route.statuses.index.filter.campaign-type.group";"Filter by SBU"
 "route.statuses.index.filter.campaign-type.region";"Filter by region"
-"route.statuses.index.filter.presence-type";"Social Media"
-"route.statuses.index.filter.countries";"Countries"
-"route.statuses.index.filter.regions";"Regions"
-"route.statuses.index.filter.groups";"SBUs"
-"route.statuses.index.filter.sort-by";"Sort"
+"route.statuses.index.filter.presence-type.label";"Social Media"
+"route.statuses.index.filter.countries.label";"Countries"
+"route.statuses.index.filter.regions.label";"Regions"
+"route.statuses.index.filter.groups.label";"SBUs"
+"route.statuses.index.filter.sort-by.label";"Sort"
 "route.statuses.index.filter.sort-by.date";"Date"
 "route.statuses.index.you-are-viewing";"You are viewing:"
 "route.statuses.index.table-header.content";"Content"
-"route.statuses.index.multi-select.select-all";"Toggle all"
-"route.statuses.index.multi-select.all-selected";"All selected"
+"route.statuses.index.multi-select.select-all.default";"Toggle all"
+"route.statuses.index.multi-select.all-selected.default";"All selected"
 "route.statuses.index.multi-select.all-selected.all-presences";"Showing all channels"
 "route.statuses.index.multi-select.all-selected.countries";"All countries"
 "route.statuses.index.multi-select.all-selected.regions";"All regions"
 "route.statuses.index.multi-select.all-selected.groups";"All SBUs"
-"route.statuses.index.multi-select.count-selected";"# of % selected"
-"route.statuses.index.multi-select.no-matches";"No matches found"
-"route.statuses.index.multi-select.placeholder";"None selected"
+"route.statuses.index.multi-select.count-selected.default";"# of % selected"
+"route.statuses.index.multi-select.no-matches.default";"No matches found"
+"route.statuses.index.multi-select.placeholder.default";"None selected"
 
 
 
 
 "route.error.error.page-title";"Application error"
 "route.error.error.page-title-404";"Page not found"
-"route.error.error.message.404";"Please check the url"
-"route.error.error.message.500";"Sorry, something has gone wrong"
+"route.error.error.message-404";"Please check the url"
+"route.error.error.message-500";"Sorry, something has gone wrong"
 
 
 
@@ -406,8 +409,8 @@
 "route.fetch.log.updating-domains.start";"Updating linked domains"
 "route.fetch.log.updating-domains.success";"Inserted %count% domains"
 "route.fetch.log.start";"Starting %action% process on %start%"
-"route.fetch.log.lock-acquire";"Process already running and last active %seconds% seconds ago"
-"route.fetch.log.lock-acquire.fail";"Stale lock found last active %seconds% seconds ago: %lockname%"
+"route.fetch.log.lock-acquire.already-running";"Process already running and last active %seconds% seconds ago"
+"route.fetch.log.lock-acquire.stale";"Stale lock found last active %seconds% seconds ago: %lockname%"
 "route.fetch.log.presence-history.start";"Updating channel history"
 "route.fetch.log.presence-history.error";"Error: %message%"
 "route.fetch.log.update-info.start";"Update info %message%"

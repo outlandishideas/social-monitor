@@ -111,7 +111,7 @@ class StatusesController extends GraphingController
 			'placeholderText' => 'route.statuses.index.multi-select.placeholder'
 		];
 		foreach ($queryFilters as $queryFilter) {
-			$labelKey = 'route.statuses.index.filter.' . $queryFilter->translationSuffix;
+			$labelKey = 'route.statuses.index.filter.' . $queryFilter->translationSuffix . '.label';
 			$label = $this->translator->trans($labelKey);
 			if ($label != $labelKey) {
 				$queryFilter->label = $label;
@@ -120,7 +120,7 @@ class StatusesController extends GraphingController
 				$specificKey = $transKey . '.' . $queryFilter->translationSuffix;
 				$text = $this->translator->trans($specificKey);
 				if ($text == $specificKey) {
-					$text = $this->translator->trans($transKey);
+					$text = $this->translator->trans($transKey . '.default');
 				}
 				$queryFilter->$property = $text;
 			}
