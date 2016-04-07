@@ -55,8 +55,14 @@ abstract class Model_Base
 			throw new \InvalidArgumentException(ucfirst($colName) . ' must not be null');
 		}
 		
-		if(!Verification::verifyType($columnDefiniton['type'], $colValue)){
-			throw new \InvalidArgumentException(ucfirst($colName) . ' is not of type '. $columnDefiniton['type']);
+		$type = Verification::getType($columnDefiniton['type']);
+		
+		if(($type === 'integer' || $type === 'double') && is_numeric($colValue)){
+			throw new \InvalidArgumentException(ucfirst($colValue) . ' is not a valid number');
+		}
+
+		if($type === 'string' && strlen($colValue) <= $tableDefinition['maxLength']){
+			throw new \InvalidArgumentException(ucfirst($colValue) . ' is not long');
 		}
 	}
 
@@ -67,7 +73,8 @@ abstract class Model_Base
 	public function getTableDefinition()
 	{
 		if (empty(self::$tableColumns)) {
-			$statement = $this->_db->prepare('SELECT table_name, column_name, is_nullable, column_default, data_type FROM information_schema.columns WHERE table_schema=database()');
+			$statement = $this->_db->prepare('SELECT table_name, column_name, is_nullable, column_default, data_type, character_maximum_length 
+											  FROM information_schema.columns WHERE table_schema=database()');
 			$statement->execute();
 			foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $row) {
 				if (!isset(Model_Base::$tableColumns[$row['table_name']])){
@@ -77,7 +84,8 @@ abstract class Model_Base
 					"name"=>$row['column_name'],
 					"nullable"=>($row['is_nullable'] === 'YES'),
 					"default"=>$row['column_default'],
-					"type"=>$row['data_type']];
+					"type"=>$row['data_type'],
+					"maxLength"=> $row['character_maximum_length']];
 			}
 		}
 		if (isset(Model_Base::$tableColumns[static::$tableName])) {
