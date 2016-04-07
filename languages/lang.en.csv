@@ -1102,3 +1102,15 @@
 "country.YE";"Yemen"
 "country.ZM";"Zambia"
 "country.ZW";"Zimbabwe"
+
+
+
+"js.datatables.searchBox";"Search by content"
+"js.datatables.search";""
+"js.datatables.searchPlaceholder";"Search"
+"js.datatables.emptyTable";"No %type%s found"
+"js.datatables.zeroRecords";"No matching %type%s"
+"js.datatables.info";"Showing %type%s: _START_ to _END_"
+"js.datatables.infoEmpty";"No %type%s to show"
+"js.datatables.infoFiltered";""
+"js.datatables.loading";"Loading..."

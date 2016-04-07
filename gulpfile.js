@@ -52,16 +52,16 @@ gulp.task('app:lang:csv2json', function () {
 gulp.task('app:lang', ['app:lang:csv2json'], function () {
 	var langDir = 'assets/build/lang';
 	var files = fs.readdirSync(langDir);
-	// var translations = ['en'];
 	files.forEach(function (file) {
 		var matches = file.match(/lang\.(.{2})\.json/);
 		if (matches.length > 1) {
 			var lang = matches[1];
 			return gulp.src('assets/js/*.js')
 				.pipe(
-					plugins.translator({
-						localePath: langDir + '/' + file,
-						lang: lang
+					plugins.transformer({
+						path: langDir + '/' + file,
+						strictDictionary: false,
+						defaultDictionary: langDir + '/lang.en.json'
 					}).on('end', function() {
 						plugins.util.log('app:lang:', plugins.util.colors.green('✔ ') + file);
 					}).on('error', function () {
