@@ -27,7 +27,7 @@
     <!--[if lte IE 8]>
     <link rel="stylesheet" media="print" href="<?php echo $this->assetUrl('css/print.css');?>" type="text/css" />
     <![endif]-->
-    <script type="text/javascript" src="<?php echo $this->assetUrl('js/modernizr.min.js');?>"></script>
+    <script type="text/javascript" src="<?php echo $this->assetUrl('js/' . $this->locale . '/modernizr.min.js');?>"></script>
 </head>
 <body class="<?php echo $this->bodyClass; ?>">
 	<nav class="top-bar" data-topbar role="navigation">
@@ -98,9 +98,9 @@
 		array('link', 'lib/tipsy/js/jquery.tipsy.js'),
 		array('link', '//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js'),
 		array('link', '//cdn.datatables.net/fixedheader/3.1.1/js/dataTables.fixedHeader.min.js'),
-		array('link', 'js/dataTables.filteringDelay.js'),
+		array('link', 'js/' . $this->locale . '/dataTables.filteringDelay.js'),
 		array('link', 'lib/farbtastic/farbtastic.js'),
-		array('link', 'js/plugins.js'),
+		array('link', 'js/' . $this->locale . '/plugins.js'),
 		array('link', 'lib/backbone/underscore.js'),
 		array('link', 'lib/moment/moment.js'),
 //		array('link', 'lib/bootstrap/bootstrap.js'),
@@ -110,10 +110,10 @@
 		array('link', 'lib/foundation/js/foundation/foundation.slider.js'),
 		array('link', 'lib/foundation/js/foundation/jquery.cookie.js'),
 		array('link', 'lib/foundation/js/foundation/foundation.joyride.js'),
-		array('link', 'js/datatables.js'),
-		array('link', 'js/new_charts.js'),
-		array('link', 'js/home.js'),
-		array('link', 'js/main.js')
+		array('link', 'js/' . $this->locale . '/datatables.js'),
+		array('link', 'js/' . $this->locale . '/new_charts.js'),
+		array('link', 'js/' . $this->locale . '/home.js'),
+		array('link', 'js/' . $this->locale . '/main.js')
 	);
 
 	$debug = true; // enable this to print out the scripts individually, so you don't have to wait for minify to execute
