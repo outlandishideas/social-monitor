@@ -40,25 +40,31 @@ abstract class Model_Base
 		}
 	}
 
-	public function verify($data){
-		$columnInfos = $this->getColumnInfos();
-		$columnNames = Verification::pluck('name', $this->getColumnInfos());
-		foreach ($data as $key => $value){
-			$searchIndex = array_search($key, $columnNames);
-			if(!$searchIndex){
-				throw new \InvalidArgumentException(ucfirst($key) . ' does not exist in this table');
-			}
-			if(!$value && !$columnInfos[$searchIndex]['nullable'] && !$columnInfos[$searchIndex]['default']){
-				throw new \InvalidArgumentException(ucfirst($key) . ' must not be null');
-			}
+	public function verify($colName, $colValue){
+		$tableDefinition = $this->getTableDefinition();
+		$columnNames = Verification::pluck('name', $this->getTableDefinition());
+		$searchIndex = array_search($colName, $columnNames);
+
+		if(!$searchIndex){
+			throw new \InvalidArgumentException(ucfirst($colName) . ' does not exist in this table');
+		}
+		
+		$columnDefiniton = $tableDefinition[$searchIndex];
+		
+		if(!$colValue && !$columnDefiniton['nullable'] && !$columnDefiniton['default']){
+			throw new \InvalidArgumentException(ucfirst($colName) . ' must not be null');
+		}
+		
+		if(!Verification::verifyType($columnDefiniton['type'], $colValue)){
+			throw new \InvalidArgumentException(ucfirst($colName) . ' is not of type '. $columnDefiniton['type']);
 		}
 	}
 
 	public function getColumnNames(){
-		return Verification::pluck('name', $this->getColumnInfos());
+		return Verification::pluck('name', $this->getTableDefinition());
 	}
 
-	public function getColumnInfos()
+	public function getTableDefinition()
 	{
 		if (empty(self::$tableColumns)) {
 			$statement = $this->_db->prepare('SELECT table_name, column_name, is_nullable, column_default, data_type FROM information_schema.columns WHERE table_schema=database()');
@@ -107,7 +113,9 @@ abstract class Model_Base
 	{
 		$data = $this->_row;
 
-		$this->verify($data);
+		foreach ($data as $colName => $colValue){
+			$this->verify($colName, $colValue);
+		}
 		if ($this->_isNew) {
 			$query = 'INSERT INTO '.static::$tableName.' '.
 				'(`'.implode('`,`', array_keys($data)).'`) '.
