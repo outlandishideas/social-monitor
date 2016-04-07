@@ -45,7 +45,7 @@ abstract class Model_Base
 		$columnNames = Verification::pluck('name', $this->getTableDefinition());
 		$searchIndex = array_search($colName, $columnNames);
 
-		if(!$searchIndex){
+		if($searchIndex < 0){
 			throw new \InvalidArgumentException(ucfirst($colName) . ' does not exist in this table');
 		}
 		
@@ -57,12 +57,12 @@ abstract class Model_Base
 		
 		$type = Verification::getType($columnDefiniton['type']);
 		
-		if(($type === 'integer' || $type === 'double') && is_numeric($colValue)){
+		if(($type === 'integer' || $type === 'double') && !is_numeric($colValue)){
 			throw new \InvalidArgumentException(ucfirst($colValue) . ' is not a valid number');
 		}
 
-		if($type === 'string' && strlen($colValue) > $tableDefinition['maxLength']){
-			throw new \InvalidArgumentException(ucfirst($colValue) . ' is too long');
+		if($type === 'string' && strlen($colValue) > $columnDefiniton['maxLength']){
+			throw new \InvalidArgumentException(ucfirst($colName) . ' is too long');
 		}
 	}
 
