@@ -6,6 +6,9 @@ use Outlandish\SocialMonitor\Database\Database;
 
 use Outlandish\SocialMonitor\Helper\Verification;
 
+use Outlandish\SocialMonitor\Exception\InvalidPropertyException;
+
+use Outlandish\SocialMonitor\Exception\InvalidPropertiesException;
 abstract class Model_Base
 {
 	protected static $tableColumns = array();
@@ -55,11 +58,11 @@ abstract class Model_Base
 		$hasDefault = Verification::truthyOrZero($columnDefiniton['default']);
 
 		if(Verification::isNumericType($columnDefiniton['type']) && !Verification::isValidNumber($colValue)){
-				throw new \InvalidArgumentException(ucfirst($colValue) . ' is not a valid number');
+				throw new InvalidPropertyException($colName, 'is not a valid number.');
 		}
 
 		if(Verification::isStringType($columnDefiniton['type']) && strlen($colValue) > $columnDefiniton['maxLength']){
-			throw new \InvalidArgumentException(ucfirst($colName) . ' is too long');
+			throw new InvalidPropertyException($colName, 'is too long.');
 		}
 		
 		if(Verification::truthyOrZero($colValue)){
@@ -69,7 +72,7 @@ abstract class Model_Base
 		}else if($isNullable && !$hasDefault){
 			return null;
 		}else{
-			throw new \InvalidArgumentException(ucfirst($colName) . ' must not be null');
+			throw new InvalidPropertyException($colName, 'is required.');
 		}
 	}
 
@@ -183,10 +186,18 @@ abstract class Model_Base
 	{
 		if ($data) {
 			$columnNames = $this->getColumnNames();
+			$errorMessages = array();
 			foreach ($data as $key => $value) {
 				if (in_array($key, $columnNames)) {
-					$this->{$key} = $value;
+					try {
+						$this->{$key} = $value;
+					}catch (InvalidPropertyException $ex){
+						array_push($errorMessages, $ex);
+					}
 				}
+			}
+			if(!empty($errorMessages)){
+				throw new InvalidPropertiesException('Invalid properties found.', $errorMessages);
 			}
 		}
 	}

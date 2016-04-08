@@ -7,6 +7,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BaseController extends Zend_Controller_Action
 {
 
+    protected static $formInputLabels = array();
+
     protected static $publicActions = array();
 
     static $optionCache = array();

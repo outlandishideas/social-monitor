@@ -22,6 +22,7 @@ class Verification
     public static function getType($sqlType){
         return self::$sqlTypeMappings[$sqlType];
     }
+    
     public static function isStringType($sqlType){
         $mappedType = self::$sqlTypeMappings[$sqlType];
         return ($mappedType === 'string');
@@ -42,7 +43,6 @@ class Verification
        }
         return false;
     }
-
 
     public static function pluck($key, $data) {
         return array_reduce($data, function($result, $array) use($key){

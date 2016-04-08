@@ -3,11 +3,20 @@
 use Outlandish\SocialMonitor\Report\ReportableCountry;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
 use Outlandish\SocialMonitor\TableIndex\Header\Name;
+use Outlandish\SocialMonitor\Exception\InvalidPropertiesException;
+use Outlandish\SocialMonitor\Exception\InvalidPropertyException;
 
 class CountryController extends CampaignController {
 
     protected static $publicActions = array('stats-panel', 'report');
 
+	protected static $formInputLabels = array(
+		'display_name' => 'route.country.edit.label.display-name',
+		'country' => 'route.country.edit.label.country',
+		'audience' => "route.country.edit.label.audience-size",
+		'population' => "route.country.edit.label.country-population",
+		'penetration' => "route.country.edit.label.internet-penetration"
+	);
 	/**
 	 * @param bool $validate
 	 * @return Model_Country
@@ -188,24 +197,26 @@ class CountryController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 
-			$editingCountry->fromArray($this->_request->getParams());
-
 			$errorMessages = array();
-			if (!$this->_request->getParam('display_name')) {
-				$errorMessages[] = $this->translator->trans('route.country.edit.message.display-name-missing');
+			try {
+				$editingCountry->fromArray($this->_request->getParams());
+			}catch (InvalidPropertiesException $ex){
+				$errorMessages = $ex->getProperties();
 			}
-			if (!$this->_request->getParam('country')) {
-				$errorMessages[] = $this->translator->trans('route.country.edit.message.country-missing');
-			}
-
-            $editingCountry->penetration = max(0, $editingCountry->penetration);
-            $editingCountry->penetration = min(100, $editingCountry->penetration);
 
 			if ($errorMessages) {
-				foreach ($errorMessages as $message) {
-                    $this->flashMessage($message, 'error');
+				foreach ($errorMessages as $invalidProperty) {
+					$property = $invalidProperty->getProperty();
+
+					if (key_exists($property, self::$formInputLabels)) {
+						$inputLabel = $this->translator->trans(self::$formInputLabels[$property]);
+						$this->flashMessage(join(" ", [$inputLabel, $invalidProperty->getMessage()]), 'error');
+					}
 				}
 			} else {
+				$editingCountry->penetration = max(0, $editingCountry->penetration);
+				$editingCountry->penetration = min(100, $editingCountry->penetration);
+				
 				try {
 					$editingCountry->save();
 
