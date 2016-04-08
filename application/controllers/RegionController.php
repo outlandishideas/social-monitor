@@ -242,28 +242,21 @@ class RegionController extends CampaignController
                 }
             }
 
-            $errorMessages = array();
+            $producedErrors = false;
 
             $editedRegions = array();
 
             foreach($editingRegions as $g){
                 $editingRegion = Model_Region::fetchById($g['id']);
-                $display_name = $editingRegion->display_name;
-                $editingRegion->fromArray($g);
 
-                if (!$g['display_name']) {
-                    $errorMessages[] = $this->translator->trans('route.region.edit-all.message.display-name-missing', ['%region%' => $display_name]);
+                if(!$this->setProperties($editingRegion, $g)){
+                    $producedErrors = true;
                 }
 
                 $editedRegions[] = $editingRegion;
-
             }
 
-            if ($errorMessages) {
-                foreach ($errorMessages as $message) {
-                    $this->flashMessage($message, 'error');
-                }
-            } else {
+            if (!$producedErrors) {
                 try {
                     foreach($editedRegions as $region){
                         $region->save();

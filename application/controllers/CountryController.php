@@ -290,7 +290,6 @@ class CountryController extends CampaignController {
 //			$oldTimeZone = $editingCountry->timezone;
             foreach($editingCountries as $c){
                 $editingCountry = Model_Country::fetchById($c['id']);
-                $display_name = $editingCountry->display_name;
 
 				if(!$this->setProperties($editingCountry, $c)){
 					$producedErrors = true;
