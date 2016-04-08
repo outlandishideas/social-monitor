@@ -615,18 +615,23 @@ class BaseController extends Zend_Controller_Action
         return $elements;
     }
 
-    protected function setProperties($model){
+    protected function getInputLabel($key){
+        if (array_key_exists($key, $this->formInputLabels)){
+            return $this->formInputLabels[$key];
+        }else{
+            return 'route.error.error.label.default';
+        }
+    }
+
+    protected function setProperties($model, $properties){
         try {
-            $model->fromArray($this->_request->getParams());
+            $model->fromArray($properties);
         }catch (InvalidPropertiesException $ex){
             $errorMessages = $ex->getProperties();
             foreach ($errorMessages as $invalidProperty) {
                 $property = $invalidProperty->getProperty();
-
-                if (key_exists($property, $this->formInputLabels)) {
-                    $inputLabel = $this->translator->trans($this->formInputLabels[$property]);
-                    $this->flashMessage(join(" ", [$inputLabel, $invalidProperty->getMessage()]), 'error');
-                }
+                $inputLabel = $this->translator->trans($this->getInputLabel($property));
+                $this->flashMessage(join(" ", [$inputLabel, $invalidProperty->getMessage()]), 'error');
             }
             return false;
         }

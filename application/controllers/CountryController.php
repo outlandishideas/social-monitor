@@ -13,9 +13,10 @@ class CountryController extends CampaignController {
 		'country' => 'route.country.edit.label.country',
 		'audience' => 'route.country.edit.label.audience-size',
 		'population' => 'route.country.edit.label.country-population',
-		'penetration' => 'route.country.edit.label.internet-penetration'
+		'penetration' => 'route.country.edit.label.internet-penetration',
+        'page_title' => 'route.region.edit-all.page-title',
 	);
-	
+
 	/**
 	 * @param bool $validate
 	 * @return Model_Country
@@ -196,7 +197,7 @@ class CountryController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 
-			if ($this->setProperties($editingCountry)) {
+			if ($this->setProperties($editingCountry,  $this->_request->getParams())) {
 				$editingCountry->penetration = max(0, $editingCountry->penetration);
 				$editingCountry->penetration = min(100, $editingCountry->penetration);
 
@@ -282,7 +283,7 @@ class CountryController extends CampaignController {
                 }
             }
 
-            $errorMessages = array();
+            $producedErrors = false;
 
             $editedCountries = array();
 
@@ -290,24 +291,15 @@ class CountryController extends CampaignController {
             foreach($editingCountries as $c){
                 $editingCountry = Model_Country::fetchById($c['id']);
                 $display_name = $editingCountry->display_name;
-                $editingCountry->fromArray($c);
 
-                if (!$c['display_name']) {
-                    $errorMessages[] = $this->translator->trans('route.country.edit-all.message.display-name-missing', ['%country%' => $display_name]);
-                }
-                if (!$c['country']) {
-                    $errorMessages[] = $this->translator->trans('route.country.edit-all.message.country-missing', ['%country%' => $display_name]);
-                }
+				if(!$this->setProperties($editingCountry, $c)){
+					$producedErrors = true;
+				};
 
                 $editedCountries[] = $editingCountry;
-
             }
 
-            if ($errorMessages) {
-                foreach ($errorMessages as $message) {
-                    $this->flashMessage($message, 'error');
-                }
-            } else {
+            if (!$producedErrors) {
                 try {
 					/** @var Model_Country $country */
 					foreach($editedCountries as $country){

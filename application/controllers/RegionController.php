@@ -9,6 +9,10 @@ class RegionController extends CampaignController
 
     protected static $publicActions = array('report');
 
+    protected $formInputLabels = array(
+        'display_name'=>'route.region.edit.label.name'
+    );
+
 	/**
 	 * @param bool $validate
 	 * @return Model_Region
@@ -192,18 +196,8 @@ class RegionController extends CampaignController
         }
 
         if ($this->_request->isPost()) {
-            $editingRegion->fromArray($this->_request->getParams());
 
-            $errorMessages = array();
-            if (!$this->_request->getParam('display_name')) {
-                $errorMessages[] = $this->translator->trans('route.region.edit.message.display-name-missing');
-            }
-
-            if ($errorMessages) {
-                foreach ($errorMessages as $message) {
-                    $this->flashMessage($message, 'error');
-                }
-            } else {
+            if($this->setProperties($editingRegion, $this->_request->getParams())) {
                 try {
                     $editingRegion->save();
 

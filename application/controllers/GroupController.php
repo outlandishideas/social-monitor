@@ -196,7 +196,7 @@ class GroupController extends CampaignController {
         if ($this->_request->isPost()) {
 //			$oldTimeZone = $editingGroup->timezone;
 
-            if($this->setProperties($editingGroup)){
+            if($this->setProperties($editingGroup, $this->_request->getParams())){
                 try {
                     $editingGroup->save();
 
