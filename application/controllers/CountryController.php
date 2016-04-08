@@ -11,9 +11,9 @@ class CountryController extends CampaignController {
 	protected $formInputLabels = array(
 		'display_name' => 'route.country.edit.label.display-name',
 		'country' => 'route.country.edit.label.country',
-		'audience' => "route.country.edit.label.audience-size",
-		'population' => "route.country.edit.label.country-population",
-		'penetration' => "route.country.edit.label.internet-penetration"
+		'audience' => 'route.country.edit.label.audience-size',
+		'population' => 'route.country.edit.label.country-population',
+		'penetration' => 'route.country.edit.label.internet-penetration'
 	);
 	
 	/**
