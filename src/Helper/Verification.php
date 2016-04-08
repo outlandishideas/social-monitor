@@ -22,9 +22,18 @@ class Verification
     public static function getType($sqlType){
         return self::$sqlTypeMappings[$sqlType];
     }
+    public static function isStringType($sqlType){
+        $mappedType = self::$sqlTypeMappings[$sqlType];
+        return ($mappedType === 'string');
+    }
 
-    public static function isNumericType($type){
-        return ($type === 'integer' || $type === 'double');
+    public static function isNumericType($sqlType){
+        $mappedType = self::$sqlTypeMappings[$sqlType];
+        return ($mappedType === 'integer' || $mappedType === 'double');
+    }
+
+    public static function isValidNumber($candidate){
+        return is_numeric($candidate) || !$candidate;
     }
 
     public static function truthyOrZero($value){

@@ -50,34 +50,27 @@ abstract class Model_Base
 		}
 		
 		$columnDefiniton = $tableDefinition[$searchIndex];
-		$type = Verification::getType($columnDefiniton['type']);
 
 		$isNullable = $columnDefiniton['nullable'];
 		$hasDefault = Verification::truthyOrZero($columnDefiniton['default']);
 
-		if (!$isNullable && !$hasDefault && !Verification::truthyOrZero($colValue)){
-			throw new \InvalidArgumentException(ucfirst($colName) . ' must not be null');
-		}
-
-		if(Verification::isNumericType($type) && !is_numeric($colValue)){
-			if(!$colValue){
-				if($isNullable && !$hasDefault){
-					return null;
-				}
-				if(!$isNullable && $hasDefault){
-					return $columnDefiniton['default'];
-				}
-			}
-			else{
+		if(Verification::isNumericType($columnDefiniton['type']) && !Verification::isValidNumber($colValue)){
 				throw new \InvalidArgumentException(ucfirst($colValue) . ' is not a valid number');
-			}
 		}
 
-		if($type === 'string' && strlen($colValue) > $columnDefiniton['maxLength']){
+		if(Verification::isStringType($columnDefiniton['type']) && strlen($colValue) > $columnDefiniton['maxLength']){
 			throw new \InvalidArgumentException(ucfirst($colName) . ' is too long');
 		}
-
-		return $colValue;
+		
+		if(Verification::truthyOrZero($colValue)){
+			return $colValue;
+		}else if(!$isNullable && $hasDefault){
+			return $columnDefiniton['default'];
+		}else if($isNullable && !$hasDefault){
+			return null;
+		}else{
+			throw new \InvalidArgumentException(ucfirst($colName) . ' must not be null');
+		}
 	}
 
 	public function getColumnNames(){
