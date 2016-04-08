@@ -3,11 +3,13 @@
 use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Helper\Gatekeeper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Outlandish\SocialMonitor\Exception\InvalidPropertiesException;
+use Outlandish\SocialMonitor\Exception\InvalidPropertyException;
 
 class BaseController extends Zend_Controller_Action
 {
 
-    protected static $formInputLabels = array();
+    protected $formInputLabels = array();
 
     protected static $publicActions = array();
 
@@ -611,6 +613,24 @@ class BaseController extends Zend_Controller_Action
             $elements[$i] = $this->view->pluralise($e[1], $e[0]);
         }
         return $elements;
+    }
+
+    protected function setProperties($model){
+        try {
+            $model->fromArray($this->_request->getParams());
+        }catch (InvalidPropertiesException $ex){
+            $errorMessages = $ex->getProperties();
+            foreach ($errorMessages as $invalidProperty) {
+                $property = $invalidProperty->getProperty();
+
+                if (key_exists($property, $this->formInputLabels)) {
+                    $inputLabel = $this->translator->trans($this->formInputLabels[$property]);
+                    $this->flashMessage(join(" ", [$inputLabel, $invalidProperty->getMessage()]), 'error');
+                }
+            }
+            return false;
+        }
+            return true;
     }
 
     private function showAccessTokenNeedsRefreshMessage()
