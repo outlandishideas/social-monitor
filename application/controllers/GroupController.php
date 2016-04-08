@@ -245,29 +245,22 @@ class GroupController extends CampaignController {
                 }
             }
 
-            $errorMessages = array();
+            $producedErrors = false;
 
             /** @var Model_Group[] $editedGroups */
             $editedGroups = array();
 
             foreach($editingGroups as $g){
                 $editingGroup = Model_Group::fetchById($g['id']);
-                $display_name = $editingGroup->display_name;
-                $editingGroup->fromArray($g);
 
-                if (!$g['display_name']) {
-                    $errorMessages[] = $this->translator->trans('route.group.edit-all.message.display-name-missing', ['%group%' => $display_name]);
+                if(!$this->setProperties($editingGroup, $g)){
+                    $producedErrors = true;
                 }
-
+                
                 $editedGroups[] = $editingGroup;
-
             }
 
-            if ($errorMessages) {
-                foreach ($errorMessages as $message) {
-                    $this->flashMessage($message, 'error');
-                }
-            } else {
+            if (!$producedErrors) {
                 try {
                     foreach($editedGroups as $group){
                         $group->save();
