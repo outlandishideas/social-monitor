@@ -11,6 +11,13 @@ class UserController extends BaseController
     /** @var LinkedIn */
     protected $linkedin;
 
+    protected $formInputLabels = array(
+        'name'=>'Global.user',
+        'user_level' => 'views.scripts.user.edit.label.user.level',
+        'password'=>'Global.password', 'password_confirm'=>'Global.password-confirm',
+    );
+
+
     public function init()
     {
         parent::init();
@@ -252,25 +259,18 @@ class UserController extends BaseController
             if (!$this->view->canChangeLevel) {
                 unset($params['user_level']);
             }
-
-            // populate the user with submitted values
-            $editingUser->fromArray($params);
-
+            
+            $setProperties = $this->setProperties($editingUser, $params);
             $errorMessages = array();
-            if (!$this->_request->getParam('name')) {
-                $errorMessages[] = $this->translator->trans('route.user.edit.message.missing-username'); //'Please enter a user name';
-            }
-            if (!$this->_request->getParam('email')) {
-                $errorMessages[] = $this->translator->trans('route.user.edit.message.missing-email'); //'Please enter an email address';
-            } else if (preg_match('/.*@.*/', $this->_request->getParam('email')) === 0) {
+            
+            if (preg_match('/.*@.*/', $this->_request->getParam('email')) === 0) {
                 $errorMessages[] = $this->translator->trans('route.user.edit.message.invalid-email'); //'Please enter a valid email address';
             } else if ($isRegistration &&
-                !$this->isBritishCouncilEmailAddress($this->_request->getParam('email'))
-            ) {
+                !$this->isBritishCouncilEmailAddress($this->_request->getParam('email'))) {
                 $errorMessages[] = $this->translator->trans('route.user.edit.message.use-company-email'); //'To register, you must use a valid British Council email address';
             }
 
-            if (!$errorMessages) {
+            if (!$errorMessages && $setProperties) {
                 $password = $this->_request->getParam('password');
                 $password2 = $this->_request->getParam('password_confirm');
                 // don't require a new password for existing users
@@ -292,7 +292,9 @@ class UserController extends BaseController
                 foreach ($errorMessages as $message) {
                     $this->flashMessage($message, 'error');
                 }
-            } else {
+            }
+            
+            if(!$errorMessages && $setProperties) {
                 try {
                     $editingUser->save();
                     $this->flashMessage($messageOnSave);

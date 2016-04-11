@@ -345,7 +345,6 @@
 "route.user.edit.message.both-passwords-required";"Both passwords are required"
 "route.user.edit.message.password-mismatch";"Passwords do not match"
 "route.user.edit.message.passwords-too-short";"Password must be at least 4 characters"
-"route.user.edit.message.missing-username";"Please enter a user name"
 "route.user.edit.message.missing-email";"Please enter an email address"
 "route.user.edit.message.invalid-email";"Please enter a valid email address"
 "route.user.edit.message.use-company-email";"To register, you must use a valid British Council email address"

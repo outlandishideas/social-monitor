@@ -615,11 +615,11 @@ class BaseController extends Zend_Controller_Action
         return $elements;
     }
 
-    protected function getInputLabel($key){
-        if (array_key_exists($key, $this->formInputLabels)){
-            return $this->formInputLabels[$key];
+    protected function getInputLabel($property){
+        if(array_key_exists($property, $this->formInputLabels)) {
+            return $this->formInputLabels[$property];
         }else{
-            return 'route.error.error.label.default';
+            return false;
         }
     }
 
@@ -630,8 +630,11 @@ class BaseController extends Zend_Controller_Action
             $errorMessages = $ex->getProperties();
             foreach ($errorMessages as $invalidProperty) {
                 $property = $invalidProperty->getProperty();
-                $inputLabel = $this->translator->trans($this->getInputLabel($property));
-                $this->flashMessage(join(" ", [$inputLabel, $invalidProperty->getMessage()]), 'error');
+                $inputLabelKey = $this->getInputLabel($property);
+                if($inputLabelKey){
+                    $inputLabel = $this->translator->trans($inputLabelKey);
+                    $this->flashMessage(join(" ", [$inputLabel, $invalidProperty->getMessage()]), 'error');
+                }
             }
             return false;
         }
