@@ -50,7 +50,7 @@ class RefreshObjectCacheCommand extends ContainerAwareCommand
 			$objectCacheManager->updateFrontPageData();
 			$output->writeln("...Done");
 		} catch (InvalidPropertiesException $ex) {
-			$output->writeln($ex);
+			$output->writeln($ex->getProperties());
 			throw $ex;
 		}
     }

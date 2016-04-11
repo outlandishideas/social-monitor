@@ -19,14 +19,4 @@ class InvalidPropertiesException extends SocialMonitorException
         return $this->properties;
     }
 
-	public function __toString()
-	{
-		$messages = [parent::__toString()];
-		foreach ($this->properties as $property) {
-			$messages[] = $property;
-		}
-		return implode("\n", $messages);
-	}
-
-
 }
