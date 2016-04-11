@@ -7,7 +7,7 @@ class InvalidPropertiesException extends SocialMonitorException
     protected $message;
     protected $properties;
 
-    public function __construct($message, $properties = array(), Exception $previous = null)
+    public function __construct($message, $properties = array(), \Exception $previous = null)
     {
         $this->message = $message;
         $this->properties = $properties;
@@ -18,5 +18,15 @@ class InvalidPropertiesException extends SocialMonitorException
     {
         return $this->properties;
     }
+
+	public function __toString()
+	{
+		$messages = [parent::__toString()];
+		foreach ($this->properties as $property) {
+			$messages[] = $property;
+		}
+		return implode("\n", $messages);
+	}
+
 
 }
