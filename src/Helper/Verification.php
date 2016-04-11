@@ -37,11 +37,16 @@ class Verification
         return is_numeric($candidate) || !$candidate;
     }
 
-    public static function truthyOrZero($value){
-       if($value || $value === 0 || $value === '0'){
-           return true;
-       }
-        return false;
+    public static function exists($value, $type){
+        if(self::isNumericType($type)){
+            if($value || $value === 0 || $value === '0'){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
+        return !is_null($type);
     }
 
     public static function pluck($key, $data) {

@@ -57,7 +57,7 @@ abstract class Model_Base
 		$columnDefiniton = $tableDefinition[$searchIndex];
 
 		$isNullable = $columnDefiniton['nullable'];
-		$hasDefault = Verification::truthyOrZero($columnDefiniton['default']);
+		$hasDefault = Verification::exists($columnDefiniton['default'], $columnDefiniton['type']);
 
 		if(Verification::isNumericType($columnDefiniton['type']) && !Verification::isValidNumber($colValue)){
 				throw new InvalidPropertyException($colName, $translator->trans('Error.invalid-number'));
@@ -67,7 +67,7 @@ abstract class Model_Base
 			throw new InvalidPropertyException($colName, $translator->trans('Error.too-long'));
 		}
 		
-		if(Verification::truthyOrZero($colValue)){
+		if(Verification::exists($colValue, $columnDefiniton['type'])){
 			return $colValue;
 		}else if(!$isNullable && $hasDefault){
 			return $columnDefiniton['default'];
