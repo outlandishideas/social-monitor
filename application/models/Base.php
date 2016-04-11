@@ -4,13 +4,17 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 use Outlandish\SocialMonitor\Database\Database;
 
+use Outlandish\SocialMonitor\Helper\Verification;
+
+use Outlandish\SocialMonitor\Exception\InvalidPropertyException;
+
+use Outlandish\SocialMonitor\Exception\InvalidPropertiesException;
 abstract class Model_Base
 {
 	protected static $tableColumns = array();
+
 	protected static $tableName;
 	protected static $sortColumn = 'id';
-
-
 
 	/**
 	 * @var Database
@@ -39,16 +43,61 @@ abstract class Model_Base
 		}
 	}
 
-	public function getColumnNames()
+	public function verify($colName, $colValue){
+		$tableDefinition = $this->getTableDefinition();
+		$columnNames = Verification::pluck('name', $this->getTableDefinition());
+		$searchIndex = array_search($colName, $columnNames);
+		
+		$translator = Zend_Registry::get('symfony_translate');
+
+		if($searchIndex < 0){
+			throw new \InvalidArgumentException(join(" ", [ucfirst($colName) , $translator->trans('Error.not-in-table')]));
+		}
+		
+		$columnDefiniton = $tableDefinition[$searchIndex];
+
+		$isNullable = $columnDefiniton['nullable'];
+		$hasDefault = Verification::truthyOrZero($columnDefiniton['default']);
+
+		if(Verification::isNumericType($columnDefiniton['type']) && !Verification::isValidNumber($colValue)){
+				throw new InvalidPropertyException($colName, $translator->trans('Error.invalid-number'));
+		}
+
+		if(Verification::isStringType($columnDefiniton['type']) && strlen($colValue) > $columnDefiniton['maxLength']){
+			throw new InvalidPropertyException($colName, $translator->trans('Error.too-long'));
+		}
+		
+		if(Verification::truthyOrZero($colValue)){
+			return $colValue;
+		}else if(!$isNullable && $hasDefault){
+			return $columnDefiniton['default'];
+		}else if($isNullable && !$hasDefault){
+			return null;
+		}else{
+			throw new InvalidPropertyException($colName, $translator->trans('Error.required'));
+		}
+	}
+
+	public function getColumnNames(){
+		return Verification::pluck('name', $this->getTableDefinition());
+	}
+
+	public function getTableDefinition()
 	{
 		if (empty(self::$tableColumns)) {
-			$statement = $this->_db->prepare('SELECT table_name, column_name FROM information_schema.columns WHERE table_schema=database()');
+			$statement = $this->_db->prepare('SELECT table_name, column_name, is_nullable, column_default, data_type, character_maximum_length 
+											  FROM information_schema.columns WHERE table_schema=database()');
 			$statement->execute();
 			foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $row) {
 				if (!isset(Model_Base::$tableColumns[$row['table_name']])){
 					Model_Base::$tableColumns[$row['table_name']] = array();
 				}
-				Model_Base::$tableColumns[$row['table_name']][] = $row['column_name'];
+				Model_Base::$tableColumns[$row['table_name']][] = [
+					"name"=>$row['column_name'],
+					"nullable"=>($row['is_nullable'] === 'YES'),
+					"default"=>$row['column_default'],
+					"type"=>$row['data_type'],
+					"maxLength"=> $row['character_maximum_length']];
 			}
 		}
 		if (isset(Model_Base::$tableColumns[static::$tableName])) {
@@ -74,7 +123,8 @@ abstract class Model_Base
 		if (method_exists($this, $methodName)) {
 			return $this->$methodName($value);
 		} elseif (in_array($name, $this->getColumnNames())) {
-			return $this->_row[$name] = $value;
+			$validatedValue = $this->verify($name, $value);
+			return $this->_row[$name] = $validatedValue;
 		} else {
 			return $this->$name = $value;
 		}
@@ -138,10 +188,18 @@ abstract class Model_Base
 	{
 		if ($data) {
 			$columnNames = $this->getColumnNames();
+			$errorMessages = array();
 			foreach ($data as $key => $value) {
 				if (in_array($key, $columnNames)) {
-					$this->{$key} = $value;
+					try {
+						$this->{$key} = $value;
+					}catch (InvalidPropertyException $ex){
+						array_push($errorMessages, $ex);
+					}
 				}
+			}
+			if(!empty($errorMessages)){
+				throw new InvalidPropertiesException('Invalid properties found.', $errorMessages);
 			}
 		}
 	}

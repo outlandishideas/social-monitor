@@ -6,7 +6,8 @@ class Model_Country extends Model_Campaign {
 
 	public static $campaignType = '1';
 
-	public function fromArray($data) {
+	public function fromArray($data)
+	{
 		if (array_key_exists('audience', $data)) {
 			$data['audience'] = str_replace(',', '', $data['audience']);
 		}

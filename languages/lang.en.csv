@@ -130,6 +130,7 @@
 "route.region.edit.page-title";"Edit Region"
 "route.region.edit.message.success";"Region saved"
 "route.region.edit.message.display-name-missing";"Please enter a display name"
+"route.region.edit.label.name";"Name"
 
 "route.region.edit-all.page-title";"Edit All Regions"
 "route.region.edit-all.empty-table";"No regions found"
@@ -344,7 +345,6 @@
 "route.user.edit.message.both-passwords-required";"Both passwords are required"
 "route.user.edit.message.password-mismatch";"Passwords do not match"
 "route.user.edit.message.passwords-too-short";"Password must be at least 4 characters"
-"route.user.edit.message.missing-username";"Please enter a user name"
 "route.user.edit.message.missing-email";"Please enter an email address"
 "route.user.edit.message.invalid-email";"Please enter a valid email address"
 "route.user.edit.message.use-company-email";"To register, you must use a valid British Council email address"
@@ -399,7 +399,10 @@
 "route.error.error.message-404";"Please check the url"
 "route.error.error.message-500";"Sorry, something has gone wrong"
 
-
+"Error.not-in-table";"does not exist in this table"
+"Error.invalid-number";"is not a valid number."
+"Error.too-long";"is too long."
+"Error.required";"is required."
 
 
 "route.fetch.log.finished";"Finished"
