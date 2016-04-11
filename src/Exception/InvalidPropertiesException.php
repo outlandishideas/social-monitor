@@ -7,7 +7,7 @@ class InvalidPropertiesException extends SocialMonitorException
     protected $message;
     protected $properties;
 
-    public function __construct($message, $properties = array(), Exception $previous = null)
+    public function __construct($message, $properties = array(), \Exception $previous = null)
     {
         $this->message = $message;
         $this->properties = $properties;
