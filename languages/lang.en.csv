@@ -399,8 +399,10 @@
 "route.error.error.message-404";"Please check the url"
 "route.error.error.message-500";"Sorry, something has gone wrong"
 
-"route.error.error.label.default";"Input"
-
+"Error.not-in-table";"does not exist in this table"
+"Error.invalid-number";"is not a valid number."
+"Error.too-long";"is too long."
+"Error.required";"is required."
 
 
 "route.fetch.log.finished";"Finished"

@@ -47,9 +47,11 @@ abstract class Model_Base
 		$tableDefinition = $this->getTableDefinition();
 		$columnNames = Verification::pluck('name', $this->getTableDefinition());
 		$searchIndex = array_search($colName, $columnNames);
+		
+		$translator = Zend_Registry::get('symfony_translate');
 
 		if($searchIndex < 0){
-			throw new \InvalidArgumentException(ucfirst($colName) . ' does not exist in this table');
+			throw new \InvalidArgumentException(join(" ", [ucfirst($colName) , $translator->trans('Error.not-in-table')]));
 		}
 		
 		$columnDefiniton = $tableDefinition[$searchIndex];
@@ -58,11 +60,11 @@ abstract class Model_Base
 		$hasDefault = Verification::truthyOrZero($columnDefiniton['default']);
 
 		if(Verification::isNumericType($columnDefiniton['type']) && !Verification::isValidNumber($colValue)){
-				throw new InvalidPropertyException($colName, 'is not a valid number.');
+				throw new InvalidPropertyException($colName, $translator->trans('Error.invalid-number'));
 		}
 
 		if(Verification::isStringType($columnDefiniton['type']) && strlen($colValue) > $columnDefiniton['maxLength']){
-			throw new InvalidPropertyException($colName, 'is too long.');
+			throw new InvalidPropertyException($colName, $translator->trans('Error.too-long'));
 		}
 		
 		if(Verification::truthyOrZero($colValue)){
@@ -72,7 +74,7 @@ abstract class Model_Base
 		}else if($isNullable && !$hasDefault){
 			return null;
 		}else{
-			throw new InvalidPropertyException($colName, 'is required.');
+			throw new InvalidPropertyException($colName, $translator->trans('Error.required'));
 		}
 	}
 
