@@ -6,7 +6,8 @@ class Model_Country extends Model_Campaign {
 
 	public static $campaignType = '1';
 
-	public function fromArray($data) {
+	public function fromArray($data)
+	{
 		if (array_key_exists('audience', $data)) {
 			$data['audience'] = str_replace(',', '', $data['audience']);
 		}
@@ -22,6 +23,14 @@ class Model_Country extends Model_Campaign {
 
 	public function getName() {
 		return self::getNameFromCode($this->country);
+	}
+
+	public function setDisplay_name($name){
+		$this->setProperty('display_name', $name);
+	}
+	
+	public function setCountry($name){
+		$this->setProperty('country', $name);
 	}
 
     /**

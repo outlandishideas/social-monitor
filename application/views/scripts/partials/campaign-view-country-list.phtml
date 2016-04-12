@@ -1,7 +1,7 @@
 <?php $translator = $this->translate() ?>
 <?php if ($this->countries) : ?>
     <div id="campaign-view-country-list">
-    <h4><?php echo $translator->trans('views.scripts.partials.campaign-view-country-list.header', ['%count%' => count($this->countries)]); ?></h4>
+    <h4><?php echo $translator->trans('route.region.report.countries.header', ['%count%' => count($this->countries)]); ?></h4>
     <ul class="entity-list">
         <?php foreach ($this->countries as $c) : ?>
             <?php echo $this->partial('partials/country_box.phtml', array('country'=>$c)); ?>

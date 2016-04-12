@@ -94,6 +94,7 @@ Badge_Factory::setContainer($container);
 
 //add translator to Zend_Registry
 Zend_Registry::set('symfony_translate', $container->get('translation.translator'));
+Model_Base::setTranslator($container->get('translation.translator'));
 Model_Presence::setTranslator($container->get('translation.translator'));
 
 //set db for PresenceFactory
