@@ -146,7 +146,7 @@ app.home = {
 	updateAll: function () {
 		app.home.updateDataAttributes();
 		$('[data-badge]').each(function () {
-			convertToBadge($(this));
+			app.home.convertToBadge($(this));
 		});
 		app.home.refreshMap();
 	},
@@ -450,7 +450,7 @@ app.home = {
 		if (d.b && d.b[badge] && d.b[badge][day]) {
 			score = d.b[badge][day].s;
 		}
-		$el.data('score', numberWithCommas(Math.round(score)));
+		$el.data('score', app.home.numberWithCommas(Math.round(score)));
 		var color = colorArgs.colors[0];
 		for (var j = 0; j < colorArgs.colors.length - 1; j++) {
 			if (score > colorArgs.range[j] && score <= colorArgs.range[j + 1]) {
@@ -494,7 +494,7 @@ app.home = {
         }
         var $score = $el.find('[data-badge-score]');
         var $bar = $el.find('[data-badge-bar]');
-    
+
         $score.text(score + $score.data('badge-score')).css('color', color);
         $bar.css({
             'width': score + '%',
