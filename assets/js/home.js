@@ -440,9 +440,6 @@ app.home = {
 		var badge = $('#homepage-tabs').find('dd.active').data('badge');
 		var colorArgs = app.home.geochartMetrics[badge];
 
-		$el.find('.flag-score').hide();
-		$el.find('.flag-score.' + badge).show();
-
 		var score = 0;
 		if (d.b && d.b[badge] && d.b[badge][day]) {
 			score = d.b[badge][day].s;
