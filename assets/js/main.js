@@ -833,7 +833,7 @@ app.modal = {
 app.joyride = {
 	config: function(id) {
 		return {
-			cookie_monster: !$.cookie(id) ? false : true,
+			cookie_monster: !!$.cookie(id),
 			cookie_name: id,
 			cookie_domain: true,
 			post_ride_callback: function() {

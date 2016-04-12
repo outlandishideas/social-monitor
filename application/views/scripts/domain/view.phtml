@@ -2,8 +2,10 @@
 /** @var \Symfony\Component\Translation\Translator $translator */
 $translator = $this->translate();
 
-$sites = $this->pluralise($translator->trans('route.domain.view.site.single'), count($this->links), $translator->trans('route.domain.view.site.plural'));
-$statuses = $this->pluralise($translator->trans('route.domain.view.status.single'), $this->domain->getLinkCount(), $translator->trans('route.domain.view.status.plural'));
+$linkCount = count($this->links);
+$statusCount = $this->domain->getLinkCount();
+$sites = $translator->transChoice('route.domain.view.site-count', $linkCount, ['%count%' => $linkCount]);
+$statuses = $translator->transChoice('route.domain.view.status-count', $statusCount, ['%count%' => $statusCount]);
 $summary = $translator->trans('route.domain.view.linked-to-from', ['%sites%' => $sites, '%statuses%' => $statuses]);
 ?>
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
@@ -13,7 +15,7 @@ $summary = $translator->trans('route.domain.view.linked-to-from', ['%sites%' => 
     <div class="link-title">
         <a href="#" class="toggle-expand"></a>
         <a href="<?php echo $link->url; ?>" target="_blank"><?php echo highlight($link->url, $this->domain->domain); ?> <span class="icon-external-link"></span></a>
-        (<?php echo $this->pluralise('mention', count($link->statuses)); ?>)
+        (<?php echo $translator->transChoice('route.domain.view.mention-count', count($link->statuses), ['%count%' => count($link->statuses)]); ?>)
     </div>
 </div>
 <?php endforeach; ?>
