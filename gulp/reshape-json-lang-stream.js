@@ -29,10 +29,16 @@ module.exports = function(opt) {
 				}
 				values.push(element.value);
 				// convert common labels to intervals
+				var zero = {
+
+					found: false,
+					sub: ''
+				}
 				values = values.map(function(value) {
 					value = value.trim();
 					if (value.substr(0, 5) == 'zero:') {
 						value = '{0} ' + value.substr(5);
+						zero.found = true;
 					} else if (value.substr(0, 4) == 'one:') {
 						value = '{1} ' + value.substr(4);
 					} else if (value.substr(0, 4) == 'two:') {
@@ -40,10 +46,14 @@ module.exports = function(opt) {
 					} else if (value.substr(0, 6) == 'three:') {
 						value = '{3} ' + value.substr(6);
 					} else if (value.substr(0, 5) == 'more:') {
+						zero.sub = '{0} ' + value.substr(5);
 						value = '[2,Inf[ ' + value.substr(5);
 					}
 					return value;
 				});
+				if (!zero.found && zero.sub !== '') {
+					values.push(zero.sub);
+				}
 				carry[element.key] = values.join('|');
 				return carry;
 			}, {});
