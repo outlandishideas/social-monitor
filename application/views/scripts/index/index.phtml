@@ -145,10 +145,6 @@ $allBadges = $this->badges;
                                             <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
                                                 <span class="white-background <?php echo $presence->getPresenceSign(); ?> fixed-width"></span> <?php echo $presence->getHandle(); ?>
                                                 <?php $score = $presence->getEngagementScore(); ?>
-                                                <span class="flag-score <?php echo $score->getType(); ?>"
-                                                      title="<?php echo $score->getName(); ?>: <?php echo $score->getScore(); ?>">
-                                                    <?php echo round($score->getScore()); ?>
-                                                </span>
                                             </a>
                                         </li>
                                     <?php endforeach; ?>
