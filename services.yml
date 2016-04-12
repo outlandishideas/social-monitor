@@ -293,8 +293,8 @@ services:
         class: Outlandish\SocialMonitor\TableIndex\Header\PresenceType
         arguments: [@translation.translator]
 
-    table.header.sbu:
-        class: Outlandish\SocialMonitor\TableIndex\Header\SBU
+    table.header.group:
+        class: Outlandish\SocialMonitor\TableIndex\Header\Group
         arguments: [@translation.translator]
 
     # Index table data sources

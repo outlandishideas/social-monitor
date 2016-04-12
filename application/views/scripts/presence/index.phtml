@@ -11,7 +11,7 @@ if ($this->rows) {
 $buttons = $this->gatekeeper()->filterAll($buttons);
 if ($this->rows) {
 	array_unshift($buttons, '<span id="filter-presence-type"></span>');
-	array_unshift($buttons, '<span id="filter-sbu"></span>');
+	array_unshift($buttons, '<span id="filter-group"></span>');
 	array_unshift($buttons, '<span id="filter-region"></span>');
 	array_unshift($buttons, '<div id="search-table">'.$translator->trans('Global.loading-data').'</div>');
 }

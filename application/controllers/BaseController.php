@@ -118,9 +118,6 @@ class BaseController extends Zend_Controller_Action
         $this->view->subtitle = '';
         $this->view->titleImage = '';
 
-        //calculate twitter api status
-        $this->view->apiStatus = array();
-
         //set up navigation
         $navConfig = new Zend_Config_Yaml(APPLICATION_PATH . '/configs/navigation.yaml');
         $navigation = new Zend_Navigation($navConfig);

@@ -152,7 +152,6 @@
 
 "route.country.index.page-title";"Countries"
 "route.country.index.empty-table";"No countries found"
-"route.country.index.region-filter.placeholder";"Filter by region"
 
 "route.country.new.page-title";"New Country"
 
@@ -1105,3 +1104,59 @@
 "country.YE";"Yemen"
 "country.ZM";"Zambia"
 "country.ZW";"Zimbabwe"
+
+
+
+"js.datatables.searchBox";"Search by content"
+"js.datatables.search";""
+"js.datatables.searchPlaceholder";"Search"
+"js.datatables.emptyTable";"No %type%s found"
+"js.datatables.zeroRecords";"No matching %type%s"
+"js.datatables.info";"Showing %type%s: _START_ to _END_"
+"js.datatables.infoEmpty";"No %type%s to show"
+"js.datatables.infoFiltered";""
+"js.datatables.loading";"Loading..."
+
+"js.home.map-data.column.country";"Country"
+"js.home.map-data.column.display-name";"Display Name"
+"js.home.map-data.column.presences";"Presences"
+"js.home.map-data.column.id";"id"
+"js.home.map-data.metric.title";"{1} (Presences: {2})"
+"js.home.map-data.metric.kpi";"{1}"
+
+"js.templates.post.likes";"Likes"
+"js.templates.post.comments";"Comments"
+"js.templates.post.shares";"Shares"
+"js.templates.postResponse_needed.title";"Does not require a response"
+"js.templates.postResponse_needed.message";"Awaiting response"
+"js.templates.postResponse_notNeeded.title";"Requires a response"
+"js.templates.postResponse_notNeeded.message";"No response required"
+"js.templates.errorPopup.message";"Error"
+"js.templates.emptyCountryBadge.message";"This country has no presences."
+"js.templates.globalScore.title";"British Council around the web"
+"js.templates.globalScore.fans";"Fans/Followers"
+"js.templates.globalScore.description";"This is built up from the total scores from all British Council presences around the world."
+"js.templates.globalScore.total-presences-description";"Total Channels"
+
+"js.datatables.filter.presence-type";"Filter by presence type"
+"js.datatables.filter.region";"Filter by region"
+"js.datatables.filter.group";"Filter by SBU"
+
+"js.date-picker.specific-date";"Specific date"
+"js.date-picker.date-range";"Date range"
+"js.date-picker.last-30-days";"Last 30 days"
+"js.date-picker.last-7-days";"Last 7 days"
+"js.date-picker.month-to-date";"Month to date"
+"js.date-picker.last-month";"Last month"
+"js.date-picker.last-quarter";"Last Quarter"
+
+"js.auto-confirm.are-you-sure";"Are you sure?"
+
+"js.feedbackForm.missing.name";"Please enter your name"
+"js.feedbackForm.missing.email";"Please enter your email address"
+"js.feedbackForm.missing.body";"Please enter your message"
+"js.feedbackForm.message.success";"Feedback sent. Thanks!"
+"js.feedbackForm.message.error";"Error sending feedback, please try again"
+
+"js.chart.message.toggle";"Click on each item to toggle them on or off the graph"
+"js.chart.message.toggle-all";"Hide all"
