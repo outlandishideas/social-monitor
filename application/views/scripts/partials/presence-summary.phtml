@@ -1,6 +1,7 @@
 <?php
 /** @var Model_Presence $presence */
-$presence = $this->presence
+$presence = $this->presence;
+$translator = $this->translate();
 ?>
 <a href="<?php echo $this->url(array('controller' => 'presence', 'action' => 'view', 'id' => $presence->getId())); ?>">
     <span class="white-background fixed-width <?php echo $presence->getPresenceSign(); ?>"></span>
