@@ -6,6 +6,10 @@ class Model_Region extends Model_Campaign {
 
 	public static $campaignType = '2';
 
+    public function setDisplay_name($name){
+        $this->setProperty('display_name', $name);
+    }
+
     public function fromArray($data) {
         if (array_key_exists('presences', $data)) {
             unset($data['presences']);

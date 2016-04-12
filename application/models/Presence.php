@@ -12,7 +12,6 @@ use Outlandish\SocialMonitor\PresenceType\PresenceType;
 use Outlandish\SocialMonitor\PresenceType\SinaWeiboType;
 use Outlandish\SocialMonitor\PresenceType\TwitterType;
 use Outlandish\SocialMonitor\PresenceType\YoutubeType;
-use Symfony\Component\Translation\Translator;
 
 class Model_Presence
 {
@@ -215,7 +214,10 @@ class Model_Presence
         );
     }
 
-    public static function setTranslator(Translator $translator)
+    /**
+     * @param \Outlandish\SocialMonitor\Translation\Translator $translator
+     */
+    public static function setTranslator($translator)
     {
         self::$translator = $translator;
     }

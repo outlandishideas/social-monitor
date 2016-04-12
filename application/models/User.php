@@ -46,6 +46,14 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	function setAuthName($p) {
 		$this->_authName = $p;
 	}
+	
+	function setName($name){
+		$this->setProperty('name', $name);
+	}
+	
+	function setUser_level($level){
+		$this->setProperty('user_level', $level);
+	}
 
 	function fromArray($data)
 	{
