@@ -387,9 +387,8 @@ app.home = {
 				return c.n.substring(0,search.length).toLowerCase() === search.toLowerCase();
 			}).slice(0,3);
 
-			if (foundCountries.length > 1) {
+			if (!_.isEmpty(foundCountries)) {
 				_.forEach(foundCountries, app.home.addToSearchResults);
-
 			} else {
 				$list.append('<li>No Results found</li>');
 			}
