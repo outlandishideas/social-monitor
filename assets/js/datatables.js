@@ -10,11 +10,8 @@ app.datatables = {
 	init:function () {
         // add a 'fuzzy numeric' sort type, which just ignores all non-numeric characters
         app.datatables.addSortFunction('fuzzy-numeric', function ( a ) {
-	        if (typeof(a) == 'string') {
-		        return parseInt(a.replace(/[^\d]/g, ""));
-	        } else {
-		        return 0;
-	        }
+			var candidate = parseInt(a.trim());
+			return _.isNaN(candidate) ? Number.POSITIVE_INFINITY : candidate;
         });
 
         // sort by a numeric value in data-value on the direct child or a descendent of the table cell
