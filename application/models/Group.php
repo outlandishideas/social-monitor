@@ -12,5 +12,9 @@ class Model_Group extends Model_Campaign {
         }
         parent::fromArray($data);
     }
+    
+    public function setDisplay_name($name){
+        $this->setProperty('display_name', $name);
+    }
 
 }

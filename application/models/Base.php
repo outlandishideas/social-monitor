@@ -1,7 +1,5 @@
 <?php
 
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-
 use Outlandish\SocialMonitor\Database\Database;
 
 use Outlandish\SocialMonitor\Helper\Verification;
@@ -16,6 +14,8 @@ abstract class Model_Base
 	protected static $tableName;
 	protected static $sortColumn = 'id';
 
+
+    protected static $translator;
 	/**
 	 * @var Database
 	 */
@@ -43,30 +43,37 @@ abstract class Model_Base
 		}
 	}
 
+	public function setProperty($key, $value){
+		if(!$value){
+			throw new InvalidPropertyException($key, self::$translator->trans('Error.required'));
+		}
+		$validatedValue = $this->verify($key, $value);
+		$this->_row[$key] = $validatedValue;
+	}
+
 	public function verify($colName, $colValue){
 		$tableDefinition = $this->getTableDefinition();
-		$columnNames = Verification::pluck('name', $this->getTableDefinition());
+		$columnNames = Verification::pluck('name', $tableDefinition);
 		$searchIndex = array_search($colName, $columnNames);
-		
-		$translator = Zend_Registry::get('symfony_translate');
+
 
 		if($searchIndex < 0){
-			throw new \InvalidArgumentException(join(" ", [ucfirst($colName) , $translator->trans('Error.not-in-table')]));
+			throw new \InvalidArgumentException(join(" ", [ucfirst($colName) , self::$translator->trans('Error.not-in-table')]));
 		}
-		
+
 		$columnDefiniton = $tableDefinition[$searchIndex];
 
 		$isNullable = $columnDefiniton['nullable'];
 		$hasDefault = Verification::exists($columnDefiniton['default'], $columnDefiniton['type']);
 
 		if(Verification::isNumericType($columnDefiniton['type']) && !Verification::isValidNumber($colValue)){
-				throw new InvalidPropertyException($colName, $translator->trans('Error.invalid-number'));
+				throw new InvalidPropertyException($colName, self::$translator->trans('Error.invalid-number'));
 		}
 
 		if(Verification::isStringType($columnDefiniton['type']) && strlen($colValue) > $columnDefiniton['maxLength']){
-			throw new InvalidPropertyException($colName, $translator->trans('Error.too-long'));
+			throw new InvalidPropertyException($colName, self::$translator->trans('Error.too-long'));
 		}
-		
+
 		if(Verification::exists($colValue, $columnDefiniton['type'])){
 			return $colValue;
 		}else if(!$isNullable && $hasDefault){
@@ -74,7 +81,7 @@ abstract class Model_Base
 		}else if($isNullable && !$hasDefault){
 			return null;
 		}else{
-			throw new InvalidPropertyException($colName, $translator->trans('Error.required'));
+			throw new InvalidPropertyException($colName, self::$translator->trans('Error.required'));
 		}
 	}
 
@@ -391,6 +398,13 @@ abstract class Model_Base
 	public static function setDb(Database $db)
 	{
 		self::$db = $db;
+	}
+
+	/**
+	 * @param \Outlandish\SocialMonitor\Translation\Translator $translator
+	 */
+	public static function setTranslator($translator){
+		self::$translator = $translator;
 	}
 
 }

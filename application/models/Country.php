@@ -25,6 +25,14 @@ class Model_Country extends Model_Campaign {
 		return self::getNameFromCode($this->country);
 	}
 
+	public function setDisplay_name($name){
+		$this->setProperty('display_name', $name);
+	}
+	
+	public function setCountry($name){
+		$this->setProperty('country', $name);
+	}
+
     /**
      * @return Model_Region|null
      */
