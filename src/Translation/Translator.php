@@ -11,6 +11,7 @@ class Translator extends \Symfony\Component\Translation\Translator
 	 */
 	public function loadFromDirectory($format, $dirName)
 	{
+		$dirName = APP_ROOT_PATH . DIRECTORY_SEPARATOR . $dirName;
 		$files = scandir($dirName);
 		foreach ($files as $file) {
 			if (preg_match("/.*\.([a-z]{2})\.$format/", $file, $matches)) {

@@ -3,9 +3,13 @@
 use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Helper\Gatekeeper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Outlandish\SocialMonitor\Exception\InvalidPropertiesException;
+use Outlandish\SocialMonitor\Exception\InvalidPropertyException;
 
 class BaseController extends Zend_Controller_Action
 {
+
+    protected $formInputLabels = array();
 
     protected static $publicActions = array();
 
@@ -113,9 +117,6 @@ class BaseController extends Zend_Controller_Action
 		}
         $this->view->subtitle = '';
         $this->view->titleImage = '';
-
-        //calculate twitter api status
-        $this->view->apiStatus = array();
 
         //set up navigation
         $navConfig = new Zend_Config_Yaml(APPLICATION_PATH . '/configs/navigation.yaml');
@@ -611,6 +612,32 @@ class BaseController extends Zend_Controller_Action
             $elements[$index] = $this->translator->transChoice('route.base.fetch-lock.' . $key, $amount, ['%amount%' => $amount]);
         }
         return $elements;
+    }
+
+    protected function getInputLabel($property){
+        if(array_key_exists($property, $this->formInputLabels)) {
+            return $this->formInputLabels[$property];
+        }else{
+            return false;
+        }
+    }
+
+    protected function setProperties($model, $properties){
+        try {
+            $model->fromArray($properties);
+        }catch (InvalidPropertiesException $ex){
+            $errorMessages = $ex->getProperties();
+            foreach ($errorMessages as $invalidProperty) {
+                $property = $invalidProperty->getProperty();
+                $inputLabelKey = $this->getInputLabel($property);
+                if($inputLabelKey){
+                    $inputLabel = $this->translator->trans($inputLabelKey);
+                    $this->flashMessage(join(" ", [$inputLabel, $invalidProperty->getMessage()]), 'error');
+                }
+            }
+            return false;
+        }
+            return true;
     }
 
     private function showAccessTokenNeedsRefreshMessage()

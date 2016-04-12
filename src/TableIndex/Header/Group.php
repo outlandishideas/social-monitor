@@ -4,9 +4,9 @@ namespace Outlandish\SocialMonitor\TableIndex\Header;
 
 use Model_Presence;
 
-class SBU extends Header {
+class Group extends Header {
 
-    const NAME = "sbu";
+    const NAME = "group";
 
 	public function __construct($translator)
     {
