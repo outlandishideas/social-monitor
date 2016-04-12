@@ -4,7 +4,6 @@ namespace Outlandish\SocialMonitor\TableIndex\Header;
 
 use Model_Campaign;
 use Model_Country;
-use Zend_Controller_Front;
 
 class Name extends Header {
 

@@ -1,5 +1,5 @@
-"key";"value"
-"do not remove or edit row above";""
+"key";"plural1";"plural2";"plural3";"plural4";"plural5";"plural6";"value"
+"do not remove or edit row above, even though it looks wrong"
 
 "Global.score";"Wertung"
 "Global.loading-data";"Lade daten..."
@@ -127,7 +127,6 @@
 
 "route.country.index.page-title";"Länder"
 "route.country.index.empty-table";"Es konnten keine Länder gefunden werden"
-"route.country.index.region-filter.placeholder";"Nach Region filtern"
 
 "route.country.new.page-title";"Neues Land"
 

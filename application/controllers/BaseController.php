@@ -118,9 +118,6 @@ class BaseController extends Zend_Controller_Action
         $this->view->subtitle = '';
         $this->view->titleImage = '';
 
-        //calculate twitter api status
-        $this->view->apiStatus = array();
-
         //set up navigation
         $navConfig = new Zend_Config_Yaml(APPLICATION_PATH . '/configs/navigation.yaml');
         $navigation = new Zend_Navigation($navConfig);
@@ -609,8 +606,10 @@ class BaseController extends Zend_Controller_Action
                 }
             }
         }
-        foreach ($elements as $i => $e) {
-            $elements[$i] = $this->view->pluralise($e[1], $e[0]);
+        foreach ($elements as $index => $element) {
+			$key = $element[1];
+			$amount = $element[0];
+            $elements[$index] = $this->translator->transChoice('route.base.fetch-lock.' . $key, $amount, ['%amount%' => $amount]);
         }
         return $elements;
     }

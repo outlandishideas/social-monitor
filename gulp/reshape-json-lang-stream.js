@@ -3,6 +3,7 @@
 var dot = require('dot-object');
 var eventStream = require('event-stream');
 var gutil = require('gulp-util');
+var _ = require('lodash');
 
 module.exports = function(opt) {
 
@@ -19,7 +20,41 @@ module.exports = function(opt) {
 			var filename = src.history[src.history.length-1];
 			var rawData = JSON.parse(src.contents.toString('utf8'));
 			var reshapedData = rawData.reduce(function (carry, element) {
-				carry[element.key] = element.value;
+				// csv2json is crazy and puts the last column first, so put in any plurals first
+				var values = [];
+				for (var i=1; i<=6; i++) {
+					if (element['plural' + i]) {
+						values.push(element['plural' + i]);
+					}
+				}
+				values.push(element.value);
+				// convert common labels to intervals
+				var zero = {
+
+					found: false,
+					sub: ''
+				}
+				values = values.map(function(value) {
+					value = value.trim();
+					if (value.substr(0, 5) == 'zero:') {
+						value = '{0} ' + value.substr(5);
+						zero.found = true;
+					} else if (value.substr(0, 4) == 'one:') {
+						value = '{1} ' + value.substr(4);
+					} else if (value.substr(0, 4) == 'two:') {
+						value = '{2} ' + value.substr(4);
+					} else if (value.substr(0, 6) == 'three:') {
+						value = '{3} ' + value.substr(6);
+					} else if (value.substr(0, 5) == 'more:') {
+						zero.sub = '{0} ' + value.substr(5);
+						value = '[2,Inf[ ' + value.substr(5);
+					}
+					return value;
+				});
+				if (!zero.found && zero.sub !== '') {
+					values.push(zero.sub);
+				}
+				carry[element.key] = values.join('|');
 				return carry;
 			}, {});
 			src.contents = new Buffer(JSON.stringify(dot.object(reshapedData)));

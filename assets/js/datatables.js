@@ -360,26 +360,34 @@ app.datatables = {
 		app.datatables.statusesTable = $container.find('table')
 			.dataTable(args)
 			.fnSetFilteringDelay(250);
-		app.datatables.moveSearchBox('Search by content');
+		app.datatables.moveSearchBox('{{ js.datatables.searchBox | translate }}');
 	},
 	moveSearchBox: function(placeholder) {
 		var $search = $('div.dataTables_filter');
-		$search.find('input').first().attr('placeholder', placeholder || 'Search');
+		$search.find('input').first().attr('placeholder', placeholder || '{{ js.datatables.searchPlaceholder | translate }}');
 		$('#search-table').empty().append($search);
 
 		var $filters = $('.statusesDisplay .filters');
 		$filters.show();
 	},
 	generateLanguage: function(type) {
-		return {
-			sSearch:'',
-			sEmptyTable:'No ' + type + 's found',
-			sZeroRecords:'No matching ' + type + 's',
-			sInfo:'Showing ' + type + 's: _START_ to _END_',
-			sInfoEmpty:'No ' + type + 's to show',
-			sInfoFiltered:'',// (from _MAX_ ' + type + 's)'
-			sProcessing:'<span class="fa fa-refresh fa-spin"></span> Loading...'
+		var language = {
+			sSearch: '{{ js.datatables.search | translate }}',
+			sEmptyTable: '{{ js.datatables.emptyTable | translate }}',
+			sZeroRecords: '{{ js.datatables.zeroRecords | translate }}',
+			sInfo: '{{ js.datatables.info | translate }}',
+			sInfoEmpty: '{{ js.datatables.infoEmpty | translate }}',
+			sInfoFiltered: '{{ js.datatables.infoFiltered | translate }}',// (from _MAX_ ' + type + 's)'
+			sProcessing: '<span class="fa fa-refresh fa-spin"></span> {{ js.datatables.loading | translate }}'
 		};
+
+		for(var key in language){
+			if (language.hasOwnProperty(key)) {
+				language[key] = language[key].replace('%type%', type);
+			}
+		}
+
+		return language;
 	},
 	serverSideArgs: function() {
 		return {
