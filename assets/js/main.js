@@ -29,7 +29,7 @@ $.extend(app, {
 			    <p class="more"><a href="<%=permalink%>" target="_blank" title="View update"><span class="icon-external-link icon-large"></span></a></p>\
 				<div class="<%=icon%>"></div>\
 				<div class="content">\
-					<%if(!showResponses){%><a href="/presence/view/id/<%=presence_id%>"><%}%>\
+					<%if(!showResponses){%><a target="_blank" href="/presence/view/id/<%=presence_id%>"><%}%>\
 						<h4 class="presence-name" data-presence="<%=presence_id%>"><%=presence_name%></h4>\
 					<%if(!showResponses){%></a><%}%>\
 					<%=message.replace(/\\n/g, "<br />")%>\
