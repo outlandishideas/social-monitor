@@ -252,6 +252,8 @@ class Provider_Instagram extends Provider_Abstract
             $status->permalink = $r['permalink'];
             $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
             $status->presence_id = $r['presence_id'];
+            $status->presence_handle = $presence->getHandle();
+            $status->presence_type = 'instagram';
             $status->presence_name = $presence->getName();
             $status->engagement = [
                 'comments' => $r['comments'],

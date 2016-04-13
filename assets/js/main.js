@@ -30,7 +30,7 @@ $.extend(app, {
 				<div class="<%=icon%>"></div>\
 				<div class="content">\
 					<%if(!showResponses){%><a href="/presence/view/id/<%=presence_id%>"><%}%>\
-						<h4 class="presence-name" data-presence="<%=presence_id%>"><%=presence_name%></h4>\
+						<h4 class="presence-name" data-presence="<%=presence_id%>"><%=presence_name%><%if (presence_type==="twitter")%> <span class="presence-handle">@<%=presence_handle %></span> <%;%></h4>\
 					<%if(!showResponses){%></a><%}%>\
 					<%=message.replace(/\\n/g, "<br />")%>\
 					<p class="date"><%=date%></p>\

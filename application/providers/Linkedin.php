@@ -219,6 +219,8 @@ class Provider_Linkedin extends Provider_Abstract
             $status->presence_id = $r['presence_id'];
             $status->presence_name = $presence->getName();
             $status->permalink = $r['permalink'];
+            $status->presence_type = 'linkedin';
+            $status->presence_handle = $presence->getHandle();
             $status->engagement = [
                 'comments' => $r['comments'],
                 'likes' => $r['likes'],
