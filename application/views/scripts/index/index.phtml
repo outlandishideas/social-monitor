@@ -80,7 +80,7 @@ $allBadges = $this->badges;
             <div id="find-country" class="find-country">
                 <form onsubmit="return app.home.selectCountry()">
                     <label for="search-countries"><?php echo $translator->trans('route.index.index.find-country')?></label>
-                    <input type="text" id="search-countries" oninput="app.home.searchCountries()" />
+                    <input type="text" id="search-countries" oninput="app.home.searchCountries()" autocomplete="off" />
                 </form>
 				<ul class="country-list">
 				</ul>
