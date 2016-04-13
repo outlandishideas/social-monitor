@@ -1,21 +1,8 @@
 <?php
 /** @var Model_Presence $presence */
 $presence = $this->presence;
-$translator = $this->translate();
 ?>
 <a href="<?php echo $this->url(array('controller' => 'presence', 'action' => 'view', 'id' => $presence->getId())); ?>">
     <span class="white-background fixed-width <?php echo $presence->getPresenceSign(); ?>"></span>
     <?php echo $presence->getHandle(); ?>
-    <span class="flag-score engagement <?php echo $presence->getEngagementScore()->getType(); ?>"
-          title="<?php echo $presence->getEngagementScore()->getName(); ?>: <?php echo $presence->getEngagementScore()->getScore(); ?>">
-    <?php echo floor($presence->getEngagementScore()->getScore()); ?>
-</span>
-<span class="flag-score reach <?php echo $presence->getType(); ?>"
-      title="Reach score: <?php echo $presence->getReachScore(); ?>">
-    <?php echo floor($presence->getReachScore()); ?>
-</span>
-<span class="flag-score quality <?php echo $presence->getType(); ?>"
-      title="<?php echo $translator->trans('views.scripts.partials.presence-summary.quality-score'); ?><?php echo $presence->getQualityScore(); ?>">
-    <?php echo floor($presence->getQualityScore()); ?>
-</span>
 </a>

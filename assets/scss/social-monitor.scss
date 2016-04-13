@@ -1128,40 +1128,6 @@ form.management button.add-item {
   }
 }
 
-.flag-score {
-  background: no-repeat 0 0;
-  display: inline-block;
-  width: 20px;
-  height: 18px;
-  color: #fff;
-  text-align: center;
-  cursor: default;
-  font-size: 12px;
-  font-weight: bold;
-  line-height: 18px;
-
-  &.klout,
-  &.twitter {
-    background-image: url(../img/klout.png);
-  }
-  &.facebook {
-    background-image: url(../img/facebook_engagement.png);
-  }
-  &.sina-weibo {
-    background-image: url(../img/sinaweibo_engagement.png);
-  }
-  &.instagram {
-    background-image: url(../img/instagram_engagement.png);
-  }
-  &.linkedin {
-    background-image: url(../img/linkedin_engagement.png);
-  }
-  &.youtube {
-    background-image: url(../img/youtube_engagement.png);
-  }
-
-}
-
 /* Slider & Date */
 
 #map-date .range-slider {
