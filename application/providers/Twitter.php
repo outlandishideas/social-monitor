@@ -299,6 +299,8 @@ class Provider_Twitter extends Provider_Abstract
             $presence = Model_PresenceFactory::getPresenceById($r['presence_id']);
             $status->presence_id = $r['presence_id'];
             $status->presence_name = $presence->getName();
+            $status->presence_type = 'twitter';
+            $status->presence_handle = $presence->getHandle();
             $status->engagement = [
                 'shares' => $r['retweet_count'],
                 'comparable' => $r['retweet_count']
