@@ -375,8 +375,8 @@
 
 
 "route.statuses.index.page-title";"Posts"
-"route.statuses.index.filter.campaign-type.label";"Channels"
-"route.statuses.index.filter.campaign-type.all";"Show all channels"
+"route.statuses.index.filter.campaign-type.label";"Filter"
+"route.statuses.index.filter.campaign-type.all";"Select filter"
 "route.statuses.index.filter.campaign-type.country";"Filter by country"
 "route.statuses.index.filter.campaign-type.group";"Filter by SBU"
 "route.statuses.index.filter.campaign-type.region";"Filter by region"
@@ -390,7 +390,7 @@
 "route.statuses.index.table-header.content";"Content"
 "route.statuses.index.multi-select.select-all.default";"Toggle all"
 "route.statuses.index.multi-select.all-selected.default";"All selected"
-"route.statuses.index.multi-select.all-selected.all-presences";"Showing all channels"
+"route.statuses.index.multi-select.all-selected.all-presences";"No filter selected"
 "route.statuses.index.multi-select.all-selected.countries";"All countries"
 "route.statuses.index.multi-select.all-selected.regions";"All regions"
 "route.statuses.index.multi-select.all-selected.groups";"All SBUs"
