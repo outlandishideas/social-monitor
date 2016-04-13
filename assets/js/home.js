@@ -110,12 +110,10 @@ app.home = {
 				$parent.find('.badge-presences-buttons li a').removeClass('active');
 				$this.addClass('active');
 				if (type == 'all') {
-					$parent.find('.badge-presences li[data-presence-type]').slideDown()
-						.find('.flag-score').hide();
+					$parent.find('.badge-presences li[data-presence-type]').slideDown();
 				} else {
 					$parent.find('.badge-presences li:not([data-presence-type=' + type + '])').slideUp();
-					$parent.find('.badge-presences li[data-presence-type=' + type + ']').slideDown()
-						.find('.flag-score').show();
+					$parent.find('.badge-presences li[data-presence-type=' + type + ']').slideDown();
 				}
 			})
 			.end().find('[data-presence-type]').hide();
@@ -441,9 +439,6 @@ app.home = {
 		var day = app.home.currentDay();
 		var badge = $('#homepage-tabs').find('dd.active').data('badge');
 		var colorArgs = app.home.geochartMetrics[badge];
-
-		$el.find('.flag-score').hide();
-		$el.find('.flag-score.' + badge).show();
 
 		var score = 0;
 		if (d.b && d.b[badge] && d.b[badge][day]) {
