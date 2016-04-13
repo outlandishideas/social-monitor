@@ -836,6 +836,7 @@ app.joyride = {
 			cookie_monster: !!$.cookie(id),
 			cookie_name: id,
 			cookie_domain: true,
+			abort_on_close: false,
 			post_ride_callback: function() {
 				$.post('/user/joyride/ride/' + id);
 				!$.cookie(id) ? $.cookie(id, 'ridden', { expires: 365 }) : null;
