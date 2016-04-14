@@ -223,7 +223,7 @@ class RegionController extends CampaignController
 
     /**
      * lists all regions
-     * @user-level user
+     * @user-level manager
      */
     public function editAllAction()
     {

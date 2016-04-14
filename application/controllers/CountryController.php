@@ -262,7 +262,7 @@ class CountryController extends CampaignController {
 
     /**
      * Edits/creates a country
-     * @user-level user
+     * @user-level manager
      */
     public function editAllAction()
     {
