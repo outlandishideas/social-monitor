@@ -222,6 +222,9 @@ abstract class Model_Base
 		if (!is_array($ids)) {
 			$ids = array($ids);
 		}
+		if(empty($ids)){
+			return array();
+		}
 		return self::fetchAll("`id` IN (".implode(', ', array_fill(0, count($ids), '?')).")", $ids);
 	}
 
