@@ -468,6 +468,8 @@ class Provider_Youtube extends Provider_Abstract
             $status->presence_id = $r['presence_id'];
             $status->presence_name = $presence->getName();
             $status->icon = $this->type->getSign();
+            $status->presence_type = 'youtube';
+            $status->presence_handle = $presence->getHandle();
             $status->engagement = [
                 'comments' => $r['number_of_replies'],
                 'likes' => $r['likes'],
