@@ -207,7 +207,7 @@ class GroupController extends CampaignController {
                         $editingGroup->assignPresences($p);
                     }
                     $this->flashMessage($this->translator->trans('route.group.edit.message.success'));
-                    $this->_helper->redirector->gotoRoute(array('action' => 'view'));
+                    $this->_helper->redirector->gotoRoute(array('action' => 'view', 'id' => $editingGroup->id));
                 } catch (Exception $ex) {
                     if (strpos($ex->getMessage(), '23000') !== false) {
                         $this->flashMessage($this->translator->trans('Error.display-name-exists'), 'error');
