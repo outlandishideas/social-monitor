@@ -3,9 +3,10 @@
 $translator = $this->translate();
 $buttons = array();
 $cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$translator->trans('buttons.common.cancel').'</a>', array('controller'=>'user', 'action'=>'index'), null, true);
-if ($cancel) {
-    $buttons[] = $cancel;
+if (!$cancel) {
+	$cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$translator->trans('buttons.common.cancel').'</a>', array('controller'=>'index', 'action'=>'index'), null, true);
 }
+$buttons[] = $cancel;
 $buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('buttons.common.save').'</button>';
 ?>
 
