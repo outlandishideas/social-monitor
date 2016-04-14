@@ -313,7 +313,7 @@ class Model_Campaign extends Model_Base {
 		$campaigns = array();
 
 		/** @var Model_Campaign[] $campaignData */
-		$campaignData = static::fetchAll('id IN (' . implode(',', array_filter(array_keys($campaignIds))) . ')');
+		$campaignData = static::fetchByIds(array_filter(array_keys($campaignIds)));
 		foreach ($campaignData as $campaign) {
 			$row = (object)array(
 				'id'=>intval($campaign->id),
