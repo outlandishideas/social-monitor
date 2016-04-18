@@ -513,6 +513,35 @@ h3 {
   }
 }
 
+@media all and (min-width: 1300px) {
+    .top-bar{
+        height: 85px;
+        }
+    .title-area li.name h1 a{
+        height: 85px;
+        }
+    .top-bar-section li:not(.has-form) a:not(.button){
+        padding: 20px 30px;
+        }
+    .top-bar-section li.active:not(.has-form) a:not(.button){
+        padding: 20px 30px;
+        }
+    .top-bar-section > ul > li > a:hover > .triangle,
+    .top-bar-section > ul > li.active > a > .triangle {
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 8px solid $colour-background;
+        }
+}
+@media all and (max-width: 1300px){
+    .top-bar-section > ul > li > a:hover > .triangle,
+    .top-bar-section > ul > li.active > a > .triangle {
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 6px solid $colour-background;
+        }
+    }
+
 @media all and (max-width: 1080px) {
   #nav li span.label {
     display: none;
@@ -1642,24 +1671,28 @@ body.errorController.errorAction {
 .top-bar-section > ul > li.active > a > .triangle {
   width: 0;
   height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 6px solid #234a55;
   position: absolute;
   left: 50%;
+  bottom: 0;
+  -ms-transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
   margin-left: -8px;
 }
 
-.top-bar-section > ul > li.active > a > .triangle {
-  border-top-color: #2ba6cb;
+.dropdown > li:hover{
+    background: $colour-nav-background;
 }
 
-.top-bar-section > ul > li.active > a:hover > .triangle {
-  border-top-color: #258faf;
+.top-bar-section > ul > li:not(.active) > a > span {
+    opacity: 0.6;
 }
 
+.top-bar-section > ul > li:not(.active) > a:hover > span {
+    opacity: 1;
+}
 .top-bar-section li:not(.has-form) a:not(.button):hover {
-  background: #234a55;
+    background: #0071bc;
 }
 
 .bd-btm {
@@ -1826,7 +1859,7 @@ h4 {
 
 .badge-presences-buttons li a.active h4,
 .badge-presences-buttons li a:hover h4 {
-  color: $colour-highlight;
+    color: $colour-highlight;
 }
 
 .badge-presences-buttons li a.active .score-value,
