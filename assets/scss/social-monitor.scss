@@ -514,28 +514,40 @@ h3 {
 }
 
 @media all and (min-width: 1400px) {
+    .top-bar-section .dropdown li a{
+        font-weight: 300;
+    }
 
+    .top-bar-section ul li > a{
+        font-size: 12pt;
+    }
+    
     .top-bar-section .icon-large:before{
         font-size: 22px; 
         padding-right: 3px;
-        }
+     }
     
     .top-bar-section .text{
         font-size: 12pt;
         font-weight: 300;
     }
+
     .top-bar{
         height: 85px;
-        }
+     }
+
     .title-area li.name h1 a{
         height: 85px;
-        }
+     }
+
     .top-bar-section li:not(.has-form) a:not(.button){
-        padding: 19px 30px 20px
-        }
+        padding: 20px 30px 20px
+     }
+
     .top-bar-section li.active:not(.has-form) a:not(.button){
-        padding: 19px 30px 20px
-        }
+        padding: 20px 30px 20px
+     }
+
     .top-bar-section > ul > li > a:hover > .triangle,
     .top-bar-section > ul > li.active > a > .triangle {
         border-left: 10px solid transparent;
