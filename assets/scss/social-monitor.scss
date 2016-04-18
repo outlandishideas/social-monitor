@@ -2521,11 +2521,8 @@ table td ul li a:hover {
 }
 
 .find-country{
-  padding: 10px;
-  z-index: 1000;
-}
-
-.find-country{
+    padding: 10px;
+    z-index: 9;
     input{
         border: 2px solid #fff;
     }
@@ -2557,7 +2554,7 @@ table td ul li a:hover {
   background: #0A3542;
   padding: 2.5rem 1rem 1rem;
   border: 1px solid white;
-  z-index: 1000;
+  z-index: 10;
   display: none;
 }
 
