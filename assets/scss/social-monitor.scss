@@ -1680,14 +1680,19 @@ body.errorController.errorAction {
   margin-left: -8px;
 }
 
-.dropdown > li:hover{
-    background: $colour-nav-background;
+.top-bar-section .dropdown li:not(.has-form):not(.active):hover > a:not(.button){
+  background: $colour-highlight;
+}
+.top-bar-section ul li:hover:not(.has-form) > a{
+  background: $colour-highlight;
 }
 
+.dropdown >li:not(.active) > a,
 .top-bar-section > ul > li:not(.active) > a > span {
     opacity: 0.6;
 }
 
+.dropdown >li:not(.active) > a:hover,
 .top-bar-section > ul > li:not(.active) > a:hover > span {
     opacity: 1;
 }

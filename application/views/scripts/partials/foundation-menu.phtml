@@ -22,7 +22,7 @@ foreach ($this->container as $page) :
             <a href="<?php echo $href; ?>">
                 <span class="<?php echo $page->icon; ?>"></span>
                 <span class="text"><?php echo $translator->trans('navigation-menu.' . $page->getId()); ?></span>
-                <div class="triangle hide-for-medium-down"></div>
+                <?php if (empty($page->pages)){ ?><div class="triangle hide-for-medium-down"></div> <?php }?>
             </a>
             <?php if(!empty($page->pages)) : ?>
                 <ul class="dropdown">
