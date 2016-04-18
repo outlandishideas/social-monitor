@@ -513,23 +513,41 @@ h3 {
   }
 }
 
-@media all and (min-width: 1400px) {
-    .top-bar-section .dropdown li a{
-        font-weight: 300;
-    }
+@media all and (min-width: 1420px) {
+    
+    .top-bar-section{
 
-    .top-bar-section ul li > a{
-        font-size: 12pt;
-    }
-    
-    .top-bar-section .icon-large:before{
-        font-size: 22px; 
-        padding-right: 3px;
-     }
-    
-    .top-bar-section .text{
-        font-size: 12pt;
-        font-weight: 300;
+        .dropdown li a{
+            font-weight: 300;
+        }
+
+        ul li > a{
+            font-size: 12pt;
+        }
+
+        .icon-large:before{
+            font-size: 22px; 
+            padding-right: 3px;
+        }
+
+        .text{
+            font-size: 12pt;
+            font-weight: 300;
+        }
+        li:not(.has-form) a:not(.button){
+            padding: 20px 30px 20px
+        }
+
+        li.active:not(.has-form) a:not(.button){
+            padding: 20px 30px 20px
+        }
+
+        > ul > li > a:hover > .triangle,
+        > ul > li.active > a > .triangle {
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 8px solid $colour-background;
+         }
     }
 
     .top-bar{
@@ -540,21 +558,8 @@ h3 {
         height: 85px;
      }
 
-    .top-bar-section li:not(.has-form) a:not(.button){
-        padding: 20px 30px 20px
-     }
-
-    .top-bar-section li.active:not(.has-form) a:not(.button){
-        padding: 20px 30px 20px
-     }
-
-    .top-bar-section > ul > li > a:hover > .triangle,
-    .top-bar-section > ul > li.active > a > .triangle {
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-top: 8px solid $colour-background;
-        }
 }
+
 @media all and (max-width: 1400px){
     .top-bar-section > ul > li > a:hover > .triangle,
     .top-bar-section > ul > li.active > a > .triangle {
@@ -562,7 +567,7 @@ h3 {
         border-right: 8px solid transparent;
         border-top: 6px solid $colour-background;
         }
-    }
+}
 
 @media all and (max-width: 1080px) {
   #nav li span.label {
@@ -1684,11 +1689,6 @@ body.errorController.errorAction {
   margin-bottom: 0.5rem;
 }
 
-.top-bar-section > ul > li > a {
-  position: relative;
-  letter-spacing: 0;
-}
-
 .top-bar-section > ul > li > a:hover > .triangle,
 .top-bar-section > ul > li.active > a > .triangle {
   width: 0;
@@ -1702,11 +1702,21 @@ body.errorController.errorAction {
   margin-left: -8px;
 }
 
-.top-bar-section .dropdown li:not(.has-form):not(.active):hover > a:not(.button){
-  background: $colour-highlight;
-}
-.top-bar-section ul li:hover:not(.has-form) > a{
-  background: $colour-highlight;
+.top-bar-section {
+    > ul > li > a {
+        position: relative;
+        letter-spacing: 0;
+    }
+    .dropdown li:not(.has-form):not(.active):hover > a:not(.button){
+        background: $colour-highlight;
+    }
+    ul li:hover:not(.has-form) > a{
+        background: $colour-highlight;
+    }
+    li:not(.has-form) a:not(.button):hover {
+        background: #0071bc;
+    }
+
 }
 
 .dropdown >li:not(.active) > a,
@@ -1717,9 +1727,6 @@ body.errorController.errorAction {
 .dropdown >li:not(.active) > a:hover,
 .top-bar-section > ul > li:not(.active) > a:hover > span {
     opacity: 1;
-}
-.top-bar-section li:not(.has-form) a:not(.button):hover {
-    background: #0071bc;
 }
 
 .bd-btm {
