@@ -2525,15 +2525,16 @@ table td ul li a:hover {
   z-index: 1000;
 }
 
-.find-country input{
-    border: 2px solid #fff;
-}
-
-.find-country label {
-  font-size: 0.8rem;
-  opacity: 0.8;
-  font-weight: 300;
-  text-transform: uppercase;
+.find-country{
+    input{
+        border: 2px solid #fff;
+    }
+    label{
+        font-size: 0.8rem;
+        opacity: 0.8;
+        font-weight: 300;
+        text-transform: uppercase;
+    }
 }
 
 .date-range-text{
