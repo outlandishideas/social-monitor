@@ -77,11 +77,6 @@ $allBadges = $this->badges;
 
             </div>
             <div id="map-date" class="small-24 large-12 columns" data-current-date="<?php echo $this->currentDate; ?>" data-day-range="<?php echo $this->dayRange; ?>">
-                 <span class="help-text-toggle icon-question-sign icon-large">
-            <div class="help-text">
-                <p><?php echo $translator->trans('route.index.index.contextual-help.date-range')?></p>
-            </div>
-        </span>
                 <div class="row">
                     <div class="small-24 large-offset-2 large-10 columns">
                         <h4 id="date-range-text-header"> <?php echo $translator->trans('route.index.index.date-range')?></h4>
@@ -94,6 +89,11 @@ $allBadges = $this->badges;
                             <input type="hidden">
                         </div>
                     </div>
+                 <span class="help-text-toggle large-1 icon-question-sign icon-large" id="range-help">
+            <div class="help-text">
+                <p><?php echo $translator->trans('route.index.index.contextual-help.date-range')?></p>
+            </div>
+        </span>
                 </div>
             </div>
         </div>

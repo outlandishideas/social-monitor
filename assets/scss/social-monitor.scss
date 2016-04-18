@@ -1199,7 +1199,7 @@ form.management button.add-item {
 /* Slider & Date */
 
 #map-date .range-slider {
-  width: auto;
+    width: auto;
   margin: 35px 0 20px;
   height: 2px;
   border: none;
@@ -1215,6 +1215,12 @@ form.management button.add-item {
     border-radius: 50%;
     top: -7px;
   }
+
+}
+
+#range-help {
+    top: 0;
+    left: 95%;
 
 }
 
