@@ -513,6 +513,62 @@ h3 {
   }
 }
 
+@media all and (min-width: 1420px) {
+    
+    .top-bar-section{
+
+        .dropdown li a{
+            font-weight: 300;
+        }
+
+        ul li > a{
+            font-size: 12pt;
+        }
+
+        .icon-large:before{
+            font-size: 22px; 
+            padding-right: 3px;
+        }
+
+        .text{
+            font-size: 12pt;
+            font-weight: 300;
+        }
+        li:not(.has-form) a:not(.button){
+            padding: 20px 30px 20px
+        }
+
+        li.active:not(.has-form) a:not(.button){
+            padding: 20px 30px 20px
+        }
+
+        > ul > li > a:hover > .triangle,
+        > ul > li.active > a > .triangle {
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 8px solid $colour-background;
+         }
+    }
+
+    .top-bar{
+        height: 85px;
+     }
+
+    .title-area li.name h1 a{
+        height: 85px;
+     }
+
+}
+
+@media all and (max-width: 1400px){
+    .top-bar-section > ul > li > a:hover > .triangle,
+    .top-bar-section > ul > li.active > a > .triangle {
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 6px solid $colour-background;
+        }
+}
+
 @media all and (max-width: 1080px) {
   #nav li span.label {
     display: none;
@@ -1633,33 +1689,44 @@ body.errorController.errorAction {
   margin-bottom: 0.5rem;
 }
 
-.top-bar-section > ul > li > a {
-  position: relative;
-  letter-spacing: 0;
-}
-
 .top-bar-section > ul > li > a:hover > .triangle,
 .top-bar-section > ul > li.active > a > .triangle {
   width: 0;
   height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 6px solid #234a55;
   position: absolute;
   left: 50%;
+  bottom: 0;
+  -ms-transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
   margin-left: -8px;
 }
 
-.top-bar-section > ul > li.active > a > .triangle {
-  border-top-color: #2ba6cb;
+.top-bar-section {
+    > ul > li > a {
+        position: relative;
+        letter-spacing: 0;
+    }
+    .dropdown li:not(.has-form):not(.active):hover > a:not(.button){
+        background: $colour-highlight;
+    }
+    ul li:hover:not(.has-form) > a{
+        background: $colour-highlight;
+    }
+    li:not(.has-form) a:not(.button):hover {
+        background: #0071bc;
+    }
+
 }
 
-.top-bar-section > ul > li.active > a:hover > .triangle {
-  border-top-color: #258faf;
+.dropdown >li:not(.active) > a,
+.top-bar-section > ul > li:not(.active) > a > span {
+    opacity: 0.6;
 }
 
-.top-bar-section li:not(.has-form) a:not(.button):hover {
-  background: #234a55;
+.dropdown >li:not(.active) > a:hover,
+.top-bar-section > ul > li:not(.active) > a:hover > span {
+    opacity: 1;
 }
 
 .bd-btm {
@@ -1826,7 +1893,7 @@ h4 {
 
 .badge-presences-buttons li a.active h4,
 .badge-presences-buttons li a:hover h4 {
-  color: $colour-highlight;
+    color: $colour-highlight;
 }
 
 .badge-presences-buttons li a.active .score-value,
