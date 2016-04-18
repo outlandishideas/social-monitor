@@ -514,7 +514,7 @@ h3 {
 }
 
 @media all and (min-width: 1420px) {
-    
+
     .top-bar-section{
 
         .dropdown li a{
@@ -526,7 +526,7 @@ h3 {
         }
 
         .icon-large:before{
-            font-size: 22px; 
+            font-size: 22px;
             padding-right: 3px;
         }
 
@@ -567,6 +567,18 @@ h3 {
         border-right: 8px solid transparent;
         border-top: 6px solid $colour-background;
         }
+}
+
+@media all and (min-width: 1025px) {
+  .find-country {
+    position: absolute;
+  }
+}
+
+@media all and (max-width: 1024px) {
+  .find-country {
+    position: relative;
+  }
 }
 
 @media all and (max-width: 1080px) {
@@ -1187,9 +1199,9 @@ form.management button.add-item {
 /* Slider & Date */
 
 #map-date .range-slider {
-  width: auto;
-  margin: 10px 0 20px;
-  height: 3px;
+    width: auto;
+  margin: 35px 0 20px;
+  height: 2px;
   border: none;
   background: #fff;
 
@@ -1203,6 +1215,12 @@ form.management button.add-item {
     border-radius: 50%;
     top: -7px;
   }
+
+}
+
+#range-help {
+    top: 0;
+    left: 95%;
 
 }
 
@@ -1751,7 +1769,6 @@ h2 {
 h2.page-title {
   color: #fff;
   border-color: #fff;
-  margin-bottom: 2rem;
 }
 
 h3 {
@@ -2503,20 +2520,31 @@ table td ul li a:hover {
   display: none;
 }
 
-#map > .find-country{
-  position: absolute;
-  top: 10px;
-  left: 35px;
-  width: 280px;
-  z-index: 9;
+.find-country{
+    padding: 10px;
+    z-index: 9;
+    input{
+        border: 2px solid #fff;
+    }
+    label{
+        font-size: 0.8rem;
+        opacity: 0.8;
+        font-weight: 300;
+        text-transform: uppercase;
+    }
 }
 
-.find-country label {
-  font-size: 1rem;
-  font-weight: 300;
-  margin: 0;
-  padding: 0.25rem 0;
-  text-transform: uppercase;
+.date-range-text{
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+#date-range-text-header{
+  font-size: 0.8rem;
+}
+
+#map-util{
+  margin-bottom: 20px;
 }
 
 .country-list {
@@ -2524,8 +2552,9 @@ table td ul li a:hover {
   color: #fff;
   margin-left: 0;
   background: #0A3542;
-  padding: 0.5rem 1rem 1rem;
+  padding: 2.5rem 1rem 1rem;
   border: 1px solid white;
+  z-index: 10;
   display: none;
 }
 

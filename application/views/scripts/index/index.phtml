@@ -51,40 +51,54 @@ $allBadges = $this->badges;
 
 <div class="row">
     <div class="small-24 large-5 columns hide-for-small-down">
-        <span class="help-text-toggle icon-question-sign icon-large">
-            <div class="help-text">
-                <p><?php echo $translator->trans('route.index.index.contextual-help.date-range')?></p>
-            </div>
-        </span>
-
-        <div id="map-date" class="bd-btm" data-current-date="<?php echo $this->currentDate; ?>" data-day-range="<?php echo $this->dayRange; ?>">
-            <h4><?php echo $translator->trans('route.index.index.date-range')?></h4>
-            <div class="date-range-text"></div>
-            <div class="range-slider" data-slider="<?php echo $this->dayRange; ?>" data-options="start: 1; end: <?php echo $this->dayRange; ?>; step: 1">
-                <span class="range-slider-handle" role="slider" tabindex="0"></span>
-                <span class="range-slider-active-segment"></span>
-                <input type="hidden">
-            </div>
-        </div>
-
         <?php foreach($allBadges as $badge): ?>
         <div class="badge-description animated fadeInLeft" data-badge-name="<?php echo $badge->getName(); ?>">
             <?php echo $badge->getDescription(); ?>
         </div>
         <?php endforeach; ?>
-
     </div>
     <div class="small-24 large-14 columns">
-		<div id="map-top"></div>
-        <div id="map">
-            <div id="find-country" class="find-country">
+        <div class="row" id="map-util">
+            <div id="find-country" class="find-country small-24 large-12 columns">
                 <form onsubmit="return app.home.selectCountry()">
-                    <label for="search-countries"><?php echo $translator->trans('route.index.index.find-country')?></label>
-                    <input type="text" id="search-countries" oninput="app.home.searchCountries()" autocomplete="off" />
+                    <div class="row">
+                        <div class="small-24 large-4 large-offset-1 columns">
+                            <label for="search-countries"><?php echo $translator->trans('route.index.index.find-country')?></label>
+                        </div>
+                        <div class="small-24 large-15 end columns">
+                            <div id="search-input">
+                                <input class="small-24 large-12 columns" type="text" id="search-countries" oninput="app.home.searchCountries()" autocomplete="off" />
+                            </div>
+                            <ul class="country-list">
+                            </ul>
+                        </div>
+                    </div>
                 </form>
-				<ul class="country-list">
-				</ul>
+
             </div>
+            <div id="map-date" class="small-24 large-12 columns" data-current-date="<?php echo $this->currentDate; ?>" data-day-range="<?php echo $this->dayRange; ?>">
+                <div class="row">
+                    <div class="small-24 large-offset-2 large-10 columns">
+                        <h4 id="date-range-text-header"> <?php echo $translator->trans('route.index.index.date-range')?></h4>
+                        <div class="date-range-text"></div>
+                    </div>
+                    <div class="small-24 large-11 end columns">
+                        <div class="range-slider" data-slider="<?php echo $this->dayRange; ?>" data-options="start: 1; end: <?php echo $this->dayRange; ?>; step: 1">
+                            <span class="range-slider-handle" role="slider" tabindex="0"></span>
+                            <span class="range-slider-active-segment"></span>
+                            <input type="hidden">
+                        </div>
+                    </div>
+                 <span class="help-text-toggle large-1 icon-question-sign icon-large" id="range-help">
+            <div class="help-text">
+                <p><?php echo $translator->trans('route.index.index.contextual-help.date-range')?></p>
+            </div>
+        </span>
+                </div>
+            </div>
+        </div>
+        <div id="map-top"></div>
+        <div id="map">
 
             <span class="help-text-toggle icon-question-sign icon-large">
                 <div class="help-text">
