@@ -569,13 +569,13 @@ h3 {
         }
 }
 
-@media all and (min-width: 1023px) {
+@media all and (min-width: 1025px) {
   .find-country {
     position: absolute;
   }
 }
 
-@media all and (max-width: 1025px) {
+@media all and (max-width: 1024px) {
   .find-country {
     position: relative;
   }
