@@ -513,6 +513,20 @@ h3 {
   }
 }
 
+@media all and (max-width: 1419px) {
+
+  .top-bar-section{
+
+    li:not(.has-form) a:not(.button){
+      padding: 1px 15px;
+    }
+
+    li.active:not(.has-form) a:not(.button){
+      padding: 1px 15px;
+    }
+  }
+}
+
 @media all and (min-width: 1420px) {
 
     .top-bar-section{
@@ -531,9 +545,10 @@ h3 {
         }
 
         .text{
-            font-size: 12pt;
+            font-size: 13pt;
             font-weight: 300;
         }
+      
         li:not(.has-form) a:not(.button){
             padding: 20px 30px 20px
         }
