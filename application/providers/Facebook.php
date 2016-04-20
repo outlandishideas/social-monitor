@@ -30,7 +30,7 @@ class Provider_Facebook extends Provider_Abstract
 		$stmt = $this->db->prepare("SELECT created_time
 		    FROM {$this->tableName}
 		    WHERE presence_id = :id
-            AND created_time <= DATE_SUB(NOW(), INTERVAL 7 DAY)
+            AND created_time <= DATE_SUB(NOW(), INTERVAL 3 DAY)
 		    ORDER BY created_time DESC
 		    LIMIT 1");
 		$stmt->execute(array(':id' => $presence->getId()));
