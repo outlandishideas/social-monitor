@@ -7,7 +7,7 @@ use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 class UserController extends BaseController
 {
-    protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register', 'confirm-email', 'joyride');
+    protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register', 'confirm-email', 'joyride', 'linkedin');
     /** @var LinkedIn */
     protected $linkedin;
 
@@ -259,10 +259,10 @@ class UserController extends BaseController
             if (!$this->view->canChangeLevel) {
                 unset($params['user_level']);
             }
-            
+
             $setProperties = $this->setProperties($editingUser, $params);
             $errorMessages = array();
-            
+
             if (preg_match('/.*@.*/', $this->_request->getParam('email')) === 0) {
                 $errorMessages[] = $this->translator->trans('route.user.edit.message.invalid-email'); //'Please enter a valid email address';
             } else if ($isRegistration &&
@@ -293,7 +293,7 @@ class UserController extends BaseController
                     $this->flashMessage($message, 'error');
                 }
             }
-            
+
             if(!$errorMessages && $setProperties) {
                 try {
                     $editingUser->save();
