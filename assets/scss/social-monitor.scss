@@ -1704,6 +1704,7 @@ body.errorController.errorAction {
 }
 
 .top-bar {
+  border-bottom: 1px solid $colour-background;
   margin-bottom: 0.5rem;
 }
 
@@ -2533,7 +2534,6 @@ table td ul li a:hover {
     }
     label{
         font-size: 0.8rem;
-        opacity: 0.8;
         font-weight: 300;
         text-transform: uppercase;
     }
