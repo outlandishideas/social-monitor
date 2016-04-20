@@ -521,17 +521,13 @@ h3 {
             font-weight: 300;
         }
 
-        ul li > a{
-            font-size: 12pt;
-        }
-
         .icon-large:before{
             font-size: 22px;
             padding-right: 3px;
         }
 
         .text{
-            font-size: 12pt;
+            font-size: 16px;
             font-weight: 300;
         }
         li:not(.has-form) a:not(.button){
@@ -551,11 +547,11 @@ h3 {
     }
 
     .top-bar{
-        height: 85px;
+        height: 86px;
      }
 
     .title-area li.name h1 a{
-        height: 85px;
+        height: 86px;
      }
 
 }
@@ -1482,6 +1478,16 @@ li.link.box {
 
 /* badges */
 
+.badges .pdflink{
+  margin-bottom: 15px;
+}
+
+.badges .pdflink ul li a{
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 #badges {;
 }
 
@@ -1759,7 +1765,7 @@ h2 {
   font-family: 'Open Sans', sans-serif;
   color: $colour-highlight;
   font-size: 1.5rem;
-  font-weight: 400;
+  font-weight: 300;
   margin: 0;
   margin-bottom: 1rem;
   padding: 0.25rem 0;
@@ -1767,8 +1773,13 @@ h2 {
 }
 
 h2.page-title {
-  color: #fff;
-  border-color: #fff;
+
+    height: 72px;
+    display: table-cell;
+    vertical-align: bottom;
+    border-bottom: 0px;
+    color: #fff;
+    border-color: #fff;
 }
 
 h3 {
@@ -2324,9 +2335,9 @@ table .cell-handle .missing {
 }
 
 .pdflink {
-   margin-top: 0;
-   margin-bottom: 0;
- }
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
 .button-bc-bar.pdflink {
   margin-bottom: 0;
@@ -2528,7 +2539,6 @@ table td ul li a:hover {
     }
     label{
         font-size: 0.8rem;
-        opacity: 0.8;
         font-weight: 300;
         text-transform: uppercase;
     }
@@ -2688,6 +2698,21 @@ td.countries a {
   position: relative;
 }
 
+#country-stats {
+
+    h3{
+        height: 72px;
+        display: table-cell;
+        vertical-align: bottom;
+        border-bottom: 0px;
+        overflow: hidden;
+    }
+    
+    .badge-score > h4{
+        border-top: 1px solid #fff;
+    }
+}
+
 #country-stats .loading-icon {
   position: absolute;
   top: 0;
@@ -2839,7 +2864,23 @@ ul.blockLabels {
 
 .kpi-download {
   text-align: center;
-  padding-top: 20px;
+  padding-top: 21px;
+}
+
+.kpi-download-button {
+    a{
+        padding-top: 5px;
+        padding-bottom: 5px;
+        background-color: $colour-highlight;
+        border: 1px solid transparent;
+    }
+    a:hover{
+        border: 1px solid #FFF;
+    }
+    a:focus{
+        color: #FFF;
+    }
+
 }
 
 /* messages */

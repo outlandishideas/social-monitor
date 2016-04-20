@@ -9,55 +9,60 @@ $allBadges = $this->badges;
 ?>
 
 <div class="row">
-    <div class="small-24 large-5 columns homepage-title">
-        <h2 class="page-title"><?php echo $this->pageTitle ?></h2>
-        <span class="help-text-toggle icon-question-sign icon-large">
-            <div class="help-text">
-                <p><?php echo $translator->trans('route.index.index.contextual-help.page-title')?></p>
-            </div>
-        </span>
-    </div>
-    <div class="columns large-19" id="homepage-tabs">
-        <div class="small-24 large-17 columns">
-                <dl id="kpi-tabs" class="tabs">
-                <?php foreach($allBadges as $badge) : ?>
-                    <dd data-badge="<?php echo $badge->getName(); ?>" data-title="<?php echo $badge->getTitle(); ?>">
-                        <a href="#<?php echo $badge->getName(); ?>"><?php echo $badge->getTitle(); ?></a>
-                    </dd>
-                <?php endforeach; ?>
-                </dl>
+<div class="small-24 large-5 columns hide-for-medium-down">
+  <div class="row">
+    <div class="columns large-24">
+      <h2 class="page-title"><?php echo $this->pageTitle ?></h2>
+      <span class="help-text-toggle icon-question-sign icon-large">
+        <div class="help-text">
+          <p><?php echo $translator->trans('route.index.index.contextual-help.page-title')?></p>
         </div>
-    <?php if ($this->pdfLink) : ?>
-        <div class="small-24 large-7 show-for-large-up columns pdflink">
-                <div id="kpi-download-button" class="kpi-download">
-                    <ul class="button-group">
-                        <li>
-                            <a
-                                href="<?php echo $this->pdfLink; ?>"
-                                target="_blank"
-                                title="<?php echo $translator->trans('route.index.index.pdf-download-link-title')?>"
-                                class="button-bc"
-                                download="metrics.pdf"
-                            >
-                                <?php echo $translator->trans('route.index.index.pdf-download-link')?>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-        </div>
-    <?php endif; ?>
+      </span>
     </div>
+  </div>
+  <div class="row">
+      <?php if ($this->pdfLink) : ?>
+      <div class="large-24 show-for-large-up columns pdflink">
+        <div class="kpi-download kpi-download-button">
+          <ul class="btn btn-default btn-block no-bullet">
+            <li>
+              <a
+                  href="<?php echo $this->pdfLink; ?>"
+                  target="_blank"
+                  title="<?php echo $translator->trans('route.index.index.pdf-download-link-title')?>"
+                  class="button-bc"
+                  download="metrics.pdf"
+              >
+                <?php echo $translator->trans('route.index.index.pdf-download-link')?>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+  </div>
+  <?php endif; ?>
+  <div class="row">
+    <div class="columns large-24">
+      <?php foreach($allBadges as $badge): ?>
+      <div class="badge-description animated fadeInLeft" data-badge-name="<?php echo $badge->getName(); ?>">
+        <?php echo $badge->getDescription(); ?>
+      </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
 </div>
-
-<div class="row">
-    <div class="small-24 large-5 columns hide-for-small-down">
-        <?php foreach($allBadges as $badge): ?>
-        <div class="badge-description animated fadeInLeft" data-badge-name="<?php echo $badge->getName(); ?>">
-            <?php echo $badge->getDescription(); ?>
-        </div>
+<div class="columns large-14">
+  <div class="row">
+    <div id="homepage-tabs" class="small-24 large-24 columns">
+      <dl id="kpi-tabs" class="tabs">
+        <?php foreach($allBadges as $badge) : ?>
+        <dd data-badge="<?php echo $badge->getName(); ?>" data-title="<?php echo $badge->getTitle(); ?>">
+          <a href="#<?php echo $badge->getName(); ?>"><?php echo $badge->getTitle(); ?></a>
+        </dd>
         <?php endforeach; ?>
+      </dl>
     </div>
-    <div class="small-24 large-14 columns">
+  </div>
         <div class="row" id="map-util">
             <div id="find-country" class="find-country small-24 large-12 columns">
                 <form onsubmit="return app.home.selectCountry()">
@@ -107,18 +112,19 @@ $allBadges = $this->badges;
             </span>
             <div id="geo-map"></div>
         </div>
-    </div>
-    <div class="small-24 large-5 columns">
+</div>
+<div class="small-24 large-5 columns">
         <div id="country-stats" class="global">
             <!-- overall score now inserted in app.home.setup() because we use a template that we can insert and remove -->
         </div>
     </div>
 </div>
 
+
 <?php if(isset($this->groups) && count($this->groups) > 0): ?>
-    <h2><?php echo $translator->trans('Global.groups')?></h2>
-    <div class="row">
-        <div class="small-24 large-23 large-centered columns">
+<div class="row">
+        <div class="small-24 large-24 large-centered columns">
+          <h2><?php echo $translator->trans('Global.groups')?></h2>
             <div class="row">
                 <?php foreach($this->groups as $group): /** @var Model_Group $group */ ?>
                     <div class="small-24 large-8 columns">
