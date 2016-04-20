@@ -521,17 +521,13 @@ h3 {
             font-weight: 300;
         }
 
-        ul li > a{
-            font-size: 12pt;
-        }
-
         .icon-large:before{
             font-size: 22px;
             padding-right: 3px;
         }
 
         .text{
-            font-size: 12pt;
+            font-size: 16px;
             font-weight: 300;
         }
         li:not(.has-form) a:not(.button){
@@ -1704,7 +1700,7 @@ body.errorController.errorAction {
 }
 
 .top-bar {
-  border-bottom: 1px solid $colour-background;
+  overflow: hidden;
   margin-bottom: 0.5rem;
 }
 
