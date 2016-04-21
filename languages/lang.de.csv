@@ -64,9 +64,9 @@
 
 
 "route.index.index.page-title";"Social Media Monitor"
-"route.index.index.find-country";"Nach Land suchen"
+"route.index.index.find-country";"Suchen"
 "route.index.index.pdf-download-description";"Diese Statistiken sind von den Social Media Metriken des Unternehmens bezogen.<br />Sie könnnen eine PDF zur Erklärung hier herunterladen:"
-"route.index.index.pdf-download-link";"Metriken herunterladen"
+"route.index.index.pdf-download-link";"Erklärung zu den Metriken herunterladen"
 "route.index.index.pdf-download-link-title";"PDF mit Metriken herunterladen"
 "route.index.index.contextual-help.page-title";"Wählen sie aus Reichweite, Engagement, Qualität oder Gesamt um zu sehen wie verschiedene Länder abschneiden."
 "route.index.index.contextual-help.map";"Click on the map to select a country and preview the individual social media presences."
