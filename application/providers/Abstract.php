@@ -333,6 +333,17 @@ abstract class Provider_Abstract
     }
 
     /**
+     * Returns all relevant hashtags posted in the last x days
+     * @param $presenceId
+     * @param $type
+     * @param $lastDays
+     * @return array
+     */
+    public function getRelevantHashtags($presenceId, $lastDays=7){
+        return array();
+    }
+
+    /**
      * @param Model_Presence $presence  the presence to fetch the data for
      * @param DateTime $start  the date from which to fetch historic data from (inclusive)
      * @param DateTime $end  the date from which to fetch historic data to (inclusive)

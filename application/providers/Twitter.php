@@ -164,6 +164,37 @@ class Provider_Twitter extends Provider_Abstract
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Returns all relevant hashtags posted in the last x days
+     * @param $presenceId
+     * @param $type
+     * @param $lastDays
+     * @return array
+     */
+    public function getRelevantHashtags($presenceId, $lastDays=7){
+
+        if(!($presenceId)){
+            return array();
+        }
+
+        $hashtagStmt = $this->db->prepare("
+        SELECT hashtags.hashtag 
+        FROM twitter_tweets
+        INNER JOIN posts_hashtags ON twitter_tweets.id=posts_hashtags.post AND post_type='twitter'
+        INNER JOIN hashtags ON posts_hashtags.hashtag=hashtags.id AND is_relevant=1
+        WHERE twitter_tweets.presence_id=:presence_id AND twitter_tweets.created_time >= DATE(NOW()) - INTERVAL :last_days DAY;
+        ");
+
+        $hashtagStmt->bindParam(':post_type', $postType);
+        $hashtagStmt->bindParam(':presence_id', $presenceId);
+        $hashtagStmt->bindParam(':last_days', $lastDays);
+
+        $hashtagStmt->execute();
+
+        $hashtags = $hashtagStmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $hashtags;
+    }
 
     public function update(Model_Presence $presence)
     {
