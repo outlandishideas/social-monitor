@@ -92,7 +92,7 @@ abstract class Model_Base
 	public function getTableDefinition()
 	{
 		if (empty(self::$tableColumns)) {
-			$statement = $this->_db->prepare('SELECT table_name, column_name, is_nullable, column_default, data_type, character_maximum_length 
+			$statement = $this->_db->prepare('SELECT table_name, column_name, is_nullable, column_default, data_type, character_maximum_length
 											  FROM information_schema.columns WHERE table_schema=database()');
 			$statement->execute();
 			foreach ($statement->fetchAll(\PDO::FETCH_ASSOC) as $row) {
@@ -219,13 +219,14 @@ abstract class Model_Base
 	}
 
 	public static function fetchByIds($ids) {
-		if (!is_array($ids)) {
+		if ($ids && !is_array($ids)) {
 			$ids = array($ids);
 		}
+		$ids = array_filter($ids);
 		if(empty($ids)){
 			return array();
 		}
-		return self::fetchAll("`id` IN (".implode(', ', array_fill(0, count($ids), '?')).")", $ids);
+		return self::fetchAll("`id` IN (".implode(', ', array_fill(0, count($ids), '?')).")", array_values($ids));
 	}
 
 	/**
