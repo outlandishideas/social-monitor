@@ -43,7 +43,7 @@ gulp.task('watch:app:lang', function() {
 
 gulp.task('app:lang:csv2json', function () {
 	return gulp.src('languages/*.csv')
-		.pipe(plugins.csv2json({delimiter: ';'}))
+		.pipe(plugins.csv2json({delimiter: ','}))
 		.pipe(plugins.rename({extname: '.json'}))
 		.pipe(reshapeJsonStream())
 		.pipe(gulp.dest('assets/build/lang'));
