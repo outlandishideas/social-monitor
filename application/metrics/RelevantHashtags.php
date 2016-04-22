@@ -1,13 +1,13 @@
 <?php
 
-class RelevantHashTags extends Metric_Abstract {
+class Metric_RelevantHashTags extends Metric_Abstract {
 
 	const NAME = "relevant_hashtags";
-	
+
     function __construct($translator)
     {
 		parent::__construct($translator, self::NAME, "NO ICON YET", false);
-        $this->target = floatval(BaseController::getOption('target_hashtags_per_week'));
+        $this->target = floatval(BaseController::getOption('hashtags_per_week_best'));
     }
 
     /**
@@ -19,13 +19,19 @@ class RelevantHashTags extends Metric_Abstract {
      */
     public function calculate(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-       return count($presence->getRelevantHashtags());
+       return count($presence->getRelevantHashtags($start, $end));
     }
 
     public function getScore(Model_Presence $presence, \DateTime $start, \DateTime $end)
     {
-        $actual = $presence->getMetricValue($this);
-        return $actual;
+        if(!$this->target){
+            return null;
+        }
+
+        $hashtagCount = $presence->getMetricValue($this);
+        $score = round(($hashtagCount/$this->target)*100);
+
+        return min(max($score, 0), 100);
     }
 
     public function getData(Model_Presence $presence, \DateTime $start, \DateTime $end)

@@ -403,6 +403,9 @@ services:
     metric.youtube-engagement:
         class: Metric_YoutubeEngagement
         arguments: [@translation.translator, @engagement-query.youtube]
+    metric.relevant-hashtags:
+        class: Metric_RelevantHashtags
+        arguments: [@translation.translator]
 
     # presence types
     presence-type.twitter:

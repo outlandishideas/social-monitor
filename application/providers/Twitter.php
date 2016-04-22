@@ -167,11 +167,11 @@ class Provider_Twitter extends Provider_Abstract
     /**
      * Returns all relevant hashtags posted in the last x days
      * @param $presenceId
-     * @param $type
-     * @param $lastDays
+     * @param $start
+     * @param $end
      * @return array
      */
-    public function getRelevantHashtags($presenceId, $lastDays=7){
+    public function getRelevantHashtags($presenceId, $start, $end){
 
         if(!($presenceId)){
             return array();
@@ -182,14 +182,16 @@ class Provider_Twitter extends Provider_Abstract
         FROM twitter_tweets
         INNER JOIN posts_hashtags ON twitter_tweets.id=posts_hashtags.post AND post_type='twitter'
         INNER JOIN hashtags ON posts_hashtags.hashtag=hashtags.id AND is_relevant=1
-        WHERE twitter_tweets.presence_id=:presence_id AND twitter_tweets.created_time >= DATE(NOW()) - INTERVAL :last_days DAY;
+        WHERE twitter_tweets.created_time >= :start
+		  AND twitter_tweets.created_time <= :end
+		  AND twitter_tweets.presence_id = :presence_id;
         ");
 
-        $hashtagStmt->bindParam(':post_type', $postType);
-        $hashtagStmt->bindParam(':presence_id', $presenceId);
-        $hashtagStmt->bindParam(':last_days', $lastDays);
-
-        $hashtagStmt->execute();
+        $hashtagStmt->execute(array(
+            ':presence_id' => $presenceId,
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end' => $end->format('Y-m-d H:i:s')
+        ));
 
         $hashtags = $hashtagStmt->fetchAll(\PDO::FETCH_ASSOC);
 

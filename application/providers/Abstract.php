@@ -339,7 +339,7 @@ abstract class Provider_Abstract
      * @param $lastDays
      * @return array
      */
-    public function getRelevantHashtags($presenceId, $lastDays=7){
+    public function getRelevantHashtags($presenceId, $start, $end){
         return array();
     }
 
