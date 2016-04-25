@@ -2,12 +2,17 @@
 @import 'mixins';
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,300,700);
 
+
 body {
   font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
   background-color: $colour-background;
   letter-spacing: 0.03rem;
+}
+
+h1, h2, h3, h4, a, div, p, label{
+  color: $colour-text;
 }
 
 #feedback {
@@ -87,7 +92,7 @@ abbr {
 
 #footer {
   height: 100px;
-  background-color: #0f70a3;
+  background-color: $colour-footer;
   padding: 20px;
   margin-top: 20px;
 
@@ -1199,17 +1204,18 @@ form.management button.add-item {
   margin: 35px 0 20px;
   height: 2px;
   border: none;
-  background: #fff;
+  background: $colour-text;
 
   .range-slider-active-segment {
     height: 100%;
-    background: #fff;
+    background: $colour-text;
   }
   .range-slider-handle {
     height: 15px;
     width: 15px;
     border-radius: 50%;
     top: -7px;
+    background: $colour-accent;
   }
 
 }
@@ -1377,7 +1383,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
   a:link {
     display: inline-block;
     background-color: #ddd;
-    color: #fff;
+    color: $colour-text;
     cursor: pointer;
   }
 
@@ -1706,7 +1712,7 @@ body.errorController.errorAction {
 .top-bar-section li:not(.has-form) a:not(.button),
 .top-bar-section ul li,
 .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button) {
-  background: $colour-highlight;
+  background: $colour-nav-background;
 }
 
 .top-bar {
@@ -1735,13 +1741,19 @@ body.errorController.errorAction {
         background: $colour-highlight;
     }
     ul li:hover:not(.has-form) > a{
-        background: $colour-highlight;
+        background: $colour-nav-background;
     }
     li:not(.has-form) a:not(.button):hover {
-        background: #0071bc;
+        background: $colour-nav-background;
     }
-
+    li.active:not(.has-form) a:not(.button){
+      background: $colour-accent;
+    }
+    li.active:not(.has-form) a:not(.button):hover{
+      background: $colour-nav-active-hover;
+    }
 }
+
 
 .dropdown >li:not(.active) > a,
 .top-bar-section > ul > li:not(.active) > a > span {
@@ -1754,11 +1766,11 @@ body.errorController.errorAction {
 }
 
 .bd-btm {
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid $colour-border;
 }
 
 .bd-top {
-  border-top: 1px solid #fff;
+  border-top: 1px solid $colour-border;
 }
 
 h2 {
@@ -1778,13 +1790,13 @@ h2.page-title {
     display: table-cell;
     vertical-align: bottom;
     border-bottom: 0px;
-    color: #fff;
+    color: $colour-text;
     border-color: #fff;
 }
 
 h3 {
   font-family: 'Open Sans', sans-serif;
-  color: #fff;
+  color: $colour-text;
   font-size: 1.5rem;
   font-weight: 300;
   margin: 0;
@@ -1795,8 +1807,8 @@ h3 {
 
 h4 {
   font-family: 'Open Sans', sans-serif;
-  color: #fff;
-  color: rgba(255, 255, 255, 0.8);
+  color: $colour-text;
+  opacity: 0.8;
   font-size: 1rem;
   font-weight: 300;
   margin: 0;
@@ -2453,7 +2465,7 @@ table thead {
 
 table thead tr th,
 table tbody tr td {
-  color: #fff;
+  color: $colour-text;
   font-size: 1rem;
 }
 
@@ -2509,7 +2521,7 @@ table .icon-background .icon-large {
 table td a,
 table td a:link,
 table td a:visited {
-  color: #fff;
+  color: $colour-text;
 }
 
 table td a:hover {
@@ -2519,12 +2531,12 @@ table td a:hover {
 table td ul {
   margin-left: 0;
   list-style: none;
-  color: #fff;
+  color: $colour-text;
 }
 
 table td ul li a,
 table td ul li a:hover {
-  color: #fff;
+  color: $colour-text;
 }
 
 #search-result-label{
@@ -2561,7 +2573,7 @@ table td ul li a:hover {
   list-style: none;
   color: #fff;
   margin-left: 0;
-  background: #0A3542;
+  background: $colour-background;
   padding: 2.5rem 1rem 1rem;
   border: 1px solid white;
   z-index: 10;
@@ -2603,7 +2615,7 @@ table td ul li a:hover {
 form label,
 form p.label {
   font-size: 1rem;
-  color: #fff;
+  color: $colour-text;
   margin: 0.5rem 0;
   background-color: transparent;
   padding: 0;
@@ -2707,7 +2719,7 @@ td.countries a {
         border-bottom: 0px;
         overflow: hidden;
     }
-    
+
     .badge-score > h4{
         border-top: 1px solid #fff;
     }
@@ -2799,7 +2811,7 @@ td.countries a {
 /* tabs on right-hand-side of presence/campaign page */
 #model-tabs,
 #homepage-tabs {
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid $colour-border;
   margin-bottom: 10px !important;
 }
 
@@ -2823,7 +2835,7 @@ td.countries a {
 #model-tabs dd a,
 #homepage-tabs dd a {
   background: none;
-  color: #fff;
+  color: $colour-text;
   text-transform: uppercase;
   opacity: 0.5;
   outline: none;
@@ -2839,7 +2851,7 @@ td.countries a {
 
 #model-tabs dd.active a,
 #homepage-tabs dd.active a {
-  border-bottom-color: #2ba6cb;
+  border-bottom-color: $colour-tab-active;
   opacity: 1;
   font-weight: bold;
 }
@@ -2865,6 +2877,10 @@ ul.blockLabels {
 .kpi-download {
   text-align: center;
   padding-top: 21px;
+}
+
+.kpi-download > p{
+  color: $colour-download-section;
 }
 
 .kpi-download-button {

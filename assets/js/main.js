@@ -109,14 +109,14 @@ $.extend(app, {
                 </div>\
             </div>',
 		globalScore:
-			'<div id="overall-score" class="badge-small" data-country-id="0" data-badge data-score="0" data-color="#fff">\
+			'<div id="overall-score" class="badge-small" data-country-id="0" data-badge data-score="0">\
 				<h3>{{ js.templates.globalScore.title | translate }}</h3>\
 				<div class="badge-score bd-btm">\
 					<h4><span data-badge-title>{{ badge.total.title | translate }}</span> {{ Global.score | translate }}</h4>\
 					<div class="score-value" data-badge-score="%"></div>\
 				</div>\
 			</div>\
-			<div id="overall-fans" class="badge-small" data-country-id="0" data-badge data-score="0" data-color="#fff">\
+			<div id="overall-fans" class="badge-small" data-country-id="0" data-badge data-score="0">\
 				<div class="badge-score">\
 					<h4><span data-badge-title>{{ badge.total.title | translate }}</span> {{ js.templates.globalScore.fans | translate }}</h4>\
 					<div class="score-value" data-badge-score></div>\
@@ -127,7 +127,7 @@ $.extend(app, {
 					</div>\
 				</div>\
 			</div>\
-			<div id="total-presences" class="badge-small" data-country-id="0" data-badge data-score="N/A" data-color="#fff">\
+			<div id="total-presences" class="badge-small" data-country-id="0" data-badge data-score="N/A">\
 				<div class="badge-score bd-btm">\
 					<h4>{{ js.templates.globalScore.total-presences-description | translate }}</h4>\
 					<div class="score-value" data-badge-score></div>\
