@@ -6,7 +6,7 @@ use Outlandish\SocialMonitor\Helper\Gatekeeper;
 class HashtagController extends BaseController {
 
 	/**
-	 * Lists the domains of links mentioned by presences, allowing them to be marked as belonging to british council or not
+	 * Lists the hashtags of posts mentioned by presences, allowing them to be marked as relevant or not
 	 * @user-level user
 	 */
 	function indexAction() {
@@ -14,7 +14,7 @@ class HashtagController extends BaseController {
 			if (!$this->view->user->isManager) {
 				$this->flashMessage($this->translator->trans('route.domain.index.message.access-error'), 'error'); //'You do not have sufficient access to change this data', 'error');
 			} else {
-				$relevant = $this->_request->getParam('relevant');
+				$relevant = $this->_request->getParam('is_relevant');
 				$db = self::db();
 				$db->exec('UPDATE hashtags SET is_relevant = 0');
 				if ($relevant) {
@@ -27,40 +27,8 @@ class HashtagController extends BaseController {
 		$this->view->canEdit = $this->view->user->isManager;
 	}
 
-    /**
-     * Called via ajax to show the list of statuses that contain a given url
-     */
-    function statusListAction() {
-        $id = $this->_request->getParam('id');
-        /** @var Model_Domain $domain */
-        $domain = $id ? Model_Domain::fetchById($id) : null;
-        if(!$domain){
-            $this->_helper->viewRenderer->setNoRender(true);
-        } else {
-            $twitterLookup = $this->db()->prepare('SELECT * FROM twitter_tweets WHERE id = :id');
-            $facebookLookup = $this->db()->prepare('SELECT * FROM facebook_stream WHERE id = :id');
-
-            $statuses = array();
-            foreach ($domain->getLinksForUrl($this->_request->getParam('url')) as $link) {
-                $lookup = $link->type == 'facebook' ? $facebookLookup : $twitterLookup;
-                $lookup->execute(array(':id'=>$link->status_id));
-                $status = $lookup->fetchAll(PDO::FETCH_OBJ);
-                if ($status) {
-                    $status = array_pop($status);
-                    $status->presence = Model_PresenceFactory::getPresenceById($status->presence_id);
-                    if ($status->presence) {
-                        $statuses[] = $status;
-                    }
-                }
-            }
-            usort($statuses, function($a, $b) { return strcasecmp($b->created_time, $a->created_time); });
-            $this->view->statuses = $statuses;
-        }
-        $this->_helper->layout()->disableLayout();
-    }
-
 	/**
-	 * Ajax function for getting a page of domains
+	 * Ajax function for getting a page of hashtags
 	 */
 	function listAction() {
 		Zend_Session::writeClose(); //release session on long running actions
@@ -71,7 +39,7 @@ class HashtagController extends BaseController {
 		$offset = $this->getRequestOffset();
 
 		$clauses = array();
-//		$args = array();
+		$args = array();
 		if ($search) {
 			$clauses[] = 'h.hashtag LIKE :search';
 			$args[':search'] = '%' . $search . '%';
@@ -89,7 +57,7 @@ class HashtagController extends BaseController {
 			$sql .= ' WHERE ' . implode(' AND ', $clauses);
 		}
 		$sql .= ' GROUP BY h.hashtag';
-		//$sql .= ' ORDER BY ' . implode(',', $ordering);
+		$sql .= ' ORDER BY ' . implode(',', $ordering);
 		if ($limit != -1) {
 			$sql .= ' LIMIT '.$limit;
 		}
@@ -99,7 +67,7 @@ class HashtagController extends BaseController {
 
 		$db = $this->db();
 		$query = $db->prepare($sql);
-		$query->execute();
+		$query->execute($args);
 		$hashtags = $query->fetchAll(PDO::FETCH_OBJ);
 		$totalCount = $db->lastRowCount();
 
@@ -129,53 +97,5 @@ class HashtagController extends BaseController {
 			);
 			$this->apiSuccess($apiResult);
 		}
-	}
-
-	/**
-	 * Shows details about how a domain has been used
-	 * @user-level user
-	 */
-	function viewAction() {
-
-
-		/** @var Model_Domain $domain */
-		$domain = Model_Domain::fetchById($this->_request->getParam('id'));
-		$this->validateData($domain);
-
-		$twitterLookup = $this->db()->prepare('SELECT * FROM twitter_tweets WHERE id = :id');
-		$facebookLookup = $this->db()->prepare('SELECT * FROM facebook_stream WHERE id = :id');
-
-		$links = array();
-		foreach ($domain->getLinks() as $link) {
-			$lookup = $link->type == 'facebook' ? $facebookLookup : $twitterLookup;
-			$lookup->execute(array(':id'=>$link->status_id));
-			$status = $lookup->fetchAll(PDO::FETCH_OBJ);
-			if ($status) {
-				$status = array_pop($status);
-				$status->presence = Model_PresenceFactory::getPresenceById($status->presence_id);
-				if ($status->presence) {
-					if (!array_key_exists($link->url, $links)) {
-						$link->statuses = array($status);
-						$links[$link->url] = $link;
-					} else {
-						$links[$link->url]->statuses[] = $status;
-					}
-				}
-			}
-		}
-		usort($links, function($a, $b) {
-			$ca = count($a->statuses);
-			$cb = count($b->statuses);
-			if ($ca == $cb) {
-				return strcasecmp($a->url, $b->url);
-			}
-			return $ca > $cb ? -1 : 1;
-		});
-		foreach ($links as $data) {
-			usort($data->statuses, function($a, $b) { return strcasecmp($b->created_time, $a->created_time); });
-		}
-		$this->view->domain = $domain;
-		$this->view->links = $links;
-		$this->updatePageTitle(['domain' => $domain->domain]);
 	}
 }
