@@ -87,6 +87,8 @@ class Provider_Twitter extends Provider_Abstract
                     $links[$id] = $tweet->links;
                 }
                 $count++;
+                
+                $this->saveHashtags('twitter', $tweet, $id);
             } catch (Exception $ex) {
                 $i = 0;
             }

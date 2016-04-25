@@ -240,6 +240,51 @@ abstract class Provider_Abstract
             }
         }
     }
+    
+    /**
+     * Save all hashtags of a post to to the hashtags table and link them to the post with the posts_hashtags table
+     * @param string $type
+     * @param array $post
+     * @param int $postId
+     */
+    protected function saveHashtags($type, $post, $postId){
+
+        if(!$post->hashtags){
+            return;
+        }
+
+        foreach ($post->hashtags as $hashtag){
+            try{
+                // Start a transaction because we write to two different tables that are interdependent
+                $this->db->beginTransaction();
+
+                // Check if the hashtag already exists in the database because it is unique
+                $selectStmt = $this->db->prepare("SELECT id FROM hashtags WHERE hashtag=:hashtag");
+                $selectStmt->execute(array(':hashtag' => $hashtag));
+                $hashtagId = $selectStmt->fetch()['id'];
+
+                // If the hashtag does not yet exist in the table insert it 
+                if (!$hashtagId){
+                    $hashtagStmt = $this->db->prepare("INSERT INTO hashtags (hashtag) VALUES (:hashtag)");
+                    $hashtagStmt->execute(array(':hashtag' => $hashtag));
+                    $hashtagId = $this->db->lastInsertId();
+                }
+
+                // Insert into linking table
+                $postsStmt = $this->db->prepare("INSERT INTO posts_hashtags (post, hashtag, post_type) VALUES (:post, :hashtag, :post_type)");
+                $postsStmt->execute(array(
+                    ':post' => $postId,
+                    ':hashtag' => $hashtagId,
+                    ':post_type' => $type
+                ));
+
+                $this->db->commit();
+            }catch (Exception $e){
+                $this->db->rollBack();
+                error_log('Error inserting hashtags into table' . $e->getMessage());
+            }
+        }
+    }
 
     /**
 	 * Updates the presence
@@ -304,8 +349,8 @@ abstract class Provider_Abstract
 
     /**
      * Returns all links from the given statuses, grouped by status ID
-     * @param $statusIds
-     * @param $type
+     * @param array $statusIds
+     * @param string $type
      * @return array
      */
     protected function getLinks($statusIds, $type) {
@@ -333,10 +378,10 @@ abstract class Provider_Abstract
     }
 
     /**
-     * Returns all relevant hashtags posted in the last x days
+     * Returns all relevant hashtags posted in the given time frame
      * @param $presenceId
-     * @param $type
-     * @param $lastDays
+     * @param $start
+     * @param $end
      * @return array
      */
     public function getRelevantHashtags($presenceId, $start, $end){
