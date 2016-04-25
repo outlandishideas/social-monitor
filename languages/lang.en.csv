@@ -615,6 +615,13 @@
 
 
 "route.hashtag.index.page-title";"Hashtags"
+"route.hashtag.index.paragraph-1";"This shows a list of all hashtags mentioned in tweets."
+"route.hashtag.index.paragraph-2";"You can say whether or not a hashtag is relevant by toggling the checkbox on the right, and clicking 'save'. Note that if you reorder the columns before saving, any changes will be lost."
+"route.hashtag.index.table-header.hashtag";"Hashtag"
+"route.hashtag.index.table-header.links";"Posts"
+"route.hashtag.index.table-header.relevant";"Relevant"
+"route.hashtag.index.message.success";"Hashtags updated"
+"route.hashtag.index.message.access-error";"You do not have sufficient access to change this data"
 
 "route.domain.index.table-header.domain";"Domain"
 "route.domain.index.table-header.links";"Links"
