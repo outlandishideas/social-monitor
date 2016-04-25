@@ -40,21 +40,22 @@
 
 
 
-"navigation-menu.users","Users"
-"navigation-menu.account","Account"
-"navigation-menu.edit-users","Edit Users"
-"navigation-menu.sign-out","Sign Out"
-"navigation-menu.settings","Settings"
-"navigation-menu.user","User"
-"navigation-menu.home","Home"
-"navigation-menu.regions","Regions"
-"navigation-menu.countries","Countries"
-"navigation-menu.sbus","SBUs"
-"navigation-menu.presences","Channels"
-"navigation-menu.domains","Domains"
-"navigation-menu.statuses","Posts"
-"navigation-menu.login","Login"
-"navigation-menu.register","Register"
+"navigation-menu.users";"Users"
+"navigation-menu.account";"Account"
+"navigation-menu.edit-users";"Edit Users"
+"navigation-menu.sign-out";"Sign Out"
+"navigation-menu.settings";"Settings"
+"navigation-menu.user";"User"
+"navigation-menu.home";"Home"
+"navigation-menu.regions";"Regions"
+"navigation-menu.countries";"Countries"
+"navigation-menu.sbus";"SBUs"
+"navigation-menu.presences";"Channels"
+"navigation-menu.domains";"Domains"
+"navigation-menu.domains";"Hashtags"
+"navigation-menu.statuses";"Posts"
+"navigation-menu.login";"Login"
+"navigation-menu.register";"Register"
 
 
 

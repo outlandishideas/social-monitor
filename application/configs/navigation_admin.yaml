@@ -3,6 +3,11 @@
 #  controller: user
 #  action: edit-self
 #  icon: icon-user icon-large
+hashtag:
+  id: hashtags
+  icon:
+  controller: hashtag
+  action: index
 domain:
   id: domains
   icon: icon-laptop icon-large

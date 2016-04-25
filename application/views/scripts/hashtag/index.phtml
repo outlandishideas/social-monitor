@@ -1,0 +1,47 @@
+<?php
+/** @var \Symfony\Component\Translation\Translator $translator */
+$translator = $this->translate();
+
+$bottomBar = array();
+if ($this->canEdit) {
+    $bottomBar = $this->gatekeeper()->filterAll(array(
+            '<a class="button-bc" href="%url%">' . $translator->trans('buttons.common.cancel') .  '</a>' => array('controller'=>'index', 'action'=>'index'),
+            //todo: reinstate this
+//          '<a class="button-bc" href="%url%">Download as CSV</a>' => array('action'=>'download')
+        ));
+    $bottomBar[] = '<button type="submit" class="button-bc">' . $translator->trans('buttons.common.save') . '</button>';
+}
+$topBar = $bottomBar;
+array_unshift($topBar, '<div id="search-table">'. $translator->trans('Global.loading-data') . '</div>');
+?>
+
+<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
+
+<div class="row">
+    <div class="small-24 medium-12 columns">
+		<p><?php echo $translator->trans('route.domain.index.paragraph-1'); ?></p>
+    </div>
+    <div class="small-24 medium-12 columns">
+        <p><?php echo $translator->trans('route.domain.index.paragraph-2'); ?></p>
+    </div>
+</div>
+
+<form method="post" action="<?php echo $this->url(); ?>">
+
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true)); ?>
+
+	<table class="text dtable" id="hashtags">
+		<thead>
+			<tr>
+				<th data-sort="auto"><?php echo $translator->trans('route.domain.index.table-header.domain'); ?></th>
+				<th data-sort="numeric"><?php echo $translator->trans('route.domain.index.table-header.links'); ?></th>
+				<th data-sort="checkbox"><?php echo $translator->trans('route.domain.index.table-header.relevant'); ?></th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+
+    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$bottomBar, 'dark'=>true)); ?>
+
+</form>
