@@ -794,7 +794,7 @@ form .formError {
     h4 {
       margin-top: 0;
       margin-bottom: 10px;
-      color: #fff;
+      color: $colour-text;
       text-transform: none;
     }
     p {
@@ -1407,6 +1407,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
   &.facebook a {
     background-color: $colour-facebook-light;
+    color: $colour-facebook-text;
 
     &:hover,
     &:focus {
@@ -1416,6 +1417,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
   &.twitter a {
     background-color: $colour-twitter-light;
+    color: $colour-twitter-text;
 
     &:hover,
     &:focus {
@@ -1425,6 +1427,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
   &.instagram a {
     background-color: $colour-instagram;
+    color: $colour-instagram-text;
 
     &:hover,
     &:focus {
@@ -1434,6 +1437,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
   &.linkedin a {
     background-color: $colour-linkedin;
+    color: $colour-linkedin-text;
 
     &:hover,
     &:focus {
@@ -1443,6 +1447,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
   &.youtube a {
     background-color: $colour-youtube;
+    color: $colour-youtube-text;
 
     &:hover,
     &:focus {
@@ -1452,6 +1457,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
   &.sina_weibo a {
     background-color: $colour-sina-weibo-light;
+    color: $colour-sina-weibo-text;
 
     &:hover,
     &:focus {
@@ -1827,7 +1833,7 @@ h4 {
 }
 
 .presence-handle{
-  color: rgba(255, 255, 255, 0.5);
+  opacity: 0.5;
 }
 
 /* Badge CSS */
@@ -1860,7 +1866,7 @@ h4 {
 }
 
 .numerator {
-  color: #fff;
+  color: $colour-text;
 }
 
 .numerator span {
@@ -2079,8 +2085,8 @@ h4 {
 .picker label {
   font-size: 0.8rem;
   font-weight: 300;
-  color: #fff;
-  color: rgba(255, 255, 255, 0.5);
+  color: $colour-text;
+  opacity: 0.8;
   text-align: left;
 }
 
@@ -2197,7 +2203,7 @@ body .ui-daterangepicker li.ui-state-active {
 }
 
 #new-chart-values table th {
-  color: #FFF;
+  color: $colour-text;
   border-left: 1px solid white;
   border-bottom: 1px solid #AAA;
   transition: opacity .4s ease-in-out;
@@ -2300,10 +2306,10 @@ body .ui-daterangepicker li.ui-state-active {
 
 .button-bc {
   display: block;
-  background-color: transparent;
+  color: $colour-button-text !important;
+  background-color: $colour-button-background;
   border: 1px solid #fff;
   padding: 0.25rem 1rem;
-  color: #fff;
   transition: background-color 400ms ease-out, border-color 400ms ease-out;
   line-height: 1.6;
   margin-bottom: 0;
@@ -2311,7 +2317,7 @@ body .ui-daterangepicker li.ui-state-active {
 }
 
 .button-bc.primary {
-  background-color: #2ba6cb;
+  background-color: $colour-button-background;
 }
 
 .button-bc.inline {
@@ -2571,24 +2577,24 @@ table td ul li a:hover {
 
 .country-list {
   list-style: none;
-  color: #fff;
+  color: $colour-text;
   margin-left: 0;
   background: $colour-background;
   padding: 2.5rem 1rem 1rem;
-  border: 1px solid white;
+  border: 1px solid $colour-border;
   z-index: 10;
   display: none;
 }
 
 .country-list li {
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid $colour-border;
   clear: both;
   margin-top: .5rem;
   position: relative;
 }
 
 .country-list li a {
-  color: #fff;
+  color: $colour-text;
   display: inline-block;
   width: 80%;
 }
