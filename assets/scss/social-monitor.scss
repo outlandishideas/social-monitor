@@ -1,4 +1,5 @@
 @import 'variables';
+@import 'britishcouncil';
 @import 'mixins';
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,300,700);
 
@@ -2893,7 +2894,7 @@ ul.blockLabels {
     a{
         padding-top: 5px;
         padding-bottom: 5px;
-        background-color: $colour-highlight;
+        background-color: $colour-download-button;
         border: 1px solid transparent;
     }
     a:hover{
