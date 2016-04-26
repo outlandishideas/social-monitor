@@ -12,7 +12,7 @@ class HashtagController extends BaseController {
 	function indexAction() {
 		if ($this->_request->isPost()) {
 			if (!$this->view->user->isManager) {
-				$this->flashMessage($this->translator->trans('route.domain.index.message.access-error'), 'error'); //'You do not have sufficient access to change this data', 'error');
+				$this->flashMessage($this->translator->trans('route.hashtag.index.message.access-error'), 'error'); //'You do not have sufficient access to change this data', 'error');
 			} else {
 				$relevant = $this->_request->getParam('is_relevant');
 				$db = self::db();
@@ -20,7 +20,7 @@ class HashtagController extends BaseController {
 				if ($relevant) {
 					$db->exec('UPDATE hashtags SET is_relevant = 1 WHERE id IN (' . implode(',', array_keys($relevant)) . ')');
 				}
-				$this->flashMessage($this->translator->trans('route.domain.index.message.success')); //'Domains updated');
+				$this->flashMessage($this->translator->trans('route.hashtag.index.message.success')); //'Domains updated');
 			}
 			$this->_helper->redirector->gotoSimple('');
 		}
@@ -78,7 +78,6 @@ class HashtagController extends BaseController {
 				'id'=>$hashtag->id,
 				'hashtag'=>$hashtag->hashtag,
 				'posts'=>$hashtag->posts,
-				'url'=>$url,
 				'can_edit'=>$this->view->user->isManager ? '1' : '0',
 				'is_relevant'=>$hashtag->is_relevant
 			);

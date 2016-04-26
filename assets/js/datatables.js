@@ -267,9 +267,6 @@ app.datatables = {
 					{
 						mDataProp:'hashtag',
 						render:function (val, type, row) {
-							if (row.url) {
-								val = '<a href="' + row.url + '">' + val + '<a/>';
-							}
 							return val;
 						},
 						bUseRendered: false

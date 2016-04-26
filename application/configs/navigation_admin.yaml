@@ -3,16 +3,6 @@
 #  controller: user
 #  action: edit-self
 #  icon: icon-user icon-large
-hashtag:
-  id: hashtags
-  icon:
-  controller: hashtag
-  action: index
-domain:
-  id: domains
-  icon: icon-laptop icon-large
-  controller: domain
-  action: index
 users:
   id: users
   controller: user
@@ -34,3 +24,16 @@ config:
   id: settings
   controller: config
   icon: icon-cog icon-large
+  class: parent
+  pages:
+    hashtag:
+      id: hashtags
+      icon:
+      controller: hashtag
+      action: index
+    domain:
+      id: domains
+      icon: icon-laptop icon-large
+      controller: domain
+      action: index
+

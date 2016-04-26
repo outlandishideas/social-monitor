@@ -249,7 +249,7 @@ abstract class Provider_Abstract
      */
     protected function saveHashtags($type, $post, $postId){
 
-        if(!$post->hashtags){
+        if(!$post->hashtags || !$post->posted_by_owner){
             return;
         }
 
