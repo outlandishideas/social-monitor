@@ -11,21 +11,30 @@ var dot = require('dot-object');
 var path = require('path');
 var plugins = loadPlugins();
 
+
+/**
+ * Looks up a key for a color scheme in a config file and returns the path if it exists
+ * otherwise the function will return the path to a default color scheme
+ * @param configFile
+ * @param configPath
+ * @return filePath
+ */
 function loadColors(configFile, configPath) {
-	var scssDir = 'assets/scss';
-	var defaultColors = 'britishcouncil.scss';
-	
-	var config = yaml.load(fs.readFileSync(configFile, 'utf8'));
-	var colors = dot.pick(configPath, config);
+
+	var scssDir = 'assets/scss'; // directory of scss files
+	var defaultColors = 'britishcouncil.scss'; // default color scheme
+
+	var config = yaml.safeLoad(fs.readFileSync(configFile, 'utf8')); // load the specified config file
+	var colors = dot.pick(configPath, config); 
 
 	var filePath = path.join(scssDir, colors);
 
 	try{
-        fs.accessSync(filePath, fs.F_OK);
+        fs.accessSync(filePath, fs.F_OK); // check if the file exists
 	}
 	catch(err){
 		console.log(err);
-		filePath = path.join(scssDir, defaultColors);
+		filePath = path.join(scssDir, defaultColors); // use default file
 	}
 
     return filePath;
