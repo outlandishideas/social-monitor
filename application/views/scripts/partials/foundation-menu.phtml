@@ -29,6 +29,7 @@ foreach ($this->container as $page) :
                     <?php foreach($page->pages as $subPage) : /** @var Zend_Navigation_Page_Mvc $subPage */ ?>
                         <li>
                             <a href="<?php echo $subPage->getHref(); ?>">
+                                <span class="<?php echo $subPage->icon; ?>"></span>
                                 <?php echo $translator->trans('navigation-menu.' . $subPage->getId()); ?>
                             </a>
                         </li>
