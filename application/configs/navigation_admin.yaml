@@ -28,7 +28,7 @@ config:
   pages:
     hashtag:
       id: hashtags
-      icon:
+      icon: fa fa-hashtag fa-lg
       controller: hashtag
       action: index
     domain:

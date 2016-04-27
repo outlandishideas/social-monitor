@@ -6,7 +6,7 @@ class Metric_RelevantHashTags extends Metric_Abstract {
 
     function __construct($translator)
     {
-		parent::__construct($translator, self::NAME, "NO ICON YET", false);
+		parent::__construct($translator, self::NAME, "fa fa-hashtag", false);
         $this->target = floatval(BaseController::getOption('hashtags_per_week_best'));
     }
 
