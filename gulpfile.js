@@ -4,8 +4,41 @@ var gulp = require('gulp');
 var loadPlugins = require('gulp-load-plugins');
 var injectVariables = require('./gulp/inject-variables');
 var reshapeJsonStream = require('./gulp/reshape-json-lang-stream');
+var yaml = require('js-yaml');
 var fs = require('fs');
+var _ = require('lodash');
+var dot = require('dot-object');
+var path = require('path');
 var plugins = loadPlugins();
+
+
+/**
+ * Looks up a key for a color scheme in a config file and returns the path if it exists
+ * otherwise the function will return the path to a default color scheme
+ * @param configFile
+ * @param configPath
+ * @return filePath
+ */
+function loadColors(configFile, configPath) {
+
+	var scssDir = 'assets/scss'; // directory of scss files
+	var defaultColors = 'britishcouncil.scss'; // default color scheme
+
+	var config = yaml.safeLoad(fs.readFileSync(configFile, 'utf8')); // load the specified config file
+	var colors = dot.pick(configPath, config); 
+
+	var filePath = path.join(scssDir, colors);
+
+	try{
+        fs.accessSync(filePath, fs.F_OK); // check if the file exists
+	}
+	catch(err){
+		console.log(err);
+		filePath = path.join(scssDir, defaultColors); // use default file
+	}
+
+    return filePath;
+}
 
 gulp.task('app:styles:preprocess', function() {
 	return gulp.src('assets/scss/*.scss')
@@ -21,7 +54,10 @@ gulp.task('app:styles:preprocess', function() {
 
 gulp.task('app:styles', ['app:styles:preprocess'], function() {
 	var errorHandler = plugins.notify.onError("Error: <%= error.message %>");
-	return gulp.src('assets/build/scss/social-monitor.scss')
+	return gulp.src([
+		loadColors('application/configs/config.yaml', 'prod.app.colorscheme'),
+		'assets/build/scss/social-monitor.scss'])
+		.pipe(plugins.concat('social-monitor.scss'))
 		.pipe(plugins.plumber({errorHandler: errorHandler}))
 		.pipe(plugins.sourcemaps.init())
 		.pipe(plugins.sass({

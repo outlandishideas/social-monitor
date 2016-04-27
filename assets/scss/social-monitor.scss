@@ -10,6 +10,10 @@ body {
   letter-spacing: 0.03rem;
 }
 
+h1, h2, h3, h4, a, div, p, label{
+  color: $colour-text;
+}
+
 #feedback {
   position: fixed;
   right: 0;
@@ -87,7 +91,7 @@ abbr {
 
 #footer {
   height: 100px;
-  background-color: #0f70a3;
+  background-color: $colour-footer;
   padding: 20px;
   margin-top: 20px;
 
@@ -789,7 +793,7 @@ form .formError {
     h4 {
       margin-top: 0;
       margin-bottom: 10px;
-      color: #fff;
+      color: $colour-text;
       text-transform: none;
     }
     p {
@@ -1199,17 +1203,18 @@ form.management button.add-item {
   margin: 35px 0 20px;
   height: 2px;
   border: none;
-  background: #fff;
+  background: $colour-text;
 
   .range-slider-active-segment {
     height: 100%;
-    background: #fff;
+    background: $colour-text;
   }
   .range-slider-handle {
     height: 15px;
     width: 15px;
     border-radius: 50%;
     top: -7px;
+    background: $colour-accent;
   }
 
 }
@@ -1377,7 +1382,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
   a:link {
     display: inline-block;
     background-color: #ddd;
-    color: #fff;
+    color: $colour-text;
     cursor: pointer;
   }
 
@@ -1401,6 +1406,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
   &.facebook a {
     background-color: $colour-facebook-light;
+    color: $colour-facebook-text;
 
     &:hover,
     &:focus {
@@ -1410,6 +1416,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
   &.twitter a {
     background-color: $colour-twitter-light;
+    color: $colour-twitter-text;
 
     &:hover,
     &:focus {
@@ -1419,6 +1426,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
   &.instagram a {
     background-color: $colour-instagram;
+    color: $colour-instagram-text;
 
     &:hover,
     &:focus {
@@ -1428,6 +1436,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
   &.linkedin a {
     background-color: $colour-linkedin;
+    color: $colour-linkedin-text;
 
     &:hover,
     &:focus {
@@ -1437,6 +1446,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
   &.youtube a {
     background-color: $colour-youtube;
+    color: $colour-youtube-text;
 
     &:hover,
     &:focus {
@@ -1446,6 +1456,7 @@ $social-media: twitter instagram linkedin youtube sina_weibo facebook;
 
   &.sina_weibo a {
     background-color: $colour-sina-weibo-light;
+    color: $colour-sina-weibo-text;
 
     &:hover,
     &:focus {
@@ -1706,7 +1717,7 @@ body.errorController.errorAction {
 .top-bar-section li:not(.has-form) a:not(.button),
 .top-bar-section ul li,
 .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button) {
-  background: $colour-highlight;
+  background: $colour-nav-background;
 }
 
 .top-bar {
@@ -1735,13 +1746,19 @@ body.errorController.errorAction {
         background: $colour-highlight;
     }
     ul li:hover:not(.has-form) > a{
-        background: $colour-highlight;
+        background: $colour-nav-background;
     }
     li:not(.has-form) a:not(.button):hover {
-        background: #0071bc;
+        background: $colour-nav-background;
     }
-
+    li.active:not(.has-form) a:not(.button){
+      background: $colour-accent;
+    }
+    li.active:not(.has-form) a:not(.button):hover{
+      background: $colour-nav-active-hover;
+    }
 }
+
 
 .dropdown >li:not(.active) > a,
 .top-bar-section > ul > li:not(.active) > a > span {
@@ -1754,11 +1771,11 @@ body.errorController.errorAction {
 }
 
 .bd-btm {
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid $colour-border;
 }
 
 .bd-top {
-  border-top: 1px solid #fff;
+  border-top: 1px solid $colour-border;
 }
 
 h2 {
@@ -1778,13 +1795,13 @@ h2.page-title {
     display: table-cell;
     vertical-align: bottom;
     border-bottom: 0px;
-    color: #fff;
+    color: $colour-text;
     border-color: #fff;
 }
 
 h3 {
   font-family: 'Open Sans', sans-serif;
-  color: #fff;
+  color: $colour-text;
   font-size: 1.5rem;
   font-weight: 300;
   margin: 0;
@@ -1795,8 +1812,8 @@ h3 {
 
 h4 {
   font-family: 'Open Sans', sans-serif;
-  color: #fff;
-  color: rgba(255, 255, 255, 0.8);
+  color: $colour-text;
+  opacity: 0.8;
   font-size: 1rem;
   font-weight: 300;
   margin: 0;
@@ -1815,7 +1832,7 @@ h4 {
 }
 
 .presence-handle{
-  color: rgba(255, 255, 255, 0.5);
+  opacity: 0.5;
 }
 
 /* Badge CSS */
@@ -1848,7 +1865,7 @@ h4 {
 }
 
 .numerator {
-  color: #fff;
+  color: $colour-text;
 }
 
 .numerator span {
@@ -2067,8 +2084,8 @@ h4 {
 .picker label {
   font-size: 0.8rem;
   font-weight: 300;
-  color: #fff;
-  color: rgba(255, 255, 255, 0.5);
+  color: $colour-text;
+  opacity: 0.8;
   text-align: left;
 }
 
@@ -2185,7 +2202,7 @@ body .ui-daterangepicker li.ui-state-active {
 }
 
 #new-chart-values table th {
-  color: #FFF;
+  color: $colour-text;
   border-left: 1px solid white;
   border-bottom: 1px solid #AAA;
   transition: opacity .4s ease-in-out;
@@ -2288,10 +2305,10 @@ body .ui-daterangepicker li.ui-state-active {
 
 .button-bc {
   display: block;
-  background-color: transparent;
+  color: $colour-button-text !important;
+  background-color: $colour-button-background;
   border: 1px solid #fff;
   padding: 0.25rem 1rem;
-  color: #fff;
   transition: background-color 400ms ease-out, border-color 400ms ease-out;
   line-height: 1.6;
   margin-bottom: 0;
@@ -2299,7 +2316,7 @@ body .ui-daterangepicker li.ui-state-active {
 }
 
 .button-bc.primary {
-  background-color: #2ba6cb;
+  background-color: $colour-button-background;
 }
 
 .button-bc.inline {
@@ -2453,7 +2470,7 @@ table thead {
 
 table thead tr th,
 table tbody tr td {
-  color: #fff;
+  color: $colour-text;
   font-size: 1rem;
 }
 
@@ -2509,7 +2526,7 @@ table .icon-background .icon-large {
 table td a,
 table td a:link,
 table td a:visited {
-  color: #fff;
+  color: $colour-text;
 }
 
 table td a:hover {
@@ -2519,12 +2536,12 @@ table td a:hover {
 table td ul {
   margin-left: 0;
   list-style: none;
-  color: #fff;
+  color: $colour-text;
 }
 
 table td ul li a,
 table td ul li a:hover {
-  color: #fff;
+  color: $colour-text;
 }
 
 #search-result-label{
@@ -2559,24 +2576,24 @@ table td ul li a:hover {
 
 .country-list {
   list-style: none;
-  color: #fff;
+  color: $colour-text;
   margin-left: 0;
-  background: #0A3542;
+  background: $colour-background;
   padding: 2.5rem 1rem 1rem;
-  border: 1px solid white;
+  border: 1px solid $colour-border;
   z-index: 10;
   display: none;
 }
 
 .country-list li {
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid $colour-border;
   clear: both;
   margin-top: .5rem;
   position: relative;
 }
 
 .country-list li a {
-  color: #fff;
+  color: $colour-text;
   display: inline-block;
   width: 80%;
 }
@@ -2603,7 +2620,7 @@ table td ul li a:hover {
 form label,
 form p.label {
   font-size: 1rem;
-  color: #fff;
+  color: $colour-text;
   margin: 0.5rem 0;
   background-color: transparent;
   padding: 0;
@@ -2707,7 +2724,7 @@ td.countries a {
         border-bottom: 0px;
         overflow: hidden;
     }
-    
+
     .badge-score > h4{
         border-top: 1px solid #fff;
     }
@@ -2799,7 +2816,7 @@ td.countries a {
 /* tabs on right-hand-side of presence/campaign page */
 #model-tabs,
 #homepage-tabs {
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid $colour-border;
   margin-bottom: 10px !important;
 }
 
@@ -2823,7 +2840,7 @@ td.countries a {
 #model-tabs dd a,
 #homepage-tabs dd a {
   background: none;
-  color: #fff;
+  color: $colour-text;
   text-transform: uppercase;
   opacity: 0.5;
   outline: none;
@@ -2839,7 +2856,7 @@ td.countries a {
 
 #model-tabs dd.active a,
 #homepage-tabs dd.active a {
-  border-bottom-color: #2ba6cb;
+  border-bottom-color: $colour-tab-active;
   opacity: 1;
   font-weight: bold;
 }
@@ -2867,11 +2884,15 @@ ul.blockLabels {
   padding-top: 21px;
 }
 
+.kpi-download > p{
+  color: $colour-download-section;
+}
+
 .kpi-download-button {
     a{
         padding-top: 5px;
         padding-bottom: 5px;
-        background-color: $colour-highlight;
+        background-color: $colour-download-button;
         border: 1px solid transparent;
     }
     a:hover{
