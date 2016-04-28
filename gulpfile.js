@@ -1,6 +1,7 @@
 "use strict";
 
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var loadPlugins = require('gulp-load-plugins');
 var injectVariables = require('./gulp/inject-variables');
 var reshapeJsonStream = require('./gulp/reshape-json-lang-stream');
@@ -23,18 +24,23 @@ function loadColors(configFile, configPath) {
 
 	var scssDir = 'assets/scss'; // directory of scss files
 	var defaultColors = 'britishcouncil.scss'; // default color scheme
+	var defaultPath = path.join(scssDir, defaultColors); // use default file
 
 	var config = yaml.safeLoad(fs.readFileSync(configFile, 'utf8')); // load the specified config file
-	var colors = dot.pick(configPath, config); 
+	var colors = dot.pick(configPath, config);
 
+	if(!colors){
+		gutil.log(gutil.colors.red('No colorscheme defined'), '-', 'Using default');
+		return defaultPath;
+	}
+	
 	var filePath = path.join(scssDir, colors);
-
 	try{
         fs.accessSync(filePath, fs.F_OK); // check if the file exists
 	}
 	catch(err){
-		console.log(err);
-		filePath = path.join(scssDir, defaultColors); // use default file
+		gutil.log(gutil.colors.red('Colorscheme file'),gutil.colors.magenta(filePath), gutil.colors.red("not found"), "-", 'Using default');
+		filePath = defaultPath;
 	}
 
     return filePath;
