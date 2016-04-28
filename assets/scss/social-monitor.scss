@@ -206,6 +206,7 @@ fieldset {
 
 .title-area li.name h1 a {
   background: url('../img/#{$site-logo}') center center no-repeat;
+  background-color: $colour-nav-background;
   background-size: contain;
   height: 45px;
   width: 118px;
