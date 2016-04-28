@@ -28,19 +28,18 @@ function loadColors(configFile, configPath) {
 
 	var config = yaml.safeLoad(fs.readFileSync(configFile, 'utf8')); // load the specified config file
 	var colors = dot.pick(configPath, config);
-	
+
 	if(!colors){
 		gutil.log(gutil.colors.red('No colorscheme defined'), '-', 'Using default');
 		return defaultPath;
 	}
 	
 	var filePath = path.join(scssDir, colors);
-	
 	try{
         fs.accessSync(filePath, fs.F_OK); // check if the file exists
 	}
 	catch(err){
-		console.log(err);
+		gutil.log(gutil.colors.red('Colorscheme file'),gutil.colors.magenta(filePath), gutil.colors.red("not found"), "-", 'Using default');
 		filePath = defaultPath;
 	}
 
