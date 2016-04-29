@@ -266,7 +266,7 @@ class UserController extends BaseController
             if (preg_match('/.*@.*/', $this->_request->getParam('email')) === 0) {
                 $errorMessages[] = $this->translator->trans('route.user.edit.message.invalid-email'); //'Please enter a valid email address';
             } else if ($isRegistration &&
-                !$this->isBritishCouncilEmailAddress($this->_request->getParam('email'))) {
+                !$this->isValidEmailAddress($this->_request->getParam('email'))) {
                 $errorMessages[] = $this->translator->trans('route.user.edit.message.use-company-email'); //'To register, you must use a valid British Council email address';
             }
 
@@ -494,8 +494,9 @@ class UserController extends BaseController
      * @param $email
      * @return bool
      */
-    private function isBritishCouncilEmailAddress($email)
+    private function isValidEmailAddress($email)
     {
-        return (preg_match('/@britishcouncil\.[\.a-z]{2,5}$/i', $email) === 1) || (preg_match('/@outlandish.com$/i', $email) === 1);
+        $validLogin = $this->getContainer()->getParameter('email.login');
+        return (preg_match($validLogin, $email) === 1) || (preg_match('/@outlandish.com$/i', $email) === 1);
     }
 }
