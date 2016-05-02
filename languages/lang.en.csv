@@ -274,7 +274,7 @@
 "route.presence.view.info.twitter.average-score","Monthly Average Klout score: %score%%"
 "route.presence.view.info.owner-name","This channel contributes to the statistics for %link%"
 "route.presence.view.info.target-audience","The target audience size is %size%"
-"route.presence.view.info.current-audience","The target audience size is %size%"
+"route.presence.view.info.current-audience","The current audience size is %size%"
 "route.presence.view.info.time-to-target","At the current rate, the target will be reached by %date%"
 "route.presence.view.info.daily-gains","The following daily gains are required to meet the target audience size:"
 "route.presence.view.info.target-date","Target date"
