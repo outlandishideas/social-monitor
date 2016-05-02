@@ -175,7 +175,7 @@ class Provider_Twitter extends Provider_Abstract
      */
     public function getRelevantHashtags($presenceId, $start, $end){
 
-        if(!($presenceId)){
+        if(!$presenceId){
             return array();
         }
 

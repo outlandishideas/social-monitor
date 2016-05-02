@@ -11,7 +11,7 @@ class Metric_RelevantHashTags extends Metric_Abstract {
     }
 
     /**
-     * Returns 100 if presence has been signed off, else returns 0
+     * Returns the count of the relevant hashtags found
      * @param Model_Presence $presence
      * @param DateTime $start
      * @param DateTime $end
