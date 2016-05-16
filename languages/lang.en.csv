@@ -529,6 +529,14 @@
 "route.config.index.sections.engagement.yt.active-users-large","...large channels"
 "route.config.index.sections.engagement.yt.active-users-extra-large","...and extra large channels"
 
+"route.config.index.sections.engagement.number-of-posts.best.hint","The presence will get the best score if the ratio of replies to the number of posts from others falls below this number"
+"route.config.index.sections.engagement.number-of-posts.best.label","Best ratio of replies to number of posts"
+"route.config.index.sections.engagement.number-of-posts.good.hint","The presence will get a medium score if the ratio of replies to the number of posts from others falls below this number"
+"route.config.index.sections.engagement.number-of-posts.good.label","Good ratio of replies to number of posts"
+"route.config.index.sections.engagement.number-of-posts.description","The more replies that each post receives the higher the engagement score will be"
+"route.config.index.sections.engagement.number-of-posts.title","Replies to Number of Posts"
+"route.config.index.sections.engagement.number-of-posts.weighting.label","Replies to Number of Posts Weighting"
+
 "route.config.index.sections.quality.actions-per-day.title","Actions per Day"
 "route.config.index.sections.quality.actions-per-day.description","A measurement of the average number of actions per day against the benchmark"
 "route.config.index.sections.quality.actions-per-day.weighting","Actions per Day Weighting"
@@ -553,6 +561,7 @@
 "route.config.index.sections.quality.likes-per-view.good-hint","The channel will get a good score if the average likes per view is equal to or more than this"
 "route.config.index.sections.quality.likes-per-view.best-label","Best Likes per View"
 "route.config.index.sections.quality.likes-per-view.best-hint","The channel will get the best score if the average likes per view is equal to or more than this"
+
 
 "route.config.index.sections.quality.sign-off.title","Sign Off"
 "route.config.index.sections.quality.sign-off.description","The channel has been signed off by key stakeholders"

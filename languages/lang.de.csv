@@ -529,6 +529,14 @@ route.config.index.sections.engagement.yt.active-users-medium,…mittlere Reichw
 route.config.index.sections.engagement.yt.active-users-large,...Kanäle mit hoher Reichweite
 route.config.index.sections.engagement.yt.active-users-extra-large,…und Kanäle mit besonders hoher Reichweite
 
+"route.config.index.sections.engagement.number-of-posts.best.hint",""
+"route.config.index.sections.engagement.number-of-posts.best.label","Ideales Verhältnis von Antworten zu Anzahl von Postings"
+"route.config.index.sections.engagement.number-of-posts.good.hint",""
+"route.config.index.sections.engagement.number-of-posts.good.label","Gutes Verhältnis von Antworten zu Anzahl von Postings"
+"route.config.index.sections.engagement.number-of-posts.description","Je mehr Antworten jeder Post erhält, desto höher ist die Aktivitätswertung"
+"route.config.index.sections.engagement.number-of-posts.title","Antworten auf Anzahl von Postings"
+"route.config.index.sections.engagement.number-of-posts.weighting.label","Auswertung des Verhältnis von Antworten zu Anzahl von Postings"
+
 route.config.index.sections.quality.actions-per-day.title,Aktivitäten pro Tag
 route.config.index.sections.quality.actions-per-day.description,Eine Ermittlung der durchschnittlichen Aktivitäten pro Tag im Vergleich zum Bezugswert
 route.config.index.sections.quality.actions-per-day.weighting,Auswertung der Aktivitäten pro Tag
@@ -602,7 +610,7 @@ route.domain.view.linked-to-from,%sites% von %statuses% aus verlinkt
 
 
 badge.engagement.title,Aktivität
-badge.engagement.description,"<p>Der Aktivitäts-KPI ist ein Gesamtwert, wie gut der Kanal, das Land oder die SBU-Region mit seinen Nutzern interagiert. Der Wert verbindet die folgenden Angaben:</p><ul><li> Der Klout-Wert für diesen Kanal (nur Twitter).</li><li> -Der Facebook-Aktivitätswert für diesen Kanal (nur Facebook). </li><li> Der Sina Weibo Aktivitätswert für diesen Kanal (nur Sina Weibo).</li><li> Der Instagram-Aktivitätswert für diesen Kanal (nur Instagram).</li><li> Der Youtube-Aktivitätswert für diesen Kanal (nur Youtube).</li><li>Der Linkedin-Aktivitätswert für diesen Kanal (nur Linkedin)</li></ul>"""
+badge.engagement.description,"<p>Der Aktivitäts-KPI ist ein Gesamtwert, wie gut der Kanal, das Land oder die SBU-Region mit seinen Nutzern interagiert. Der Wert verbindet die folgenden Angaben:</p><ul><li> Der Klout-Wert für diesen Kanal (nur Twitter).</li><li> Der Facebook-Aktivitätswert für diesen Kanal (nur Facebook). </li><li> Der Sina Weibo Aktivitätswert für diesen Kanal (nur Sina Weibo).</li><li> Der Instagram-Aktivitätswert für diesen Kanal (nur Instagram).</li><li> Der Youtube-Aktivitätswert für diesen Kanal (nur Youtube).</li><li>Der Linkedin-Aktivitätswert für diesen Kanal (nur Linkedin)</li></ul>"
 
 badge.reach.title,Reichweite
 badge.reach.description,"<p>Der Reichweiten-KPI ist ein Gesamtwert, der ermittelt, wie gut ein Kanal, Land oder SBU seine Zielgruppe erreicht. Der Wert verbindet die folgenden Angaben:</p><ul><li>Derzeitige Anzahl von Freunden / Followern</li><li>Anzahl der Monate, in denen die Zielanzahl von Freunden / Followern erreicht wird</li><li>Durchschnittliche Anzahl geteilter Inhalte / Retweets für jedes Posting / Tweet</li></ul>"
@@ -992,7 +1000,7 @@ country.LI,Liechtenstein
 country.LT,Litauen
 country.LU,Luxemburg
 country.MO,Macao
-"country.MK,""Macedonia, the Former Yugoslav Republic of"";;""country.MK","Mazedonien, ehemalige Jugoslawische Republik"
+country.MK,"Mazedonien, ehemalige Jugoslawische Republik"
 country.MG,Madagascar
 country.MW,Malawi
 country.MY,Malaysia
@@ -1005,8 +1013,8 @@ country.MR,Mauretanien
 country.MU,Mauritius
 country.YT,Mayotte
 country.MX,Mexiko
-"country.FM,""Micronesia, Federated States of"";;""country.FM",Föderierte Staaten von Mikronesien
-"country.MD,""Moldova, Republic of"";;""country.MD",Republik Moldau (Moldawien)
+country.FM,Föderierte Staaten von Mikronesien
+country.MD,Republik Moldau (Moldawien)
 country.MC,Monaco
 country.MN,Mongolei
 country.ME,Montenegro

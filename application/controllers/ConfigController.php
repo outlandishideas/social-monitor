@@ -142,12 +142,12 @@ class ConfigController extends BaseController {
                 'kpis' => array(
 					//TODO: Remove this as we currently aren't using ResponseRatio
                     (object)array(
-                        'title' => 'Replies to Number of Posts',
-                        'description' => 'The more replies that each post receives the higher the engagement score will be',
+                        'title' => $this->translator->trans('route.config.index.sections.engagement.number-of-posts.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.engagement.number-of-posts.description'),
                         'values' => array(
-                            'replies_to_posts_weighting'=>array('label'=>' Replies to Number of Posts Weighting'),
-                            'replies_to_number_posts_best'=>array('label'=>'Best ratio of replies to number of posts', 'hint'=>'The presence will get the best score if the ratio of replies to the number of posts from others falls below this number'),
-                            'replies_to_number_posts_good'=>array('label'=>'Good ratio of replies to number of posts', 'hint'=>'The presence will get a medium score if the ratio of replies to the number of posts from others falls below this number'),
+                            'replies_to_posts_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.number-of-posts.weighting.label')),
+                            'replies_to_number_posts_best'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.number-of-posts.best.label'), 'hint'=>$this->translator->trans('route.config.index.sections.engagement.number-of-posts.best.hint')),
+                            'replies_to_number_posts_good'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.number-of-posts.good.label'), 'hint'=>$this->translator->trans('route.config.index.sections.engagement.number-of-posts.good.hint')),
                         )
                     ),
                     (object)array(
