@@ -265,13 +265,13 @@ class ConfigController extends BaseController {
                     ),
 					// TODO: Remove if we're not using this
                     (object)array(
-                        'title' => 'Links Per Day',
-                        'description' => 'Measures the average number of links used within posts per day',
+                        'title' => $this->translator->trans('route.config.index.sections.quality.links-per-day.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.quality.links-per-day.description'),
                         'values' => array(
-                            'links_per_day_weighting'=>array('label'=>'Links Per Day Weighting'),
-                            'links_per_day'=>array('label'=>'Links Per Day'),
-                            'links_per_day_ok_range'=>array('label'=>'Links Per Day OK range', 'hint'=>'Number above or below [links per day] that is considered OK'),
-                            'links_per_day_bad_range'=>array('label'=>'Links Per Day bad range', 'hint'=>'Number above or below [links per day] that is considered too much or too little'),
+                            'links_per_day_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.links-per-day.weighting')),
+                            'links_per_day'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.links-per-day.label')),
+                            'links_per_day_ok_range'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.links-per-day.good.label'), 'hint'=>$this->translator->trans('route.config.index.sections.quality.links-per-day.good.hint')),
+                            'links_per_day_bad_range'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.links-per-day.bad.label'), 'hint'=>$this->translator->trans('route.config.index.sections.quality.links-per-day.bad.hint')),
                         )
                     ),
                     (object)array(

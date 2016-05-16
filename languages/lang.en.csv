@@ -578,6 +578,15 @@
 "route.config.index.sections.quality.relevance.twitter-target","Percent of Actions Per Day that should be relevant for Twitter"
 "route.config.index.sections.quality.relevance.sina-weibo-target","Percent of Actions Per Day that should be relevant for Sina Weibo"
 
+"route.config.index.sections.quality.links-per-day.title","Links Per Day"
+"route.config.index.sections.quality.links-per-day.description","Measures the average number of links used within posts per day"
+"route.config.index.sections.quality.links-per-day.weighting","Links Per Day Weighting"
+"route.config.index.sections.quality.links-per-day.label","Links Per Day"
+"route.config.index.sections.quality.links-per-day.good.hint","Number above or below [links per day] that is considered OK"
+"route.config.index.sections.quality.links-per-day.good.label","Links Per Day OK range"
+"route.config.index.sections.quality.links-per-day.bad.label","Links Per Day bad range"
+"route.config.index.sections.quality.links-per-day.bad.hint","Number above or below [links per day] that is considered too much or too little"
+
 "route.config.index.sections.all.weighting-hint","A higher weighting will make this metric more important when calculating the score for the %section% Badge"
 "route.config.index.numeric-error","Value must be numeric"
 "route.config.index.email-error","This email address %email% is considered invalid."

@@ -485,8 +485,8 @@ route.config.index.sections.engagement.response-time.good-label,Gute Reaktionsze
 route.config.index.sections.engagement.response-time.bad-label,Schlechte Reaktionszeiet (Stunden)
 route.config.index.sections.engagement.klout.title,Klout-Wert (nur Twitter)
 route.config.index.sections.engagement.klout.description,"Der Klout-Wert ist eine Messung eines externen Dienstleisters, die die Interaktion mit Ihrer Zielgruppe bewertet (nur Twitter)"
-route.config.index.sections.engagement.klout.weighting
-route.config.index.sections.engagement.klout.target-label
+route.config.index.sections.engagement.klout.weighting,Auswertung Klout-Wert
+route.config.index.sections.engagement.klout.target-label,Idealer Klout-Wert
 route.config.index.sections.engagement.klout.target-hint,"Der Kanal erreicht 100%,wenn er diesen Zielwert erreicht oder überschreitet,jedoch nur 0%,""wenn er ihn nicht erreicht."
 
 route.config.index.sections.engagement.fb.title,Facebook-Aktivitätswert (nur Facebook)
@@ -494,7 +494,7 @@ route.config.index.sections.engagement.fb.description,"Der Facebook-Aktivitätsw
 route.config.index.sections.engagement.fb.weighting,Auswertung des Facebook-Aktivitätswerts
 route.config.index.sections.engagement.fb.active-users-small,"Prozentsatz der Benutzer, die vermutlich auf Kanälen mit geringer Reichweiter aktiv sind"
 route.config.index.sections.engagement.fb.active-users-medium,Kanäle mit mittlerer Reichweite
-route.config.index.sections.engagement.fb.active-users-large
+route.config.index.sections.engagement.fb.active-users-large, ...große Kanäle
 route.config.index.sections.engagement.fb.active-users-extra-large,… und Kanäle mit besonders hoher Reichweite
 
 route.config.index.sections.engagement.ig.title,Instagram-Aktivitätswert (nur Instagram)
@@ -515,7 +515,7 @@ route.config.index.sections.engagement.sw.active-users-extra-large,…und Kanäl
 
 route.config.index.sections.engagement.in.title,LinkedIn Aktivitätswert (nur LinkedIn)
 route.config.index.sections.engagement.in.description,Der LinkedIn-Aktivitätswert basiert auf Gefällt-mir-Angaben und Kommentaren
-route.config.index.sections.engagement.in.weighting
+route.config.index.sections.engagement.in.weighting, Auswertung des LinkedIn Aktivitätswert
 route.config.index.sections.engagement.in.active-users-small,"Prozentzahl der Nutzer, die vermutlich auf kleinen Kanälen aktiv sind"
 route.config.index.sections.engagement.in.active-users-medium,Kanäle mit mittlerer Reichweite
 route.config.index.sections.engagement.in.active-users-large,Kanäle mit hoher Reichweite
@@ -543,7 +543,7 @@ route.config.index.sections.quality.actions-per-day.weighting,Auswertung der Akt
 route.config.index.sections.quality.actions-per-day.target-label,Aktivitäten pro Tag
 route.config.index.sections.quality.actions-per-day.ok-range-label,Akzeptabler Bereich der Aktivitäten pro Tag
 route.config.index.sections.quality.actions-per-day.ok-range-hint,"Anzahl über oder unter dem Wert [Aktivitäten pro Tag], die im aktzeptablen Bereich liegt"
-route.config.index.sections.quality.actions-per-day.bad-range-label,schlechter Aktivitätswert pro Tag
+route.config.index.sections.quality.actions-per-day.bad-range-label,Schlechter Aktivitätswert pro Tag
 route.config.index.sections.quality.actions-per-day.bad-range-hint,"Anzahl über oder unter dem Wert [Aktivitäten pro Tag], die als zu viel oder zu wenig gilt"
 
 route.config.index.sections.quality.likes-per-post.title,Gefällt-mir-Angaben pro Posting
@@ -551,7 +551,7 @@ route.config.index.sections.quality.likes-per-post.description,Misst die durchsc
 route.config.index.sections.quality.likes-per-post.weighting,Gefällt-mir-Angaben pro Posting Auswertung
 route.config.index.sections.quality.likes-per-post.good-label,Guter Wert für Gefällt-mir-Angaben pro Posting
 route.config.index.sections.quality.likes-per-post.good-hint,"Der Kanal wird gut bewertet, wenn die durchschnittliche Anzahl der Postings genauso hoch oder höher liegt"
-route.config.index.sections.quality.likes-per-post.best-label
+route.config.index.sections.quality.likes-per-post.best-label,Bester Wert für Gefällt-mir-Angaben pro Posting
 route.config.index.sections.quality.likes-per-post.best-hint,"Der Kanal wird am besten bewertet, wenn die Anzahl der Gefällt-mir-Angaben pro Posting so hoch oder höher ist"
 
 route.config.index.sections.quality.likes-per-view.title,Gefällt-mir-Angaben pro Aufruf
@@ -576,6 +576,15 @@ route.config.index.sections.quality.relevance.weighting,Auswertung der Relevanz
 route.config.index.sections.quality.relevance.facebook-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Facebook relevant sind"
 route.config.index.sections.quality.relevance.twitter-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Twitter relevant sind"
 route.config.index.sections.quality.relevance.sina-weibo-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Sina Weibo relevant sind"
+
+"route.config.index.sections.quality.links-per-day.title","Links pro Tag"
+"route.config.index.sections.quality.links-per-day.description","Misst die durchschnittliche Anzahl der benutzten Links pro Posting pro Tag"
+"route.config.index.sections.quality.links-per-day.weighting","Links pro Tag"
+"route.config.index.sections.quality.links-per-day.label","Links pro Tag"
+"route.config.index.sections.quality.links-per-day.good.hint","Anzahl über oder unter dem Wert [Links pro Tag] die im guten Bereich liegt"
+"route.config.index.sections.quality.links-per-day.good.label","Gute Anzahl an Links pro Tag"
+"route.config.index.sections.quality.links-per-day.bad.label","Schlechte Anzahl an Links pro Tag"
+"route.config.index.sections.quality.links-per-day.bad.hint","Anzahl über oder unter dem Wert [Links pro Tag] die für zu hoch oder zu gering gehalten wird"
 
 route.config.index.sections.all.weighting-hint,Durch eine höhere Bewertung wird dieser Zahl bei der Berechnung des Zielwerts für den %section% Kennwert wichtiger
 route.config.index.numeric-error,Wert muss numerisch sein
