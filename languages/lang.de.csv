@@ -1,363 +1,1167 @@
 "key","plural1","plural2","plural3","plural4","plural5","plural6","value"
 "do not remove or edit row above, even though it looks wrong"
 
-"Global.score","Wertung"
-"Global.loading-data","Lade daten..."
-"Global.add","Hinzufügen"
-"Global.edit","Editieren"
-"Global.display-name","Namen anzeigen"
-"Global.delete","Löschen"
-"Global.click-to-expand","Zum Ausklappen klicken"
-"Global.region","Region"
-"Global.country","Land"
-"Global.countries","Länder"
-"Global.group","SBU"
-"Global.groups","SBUs"
-"Global.presence","Auftritt"
-"Global.presences","Auftritte"
-"Global.select","Auswahl"
-"Global.select-placeholder","-- Auswahl --"
-"Global.save","Speichern"
-"Global.no","Nein"
-"Global.yes","Ja"
-"Global.password","Passwort"
-"Global.send","Senden"
-"Global.name","Name"
-"Global.user","Benutzername"
-"Global.email","Email"
-"Global.password-confirm","Passwort (nochmal)"
-"Global.available-countries","Verfügbare Länder"
-"Global.rank","Rang"
+Global.score,Wert
+Global.loading-data,Daten werden geladen…
+Global.add,Hinzufügen
+Global.edit,Bearbeiten
+Global.display-name,Benutzername
+Global.delete,Löschen
+Global.click-to-expand,Zum Vergrößern klicken
+Global.region,Region
+Global.country,Land
+Global.countries,Länder
+Global.group,SBU
+Global.groups,SBUs
+Global.presence,Kanal
+Global.presences,Kanäle
+Global.select,Auswählen
+Global.select-placeholder,--Auswählen--
+Global.no,Nein
+Global.yes,Ja
+Global.password,Passwort
+Global.send,Senden
+Global.name,Name
+Global.user,Benutzername
+Global.email,E-Mail
+Global.password-confirm,Passwort (noch einmal)
+Global.available-countries,Verfügbare Länder
+Global.rank,Rang
+
+Global.tabs.info.label,Info
+
+Global.tabs.charts.label,Ansichten
+Global.tabs.charts.unavailable,Leider ist diese Ansicht auf Ihrem Gerät nicht verfügbar
+Global.tabs.charts.chart.label,Ansicht
+Global.tabs.charts.date-range.label,Datumszeitraum
+
+Global.tabs.statuses.label,Postings
+
+
+
+
+navigation-menu.users,Benutzer
+navigation-menu.account,Konto
+navigation-menu.edit-users,Benutzer bearbeiten
+navigation-menu.sign-out,Abmelden
+navigation-menu.settings,Einstellungen
+navigation-menu.user,Benutzer
+navigation-menu.home,Startseite
+navigation-menu.regions,Regionen
+navigation-menu.countries,Länder
+navigation-menu.sbus,SBUs
+navigation-menu.presences,Kanäle
+navigation-menu.domains,Domains
+navigation-menu.statuses,Postings
+navigation-menu.login,Login
+navigation-menu.register,Anmelden
+
+
+
+
+Base.layout.feedback-button,Feedback
+Base.layout.feedback-modal.title,Feedback-Formular
+Base.layout.feedback-modal.subtitle,Jede Art von Feedback ist willkommen.Bitte teilen Sie uns Ihre Meinung mit
+Base.layout.feedback-modal.name-label,Ihr Name
+Base.layout.feedback-modal.name-placeholder,Vor- und Nachnamen eingeben
+Base.layout.feedback-modal.email-label,Ihre E-Mail-Adresse
+Base.layout.feedback-modal.email-placeholder,Geben Sie Ihre E-Mail-Adresse ein
+Base.layout.feedback-modal.message-label,Ihre Nachricht
+Base.layout.feedback-modal.message-placeholder,Geben Sie Ihre Nachricht ein (max. 1000 Zeichen)
+Base.layout.feedback-modal.submit,Formular absenden
+Base.layout.feedback-modal.close,Beenden
+
+
+
+
+route.base.fetch-lock.day,eins: 1 Tag,mehr:%amount% Tage
+route.base.fetch-lock.hour,eins: 1 Stunde,mehr:%amount% Stunden
+route.base.fetch-lock.min,eins: 1 Min.,mehr:%amount% Min.
+route.base.fetch-lock.sec,eins:1 Sek.,mehr:%amount% Sek.
+
+
+
+
+route.index.index.page-title,Social Media Monitor
+route.index.index.find-country,Suche
+route.index.index.date-range,Zeige Daten an für
+route.index.index.pdf-download-description,Diese Werte basieren auf der Social Media Auswertung der Organisation.<br /> Hier können Sie sich ein PDF mit Erklärungen dazu herunterladen:
+route.index.index.pdf-download-link,Hier können Sie sich die Kennzahlen herunterladen
+route.index.index.pdf-download-link-title,Info-PDF herunterladen
+route.index.index.contextual-help.page-title,"Wählen Sie Reichweite, Aktivität, Qualität oder Gesamt um Details zu jedem Land bzw. jeder SBU-Region zu erfahren."
+route.index.index.contextual-help.date-range,"Bewegen Sie den Datumsanzeiger, um die letzten Entwicklungen der Werte für jedes Land bzw. jede SBU-Region zu sehen."
+route.index.index.contextual-help.map,"Klicken Sie auf die Karte, um ein Land auszuwählen und eine Vorschau auf die einzelnen Social Media Kanäle  zu erhalten."
+route.index.index.search-result-label
+
+
+buttons.common.delete,Löschen
+buttons.common.edit,Bearbeiten
+buttons.common.edit-all,Alles bearbeiten
+buttons.common.download-csv,Download CSV
+buttons.common.download-report,Bericht herunterladen
+buttons.common.save,Speichern
+buttons.common.cancel,Beenden
+buttons.common.add-new,Neu hinzufügen
+buttons.common.manage-presences,Kanäle
+buttons.common.manage-countries,Länder
 
-"navigation-menu.users","Benutzer"
-"navigation-menu.account","Account"
-"navigation-menu.edit-users","Benutzer bearbeiten"
-"navigation-menu.sign-out","Ausloggen"
-"navigation-menu.settings","Einstellungen"
-"navigation-menu.user","Benutzer"
-"navigation-menu.home","Startseite"
-"navigation-menu.regions","Regionen"
-"navigation-menu.countries","Länder"
-"navigation-menu.sbus","SBUs"
-"navigation-menu.presences","Auftritte"
-"navigation-menu.domains","Domains"
-"navigation-menu.statuses","Status"
-"navigation-menu.login","Einloggen"
-"navigation-menu.register","Registrieren"
+buttons.region.edit,Region bearbeiten
+buttons.region.delete,Region löschen
+buttons.region.manage,Länder verwalten
+buttons.region.view,Region ansehen
 
+buttons.country.edit,Land bearbeiten
+buttons.country.delete,Land löschen
+buttons.country.manage,Kanäle verwalten
+buttons.country.view,Land ansehen
 
+buttons.group.edit,SBU bearbeiten
+buttons.group.delete,SBU löschen
+buttons.group.manage,Kanäle verwalten
+buttons.group.view,SBU ansehen
 
+buttons.presence.edit,Kanal bearbeiten
+buttons.presence.delete,Kanal löschen
+buttons.presence.view,Kanal ansehen
 
-"Base.layout.feedback-button","Feedback"
-"Base.layout.feedback-modal.title","Feedback Formular"
-"Base.layout.feedback-modal.subtitle","Ihr Feedback ist uns wichtig. Bitte teilen Sie uns ihre Wünsche und Vorschläge mit."
-"Base.layout.feedback-modal.name-label","Ihr Name"
-"Base.layout.feedback-modal.name-placeholder","Geben Sie ihren Vor- und Nachnamen ein"
-"Base.layout.feedback-modal.email-label","Ihre Email"
-"Base.layout.feedback-modal.email-placeholder","Bitte geben Sie ihre Email ein"
-"Base.layout.feedback-modal.message-label","Ihre Nachricht"
-"Base.layout.feedback-modal.message-placeholder","Bitte geben Sie ihre Nachricht ein (max. 1000 Buchstaben)"
-"Base.layout.feedback-modal.submit","Absenden"
-"Base.layout.feedback-modal.close","Abbrechen"
 
+route.region.index.page-title,Regionen
+route.region.index.empty-table,Keine Regionen gefunden
 
+route.region.new.page-title,Neue Region
 
+route.region.delete.message.success,Region gelöscht
 
-"route.index.index.page-title","Social Media Monitor"
-"route.index.index.find-country","Suchen"
-"route.index.index.pdf-download-description","Diese Statistiken sind von den Social Media Metriken des Unternehmens bezogen.<br />Sie könnnen eine PDF zur Erklärung hier herunterladen:"
-"route.index.index.pdf-download-link","Erklärung zu den Metriken herunterladen"
-"route.index.index.pdf-download-link-title","PDF mit Metriken herunterladen"
-"route.index.index.contextual-help.page-title","Wählen sie aus Reichweite, Engagement, Qualität oder Gesamt um zu sehen wie verschiedene Länder abschneiden."
-"route.index.index.contextual-help.map","Click on the map to select a country and preview the individual social media presences."
-"route.index.index.contextual-help.map","Wählen Sie ein Land auf der Karte aus um die unterschiedlichen Social Media Auftritte anzuzeigen"
-"route.index.index.search-result-label","Suchergebnisse:"
+route.region.view.page-title,Region: %region%
+route.region.view.info.presences.header
 
+route.region.edit.page-title,Region bearbeiten
+route.region.edit.message.success,Region gespeichert
+route.region.edit.message.display-name-missing,Bitte Benutzernamen eingeben
+route.region.edit.label.name,Name
 
+route.region.edit-all.page-title,Alle Regionen bearbeiten
+route.region.edit-all.empty-table,Keine Regionen gefunden
+route.region.edit-all.message.display-name-missing
+route.region.edit-all.message.success,%count% Regionen gespeichert
+route.region.edit-all.table-header.display-name,Benutzername
 
+route.region.graph-data.message.not-found,Region wurde nicht gefunden
 
-"buttons.common.cancel","Abbrechen"
+route.region.manage.page-title,Verwalte Regionen: %region%
+route.region.manage.message.success,Länder der Region aktualisiert
 
-"buttons.region.edit","Region bearbeiten"
-"buttons.region.delete","Region löschen"
-"buttons.region.manage","Länder verwalten"
-"buttons.region.view","Region anzeigen"
+Route.region.report.page-titel,Social Media Monitor Report
+route.region.report.countries.header,Länder: %count%
+route.region.report.presences.header,Kanäle: %count%
 
-"buttons.country.edit","Land bearbeiten"
-"buttons.country.delete","Land löschen"
-"buttons.country.manage","Auftritte verwalten"
-"buttons.country.view","Land anzeigen"
 
-"buttons.group.edit","SBU bearbeiten"
-"buttons.group.delete","SBU löschen"
-"buttons.group.manage","SBU verwalten"
-"buttons.group.view","SBU anzeigen"
 
-"buttons.presence.edit","Auftritt editieren"
-"buttons.presence.delete","Auftritt löschen"
-"buttons.presence.view","Präsenz anzeigen"
 
+route.country.index.page-title,Länder
+route.country.index.empty-table,Keine Länder gefunden
 
+route.country.new.page-title,Neues Land
 
-"route.region.index.page-title","Regionen"
-"route.region.index.empty-table","Es konnten keine Regionen gefunden werden"
+route.country.view.page-title,Land: %country%
+route.country.view.info-panel.containing-region,Teil der %region% Region
+route.country.view.info-panel.audience-size,Verfügbare Besuchermenge: %size%
+route.country.view.info-panel.country-population,Bevölkerungszahl Land: %population%
+route.country.view.info-panel.digital-population,Digitale Zielgruppe: %population% (%percent%)
 
-"route.region.new.page-title","Neue Region"
+route.country.edit.page-title,Land bearbeiten
+route.country.edit.message.success,Land gespeichert
+route.country.edit.message.display-name-missing,Bitte Benutzernamen eingeben
+route.country.edit.message.country-missing,Bitte Land auswählen
+route.country.edit.label.country,Land
+route.country.edit.label.display-name,Benutzername
+route.country.edit.label.audience-size,Verfügbare Besuchermenge
+route.country.edit.label.country-population,Bevölkerungszahl Land
+route.country.edit.label.internet-penetration,Internet Reichweite (%)
 
-"route.region.view.page-title","Region: %region%"
+route.country.edit-all.page-title,Alle Länder bearbeiten
+route.country.edit-all.empty-table,Keine Länder gefunden
+route.country.edit-all.message.success,%count% Länder gespeichert
+route.country.edit-all.message.display-name-missing,Bitte Benutzernamen eingeben für %country%
+route.country.edit-all.message.country-missing,Bitte Land auswählen für %country%
+route.country.edit-all.table-header.country,Land
+route.country.edit-all.table-header.display-name,Benutzername
+route.country.edit-all.table-header.audience-size,Besuchermenge
+route.country.edit-all.table-header.country-population
+route.country.edit-all.table-header.internet-penetration,Internetreichweite
 
-"route.region.edit.page-title","Region bearbeiten"
-"route.region.edit.message.success","Region gespeichert"
-"route.region.edit.message.display-name-missing","Bitte geben Sie einen Namen an"
+route.country.delete.message.success,Land gelöscht
 
-"route.region.edit-all.page-title","Alle Regionen bearbeiten"
-"route.region.edit-all.message.display-name-missing","Bitte geben sie einen Namen für die Region %region% an"
-"route.region.edit-all.message.success","%count% Regionen gespeichert"
+route.country.graph-data.message.not-found,Land wurde nicht gefunden
 
-"route.region.delete.message.success","Region gelöscht"
+route.country.manage.page-title,Kanäle verwalten
+route.country.manage.message.success,Länderkanäle aktualisiert
 
-"route.region.graph-data.message.not-found","Region konnte nicht gefunden werden"
+route.country.report.page-title,Social Media Monitor Report
+route.country.report.label.additional-info,Zusatzinformationen
+route.country.report.label.containing-region,Teil der %region% Region
+route.country.report.label.audience-size,Verfügbare Besuchermenge
+route.country.report.label.country-population,Land Bevölkerung
+route.country.report.label.digital-population,Digitale Besucherzahl
+route.country.report.label.presence-count,Kanäle:%count%
 
-"route.region.manage.page-title","Länder verwalten: %region%"
-"route.region.manage.message.success","Region countries updated"
+route.country.stats-panel.header.score,Wert
+route.country.stats-panel.header.presences,Kanäle
 
-"route.region.report.page-title","Social Media Monitor Bericht"
 
 
 
-"route.country.index.page-title","Länder"
-"route.country.index.empty-table","Es konnten keine Länder gefunden werden"
+route.feedback.index.error.missing-name,Bitte Namen eingeben.
+route.feedback.index.error.missing-email,Bitte eine gültige E-Mail-Adresse eingeben.
+route.feedback.index.error.missing-message,Bitte Ihre Nachricht eingeben.
+route.feedback.index.email-subject,Social Monitor Feedback von %name%
 
-"route.country.new.page-title","Neues Land"
 
-"route.country.view.page-title","Land: %country%"
 
-"route.country.edit.page-title","Land bearbeiten"
-"route.country.edit.message.success","Land gespeichert"
-"route.country.edit.message.display-name-missing","Bitte geben Sie einen Namen an"
-"route.country.edit.message.country-missing","Bitte wählen Sie ein Land aus"
 
-"route.country.edit-all.page-title","Alle Länder bearbeiten"
-"route.country.edit-all.message.success","%count% Länder gespeichert"
-"route.country.edit-all.message.display-name-missing","Bitte wählen Sie einen Namen für %country%"
-"route.country.edit-all.message.country-missing","Bitte wählen Sie ein Land für %country%"
 
-"route.country.delete.message.success","Land gelöscht"
+route.group.index.page-title,SBUs
+route.group.index.empty-table,Keine SBUs gefunden
 
-"route.country.graph-data.message.not-found","Land konnte nicht gefunden werden"
+route.group.new.page-title,Neue SBU
 
-"route.country.manage.page-title","Auftritte verwalten"
-"route.country.manage.message.success","Auftritt des Landes aktualisiert"
+route.group.view.page-title,SBU: %group
+route.group.view.info-panel.presences,Kanäle: %count%
 
-"route.country.report.page-title","Social Media Monitor Bericht"
-"route.country.report.label.additional-info","Zusätzliche Informationen"
+route.group.edit.page-title,SBU bearbeiten
+route.group.edit.message.success,SBU gespeichert
+route.group.edit.message.display-name-missing,Bitte einen Benutzernamen eingeben
+route.group.edit.label.display-name
+route.group.edit.label.audience-size,Verfügbare Besuchermenge
 
+route.group.edit-all.page-title,alle SBUs bearbeiten
+route.group.edit-all.empty-table,Keine SBUs gefunden
+route.group.edit-all.message.display-name-missing,Bitte Benutzernamen für %group% eingeben
+route.group.edit-all.message.success,%count% SBUs gespeichert
+route.group.edit-all.table-header.display-name,Benutzername
+route.group.edit-all.table-header.audience-size,Besuchermenge
 
+route.group.delete.message.success,SBU gelöscht
 
+route.group.graph-data.message.not-found,SBU wurde nicht gefunden
 
-"route.feedback.index.error.missing-name","Bitte geben Sie ihren Namen ein."
-"route.feedback.index.error.missing-email","Bitte geben Sie eine gültige Email Addresse ein."
-"route.feedback.index.error.missing-message","Bitte geben Sie ihre Nachricht ein."
-"route.feedback.index.email-subject","Social Monitor Rückmeldung von %name%"
+route.group.manage.page-title,Kanäle Verwalten: %group%
+route.group.manage.message.success,SBU Kanäle aktualisiert
 
+route.group.report.page-title,Social Media Monitor Report
+route.group.report.presence.header,Kanäle: %count%
 
 
 
-"route.group.index.page-title","SBUs"
-"route.group.index.empty-table","Keine SBUs gefunden"
 
-"route.group.new.page-title","Neue SBU"
+route.presence.index.page-title,Kanäle
+route.presence.index.table-empty
 
-"route.group.view.page-title","SBU: %group%"
+route.presence.new.page-title,Neuer Kanal
 
-"route.group.edit.page-title","SBU bearbeiten"
-"route.group.edit.message.success","SBU gespeichert"
-"route.group.edit.message.display-name-missing","Bitte geben Sie einen Namen ein"
+route.presence.delete.message.success,Kanal gelöscht
 
-"route.group.edit-all.page-title","Alle SBUs bearbeiten"
-"route.group.edit-all.message.display-name-missing","Bitte geben Sie einen Namen für %group% ein"
-"route.group.edit-all.message.success","%count% SBUs gespeichert"
+route.presence.assign.message.success
+route.presence.assign.message.failure,Kanal konnte keinem Benutzer zugewiesen werden
 
-"route.group.delete.message.success","SBU gelöscht"
+route.presence.graph-data.message.not-found,Kanal wurde nicht gefunden
 
-"route.group.graph-data.message.not-found","SBU konnte nicht gefunden werden"
+route.presence.view.page-title,Kanal: %presence%
+route.presence.view.info.presence-type,Dies ist ein %type% Kanal
+route.presence.view.info.presence.score,Beteiligungswert von %type% gestern:
+route.presence.view.info.presence.average-score,Durchschnittlicher %type% monatlicher Beteiligungswert: %score%
+route.presence.view.info.twitter.score,Klout Wert von gestern:%score%%
+route.presence.view.info.twitter.average-score,Durchschnittlicher monatlicher Klout Wert: %score%
+route.presence.view.info.owner-name,Dieser Kanal umfasst die Statistiken für %link%
+route.presence.view.info.target-audience,Die Größe der Zielgruppe beträgt %size%
+route.presence.view.info.current-audience,Die Größe der Zielgruppe beträgt %size%
+route.presence.view.info.time-to-target,Bei den momentanen Zahlen wird das Ziel erreicht sein am %date%
+route.presence.view.info.daily-gains,"Die folgenden Kontakte pro Tag sind nötig, um diese Zielgruppengröße abzudecken:"
+route.presence.view.info.target-date,Zieldatum
+route.presence.view.info.gain-per-day,Erforderliche Kontakte pro Tag
+route.presence.view.statuses.table-header.content,Inhalt
 
-"route.group.manage.page-title","Auftritte verwalten: %group%"
-"route.group.manage.message.success","SBU Auftritt aktualisiert"
+route.presence.edit.page-title,Kanal bearbeiten
+route.presence.edit.message.success,Kanal gespeichert
+route.presence.edit.message.already-exists,Kanal existiert bereits
+route.presence.edit.message.missing-handle,Bitte anderen Identifikator eingeben
+route.presence.edit.message.missing-type,Bitte einen Typ wählen
+route.presence.edit.label.handle,Kanal
+route.presence.edit.label.type,Typ
+route.presence.edit.label.size,Größe
+route.presence.edit.label.signed-off,Abgemeldet
+route.presence.edit.label.branding,Branding
+route.presence.edit.hint.connect-account,Bitte verbinden Sie Ihren Account mit %title%
+route.presence.edit.hint.handle.facebook,"Für www.facebook.com/<strong>platform</strong> ist der Kennwert <strong>platform</strong><br/> Für Seiten ohne Vanity-URLs ist der Kennwert die lange Zahlenfolge in der URL, z.B. www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>"
+route.presence.edit.hint.handle.twitter,Für www.twitter.com/<strong>platform</strong> ist der Kennwert <strong>platform</strong>
+route.presence.edit.hint.handle.instagram,Für www.instagram.com/<strong>platform</strong> ist der Kennwert <strong>platform</strong>
+route.presence.edit.hint.handle.youtube,Für www.youtube.com/channel/<strong>platform</strong> ist der Kennwert <strong>platform</strong>
+route.presence.edit.hint.handle.linkedin,"Benutzen Sie den Firmennamen so, wie er auf dieser Seite erscheint, z.B. für <a href=""https://www.linkedin.com/company/1337"" target=""_blank"">LinkedIn</a> benutzen Sie '<strong>LinkedIn</strong>'"
+route.presence.edit.hint.handle.sinaweibo,"Benutzen Sie den Firmennamen so wie er auf dieser Seite erscheint. Z.B. für <a href=""http://www.weibo.com/u/2463797455"" target=""_blank"">BBC World</a> benutzen Sie '<strong>BBCWorld</strong>'"
+route.presence.edit.hint.size,"Die Größe eines Kanals hat Auswirkungen auf die Auswertung eines Kanals bei der Ermittlung der Beliebtheit des Ziels.<br/>Die Größe beeinflusst nur die zur SBU-Region gehörenden Kanäle.<br/>Große Kanäle in einer SBU-Region nehmen innerhalb der SBU-Zielgruppe einen höheren Anteil ein, mittlere Kanäle einen kleineren."
+route.presence.edit.access-token.title,"Token zugänglich machen, um Daten zu erfassen."
+route.presence.edit.access-token.message,Diese Art von Kanal erfordert ein Zugangs-Token
+route.presence.edit.access-token.has-user.message,Dieser Kanal benutzt momentan das Zugangs-Token folgenden Benutzers: <strong>%name%</strong>
+route.presence.edit.access-token.no-user.message,Dieser Kanal hat momentan kein Zugangs-Token u nd kann daher nicht erreicht werden
+route.presence.edit.access-token.button,Benutzen Sie Ihr Zugangs-Token
 
-"route.group.report.page-title","Social Media Monitor Report"
+route.presence.report.page-title,Social Media Monitor Report
+route.presence.report.presence.header
 
 
 
 
-"route.presence.index.page-title","Auftritte"
-"route.presence.index.table-empty","Es konnten keine Auftritte gefunden werden"
+route.user.index.page-title,Benutzer
 
-"route.presence.new.page-title","Neuer Auftritt"
+route.user.linkedin.page-title,auf LinkedIn einloggen
+route.user.linkedin.message.success
 
-"route.presence.delete.message.success","Auftritt gelöscht"
+route.user.login.page-title,Login
+route.user.login.message.cannot-login,Ungültiger Benutzername/Passwort oder E-Mail-Adresse nicht bestätigt worden
 
-"route.presence.assign.message.success","Der Auftritt wurde dem Benutzer zugewiesen"
+route.user.logout.message.success,ausgeloggt
 
-"route.presence.view.page-title","Auftritt: %presence%"
-"route.presence.view.info.presence-type","Dies ist ein %type% Auftritt"
-"route.presence.view.info.presence.score","Die %type% Engagement Wertung von gestern: %score%%"
-"route.presence.view.info.presence.average-score","Monatlich durchschnittliche %type% Wertung: %score%%"
-"route.presence.view.info.twitter.score","Klout Wertung von gestern: %score%%"
-"route.presence.view.info.twitter.average-score","Monatlich durchschnittliche Klout Wertung von: %score%%"
-"route.presence.view.info.owner-name","Dieser Auftritt trägt zu der Statistik für %link% bei"
-"route.presence.view.info.target-audience","Die Größe der Zielgruppe beträgt %size%"
-"route.presence.view.info.current-audience","Die Größe der Zielgruppe beträgt %size%"
-"route.presence.view.info.time-to-target","Bei der aktuellen Rate wird das Ziel am %date% erreicht sein"
-"route.presence.view.info.daily-gains","Der folgende Zuwachs pro Tag ist nötig um die geplante Zielgruppengröße zu erreichen:"
-"route.presence.view.info.gain-per-day","Benötigter Zuwachs pro Tag"
+route.user.delete.message.success,Benutzer gelöscht
 
-"route.presence.compare.page-title","Vergleichen von %count% Auftritten"
-"route.presence.compare.presence-handle","Handle"
-"route.presence.compare.table-empty","Keine Auftritte gefunden"
-"route.presence.compare.button.create-sbu","SBU erstellen"
-"route.presence.compare.chart-title","Wertung der letzten 30 Tage:"
+route.user.forgotten.page-title,Passwort vergessen
+route.user.forgotten.message.missing-username-email,Bitte Benutzernamen oder E-Mail-Adresse eingeben
+route.user.forgotten.message.user-not-found,Benutzer konnte nicht gefunden werden
+route.user.forgotten.message.password-reset-email-sent,Sie erhalten in Kürze eine E-Mail mit einem Link zum Passwort-Reset
+route.user.forgotten.message.password-reset-failed-email,"Reset-E-Mail konnte nicht gesendet werden.<br /> Bitten Sie einen Benutzeradministrator, Ihr Passwort zurückzusetzen."
 
-"route.presence.edit.page-title","Auftritt bearbeiten"
-"route.presence.edit.message.success","Auftritt gespeichert"
-"route.presence.edit.label.handle","Name"
-"route.presence.edit.label.type","Typ"
-"route.presence.edit.label.size","Größe"
-"route.presence.edit.label.signed-off","Signed Off"
-"route.presence.edit.label.branding","Branding"
-"route.presence.edit.hint.connect-account","Bitte verbinden Sie ihren Account mit %title%"
-"route.presence.edit.hint.handle.facebook","For www.facebook.com/<strong>platform</strong> the handle is '<strong>platform</strong>'<br/>For pages without vanity URLs, the handle is the long number in the URL, eg www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>"
-"route.presence.edit.hint.handle.twitter","For www.twitter.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
-"route.presence.edit.hint.handle.instagram","For www.instagram.com/<strong>platform</strong> the handle is '<strong>platform</strong>'"
-"route.presence.edit.hint.handle.youtube","For www.youtube.com/channel/<strong>platform</strong> the handle is '<strong>platform</strong>'"
-"route.presence.edit.hint.handle.linkedin","Use the name of the company, as it appears on its page. E.g. for <a href=""https://www.linkedin.com/company/1337"" target=""_blank"">LinkedIn themselves</a>, the handle is '<strong>LinkedIn</strong>'"
-"route.presence.edit.hint.handle.sinaweibo","Use the name of the account, as it appears on its page. E.g. for <a href=""http://www.weibo.com/u/2463797455"" target=""_blank"">BBC World</a>, the handle is '<strong>BBCWorld</strong>'"
-"route.presence.edit.hint.size","Size will affect the weighting of a presence when calculating the target for its popularity.<br/>Size will only affect presences that belong to SBU.<br/>Large presences in an SBU will take a larger share of the SBU's target population, Medium presences a smaller share, and Small presences an even smaller share."
-"route.presence.edit.access-token.title","Access Token"
-"route.presence.edit.access-token.message","Diese Art von Auftritt benötigt ein Access Token um die Daten zu laden"
-"route.presence.edit.access-token.has-user.message","Dieser Auftritt nutzt aktuell ein Access Token des folgenden Benutzers: <strong>%name%</strong>"
-"route.presence.edit.access-token.no-user.message","Dieser Auftritt hat aktuell kein Access Token und kann deshalb nicht geladen werden."
-"route.presence.edit.access-token.button","Use your access token"
+route.user.reset-password.page-title,Passwort ändern
+route.user.reset-password.message.both-passwords-required,Beide Passwörter werden benötigt
+route.user.reset-password.message.password-mismatch,Passwörter stimmen nicht überein
+route.user.reset-password.message.passwords-too-short,Passwort muss mindestens 4 Zeichen haben
+route.user.reset-password.message.success,Passwort erfolgreich geändert
+route.user.reset-password.message.incorrect-user-key,Falscher Benutzer/Keycode für Passwort-Reset
 
-"route.presence.report.page-title","Social Media Monitor Bericht"
+route.user.register.page-title,Benutzer registrieren
+route.user.register.registration-successful,Registrierung erfolgreich
+route.user.register.email.subject,Sie haben sich erfolgreich registriert
+route.user.register.email.message,"<p>Hallo %name%,<p>Danke, dass Sie sich für das British Council Social Monitor Programm registriert haben</p><p>Wenn Sie sich für diesen Service nicht angemeldet haben, ignorieren Sie bitte diese E-Mail.</p><p> Andernfalls klicken Sie hier, um Ihre E-Mail-Adresse zu bestätigen und sich mit Ihrem neuen Account einzuloggen <a href=""%link%"">E-Mail bestätigen</a></p><p>Danke, <br />das British Council Social Media Monitor Team</p>"
+route.user.register.email.from,Das British Council Social Media  Monitor Team
+route.user.register.email.from-address,nicht-antworten@beispiel.com
 
+route.user.new.page-title,Neuer Benutzer
 
-
-
-"route.user.index.page-title","Benutzer"
-
-"route.user.linkedin.page-title","Bei LinkedIn einloggen"
-"route.user.linkedin.message.success","Linkedin Account wurde verknüpft"
-
-"route.user.login.page-title","Einloggen"
-"route.user.login.message.cannot-login","Incorrect username/password or email has not been confirmed"
-"route.user.login.message.cannot-login","Passwort und Nutzername waren nicht korrekt oder die Email wurde noch nicht bestätigt"
-
-"route.user.logout.message.success","Ausgeloggt"
-
-"route.user.delete.message.success","Benutzer wurde gelöscht"
-
-"route.user.forgotten.page-title","Passwort vergessen"
-"route.user.forgotten.message.missing-username-email","Benutzername oder Email eingeben"
-"route.user.forgotten.message.user-not-found","Benutzer konnte nicht gefunden werden"
-"route.user.forgotten.message.password-reset-email-sent","Sie erhalten in kürze eine Email mit einem Link zum Zurücksetzen ihres Passwortes"
-"route.user.forgotten.message.password-reset-failed-email","Email kontte nicht gesendet werden.<br />Bitte benachrichtigen Sie einen Administrator um ihr Passwort zurückzusetzen"
-
-"route.user.reset-password.page-title","Passwort ändern"
-"route.user.reset-password.message.both-passwords-required","Beide Passwörter sind erforderlich"
-"route.user.reset-password.message.password-mismatch","Die Passwörter stimmen nicht überein"
-"route.user.reset-password.message.passwords-too-short","Das Passwort muss mindestens 4 Buchstaben enthalten"
-"route.user.reset-password.message.success","Passwort wurde erfolgreich geändert"
-"route.user.reset-password.message.incorrect-user-key","Falsche Kombination von Name und Schlüssel"
-
-"route.user.register.page-title","Benutzer registrieren"
-"route.user.register.registration-successful","Registrierung erfolgreich"
-"route.user.register.email.subject","Sie haben sich erfolgreich registriert"
-"route.user.register.email.message","<p>Hi %name%,</p><p>Thank you for registering with the British Council Social Monitor</p><p>If you did not register for this service, please ignore this email.</p><p>Otherwise, click this link to confirm your email so that you can login with your new account <a href=""%link%"">Confirm email</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
-"route.user.register.email.from","The British Council Social Media Monitor team"
-"route.user.register.email.from-address","do.not.reply@example.com"
-
-"route.user.new.page-title","Neuer Benutzer"
-
-"route.user.edit.page-title","Benutzer bearbeiten"
-"route.user.edit.saved","Benutzer gespeichert"
-"route.user.edit.created","Benutzer erstellt"
-"route.user.edit.registered","Benutzer registriert"
-"route.user.edit.message.both-passwords-required","Beide Passwörter sind erforderlich"
-"route.user.edit.message.password-mismatch","Die Passwörter stimmen nicht überei"
-"route.user.edit.message.passwords-too-short","Das Passwort muss mindestens 4 Buchstaben enthalten"
-"route.user.edit.message.missing-username","Bitte geben Sie einen Benutzernamen an"
-"route.user.edit.message.missing-email","Bitte geben Sie eine Email Addresse an"
-"route.user.edit.message.invalid-email","Bitte geben Sie eine gültige Email Addresse an"
-"route.user.edit.message.use-company-email","Um sich zu registrieren benötigen Sie eine gültige Email Addresse des Goethe-Instituts"
-"route.user.edit.message.email-in-use","Diese Email wird bereits verwendet"
-"route.user.edit.message.username-in-use","Dieser Benutzername wird bereits verwendet"
-
-"route.user.edit-self.page-title","Meine Angaben bearbeiten"
-
-"route.user.manage.page-title","Zugangsrechte für den Benutzer %user% bearbeiten"
-"route.user.manage.message.permissions-saved","Zugangsrechte gespeichert"
-
-"route.user.forgotten.email.subject","Passwort zurücksetzen"
-"route.user.forgotten.email.message","'<p>Hi %name%,</p><p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p><p>If you did not request a reset, please ignore this email.</p><p>Otherwise, click this link to reset your password <a href=""%link%"">Reset password</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
-"route.user.forgotten.email.from","The British Council Social Media Monitor team"
-"route.user.forgotten.email.from-address","do.not.reply@example.com"
-
-"route.user.confirm-email.message.success","Thank you for confirming your email. You can now login."
-"route.user.confirm-email.message.fail","Something went wrong and we couldn't confirm your email address."
-"route.user.confirm-email.message.invalid-email","Incorrect user/key combination for email confirmation"
-
-
-
-"route.statuses.index.page-title","Status"
-
-
-
-"route.error.error.page-title","Application error"
-"route.error.error.page-title-404","Seite konnte nicht gefunden werden"
-"route.error.error.message-404","Bitte überprüfen Sie die URL"
-"route.error.error.message-500","Es tut uns leid, da ist wohl etwas schief gegangen"
-
-
-
-
-"route.fetch.log.finished","Abgeschlossen"
-"route.fetch.log.updating-facebook-actors.start","Facebook Akteure werden aktualisiert"
-"route.fetch.log.updating-facebook-actors.fail","Updaten der Facebook Akteure ist fehlgeschlagen: %message%"
-"route.fetch.log.updating-facebook-actors.success","%count% Akteuere aktualisiert"
-"route.fetch.log.updating-domains.start","Aktualisiere verknüpfte Domains"
-"route.fetch.log.updating-domains.success","%count% Domains eingefügt"
-"route.fetch.log.start","Starting %action% process on %start%"
-"route.fetch.log.lock-acquire.already-running","Der Prozess ist bereits am laufen und war zuletzt vor %seconds% Sekunden aktiv"
-"route.fetch.log.lock-acquire.stale","Stale lock found last active %seconds% seconds ago: %lockname%"
-"route.fetch.log.presence-history.start","Aktualisiere Verlauf des Standort"
-"route.fetch.log.presence-history.error","Error: %message%"
-"route.fetch.log.update-info.start","Information aktualisieren %message%"
-"route.fetch.log.update-info.success","Information aktualisiert %message%"
-"route.fetch.log.update-info.error","Fehler beim aktualisieren der Standort Information: %message%"
-"route.fetch.log.update-info.skip","Information wird nicht aktualisiert %message% da Sie bereits aktualisiert wurde %lastupdated%"
-"route.fetch.log.fetch-statues.start","Status %message%"
-"route.fetch.log.fetch-statues.success","%count% hinzugefügt"
-"route.fetch.log.fetch-statues.error","Error: %message%"
-
-
-
-
-"route.config.index.page-title","Einstellungen"
-
-
-"route.index.index.date-range","Datumsbereich"
-
-
-"badge.engagement.title","Engagement"
-"badge.engagement.description","<p>Der Engagement KPI erstellt eine Wertung darüber, wie gut sich ein Standort, ein Land oder eine SBU mit ihrem Publikum beschäftigt. Diese Wertung setzt sich aus folgenden Metriken zusammen:</p><ul><li>Klout Wertung für diesen Standort (nur Twitter).</li><li>Facebook Engagement Wertung für diesen Standort (nur Facebook).</li><li>Sina Weibo Engagement Wertnug für diesen Standort (nur Sina Weibo).</li><li>Instagram Engagement Wertung für diesen Standort (nur Instagram).</li><li>Youtube Engagement Wertung für diesen Standort (nur Youtube).</li><li>Linkedin Engagement Wertung für diesen Standort (nur LinkedIn).</li></ul>"
-
-"badge.reach.title","Reichweite"
-"badge.reach.description","<p>Der Reichweite KPI erstellt eine Wertung darüber, wie gut ein Standort, ein Land oder eine SBU sein Publikum erreicht. Diese Wertung setzt sich aus folgenden Metriken zusammen:</p><ul><li>Aktuelle Anzahl der Fans / Follower.</li><li>Anzahl der Monate die benötigt werden um die geplante Anzahl an Fans / Follower zu erreichen.</li><li>Durchschnittliche Anzahl der geteilten Inhalte / Retweets für jeden Post / Tweet.</li></ul>"
-
-
-"badge.quality.title","Qualität"
-"badge.quality.description","<p>Der Qualitäts KPI erstellt eine Wertung über die Qualität der erstellten Posts von den jeweiligen Standorten eines Landes oder einer SBU. Diese Wertung setzt sich aus folgenden Metriken zusammen:</p><ul><li>Durchschnittliche Anzahl an Posts / Tweets pro Tag.</li><li>Durchschnittliche Anzahl an Links pro Tag.</li><li>Durchschnittliche Anzahl an Likes / Retweets pro Post / Tweet / abgespieltem Video.</li><li>Genehmigungsstatus des Standortes.</li><li>Markenstatus des Standortes.</li><li>Anzahl einschlägiger Posts die täglich gemacht werden.</li><li>Die durchschnittlich Reaktionszeit auf Kommentare für diesen Standort.</li></ul>"
-
-"badge.total.title","Insgesamt"
-"badge.total.description","<p>Die insgesamte Wertung gibt einen Überblick darüber wie gut ein Social Media Auftritt, ein Land oder eine SBU abschneidet. Die Wertung fasst die Gesamtwertungen der folgenden KPIs zusammen:</p><ul><li>Reichweite KPI</li><li>Engagement KPI</li><li>Qualitäts KPI</li></ul>"
+route.user.edit.page-title,Benutzer bearbeiten
+route.user.edit.saved,Benutzer gespeichert
+route.user.edit.created,Benutzer angelegt
+route.user.edit.registered,Benutzer registriert
+route.user.edit.message.both-passwords-required,Beide Passwörter erforderlich
+route.user.edit.message.password-mismatch,Passwörter passen nicht zusammen
+route.user.edit.message.passwords-too-short,Passwort muss mindestens 4 Zeichen haben
+route.user.edit.message.missing-email
+route.user.edit.message.invalid-email,Bitte eine gültige E-Mail-Adresse eingeben
+route.user.edit.message.use-company-email,"Sie benötigen eine gültige E-Mail-Adresse des British Council, um sich zu registrieren"
+route.user.edit.message.email-in-use,E-Mail-Adresse bereits vergeben
+route.user.edit.message.username-in-use,Benutzername bereits vergeben
+
+route.user.edit-self.page-title,Angaben bearbeiten
+
+route.user.manage.page-title,Zugangsrechte für %user% bearbeiten
+route.user.manage.message.permissions-saved,Benutzerberechtigungen gespeichert
+
+route.user.forgotten.email.subject,Passwort-Zurücksetzung
+route.user.forgotten.email.message,"<p>Hallo %name%</p><p>Wir haben eine Anfrage zur Rücksetzung Ihres Passworts für Ihren British Council Social Media Monitor Account erhalten.</p><p>Wenn Sie keine Zurücksetzung angefordert haben, ignorieren Sie bitte diese E-Mail.</p>Ansonsten klicken Sie auf diesen Link um Ihr Passwort zurückzusetzen<a href=""""%link%"""">Password zurücksetzen</a></p><p>Danke, <br />das British Council Social Media Monitor Team</p>"""
+route.user.forgotten.email.from,Das British Council Social Media Monitor Team
+route.user.forgotten.email.from-address,bitte.nicht.antworten@beispiel.com
+
+route.user.confirm-email.message.success,"Vielen Dank, dass Sie Ihre E-Mail-Adresse bestätigt haben. Sie können sich nun einloggen. "
+route.user.confirm-email.message.fail,Ein Fehler ist aufgetreten und wir konnten Ihre E-Mail-Adresse nicht bestätigen.
+route.user.confirm-email.message.invalid-email,Falsche Benutzer/Keycode-Kombination für die E-Mail-Bestätigung
+
+
+
+route.statuses.index.page-title,Postings
+route.statuses.index.filter.campaign-type.label,Filter
+route.statuses.index.filter.campaign-type.all,Filter auswählen
+route.statuses.index.filter.campaign-type.country,Nach Land filtern
+route.statuses.index.filter.campaign-type.group,Nach SBU filtern
+route.statuses.index.filter.campaign-type.region,Nach Region filtern
+route.statuses.index.filter.presence-type.label,Social Media
+route.statuses.index.filter.countries.label,Länder
+route.statuses.index.filter.regions.label,Regionen
+route.statuses.index.filter.groups.label,SBUs
+route.statuses.index.filter.sort-by.label,Sorte
+route.statuses.index.filter.sort-by.date,Datum
+route.statuses.index.you-are-viewing,Sie sehen gerade:
+route.statuses.index.table-header.content,Inhalt
+route.statuses.index.multi-select.select-all.default,Alle Ansichten wechseln
+route.statuses.index.multi-select.all-selected.default,Alles ausgewählt
+route.statuses.index.multi-select.all-selected.all-presences,Kein Filter ausgewählt
+route.statuses.index.multi-select.all-selected.countries,Alle Länder
+route.statuses.index.multi-select.all-selected.regions,Alle Regionen
+route.statuses.index.multi-select.all-selected.groups,Alle SBUs
+route.statuses.index.multi-select.count-selected.default,# von ausgewählten %
+route.statuses.index.multi-select.no-matches.default,Keine Übereinstimmung gefunden
+route.statuses.index.multi-select.placeholder.default,Keine Auswahl getroffen
+
+
+
+
+route.error.error.page-title,Fehler beim Ausfüllen
+route.error.error.page-title-404,Seite nicht gefunden
+route.error.error.message-404,Bitte überprüfen Sie die URL
+route.error.error.message-500,"Entschuldigung, ein Fehler ist aufgetreten"
+
+Error.not-in-table,kommt in dieser Tabelle nicht vor
+Error.invalid-number,ist keine gültige Zahl.
+Error.too-long,ist zu lang.
+Error.required,wird benötigt.
+
+
+route.fetch.log.finished,Fertig
+route.fetch.log.updating-facebook-actors.start,Facebook-Nutzer werden aktualisiert
+route.fetch.log.updating-facebook-actors.fail,Facebook-Nutzer konnten nicht aktualisiert werden: %message%
+route.fetch.log.updating-facebook-actors.success,Nutzer %count%aktualisiert
+route.fetch.log.updating-domains.start,Verlinkte Domains werden aktualisiert
+route.fetch.log.updating-domains.success,Domains %count% eingefügt
+route.fetch.log.start,Prozess %action% wird gestartet %start
+route.fetch.log.lock-acquire.already-running,Prozess bereits im Gang und vor %seconds% Sekunden letztmals aktiv
+route.fetch.log.lock-acquire.stale
+route.fetch.log.presence-history.start,Kanalverlauf wird aktualisiert
+route.fetch.log.presence-history.error,Fehler:%message%
+route.fetch.log.update-info.start,Informationen werden aktualisiert %message%
+route.fetch.log.update-info.success,Informationen wurden aktualisiert %message%
+route.fetch.log.update-info.error,Fehler beim Aktualisieren der Kanalinformationen: %message%
+route.fetch.log.update-info.skip,Informationen werden nicht aktualisiert %message% da zuletzt aktualisiert %lastupdated%
+route.fetch.log.fetch-statuses.start,Postings abholen %message%
+route.fetch.log.fetch-statuses.success,Eingefügt %count%
+route.fetch.log.fetch-statuses.error,Fehler:%message%
+
+
+
+
+route.config.index.page-title,Einstellungen
+route.config.index.introduction,"Alle metrischen Werte und Kennzeichnungen konfiguren, dann auf speichern klicken"
+
+route.config.index.sections.general.title,Allgemein
+route.config.index.sections.general.feedback.title,Feedback
+route.config.index.sections.general.feedback.description,An welche E-Mail-Adresse soll das Feedback gesendet werden?
+route.config.index.sections.general.feedback.email-address,E-Mail-Adresse
+
+route.config.index.sections.reach.target-audience.title,Zielgruppe
+route.config.index.sections.reach.target-audience.description,"Jedem Kanal ist eine Zielgruppe zugeordnet. Der Wert basiert auf der Angabe, wie eng der Kanal mit der Zielgruppe verbunden ist"
+route.config.index.sections.reach.target-audience.weighting,Zielgruppenfestlegung
+route.config.index.sections.reach.target-audience.fb-min,Mindestwert Facebook-Nutzer (% von gesamt)
+route.config.index.sections.reach.target-audience.fb-opt,Optimalwert Facebook-Nutzer  (% von gesamt)
+route.config.index.sections.reach.target-audience.tw-min,Mindestwert Twitter-Nutzer (% von gesamt)
+route.config.index.sections.reach.target-audience.tw-opt,Optimalwert Twitter-Nutzer (% von gesamt)
+route.config.index.sections.reach.target-audience.sw-min,Mindestwert Sina Weibo Nutzer (% von gesamt)
+route.config.index.sections.reach.target-audience.sw-opt,Optimalwert Sina Weibo Nutzer
+route.config.index.sections.reach.target-audience.ig-min,Mindestwert Instagramm-Nutzer (% von gesamt)
+route.config.index.sections.reach.target-audience.ig-opt,Optimalwert Instagramm-Nutzer (% von gesamt)
+route.config.index.sections.reach.target-audience.yt-min,Mindestwert Youtube-Nutzer (% von gesamt)
+route.config.index.sections.reach.target-audience.yt-opt,Optimalwert Youtube-Nutzer (% von gesamt)
+route.config.index.sections.reach.target-audience.in-min,Mindeswert LinkedIn-Nutzer (% von gesamt)
+route.config.index.sections.reach.target-audience.in-opt,Optimalwert LinkedIn-Nutzer (% von gesamt)
+route.config.index.sections.reach.target-audience.shared-audience-extra-large
+route.config.index.sections.reach.target-audience.shared-audience-large
+route.config.index.sections.reach.target-audience.shared-audience-medium,%  der Zielgruppe des Besitzers auf Kanälen mit mittlererer Reichweite
+route.config.index.sections.reach.target-audience.shared-audience-small,% der Zielgrupp des Besitzers auf Kanälen mit geringer Reichweite
+route.config.index.sections.reach.time-to-target-audience.title,Zeit zur Zielgruppenerfassung
+route.config.index.sections.reach.time-to-target-audience.description,"Jedem Kanal ist eine Zielgruppe zugeordnet. Der Wert basiert auf der Angabe, wie eng der Kanal mit der Zielgruppe verbunden ist."
+route.config.index.sections.reach.time-to-target-audience.weighting,Zeit zur Zielgruppenauswertung
+route.config.index.sections.reach.time-to-target-audience.best-score-label,Bester Zielgruppenwert (Monate)
+route.config.index.sections.reach.time-to-target-audience.best-score-hint,"Anzahl der Monate, innerhalb derer die Zielgruppe erreicht werden sollte, um die besten Werte zu erzielen."
+route.config.index.sections.reach.time-to-target-audience.good-score-label,Guter Zielgruppenwert (Monate)
+route.config.index.sections.reach.time-to-target-audience.good-score-hint,"Anzahl der Monate, in der die Zielgruppe erreicht werden sollte, um einen guten Wert zu erhalten."
+route.config.index.sections.reach.time-to-target-audience.bad-score-label,Schlechter Zielgruppenwert (Monate)
+route.config.index.sections.reach.time-to-target-audience.bad-score-hint,"Wenn die Zielgruppe erst nach dieser Anzahl von Monaten erreicht wird, wird der Kanal schlecht bewertet"
+route.config.index.sections.reach.sharing.title,Retweets/geteilte Inhalte
+route.config.index.sections.reach.sharing.description,Wie oft werden die Postsingsdes jeweiligen Kanals geteilt (Facebook) oder retweeted (Twitter)
+route.config.index.sections.reach.sharing.weighting,Auswertung der Retweets/geteilten Inhalte
+route.config.index.sections.reach.sharing.fb-target,Durchschnittliche geteilte Inhalte innerhalb der Zielgruppe (% der Gesamtbesucherzahl)
+route.config.index.sections.reach.sharing.tw-target,Durchschnittliche Retweets der Zielgruppe (% der Gesamtbesucherzahl)
+
+route.config.index.sections.engagement.response-time.title,Reaktionszeit
+route.config.index.sections.engagement.response-time.description,"Der Reaktionszeitwert ermittelt, wie schnell der Kanal auf einzelne Postings reagiert"
+route.config.index.sections.engagement.response-time.weighting,Auswertung der Reaktionszeit
+route.config.index.sections.engagement.response-time.best-label,Ideale Reaktionszeit (Stunden)
+route.config.index.sections.engagement.response-time.good-label,Gute Reaktionszeit (Stunden)
+route.config.index.sections.engagement.response-time.bad-label,Schlechte Reaktionszeiet (Stunden)
+route.config.index.sections.engagement.klout.title,Klout-Wert (nur Twitter)
+route.config.index.sections.engagement.klout.description,"Der Klout-Wert ist eine Messung eines externen Dienstleisters, die die Interaktion mit Ihrer Zielgruppe bewertet (nur Twitter)"
+route.config.index.sections.engagement.klout.weighting
+route.config.index.sections.engagement.klout.target-label
+route.config.index.sections.engagement.klout.target-hint,"Der Kanal erreicht 100%,wenn er diesen Zielwert erreicht oder überschreitet,jedoch nur 0%,""wenn er ihn nicht erreicht."
+
+route.config.index.sections.engagement.fb.title,Facebook-Aktivitätswert (nur Facebook)
+route.config.index.sections.engagement.fb.description,"Der Facebook-Aktivitätswert beruht auf Gefällt-mir-Angaben, Kommentaren und geteilten Inhalten"
+route.config.index.sections.engagement.fb.weighting,Auswertung des Facebook-Aktivitätswerts
+route.config.index.sections.engagement.fb.active-users-small,"Prozentsatz der Benutzer, die vermutlich auf Kanälen mit geringer Reichweiter aktiv sind"
+route.config.index.sections.engagement.fb.active-users-medium,Kanäle mit mittlerer Reichweite
+route.config.index.sections.engagement.fb.active-users-large
+route.config.index.sections.engagement.fb.active-users-extra-large,… und Kanäle mit besonders hoher Reichweite
+
+route.config.index.sections.engagement.ig.title,Instagram-Aktivitätswert (nur Instagram)
+route.config.index.sections.engagement.ig.description,Der Instagram-Aktivitätswert beruht auf Favoriten und Kommentaren
+route.config.index.sections.engagement.ig.weighting,Auswertung des Instagram-Aktivitätswerts
+route.config.index.sections.engagement.ig.active-users-small,"Prozentsatz der Benutzer, die vermutlich auf Kanälen mit geringer Reichweite aktiv sind"
+route.config.index.sections.engagement.ig.active-users-medium,…Kanäle mit mittlerer Reichweite
+route.config.index.sections.engagement.ig.active-users-large,Kanäle mit hoher Reichweite
+route.config.index.sections.engagement.ig.active-users-extra-large,…und Kanälen mit besonders hoher Reichweite
+
+route.config.index.sections.engagement.sw.title,Sina Weibo Aktivitätswert (nur Sina Weibo)
+route.config.index.sections.engagement.sw.description,"Der Sina Weibo Aktivitätswert beruht auf Gefällt-mir-Angaben, Kommentare und geteilten Inhalten."
+route.config.index.sections.engagement.sw.weighting,Auswertung des Sina Weibo Aktivitätswerts
+route.config.index.sections.engagement.sw.active-users-small,"Prozentsatz von Benutzern, die vermutlich auf Kanälen mit geringer Reichweite aktiv sind"
+route.config.index.sections.engagement.sw.active-users-medium,Kanäle mit mittlerer Reichweite
+route.config.index.sections.engagement.sw.active-users-large,Kanäle mit hoher Reichweite
+route.config.index.sections.engagement.sw.active-users-extra-large,…und Kanäle mit besonders hoher Reichweite
+
+route.config.index.sections.engagement.in.title,LinkedIn Aktivitätswert (nur LinkedIn)
+route.config.index.sections.engagement.in.description,Der LinkedIn-Aktivitätswert basiert auf Gefällt-mir-Angaben und Kommentaren
+route.config.index.sections.engagement.in.weighting
+route.config.index.sections.engagement.in.active-users-small,"Prozentzahl der Nutzer, die vermutlich auf kleinen Kanälen aktiv sind"
+route.config.index.sections.engagement.in.active-users-medium,Kanäle mit mittlerer Reichweite
+route.config.index.sections.engagement.in.active-users-large,Kanäle mit hoher Reichweite
+route.config.index.sections.engagement.in.active-users-extra-large,…und Kanäle mit sehr hoher Reichweite
+
+route.config.index.sections.engagement.yt.title,Youtube Aktivitätswert (nur Youtube)
+route.config.index.sections.engagement.yt.description,"Der Youtube-Aktivitätswert beruht auf Gefällt-mir- bzw. Gefällt-mir-nicht-Angaben, Kommenataren und Abonnements."
+route.config.index.sections.engagement.yt.weighting,Auswertung des Youtube Aktivitäswerts
+route.config.index.sections.engagement.yt.active-users-small,"Prozentsatz von Benutzern, die vermutlich auf Kanälen mit geringer Reichweite aktiv sind"
+route.config.index.sections.engagement.yt.active-users-medium,…mittlere Reichweite
+route.config.index.sections.engagement.yt.active-users-large,...Kanäle mit hoher Reichweite
+route.config.index.sections.engagement.yt.active-users-extra-large,…und Kanäle mit besonders hoher Reichweite
+
+route.config.index.sections.quality.actions-per-day.title,Aktivitäten pro Tag
+route.config.index.sections.quality.actions-per-day.description,Eine Ermittlung der durchschnittlichen Aktivitäten pro Tag im Vergleich zum Bezugswert
+route.config.index.sections.quality.actions-per-day.weighting,Auswertung der Aktivitäten pro Tag
+route.config.index.sections.quality.actions-per-day.target-label,Aktivitäten pro Tag
+route.config.index.sections.quality.actions-per-day.ok-range-label,Akzeptabler Bereich der Aktivitäten pro Tag
+route.config.index.sections.quality.actions-per-day.ok-range-hint,"Anzahl über oder unter dem Wert [Aktivitäten pro Tag], die im aktzeptablen Bereich liegt"
+route.config.index.sections.quality.actions-per-day.bad-range-label,schlechter Aktivitätswert pro Tag
+route.config.index.sections.quality.actions-per-day.bad-range-hint,"Anzahl über oder unter dem Wert [Aktivitäten pro Tag], die als zu viel oder zu wenig gilt"
+
+route.config.index.sections.quality.likes-per-post.title,Gefällt-mir-Angaben pro Posting
+route.config.index.sections.quality.likes-per-post.description,Misst die durchschnittliche Anzahl von Gefällt-mir-Angaben der Benutzer für jedes Posting
+route.config.index.sections.quality.likes-per-post.weighting,Gefällt-mir-Angaben pro Posting Auswertung
+route.config.index.sections.quality.likes-per-post.good-label,Guter Wert für Gefällt-mir-Angaben pro Posting
+route.config.index.sections.quality.likes-per-post.good-hint,"Der Kanal wird gut bewertet, wenn die durchschnittliche Anzahl der Postings genauso hoch oder höher liegt"
+route.config.index.sections.quality.likes-per-post.best-label
+route.config.index.sections.quality.likes-per-post.best-hint,"Der Kanal wird am besten bewertet, wenn die Anzahl der Gefällt-mir-Angaben pro Posting so hoch oder höher ist"
+
+route.config.index.sections.quality.likes-per-view.title,Gefällt-mir-Angaben pro Aufruf
+route.config.index.sections.quality.likes-per-view.description,Misst die durchschnittliche Anzahl von Gefällt-mir-Angaben von Benutzern für jedes Video
+route.config.index.sections.quality.likes-per-view.weighting,Auswertung der Gefällt-mir-Angaben pro Aufruf
+route.config.index.sections.quality.likes-per-view.good-label,guter Wert für Gefällt-mir-Angaben pro Aufruf
+route.config.index.sections.quality.likes-per-view.good-hint,"Der Kanal wird gut bewertet, wenn die durchschnittliche Anzahl der Gefällt-mir-Angaben pro Aufruf so hoch oder höher liegt"
+route.config.index.sections.quality.likes-per-view.best-label,Bester Gefällt-mir-Angaben-Wert pro Aufruf
+route.config.index.sections.quality.likes-per-view.best-hint,"Der Kanal wird am besten bewertet, wenn die durchschnittliche Zahl der Gefällt-mir-Angaben pro Aufruf genauso hoch oder höher liegt"
+
+route.config.index.sections.quality.sign-off.title,Abmelden
+route.config.index.sections.quality.sign-off.description,Hauptakteure haben sich von diesem Kanal abgemeldet
+route.config.index.sections.quality.sign-off.weighting,Auswertung der Abmeldungen
+
+route.config.index.sections.quality.branding.title,Branding
+route.config.index.sections.quality.branding.description,Der Kanal verfügt über das richtige Branding
+route.config.index.sections.quality.branding.weighting,Auswertung des Brandings
+
+route.config.index.sections.quality.relevance.title,Relevanz
+route.config.index.sections.quality.relevance.description,"So relevant waren die Aktivitäten des Kanals. Dieser Wert beruht derzeit auf der Zahl der relevanten British Council Domains, die pro Tag mit ihren Aktivitäten verlinkt waren."
+route.config.index.sections.quality.relevance.weighting,Auswertung der Relevanz
+route.config.index.sections.quality.relevance.facebook-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Facebook relevant sind"
+route.config.index.sections.quality.relevance.twitter-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Twitter relevant sind"
+route.config.index.sections.quality.relevance.sina-weibo-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Sina Weibo relevant sind"
+
+route.config.index.sections.all.weighting-hint,Durch eine höhere Bewertung wird dieser Zahl bei der Berechnung des Zielwerts für den %section% Kennwert wichtiger
+route.config.index.numeric-error,Wert muss numerisch sein
+route.config.index.email-error,Diese E-Mail-Adresse %email% ist ungültig
+route.config.index.upload-success,Datei erfolgreich hochgeladen
+route.config.index.settings-saved,Eingaben gespeichert
+route.config.index.invalid-values,Ungültiger Wert.Bitte vor dem Speichern überprüfen
+
+route.config.index.kpi-file-title,KPI Datei wird hochgeladen
+route.config.index.kpi-file-message,"Hochladen der KPI Datei, die von der Startseite heruntergeladen werden kann"
+route.config.index.kpi-file-prompt,Wählen Sie eine Datei zum Hochladen:
+
+
+
+
+route.domain.index.page-title,Domains
+route.domain.index.paragraph-1,"Hier werden die Listen aller Domains angezeigt, die mit Tweets oder Facebook-Postings verbunden sind. Klicken Sie auf den Link, um mehr Informationen zu Nutzern und den einzelnen URLS zu erhalten."
+route.domain.index.paragraph-2,"Sie können sehen, ob eine Domain zum British council gehört, indem Sie auf den Kästchen rechts hin- und herschalten und auf 'speichern' drücken. Beachten Sie, dass Änderungen verloren gehen."
+route.domain.index.table-header.domain,Domain
+route.domain.index.table-header.links,Links
+route.domain.index.table-header.relevant,British Council
+route.domain.index.message.success,Domains aktualisiert
+route.domain.index.message.access-error,"Sie sind nicht berechtigt, diese Daten zu ändern"
+
+route.domain.view.page-title,%domain%
+route.domain.view.site-count,eins:1 Seite,viele:%count% Seiten
+route.domain.view.status-count,eins:1 Posting,viele:%count% Postings
+route.domain.view.mention-count,eins:1 Erwähnung,viele:%count% Erwähnungen
+route.domain.view.linked-to-from,%sites% von %statuses% aus verlinkt
+
+
+
+
+badge.engagement.title,Aktivität
+badge.engagement.description,"<p>Der Aktivitäts-KPI ist ein Gesamtwert, wie gut der Kanal, das Land oder die SBU-Region mit seinen Nutzern interagiert. Der Wert verbindet die folgenden Angaben:</p><ul><li> Der Klout-Wert für diesen Kanal (nur Twitter).</li><li> -Der Facebook-Aktivitätswert für diesen Kanal (nur Facebook). </li><li> Der Sina Weibo Aktivitätswert für diesen Kanal (nur Sina Weibo).</li><li> Der Instagram-Aktivitätswert für diesen Kanal (nur Instagram).</li><li> Der Youtube-Aktivitätswert für diesen Kanal (nur Youtube).</li><li>Der Linkedin-Aktivitätswert für diesen Kanal (nur Linkedin)</li></ul>"""
+
+badge.reach.title,Reichweite
+badge.reach.description,"<p>Der Reichweiten-KPI ist ein Gesamtwert, der ermittelt, wie gut ein Kanal, Land oder SBU seine Zielgruppe erreicht. Der Wert verbindet die folgenden Angaben:</p><ul><li>Derzeitige Anzahl von Freunden / Followern</li><li>Anzahl der Monate, in denen die Zielanzahl von Freunden / Followern erreicht wird</li><li>Durchschnittliche Anzahl geteilter Inhalte / Retweets für jedes Posting / Tweet</li></ul>"
+
+badge.quality.title,Qualität
+badge.quality.description,"<p>Der Qualitäts-KPI-Wert ist ein Gesamtwert für die Qualität der Postings, die in einem Kanal oder Kanälen eines Landes oder einer SBU-Region produziert werden. Er beruht auf folgenden Werten:</p><ul><li>Die durchschnittliche Anzahl an Postings / Tweets am Tag.</li><li>Die durchschnittliche Anzahl von Links pro Tag.</li><li>Die durchschnittliche Anzahl von Gefällt-mir-Angaben / Retweets per Posting / Tweet / Videonutzung.</li><li>Der Abmeldestatus auf dem Kanal.</li><li>Der Branding-Status auf dem Kanal.</li><li>Die Anzahl der relevanten Postings pro Tag.</li><li>Die durchschnittliche Reaktionszeit auf Kommentare auf diesem Kanal.</li></ul>"
+
+badge.total.title,Gesamt
+badge.total.description,"<p>Der KPI-Gesamtwert beruht auf einem allgemeinen Wert, der bestimmt, wie gut ein Social Media Kanal, Land oder eine SBU-Region innerhalb der anderen drei KPI-Werte funktioniert. Der Wert kombiniert die Gesamtergebnisse der folgenden drei KPIs:</p><ul><li>Reichweiten-KPI</li><li>Aktivitäts- KPI</li><li>Qualitäts-KPI</li></ul>"
+
+
+
+
+chart.actionsPerDay.title,Messwert: Aktivität pro Tag
+chart.actionsPerDay.description
+chart.actionsPerDay.x-axis-label,Datum
+chart.actionsPerDay.y-axis-label,Anzahl der Aktivitäten pro Tag
+chart.actionsPerDay.relevant-links,Relevante Links pro Tag
+
+chart.compare.title,Vergleiche:KPIs
+chart.compare.description
+chart.compare.x-axis-label,Zeit
+chart.compare.y-axis-label,KPI-Wert
+
+chart.engagement.title,Aktivität
+chart.engagement.description
+chart.engagement.x-axis-label,Zeit
+chart.engagement.y-axis-label,Aktivitätswert
+
+chart.popularity.title,Messwert:Beliebtheit
+chart.popularity.description
+chart.popularity.x-axis-label,Datum
+chart.popularity.y-axis-label,Zahl der Freunde/Follower
+
+chart.popularity-trend.title,Messwert: Beliebtheitstrend
+chart.popularity-trend.description
+chart.popularity-trend.x-axis-label
+chart.popularity-trend.y-axis-label,Zahl der Freunde/Follower pro Tag
+
+chart.quality.title,KPI: Qualität
+chart.quality.description;;chart.quality.description
+chart.quality.x-axis-label,Zeit
+chart.quality.y-axis-label,Qualitätswert
+
+chart.reach.title,KPI: Reichweite
+chart.reach.description
+chart.reach.x-axis-label,Zeit
+chart.reach.y-axis-label,Erreiche Wert
+
+chart.response-time.title,Messwert:Reaktionszeit
+chart.response-time.description
+chart.response-time.x-axis-label,Datum
+chart.response-time.y-axis-label,Reaktionszeit in Stunden
+
+
+
+
+table-header.actions-per-day.label,Aktivität pro Tag
+table-header.actions-per-day.description
+
+table-header.branding.label,Branding
+table-header.branding.description,"Branding zeigt an, ob ein Kanal die Branding-Richtlinien des British Council bezüglich Social Media Kanälen erfüllt"
+
+table-header.countries.label,Länder
+table-header.countries.description
+
+table-header.country.label,Land
+table-header.country.description
+
+table-header.country-count.label,Länder
+table-header.country-count.description,Anzahl der Länder
+
+table-header.current-audience.label,Derzeitiges Besucherprofil
+table-header.current-audience.description;;table-header.current-audience.description
+
+table-header.digital-population.label,Digitale Nutzergruppe
+table-header.digital-population.description
+
+table-header.digital_population_health.label,Zustand der digitalen Nutzergruppe
+table-header.digital_population_health.description
+
+table-header.engagement-rank.label
+table-header.engagement-rank.description,Aktivitätsrang zeigt den Rang dieses Kanals oder dieser Gruppe im Vergleich mit anderen.
+
+table-header.engagement-score.label,Akivitätswert
+table-header.engagement-score.description,"Aktivitätswert ist das Ergebnis der kombinierten Messwerte, die die Aktivität auf einem Kanal auswerten"
+
+table-header.handle.label,Kanal
+table-header.handle.description,"Wählen Sie alle Kanäle, die Sie vergleichen möchten und klicken Sie dann oben auf den Button Vergleichen"
+
+table-header.name.label,Name
+table-header.name.description
+
+table-header.options.label,Optionen
+table-header.options.description;;table-header.options.description
+
+table-header.parent-name.label,Land/SBU
+table-header.parent-name.description
+
+table-header.percent-target-audience.label,Prozentzahl der Zielgruppe
+table-header.percent-target-audience.description
+
+table-header.presence-count.label,Kanäle
+table-header.presence-count.description,Die Anzahl der Kanäle
+
+table-header.presences.label,Kanäle
+table-header.presences.description
+
+table-header.presence-type.label,Kanaltyp
+table-header.presence-type.description
+
+table-header.quality-rank.label,Qualitätsrang
+table-header.quality-rank.description,Qualitätsrang zeigt den Rang dieses Kanals oder der Gruppe im Vergleich mit anderen.
+
+table-header.quality-score.label,Qualitätswert
+table-header.quality-score.description,"Qualitätswert zeigt den Wert der kombinierten Messwerte, die die Aktivität eines Kanals bewerten"
+
+table-header.reach-rank.label,Reichweitenrang
+table-header.reach-rank.description,Reichweitenrang zeigt den Rang dieses Kanals oder der Gruppe im Vergleich mit anderen.
+
+table-header.reach-score.label,Reichweitenwert
+table-header.reach-score.description,"Reichweitenwert zeigt den Wert für die kombinierten Messwerte, die die Aktivität eines Kanals bewerten "
+
+table-header.region.label,Region
+table-header.region.description
+
+table-header.response-time.label,Reaktionszeit
+table-header.response-time.description
+
+table-header.sign-off.label
+table-header.sign-off.description,"Abmelden zeigt an, ob sich jemand von dem Head Of Digital, abgemeldet hat."
+
+table-header.target-audience.label,Zielgruppe
+table-header.target-audience.description
+
+table-header.total-rank.label,Gesamtwert
+table-header.total-rank.description,Gesamtwert zeigt den Wert dieses Kanals oder der Gruppe im Vergleich mit anderen
+
+table-header.total-score.label,Gesamtwert
+table-header.total-score.description,"Gesamtwert zeigt die kombinierten Werte der drei Bereiche Reichweite, Aktivität und Qualität."
+
+
+
+
+metric.posts_per_day.title,Aktivität pro Tag
+metric.branding.title,Korrektes Branding
+metric.facebook_engagement.title,Facebook-Aktivitätswert
+metric.instagram_engagement.title
+metric.klout_score.title
+metric.likes_per_post.title,Gefällt-mir-Angaben pro Posting
+metric.likes_per_view.title,Akivitäten pro Aufruf
+metric.linkedin_engagement.title
+metric.popularity.title,Beliebtheit
+metric.popularity_time.title,Beliebtheitstrend
+metric.relevance.title,Relevanz
+metric.response_ratio.title,Reaktionen
+metric.response_time.title,Reaktionsfreudigkeit
+metric.sign_off.title,Abgemeldet
+metric.sina_weibo_engagement.title,Sina Weibo Aktivitätswert
+metric.youtube_engagement.title,Youtube-Aktivitätswert
+
+
+
+
+Error.missing-date-range,Fehlender Datenzeitraum
+Error.invalid-date-range,Ungültiger Datenzeitraum
+Error.display-name-exists,Benutzername bereits vergeben
+Error.missing-id,ID fehlt
+Error.missing-chart-type,fehlende Ansicht
+Error.chart-does-not-exist,Ansicht existiert nicht
+Error.invalid-delete,Löschbefehl nicht korrekt ausgeführt
+Error.not-authorized,Nicht autorisiert
+Error.not-logged-in,Nicht eingeloggt
+Error.not-allowed,Nicht erlaubt: Keine ausreichenden Zugangsrechte
+Error.data-not-found,%type% nicht gefunden
+Error.lock-error.message,"Abholprozess seit %time% inaktiv, offenbar ist ein Fehler aufgetreten."
+Error.lock-error.with-url,"Einer oder mehrere Ihrer Zugangs-Token werden bald ablaufen.<a href=%url%"">Hier klicken</a>",um Token zu erneuern.
+Error.lock-error.without-url,"Bitte einloggen, um die Sperre aufzuheben"
+Error.access-token.refresh,"Einer oder mehrere Ihrer Zugangs-Token werden bald ablaufen.<a href=%url%"">Hier klicken</a>""",um Token zu erneuern.
+
+models.presence.sizes.small,Klein
+models.presence.sizes.medium,Mittel
+models.presence.sizes.large,Groß
+models.presence.sizes.extra-large,Sehr Groß
+models.presence.engagement-score-name,Klout-Wert
+
+views.scripts.partials.badges.metric-attributes.score-title,"Dieser Kanal hat für %title% den Wert %score% erreicht, der auf einem Datendurchschnitt der letzten 30 Tage beruht."
+views.scripts.partials.badges.metric-attributes.no-data,"Es sind keine Daten verfügbar, um %title% zu berechnen."
+views.scripts.partials.badges.metric-attributes.score-zero,Dieser Kanal hat 0% für %title% erreicht.
+views.scripts.partials.badges.metric-attributes.title-not-applicable,%title% für diesen Kanal nicht gültig
+views.scripts.partials.badges.metric-attributes.title-not-applicable,%title% ist für diesen Kanal nicht gültig
+views.scripts.notabs.small-heading,Social Media Monitor
+
+views.scripts.user.edit.title,"Auf dieser Seite können Sie Ihre Benutzerinformationen bearbeiten, etwa Ihre E-Mail-Adresse aktualisieren oder Ihr Passwort ändern."
+views.scripts.user.edit.label.user.email,E-Mail-Adresse
+views.scripts.user.edit.label.user.level,Benutzer-Level
+views.scripts.user.edit.label.linkedin-expires,Sie werden bei LinkedIn ausgeloggt
+
+views.scripts.user.forgotten.username.label,Name/E-Mail
+views.scripts.user.forgotten.button.back-to-login,Zurück zum Login
+
+views.scripts.user.index.add-new,Neu hinzufügen
+views.scripts.user.index.loading-prompt,Daten werden geladen…
+views.scripts.user.index.user-table.heading.email,E-Mail-Adresse
+views.scripts.user.index.user-table.heading.user-level,Benutzer-Level
+views.scripts.user.index.user-table.heading.access,Zugangsrechte
+views.scripts.user.index.user-table.heading.last-sign-in,Letzte Anmeldung
+views.scripts.user.index.user-table.heading.options,Optionen
+views.scripts.user.index.user-level.unknown,Unbekannt (%user_level%)
+views.scripts.user.index.last-sign-in.never,Noch nie angemeldet
+
+views.scripts.user.index.cell-options.access-rights,Zugangsrechte
+views.scripts.user.index.cell-options.confirm-mail,E-Mail bestätigen
+
+views.scripts.user.linkedin.login-button,auf LinkedIn einloggen
+views.scripts.user.linkedin.token,Token
+
+views.scripts.user.login.button.submit,Login
+views.scripts.user.login.button.forgot-password,Passwort vergessen?
+views.scripts.user.login.form.label.username,Name/E-Mail
+
+views.scripts.user.manage.automatic-access,Dieser Nutzer hat automatisch Zugang zu allen Bereichen der Auswertung.
+views.scripts.user.manage.form.form-hint,Bei der Eingabe eines Landes oder SBU-Bereichs werden die dazugehörigen Kanäle automatisch dem Nutzer zugeordnet.
+views.scripts.user.manage.label.available-groups,Verfügbare SBU-Bereiche
+views.scripts.user.manage.label.twitter,Verfügbare Twitter-Kanäle
+views.scripts.user.manage.label.facebook,Verfügbare Facebook-Kanäle
+views.scripts.user.manage.label.assigned,Momentan zugeordnet
+views.scripts.user.manage.none-assigned,keine zugeordnet
+
+views.scripts.user.register.button.already-registered,Haben Sie bereits einen Account?
+views.scripts.user.register.register-successful.first-line,"Sie haben sich erfolgreich registriert.Um sich auf Ihren Account einzuloggen, müssen Sie erst Ihre E-Mail-Adresse bestätigen."
+views.scripts.user.register.register-successful.second-line,Eine E-Mail mit Anweisungen zum Abschließen des Registriervorgangs wurde an die angegebene E-Mail-Adresse verschickt.
+
+views.scripts.user.reset-password.log-in,Login
+views.scripts.user.reset-password.new-password,Neues Passwort
+views.scripts.user.reset-password.new-password-confirm,Neues Passwort (wiederholen)
+
+views.scripts.partials.assign-countries.heading.currently-assigned,momentan zugeordnete Länder
+views.scripts.partials.assign-countries.heading.none-assigned,Keine Länder zugeordnet
+
+views.scripts.partials.assign-presences.available-presences,Verfügbare Kanäle
+views.scripts.partials.assign-presences.assigned-presences,Momentan zugeordnete Kanäle
+views.scripts.partials.assign-presences.no-presences,Keine Kanäle zugeordnet
+
+views.scripts.partials.presence-summary.quality-score,Qualitätswert
+
+views.scripts.region.edit.presence-details.heading,Details zum Kanal
+views.scripts.region.edit.presence-details.content,Diese Kanäle werden automatisch zu folgender Region hinzugefügt:
+
+views.scripts.partials.new-index-table.entity-list-toggle.title,Zum Vergrößern klicken
+views.scripts.partials.new-index-table.not-available,N/A
+views.scripts.partials.new-index-table.country-count,eins:1 Land,mehr:%count% Länder
+views.scripts.partials.new-index-table.presence-count,eins:1 Kanal,mehr: %count% Kanäle
+
+report.label.date-range,Datenzeitraum
+
+
+country.AF,Afghanistan
+country.AX
+country.AL,Albanien
+country.DZ,Algerien
+country.AS,Amerikanisch-Samoa
+country.AD,Andorra
+country.AO,Angola
+country.AI,Anguilla
+country.AQ,Antarktis
+country.AG,Antigua und Barbuda
+country.AR,Argentinien
+country.AM,Armenien
+country.AW,Aruba
+country.AU,Australien
+country.AT,Österreich
+country.AZ,Aserbaidschan
+country.BS,Bahamas
+country.BH,Bahrain
+country.BD,Bangladesch
+country.BB,Barbados
+country.BY,Weißrussland
+country.BE,Belgien
+country.BZ,Belize
+country.BJ,Benin
+country.BM,Bermuda
+country.BT,Bhutan
+country.BO,Plurinationaler Staat Bolivien
+country.BQ,"Besonderen Gemeinden Bonaire, Sint Eustatius und Saba"
+country.BA,Bosnien und Herzegowina
+country.BW,Botswana
+country.BV,Bouvetinsel
+country.BR,Brasilien
+country.IO,Britisches Territorium im Indischen Ozean
+country.BN,Brunei Darussalam
+country.BG,Bulgarien
+country.BF,Burkina Faso
+country.BI,Burundi
+country.KH,Kambodscha
+country.KM,Kamerun
+country.CA,Kanada
+country.CV,Kap Verde
+country.KY,Cayman Islands
+country.CF,Zentralafrikanische Republik
+country.TD,Tschad
+country.CL,Chile
+country.CN,China
+country.CX,Weihnachtsinsel
+country.CC,Kokosinseln
+country.CO,Kolumbien
+country.KM,Komoren
+country.CG,Kongo
+country.CD,"Kongo, Demokratische Republik"
+country.CK,Cookinseln
+country.CR,Costa Rica
+country.CI,Elfenbeinküste
+country.HR,Kroatien
+country.CU,Kuba
+country.CW,Curaçao
+country.CY,Zypern
+country.CZ,Tschechien
+country.DK,Dänemark
+country.DJ,Dschibuti
+country.DM,Dominica
+country.DO,Dominikanische Repbulik
+country.EC,Ecuador
+country.EG,Ägypten
+country.SV,El Salvador
+country.GQ,Äquatorialguinea
+country.ER,Eritrea
+country.EE,Estland
+country.ET,Äthiopien
+country.FK,Falklandinseln (Malwinen)
+country.FO,Färöer-Inseln
+country.FJ,Fidschi
+country.FI,Finnland
+country.FR,Frankreich
+country.GF,Französisch-Guayana
+country.PF,Französisch-Polynesien
+country.TF,Französische Süd- und Antarktisgebiete
+country.GA,Gabun
+country.GM,Gambia
+country.GE,Georgien
+country.DE,Deutschland
+country.GH,Ghana
+country.GI,Gibraltar
+country.GR,Griechenland
+country.GL,Grönland
+country.GD,Grenada
+country.GP,Guadeloupe
+country.GU,Guam
+country.GT,Guatemala
+country.GG,Guernsey
+country.GN,Guinea
+country.GW,Guinea-Bissau
+country.GY,Guyana
+country.HT,Haiti
+country.HM,Heard und die McDonaldinseln
+country.VA,Heiliger Stuhl (Staat Vatikanstadt)
+country.HN,Honduras
+country.HK,Hong Kong
+country.HU,Ungarn
+country.IS,Island
+country.IN,Indien
+country.ID,Indonesien
+country.IR,"Iran, Islamische Republik"
+country.IQ,Irak
+country.IE,Irland
+country.IM,Isle of Man
+country.IL,Israel
+country.IT,Italien
+country.JM,Jamaica
+country.JP,Japan
+country.JE,Jersey
+country.JO,Jordanien
+country.KZ,Kasachstan
+country.KE,Kenia
+country.KI,Kiribati
+country.KP,"Korea, Demokratische Volksrepublik"
+country.KR,"Korea, Republik"
+country.XK,Kosovo
+country.KW,Kuwait
+country.KG,Kirgisistan
+country.LA,Volksdemokratische Republik Laos
+country.LV,Lettland
+country.LB,Libanon
+country.LS,Lesotho
+country.LR,Liberia
+country.LY,Libyen
+country.LI,Liechtenstein
+country.LT,Litauen
+country.LU,Luxemburg
+country.MO,Macao
+"country.MK,""Macedonia, the Former Yugoslav Republic of"";;""country.MK","Mazedonien, ehemalige Jugoslawische Republik"
+country.MG,Madagascar
+country.MW,Malawi
+country.MY,Malaysia
+country.MV,Malediven
+country.ML,Mali
+country.MT,Malta
+country.MH,Marshallinseln
+country.MQ,Martinique
+country.MR,Mauretanien
+country.MU,Mauritius
+country.YT,Mayotte
+country.MX,Mexiko
+"country.FM,""Micronesia, Federated States of"";;""country.FM",Föderierte Staaten von Mikronesien
+"country.MD,""Moldova, Republic of"";;""country.MD",Republik Moldau (Moldawien)
+country.MC,Monaco
+country.MN,Mongolei
+country.ME,Montenegro
+country.MS,Montserrat
+country.MA,Marokko
+country.MZ,Mosambik
+country.MM,Myanmar
+country.NA,Namibia
+country.NR,Nauru
+country.NP,Nepal
+country.NL,Niederlande
+country.NC,Neukaledonien
+country.NZ,Neuseeland
+country.NI,Nicaragua
+country.NE,Niger
+country.NG,Nigeria
+country.NU,Niue
+country.NF,Norfolkinsel
+country.MP,Nördliche Marianen
+country.NO,Norwegen
+country.OM,Oman
+country.PK,Pakistan
+country.PW,Palau
+country.PS,Staat Palästina
+country.PA,Panama
+country.PG,Papua-Neuguinea
+country.PY,Paraguay
+country.PE,Peru
+country.PH,Philippinen
+country.PN,Pitcairninseln
+country.PL,Polen
+country.PT,Portugal
+country.PR,Puerto Rico
+country.QA,Katar
+country.RE,La Réunion
+country.RO,Rumänien
+country.RU,Russische Föderation
+country.RW,Ruanda
+country.BL,Saint-Barthélemy
+country.SH,"St. Helena, Ascension und Tristan da Cunha"
+country.KN,St. Kitts und Nevis
+country.LC,St. Lucia
+country.MF,St. Martin (französischer Teil)
+country.PM,Saint-Pierre und Miquelon
+country.VC,St. Vincent und die Grenadinen
+country.WS,Samoa
+country.SM,San Marino
+country.ST,São Tomé und Príncipe
+country.SA,Saudi Arabien
+country.SN,Senegal
+country.RS,Serbien
+country.SC,Seychellen
+country.SL,Sierra Leone
+country.SG,Singapur
+country.SX,Sint Maarten (niederländischer Teil)
+country.SK,Slowakei
+country.SI,Slowenien
+country.SB,Salomonen
+country.SO,Somalia
+country.ZA,Südafrika
+country.GS,Südgeorgien und die Südlichen Sandwichinseln
+country.SS,Südsudan
+country.ES,Spanien
+country.LK,Sri Lanka
+country.SD,Sudan
+country.SR,Suriname
+country.SJ,Svalbard und Jan Mayen
+country.SZ,Swasiland
+country.SE,Schweden
+country.CH,Schweiz
+country.SY,Syrien
+country.TW,"Republik China (Taiwan)"""
+country.TJ,Tadschikistan
+country.TZ,Vereinigte Republik Tansania
+country.TH,Thailand
+country.TL,Osttimor
+country.TG,Togo
+country.TK,Tokelau
+country.TO,Tonga
+country.TT,Trinidad und Tobago
+country.TN,Tunesien
+country.TR,Türkei
+country.TM,Turkmenistan
+country.TC,Turks- und Caicosinseln
+country.TV,Tuvalu
+country.UG,Uganda
+country.UA,Ukraine
+country.AE,Vereinigte Arabische Emirate
+country.GB,Großbritannien
+country.US,Vereinigte Staaten
+country.UM,United States Minor Outlying Islands
+country.UY,Uruguay
+country.UZ,Usbekistan
+country.VU,Vanuatu
+country.VE,Bolivarische Republik Venezuela
+country.VN,Vietnam
+country.VG,Britische Jungferninseln
+country.VI,Amerikanische Jungferninseln
+country.WF,Wallis und Futuna
+country.EH,Westsahara
+country.YE,Jemen
+country.ZM
+country.ZW,Simbabwe
+
+
+
+js.datatables.searchBox,Nach Inhalt suchen
+js.datatables.search;;js.datatables.search
+js.datatables.searchPlaceholder,Suche
+js.datatables.emptyTable,Kein %type% gefunden
+js.datatables.zeroRecords,Kein passender %type% gefunden
+js.datatables.info,_START_bis_ENDE
+js.datatables.infoEmpty,Keine %types% zum Anzeigen
+js.datatables.infoFiltered;;js.datatables.infoFiltered
+js.datatables.loading,Laden…
+
+js.home.map-data.column.country,Land
+js.home.map-data.column.display-name,Benutzername
+js.home.map-data.column.presences,Präsenzen
+js.home.map-data.column.id,ID
+js.home.map-data.metric.title,{1} (Präsenzen: {2})
+js.home.map-data.metric.kpi,{1}
+
+js.templates.post.likes,Gefällt-mir-Angaben
+js.templates.post.comments,Kommentare
+js.templates.post.shares,geteilte Inhalte
+js.templates.postResponse_needed.title,Keine Antwort erforderlich
+js.templates.postResponse_needed.message,Warte auf Antwort
+js.templates.postResponse_notNeeded.title,Antwort erforderlich
+js.templates.postResponse_notNeeded.message,Keine Antwort erforderlich
+js.templates.errorPopup.message,Fehler
+js.templates.emptyCountryBadge.message,Dieses Land hat keine Präsenzen
+js.templates.globalScore.title,British Council im gesamten Web
+js.templates.globalScore.fans,Freunde/Follower
+js.templates.globalScore.description,Dies beruht auf den Gesamtwerten aller British Council Vertretungen auf der Welt.
+js.templates.globalScore.total-presences-description,Kanäle gesamt
+
+js.datatables.filter.presence-type,Nach Art der Präsenz filtern
+js.datatables.filter.region,Nach Region filtern
+js.datatables.filter.group,nach SBU filtern
+
+js.date-picker.specific-date,bestimmtes Datum
+js.date-picker.date-range,Datumszeitraum
+js.date-picker.last-30-days,Letzte 30 Tage
+js.date-picker.last-7-days,Letzte 7 Tage
+js.date-picker.month-to-date,Monatsanfang bis heute
+js.date-picker.last-month,Letzter Monat
+js.date-picker.last-quarter,Letztes Quartal
+
+js.auto-confirm.are-you-sure,Sind Sie sicher?
+
+js.feedbackForm.missing.name,Bitte Namen eingeben
+js.feedbackForm.missing.email
+js.feedbackForm.missing.body,Bitte Nachricht eingeben
+js.feedbackForm.message.success,Feedback abgesendet.Vielen Dank!
+js.feedbackForm.message.error,"Fehler beim Übertragen des Feedbacks, bitte versuchen Sie es erneut"
+
+js.chart.message.toggle,"Bitte auf jedes Feld klicken, um zwischen den Ansichten hin- und herzuschalten"
+js.chart.message.toggle-all,Alle verbergen

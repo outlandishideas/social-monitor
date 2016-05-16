@@ -512,7 +512,7 @@
 "route.config.index.sections.engagement.sw.active-users-large","...large channels"
 "route.config.index.sections.engagement.sw.active-users-extra-large","...and extra large channels"
 
-"route.config.index.sections.engagement.in.title","LinkedIn Engagement Score (Facebook only)"
+"route.config.index.sections.engagement.in.title","LinkedIn Engagement Score (Linkedin only)"
 "route.config.index.sections.engagement.in.description","The LinkedIn Engagement Score is an aggregation of likes and comments."
 "route.config.index.sections.engagement.in.weighting","LinkedIn Engagement Score Weighting"
 "route.config.index.sections.engagement.in.active-users-small","Percentage of users assumed to be active for small channels"
