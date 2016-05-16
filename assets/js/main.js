@@ -762,7 +762,7 @@ app.utils = {
 		} else if(texts && texts.length===0) {
 			summary = '';
 		} else {
-			summary = 'All ' + $select.data('label');
+			summary = '{{ js.summariseSelectedOptions.all | translate }} ' + $select.data('label');
 		}
 		return summary;
 	},

@@ -93,7 +93,7 @@ function metricAttributes($metric, $translator) {
                     <h2 class="bd-btm"><?php echo $badge['title']; ?></h2>
 
                     <div class="badge-rank bd-btm">
-                        <h3>Rank</h3>
+                        <h3><?php echo $translator->trans('Global.rank') ?></h3>
                         <div class="rank-value">
                             <!-- breaking the line causes the display not display properly -->
                             <span class="numerator"><?php echo $badge['rank']['value']; ?><span><?php echo trim(str_replace(range(0,9),'',$nf->format($badge['rank']['value'])));?></span></span><span class="denominator">/<?php echo $badge['rank']['denominator']; ?></span>

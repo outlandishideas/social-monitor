@@ -168,6 +168,7 @@
 "route.country.view.info-panel.audience-size","Available Audience Size: %size%"
 "route.country.view.info-panel.country-population","Country Population: %population%"
 "route.country.view.info-panel.digital-population","Digital Population: %population% (%percent%%)"
+"route.country.view.info-panel.presences","Presences"
 
 "route.country.edit.page-title","Edit Country"
 "route.country.edit.message.success","Country saved"
@@ -1165,3 +1166,5 @@
 
 "js.chart.message.toggle","Click on each item to toggle them on or off the graph"
 "js.chart.message.toggle-all","Hide all"
+
+"js.summariseSelectedOptions.all","All"
