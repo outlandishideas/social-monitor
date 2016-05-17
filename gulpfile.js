@@ -11,7 +11,7 @@ var _ = require('lodash');
 var dot = require('dot-object');
 var path = require('path');
 var plugins = loadPlugins();
-
+var config = yaml.safeLoad(fs.readFileSync('application/configs/config.yaml', 'utf8'));
 
 /**
  * Looks up a key for a color scheme in a config file and returns the path if it exists
@@ -20,13 +20,12 @@ var plugins = loadPlugins();
  * @param configPath
  * @return filePath
  */
-function loadColors(configFile, configPath) {
+function loadColors(configPath) {
 
 	var scssDir = 'assets/scss'; // directory of scss files
 	var defaultColors = 'britishcouncil.scss'; // default color scheme
 	var defaultPath = path.join(scssDir, defaultColors); // use default file
 
-	var config = yaml.safeLoad(fs.readFileSync(configFile, 'utf8')); // load the specified config file
 	var colors = dot.pick(configPath, config);
 
 	if(!colors){
@@ -61,7 +60,7 @@ gulp.task('app:styles:preprocess', function() {
 gulp.task('app:styles', ['app:styles:preprocess'], function() {
 	var errorHandler = plugins.notify.onError("Error: <%= error.message %>");
 	return gulp.src([
-		loadColors('application/configs/config.yaml', 'prod.app.colorscheme'),
+		loadColors('prod.app.colorscheme'),
 		'assets/build/scss/social-monitor.scss'])
 		.pipe(plugins.concat('social-monitor.scss'))
 		.pipe(plugins.plumber({errorHandler: errorHandler}))
@@ -104,7 +103,12 @@ gulp.task('app:lang', ['app:lang:csv2json'], function () {
 						path: langDir + '/' + file,
 						strictDictionary: false,
 						defaultDictionary: langDir + '/lang.en.json',
-						pattern: /\{{2}([-_\w\.\s\"\']+\s?\|\s?translate[\w\s\|]*)\}{2}/g // our keys can have hyphens and underscores
+						pattern: /\{{2}([-_\w\.\s\"\']+\s?\|\s?translate[\w\s\|]*)\}{2}/g, // our keys can have hyphens and underscores
+						transform: {
+							replaceCompany: function(string){
+								return string.replace('%company%', dot.pick('prod.app.client_name', config))
+							}
+						}
 					}).on('end', function() {
 						plugins.util.log('app:lang:', plugins.util.colors.green('✔ ') + file);
 					}).on('error', function () {

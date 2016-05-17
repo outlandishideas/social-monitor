@@ -1156,9 +1156,9 @@ js.templates.postResponse_notNeeded.title,Antwort erforderlich
 js.templates.postResponse_notNeeded.message,Keine Antwort erforderlich
 js.templates.errorPopup.message,Fehler
 js.templates.emptyCountryBadge.message,Dieses Land hat keine Präsenzen
-js.templates.globalScore.title,British Council im gesamten Web
+js.templates.globalScore.title,%company% im gesamten Web
 js.templates.globalScore.fans,Freunde/Follower
-js.templates.globalScore.description,Dies beruht auf den Gesamtwerten aller British Council Vertretungen auf der Welt.
+js.templates.globalScore.description,Dies beruht auf den Gesamtwerten aller %company% Vertretungen auf der Welt.
 js.templates.globalScore.total-presences-description,Kanäle gesamt
 
 js.datatables.filter.presence-type,Nach Art der Präsenz filtern

@@ -1157,9 +1157,9 @@
 "js.templates.postResponse_notNeeded.message","No response required"
 "js.templates.errorPopup.message","Error"
 "js.templates.emptyCountryBadge.message","This country has no presences."
-"js.templates.globalScore.title","British Council around the web"
+"js.templates.globalScore.title","%company% around the web"
 "js.templates.globalScore.fans","Fans/Followers"
-"js.templates.globalScore.description","This is built up from the total scores from all British Council presences around the world."
+"js.templates.globalScore.description","This is built up from the total scores from all %company% presences around the world."
 "js.templates.globalScore.total-presences-description","Total Channels"
 
 "js.datatables.filter.presence-type","Filter by presence type"

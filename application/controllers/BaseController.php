@@ -43,7 +43,7 @@ class BaseController extends Zend_Controller_Action
     }
 
     public function getCompanyName(){
-        return $this->getContainer()->getParameter('company.name');
+        return $this->config->app->client_name;
     }
 
     public function preDispatch()
@@ -145,6 +145,7 @@ class BaseController extends Zend_Controller_Action
         $configArray = $this->config->toArray();
         $this->view->jsConfig = $configArray['jsConfig'];
         $this->view->jsConfig['apiEndpoint'] = $this->view->baseUrl('/');
+        $this->view->jsConfig['companyName'] = $this->getCompanyName();
 
 		$this->translator = $translator;
     }
