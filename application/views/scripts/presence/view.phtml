@@ -50,7 +50,7 @@ if ($sizeDiff > 0) {
         <div class="model-header bd-btm">
             <a href="<?php echo $presence->page_url; ?>" target="_blank"><span class="page-icon white-background <?php echo $presence->getPresenceSign(); ?>"></span></a>
             <div class="picker">
-                <label for="presence-switcher">Presence:</label>
+                <label for="presence-switcher"><?php echo $translator->trans('Global.presence')?>:</label>
                 <select id="presence-switcher" data-url-template="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>'the_id')); ?>">
                     <?php foreach ($this->allPresences as $type=>$presences) : ?>
                         <optgroup label="<?php echo $type; ?>">
