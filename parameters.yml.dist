@@ -8,6 +8,7 @@ parameters:
     linkedin.client_secret:
     linkedin.redirect_url:
     twitter.fetch_per_page: 200
+    email.login: /@britishcouncil\.[\.a-z]{2,5}$/i
     db.name:
     db.host:
     db.username:
