@@ -91,7 +91,7 @@ route.index.index.pdf-download-link-title,Info-PDF herunterladen
 route.index.index.contextual-help.page-title,"Wählen Sie Reichweite, Aktivität, Qualität oder Gesamt um Details zu jedem Land bzw. jeder SBU-Region zu erfahren."
 route.index.index.contextual-help.date-range,"Bewegen Sie den Datumsanzeiger, um die letzten Entwicklungen der Werte für jedes Land bzw. jede SBU-Region zu sehen."
 route.index.index.contextual-help.map,"Klicken Sie auf die Karte, um ein Land auszuwählen und eine Vorschau auf die einzelnen Social Media Kanäle  zu erhalten."
-route.index.index.search-result-label
+route.index.index.search-result-label,Suchergebnisse:
 
 
 buttons.common.delete,Löschen
@@ -142,7 +142,7 @@ route.region.edit.label.name,Name
 
 route.region.edit-all.page-title,Alle Regionen bearbeiten
 route.region.edit-all.empty-table,Keine Regionen gefunden
-route.region.edit-all.message.display-name-missing
+route.region.edit-all.message.display-name-missing,Bitte vergeben Sie einen Namen für %region%
 route.region.edit-all.message.success,%count% Regionen gespeichert
 route.region.edit-all.table-header.display-name,Ländernamen
 
@@ -188,7 +188,7 @@ route.country.edit-all.message.country-missing,Bitte Land auswählen für %count
 route.country.edit-all.table-header.country,Land
 route.country.edit-all.table-header.display-name,Name
 route.country.edit-all.table-header.audience-size,Besuchermenge
-route.country.edit-all.table-header.country-population
+route.country.edit-all.table-header.country-population,Einwohnerzahl
 route.country.edit-all.table-header.internet-penetration,Internetreichweite
 
 route.country.delete.message.success,Land gelöscht
@@ -256,13 +256,13 @@ route.group.report.presence.header,Kanäle: %count%
 
 
 route.presence.index.page-title,Kanäle
-route.presence.index.table-empty
+route.presence.index.table-empty,Keine Kanäle gefunden
 
 route.presence.new.page-title,Neuer Kanal
 
 route.presence.delete.message.success,Kanal gelöscht
 
-route.presence.assign.message.success
+route.presence.assign.message.success,Kanal wurde dem Benutzer zugeordnet
 route.presence.assign.message.failure,Kanal konnte keinem Benutzer zugewiesen werden
 
 route.presence.graph-data.message.not-found,Kanal wurde nicht gefunden
@@ -307,15 +307,15 @@ route.presence.edit.access-token.no-user.message,Dieser Kanal hat momentan kein 
 route.presence.edit.access-token.button,Benutzen Sie Ihr Zugangs-Token
 
 route.presence.report.page-title,Social Media Monitor Report
-route.presence.report.presence.header
+route.presence.report.presence.header,Kanal: %presence%
 
 
 
 
 route.user.index.page-title,Benutzer
 
-route.user.linkedin.page-title,auf LinkedIn einloggen
-route.user.linkedin.message.success
+route.user.linkedin.page-title,Auf LinkedIn einloggen
+route.user.linkedin.message.success,LinkedIn Account verbunden
 
 route.user.login.page-title,Login
 route.user.login.message.cannot-login,Ungültiger Benutzername/Passwort oder E-Mail-Adresse nicht bestätigt worden
@@ -353,7 +353,7 @@ route.user.edit.registered,Benutzer registriert
 route.user.edit.message.both-passwords-required,Beide Passwörter erforderlich
 route.user.edit.message.password-mismatch,Passwörter passen nicht zusammen
 route.user.edit.message.passwords-too-short,Passwort muss mindestens 4 Zeichen haben
-route.user.edit.message.missing-email
+route.user.edit.message.missing-email,Bitte geben Sie eine E-Mail-Adresse an
 route.user.edit.message.invalid-email,Bitte eine gültige E-Mail-Adresse eingeben
 route.user.edit.message.use-company-email,"Sie benötigen eine gültige %company% E-Mail-Adresse, um sich zu registrieren"
 route.user.edit.message.email-in-use,E-Mail-Adresse bereits vergeben
@@ -421,7 +421,7 @@ route.fetch.log.updating-domains.start,Verlinkte Domains werden aktualisiert
 route.fetch.log.updating-domains.success,Domains %count% eingefügt
 route.fetch.log.start,Prozess %action% wird gestartet %start
 route.fetch.log.lock-acquire.already-running,Prozess bereits im Gang und vor %seconds% Sekunden letztmals aktiv
-route.fetch.log.lock-acquire.stale
+
 route.fetch.log.presence-history.start,Kanalverlauf wird aktualisiert
 route.fetch.log.presence-history.error,Fehler:%message%
 route.fetch.log.update-info.start,Informationen werden aktualisiert %message%
@@ -458,8 +458,8 @@ route.config.index.sections.reach.target-audience.yt-min,Mindestwert Youtube-Nut
 route.config.index.sections.reach.target-audience.yt-opt,Optimalwert Youtube-Nutzer (% von gesamt)
 route.config.index.sections.reach.target-audience.in-min,Mindeswert LinkedIn-Nutzer (% von gesamt)
 route.config.index.sections.reach.target-audience.in-opt,Optimalwert LinkedIn-Nutzer (% von gesamt)
-route.config.index.sections.reach.target-audience.shared-audience-extra-large
-route.config.index.sections.reach.target-audience.shared-audience-large
+route.config.index.sections.reach.target-audience.shared-audience-extra-large,%  der Zielgruppe des Besitzers auf Kanälen mit sehr hoher Reichweite
+route.config.index.sections.reach.target-audience.shared-audience-large,%  der Zielgruppe des Besitzers auf Kanälen mit hoher Reichweite
 route.config.index.sections.reach.target-audience.shared-audience-medium,%  der Zielgruppe des Besitzers auf Kanälen mit mittlererer Reichweite
 route.config.index.sections.reach.target-audience.shared-audience-small,% der Zielgrupp des Besitzers auf Kanälen mit geringer Reichweite
 route.config.index.sections.reach.time-to-target-audience.title,Zeit zur Zielgruppenerfassung
@@ -633,7 +633,7 @@ badge.total.description,"<p>Der KPI-Gesamtwert beruht auf einem allgemeinen Wert
 
 
 chart.actionsPerDay.title,Messwert: Aktivität pro Tag
-chart.actionsPerDay.description
+
 chart.actionsPerDay.x-axis-label,Datum
 chart.actionsPerDay.y-axis-label,Anzahl der Aktivitäten pro Tag
 chart.actionsPerDay.relevant-links,Relevante Links pro Tag
@@ -765,11 +765,11 @@ table-header.total-score.description,"Gesamtwert zeigt die kombinierten Werte de
 metric.posts_per_day.title,Aktivität pro Tag
 metric.branding.title,Korrektes Branding
 metric.facebook_engagement.title,Facebook-Aktivitätswert
-metric.instagram_engagement.title
-metric.klout_score.title
+metric.instagram_engagement.title,Instagram-Aktivitätswert
+metric.klout_score.title,
 metric.likes_per_post.title,Gefällt-mir-Angaben pro Posting
 metric.likes_per_view.title,Akivitäten pro Aufruf
-metric.linkedin_engagement.title
+metric.linkedin_engagement.title,LinkedIn-Aktivitätswert
 metric.popularity.title,Beliebtheit
 metric.popularity_time.title,Beliebtheitstrend
 metric.relevance.title,Relevanz
@@ -878,7 +878,7 @@ report.label.date-range,Datenzeitraum
 
 
 country.AF,Afghanistan
-country.AX
+country.AX,Åland
 country.AL,Albanien
 country.DZ,Algerien
 country.AS,Amerikanisch-Samoa
@@ -1125,7 +1125,7 @@ country.VI,Amerikanische Jungferninseln
 country.WF,Wallis und Futuna
 country.EH,Westsahara
 country.YE,Jemen
-country.ZM
+country.ZM,Sambia
 country.ZW,Simbabwe
 
 
@@ -1176,7 +1176,7 @@ js.date-picker.last-quarter,Letztes Quartal
 js.auto-confirm.are-you-sure,Sind Sie sicher?
 
 js.feedbackForm.missing.name,Bitte Namen eingeben
-js.feedbackForm.missing.email
+js.feedbackForm.missing.email,Bitte E-Mail eingeben
 js.feedbackForm.missing.body,Bitte Nachricht eingeben
 js.feedbackForm.message.success,Feedback abgesendet.Vielen Dank!
 js.feedbackForm.message.error,"Fehler beim Übertragen des Feedbacks, bitte versuchen Sie es erneut"
