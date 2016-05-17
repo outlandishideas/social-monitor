@@ -195,7 +195,8 @@ class FetchController extends BaseController
 		$stmt = $db->prepare('INSERT INTO domains (domain, is_bc) VALUES (:domain, :is_bc)');
 		foreach ($toInsert as $domain) {
             $is_bc = 0;
-            if(preg_match('/britishcouncil/i', $domain)){
+			$domainName = $this->getContainer()->getParameter('domain.name');
+            if(preg_match('/'.$domainName.'/i', $domain)){
                 $is_bc = 1;
             }
 			try {
