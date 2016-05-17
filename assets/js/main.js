@@ -110,7 +110,7 @@ $.extend(app, {
             </div>',
 		globalScore:
 			'<div id="overall-score" class="badge-small" data-country-id="0" data-badge data-score="0">\
-				<h3>{{ js.templates.globalScore.title | translate }}</h3>\
+				<h3> {{ js.templates.globalScore.title | translate | replaceCompany }}</h3>\
 				<div class="badge-score bd-btm">\
 					<h4><span data-badge-title>{{ badge.total.title | translate }}</span> {{ Global.score | translate }}</h4>\
 					<div class="score-value" data-badge-score="%"></div>\
@@ -123,7 +123,7 @@ $.extend(app, {
 				</div>\
 				<div class="bd-btm">\
 					<div>\
-						{{ js.templates.globalScore.description | translate }}\
+						{{ js.templates.globalScore.description | translate | replaceCompany }}\
 					</div>\
 				</div>\
 			</div>\
@@ -762,7 +762,7 @@ app.utils = {
 		} else if(texts && texts.length===0) {
 			summary = '';
 		} else {
-			summary = 'All ' + $select.data('label');
+			summary = '{{ js.summariseSelectedOptions.all | translate }} ' + $select.data('label');
 		}
 		return summary;
 	},

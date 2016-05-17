@@ -168,6 +168,7 @@
 "route.country.view.info-panel.audience-size","Available Audience Size: %size%"
 "route.country.view.info-panel.country-population","Country Population: %population%"
 "route.country.view.info-panel.digital-population","Digital Population: %population% (%percent%%)"
+"route.country.view.info-panel.presences","Presences"
 
 "route.country.edit.page-title","Edit Country"
 "route.country.edit.message.success","Country saved"
@@ -339,8 +340,8 @@
 "route.user.register.page-title","Register user"
 "route.user.register.registration-successful","Registration successful"
 "route.user.register.email.subject","You have successfully registered"
-"route.user.register.email.message","<p>Hi %name%,</p><p>Thank you for registering with the British Council Social Monitor</p><p>If you did not register for this service, please ignore this email.</p><p>Otherwise, click this link to confirm your email so that you can login with your new account <a href=""%link%"">Confirm email</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
-"route.user.register.email.from","The British Council Social Media Monitor team"
+"route.user.register.email.message","<p>Hi %name%,</p><p>Thank you for registering with the %company% Social Monitor</p><p>If you did not register for this service, please ignore this email.</p><p>Otherwise, click this link to confirm your email so that you can login with your new account <a href=""%link%"">Confirm email</a></p><p>Thanks,<br />the %company% Social Media Monitor team</p>"
+"route.user.register.email.from","The %company% Social Media Monitor team"
 "route.user.register.email.from-address","do.not.reply@example.com"
 
 "route.user.new.page-title","New User"
@@ -354,7 +355,7 @@
 "route.user.edit.message.passwords-too-short","Password must be at least 4 characters"
 "route.user.edit.message.missing-email","Please enter an email address"
 "route.user.edit.message.invalid-email","Please enter a valid email address"
-"route.user.edit.message.use-company-email","To register, you must use a valid British Council email address"
+"route.user.edit.message.use-company-email","To register, you must use a valid %company% email address"
 "route.user.edit.message.email-in-use","Email already in use"
 "route.user.edit.message.username-in-use","User name already in use"
 
@@ -364,8 +365,8 @@
 "route.user.manage.message.permissions-saved","User permissions saved"
 
 "route.user.forgotten.email.subject","Password reset"
-"route.user.forgotten.email.message","'<p>Hi %name%,</p><p>A request to reset the password for your British Council Social Media Monitor account was recently made.</p><p>If you did not request a reset, please ignore this email.</p><p>Otherwise, click this link to reset your password <a href=""%link%"">Reset password</a></p><p>Thanks,<br />the British Council Social Media Monitor team</p>"
-"route.user.forgotten.email.from","The British Council Social Media Monitor team"
+"route.user.forgotten.email.message","'<p>Hi %name%,</p><p>A request to reset the password for your %company% Social Media Monitor account was recently made.</p><p>If you did not request a reset, please ignore this email.</p><p>Otherwise, click this link to reset your password <a href=""%link%"">Reset password</a></p><p>Thanks,<br />the %company% Social Media Monitor team</p>"
+"route.user.forgotten.email.from","The %company% Social Media Monitor team"
 "route.user.forgotten.email.from-address","do.not.reply@example.com"
 
 "route.user.confirm-email.message.success","Thank you for confirming your email. You can now login."
@@ -512,7 +513,7 @@
 "route.config.index.sections.engagement.sw.active-users-large","...large channels"
 "route.config.index.sections.engagement.sw.active-users-extra-large","...and extra large channels"
 
-"route.config.index.sections.engagement.in.title","LinkedIn Engagement Score (Facebook only)"
+"route.config.index.sections.engagement.in.title","LinkedIn Engagement Score (Linkedin only)"
 "route.config.index.sections.engagement.in.description","The LinkedIn Engagement Score is an aggregation of likes and comments."
 "route.config.index.sections.engagement.in.weighting","LinkedIn Engagement Score Weighting"
 "route.config.index.sections.engagement.in.active-users-small","Percentage of users assumed to be active for small channels"
@@ -527,6 +528,14 @@
 "route.config.index.sections.engagement.yt.active-users-medium","...medium channels"
 "route.config.index.sections.engagement.yt.active-users-large","...large channels"
 "route.config.index.sections.engagement.yt.active-users-extra-large","...and extra large channels"
+
+"route.config.index.sections.engagement.number-of-posts.best.hint","The presence will get the best score if the ratio of replies to the number of posts from others falls below this number"
+"route.config.index.sections.engagement.number-of-posts.best.label","Best ratio of replies to number of posts"
+"route.config.index.sections.engagement.number-of-posts.good.hint","The presence will get a medium score if the ratio of replies to the number of posts from others falls below this number"
+"route.config.index.sections.engagement.number-of-posts.good.label","Good ratio of replies to number of posts"
+"route.config.index.sections.engagement.number-of-posts.description","The more replies that each post receives the higher the engagement score will be"
+"route.config.index.sections.engagement.number-of-posts.title","Replies to Number of Posts"
+"route.config.index.sections.engagement.number-of-posts.weighting.label","Replies to Number of Posts Weighting"
 
 "route.config.index.sections.quality.actions-per-day.title","Actions per Day"
 "route.config.index.sections.quality.actions-per-day.description","A measurement of the average number of actions per day against the benchmark"
@@ -553,6 +562,7 @@
 "route.config.index.sections.quality.likes-per-view.best-label","Best Likes per View"
 "route.config.index.sections.quality.likes-per-view.best-hint","The channel will get the best score if the average likes per view is equal to or more than this"
 
+
 "route.config.index.sections.quality.sign-off.title","Sign Off"
 "route.config.index.sections.quality.sign-off.description","The channel has been signed off by key stakeholders"
 "route.config.index.sections.quality.sign-off.weighting","Sign Off Weighting"
@@ -562,11 +572,20 @@
 "route.config.index.sections.quality.branding.weighting","Branding Weighting"
 
 "route.config.index.sections.quality.relevance.title","Relevance"
-"route.config.index.sections.quality.relevance.description","How relevant the channel's actions have been. This is currently based on the number of relevant, British Council domains that have been linked to in their actions per day."
+"route.config.index.sections.quality.relevance.description","How relevant the channel's actions have been. This is currently based on the number of relevant, %company% domains that have been linked to in their actions per day."
 "route.config.index.sections.quality.relevance.weighting","Relevance Weighting"
 "route.config.index.sections.quality.relevance.facebook-target","Percent of Actions Per Day that should be relevant for Facebook"
 "route.config.index.sections.quality.relevance.twitter-target","Percent of Actions Per Day that should be relevant for Twitter"
 "route.config.index.sections.quality.relevance.sina-weibo-target","Percent of Actions Per Day that should be relevant for Sina Weibo"
+
+"route.config.index.sections.quality.links-per-day.title","Links Per Day"
+"route.config.index.sections.quality.links-per-day.description","Measures the average number of links used within posts per day"
+"route.config.index.sections.quality.links-per-day.weighting","Links Per Day Weighting"
+"route.config.index.sections.quality.links-per-day.label","Links Per Day"
+"route.config.index.sections.quality.links-per-day.good.hint","Number above or below [links per day] that is considered OK"
+"route.config.index.sections.quality.links-per-day.good.label","Links Per Day OK range"
+"route.config.index.sections.quality.links-per-day.bad.label","Links Per Day bad range"
+"route.config.index.sections.quality.links-per-day.bad.hint","Number above or below [links per day] that is considered too much or too little"
 
 "route.config.index.sections.all.weighting-hint","A higher weighting will make this metric more important when calculating the score for the %section% Badge"
 "route.config.index.numeric-error","Value must be numeric"
@@ -584,10 +603,9 @@
 
 "route.domain.index.page-title","Domains"
 "route.domain.index.paragraph-1","This shows the list of all domains linked to by tweets or facebook posts. Click the links to see more usage information and the specific URLs."
-"route.domain.index.paragraph-2","You can say whether or not a domain belongs to the British Council by toggling the checkbox on the right, and clicking 'save'. Note that if you reorder the columns before saving, any changes will be lost."
+"route.domain.index.paragraph-2","You can say whether or not a domain belongs to the %company% by toggling the checkbox on the right, and clicking 'save'. Note that if you reorder the columns before saving, any changes will be lost."
 "route.domain.index.table-header.domain","Domain"
 "route.domain.index.table-header.links","Links"
-"route.domain.index.table-header.relevant","British Council"
 "route.domain.index.message.success","Domains updated"
 "route.domain.index.message.access-error","You do not have sufficient access to change this data"
 
@@ -663,7 +681,6 @@
 "table-header.actions-per-day.description",""
 
 "table-header.branding.label","Branding"
-"table-header.branding.description","Branding shows whether a channel meets the British Council branding guidelines for social media channels."
 
 "table-header.countries.label","Countries"
 "table-header.countries.description","The countries in this region."
@@ -799,6 +816,8 @@
 "views.scripts.user.edit.label.user.email","Email address"
 "views.scripts.user.edit.label.user.level","User Level"
 "views.scripts.user.edit.label.linkedin-expires","You will be logged out of Linkedin in "
+"views.scripts.user.edit.label.refresh-linkedin","Refresh account"
+"views.scripts.user.edit.label.connect-linkedin","Connect account"
 
 "views.scripts.user.forgotten.username.label","Name/Email"
 "views.scripts.user.forgotten.button.back-to-login","Back to login"
@@ -812,6 +831,8 @@
 "views.scripts.user.index.user-table.heading.options","Options"
 "views.scripts.user.index.user-level.unknown","Unknown (%user_level%)"
 "views.scripts.user.index.last-sign-in.never","Never signed in"
+"views.scripts.user.index.all","All"
+"views.scripts.user.index.none","None"
 
 "views.scripts.user.index.cell-options.access-rights","Access Rights"
 "views.scripts.user.index.cell-options.confirm-mail","Confirm Email"
@@ -1138,9 +1159,9 @@
 "js.templates.postResponse_notNeeded.message","No response required"
 "js.templates.errorPopup.message","Error"
 "js.templates.emptyCountryBadge.message","This country has no presences."
-"js.templates.globalScore.title","British Council around the web"
+"js.templates.globalScore.title","%company% around the web"
 "js.templates.globalScore.fans","Fans/Followers"
-"js.templates.globalScore.description","This is built up from the total scores from all British Council presences around the world."
+"js.templates.globalScore.description","This is built up from the total scores from all %company% presences around the world."
 "js.templates.globalScore.total-presences-description","Total Channels"
 
 "js.datatables.filter.presence-type","Filter by presence type"
@@ -1165,3 +1186,5 @@
 
 "js.chart.message.toggle","Click on each item to toggle them on or off the graph"
 "js.chart.message.toggle-all","Hide all"
+
+"js.summariseSelectedOptions.all","All"

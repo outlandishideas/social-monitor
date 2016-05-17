@@ -142,7 +142,7 @@
 		$buttons = $this->gatekeeper()->filterAll(array(
 			'<p><a href="%url%" class="button-bc">'.$translator->trans('buttons.common.cancel').'</a></p>' => array('controller'=>'user', 'action'=>'index')
 		));
-		$buttons[] = '<input type="submit" value="Save" class="primaryAction button-bc">';
+		$buttons[] = '<input type="submit" value="'.$translator->trans('buttons.common.save').'" class="primaryAction button-bc">';
 		?>
 		<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
 	</form>

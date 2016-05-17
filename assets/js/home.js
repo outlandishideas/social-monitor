@@ -308,6 +308,8 @@ app.home = {
 		var $slider = $dateSlider.find('.range-slider');
 		var $text = $dateSlider.find('.date-range-text');
 		var $input = $dateSlider.find('input[type=hidden]');
+		var options = { year: 'numeric', month: 'short', day: 'numeric' };
+		var locale = jsConfig.dateLocale;
 
 		var lastVal = null;
 		$slider.on('change.fndtn.slider', function () {
@@ -320,7 +322,7 @@ app.home = {
 				var then = now.clone();
 				then.addDays(-dayRange);
 				$slider.data('val', value);
-				$text.text(then.toString('dd MMM yyyy') + ' - ' + now.toString('dd MMM yyyy'));
+				$text.text(then.toLocaleDateString(locale, options) + ' - ' + now.toLocaleDateString(locale, options));
 				app.home.updateAll();
 			}
 		});

@@ -5,7 +5,7 @@ $translator = $this->translate();
 $buttons = $this->gatekeeper()->filterAll(array(
 	'<a class="button-bc" href="%url%">' . $translator->trans('buttons.common.cancel') . '</a>' => array('controller'=>'index', 'action'=>'index')
 ));
-$buttons[] = '<button form="settings" type="submit" class="button-bc">Save</button>';
+$buttons[] = '<button form="settings" type="submit" class="button-bc">'.$translator->trans('buttons.common.save').'</button>';
 ?>
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>

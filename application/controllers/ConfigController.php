@@ -142,12 +142,12 @@ class ConfigController extends BaseController {
                 'kpis' => array(
 					//TODO: Remove this as we currently aren't using ResponseRatio
                     (object)array(
-                        'title' => 'Replies to Number of Posts',
-                        'description' => 'The more replies that each post receives the higher the engagement score will be',
+                        'title' => $this->translator->trans('route.config.index.sections.engagement.number-of-posts.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.engagement.number-of-posts.description'),
                         'values' => array(
-                            'replies_to_posts_weighting'=>array('label'=>' Replies to Number of Posts Weighting'),
-                            'replies_to_number_posts_best'=>array('label'=>'Best ratio of replies to number of posts', 'hint'=>'The presence will get the best score if the ratio of replies to the number of posts from others falls below this number'),
-                            'replies_to_number_posts_good'=>array('label'=>'Good ratio of replies to number of posts', 'hint'=>'The presence will get a medium score if the ratio of replies to the number of posts from others falls below this number'),
+                            'replies_to_posts_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.number-of-posts.weighting.label')),
+                            'replies_to_number_posts_best'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.number-of-posts.best.label'), 'hint'=>$this->translator->trans('route.config.index.sections.engagement.number-of-posts.best.hint')),
+                            'replies_to_number_posts_good'=>array('label'=>$this->translator->trans('route.config.index.sections.engagement.number-of-posts.good.label'), 'hint'=>$this->translator->trans('route.config.index.sections.engagement.number-of-posts.good.hint')),
                         )
                     ),
                     (object)array(
@@ -265,13 +265,13 @@ class ConfigController extends BaseController {
                     ),
 					// TODO: Remove if we're not using this
                     (object)array(
-                        'title' => 'Links Per Day',
-                        'description' => 'Measures the average number of links used within posts per day',
+                        'title' => $this->translator->trans('route.config.index.sections.quality.links-per-day.title'),
+                        'description' => $this->translator->trans('route.config.index.sections.quality.links-per-day.description'),
                         'values' => array(
-                            'links_per_day_weighting'=>array('label'=>'Links Per Day Weighting'),
-                            'links_per_day'=>array('label'=>'Links Per Day'),
-                            'links_per_day_ok_range'=>array('label'=>'Links Per Day OK range', 'hint'=>'Number above or below [links per day] that is considered OK'),
-                            'links_per_day_bad_range'=>array('label'=>'Links Per Day bad range', 'hint'=>'Number above or below [links per day] that is considered too much or too little'),
+                            'links_per_day_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.links-per-day.weighting')),
+                            'links_per_day'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.links-per-day.label')),
+                            'links_per_day_ok_range'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.links-per-day.good.label'), 'hint'=>$this->translator->trans('route.config.index.sections.quality.links-per-day.good.hint')),
+                            'links_per_day_bad_range'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.links-per-day.bad.label'), 'hint'=>$this->translator->trans('route.config.index.sections.quality.links-per-day.bad.hint')),
                         )
                     ),
                     (object)array(
@@ -316,7 +316,7 @@ class ConfigController extends BaseController {
                     ),
                     (object)array(
                         'title' => $this->translator->trans('route.config.index.sections.quality.relevance.title'),
-                        'description' => $this->translator->trans('route.config.index.sections.quality.relevance.description'),
+                        'description' => $this->translator->trans('route.config.index.sections.quality.relevance.description', ['%company%' => $this->getCompanyName()]),
                         'values' => array(
                             'relevance_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.relevance.weighting')),
                             'facebook_relevance_percentage'=>array(

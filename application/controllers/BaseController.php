@@ -42,6 +42,10 @@ class BaseController extends Zend_Controller_Action
         return self::$container;
     }
 
+    public function getCompanyName(){
+        return $this->config->app->client_name;
+    }
+
     public function preDispatch()
     {
         $this->auth = Zend_Auth::getInstance();
@@ -141,6 +145,8 @@ class BaseController extends Zend_Controller_Action
         $configArray = $this->config->toArray();
         $this->view->jsConfig = $configArray['jsConfig'];
         $this->view->jsConfig['apiEndpoint'] = $this->view->baseUrl('/');
+        $this->view->jsConfig['companyName'] = $this->getCompanyName();
+        $this->view->jsConfig['dateLocale'] = $this->getContainer()->getParameter('date.locale');
 
 		$this->translator = $translator;
     }

@@ -87,7 +87,7 @@ $buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('butt
 					</div>
 					<div class="small-24 medium-16 large-16 end columns">
 						<a href="<?php echo $this->linkedinUrl ?>"
-						   class="button-bc inline"><?php echo $this->linkedinToken ? 'Refresh account' : 'Connect account'; ?></a>
+						   class="button-bc inline"><?php echo $this->linkedinToken ? $translator->trans('views.scripts.user.edit.label.refresh-linkedin') : $translator->trans('views.scripts.user.edit.label.connect-linkedin'); ?></a>
 						<?php if ($this->linkedinToken && !$this->linkedinToken->isExpired()) : ?>
 							<div><?php echo $translator->trans('views.scripts.user.edit.label.linkedin-expires'); ?><?php echo $this->linkedinToken->getExpires()->diffForHumans(); ?></div>
 						<?php endif; ?>
