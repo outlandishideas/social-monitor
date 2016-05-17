@@ -831,6 +831,8 @@
 "views.scripts.user.index.user-table.heading.options","Options"
 "views.scripts.user.index.user-level.unknown","Unknown (%user_level%)"
 "views.scripts.user.index.last-sign-in.never","Never signed in"
+"views.scripts.user.index.all","All"
+"views.scripts.user.index.none","None"
 
 "views.scripts.user.index.cell-options.access-rights","Access Rights"
 "views.scripts.user.index.cell-options.confirm-mail","Confirm Email"

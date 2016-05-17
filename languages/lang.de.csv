@@ -830,6 +830,8 @@ views.scripts.user.index.user-table.heading.last-sign-in,Letzte Anmeldung
 views.scripts.user.index.user-table.heading.options,Optionen
 views.scripts.user.index.user-level.unknown,Unbekannt (%user_level%)
 views.scripts.user.index.last-sign-in.never,Noch nie angemeldet
+views.scripts.user.index.all,Alle
+"views.scripts.user.index.none","Keine"
 
 views.scripts.user.index.cell-options.access-rights,Zugangsrechte
 views.scripts.user.index.cell-options.confirm-mail,E-Mail bestätigen
