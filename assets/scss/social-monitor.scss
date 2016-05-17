@@ -1725,6 +1725,7 @@ body.errorController.errorAction {
 
 /* foundation styles */
 .top-bar,
+.top-bar.expanded .title-area,
 .top-bar-section li:not(.has-form) a:not(.button),
 .top-bar-section ul li,
 .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button) {
