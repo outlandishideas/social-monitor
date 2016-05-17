@@ -20,6 +20,7 @@ prod:
     dateFormat: j M Y
     fetch_time_limit: 1140
     client_name: Outlandish
+    colorscheme: britishcouncil.scss
   jsConfig:
 # e.g. 7 Feb 2012 for jQuery UI
     dateFormat: d M yy

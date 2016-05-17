@@ -1,5 +1,6 @@
 parameters:
     app.locale: en
+    date.locale: en-GB
     facebook.app_id:
     facebook.app_secret:
     instagram.app_token:
