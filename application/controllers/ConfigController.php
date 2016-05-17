@@ -316,7 +316,7 @@ class ConfigController extends BaseController {
                     ),
                     (object)array(
                         'title' => $this->translator->trans('route.config.index.sections.quality.relevance.title'),
-                        'description' => $this->translator->trans('route.config.index.sections.quality.relevance.description'),
+                        'description' => $this->translator->trans('route.config.index.sections.quality.relevance.description', ['%company%' => $this->getCompanyName()]),
                         'values' => array(
                             'relevance_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.relevance.weighting')),
                             'facebook_relevance_percentage'=>array(

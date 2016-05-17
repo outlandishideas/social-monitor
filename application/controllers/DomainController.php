@@ -25,6 +25,7 @@ class DomainController extends BaseController {
 			$this->_helper->redirector->gotoSimple('');
 		}
 		$this->view->canEdit = $this->view->user->isManager;
+		$this->view->company = $this->getCompanyName();
 	}
 
     /**

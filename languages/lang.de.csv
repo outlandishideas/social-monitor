@@ -340,8 +340,8 @@ route.user.reset-password.message.incorrect-user-key,Falscher Benutzer/Keycode f
 route.user.register.page-title,Benutzer registrieren
 route.user.register.registration-successful,Registrierung erfolgreich
 route.user.register.email.subject,Sie haben sich erfolgreich registriert
-route.user.register.email.message,"<p>Hallo %name%,<p>Danke, dass Sie sich für das British Council Social Monitor Programm registriert haben</p><p>Wenn Sie sich für diesen Service nicht angemeldet haben, ignorieren Sie bitte diese E-Mail.</p><p> Andernfalls klicken Sie hier, um Ihre E-Mail-Adresse zu bestätigen und sich mit Ihrem neuen Account einzuloggen <a href=""%link%"">E-Mail bestätigen</a></p><p>Danke, <br />das British Council Social Media Monitor Team</p>"
-route.user.register.email.from,Das British Council Social Media  Monitor Team
+route.user.register.email.message,"<p>Hallo %name%,<p>Danke, dass Sie sich für das %company% Social Monitor Programm registriert haben</p><p>Wenn Sie sich für diesen Service nicht angemeldet haben, ignorieren Sie bitte diese E-Mail.</p><p> Andernfalls klicken Sie hier, um Ihre E-Mail-Adresse zu bestätigen und sich mit Ihrem neuen Account einzuloggen <a href=""%link%"">E-Mail bestätigen</a></p><p>Danke, <br />das %company% Social Media Monitor Team</p>"
+route.user.register.email.from,Das %company% Social Media  Monitor Team
 route.user.register.email.from-address,nicht-antworten@beispiel.com
 
 route.user.new.page-title,Neuer Benutzer
@@ -355,7 +355,7 @@ route.user.edit.message.password-mismatch,Passwörter passen nicht zusammen
 route.user.edit.message.passwords-too-short,Passwort muss mindestens 4 Zeichen haben
 route.user.edit.message.missing-email
 route.user.edit.message.invalid-email,Bitte eine gültige E-Mail-Adresse eingeben
-route.user.edit.message.use-company-email,"Sie benötigen eine gültige E-Mail-Adresse des British Council, um sich zu registrieren"
+route.user.edit.message.use-company-email,"Sie benötigen eine gültige %company% E-Mail-Adresse, um sich zu registrieren"
 route.user.edit.message.email-in-use,E-Mail-Adresse bereits vergeben
 route.user.edit.message.username-in-use,Benutzername bereits vergeben
 
@@ -365,8 +365,8 @@ route.user.manage.page-title,Zugangsrechte für %user% bearbeiten
 route.user.manage.message.permissions-saved,Benutzerberechtigungen gespeichert
 
 route.user.forgotten.email.subject,Passwort-Zurücksetzung
-route.user.forgotten.email.message,"<p>Hallo %name%</p><p>Wir haben eine Anfrage zur Rücksetzung Ihres Passworts für Ihren British Council Social Media Monitor Account erhalten.</p><p>Wenn Sie keine Zurücksetzung angefordert haben, ignorieren Sie bitte diese E-Mail.</p>Ansonsten klicken Sie auf diesen Link um Ihr Passwort zurückzusetzen<a href=""""%link%"""">Password zurücksetzen</a></p><p>Danke, <br />das British Council Social Media Monitor Team</p>"""
-route.user.forgotten.email.from,Das British Council Social Media Monitor Team
+route.user.forgotten.email.message,"<p>Hallo %name%</p><p>Wir haben eine Anfrage zur Rücksetzung Ihres Passworts für Ihren %company% Social Media Monitor Account erhalten.</p><p>Wenn Sie keine Zurücksetzung angefordert haben, ignorieren Sie bitte diese E-Mail.</p>Ansonsten klicken Sie auf diesen Link um Ihr Passwort zurückzusetzen<a href=""""%link%"""">Password zurücksetzen</a></p><p>Danke, <br />das %company% Social Media Monitor Team</p>"""
+route.user.forgotten.email.from,Das %company% Social Media Monitor Team
 route.user.forgotten.email.from-address,bitte.nicht.antworten@beispiel.com
 
 route.user.confirm-email.message.success,"Vielen Dank, dass Sie Ihre E-Mail-Adresse bestätigt haben. Sie können sich nun einloggen. "
@@ -571,7 +571,7 @@ route.config.index.sections.quality.branding.description,Der Kanal verfügt übe
 route.config.index.sections.quality.branding.weighting,Auswertung des Brandings
 
 route.config.index.sections.quality.relevance.title,Relevanz
-route.config.index.sections.quality.relevance.description,"So relevant waren die Aktivitäten des Kanals. Dieser Wert beruht derzeit auf der Zahl der relevanten British Council Domains, die pro Tag mit ihren Aktivitäten verlinkt waren."
+route.config.index.sections.quality.relevance.description,"So relevant waren die Aktivitäten des Kanals. Dieser Wert beruht derzeit auf der Zahl der relevanten %company% Domains, die pro Tag mit ihren Aktivitäten verlinkt waren."
 route.config.index.sections.quality.relevance.weighting,Auswertung der Relevanz
 route.config.index.sections.quality.relevance.facebook-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Facebook relevant sind"
 route.config.index.sections.quality.relevance.twitter-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Twitter relevant sind"
@@ -602,10 +602,9 @@ route.config.index.kpi-file-prompt,Wählen Sie eine Datei zum Hochladen:
 
 route.domain.index.page-title,Domains
 route.domain.index.paragraph-1,"Hier werden die Listen aller Domains angezeigt, die mit Tweets oder Facebook-Postings verbunden sind. Klicken Sie auf den Link, um mehr Informationen zu Nutzern und den einzelnen URLS zu erhalten."
-route.domain.index.paragraph-2,"Sie können sehen, ob eine Domain zum British council gehört, indem Sie auf den Kästchen rechts hin- und herschalten und auf 'speichern' drücken. Beachten Sie, dass Änderungen verloren gehen."
+route.domain.index.paragraph-2,"Sie können sehen, ob eine Domain zu %company% gehört, indem Sie auf den Kästchen rechts hin- und herschalten und auf 'speichern' drücken. Beachten Sie, dass Änderungen verloren gehen."
 route.domain.index.table-header.domain,Domain
 route.domain.index.table-header.links,Links
-route.domain.index.table-header.relevant,British Council
 route.domain.index.message.success,Domains aktualisiert
 route.domain.index.message.access-error,"Sie sind nicht berechtigt, diese Daten zu ändern"
 
@@ -681,7 +680,6 @@ table-header.actions-per-day.label,Aktivität pro Tag
 table-header.actions-per-day.description
 
 table-header.branding.label,Branding
-table-header.branding.description,"Branding zeigt an, ob ein Kanal die Branding-Richtlinien des British Council bezüglich Social Media Kanälen erfüllt"
 
 table-header.countries.label,Länder
 table-header.countries.description

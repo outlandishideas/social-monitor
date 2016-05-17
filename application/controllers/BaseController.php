@@ -42,6 +42,10 @@ class BaseController extends Zend_Controller_Action
         return self::$container;
     }
 
+    public function getCompanyName(){
+        return $this->getContainer()->getParameter('company.name');
+    }
+
     public function preDispatch()
     {
         $this->auth = Zend_Auth::getInstance();
