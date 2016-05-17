@@ -146,6 +146,7 @@ class BaseController extends Zend_Controller_Action
         $this->view->jsConfig = $configArray['jsConfig'];
         $this->view->jsConfig['apiEndpoint'] = $this->view->baseUrl('/');
         $this->view->jsConfig['companyName'] = $this->getCompanyName();
+        $this->view->jsConfig['dateLocale'] = $this->getContainer()->getParameter('date.locale');
 
 		$this->translator = $translator;
     }
