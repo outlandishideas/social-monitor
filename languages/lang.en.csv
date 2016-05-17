@@ -818,6 +818,8 @@
 "views.scripts.user.edit.label.user.email","Email address"
 "views.scripts.user.edit.label.user.level","User Level"
 "views.scripts.user.edit.label.linkedin-expires","You will be logged out of Linkedin in "
+"views.scripts.user.edit.label.refresh-linkedin","Refresh account"
+"views.scripts.user.edit.label.connect-linkedin","Connect account"
 
 "views.scripts.user.forgotten.username.label","Name/Email"
 "views.scripts.user.forgotten.button.back-to-login","Back to login"

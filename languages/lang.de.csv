@@ -137,18 +137,18 @@ route.region.view.info.presences.header,Kanäle: %count%
 
 route.region.edit.page-title,Region bearbeiten
 route.region.edit.message.success,Region gespeichert
-route.region.edit.message.display-name-missing,Bitte Benutzernamen eingeben
+route.region.edit.message.display-name-missing,Bitte Namen eingeben
 route.region.edit.label.name,Name
 
 route.region.edit-all.page-title,Alle Regionen bearbeiten
 route.region.edit-all.empty-table,Keine Regionen gefunden
 route.region.edit-all.message.display-name-missing
 route.region.edit-all.message.success,%count% Regionen gespeichert
-route.region.edit-all.table-header.display-name,Benutzername
+route.region.edit-all.table-header.display-name,Ländernamen
 
 route.region.graph-data.message.not-found,Region wurde nicht gefunden
 
-route.region.manage.page-title,Verwalte Regionen: %region%
+route.region.manage.page-title,Verwalte Region: %region%
 route.region.manage.message.success,Länder der Region aktualisiert
 
 Route.region.report.page-titel,Social Media Monitor Report
@@ -172,10 +172,10 @@ route.country.view.info-panel.presences,Kanäle
 
 route.country.edit.page-title,Land bearbeiten
 route.country.edit.message.success,Land gespeichert
-route.country.edit.message.display-name-missing,Bitte Benutzernamen eingeben
+route.country.edit.message.display-name-missing,Bitte Name eingeben
 route.country.edit.message.country-missing,Bitte Land auswählen
 route.country.edit.label.country,Land
-route.country.edit.label.display-name,Benutzername
+route.country.edit.label.display-name,Name
 route.country.edit.label.audience-size,Verfügbare Besuchermenge
 route.country.edit.label.country-population,Bevölkerungszahl Land
 route.country.edit.label.internet-penetration,Internet Reichweite (%)
@@ -183,10 +183,10 @@ route.country.edit.label.internet-penetration,Internet Reichweite (%)
 route.country.edit-all.page-title,Alle Länder bearbeiten
 route.country.edit-all.empty-table,Keine Länder gefunden
 route.country.edit-all.message.success,%count% Länder gespeichert
-route.country.edit-all.message.display-name-missing,Bitte Benutzernamen eingeben für %country%
+route.country.edit-all.message.display-name-missing,Bitte Namen eingeben für %country%
 route.country.edit-all.message.country-missing,Bitte Land auswählen für %country%
 route.country.edit-all.table-header.country,Land
-route.country.edit-all.table-header.display-name,Benutzername
+route.country.edit-all.table-header.display-name,Name
 route.country.edit-all.table-header.audience-size,Besuchermenge
 route.country.edit-all.table-header.country-population
 route.country.edit-all.table-header.internet-penetration,Internetreichweite
@@ -231,15 +231,15 @@ route.group.view.info-panel.presences,Kanäle: %count%
 
 route.group.edit.page-title,SBU bearbeiten
 route.group.edit.message.success,SBU gespeichert
-route.group.edit.message.display-name-missing,Bitte einen Benutzernamen eingeben
-route.group.edit.label.display-name
+route.group.edit.message.display-name-missing,Bitte einen Namen eingeben
+route.group.edit.label.display-name,Name
 route.group.edit.label.audience-size,Verfügbare Besuchermenge
 
 route.group.edit-all.page-title,alle SBUs bearbeiten
 route.group.edit-all.empty-table,Keine SBUs gefunden
-route.group.edit-all.message.display-name-missing,Bitte Benutzernamen für %group% eingeben
+route.group.edit-all.message.display-name-missing,Bitte Name für %group% eingeben
 route.group.edit-all.message.success,%count% SBUs gespeichert
-route.group.edit-all.table-header.display-name,Benutzername
+route.group.edit-all.table-header.display-name,Name
 route.group.edit-all.table-header.audience-size,Besuchermenge
 
 route.group.delete.message.success,SBU gelöscht
@@ -290,7 +290,7 @@ route.presence.edit.message.missing-type,Bitte einen Typ wählen
 route.presence.edit.label.handle,Kanal
 route.presence.edit.label.type,Typ
 route.presence.edit.label.size,Größe
-route.presence.edit.label.signed-off,Abgemeldet
+route.presence.edit.label.signed-off,Abgesegnet
 route.presence.edit.label.branding,Branding
 route.presence.edit.hint.connect-account,Bitte verbinden Sie Ihren Account mit %title%
 route.presence.edit.hint.handle.facebook,"Für www.facebook.com/<strong>platform</strong> ist der Kennwert <strong>platform</strong><br/> Für Seiten ohne Vanity-URLs ist der Kennwert die lange Zahlenfolge in der URL, z.B. www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>"
@@ -749,7 +749,7 @@ table-header.region.description
 table-header.response-time.label,Reaktionszeit
 table-header.response-time.description
 
-table-header.sign-off.label
+table-header.sign-off.label,Abgesegnet
 table-header.sign-off.description,"Abmelden zeigt an, ob sich jemand von dem Head Of Digital, abgemeldet hat."
 
 table-header.target-audience.label,Zielgruppe
@@ -777,7 +777,7 @@ metric.popularity_time.title,Beliebtheitstrend
 metric.relevance.title,Relevanz
 metric.response_ratio.title,Reaktionen
 metric.response_time.title,Reaktionsfreudigkeit
-metric.sign_off.title,Abgemeldet
+metric.sign_off.title,Abgesegnet
 metric.sina_weibo_engagement.title,Sina Weibo Aktivitätswert
 metric.youtube_engagement.title,Youtube-Aktivitätswert
 
@@ -817,6 +817,8 @@ views.scripts.user.edit.title,"Auf dieser Seite können Sie Ihre Benutzerinforma
 views.scripts.user.edit.label.user.email,E-Mail-Adresse
 views.scripts.user.edit.label.user.level,Benutzer-Level
 views.scripts.user.edit.label.linkedin-expires,Sie werden bei LinkedIn ausgeloggt
+"views.scripts.user.edit.label.refresh-linkedin","Account neu laden"
+"views.scripts.user.edit.label.connect-linkedin","Account verbinden"
 
 views.scripts.user.forgotten.username.label,Name/E-Mail
 views.scripts.user.forgotten.button.back-to-login,Zurück zum Login
@@ -857,7 +859,7 @@ views.scripts.user.reset-password.log-in,Login
 views.scripts.user.reset-password.new-password,Neues Passwort
 views.scripts.user.reset-password.new-password-confirm,Neues Passwort (wiederholen)
 
-views.scripts.partials.assign-countries.heading.currently-assigned,momentan zugeordnete Länder
+views.scripts.partials.assign-countries.heading.currently-assigned,Momentan zugeordnete Länder
 views.scripts.partials.assign-countries.heading.none-assigned,Keine Länder zugeordnet
 
 views.scripts.partials.assign-presences.available-presences,Verfügbare Kanäle
