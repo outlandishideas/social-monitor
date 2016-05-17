@@ -1165,7 +1165,7 @@ js.datatables.filter.presence-type,Nach Art der Präsenz filtern
 js.datatables.filter.region,Nach Region filtern
 js.datatables.filter.group,nach SBU filtern
 
-js.date-picker.specific-date,bestimmtes Datum
+js.date-picker.specific-date,Bestimmtes Datum
 js.date-picker.date-range,Datumszeitraum
 js.date-picker.last-30-days,Letzte 30 Tage
 js.date-picker.last-7-days,Letzte 7 Tage
