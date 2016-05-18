@@ -691,7 +691,7 @@ table-header.country-count.label,Länder
 table-header.country-count.description,Anzahl der Länder
 
 table-header.current-audience.label,Derzeitiges Besucherprofil
-table-header.current-audience.description;;table-header.current-audience.description
+table-header.current-audience.description
 
 table-header.digital-population.label,Digitale Nutzergruppe
 table-header.digital-population.description
@@ -712,7 +712,7 @@ table-header.name.label,Name
 table-header.name.description
 
 table-header.options.label,Optionen
-table-header.options.description;;table-header.options.description
+table-header.options.description
 
 table-header.parent-name.label,Land/SBU
 table-header.parent-name.description
@@ -1133,7 +1133,7 @@ country.ZW,Simbabwe
 
 
 js.datatables.searchBox,Nach Inhalt suchen
-js.datatables.search;;js.datatables.search
+js.datatables.search
 js.datatables.searchPlaceholder,Suche
 js.datatables.emptyTable,Kein %type% gefunden
 js.datatables.zeroRecords,Kein passender %type% gefunden
