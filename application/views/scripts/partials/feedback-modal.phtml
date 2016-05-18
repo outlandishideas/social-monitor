@@ -1,5 +1,7 @@
 <?php
 /** @var \Symfony\Component\Translation\Translator $translator */
+use Volnix\CSRF\CSRF;
+
 $translator = $this->translate();
 
 ?>
@@ -11,6 +13,7 @@ $translator = $this->translate();
             <p><?php echo $translator->trans("Base.layout.feedback-modal.subtitle")?></p>
         </header>
         <form>
+			<?php echo CSRF::getHiddenInputString(); ?>
             <label for="name"><?php echo $translator->trans("Base.layout.feedback-modal.name-label") ?></label>
             <input id="name" name="name" maxlength="64" type="text"
                    placeholder="<?php echo $translator->trans("Base.layout.feedback-modal.name-placeholder") ?>" required />

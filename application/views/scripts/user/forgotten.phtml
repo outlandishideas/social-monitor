@@ -1,4 +1,6 @@
 <?php
+use Volnix\CSRF\CSRF;
+
 $translator = $this->translate();
 $buttons = array(
     '<a href="' . $this->url(array('controller'=>'user', 'action'=>'login')) . '" class="button-bc">'.$translator->trans('views.scripts.user.forgotten.button.back-to-login').'</a>',
@@ -8,6 +10,7 @@ $buttons = array(
 
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 <form method="post" action="<?php echo $this->url(); ?>">
+	<?php echo CSRF::getHiddenInputString(); ?>
     <input type="hidden" name="redirect_to" value="<?php echo $this->redirect_to; ?>" />
     <fieldset>
         <div>

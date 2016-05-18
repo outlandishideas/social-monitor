@@ -1,5 +1,7 @@
 <?php
 /** @var \Symfony\Component\Translation\Translator $translator */
+use Volnix\CSRF\CSRF;
+
 $translator = $this->translate();
 $bottomBar = array();
 $cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">' . $translator->trans('buttons.common.cancel') . '</a>', array('controller' => 'country', 'action' => 'index'), null, true);
@@ -18,6 +20,7 @@ array_unshift($topBar, '<div id="search-table">' . $translator->trans('Global.lo
 	<h3 class="empty-table"><?php echo $translator->trans('route.country.edit-all.empty-table') ?></h3>
 <?php else : ?>
 	<form class="edit-all" method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-all-countries">
+		<?php echo CSRF::getHiddenInputString(); ?>
 
 		<?php echo $this->partial('partials/button-bar.phtml', array('buttons' => $topBar, 'dark' => true)); ?>
 

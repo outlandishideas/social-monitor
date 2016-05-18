@@ -1,10 +1,12 @@
 <?php
 
 use Outlandish\SocialMonitor\Database\Database;
+use Outlandish\SocialMonitor\Exception\TokenMismatchException;
 use Outlandish\SocialMonitor\Helper\Gatekeeper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Outlandish\SocialMonitor\Exception\InvalidPropertiesException;
 use Outlandish\SocialMonitor\Exception\InvalidPropertyException;
+use Volnix\CSRF\CSRF;
 
 class BaseController extends Zend_Controller_Action
 {
@@ -72,7 +74,14 @@ class BaseController extends Zend_Controller_Action
 
     public function preDispatch()
     {
-        $this->auth = Zend_Auth::getInstance();
+		try {
+			$this->guardAgainstCrossSiteRequestForgery();
+		} catch (TokenMismatchException $e) {
+			$this->flashMessage($this->translator->trans('Error.csrf-token.missing'), 'error');
+			$this->_helper->redirector->gotoSimple('index');
+		}
+
+		$this->auth = Zend_Auth::getInstance();
         $this->view->user = null;
 		$this->view->clientName = $this->config->app->client_name;
 		$this->view->locale = $this->getContainer()->getParameter('app.locale');
@@ -128,9 +137,10 @@ class BaseController extends Zend_Controller_Action
 
     public function init()
     {
-        $this->config = Zend_Registry::get('config');
-
 		$translator = $this->getContainer()->get('translation.translator');
+		$this->translator = $translator;
+
+        $this->config = Zend_Registry::get('config');
 
         $this->view->bodyClass = $this->_request->getActionName() . 'Action '.$this->_request->getControllerName().'Controller';
         // provide a default page title
@@ -172,7 +182,6 @@ class BaseController extends Zend_Controller_Action
         $this->view->jsConfig['companyName'] = $this->getCompanyName();
         $this->view->jsConfig['dateLocale'] = $this->getContainer()->getParameter('date.locale');
 
-		$this->translator = $translator;
     }
 
 	/**
@@ -681,5 +690,12 @@ class BaseController extends Zend_Controller_Action
             $this->flashMessage($message, 'inaction');
         }
     }
+
+	private function guardAgainstCrossSiteRequestForgery()
+	{
+		if ($this->_request->isPost() && !CSRF::validate($this->_request->getParams())) {
+			throw new TokenMismatchException();
+		}
+	}
 
 }

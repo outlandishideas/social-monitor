@@ -1,5 +1,7 @@
 <?php
 /** @var \Symfony\Component\Translation\Translator $translator */
+use Volnix\CSRF\CSRF;
+
 $translator = $this->translate();
 
 $region = $this->region;
@@ -20,6 +22,7 @@ $bottomBar[] = '<button type="submit" class="button-bc">'.$translator->trans("bu
 <h2 class="page-title"><?php echo htmlspecialchars($this->pageTitle); ?></h2>
 
 <form class="management" method="post" action="<?php echo $this->url(); ?>" novalidate id="manage-region">
+	<?php echo CSRF::getHiddenInputString(); ?>
 
 	<?php
     echo $this->partial('partials/button-bar.phtml', array('buttons'=>$topBar, 'dark'=>true));
