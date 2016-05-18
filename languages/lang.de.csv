@@ -659,7 +659,7 @@ chart.popularity-trend.x-axis-label
 chart.popularity-trend.y-axis-label,Zahl der Freunde/Follower pro Tag
 
 chart.quality.title,KPI: Qualität
-chart.quality.description;;chart.quality.description
+chart.quality.description
 chart.quality.x-axis-label,Zeit
 chart.quality.y-axis-label,Qualitätswert
 
@@ -691,7 +691,7 @@ table-header.country-count.label,Länder
 table-header.country-count.description,Anzahl der Länder
 
 table-header.current-audience.label,Derzeitiges Besucherprofil
-table-header.current-audience.description;;table-header.current-audience.description
+table-header.current-audience.description
 
 table-header.digital-population.label,Digitale Nutzergruppe
 table-header.digital-population.description
@@ -712,7 +712,7 @@ table-header.name.label,Name
 table-header.name.description
 
 table-header.options.label,Optionen
-table-header.options.description;;table-header.options.description
+table-header.options.description
 
 table-header.parent-name.label,Land/SBU
 table-header.parent-name.description
@@ -1133,13 +1133,13 @@ country.ZW,Simbabwe
 
 
 js.datatables.searchBox,Nach Inhalt suchen
-js.datatables.search;;js.datatables.search
+js.datatables.search
 js.datatables.searchPlaceholder,Suche
 js.datatables.emptyTable,Kein %type% gefunden
 js.datatables.zeroRecords,Kein passender %type% gefunden
 "js.datatables.info","Zeige %type%s: _START_ bis _END_"
 js.datatables.infoEmpty,Keine %types% zum Anzeigen
-js.datatables.infoFiltered;;js.datatables.infoFiltered
+js.datatables.infoFiltered
 js.datatables.loading,Laden…
 
 js.home.map-data.column.country,Land
