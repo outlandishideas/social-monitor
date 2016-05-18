@@ -791,6 +791,7 @@ metric.response_time.title,Reaktionsfreudigkeit
 metric.sign_off.title,Abgesegnet
 metric.sina_weibo_engagement.title,Sina Weibo Aktivitätswert
 metric.youtube_engagement.title,Youtube-Aktivitätswert
+"metric.relevant_hashtags.title","Relevante Hashtags"
 
 
 
