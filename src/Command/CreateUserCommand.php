@@ -3,10 +3,15 @@
 namespace Outlandish\SocialMonitor\Command;
 
 use Model_User;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * This should be run in a cron job daily, just after midnight. This ensures that the day's data is created, but will
- * be updated later as part of fetch
+ * Create a new user.
+ *
+ * Can be used to create a user with normal user permissions, or create an admin user with optional flag
  */
 class CreateUserCommand extends ContainerAwareCommand
 {
@@ -24,7 +29,7 @@ class CreateUserCommand extends ContainerAwareCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-		$properties = $input->getArguments('username');
+		$properties = $input->getArguments();
 		$properties['user_level'] = $input->hasOption('admin') && $input->getOption('admin') ? 10 : 1 ;
 
 		$user = new Model_User([]);
