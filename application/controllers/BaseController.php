@@ -77,7 +77,11 @@ class BaseController extends Zend_Controller_Action
 		try {
 			$this->guardAgainstCrossSiteRequestForgery();
 		} catch (TokenMismatchException $e) {
-			$this->flashMessage($this->translator->trans('Error.csrf-token.missing'), 'error');
+			$errorMessage = $this->translator->trans('Error.csrf-token.missing');
+			if ($this->isAjaxRequest()) {
+				return $this->apiError($errorMessage);
+			}
+			$this->flashMessage($errorMessage, 'error');
 			$this->_helper->redirector->gotoSimple('index');
 		}
 
@@ -696,6 +700,12 @@ class BaseController extends Zend_Controller_Action
 		if ($this->_request->isPost() && !CSRF::validate($this->_request->getParams())) {
 			throw new TokenMismatchException();
 		}
+	}
+
+	protected function isAjaxRequest()
+	{
+		return !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+			&& strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 	}
 
 }

@@ -13,7 +13,7 @@ $translator = $this->translate();
             <p><?php echo $translator->trans("Base.layout.feedback-modal.subtitle")?></p>
         </header>
         <form>
-			<?php echo CSRF::getHiddenInputString(); ?>
+			<input type="hidden" id="token" name="<?php echo CSRF::TOKEN_NAME ?>" value="<?php echo CSRF::getToken() ?>"/>
             <label for="name"><?php echo $translator->trans("Base.layout.feedback-modal.name-label") ?></label>
             <input id="name" name="name" maxlength="64" type="text"
                    placeholder="<?php echo $translator->trans("Base.layout.feedback-modal.name-placeholder") ?>" required />

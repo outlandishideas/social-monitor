@@ -909,12 +909,19 @@ app.feedbackForm = {
 
 		var form = $('#feedback-form');
 
-		var name = form.find('#name').val();
-		var from = form.find('#from').val();
-		var body = form.find('#body').val();
 		var url = form.find('#url').val();
 
-		$.post(url, {name: name, body: body, from: from}, function(response) {
+		var data = {
+			name: form.find('#name').val(),
+			from: form.find('#from').val(),
+			body: form.find('#body').val(),
+			url: url
+		}
+
+		var tokenField = form.find('#token');
+		data[tokenField.attr('name')] = tokenField.val();
+
+		$.post(url, data, function(response) {
 			if(response.data.success) {
 				app.flashMessenger.show('{{ js.feedbackForm.message.success | translate }}');
 				app.feedbackForm.clear();
