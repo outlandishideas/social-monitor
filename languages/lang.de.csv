@@ -753,8 +753,8 @@ table-header.sign-off.description,"Abmelden zeigt an, ob sich jemand von dem Hea
 table-header.target-audience.label,Zielgruppe
 table-header.target-audience.description
 
-table-header.total-rank.label,Gesamtwert
-table-header.total-rank.description,Gesamtwert zeigt den Wert dieses Kanals oder der Gruppe im Vergleich mit anderen
+table-header.total-rank.label,Rang
+table-header.total-rank.description,Zeigt den Rang dieses Kanals oder der Gruppe im Vergleich mit anderen
 
 table-header.total-score.label,Gesamtwert
 table-header.total-score.description,"Gesamtwert zeigt die kombinierten Werte der drei Bereiche Reichweite, Aktivität und Qualität."

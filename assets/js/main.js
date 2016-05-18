@@ -10,6 +10,7 @@ var jsConfig = jsConfig || {};
 
 $.extend(app, {
 	colors: ['CD3667', '177AB9', '22B5E9', '47918E', '8EBD3D', '645691', 'FF0000', '0000FF', 'FFFF00', 'FF00FF'],
+	dateOptions : { year: 'numeric', month: 'short', day: 'numeric' },
 	state: {
 		charts: {},
 		chart: null,

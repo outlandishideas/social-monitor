@@ -78,7 +78,7 @@ app.newCharts = {
                             }
                         }
                         //now update the table
-                        document.getElementById('current-chart-date').innerHTML = date.toDateString();
+                        document.getElementById('current-chart-date').innerHTML = date.toLocaleDateString(jsConfig.dateLocale, app.dateOptions);
                         for (var i = 0, l = targets.length; i < l; i++) {
                             //$('#chart-table-value-'+targets[i].id).html(targets[i].values[index].value);
                             // go for native JS instead of jQuery here, since it's much faster. jQuery will give a noticable lag
@@ -102,7 +102,7 @@ app.newCharts = {
                 // create table
                 date = new Date(targets[0].values[0].x);
                 var html = '<p>{{ js.chart.message.toggle | translate }}</p>';
-                html += '<table class="size-'+numCols+'"><tr><th colspan="'+((numCols * 2) - 1)+'" class="header" id="current-chart-date">'+date.toDateString()+'</th><th class="header"><span id="uncheck-all">{{ js.chart.message.toggle-all | translate }}</span></th></tr>';
+                html += '<table class="size-'+numCols+'"><tr><th colspan="'+((numCols * 2) - 1)+'" class="header" id="current-chart-date">'+date.toLocaleDateString(jsConfig.dateLocale, app.dateOptions)+'</th><th class="header"><span id="uncheck-all">{{ js.chart.message.toggle-all | translate }}</span></th></tr>';
                 var startRow = true;
                 for (var i = 0, l = targets.length; i < l; i++) {
                     var id = targets[i].id;
