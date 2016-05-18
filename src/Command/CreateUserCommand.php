@@ -41,6 +41,7 @@ class CreateUserCommand extends ContainerAwareCommand
 			$output->writeln("Could not create user. Please try again.");
 			$output->writeln($e->getMessage());
 			$output->writeln("Please try again.");
+			return;
 		}
 
 		$output->writeln("Created new user with the following credentials:");
