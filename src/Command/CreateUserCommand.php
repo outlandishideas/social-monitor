@@ -2,16 +2,7 @@
 
 namespace Outlandish\SocialMonitor\Command;
 
-use Badge_Factory;
-use Enum_Period;
-use Model_PresenceFactory;
 use Model_User;
-use Outlandish\SocialMonitor\Cache\KpiCacheEntry;
-use Outlandish\SocialMonitor\Command\Output\DatestampFormatter;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * This should be run in a cron job daily, just after midnight. This ensures that the day's data is created, but will
