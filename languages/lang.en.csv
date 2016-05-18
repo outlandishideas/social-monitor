@@ -626,7 +626,7 @@
 "route.domain.index.page-title","Domains"
 "route.domain.index.table-header.domain","Domain"
 "route.domain.index.table-header.links","Links"
-"route.domain.index.table-header.relevant","British Council"
+"route.domain.index.table-header.relevant","%company%"
 "route.domain.index.message.success","Domains updated"
 "route.domain.index.message.access-error","You do not have sufficient access to change this data"
 "route.domain.index.paragraph-1","This shows the list of all domains linked to by tweets or facebook posts. Click the links to see more usage information and the specific URLs."
