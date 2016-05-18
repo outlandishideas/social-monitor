@@ -37,7 +37,8 @@
 		"linkedinapi/linkedin": "1.1.0",
 		"zendframework/zendframework1": "^1.12",
 		"nesbot/carbon": "1.9.0",
-		"hwi/oauth-bundle": "^0.4.1"
+		"hwi/oauth-bundle": "^0.4.1",
+		"volnix/csrf": "1.2.0"
 	},
 	"repositories": [
 		{
