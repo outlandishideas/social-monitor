@@ -946,5 +946,9 @@ class Model_Presence
         }
     }
 
+    public function getRelevantHashtags($start, $end){
+        return $this->provider->getRelevantHashtags($this->getId(), $start, $end);
+    }
+
 
 }

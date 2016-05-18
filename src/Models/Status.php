@@ -17,6 +17,7 @@ class Status {
     public $links;
     public $likes;
     public $icon;
+    public $hashtags;
     public $engagement = array();
 
 }

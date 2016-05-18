@@ -195,6 +195,7 @@ class TwitterAdapter extends AbstractAdapter
 		$tweet->in_response_to_status_uid = $raw->in_reply_to_status_id_str;
 		$tweet->posted_by_owner = !$mention;
 		$tweet->needs_response = $mention && !$isRetweet ? 1 : 0;
+		$tweet->hashtags = $parsedTweet['hashtags'];
 		if (!empty($raw->entities->urls) && !$mention) {
 			$tweet->links = array_map(function ($a) {
 				return $a->expanded_url;
@@ -229,6 +230,7 @@ class TwitterAdapter extends AbstractAdapter
 	{
 
 		$isRetweet = !empty($tweet->retweeted_status->text);
+		$hashTags = array();
 
 		if ($isRetweet) {
 			$htmlTweet = $tweet->retweeted_status->text;
@@ -256,6 +258,7 @@ class TwitterAdapter extends AbstractAdapter
 		foreach ($allEntities as $entity) {
 			switch ($entity->entityType) {
 				case 'hashtags':
+					array_push($hashTags, $entity->text);
 					$replace = '<a href="https://twitter.com/search/%23' . $entity->text . '" target="_blank">#' . $entity->text . '</a>';
 					$htmlTweet = $this->replaceTweetSubstring($htmlTweet, $replace, $entity->indices);
 					break;
@@ -290,7 +293,8 @@ class TwitterAdapter extends AbstractAdapter
 
 		return array(
 			'html_tweet' => $htmlTweet,
-			'text_expanded' => $expandedText
+			'text_expanded' => $expandedText,
+			'hashtags' => array_unique($hashTags)
 		);
 
 	}

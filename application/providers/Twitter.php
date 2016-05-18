@@ -87,6 +87,8 @@ class Provider_Twitter extends Provider_Abstract
                     $links[$id] = $tweet->links;
                 }
                 $count++;
+                
+                $this->saveHashtags('twitter', $tweet, $id);
             } catch (Exception $ex) {
                 $i = 0;
             }
@@ -164,6 +166,39 @@ class Provider_Twitter extends Provider_Abstract
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Returns all relevant hashtags posted in the last x days
+     * @param $presenceId
+     * @param $start
+     * @param $end
+     * @return array
+     */
+    public function getRelevantHashtags($presenceId, $start, $end){
+
+        if(!$presenceId){
+            return array();
+        }
+
+        $hashtagStmt = $this->db->prepare("
+        SELECT hashtags.hashtag 
+        FROM twitter_tweets
+        INNER JOIN posts_hashtags ON twitter_tweets.id=posts_hashtags.post AND post_type='twitter'
+        INNER JOIN hashtags ON posts_hashtags.hashtag=hashtags.id AND is_relevant=1
+        WHERE twitter_tweets.created_time >= :start
+		  AND twitter_tweets.created_time <= :end
+		  AND twitter_tweets.presence_id = :presence_id;
+        ");
+
+        $hashtagStmt->execute(array(
+            ':presence_id' => $presenceId,
+            ':start' => $start->format('Y-m-d H:i:s'),
+            ':end' => $end->format('Y-m-d H:i:s')
+        ));
+
+        $hashtags = $hashtagStmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $hashtags;
+    }
 
     public function update(Model_Presence $presence)
     {

@@ -329,7 +329,15 @@ class ConfigController extends BaseController {
 								'label'=>$this->translator->trans('route.config.index.sections.quality.relevance.sina-weibo-target'),
 							),
                         )
-                    )
+                    ),
+                    (object)array(
+						'title' => $this->translator->trans('route.config.index.sections.quality.hashtags.title'),
+						'description' => $this->translator->trans('route.config.index.sections.quality.hashtags.description'),
+						'values' => array(
+							'hashtags_per_weighting'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.hashtags.weighting')),
+							'hashtags_per_week_best'=>array('label'=>$this->translator->trans('route.config.index.sections.quality.hashtags.target'))
+						)
+					),
                 )
             ),
 		);

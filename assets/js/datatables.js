@@ -257,6 +257,51 @@ app.datatables = {
 			app.datatables.moveSearchBox();
 		},
 
+		'table#hashtags': function($table) {
+			var args = {
+				sAjaxSource:jsConfig.apiEndpoint + "hashtag/list",
+				aaSorting:[
+					[0, 'asc']
+				],
+				aoColumns:[
+					{
+						mDataProp:'hashtag',
+						render:function (val, type, row) {
+							return val;
+						},
+						bUseRendered: false
+					},
+					{
+						mDataProp:'posts'
+					},
+					{
+						mDataProp:'is_relevant',
+						render:function (val, type, row) {
+							var d = row;
+							var $input = $('<input type="checkbox" />')
+								.attr('id', 'hashtag-' + d.id)
+								.attr('name', 'is_relevant[' + d.id + ']');
+							if (d.is_relevant == '1') {
+								$input.attr('checked', 'checked');
+							}
+							if (d.can_edit != '1') {
+								$input.attr('disabled', 'disabled');
+							}
+							return $('<div></div>').append($input).html();
+						},
+						bUseRendered: false
+					}
+				],
+				oLanguage:app.datatables.generateLanguage('hashtag')
+			};
+
+			app.datatables.statusesTable = $table
+				.dataTable($.extend({}, app.datatables.serverSideArgs(), args))
+				.fnSetFilteringDelay(250);
+
+			app.datatables.moveSearchBox();
+		},
+		
 		// combined statuses on status controller
 		'#statuses .combined-statuses': function($div) {
 			app.statuses.init($div);
