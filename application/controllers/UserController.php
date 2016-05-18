@@ -267,7 +267,7 @@ class UserController extends BaseController
                 $errorMessages[] = $this->translator->trans('route.user.edit.message.invalid-email'); //'Please enter a valid email address';
             } else if ($isRegistration &&
                 !$this->isValidEmailAddress($this->_request->getParam('email'))) {
-                $errorMessages[] = $this->translator->trans('route.user.edit.message.use-company-email'); //'To register, you must use a valid British Council email address';
+                $errorMessages[] = $this->translator->trans('route.user.edit.message.use-company-email', ['%company%' => $this->getCompanyName()]); //'To register, you must use a valid British Council email address';
             }
 
             if (!$errorMessages && $setProperties) {
@@ -406,9 +406,9 @@ class UserController extends BaseController
         $subject = $this->translator->trans('route.user.register.email.subject'); //"You have successfully registered";
         $toEmail = $registeredUser->email;
 		$fromEmail = $this->translator->trans('route.user.register.email.from-address');
-		$fromName = $this->translator->trans('route.user.register.email.from');
+		$fromName = $this->translator->trans('route.user.register.email.from', ['%company%' => $this->getCompanyName()]);
         $resetLink = $this->getResetLink($registeredUser, 'confirm-email');
-        $message = $this->translator->trans('route.user.register.email.message', ['%name%' => $registeredUser->name, '%link%' => $resetLink]);
+        $message = $this->translator->trans('route.user.register.email.message', ['%name%' => $registeredUser->name, '%link%' => $resetLink, '%company%' => $this->getCompanyName()]);
 
         $this->sendEmail($message, $fromEmail, $fromName, $toEmail, $subject);
     }
@@ -423,9 +423,9 @@ class UserController extends BaseController
     {
 		$subject = $this->translator->trans('route.user.forgotten.email.subject');
 		$fromAddress = $this->translator->trans('route.user.forgotten.email.from-address');
-		$fromName = $this->translator->trans('route.user.forgotten.email.from');
+		$fromName = $this->translator->trans('route.user.forgotten.email.from', ['%company%' => $this->getCompanyName()]);
         $resetLink = $this->getResetLink($user, 'reset-password');
-        $message = $this->translator->trans('route.user.forgotten.email.message', ['%name%' => $user->name, '%link%' => $resetLink]);
+        $message = $this->translator->trans('route.user.forgotten.email.message', ['%name%' => $user->name, '%link%' => $resetLink, '%company%' => $this->getCompanyName()]);
 
         $this->sendEmail($message, $fromAddress, $fromName, $user->email, $subject);
     }
