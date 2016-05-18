@@ -766,7 +766,7 @@ metric.posts_per_day.title,Aktivität pro Tag
 metric.branding.title,Korrektes Branding
 metric.facebook_engagement.title,Facebook-Aktivitätswert
 metric.instagram_engagement.title,Instagram-Aktivitätswert
-metric.klout_score.title,
+metric.klout_score.title,Klout Score
 metric.likes_per_post.title,Gefällt-mir-Angaben pro Posting
 metric.likes_per_view.title,Akivitäten pro Aufruf
 metric.linkedin_engagement.title,LinkedIn-Aktivitätswert
