@@ -580,7 +580,7 @@
 "route.config.index.sections.quality.relevance.sina-weibo-target","Percent of Actions Per Day that should be relevant for Sina Weibo"
 
 "route.config.index.sections.quality.hashtags.title","Relevant Hashtags"
-"route.config.index.sections.quality.hashtags.description","Measures the amount of relevant hashtags posted in a week"
+"route.config.index.sections.quality.hashtags.description","Measures the amount of relevant hashtags posted in a month"
 "route.config.index.sections.quality.hashtags.weighting","Hashtags weighting"
 "route.config.index.sections.quality.hashtags.target","Best Hashtag amount"
 

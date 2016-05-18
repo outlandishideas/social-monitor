@@ -577,6 +577,11 @@ route.config.index.sections.quality.relevance.facebook-target,"Prozentsatz der A
 route.config.index.sections.quality.relevance.twitter-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Twitter relevant sind"
 route.config.index.sections.quality.relevance.sina-weibo-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Sina Weibo relevant sind"
 
+"route.config.index.sections.quality.hashtags.title","Relevante Hashtags"
+"route.config.index.sections.quality.hashtags.description","Misst die Anzahl der relevanten Hashtags die innerhalb eines Monats gepostet wurden"
+"route.config.index.sections.quality.hashtags.weighting","Hashtags Gewichtung"
+"route.config.index.sections.quality.hashtags.target","Beste Anzahl an Hashtags pro Monat"
+
 "route.config.index.sections.quality.links-per-day.title","Links pro Tag"
 "route.config.index.sections.quality.links-per-day.description","Misst die durchschnittliche Anzahl der benutzten Links pro Posting pro Tag"
 "route.config.index.sections.quality.links-per-day.weighting","Links pro Tag"
@@ -602,7 +607,7 @@ route.config.index.kpi-file-prompt,Wählen Sie eine Datei zum Hochladen:
 
 route.domain.index.page-title,Domains
 route.domain.index.paragraph-1,"Hier werden die Listen aller Domains angezeigt, die mit Tweets oder Facebook-Postings verbunden sind. Klicken Sie auf den Link, um mehr Informationen zu Nutzern und den einzelnen URLS zu erhalten."
-route.domain.index.paragraph-2,"Sie können sehen, ob eine Domain zu %company% gehört, indem Sie auf den Kästchen rechts hin- und herschalten und auf 'speichern' drücken. Beachten Sie, dass Änderungen verloren gehen."
+route.domain.index.paragraph-2,"Sie können sehen, ob eine Domain zu %company% gehört, indem Sie auf den Kästchen rechts hin- und herschalten und auf 'speichern' drücken."
 route.domain.index.table-header.domain,Domain
 route.domain.index.table-header.links,Links
 route.domain.index.message.success,Domains aktualisiert
@@ -615,6 +620,14 @@ route.domain.view.mention-count,eins:1 Erwähnung,viele:%count% Erwähnungen
 route.domain.view.linked-to-from,%sites% von %statuses% aus verlinkt
 
 
+"route.hashtag.index.page-title","Hashtags"
+"route.hashtag.index.paragraph-1","Hier wird eine Liste aller Hashtags angezeigt, die von Kanälen auf Twitter gepostet wurden."
+"route.hashtag.index.paragraph-2","Sie können bestimmen ob ein Hashtag relevant ist, indem Sie auf den Kästchen rechts hin- und herschalten und auf 'speichern' drücken."
+"route.hashtag.index.table-header.hashtag","Hashtag"
+"route.hashtag.index.table-header.links","Postings"
+"route.hashtag.index.table-header.relevant","Relevant"
+"route.hashtag.index.message.success","Hashtags aktualisiert"
+"route.hashtag.index.message.access-error","Sie sind nicht berechtigt, diese Daten zu ändern"
 
 
 badge.engagement.title,Aktivität
