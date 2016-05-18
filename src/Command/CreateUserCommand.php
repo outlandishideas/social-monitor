@@ -34,7 +34,14 @@ class CreateUserCommand extends ContainerAwareCommand
 
 		$user = new Model_User([]);
 		$user->fromArray($properties);
-		$user->save();
+
+		try {
+			$user->save();
+		} catch (\Exception $e) {
+			$output->writeln("Could not create user. Please try again.");
+			$output->writeln($e->getMessage());
+			$output->writeln("Please try again.");
+		}
 
 		$output->writeln("Created new user with the following credentials:");
 		$output->writeln("Username: $user->name");
