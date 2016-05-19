@@ -60,6 +60,10 @@ class GroupController extends CampaignController {
 		$this->view->pdfLink = $this->getContainer()->get('kpi_download_linker')->link();
 	}
 
+	/**
+	 * Download the report for this group
+	 * @user-level user
+	 */
     public function downloadReportAction()
     {
 		$group = $this->getRequestedGroup();
@@ -100,6 +104,11 @@ class GroupController extends CampaignController {
         exit;
     }
 
+	/**
+	 * View the data for this group in report format
+	 *
+	 * This is used by software to oonvert HTML into PDF
+	 */
     public function reportAction()
     {
 		$group = $this->getRequestedGroup();
@@ -136,6 +145,8 @@ class GroupController extends CampaignController {
 
     /**
      * Gets all of the graph data for the requested presence
+	 *
+	 * @user-level user
      */
     public function graphDataAction() {
         Zend_Session::writeClose(); //release session on long running actions
@@ -181,7 +192,7 @@ class GroupController extends CampaignController {
 
     /**
      * Edits/creates a group
-     * @user-level user
+     * @user-level manager
      */
     public function editAction()
     {
@@ -256,7 +267,7 @@ class GroupController extends CampaignController {
                 if(!$this->setProperties($editingGroup, $g)){
                     $producedErrors = true;
                 }
-                
+
                 $editedGroups[] = $editingGroup;
             }
 
@@ -330,6 +341,11 @@ class GroupController extends CampaignController {
 		}
 	}
 
+	/**
+	 * Download a csv of data based on the group index table
+	 *
+	 * @user-level user
+	 */
 	public function downloadAction() {
         $table = $this->getContainer()->get('table.group-index');
         $csvData = Util_Csv::generateCsvData($table);
