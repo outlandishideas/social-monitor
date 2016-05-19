@@ -29,6 +29,7 @@ class HashtagController extends BaseController {
 
 	/**
 	 * Ajax function for getting a page of hashtags
+	 * @user-level user
 	 */
 	function listAction() {
 		Zend_Session::writeClose(); //release session on long running actions
