@@ -259,7 +259,7 @@ class UserController extends BaseController
         if ($this->_request->isPost()) {
             // prevent hackers upgrading their own user level
             $params = $this->_request->getParams();
-            if (!$this->view->canChangeLevel) {
+            if (!$this->view->canChangeLevel || $params['user_level'] > $this->view->user->user_level) {
                 unset($params['user_level']);
             }
 
