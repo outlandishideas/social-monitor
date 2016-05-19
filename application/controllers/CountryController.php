@@ -94,6 +94,10 @@ class CountryController extends CampaignController {
 		$this->view->pdfLink = $this->getContainer()->get('kpi_download_linker')->link();
 	}
 
+	/**
+	 * download a report for a specific country
+	 * @user-level user
+	 */
 	public function downloadReportAction()
 	{
 		$country = $this->getRequestedCountry();
@@ -134,6 +138,10 @@ class CountryController extends CampaignController {
 		exit;
 	}
 
+
+	/**
+	 * generates a report in html to turned into pdf by other server
+	 */
 	public function reportAction()
 	{
 		$country = $this->getRequestedCountry();
@@ -181,7 +189,7 @@ class CountryController extends CampaignController {
 
 	/**
 	 * Edits/creates a country
-	 * @user-level user
+	 * @user-level manager
 	 */
 	public function editAction()
 	{
@@ -218,50 +226,12 @@ class CountryController extends CampaignController {
 			}
 		}
 
-//		$utc = new DateTimeZone('UTC');
-//		$dt = new DateTime('now', $utc);
-//
-//		$zoneInfo = array();
-//		foreach (DateTimeZone::listIdentifiers() as $tz) {
-//			$current_tz = new DateTimeZone($tz);
-//			$offset = $current_tz->getOffset($dt);
-//			$transition = $current_tz->getTransitions($dt->getTimestamp(), $dt->getTimestamp());
-//			$abbr = $transition[0]['abbr'];
-//			list($continent, $city) = $tz == 'UTC' ? array('UTC', 'UTC') : explode('/', $tz);
-//
-//			$hours = $offset / 3600;
-//			$remainder = $offset % 3600;
-//			$sign = $hours > 0 ? '+' : '-';
-//			$hour = (int)abs($hours);
-//			$minutes = (int)abs($remainder / 60);
-//
-//			if ($hour == 0 AND $minutes == 0) {
-//				$sign = ' ';
-//			}
-//			$displayOffset = $sign . str_pad($hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($minutes, 2, '0');
-//
-//			$zoneInfo[] = array(
-//				'name' => $tz,
-//				'abbr' => $abbr,
-//				'offset' => $offset,
-//				'display' => $displayOffset,
-//				'city' => str_replace('_', ' ', $city),
-//				'continent' => $continent
-//			);
-//		}
-//
-//		uasort($zoneInfo, function($a, $b) { return $a['offset'] - $b['offset']; });
-//
-//		$this->view->zones = array();
-//		foreach ($zoneInfo as $info) {
-//			$this->view->zones[$info['name']] = "$info[display] $info[city], $info[continent] ($info[abbr])";
-//		}
-
 		$this->view->editingCountry = $editingCountry;
 	}
 
     /**
-     * Edits/creates a country
+     * Edits all countries
+	 *
      * @user-level manager
      */
     public function editAllAction()
@@ -370,6 +340,7 @@ class CountryController extends CampaignController {
 
 	/**
 	 * Gets all of the graph data for the requested presence
+	 * @user-level user
 	 */
 	public function graphDataAction() {
 		Zend_Session::writeClose(); //release session on long running actions
@@ -391,6 +362,11 @@ class CountryController extends CampaignController {
 		$this->apiSuccess($chartObject->getChart($country, $start, $end));
 	}
 
+
+	/**
+	 * Downloads a csv of data from the country index page
+	 * @user-level user
+	 */
 	public function downloadAction() {
 		$table = $this->getContainer()->get('table.country-index');
         $csvData = Util_Csv::generateCsvData($table);
