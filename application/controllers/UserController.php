@@ -7,7 +7,7 @@ use Outlandish\SocialMonitor\PresenceType\PresenceType;
 
 class UserController extends BaseController
 {
-    protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register', 'confirm-email', 'joyride', 'linkedin');
+    protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register', 'confirm-email');
     /** @var LinkedIn */
     protected $linkedin;
 
@@ -26,6 +26,9 @@ class UserController extends BaseController
         $this->view->linkedinUrl = $this->linkedin->getLoginUrl([LinkedIn::SCOPE_BASIC_PROFILE, 'rw_company_admin']);
     }
 
+	/**
+	 * @user-level user
+	 */
     public function linkedinAction()
     {
         if (isset($_REQUEST['code'])) {
@@ -462,6 +465,7 @@ class UserController extends BaseController
     }
 
 	/**
+	 * @user-level user
 	 */
 	public function joyrideAction()
 	{
