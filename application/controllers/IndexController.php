@@ -31,6 +31,9 @@ class IndexController extends GraphingController
 		$this->view->joyride = $this->getContainer()->get('joyride.home');
 	}
 
+	/**
+	 * todo: can this be deleted.
+	 */
 	public function dateRangeAction()
 	{
 		$dateRange = $this->_request->getParam('dateRange');
@@ -43,6 +46,10 @@ class IndexController extends GraphingController
 		}
 	}
 
+
+	/**
+	 * todo: can this be deleted.
+	 */
 	public function downloadimageAction()
 	{
 		$svg = base64_decode($this->_request->getParam('svg'));
@@ -72,6 +79,10 @@ class IndexController extends GraphingController
 
 	}
 
+
+	/**
+	 * todo: can this be deleted.
+	 */
 	public function servefileAction()
 	{
 		$this->_helper->layout()->disableLayout();
