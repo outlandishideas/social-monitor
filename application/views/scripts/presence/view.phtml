@@ -96,7 +96,7 @@ if ($sizeDiff > 0) {
                     <?php if ($presence->image_url) : ?>
                     <img src="<?php echo $presence->image_url; ?>" />
                     <?php endif; ?>
-                    <?php echo $presence->getName(); ?>
+                    <?php echo htmlspecialchars($presence->getName()); ?>
                 </h4>
 				<?php
 					$type = strtolower($presenceType);

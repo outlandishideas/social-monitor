@@ -129,7 +129,7 @@ $allBadges = $this->badges;
                 <?php foreach($this->groups as $group): /** @var Model_Group $group */ ?>
                     <div class="small-24 large-8 columns">
                         <div class="badge-small" data-group-id="<?php echo $group->id ?>" data-badge>
-                            <h3><a href="<?php echo $this->url(array('controller'=>'group', 'action'=>'view', 'id'=>$group->id)); ?>"><?php echo $group->display_name; ?></a></h3>
+                            <h3><a href="<?php echo $this->url(array('controller'=>'group', 'action'=>'view', 'id'=>$group->id)); ?>"><?php echo htmlspecialchars($group->display_name); ?></a></h3>
                             <div class="badge-score bd-btm">
                                 <h4><span data-badge-title></span> <?php echo $translator->trans('Global.score')?></h4>
                                 <div class="score-value" data-badge-score="%"></div>
@@ -163,7 +163,7 @@ $allBadges = $this->badges;
                                     <?php foreach($group->getPresences() as $presence) : /** @var $presence Model_Presence */ ?>
                                         <li data-presence-type="<?php echo $presence->getType()->getValue(); ?>">
                                             <a href="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$presence->getId())); ?>">
-                                                <span class="white-background <?php echo $presence->getPresenceSign(); ?> fixed-width"></span> <?php echo $presence->getHandle(); ?>
+                                                <span class="white-background <?php echo $presence->getPresenceSign(); ?> fixed-width"></span> <?php echo htmlspecialchars($presence->getHandle()); ?>
                                                 <?php $score = $presence->getEngagementScore(); ?>
                                             </a>
                                         </li>

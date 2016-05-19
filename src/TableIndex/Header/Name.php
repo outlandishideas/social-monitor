@@ -16,19 +16,25 @@ class Name extends Header {
         $this->cellClasses[] = 'left-align';
     }
 
-
-    /**
-     * @param Model_Campaign $model
-     * @return mixed
-     */
+    public function getTableCellValue($model)
+    {
+        $value = $model->display_name;
+        $formattedValue = $this->formatValue($value);
+        if ($model instanceof Model_Country) {
+            $value = '<div class="sm-flag flag-' . $this->formatValue($model->getCountryCode()) . '"></div> ' . $formattedValue;
+        }
+        
+        return $formattedValue;
+    }
+    
     public function getValue($model = null)
     {
-		$value = $model->display_name;
-        if ($model instanceof Model_Country) {
-            $value = '<div class="sm-flag flag-' . $model->getCountryCode() . '"></div> ' . $value;
-        }
-        return $value;
+        return $model->display_name;
     }
 
+    public function formatValue($value)
+    {
+        return htmlspecialchars($value);
+    }
 
 }

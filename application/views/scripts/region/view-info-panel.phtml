@@ -9,7 +9,7 @@ $countries = $region->getCountries();
 ?>
 
 <h4 class="campaign-name">
-    <?php echo $region->display_name; ?>
+    <?php echo htmlspecialchars($region->display_name); ?>
 </h4>
 
 <h4><?php echo $translator->trans('route.region.view.info.presences.header', ['%count%' => count($presences)]); ?></h4>

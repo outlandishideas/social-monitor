@@ -29,4 +29,8 @@ class Group extends Header {
         $owner = $model->getOwner();
         return $owner instanceof \Model_Group ? $owner->getName() : '';
     }
+
+    function formatValue($value) {
+        return htmlspecialchars($value);
+    }
 }

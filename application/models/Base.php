@@ -75,7 +75,7 @@ abstract class Model_Base
 		}
 
 		if(Verification::exists($colValue, $columnDefiniton['type'])){
-			return htmlentities($colValue);
+			return $colValue;
 		}else if(!$isNullable && $hasDefault){
 			return $columnDefiniton['default'];
 		}else if($isNullable && !$hasDefault){

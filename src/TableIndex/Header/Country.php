@@ -24,5 +24,9 @@ class Country extends Header {
         return $model->country;
     }
 
+    function formatValue($value) {
+        return htmlspecialchars($value);
+    }
+
 
 }
