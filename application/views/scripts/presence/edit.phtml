@@ -87,7 +87,7 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">'.$translato
 					</label>
 				</div>
 				<div class="small-24 medium-8 large-8 columns">
-					<input name="handle" id="handle" type="text" value="<?php echo $presence->handle; ?>">
+					<input name="handle" id="handle" type="text" value="<?php echo htmlspecialchars($presence->handle); ?>">
 				</div>
 				<div class="small-24 medium-10 large-12 end columns presence-handle-hints">
 					<p class="formHint hint-<?php echo FacebookType::NAME; ?>"><?php echo $translator->trans('route.presence.edit.hint.handle.facebook'); ?></p>

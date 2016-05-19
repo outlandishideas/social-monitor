@@ -5,7 +5,7 @@ $presences = $group->getPresences();
 ?>
 
 <h4 class="campaign-name">
-    <?php echo $group->display_name; ?>
+    <?php echo htmlspecialchars($group->display_name); ?>
 </h4>
 
 <h4><?php echo $this->translate()->trans('route.group.view.info-panel.presences', ['%count%' => count($presences)]); ?></h4>

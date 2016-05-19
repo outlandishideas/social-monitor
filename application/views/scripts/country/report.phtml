@@ -16,7 +16,7 @@ $region = $country->getRegion();
     <div class="small-12 columns">
         <section class="border-section info-section">
             <h2><?php echo $translator->trans('route.country.report.label.additional-info'); ?></h2>
-            <p><?php echo $translator->trans('route.country.report.label.containing-region', ['%region%' => $region->display_name]); ?></p>
+            <p><?php echo $translator->trans('route.country.report.label.containing-region', ['%region%' => htmlspecialchars($region->display_name)]); ?></p>
             <p><?php echo $translator->trans('route.country.report.label.audience-size')?>: <?php $country->getTargetAudience(); ?></p>
             <p><?php echo $translator->trans('route.country.report.label.country-population')?>: <?php echo number_format($country->population); ?></p>
             <p><?php echo $translator->trans('route.country.report.label.digital-population')?>:
@@ -27,7 +27,7 @@ $region = $country->getRegion();
     <div class="small-12 columns">
         <section class="border-section info-section">
             <h2><?php echo $translator->trans('route.country.report.label.presence-count', ['%count%' => $presenceCount])?></h2>
-            <p><?php echo implode(", ", $presences) ?>.</p>
+            <p><?php echo htmlspecialchars(implode(", ", $presences))?>.</p>
         </section>
     </div>
 </div>

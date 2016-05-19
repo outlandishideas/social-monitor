@@ -14,7 +14,7 @@ $summary = $translator->trans('route.domain.view.linked-to-from', ['%sites%' => 
 <div class="domain-link" data-domain-id="<?php echo $this->domain->id; ?>" data-url="<?php echo $link->url; ?>">
     <div class="link-title">
         <a href="#" class="toggle-expand"></a>
-        <a href="<?php echo $link->url; ?>" target="_blank"><?php echo highlight($link->url, $this->domain->domain); ?> <span class="icon-external-link"></span></a>
+        <a href="<?php echo $link->url; ?>" target="_blank"><?php echo htmlspecialchars(highlight($link->url, $this->domain->domain)); ?> <span class="icon-external-link"></span></a>
         (<?php echo $translator->transChoice('route.domain.view.mention-count', count($link->statuses), ['%count%' => count($link->statuses)]); ?>)
     </div>
 </div>

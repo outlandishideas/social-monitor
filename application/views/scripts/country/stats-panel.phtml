@@ -32,7 +32,7 @@ if (!$countryLink) {
 		<?php $presences = $country->getPresencesByType($type); ?>
         <?php if($presences && count($presences)): ?>
 		<div class="bd-btm presence-list">
-            <h4><?php echo $type->getTitle(); ?></h4>
+            <h4><?php echo htmlspecialchars($type->getTitle()); ?></h4>
             <ul class="badge-presences">
                 <?php foreach ($presences as $presence): ?>
                     <li>
