@@ -69,6 +69,8 @@ class FetchController extends BaseController
 
 
 	/**
+	 * Used to clear the lock if the fetch process failed 
+	 * 
 	 * @user-level user
 	 */
 	public function clearLockAction() {
