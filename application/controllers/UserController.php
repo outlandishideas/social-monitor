@@ -259,7 +259,7 @@ class UserController extends BaseController
         if ($this->_request->isPost()) {
             // prevent hackers upgrading their own user level
             $params = $this->_request->getParams();
-            if (!$this->view->canChangeLevel || $params['user_level'] > $this->view->user->user_level) {
+            if ($this->guardAgainstUnauthorizedUserLevelChanges($params)) {
                 unset($params['user_level']);
             }
 
@@ -503,4 +503,15 @@ class UserController extends BaseController
         $validLogin = $this->getContainer()->getParameter('email.login');
         return (preg_match($validLogin, $email) === 1) || (preg_match('/@outlandish.com$/i', $email) === 1);
     }
+
+	/**
+	 * @param $params
+	 * @return bool
+	 */
+	protected function guardAgainstUnauthorizedUserLevelChanges($params)
+	{
+		return !$this->view->canChangeLevel || //check that the user making the change can edit the user level of a user
+			$params['user_level'] > $this->view->user->user_level || //check that the user making the change is a high enough level to make the user being edited to the given user_level
+			array_key_exists($params['user_level'], Model_User::$userLevels); //check that the user level is a valid user level
+	}
 }
