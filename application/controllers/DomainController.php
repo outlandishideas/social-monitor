@@ -7,7 +7,7 @@ class DomainController extends BaseController {
 
 	/**
 	 * Lists the domains of links mentioned by presences, allowing them to be marked as belonging to british council or not
-	 * @user-level user
+	 * @user-level manager
 	 */
 	function indexAction() {
 		if ($this->_request->isPost()) {
@@ -30,6 +30,7 @@ class DomainController extends BaseController {
 
     /**
      * Called via ajax to show the list of statuses that contain a given url
+	 * @user-level manager
      */
     function statusListAction() {
         $id = $this->_request->getParam('id');
@@ -62,6 +63,7 @@ class DomainController extends BaseController {
 
 	/**
 	 * Ajax function for getting a page of domains
+	 * @user-level manager
 	 */
 	function listAction() {
 		Zend_Session::writeClose(); //release session on long running actions
@@ -134,7 +136,7 @@ class DomainController extends BaseController {
 
 	/**
 	 * Shows details about how a domain has been used
-	 * @user-level user
+	 * @user-level manager
 	 */
 	function viewAction() {
 
