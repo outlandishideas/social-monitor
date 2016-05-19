@@ -15,7 +15,7 @@ $region = $country->getRegion();
 
 <?php if ($region) : ?>
     <p>
-		<?php echo $translator->trans('route.country.view.info-panel.containing-region', ['%region%' => '<a href="' . $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)) . '">'.htmlspecialchards($region->display_name).'</a>']); ?>
+		<?php echo $translator->trans('route.country.view.info-panel.containing-region', ['%region%' => '<a href="' . $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)) . '">'.htmlspecialchars($region->display_name).'</a>']); ?>
 	</p>
 <?php endif; ?>
 

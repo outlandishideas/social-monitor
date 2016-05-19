@@ -35,7 +35,7 @@ $buttons = array('<div id="search-table">' . $translator->trans('Global.loading-
 							<?php if (!$queryOption->enabled) echo 'disabled'; ?>
 					>
 						<?php foreach($queryOption->options as $option) : ?>
-							<option value="<?php echo $option['value']; ?>" <?php if ($option['selected']) echo 'selected="selected"'; ?>><?php echo $option['title']; ?></option>
+							<option value="<?php echo $option['value']; ?>" <?php if ($option['selected']) echo 'selected="selected"'; ?>><?php echo htmlspecialchars($option['title']); ?></option>
 						<?php endforeach; ?>
 					</select>
 					<div class="selected-summary"></div>

@@ -53,7 +53,7 @@
 							        data-url="<?php echo $this->url(array('controller'=>'group', 'action'=>'view', 'id'=>$g->id)); ?>"
 							        data-label="<?php echo htmlspecialchars($g->display_name); ?>"
 							        data-hover="<?php echo htmlspecialchars($g->display_name); ?>">
-								<?php echo htmlspecialchars(htmlspecialchars($g->display_name)); ?>
+								<?php echo htmlspecialchars($g->display_name); ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
