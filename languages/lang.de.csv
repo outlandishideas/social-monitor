@@ -1152,7 +1152,7 @@ js.datatables.searchPlaceholder,Suche
 js.datatables.emptyTable,Kein %type% gefunden
 js.datatables.zeroRecords,Kein passender %type% gefunden
 "js.datatables.info","Zeige %type%s: _START_ bis _END_"
-js.datatables.infoEmpty,Keine %types% zum Anzeigen
+js.datatables.infoEmpty,Keine %type%s zum Anzeigen
 js.datatables.infoFiltered
 js.datatables.loading,Laden…
 
