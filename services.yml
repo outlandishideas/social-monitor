@@ -508,6 +508,6 @@ services:
         arguments: ["joyride-presence", %joyride.presence.steps%]
 
     # Recaptcha services
-    recaptcha.handler:
+    recaptcha.helper:
         class: Outlandish\SocialMonitor\Helper\ReCaptcha
         arguments: [%recaptcha.site_key%, %recaptcha.secret%]

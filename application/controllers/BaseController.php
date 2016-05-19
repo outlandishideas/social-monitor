@@ -27,6 +27,8 @@ class BaseController extends Zend_Controller_Action
     static protected $container;
 	/** @var \Symfony\Component\Translation\Translator */
 	protected $translator;
+	/** @var \Outlandish\SocialMonitor\Helper\ReCaptcha */
+	protected $recaptcha;
 
 	/**
      * @param ContainerInterface $container
@@ -189,6 +191,7 @@ class BaseController extends Zend_Controller_Action
         $this->view->jsConfig['companyName'] = $this->getCompanyName();
         $this->view->jsConfig['dateLocale'] = $this->getContainer()->getParameter('date.locale');
 
+		$this->recaptcha = $this->getContainer()->get('recaptcha.helper');
     }
 
 	/**
