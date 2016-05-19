@@ -259,6 +259,7 @@ class UserController extends BaseController
         if ($this->_request->isPost()) {
             // prevent hackers upgrading their own user level
             $params = $this->_request->getParams();
+
             if ($this->guardAgainstUnauthorizedUserLevelChanges($params)) {
                 unset($params['user_level']);
             }
@@ -505,6 +506,8 @@ class UserController extends BaseController
     }
 
 	/**
+	 * Only allows managers and admins to change user level, and restricts level that managers can change to
+	 *
 	 * @param $params
 	 * @return bool
 	 */
