@@ -261,17 +261,14 @@ class UserController extends BaseController
                 unset($params['user_level']);
             }
 
-            $stringValidator = new Validation\StringValidator();
-            $emailValidator = new Validation\EmailValidator();
-
             $isValidInput = $this->verifyInput([
                 $this->_request->getParam('name') => [
                     'inputLabel' => $this->formInputLabels['name'],
-                    'validator' => $stringValidator
+                    'validator' => new Validation\StringValidator()
                 ],
                 $this->_request->getParam('email') => [
                     'inputLabel' => 'Email address',
-                    'validator' => $emailValidator
+                    'validator' => new Validation\EmailValidator()
                 ]
             ]);
 
