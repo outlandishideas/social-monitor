@@ -4,7 +4,7 @@ namespace Outlandish\SocialMonitor\Validation;
 
 class RangeValidator extends BaseValidator
 {
-    protected $errorMessage = "Input for %s is not a valid number.";
+    protected $errorMessage = "%s is not a valid number.";
     private $min = null;
     private $max = null;
 

@@ -12,7 +12,7 @@ namespace Outlandish\SocialMonitor\Validation;
 class ListValidator extends BaseValidator
 {
     private $listElements = [];
-    protected $errorMessage = "%s is not in the list of valid arguments";
+    protected $errorMessage = "%s is not in the list of valid values";
 
     public function __construct($listElements)
     {
