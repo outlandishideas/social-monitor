@@ -3,6 +3,7 @@
 use Outlandish\SocialMonitor\Report\ReportableCountry;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
 use Outlandish\SocialMonitor\TableIndex\Header\Name;
+use Outlandish\SocialMonitor\Validation;
 
 class CountryController extends CampaignController {
 
@@ -197,7 +198,28 @@ class CountryController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 
-			if ($this->setProperties($editingCountry,  $this->_request->getParams())) {
+			$requestParams = $this->_request->getParams();
+			
+			$stringValidator = new Validation\StringValidator();
+			$rangeValidator = new Validation\RangeValidator(0, 100);
+			$listValidator = new Validation\ListValidator($this->view->countryCodes);
+			
+			$isValidInput = $this->verifyInput([
+				$requestParams['display_name'] => [
+					'inputLabel' => $this->formInputLabels['display_name'],
+					'validator' => $stringValidator
+				],
+				$requestParams['penetration'] => [
+					'inputLabel' => $this->formInputLabels['penetration'],
+					'validator' => $rangeValidator
+				],
+				$requestParams['country'] => [
+					'inputLabel' => $this->formInputLabels['country'],
+					'validator' => $listValidator
+				]
+			]);
+
+			if ($isValidInput && $this->setProperties($editingCountry,  $requestParams)) {
 				$editingCountry->penetration = max(0, $editingCountry->penetration);
 				$editingCountry->penetration = min(100, $editingCountry->penetration);
 

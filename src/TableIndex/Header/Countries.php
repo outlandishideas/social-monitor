@@ -32,6 +32,4 @@ class Countries extends Header {
         }
         return $presences;
     }
-
-
 }
