@@ -203,7 +203,8 @@ class RegionController extends CampaignController
             $isValidInput = $this->verifyInput([
                 $requestParams['display_name'] => [
                     'inputLabel' => $this->formInputLabels['display_name'],
-                    'validator' => new Validation\StringValidator()
+                    'validator' => new Validation\StringValidator(),
+                    'required' => true
                 ]
             ]);
 
@@ -262,7 +263,8 @@ class RegionController extends CampaignController
                 $isValidInput = $this->verifyInput([
                     $g['display_name'] => [
                         'inputLabel' => $this->formInputLabels['display_name'],
-                        'validator' => new Validation\StringValidator()
+                        'validator' => new Validation\StringValidator(),
+                        'required' => true
                     ]
                 ]);
 

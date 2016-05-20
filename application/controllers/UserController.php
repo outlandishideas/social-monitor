@@ -264,11 +264,13 @@ class UserController extends BaseController
             $isValidInput = $this->verifyInput([
                 $this->_request->getParam('name') => [
                     'inputLabel' => $this->formInputLabels['name'],
-                    'validator' => new Validation\StringValidator()
+                    'validator' => new Validation\StringValidator(),
+                    'required' => true
                 ],
                 $this->_request->getParam('email') => [
                     'inputLabel' => 'Email address',
-                    'validator' => new Validation\EmailValidator()
+                    'validator' => new Validation\EmailValidator(),
+                    'required' => true
                 ]
             ]);
 

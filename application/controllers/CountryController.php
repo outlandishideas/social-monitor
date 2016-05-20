@@ -203,7 +203,8 @@ class CountryController extends CampaignController {
 			$isValidInput = $this->verifyInput([
 				$requestParams['display_name'] => [
 					'inputLabel' => $this->formInputLabels['display_name'],
-					'validator' => new Validation\StringValidator()
+					'validator' => new Validation\StringValidator(),
+					'required' => true
 				],
 				$requestParams['penetration'] => [
 					'inputLabel' => $this->formInputLabels['penetration'],
@@ -211,7 +212,8 @@ class CountryController extends CampaignController {
 				],
 				$requestParams['country'] => [
 					'inputLabel' => $this->formInputLabels['country'],
-					'validator' => new Validation\ListValidator(array_keys($this->view->countryCodes))
+					'validator' => new Validation\ListValidator(array_keys($this->view->countryCodes)),
+					'required' => true
 				]
 			]);
 
@@ -312,7 +314,8 @@ class CountryController extends CampaignController {
 				$isValidInput = $this->verifyInput([
 					$c['display_name'] => [
 						'inputLabel' => $this->formInputLabels['display_name'],
-						'validator' => new Validation\StringValidator()
+						'validator' => new Validation\StringValidator(),
+						'required' => true
 					],
 					$c['penetration'] => [
 						'inputLabel' => $this->formInputLabels['penetration'],
@@ -320,7 +323,8 @@ class CountryController extends CampaignController {
 					],
 					$c['country'] => [
 						'inputLabel' => $this->formInputLabels['country'],
-						'validator' => new Validation\ListValidator(array_keys($this->view->countryCodes))
+						'validator' => new Validation\ListValidator(array_keys($this->view->countryCodes)),
+						'required' => true
 					]
 				]);
 
