@@ -3,7 +3,7 @@
 namespace Outlandish\SocialMonitor\Validation;
 abstract class BaseValidator
 {
-    private $errorMessage = "Value for %s is not valid";
+    protected $errorMessage = "Value for %s is not valid";
     
     abstract public function isValid($candidate);
 

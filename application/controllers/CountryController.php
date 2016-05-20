@@ -200,22 +200,18 @@ class CountryController extends CampaignController {
 
 			$requestParams = $this->_request->getParams();
 			
-			$stringValidator = new Validation\StringValidator();
-			$rangeValidator = new Validation\RangeValidator(0, 100);
-			$listValidator = new Validation\ListValidator($this->view->countryCodes);
-			
 			$isValidInput = $this->verifyInput([
 				$requestParams['display_name'] => [
 					'inputLabel' => $this->formInputLabels['display_name'],
-					'validator' => $stringValidator
+					'validator' => new Validation\StringValidator()
 				],
 				$requestParams['penetration'] => [
 					'inputLabel' => $this->formInputLabels['penetration'],
-					'validator' => $rangeValidator
+					'validator' => new Validation\RangeValidator(0, 100)
 				],
 				$requestParams['country'] => [
 					'inputLabel' => $this->formInputLabels['country'],
-					'validator' => $listValidator
+					'validator' => new Validation\ListValidator(array_keys($this->view->countryCodes))
 				]
 			]);
 
@@ -313,8 +309,24 @@ class CountryController extends CampaignController {
             foreach($editingCountries as $c){
                 $editingCountry = Model_Country::fetchById($c['id']);
 
-				if(!$this->setProperties($editingCountry, $c)){
+				$isValidInput = $this->verifyInput([
+					$c['display_name'] => [
+						'inputLabel' => $this->formInputLabels['display_name'],
+						'validator' => new Validation\StringValidator()
+					],
+					$c['penetration'] => [
+						'inputLabel' => $this->formInputLabels['penetration'],
+						'validator' => new Validation\RangeValidator(0, 100)
+					],
+					$c['country'] => [
+						'inputLabel' => $this->formInputLabels['country'],
+						'validator' => new Validation\ListValidator(array_keys($this->view->countryCodes))
+					]
+				]);
+
+				if(!$isValidInput || !$this->setProperties($editingCountry, $c)){
 					$producedErrors = true;
+					break;
 				};
 
                 $editedCountries[] = $editingCountry;

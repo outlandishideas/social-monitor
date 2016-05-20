@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use LinkedIn\LinkedIn;
 use Outlandish\SocialMonitor\Exception\SocialMonitorException;
 use Outlandish\SocialMonitor\PresenceType\PresenceType;
+use Outlandish\SocialMonitor\Validation;
 
 class UserController extends BaseController
 {
@@ -260,12 +261,24 @@ class UserController extends BaseController
                 unset($params['user_level']);
             }
 
+            $stringValidator = new Validation\StringValidator();
+            $emailValidator = new Validation\EmailValidator();
+
+            $isValidInput = $this->verifyInput([
+                $this->_request->getParam('name') => [
+                    'inputLabel' => $this->formInputLabels['name'],
+                    'validator' => $stringValidator
+                ],
+                $this->_request->getParam('email') => [
+                    'inputLabel' => 'Email address',
+                    'validator' => $emailValidator
+                ]
+            ]);
+
             $setProperties = $this->setProperties($editingUser, $params);
             $errorMessages = array();
 
-            if (preg_match('/.*@.*/', $this->_request->getParam('email')) === 0) {
-                $errorMessages[] = $this->translator->trans('route.user.edit.message.invalid-email'); //'Please enter a valid email address';
-            } else if ($isRegistration &&
+            if ($isRegistration &&
                 !$this->isValidEmailAddress($this->_request->getParam('email'))) {
                 $errorMessages[] = $this->translator->trans('route.user.edit.message.use-company-email', ['%company%' => $this->getCompanyName()]); //'To register, you must use a valid British Council email address';
             }
@@ -294,7 +307,7 @@ class UserController extends BaseController
                 }
             }
 
-            if(!$errorMessages && $setProperties) {
+            if($isValidInput && !$errorMessages && $setProperties) {
                 try {
                     $editingUser->save();
                     $this->flashMessage($messageOnSave);
