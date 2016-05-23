@@ -325,6 +325,7 @@
 
 "route.user.login.page-title","Login"
 "route.user.login.message.cannot-login","Incorrect username/password or email has not been confirmed"
+"route.user.login.message.too-many-tries","You entered the wrong credentials for too many times. Please try again later."
 
 "route.user.logout.message.success","Logged out"
 

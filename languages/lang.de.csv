@@ -325,6 +325,7 @@ route.user.linkedin.message.success,LinkedIn Account verbunden
 
 route.user.login.page-title,Login
 route.user.login.message.cannot-login,Ungültiger Benutzername/Passwort oder E-Mail-Adresse nicht bestätigt worden
+"route.user.login.message.too-many-tries","Sie haben zu falsche Eingaben gemacht. Bitte versuchen Sie es später erneut."
 
 route.user.logout.message.success,ausgeloggt
 
