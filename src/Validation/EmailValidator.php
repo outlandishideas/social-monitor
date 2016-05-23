@@ -11,7 +11,7 @@ namespace Outlandish\SocialMonitor\Validation;
 
 class EmailValidator extends BaseValidator
 {
-    protected $errorMessage = "%s contains forbidden characters";
+    protected $errorMessage = 'route.base.validation.email-forbidden';
 
     public function isValid($candidate){
         return filter_var($candidate, FILTER_VALIDATE_EMAIL);

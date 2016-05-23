@@ -4,9 +4,9 @@ namespace Outlandish\SocialMonitor\Validation;
 
 class RangeValidator extends BaseValidator
 {
-    protected $errorMessage = "%s is not a valid number.";
-    private $min = null;
-    private $max = null;
+    protected $errorMessage = 'route.base.validation.not-in-range';
+    private $min;
+    private $max;
 
     public function __construct($min, $max)
     {
@@ -16,10 +16,15 @@ class RangeValidator extends BaseValidator
 
     public function isValid($candidate){
         if ($candidate < $this->min || $candidate > $this->max){
-            $this->setErrorMessage("Input for %s must be between $this->min than $this->max");
             return false;
         }
 
         return true;
+    }
+
+    public function getErrorMessage($formInput='input')
+    {
+        return parent::$translator->trans($this->errorMessage,
+            ['%min%' => $this->min, '%max%' => $this->max, '%label%' => $formInput]);
     }
 }

@@ -49,7 +49,7 @@ class BaseController extends Zend_Controller_Action
     public function verifyInput($validators=[]){
         $errors = [];
         foreach ($validators as $candidate=>$params){
-            $required = null;
+            $required = false;
             if (array_key_exists('required', $params)){
                 $required = $params['required'];
             }
@@ -57,10 +57,10 @@ class BaseController extends Zend_Controller_Action
             $validator = $params['validator'];
 
             if(!$candidate && !is_numeric($candidate) && $required){
-                array_push($errors, "$inputLabel is required");
+                array_push($errors, $this->translator->trans('route.base.validation.required', ['%label%' => $inputLabel]));
             }
             else if(($candidate || is_numeric($candidate)) && !$validator->isValid($candidate)){
-                array_push($errors, $validator->getErrorMessage($this->translator->trans($inputLabel)));
+                array_push($errors, $validator->getErrorMessage($inputLabel));
             }
         }
         foreach ($errors as $error){

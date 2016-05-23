@@ -3,7 +3,7 @@ namespace Outlandish\SocialMonitor\Validation;
 
 class StringValidator extends BaseValidator
 {
-    protected $errorMessage = "%s contains forbidden characters";
+    protected $errorMessage = 'route.base.validation.string-forbidden';
 
     public function isValid($candidate){
         return preg_match('/^[^><\/\"]*$/', $candidate);

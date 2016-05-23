@@ -78,6 +78,7 @@ use Outlandish\SocialMonitor\PresenceType\PresenceType;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Outlandish\SocialMonitor\Validation\BaseValidator;
 
 $container = new ContainerBuilder();
 $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
@@ -96,6 +97,7 @@ Badge_Factory::setContainer($container);
 Zend_Registry::set('symfony_translate', $container->get('translation.translator'));
 Model_Base::setTranslator($container->get('translation.translator'));
 Model_Presence::setTranslator($container->get('translation.translator'));
+BaseValidator::setTranslator($container->get('translation.translator'));
 
 //set db for PresenceFactory
 Model_PresenceFactory::setDatabase($container->get('db'));
