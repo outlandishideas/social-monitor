@@ -110,7 +110,7 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">'.$translato
 						<?php foreach (Model_Presence::getSizes() as $value => $label) :
 							$selected = ($this->isNew ? '' : ($value == $presence->getSize() ? "selected" : "")); ?>
 							<option
-								value="<?php echo $value; ?>" <?php echo $selected; ?>><?php echo $label; ?></option>
+								value="<?php echo $value; ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($label); ?></option>
 						<?php endforeach; ?>
 					</select>
 				</div>

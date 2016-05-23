@@ -6,7 +6,7 @@ $forForm = !empty($this->varname);
     <?php if ($forForm) : ?>
 	<input type="hidden" value="<?php echo $this->country->id;?>" name="<?php echo $this->varname; ?>">
     <?php endif; ?>
-	<a href="<?php echo ($url ?: '#'); ?>" title="<?php echo $this->country->getName(); ?>" class="first <?php if (!$forForm) { echo 'last'; } ?>">
+	<a href="<?php echo ($url ?: '#'); ?>" title="<?php echo htmlspecialchars($this->country->getName()); ?>" class="first <?php if (!$forForm) { echo 'last'; } ?>">
 		<div class="sm-flag flag-<?php echo htmlspecialchars($this->country->getCountryCode()); ?>"></div>
 		<?php echo htmlspecialchars($this->country->getName()); ?>
 	</a><?php if ($forForm) : ?><a href="#" class="remove-item last">

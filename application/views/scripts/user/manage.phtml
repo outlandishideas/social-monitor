@@ -1,5 +1,5 @@
 <?php $translator = $this->translate(); ?>
-<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
+<h2 class="page-title"><?php echo htmlspecialchars($this->pageTitle); ?></h2>
 <?php if ($this->editingUser->isManager) : ?>
 	<?php $buttons = $this->gatekeeper()->filterAll(array(
 		'<p><a href="%url%" class="button-bc">Back</a></p>' => array('controller'=>'user', 'action'=>'index')

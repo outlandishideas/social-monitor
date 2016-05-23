@@ -31,9 +31,9 @@ array_unshift($buttons, '<div id="search-table">'.$translator->trans('views.scri
 		$userLevel = array_key_exists($user->user_level, $this->userLevels) ? $this->userLevels[$user->user_level] : $translator->trans('views.scripts.user.index.user-level.unknown', ['%user_level%' => $user->user_level]);
 	?>
 	<tr <?php if ($user->id == $this->user->id) echo 'class="current-user"'; ?>>
-		<td class="name left-align"><?php echo htmlspecialchars($user->safeName); ?></td>
+		<td class="name left-align"><?php echo $user->safeName; ?></td>
 		<td class="email left-align"><?php echo htmlspecialchars($user->email); ?></td>
-		<td class="user-level left-align"><?php echo $userLevel; ?></td>
+		<td class="user-level left-align"><?php echo htmlspecialchars($userLevel); ?></td>
 		<td class="access left-align">
 			<?php if ($user->isManager) : ?>
 			<?php echo $translator->trans('views.scripts.user.index.all')?>
