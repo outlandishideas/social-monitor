@@ -8,7 +8,7 @@ use Outlandish\SocialMonitor\Validation;
 
 class UserController extends BaseController
 {
-    protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register', 'confirm-email', 'joyride', 'linkedin');
+    protected static $publicActions = array('login', 'forgotten', 'reset-password', 'register', 'confirm-email');
     /** @var LinkedIn */
     protected $linkedin;
 
@@ -27,6 +27,9 @@ class UserController extends BaseController
         $this->view->linkedinUrl = $this->linkedin->getLoginUrl([LinkedIn::SCOPE_BASIC_PROFILE, 'rw_company_admin']);
     }
 
+	/**
+	 * @user-level user
+	 */
     public function linkedinAction()
     {
         if (isset($_REQUEST['code'])) {
@@ -257,7 +260,8 @@ class UserController extends BaseController
         if ($this->_request->isPost()) {
             // prevent hackers upgrading their own user level
             $params = $this->_request->getParams();
-            if (!$this->view->canChangeLevel) {
+
+            if ($this->guardAgainstUnauthorizedUserLevelChanges($params)) {
                 unset($params['user_level']);
             }
 
@@ -474,6 +478,7 @@ class UserController extends BaseController
     }
 
 	/**
+	 * @user-level user
 	 */
 	public function joyrideAction()
 	{
@@ -511,4 +516,17 @@ class UserController extends BaseController
         $validLogin = $this->getContainer()->getParameter('email.login');
         return (preg_match($validLogin, $email) === 1) || (preg_match('/@outlandish.com$/i', $email) === 1);
     }
+
+	/**
+	 * Only allows managers and admins to change user level, and restricts level that managers can change to
+	 *
+	 * @param $params
+	 * @return bool
+	 */
+	protected function guardAgainstUnauthorizedUserLevelChanges($params)
+	{
+		return !$this->view->canChangeLevel || //check that the user making the change can edit the user level of a user
+			$params['user_level'] > $this->view->user->user_level || //check that the user making the change is a high enough level to make the user being edited to the given user_level
+			array_key_exists($params['user_level'], Model_User::$userLevels); //check that the user level is a valid user level
+	}
 }

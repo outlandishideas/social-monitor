@@ -110,6 +110,11 @@ class PresenceController extends GraphingController
 		$this->view->joyride = $this->getContainer()->get('joyride.presence');
 	}
 
+	/**
+	 * Download a report for this presence
+	 *
+	 * @user-level user
+	 */
 	public function downloadReportAction()
 	{
 		$presence = $this->getRequestedPresence();
@@ -150,6 +155,11 @@ class PresenceController extends GraphingController
 		exit;
 	}
 
+	/**
+	 * View the data for this presence in report format
+	 *
+	 * This is used by software to convert HTML into PDF
+	 */
     public function reportAction()
     {
 		$presence = $this->getRequestedPresence();
@@ -201,7 +211,7 @@ class PresenceController extends GraphingController
 
 	/**
 	 * Edits/creates a presence
-	 * @user-level user
+	 * @user-level manager
 	 */
 	public function editAction()
 	{
@@ -323,6 +333,8 @@ class PresenceController extends GraphingController
 
 	/**
 	 * Gets all of the graph data for the requested presence
+	 *
+	 * @user-level user
 	 */
 	public function graphDataAction() {
 		Zend_Session::writeClose(); //release session on long running actions
@@ -346,6 +358,8 @@ class PresenceController extends GraphingController
 
 	/**
 	 * AJAX function for toggling whether a facebook status needs a response
+	 *
+	 * @user-level user
 	 */
 	public function toggleResponseNeededAction() {
 		$id = $this->_request->getParam('id');
@@ -366,6 +380,11 @@ class PresenceController extends GraphingController
         exit;
 	}
 
+	/**
+	 * Download a CSV of the index table data
+	 *
+	 * @user-level user
+	 */
     public function downloadAction() {
 		$table = $this->getContainer()->get('table.presence-index');
         $csvData = Util_Csv::generateCsvData($table);

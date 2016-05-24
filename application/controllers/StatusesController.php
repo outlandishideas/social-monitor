@@ -131,6 +131,8 @@ class StatusesController extends GraphingController
 
     /**
      * AJAX function for fetching the statuses
+	 *
+	 * @user-level user
      */
     public function listAction()
     {

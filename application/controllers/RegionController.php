@@ -85,6 +85,11 @@ class RegionController extends CampaignController
 		$this->view->pdfLink = $this->getContainer()->get('kpi_download_linker')->link();
 	}
 
+	/**
+	 * Download the pdf of a report
+	 *
+	 * @user-level user
+	 */
     public function downloadReportAction()
     {
 		$region = $this->getRequestedRegion();
@@ -125,6 +130,11 @@ class RegionController extends CampaignController
         exit;
     }
 
+	/**
+	 * View the data for this region in report format
+	 *
+	 * This is used by software to oonvert HTML into PDF
+	 */
     public function reportAction()
     {
 		$region = $this->getRequestedRegion();
@@ -184,7 +194,7 @@ class RegionController extends CampaignController
 
     /**
      * Edits/creates a region
-     * @user-level user
+     * @user-level manager
      */
     public function editAction()
     {
@@ -343,6 +353,11 @@ class RegionController extends CampaignController
 		}
 	}
 
+	/**
+	 * Download a CSV of the region index table data
+	 *
+	 * @user-level user
+	 */
 	public function downloadAction() {
         $table = $this->getContainer()->get('table.region-index');
         $csvData = Util_Csv::generateCsvData($table);
@@ -352,6 +367,8 @@ class RegionController extends CampaignController
 
     /**
      * Gets all of the graph data for the requested region
+	 *
+	 * @user-level user
      */
     public function graphDataAction() {
         Zend_Session::writeClose(); //release session on long running actions
