@@ -37,7 +37,7 @@ class FetchCommand extends ContainerAwareCommand
 	protected function configure()
     {
         $this
-            ->setName('sm:fetch')
+            ->setName('sm:presence:fetch')
             ->setDescription('Fetches social media data for all channels')
 			->addOption('force', 'f', InputOption::VALUE_NONE)
 			->addOption('channel', 'c', InputOption::VALUE_REQUIRED, null);
