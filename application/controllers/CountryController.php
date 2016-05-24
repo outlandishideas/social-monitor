@@ -3,6 +3,7 @@
 use Outlandish\SocialMonitor\Report\ReportableCountry;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
 use Outlandish\SocialMonitor\TableIndex\Header\Name;
+use Outlandish\SocialMonitor\Validation;
 
 class CountryController extends CampaignController {
 
@@ -197,7 +198,26 @@ class CountryController extends CampaignController {
 
 		if ($this->_request->isPost()) {
 
-			if ($this->setProperties($editingCountry,  $this->_request->getParams())) {
+			$requestParams = $this->_request->getParams();
+			
+			$isValidInput = $this->verifyInput([
+				$requestParams['display_name'] => [
+					'inputLabel' => $this->formInputLabels['display_name'],
+					'validator' => new Validation\StringValidator(),
+					'required' => true
+				],
+				$requestParams['penetration'] => [
+					'inputLabel' => $this->formInputLabels['penetration'],
+					'validator' => new Validation\RangeValidator(0, 100)
+				],
+				$requestParams['country'] => [
+					'inputLabel' => $this->formInputLabels['country'],
+					'validator' => new Validation\ListValidator(array_keys($this->view->countryCodes)),
+					'required' => true
+				]
+			]);
+
+			if ($isValidInput && $this->setProperties($editingCountry,  $requestParams)) {
 				$editingCountry->penetration = max(0, $editingCountry->penetration);
 				$editingCountry->penetration = min(100, $editingCountry->penetration);
 
@@ -291,8 +311,26 @@ class CountryController extends CampaignController {
             foreach($editingCountries as $c){
                 $editingCountry = Model_Country::fetchById($c['id']);
 
-				if(!$this->setProperties($editingCountry, $c)){
+				$isValidInput = $this->verifyInput([
+					$c['display_name'] => [
+						'inputLabel' => $this->formInputLabels['display_name'],
+						'validator' => new Validation\StringValidator(),
+						'required' => true
+					],
+					$c['penetration'] => [
+						'inputLabel' => $this->formInputLabels['penetration'],
+						'validator' => new Validation\RangeValidator(0, 100)
+					],
+					$c['country'] => [
+						'inputLabel' => $this->formInputLabels['country'],
+						'validator' => new Validation\ListValidator(array_keys($this->view->countryCodes)),
+						'required' => true
+					]
+				]);
+
+				if(!$isValidInput || !$this->setProperties($editingCountry, $c)){
 					$producedErrors = true;
+					break;
 				};
 
                 $editedCountries[] = $editingCountry;

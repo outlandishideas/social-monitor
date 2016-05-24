@@ -43,7 +43,7 @@ if ($topButtons) {
 			<select name="country" id="country" class="selectInput">
 				<option value="">--<?php echo $translator->trans('Global.select')?>--</option>
 				<?php foreach ($this->countryCodes as $code => $name) : ?>
-					<option value="<?php echo $code; ?>" <?php if ($country->country == $code) echo 'selected'; ?>><?php echo $name; ?></option>
+					<option value="<?php echo htmlspecialchars($code); ?>" <?php if ($country->country == $code) echo 'selected'; ?>><?php echo htmlspecialchars($name); ?></option>;
 				<?php endforeach; ?>
 			</select>
 		</div>

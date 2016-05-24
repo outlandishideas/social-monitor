@@ -3,6 +3,7 @@
 use Outlandish\SocialMonitor\Report\ReportableRegion;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
 use Outlandish\SocialMonitor\TableIndex\Header\Name;
+use Outlandish\SocialMonitor\Validation;
 
 class RegionController extends CampaignController
 {
@@ -197,7 +198,17 @@ class RegionController extends CampaignController
 
         if ($this->_request->isPost()) {
 
-            if($this->setProperties($editingRegion, $this->_request->getParams())) {
+            $requestParams = $this->_request->getParams();
+
+            $isValidInput = $this->verifyInput([
+                $requestParams['display_name'] => [
+                    'inputLabel' => $this->formInputLabels['display_name'],
+                    'validator' => new Validation\StringValidator(),
+                    'required' => true
+                ]
+            ]);
+
+            if($isValidInput && $this->setProperties($editingRegion, $requestParams)) {
                 try {
                     $editingRegion->save();
 
@@ -249,8 +260,17 @@ class RegionController extends CampaignController
             foreach($editingRegions as $g){
                 $editingRegion = Model_Region::fetchById($g['id']);
 
-                if(!$this->setProperties($editingRegion, $g)){
+                $isValidInput = $this->verifyInput([
+                    $g['display_name'] => [
+                        'inputLabel' => $this->formInputLabels['display_name'],
+                        'validator' => new Validation\StringValidator(),
+                        'required' => true
+                    ]
+                ]);
+
+                if(!$isValidInput || !$this->setProperties($editingRegion, $g)){
                     $producedErrors = true;
+                    break;
                 }
 
                 $editedRegions[] = $editingRegion;

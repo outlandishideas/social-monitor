@@ -9,13 +9,13 @@ $region = $country->getRegion();
 ?>
 
 <h4 class="campaign-name">
-    <div class="sm-flag flag-<?php echo $country->getCountryCode(); ?>"></div>
-    <?php echo $country->display_name; ?>
+    <div class="sm-flag flag-<?php echo htmlspecialchars($country->getCountryCode()); ?>"></div>
+    <?php echo htmlspecialchars($country->display_name); ?>
 </h4>
 
 <?php if ($region) : ?>
     <p>
-		<?php echo $translator->trans('route.country.view.info-panel.containing-region', ['%region%' => '<a href="' . $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)) . '">'.$region->display_name.'</a>']); ?>
+		<?php echo $translator->trans('route.country.view.info-panel.containing-region', ['%region%' => '<a href="' . $this->url(array('controller'=>'region', 'action'=>'view', 'id'=>$region->id)) . '">'.htmlspecialchars($region->display_name).'</a>']); ?>
 	</p>
 <?php endif; ?>
 

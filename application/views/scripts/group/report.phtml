@@ -12,7 +12,7 @@
     <div class="small-12 columns">
         <section class="border-section info-section">
             <h2><?php echo $this->translate()->trans('route.group.report.presence.header', ['%count%' => $presenceCount]); ?></h2>
-            <p><?php echo implode(", ", $presences) ?>.</p>
+            <p><?php echo htmlspecialchars(implode(", ", $presences))?>.</p>
         </section>
     </div>
 </div>

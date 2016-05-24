@@ -1,5 +1,5 @@
 <?php $translator = $this->translate(); ?>
-<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
+<h2 class="page-title"><?php echo htmlspecialchars($this->pageTitle); ?></h2>
 <?php if ($this->editingUser->isManager) : ?>
 	<?php $buttons = $this->gatekeeper()->filterAll(array(
 		'<p><a href="%url%" class="button-bc">Back</a></p>' => array('controller'=>'user', 'action'=>'index')
@@ -27,9 +27,9 @@
 						<?php foreach ($this->countries as $c) : ?>
 							<option value="<?php echo $c->id; ?>"
 							        data-url="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$c->id)); ?>"
-							        data-label="<?php echo $c->display_name; ?>"
-							        data-hover="<?php echo $c->display_name; ?>">
-								<?php echo $c->display_name; ?>
+							        data-label="<?php echo htmlspecialchars($c->display_name); ?>"
+							        data-hover="<?php echo htmlspecialchars($c->display_name); ?>">
+								<?php echo htmlspecialchars($c->display_name); ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
@@ -51,9 +51,9 @@
 						<?php foreach ($this->groups as $g) : ?>
 							<option value="<?php echo $g->id; ?>"
 							        data-url="<?php echo $this->url(array('controller'=>'group', 'action'=>'view', 'id'=>$g->id)); ?>"
-							        data-label="<?php echo $g->display_name; ?>"
-							        data-hover="<?php echo $g->display_name; ?>">
-								<?php echo $g->display_name; ?>
+							        data-label="<?php echo htmlspecialchars($g->display_name); ?>"
+							        data-hover="<?php echo htmlspecialchars($g->display_name); ?>">
+								<?php echo htmlspecialchars($g->display_name); ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
@@ -75,9 +75,9 @@
 						<?php foreach ($this->twitterPresences as $p) : ?>
 							<option value="<?php echo $p->id; ?>"
 							        data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
-							        data-label="<?php echo '@' . $p->handle; ?>"
-							        data-hover="<?php echo $p->name; ?>">
-								<?php echo '@' . $p->handle . ' (' . $p->name . ')'; ?>
+							        data-label="<?php echo htmlspecialchars('@' . $p->handle); ?>"
+							        data-hover="<?php echo htmlspecialchars($p->name); ?>">
+								<?php echo htmlspecialchars('@' . $p->handle . ' (' . $p->name . ')'); ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
@@ -99,9 +99,9 @@
 						<?php foreach ($this->facebookPresences as $p) : ?>
 							<option value="<?php echo $p->id; ?>"
 							        data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
-							        data-label="<?php echo $p->handle; ?>"
-							        data-hover="<?php echo $p->name; ?>">
-								<?php echo $p->handle . ' (' . $p->name . ')'; ?>
+							        data-label="<?php echo htmlspecialchars($p->handle); ?>"
+							        data-hover="<?php echo htmlspecialchars($p->name); ?>">
+								<?php echo htmlspecialchars($p->handle . ' (' . $p->name . ')'); ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
@@ -125,7 +125,7 @@
 								<input type="hidden" value="<?php echo $entity->entity_id;?>" name="assigned[<?php echo $entity->entity_type; ?>][]">
 								<a href="<?php echo $url ?: '#'; ?>" class="first" title="<?php echo $entity->title; ?>" target="_blank">
 									<span class="<?php echo $entity->icon; ?> icon-large"></span>
-									<?php echo $entity->text; ?>
+									<?php echo htmlspecialchars($entity->text); ?>
 								</a><a href="#" class="remove-item last">
 									<span class="icon-remove"></span>
 								</a>

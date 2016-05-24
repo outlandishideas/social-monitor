@@ -17,7 +17,7 @@ if ($cancel) {
 $bottomBar[] = '<button type="submit" class="button-bc">'.$translator->trans("buttons.common.save").'</button>';
 ?>
 
-<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
+<h2 class="page-title"><?php echo htmlspecialchars($this->pageTitle); ?></h2>
 
 <form class="management" method="post" action="<?php echo $this->url(); ?>" novalidate id="manage-region">
 

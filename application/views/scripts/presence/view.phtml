@@ -55,7 +55,7 @@ if ($sizeDiff > 0) {
                     <?php foreach ($this->allPresences as $type=>$presences) : ?>
                         <optgroup label="<?php echo $type; ?>">
                             <?php foreach ($presences as $p) : ?>
-                            <option value="<?php echo $p->id; ?>" <?php if ($p->id == $presence->id) { echo 'selected'; } ?>><?php echo $p->name . ' (' . $p->handle . ')'; ?></option>
+                            <option value="<?php echo $p->id; ?>" <?php if ($p->id == $presence->id) { echo 'selected'; } ?>><?php echo htmlspecialchars($p->name . ' (' . $p->handle . ')'); ?></option>
                             <?php endforeach; ?>
                         </optgroup>
                     <?php endforeach; ?>
@@ -96,7 +96,7 @@ if ($sizeDiff > 0) {
                     <?php if ($presence->image_url) : ?>
                     <img src="<?php echo $presence->image_url; ?>" />
                     <?php endif; ?>
-                    <?php echo $presence->getName(); ?>
+                    <?php echo htmlspecialchars($presence->getName()); ?>
                 </h4>
 				<?php
 					$type = strtolower($presenceType);

@@ -26,12 +26,10 @@ class Countries extends Header {
     {
         $presences = array();
         foreach($model->getCountries() as $country) {
-            $template = '<a href="' . Gatekeeper::PLACEHOLDER_URL . '" class="entity country"><div class="sm-flag flag-' . $country->getCountryCode() . '"></div> ' . $country->getName() . '</a>';
+            $template = '<a href="' . Gatekeeper::PLACEHOLDER_URL . '" class="entity country"><div class="sm-flag flag-' . $country->getCountryCode() . '"></div> ' . htmlspecialchars($country->getName()) . '</a>';
             $urlArgs = array("controller" => "country", "action" => "view", "id" => $country->id);
             $presences[$template] = $urlArgs;
         }
         return $presences;
     }
-
-
 }

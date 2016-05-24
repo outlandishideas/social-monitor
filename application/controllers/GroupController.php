@@ -3,6 +3,7 @@
 use Outlandish\SocialMonitor\Report\ReportableGroup;
 use Outlandish\SocialMonitor\Report\ReportGenerator;
 use Outlandish\SocialMonitor\TableIndex\Header\Name;
+use Outlandish\SocialMonitor\Validation;
 
 class GroupController extends CampaignController {
 
@@ -195,8 +196,17 @@ class GroupController extends CampaignController {
 
         if ($this->_request->isPost()) {
 //			$oldTimeZone = $editingGroup->timezone;
+            $requestParams = $this->_request->getParams();
 
-            if($this->setProperties($editingGroup, $this->_request->getParams())){
+            $isValidInput = $this->verifyInput([
+                $requestParams['display_name'] => [
+                    'inputLabel' => $this->formInputLabels['display_name'],
+                    'validator' => new Validation\StringValidator(),
+                    'required' => true
+                ]
+            ]);
+
+            if($isValidInput && $this->setProperties($editingGroup, $this->_request->getParams())){
                 try {
                     $editingGroup->save();
 
@@ -253,8 +263,17 @@ class GroupController extends CampaignController {
             foreach($editingGroups as $g){
                 $editingGroup = Model_Group::fetchById($g['id']);
 
-                if(!$this->setProperties($editingGroup, $g)){
+                $isValidInput = $this->verifyInput([
+                    $g['display_name'] => [
+                        'inputLabel' => $this->formInputLabels['display_name'],
+                        'validator' => new Validation\StringValidator(),
+                        'required' => true
+                    ]
+                ]);
+
+                if(!$isValidInput || !$this->setProperties($editingGroup, $g)){
                     $producedErrors = true;
+                    break;
                 }
                 
                 $editedGroups[] = $editingGroup;

@@ -23,7 +23,7 @@ if ($campaign instanceof Model_Country) {
                 <label for="campaign-switcher"><?php echo $this->campaignType; ?>:</label>
                 <select id="campaign-switcher" data-url-template="<?php echo $this->url(array('controller'=>$this->controllerName, 'action'=>'view', 'id'=>'the_id')); ?>">
                     <?php foreach ($this->allCampaigns as $c) : ?>
-                    <option value="<?php echo $c->id; ?>" <?php if ($c->id == $campaign->id) { echo 'selected'; } ?>><?php echo $c->display_name; ?></option>
+                    <option value="<?php echo $c->id; ?>" <?php if ($c->id == $campaign->id) { echo 'selected'; } ?>><?php echo htmlspecialchars($c->display_name); ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

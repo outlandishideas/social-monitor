@@ -17,9 +17,9 @@
 					<?php foreach ($presenceType['presences'] as $p) : /** @var $p Model_Presence */ ?>
 						<option value="<?php echo $p->id; ?>"
 								data-url="<?php echo $this->url(array('controller'=>'presence', 'action'=>'view', 'id'=>$p->id)); ?>"
-								data-label="<?php echo $p->handle; ?>"
-								data-hover="<?php echo $p->getLabel(); ?>">
-							<?php echo $p->handle . ' (' . $p->getLabel() . ')'; ?>
+								data-label="<?php echo htmlspecialchars($p->handle); ?>"
+								data-hover="<?php echo htmlspecialchars($p->getLabel()); ?>">
+							<?php echo htmlspecialchars($p->handle . ' (' . $p->getLabel() . ')'); ?>
 						</option>
 					<?php endforeach; ?>
 				</select>

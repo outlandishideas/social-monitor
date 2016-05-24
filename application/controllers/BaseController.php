@@ -46,6 +46,30 @@ class BaseController extends Zend_Controller_Action
         return $this->config->app->client_name;
     }
 
+    public function verifyInput($validators=[]){
+        $errors = [];
+        foreach ($validators as $candidate=>$params){
+            $required = false;
+            if (array_key_exists('required', $params)){
+                $required = $params['required'];
+            }
+            $inputLabel = $this->translator->trans($params['inputLabel']);
+            $validator = $params['validator'];
+
+            if(!$candidate && !is_numeric($candidate) && $required){
+                array_push($errors, $this->translator->trans('route.base.validation.required', ['%label%' => $inputLabel]));
+            }
+            else if(($candidate || is_numeric($candidate)) && !$validator->isValid($candidate)){
+                array_push($errors, $validator->getErrorMessage($inputLabel));
+            }
+        }
+        foreach ($errors as $error){
+            $this->flashMessage($error, 'error');
+        }
+
+        return $errors == false;
+    }
+
     public function preDispatch()
     {
         $this->auth = Zend_Auth::getInstance();

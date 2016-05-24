@@ -79,7 +79,12 @@
 "route.base.fetch-lock.hour","one:1 hour","more:%amount% hours"
 "route.base.fetch-lock.min","one:1 min","more:%amount% mins"
 "route.base.fetch-lock.sec","one:1 sec","more:%amount% secs"
-
+"route.base.validation.required","%label% is required"
+"route.base.validation.invalid","%label% is not valid"
+"route.base.validation.string-forbidden","%label% contains forbidden characters"
+"route.base.validation.email-forbidden","%label% contains forbidden characters"
+"route.base.validation.not-in-range","Input for %label% must be between %min% and %max%"
+"route.base.validation.not-in-list","%label% is not in the list of valid values"
 
 
 

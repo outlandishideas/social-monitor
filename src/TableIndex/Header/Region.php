@@ -32,4 +32,8 @@ class Region extends Header {
         $region = $model->getRegion();
         return $region ? $region->getName() : '';
     }
+    
+    function formatValue($value) {
+        return htmlspecialchars($value);
+    }
 }

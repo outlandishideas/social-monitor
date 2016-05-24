@@ -35,7 +35,7 @@ class Handle extends Header {
      */
     function getValue($model = null)
     {
-        return $model->getHandle();
+        return htmlspecialchars($model->getHandle());
     }
 
 

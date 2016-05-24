@@ -78,6 +78,12 @@ route.base.fetch-lock.day,eins: 1 Tag,mehr:%amount% Tage
 route.base.fetch-lock.hour,eins: 1 Stunde,mehr:%amount% Stunden
 route.base.fetch-lock.min,eins: 1 Min.,mehr:%amount% Min.
 route.base.fetch-lock.sec,eins:1 Sek.,mehr:%amount% Sek.
+"route.base.validation.required","%label% ist ein Pflichtfeld"
+"route.base.validation.invalid","%label% ist ungültig"
+"route.base.validation.string-forbidden","%label% beinhaltet verbotene Buchstaben"
+"route.base.validation.email-forbidden","%label% beinhaltet verbotene Buchstaben"
+"route.base.validation.not-in-range","Die Eingabe für %value% muss zwischen %min% und %max% liegen"
+"route.base.validation.not-in-list","%label% befindet sich nicht in der Liste der akzeptierten Werte"
 
 
 
@@ -975,7 +981,7 @@ country.TF,Französische Süd- und Antarktisgebiete
 country.GA,Gabun
 country.GM,Gambia
 country.GE,Georgien
-country.DE,Deutschland
+country.DE,Germany
 country.GH,Ghana
 country.GI,Gibraltar
 country.GR,Griechenland

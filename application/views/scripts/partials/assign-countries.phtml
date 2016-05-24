@@ -8,10 +8,10 @@
 				<?php foreach ($this->allCountries as $c) : /** @var $c Model_Country */ ?>
 					<option value="<?php echo $c->id; ?>"
 							data-url="<?php echo $this->url(array('controller'=>'country', 'action'=>'view', 'id'=>$c->id)); ?>"
-							data-label="<?php echo $c->getName(); ?>"
-							data-flag="<?php echo $c->getCountryCode(); ?>"
+							data-label="<?php echo htmlspecialchars($c->getName()); ?>"
+							data-flag="<?php echo htmlspecialchars($c->getCountryCode()); ?>"
 					>
-						<?php echo $c->getName(); ?>
+						<?php echo htmlspecialchars($c->getName()); ?>
 					</option>
 				<?php endforeach; ?>
 			</select>

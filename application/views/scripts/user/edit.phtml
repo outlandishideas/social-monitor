@@ -49,7 +49,7 @@ $buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('butt
 					<div class="small-24 medium-16 large-16 end columns">
 						<select id="user_level" name="user_level" class="selectInput" <?php if (!$this->canChangeLevel) echo 'disabled'; ?>>
 							<?php foreach ($this->userLevels as $value=>$label) : ?>
-								<option value="<?php echo $value; ?>" <?php if ($value == $this->editingUser->user_level) echo 'selected'; ?>><?php echo $label; ?></option>
+								<option value="<?php echo $value; ?>" <?php if ($value == $this->editingUser->user_level) echo 'selected'; ?>><?php echo htmlspecialchars($label); ?></option>
 							<?php endforeach; ?>
 						</select>
 					</div>
