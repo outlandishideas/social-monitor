@@ -31,18 +31,36 @@ $buttons = array(
                 <label for="password"><?php echo $translator->trans('Global.password'); ?>*</label>
                 <input id="password" name="password" type="password" size="26" required>
             </div>
-            <div class="progress">
-                <div class="progress-bar" id="password-strength" role="progressbar" aria-valuenow="0"
-                     aria-valuemin="0" aria-valuemax="4" style="width:0%">
-                </div>
-            </div>
             <div>
                 <label for="password_confirm"><?php echo $translator->trans('Global.password-confirm'); ?>*</label>
                 <input id="password_confirm" name="password_confirm" type="password" size="26" required>
             </div>
         </fieldset>
+        <div class="progress" id="password-strength">
+            <?php echo $translator->trans('views.scripts.user.register.password-strength') ?>
+                <span class="meter" role="progressbar" style="width:0%">
+                </span>
+        </div>
 
         <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
     </form>
+    <script type="text/javascript" src="<?php echo $this->assetUrl('js/'.$this->locale.'/zxcvbn.js'); ?>"></script>
+    <script type="application/javascript">
+        var password = document.getElementById('password');
+        var progress = document.getElementById('password-strength');
+        var meter = progress.firstElementChild;
+        var progressStyles = { 0: 'alert', 1: 'alert', 2: 'secondary', 3: 'secondary', 4: 'success' };
+
+        password.addEventListener('input', function () {
+            progress.style.visibility = 'visible';
+            var passwordValue = password.value;
+            if(passwordValue){
+                var calculatedPasswordStrength = zxcvbn(passwordValue).score;
+                var strengthBarWidth = calculatedPasswordStrength * 25 + 1;
+                meter.style.width = [strengthBarWidth, '%'].join('');
+                progress.className = ['progress', progressStyles[calculatedPasswordStrength]].join(' ');
+            }
+        });
+    </script>
 
 <?php endif; ?>

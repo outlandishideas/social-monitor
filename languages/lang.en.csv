@@ -885,6 +885,7 @@
 "views.scripts.user.register.button.already-registered","Already have an account?"
 "views.scripts.user.register.register-successful.first-line","Your registration was successful. In order to log into your account, you will first need to verify your email."
 "views.scripts.user.register.register-successful.second-line","An email was sent to the email address that you provided, and this will include instructions to complete user registration."
+"views.scripts.user.register.password-strength","Password Strength"
 
 "views.scripts.user.reset-password.log-in","Log in"
 "views.scripts.user.reset-password.new-password","New password"

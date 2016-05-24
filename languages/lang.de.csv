@@ -876,6 +876,7 @@ views.scripts.user.manage.none-assigned,keine zugeordnet
 views.scripts.user.register.button.already-registered,Haben Sie bereits einen Account?
 views.scripts.user.register.register-successful.first-line,"Sie haben sich erfolgreich registriert.Um sich auf Ihren Account einzuloggen, müssen Sie erst Ihre E-Mail-Adresse bestätigen."
 views.scripts.user.register.register-successful.second-line,Eine E-Mail mit Anweisungen zum Abschließen des Registriervorgangs wurde an die angegebene E-Mail-Adresse verschickt.
+"views.scripts.user.register.password-strength","Passwort Stärke"
 
 views.scripts.user.reset-password.log-in,Login
 views.scripts.user.reset-password.new-password,Neues Passwort
