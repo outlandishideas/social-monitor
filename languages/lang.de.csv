@@ -332,7 +332,6 @@ route.user.delete.message.success,Benutzer gelöscht
 
 route.user.forgotten.page-title,Passwort vergessen
 route.user.forgotten.message.missing-username-email,Bitte Benutzernamen oder E-Mail-Adresse eingeben
-route.user.forgotten.message.user-not-found,Benutzer konnte nicht gefunden werden
 route.user.forgotten.message.password-reset-email-sent,Sie erhalten in Kürze eine E-Mail mit einem Link zum Passwort-Reset
 route.user.forgotten.message.password-reset-failed-email,"Reset-E-Mail konnte nicht gesendet werden.<br /> Bitten Sie einen Benutzeradministrator, Ihr Passwort zurückzusetzen."
 

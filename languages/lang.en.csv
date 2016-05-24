@@ -332,7 +332,6 @@
 
 "route.user.forgotten.page-title","Forgotten password"
 "route.user.forgotten.message.missing-username-email","Please enter a username or email address"
-"route.user.forgotten.message.user-not-found","User not found"
 "route.user.forgotten.message.password-reset-email-sent","You should receive an email shortly with a password reset link"
 "route.user.forgotten.message.password-reset-failed-email","Failed to send reset email.<br />Please ask an admin user to reset your password"
 
