@@ -6,6 +6,7 @@ use Outlandish\SocialMonitor\PresenceType\PresenceType;
 use Outlandish\SocialMonitor\PresenceType\SinaWeiboType;
 use Outlandish\SocialMonitor\PresenceType\TwitterType;
 use Outlandish\SocialMonitor\PresenceType\YoutubeType;
+use Volnix\CSRF\CSRF;
 
 /** @var \Symfony\Component\Translation\Translator $translator */
 $translator = $this->translate();
@@ -47,6 +48,7 @@ $bottomBar[] = '<button type="submit" class="button-bc button-save">'.$translato
 	?>
 
 	<form class="edit" method="post" action="<?php echo $this->url(); ?>">
+		<?php echo CSRF::getHiddenInputString(); ?>
 
 		<fieldset class="inlineLabels">
 			<div class="row">

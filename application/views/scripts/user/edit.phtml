@@ -1,5 +1,7 @@
 <?php
 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+use Volnix\CSRF\CSRF;
+
 $translator = $this->translate();
 $buttons = array();
 $cancel = $this->gatekeeper()->filter('<a href="%url%" class="button-bc">'.$translator->trans('buttons.common.cancel').'</a>', array('controller'=>'user', 'action'=>'index'), null, true);
@@ -14,6 +16,7 @@ $buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('butt
 <p><?php echo $translator->trans('views.scripts.user.edit.title'); ?></p>
 
 <form class="edit" method="post" action="<?php echo $this->url(array('controller'=>'user')); ?>">
+	<?php echo CSRF::getHiddenInputString(); ?>
 
 	<div class="row">
 		<div class="small-24 columns">

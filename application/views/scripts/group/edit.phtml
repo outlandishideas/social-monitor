@@ -1,5 +1,7 @@
 <?php
 /** @var \Symfony\Component\Translation\Translator $translator */
+use Volnix\CSRF\CSRF;
+
 $translator = $this->translate();
 
 /** @var Model_Group $sbu */
@@ -35,6 +37,7 @@ if ($topBar) {
 ?>
 
 <form class="edit" method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-group">
+	<?php echo CSRF::getHiddenInputString(); ?>
 
 	<fieldset class="inlineLabels">
         <div class="row">

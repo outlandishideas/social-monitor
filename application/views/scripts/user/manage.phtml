@@ -1,5 +1,7 @@
-<?php $translator = $this->translate(); ?>
-<h2 class="page-title"><?php echo htmlspecialchars($this->pageTitle); ?></h2>
+<?php use Volnix\CSRF\CSRF;
+
+$translator = $this->translate(); ?>
+<h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 <?php if ($this->editingUser->isManager) : ?>
 	<?php $buttons = $this->gatekeeper()->filterAll(array(
 		'<p><a href="%url%" class="button-bc">Back</a></p>' => array('controller'=>'user', 'action'=>'index')
@@ -8,6 +10,7 @@
 	<p><?php echo $translator->trans('views.scripts.user.manage.automatic-access'); ?></p>
 <?php else : ?>
 	<form class="management" method="post" action="<?php echo $this->url(); ?>" novalidate id="manage-user">
+		<?php echo CSRF::getHiddenInputString(); ?>
 
 		<fieldset class="inlineLabels">
 			<div class="row">

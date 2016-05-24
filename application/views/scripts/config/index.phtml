@@ -1,5 +1,7 @@
 <?php
 /** @var \Symfony\Component\Translation\Translator $translator */
+use Volnix\CSRF\CSRF;
+
 $translator = $this->translate();
 
 $buttons = $this->gatekeeper()->filterAll(array(
@@ -15,6 +17,7 @@ $buttons[] = '<button form="settings" type="submit" class="button-bc">'.$transla
 <p><?php echo $translator->trans('route.config.index.introduction'); ?></p>
 
 <form method="post" action="<?php echo $this->url(); ?>" enctype="multipart/form-data" id="settings">
+	<?php echo CSRF::getHiddenInputString(); ?>
     <?php foreach ($this->sections as $section) : ?>
 		<fieldset>
             <h2><?php echo $section->title; ?></h2>

@@ -817,6 +817,7 @@ Error.lock-error.message,"Abholprozess seit %time% inaktiv, offenbar ist ein Feh
 Error.lock-error.with-url,"Einer oder mehrere Ihrer Zugangs-Token werden bald ablaufen.<a href=%url%"">Hier klicken</a>",um Token zu erneuern.
 Error.lock-error.without-url,"Bitte einloggen, um die Sperre aufzuheben"
 Error.access-token.refresh,"Einer oder mehrere Ihrer Zugangs-Token werden bald ablaufen.<a href=%url%"">Hier klicken</a>""",um Token zu erneuern.
+Error.csrf-token.missing,"A security token was missing from your form, please try again."
 
 models.presence.sizes.small,Klein
 models.presence.sizes.medium,Mittel

@@ -1,5 +1,7 @@
 <?php
 /** @var \Symfony\Component\Translation\Translator $translator */
+use Volnix\CSRF\CSRF;
+
 $translator = $this->translate();
 
 /** @var Model_Region $region */
@@ -35,6 +37,7 @@ if ($topBar) {
 ?>
 
 <form class="edit" method="post" action="<?php echo $this->url(); ?>" novalidate id="edit-region">
+	<?php echo CSRF::getHiddenInputString(); ?>
     <div class="row">
         <div class="small-24 medium-8 large-8 columns">
             <label for="display_name" class="requiredField">
