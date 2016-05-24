@@ -57,10 +57,10 @@ $buttons = array(
             var passwordValue = password.value;
             if (passwordValue){
                 progress.style.visibility = 'visible';
-            }
-            if(passwordValue){
+
                 var calculatedPasswordStrength = zxcvbn(passwordValue).score;
                 var strengthBarWidth = calculatedPasswordStrength * 25 + 1;
+                
                 meter.style.width = [strengthBarWidth, '%'].join('');
                 progress.className = ['progress', progressStyles[calculatedPasswordStrength]].join(' ');
             }
