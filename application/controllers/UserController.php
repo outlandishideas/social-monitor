@@ -101,7 +101,6 @@ class UserController extends BaseController
                         $this->view->redirect_to = $redirect;
                         $this->flashMessage($this->translator->trans('route.user.login.message.cannot-login'), 'error'); //'Incorrect username/password or email has not been confirmed'
                     }
-
                 }else{
                     $this->auth->clearIdentity();
                     $this->view->redirect_to = $redirect;
