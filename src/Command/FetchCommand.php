@@ -15,8 +15,7 @@ use Zend_Config;
 use Zend_Registry;
 
 /**
- * This should be run in a cron job daily, just after midnight. This ensures that the day's data is created, but will
- * be updated later as part of fetch
+ * This fetches all data for all presences from the social media platforms
  */
 class FetchCommand extends ContainerAwareCommand
 {
