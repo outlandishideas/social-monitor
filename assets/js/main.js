@@ -455,6 +455,11 @@ app.init = {
 				}
 			});
 		},
+		'#edit-user': function ($form) {
+			$form.submit(function() {
+				$form.find('select').removeAttr('disabled');
+			});
+		},
 		'#edit-group': function($form) {
 			$form.on('click', '.link.box .remove-item', function(e) {
 				e.preventDefault();

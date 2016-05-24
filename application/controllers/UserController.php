@@ -264,7 +264,10 @@ class UserController extends BaseController
                 unset($params['user_level']);
             }
 
-            if($action == 'edit-self'){
+            $password = $this->_request->getParam('password');
+            $password2 = $this->_request->getParam('password_confirm');
+
+            if($action == 'edit-self' && ($password || $password2)){
                 $oldPasswordMatches = $this->verifyInput([$this->_request->getParam('old_password') => [
                     'inputLabel' => $this->formInputLabels['old_password'],
                     'validator' => new Validation\PasswordValidator($editingUser),
@@ -298,8 +301,6 @@ class UserController extends BaseController
             }
 
             if (!$errorMessages && $setProperties) {
-                $password = $this->_request->getParam('password');
-                $password2 = $this->_request->getParam('password_confirm');
                 // don't require a new password for existing users
                 if (!$editingUser->id && (!$password || !$password2)) {
                     $errorMessages[] = $this->translator->trans('route.user.edit.message.both-passwords-required'); //'Please enter the password in both boxes';

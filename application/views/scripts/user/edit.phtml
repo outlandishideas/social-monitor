@@ -15,7 +15,7 @@ $buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('butt
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 <p><?php echo $translator->trans('views.scripts.user.edit.title'); ?></p>
 
-<form class="edit" method="post" action="<?php echo $this->url(array('controller'=>'user')); ?>">
+<form class="edit" id="edit-user" method="post" action="<?php echo $this->url(array('controller'=>'user')); ?>">
 	<?php echo CSRF::getHiddenInputString(); ?>
 
 	<div class="row">
