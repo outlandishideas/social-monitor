@@ -52,16 +52,19 @@ class BaseController extends Zend_Controller_Action
         $errors = [];
         foreach ($validators as $candidate=>$params){
             $required = false;
+            $validator = null;
             if (array_key_exists('required', $params)){
                 $required = $params['required'];
             }
+            if (array_key_exists('validator', $params)){
+                $validator = $params['validator'];
+            }
             $inputLabel = $this->translator->trans($params['inputLabel']);
-            $validator = $params['validator'];
 
             if(!$candidate && !is_numeric($candidate) && $required){
                 array_push($errors, $this->translator->trans('route.base.validation.required', ['%label%' => $inputLabel]));
             }
-            else if(($candidate || is_numeric($candidate)) && !$validator->isValid($candidate)){
+            else if(($candidate || is_numeric($candidate)) && ($validator && !$validator->isValid($candidate))){
                 array_push($errors, $validator->getErrorMessage($inputLabel));
             }
         }

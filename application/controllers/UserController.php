@@ -15,7 +15,7 @@ class UserController extends BaseController
     protected $formInputLabels = array(
         'name'=>'Global.user',
         'user_level' => 'views.scripts.user.edit.label.user.level',
-        'password'=>'Global.password', 'password_confirm'=>'Global.password-confirm',
+        'password'=>'Global.password', 'password_confirm'=>'Global.password-confirm', 'old_password'=>'route.user.edit.old-password'
     );
 
 
@@ -233,9 +233,9 @@ class UserController extends BaseController
     public function editAction()
     {
         $messageOnSave = $this->translator->trans('route.user.edit.saved'); //'User saved';
-		$isRegistration = false;
+        $action = $this->_request->getActionName();
         /** @var Model_User $editingUser */
-        switch ($this->_request->getActionName()) {
+        switch ($action) {
             case 'new':
                 $editingUser = new Model_User(array());
                 $messageOnSave = $this->translator->trans('route.user.edit.created'); //'User created';
@@ -243,7 +243,6 @@ class UserController extends BaseController
             case 'register':
                 $editingUser = new Model_User(array());
                 $messageOnSave = $this->translator->trans('route.user.edit.registered'); //'User registered';
-				$isRegistration = true;
                 break;
             case 'edit-self':
                 $editingUser = new Model_User($this->view->user->toArray(), true);
@@ -265,6 +264,18 @@ class UserController extends BaseController
                 unset($params['user_level']);
             }
 
+            if($action == 'edit-self'){
+                $oldPasswordMatches = $this->verifyInput([$this->_request->getParam('old_password') => [
+                    'inputLabel' => $this->formInputLabels['old_password'],
+                    'validator' => new Validation\PasswordValidator($editingUser),
+                    'required' => true
+                ]]);
+
+                if(!$oldPasswordMatches){
+                    return $this->redirectUser($editingUser);
+                }
+            }
+
             $isValidInput = $this->verifyInput([
                 $this->_request->getParam('name') => [
                     'inputLabel' => $this->formInputLabels['name'],
@@ -275,13 +286,13 @@ class UserController extends BaseController
                     'inputLabel' => 'Email address',
                     'validator' => new Validation\EmailValidator(),
                     'required' => true
-                ]
+                ],
             ]);
 
             $setProperties = $this->setProperties($editingUser, $params);
             $errorMessages = array();
 
-            if ($isRegistration &&
+            if ($action == 'register' &&
                 !$this->isValidEmailAddress($this->_request->getParam('email'))) {
                 $errorMessages[] = $this->translator->trans('route.user.edit.message.use-company-email', ['%company%' => $this->getCompanyName()]); //'To register, you must use a valid British Council email address';
             }
@@ -299,7 +310,7 @@ class UserController extends BaseController
                 }
             }
 
-            if ($isRegistration) {
+            if ($action == 'register') {
                 $code = $this->generateCode();
                 $editingUser->confirm_email_key = $code;
             }
@@ -310,13 +321,13 @@ class UserController extends BaseController
                 }
             }
 
-            if($isValidInput && !$errorMessages && $setProperties) {
+            if(!$errorMessages && $setProperties) {
                 try {
                     $editingUser->save();
                     $this->flashMessage($messageOnSave);
                     if ($this->view->user->isManager) {
                         $this->_helper->redirector->gotoSimple('index');
-                    } else if ($isRegistration) {
+                    } else if ($action == 'register') {
                         $this->sendRegisterEmail($editingUser);
                         $this->_helper->redirector->gotoRoute(['action' => 'register', 'result' => 'success']);
                     }
@@ -334,9 +345,12 @@ class UserController extends BaseController
                 }
             }
         }
+        $this->redirectUser($editingUser);
+    }
 
+    public function redirectUser($user){
         $this->view->userLevels = Model_User::$userLevels;
-        $this->view->editingUser = $editingUser;
+        $this->view->editingUser = $user;
         $this->view->showAccessTokens = false;
     }
 

@@ -60,6 +60,17 @@ $buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('butt
 
 				<div class="row">
 					<div class="small-24 medium-8 large-8 columns">
+						<label for="old_password" class="requiredField">
+							<?php echo $translator->trans('route.user.edit.old-password'); ?><span class="asteriskField">*</span>
+						</label>
+					</div>
+					<div class="small-24 medium-16 large-16 end columns">
+						<input id="old_password" name="old_password" type="password" class="textInput" />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="small-24 medium-8 large-8 columns">
 						<label for="password" class="requiredField">
 							<?php echo $translator->trans('Global.password'); ?><span class="asteriskField">*</span>
 						</label>

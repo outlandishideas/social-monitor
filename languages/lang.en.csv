@@ -364,6 +364,7 @@
 "route.user.edit.message.use-company-email","To register, you must use a valid %company% email address"
 "route.user.edit.message.email-in-use","Email already in use"
 "route.user.edit.message.username-in-use","User name already in use"
+"route.user.edit.old-password","Old password"
 
 "route.user.edit-self.page-title","Edit my details"
 
