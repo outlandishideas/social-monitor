@@ -20,6 +20,10 @@ $buttons = array(
 
     </fieldset>
 
+	<div class="recaptcha-wrapper">
+		<?php echo $this->recaptcha()->generateHtml(); ?>
+	</div>
+
     <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
 </form>
 

@@ -42,6 +42,10 @@ $buttons = array(
                 </span>
         </div>
 
+		<div class="recaptcha-wrapper">
+			<?php echo $this->recaptcha()->generateHtml(); ?>
+		</div>
+
         <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
     </form>
     <script type="text/javascript" src="<?php echo $this->assetUrl('js/'.$this->locale.'/zxcvbn.js'); ?>"></script>
