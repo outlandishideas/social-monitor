@@ -122,11 +122,20 @@ class UserController extends BaseController
      */
     public function forgottenAction()
     {
+		$this->_helper->layout()->setLayout('notabs');
+
         if ($this->auth->hasIdentity()) {
             $this->_helper->redirector->gotoSimple('index', 'index');
         }
 
         if ($this->_request->isPost()) {
+
+			$resp = $this->recaptcha->verify($this->_request->getParam('g-recaptcha-response'), $_SERVER['REMOTE_ADDR']);
+			if (!$resp->isSuccess()) {
+				$this->flashMessage($this->translator->trans('recaptcha.failure'));
+				return;
+			}
+
             $username = $this->_request->getParam('username');
             if (!$username) {
                 $this->flashMessage($this->translator->trans('route.user.forgotten.message.missing-username-email'), 'error'); //'Please enter a username or email address'
@@ -153,7 +162,7 @@ class UserController extends BaseController
                 }
             }
         }
-        $this->_helper->layout()->setLayout('notabs');
+
     }
 
     /**
