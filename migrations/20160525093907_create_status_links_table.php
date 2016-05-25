@@ -19,7 +19,7 @@ class CreateStatusLinksTable extends AbstractMigration
 		  UNIQUE KEY `type_2` (`type`,`status_id`,`url`),
 		  KEY `domain` (`domain`),
 		  KEY `type` (`type`,`status_id`)
-		) ENGINE=InnoDB AUTO_INCREMENT=1271269 DEFAULT CHARSET=utf8");
+		) ENGINE=InnoDB AUTO_INCREMENT=285 DEFAULT CHARSET=utf8");
     }
 
     /**

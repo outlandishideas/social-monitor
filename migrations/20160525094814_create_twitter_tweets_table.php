@@ -19,6 +19,7 @@ class CreateTwitterTweetsTable extends AbstractMigration
 		  `html_tweet` varchar(1024) DEFAULT NULL,
 		  `responsible_presence` int(11) DEFAULT NULL,
 		  `needs_response` int(1) NOT NULL DEFAULT '0',
+		  `permalink` varchar(64) NOT NULL,
 		  `in_reply_to_user_uid` bigint(20) DEFAULT NULL,
 		  `in_reply_to_status_uid` bigint(20) DEFAULT NULL,
 		  `bucket_half_hour` datetime DEFAULT NULL,
@@ -34,7 +35,7 @@ class CreateTwitterTweetsTable extends AbstractMigration
 		  KEY `bucket_day` (`bucket_day`),
 		  KEY `presence_id` (`presence_id`),
 		  FULLTEXT KEY `text_expanded` (`text_expanded`)
-		) ENGINE=InnoDB AUTO_INCREMENT=47161 DEFAULT CHARSET=utf8");
+		) ENGINE=InnoDB AUTO_INCREMENT=620 DEFAULT CHARSET=utf8");
     }
 
     /**

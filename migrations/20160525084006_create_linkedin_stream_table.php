@@ -18,9 +18,10 @@ class CreateLinkedinStreamTable extends AbstractMigration
 		  `comments` int(11) NOT NULL,
 		  `likes` int(11) NOT NULL,
 		  `type` varchar(20) NOT NULL,
+		  `permalink` varchar(64) NOT NULL,
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY `unique_post_id` (`post_id`)
-		) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=latin1");
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8");
     }
 
     /**

@@ -19,7 +19,7 @@ class CreatePresenceHistoryTable extends AbstractMigration
 		  KEY `type` (`type`),
 		  KEY `datetime` (`datetime`),
 		  KEY `presence_id` (`presence_id`)
-		) ENGINE=InnoDB AUTO_INCREMENT=1862164 DEFAULT CHARSET=utf8");
+		) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8");
     }
 
     /**

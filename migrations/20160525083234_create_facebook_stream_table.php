@@ -40,7 +40,7 @@ class CreateFacebookStreamTable extends AbstractMigration
 		  KEY `in_response_to` (`in_response_to`),
 		  KEY `created_time` (`created_time`),
 		  FULLTEXT KEY `message` (`message`)
-		) ENGINE=InnoDB AUTO_INCREMENT=3261223 DEFAULT CHARSET=utf8");
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8");
     }
 
     /**

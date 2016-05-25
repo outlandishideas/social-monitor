@@ -26,12 +26,12 @@ class CreatePresencesTable extends AbstractMigration
 		  `instagram_engagement` float DEFAULT NULL,
 		  `sina_weibo_engagement` float DEFAULT NULL,
 		  `size` tinyint(4) NOT NULL DEFAULT '0',
+		  `user_id` int(11) DEFAULT NULL,
 		  `last_fetched` datetime DEFAULT NULL,
 		  `last_updated` datetime DEFAULT NULL,
-		  `user_id` int(11) DEFAULT NULL,
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY `type` (`type`,`handle`)
-		) ENGINE=InnoDB AUTO_INCREMENT=445 DEFAULT CHARSET=utf8");
+		) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8");
     }
 
     /**

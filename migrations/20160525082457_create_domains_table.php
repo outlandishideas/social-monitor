@@ -15,8 +15,8 @@ class CreateDomainsTable extends AbstractMigration
 		  `is_bc` tinyint(1) NOT NULL DEFAULT '0',
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY `domain` (`domain`)
-		) ENGINE=InnoDB AUTO_INCREMENT=10018 DEFAULT CHARSET=utf8");
-    }
+		) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8");
+	}
 
     /**
      * Migrate Down.

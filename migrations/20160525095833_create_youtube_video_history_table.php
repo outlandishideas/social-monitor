@@ -17,7 +17,7 @@ class CreateYoutubeVideoHistoryTable extends AbstractMigration
 		  `value` int(11) NOT NULL,
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY `video_id` (`video_id`,`datetime`,`type`)
-		) ENGINE=InnoDB AUTO_INCREMENT=66513 DEFAULT CHARSET=latin1");
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8");
     }
 
     /**

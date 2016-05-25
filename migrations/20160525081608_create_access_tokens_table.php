@@ -17,7 +17,7 @@ class CreateAccessTokensTable extends AbstractMigration
 		  `expires` int(11) NOT NULL,
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY `unique_user_type` (`user_id`,`presence_type`)
-		) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1");
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8");
     }
 
     /**

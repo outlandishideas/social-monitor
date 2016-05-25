@@ -16,7 +16,7 @@ class CreateUserJoyridesTable extends AbstractMigration
 		  `been_ridden` smallint(6) DEFAULT '0',
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY `user_joyrides_user_id_joyride_uindex` (`user_id`,`joyride`)
-		) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1");
+		) ENGINE=InnoDB DEFAULT CHARSET=latin1");
     }
 
     /**

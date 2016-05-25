@@ -16,7 +16,7 @@ class CreateOptionsTable extends AbstractMigration
 		  `value` text NOT NULL,
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY `key` (`name`,`object_id`)
-		) ENGINE=InnoDB AUTO_INCREMENT=14800978 DEFAULT CHARSET=utf8");
+		) ENGINE=InnoDB AUTO_INCREMENT=271 DEFAULT CHARSET=utf8");
     }
 
     /**

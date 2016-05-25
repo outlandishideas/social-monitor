@@ -20,7 +20,7 @@ class CreateKpiCacheTable extends AbstractMigration
 		  UNIQUE KEY `unique_index` (`presence_id`,`metric`,`start_date`,`end_date`),
 		  KEY `start_date` (`start_date`),
 		  KEY `end_date` (`end_date`)
-		) ENGINE=InnoDB AUTO_INCREMENT=11544167 DEFAULT CHARSET=utf8");
+		) ENGINE=InnoDB AUTO_INCREMENT=317 DEFAULT CHARSET=utf8");
     }
 
     /**

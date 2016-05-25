@@ -10,7 +10,7 @@ class CreateInstagramStreamTable extends AbstractMigration
     public function up()
     {
     	$this->execute("CREATE TABLE `instagram_stream` (
-		  `id` int(11) NOT NULL,
+		  `id` int(11) NOT NULL AUTO_INCREMENT,
 		  `post_id` varchar(100) NOT NULL,
 		  `presence_id` int(11) NOT NULL,
 		  `message` varchar(1000) NOT NULL,
@@ -23,8 +23,9 @@ class CreateInstagramStreamTable extends AbstractMigration
 		  `bucket_half_hour` datetime DEFAULT NULL,
 		  `bucket_4_hours` datetime DEFAULT NULL,
 		  `bucket_12_hours` datetime DEFAULT NULL,
-		  `bucket_day` datetime DEFAULT NULL
-		) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+		  `bucket_day` datetime DEFAULT NULL,
+		  PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8");
     }
 
     /**

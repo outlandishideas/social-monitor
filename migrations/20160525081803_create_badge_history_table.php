@@ -24,7 +24,7 @@ class CreateBadgeHistoryTable extends AbstractMigration
 		  UNIQUE KEY `unique_index` (`date`,`daterange`,`presence_id`),
 		  KEY `presence_id` (`presence_id`),
 		  KEY `daterange` (`daterange`)
-		) ENGINE=InnoDB AUTO_INCREMENT=103101 DEFAULT CHARSET=utf8");
+		) ENGINE=InnoDB AUTO_INCREMENT=358 DEFAULT CHARSET=utf8");
     }
 
     /**

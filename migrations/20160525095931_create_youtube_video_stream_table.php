@@ -13,7 +13,7 @@ class CreateYoutubeVideoStreamTable extends AbstractMigration
 		  `id` int(11) NOT NULL AUTO_INCREMENT,
 		  `presence_id` int(11) NOT NULL,
 		  `video_id` varchar(16) NOT NULL,
-		  `title` varchar(128) NOT NULL,
+		  `title` text NOT NULL,
 		  `description` text NOT NULL,
 		  `created_time` date NOT NULL,
 		  `permalink` varchar(64) NOT NULL,
@@ -23,7 +23,7 @@ class CreateYoutubeVideoStreamTable extends AbstractMigration
 		  `comments` int(11) NOT NULL DEFAULT '0',
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY `video_id_idx` (`video_id`)
-		) ENGINE=InnoDB AUTO_INCREMENT=12601 DEFAULT CHARSET=latin1");
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8");
     }
 
     /**

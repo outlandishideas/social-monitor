@@ -22,7 +22,7 @@ class CreateYoutubeCommentStreamTable extends AbstractMigration
 		  `rating` varchar(200) DEFAULT NULL,
 		  `created_time` datetime NOT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8");
     }
 
     /**
