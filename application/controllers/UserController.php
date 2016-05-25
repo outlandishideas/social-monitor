@@ -220,6 +220,7 @@ class UserController extends BaseController
      */
     public function registerAction()
     {
+
         $this->editAction();
         $registerSuccessful = $this->_request->getParam('result') === 'success';
         if ($registerSuccessful) {
@@ -338,6 +339,13 @@ class UserController extends BaseController
                 !$this->isValidEmailAddress($this->_request->getParam('email'))) {
                 $errorMessages[] = $this->translator->trans('route.user.edit.message.use-company-email', ['%company%' => $this->getCompanyName()]); //'To register, you must use a valid British Council email address';
             }
+
+			if ($isRegistration) {
+				$resp = $this->recaptcha->verify($this->_request->getParam('g-recaptcha-response'), $_SERVER['REMOTE_ADDR']);
+				if (!$resp->isSuccess()) {
+					$errorMessages[] = $this->translator->trans('recaptcha.failure');
+				}
+			}
 
             if (!$errorMessages && $setProperties) {
                 // don't require a new password for existing users
