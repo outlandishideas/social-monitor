@@ -85,6 +85,7 @@
 "route.base.validation.email-forbidden","%label% contains forbidden characters"
 "route.base.validation.not-in-range","Input for %label% must be between %min% and %max%"
 "route.base.validation.not-in-list","%label% is not in the list of valid values"
+"route.base.validation.wrong-password","The %label% you entered is not correct"
 
 
 

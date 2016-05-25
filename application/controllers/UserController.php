@@ -266,9 +266,10 @@ class UserController extends BaseController
 
             $password = $this->_request->getParam('password');
             $password2 = $this->_request->getParam('password_confirm');
+            $oldPassword = $this->_request->getParam('old_password');
 
-            if($action == 'edit-self' && ($password || $password2)){
-                $oldPasswordMatches = $this->verifyInput([$this->_request->getParam('old_password') => [
+            if($action == 'edit-self' && ( $password || $password2 )){
+                $oldPasswordMatches = $this->verifyInput([$oldPassword => [
                     'inputLabel' => $this->formInputLabels['old_password'],
                     'validator' => new Validation\PasswordValidator($editingUser),
                     'required' => true
@@ -291,7 +292,11 @@ class UserController extends BaseController
                     'required' => true
                 ],
             ]);
-
+            
+            if(!$isValidInput){
+                return $this->redirectUser($editingUser);
+            }
+            
             $setProperties = $this->setProperties($editingUser, $params);
             $errorMessages = array();
 
@@ -541,7 +546,7 @@ class UserController extends BaseController
 	protected function guardAgainstUnauthorizedUserLevelChanges($params)
 	{
 		return !$this->view->canChangeLevel || //check that the user making the change can edit the user level of a user
-			$params['user_level'] > $this->view->user->user_level || //check that the user making the change is a high enough level to make the user being edited to the given user_level
+			!$params['user_level'] > $this->view->user->user_level || //check that the user making the change is a high enough level to make the user being edited to the given user_level
 			array_key_exists($params['user_level'], Model_User::$userLevels); //check that the user level is a valid user level
 	}
 }

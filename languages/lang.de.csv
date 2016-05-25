@@ -364,6 +364,7 @@ route.user.edit.message.invalid-email,Bitte eine gültige E-Mail-Adresse eingebe
 route.user.edit.message.use-company-email,"Sie benötigen eine gültige %company% E-Mail-Adresse, um sich zu registrieren"
 route.user.edit.message.email-in-use,E-Mail-Adresse bereits vergeben
 route.user.edit.message.username-in-use,Benutzername bereits vergeben
+"route.user.edit.old-password","Altes Passwort"
 
 route.user.edit-self.page-title,Angaben bearbeiten
 

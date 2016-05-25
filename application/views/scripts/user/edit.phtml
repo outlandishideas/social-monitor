@@ -58,6 +58,7 @@ $buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('butt
 					</div>
 				</div>
 
+				<?php if (!$this->canChangeLevel): ?>
 				<div class="row">
 					<div class="small-24 medium-8 large-8 columns">
 						<label for="old_password" class="requiredField">
@@ -68,6 +69,7 @@ $buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('butt
 						<input id="old_password" name="old_password" type="password" class="textInput" />
 					</div>
 				</div>
+				<?php endif; ?>
 
 				<div class="row">
 					<div class="small-24 medium-8 large-8 columns">
