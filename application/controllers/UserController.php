@@ -616,11 +616,8 @@ class UserController extends BaseController
      * @return bool
      */
     protected function isAuthorizedToCreateUser($params){
-        //check that the user making the change can edit the user level of a user
         return $this->view->canChangeLevel &&
-        //check that the user making the change is a high enough level to make the user being edited to the given user_level
         ($this->view->user->user_level >= $params['user_level']) &&
-        //check that the user level is a valid user level
         array_key_exists($params['user_level'], Model_User::$userLevels);
     }
 }
