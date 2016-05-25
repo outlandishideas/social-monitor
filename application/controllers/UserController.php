@@ -349,7 +349,7 @@ class UserController extends BaseController
                 $errorMessages[] = $this->translator->trans('route.user.edit.message.use-company-email', ['%company%' => $this->getCompanyName()]); //'To register, you must use a valid British Council email address';
             }
 
-			if ($isRegistration) {
+			if ($action == 'register') {
 				$resp = $this->recaptcha->verify($this->_request->getParam('g-recaptcha-response'), $_SERVER['REMOTE_ADDR']);
 				if (!$resp->isSuccess()) {
 					$errorMessages[] = $this->translator->trans('recaptcha.failure');
