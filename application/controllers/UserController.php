@@ -304,12 +304,17 @@ class UserController extends BaseController
             $password2 = $this->_request->getParam('password_confirm');
             $oldPassword = $this->_request->getParam('old_password');
 
-            if (!$this->isAuthorizedToChangeLevel($params, $editingUser)) {
+            if (($action == 'edit' || $action == 'edit-self') && !$this->isAuthorizedToChangeLevel($params, $editingUser)) {
                 if(($password || $password2) && !($action == 'edit-self')){
                     $this->flashMessage($this->translator->trans('route.user.edit.message.not-allowed'), 'error');
                     return $this->redirectUser($editingUser);
                 }
                 unset($params['user_level']);
+            }
+
+            if($action == 'new' && !$this->isAuthorizedToCreateUser($params)){
+                $this->flashMessage($this->translator->trans('route.user.edit.message.not-allowed'), 'error');
+                return $this->redirectUser($editingUser);
             }
 
             if($action == 'edit-self' && ( $password || $password2 )){
@@ -336,11 +341,11 @@ class UserController extends BaseController
                     'required' => true
                 ],
             ]);
-            
+
             if(!$isValidInput){
                 return $this->redirectUser($editingUser);
             }
-            
+
             $setProperties = $this->setProperties($editingUser, $params);
             $errorMessages = array();
 
@@ -599,8 +604,23 @@ class UserController extends BaseController
         //check that the user making the change can edit the user level of a user
 		return $this->view->canChangeLevel &&
             //check that the user making the change is a high enough level to make the user being edited to the given user_level
-            $this->view->user->user_level > $userToEdit->user_level &&
+        ($this->view->user->user_level > $userToEdit->user_level) &&
             //check that the user level is a valid user level
             array_key_exists($params['user_level'], Model_User::$userLevels);
 	}
+
+    /**
+     * Only allows managers and admins to create users with a certain level
+     *
+     * @param $params
+     * @return bool
+     */
+    protected function isAuthorizedToCreateUser($params){
+        //check that the user making the change can edit the user level of a user
+        return $this->view->canChangeLevel &&
+        //check that the user making the change is a high enough level to make the user being edited to the given user_level
+        ($this->view->user->user_level >= $params['user_level']) &&
+        //check that the user level is a valid user level
+        array_key_exists($params['user_level'], Model_User::$userLevels);
+    }
 }
