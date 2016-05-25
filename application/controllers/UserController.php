@@ -260,13 +260,19 @@ class UserController extends BaseController
             // prevent hackers upgrading their own user level
             $params = $this->_request->getParams();
 
-            if (!$this->isAuthorizedToChangeLevel($params, $editingUser)) {
-                unset($params['user_level']);
-            }
+
 
             $password = $this->_request->getParam('password');
             $password2 = $this->_request->getParam('password_confirm');
             $oldPassword = $this->_request->getParam('old_password');
+
+            if (!$this->isAuthorizedToChangeLevel($params, $editingUser)) {
+                if(($password || $password2) && !($action == 'edit-self')){
+                    $this->flashMessage($this->translator->trans('route.user.edit.message.not-allowed'), 'error');
+                    return $this->redirectUser($editingUser);
+                }
+                unset($params['user_level']);
+            }
 
             if($action == 'edit-self' && ( $password || $password2 )){
                 $oldPasswordMatches = $this->verifyInput([$oldPassword => [
