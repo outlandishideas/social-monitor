@@ -85,6 +85,7 @@
 "route.base.validation.email-forbidden","%label% contains forbidden characters"
 "route.base.validation.not-in-range","Input for %label% must be between %min% and %max%"
 "route.base.validation.not-in-list","%label% is not in the list of valid values"
+"route.base.validation.wrong-password","The %label% you entered is not correct"
 
 
 
@@ -364,6 +365,8 @@
 "route.user.edit.message.use-company-email","To register, you must use a valid %company% email address"
 "route.user.edit.message.email-in-use","Email already in use"
 "route.user.edit.message.username-in-use","User name already in use"
+"route.user.edit.message.not-allowed","You are not allowed to change this information"
+"route.user.edit.old-password","Old password"
 
 "route.user.edit-self.page-title","Edit my details"
 

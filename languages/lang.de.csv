@@ -84,7 +84,7 @@ route.base.fetch-lock.sec,eins:1 Sek.,mehr:%amount% Sek.
 "route.base.validation.email-forbidden","%label% beinhaltet verbotene Buchstaben"
 "route.base.validation.not-in-range","Die Eingabe für %value% muss zwischen %min% und %max% liegen"
 "route.base.validation.not-in-list","%label% befindet sich nicht in der Liste der akzeptierten Werte"
-
+"route.base.validation.wrong-password","Das %label% ist nicht korrekt"
 
 
 
@@ -364,6 +364,8 @@ route.user.edit.message.invalid-email,Bitte eine gültige E-Mail-Adresse eingebe
 route.user.edit.message.use-company-email,"Sie benötigen eine gültige %company% E-Mail-Adresse, um sich zu registrieren"
 route.user.edit.message.email-in-use,E-Mail-Adresse bereits vergeben
 route.user.edit.message.username-in-use,Benutzername bereits vergeben
+"route.user.edit.message.not-allowed","Es ist ihnen nicht gestattet diese Information zu bearbeiten"
+"route.user.edit.old-password","Altes Passwort"
 
 route.user.edit-self.page-title,Angaben bearbeiten
 

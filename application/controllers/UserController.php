@@ -15,7 +15,7 @@ class UserController extends BaseController
     protected $formInputLabels = array(
         'name'=>'Global.user',
         'user_level' => 'views.scripts.user.edit.label.user.level',
-        'password'=>'Global.password', 'password_confirm'=>'Global.password-confirm',
+        'password'=>'Global.password', 'password_confirm'=>'Global.password-confirm', 'old_password'=>'route.user.edit.old-password'
     );
 
 
@@ -258,9 +258,9 @@ class UserController extends BaseController
     public function editAction()
     {
         $messageOnSave = $this->translator->trans('route.user.edit.saved'); //'User saved';
-		$isRegistration = false;
+        $action = $this->_request->getActionName();
         /** @var Model_User $editingUser */
-        switch ($this->_request->getActionName()) {
+        switch ($action) {
             case 'new':
                 $editingUser = new Model_User(array());
                 $messageOnSave = $this->translator->trans('route.user.edit.created'); //'User created';
@@ -268,7 +268,6 @@ class UserController extends BaseController
             case 'register':
                 $editingUser = new Model_User(array());
                 $messageOnSave = $this->translator->trans('route.user.edit.registered'); //'User registered';
-				$isRegistration = true;
                 break;
             case 'edit-self':
                 $editingUser = new Model_User($this->view->user->toArray(), true);
@@ -286,8 +285,30 @@ class UserController extends BaseController
             // prevent hackers upgrading their own user level
             $params = $this->_request->getParams();
 
-            if ($this->guardAgainstUnauthorizedUserLevelChanges($params)) {
+
+
+            $password = $this->_request->getParam('password');
+            $password2 = $this->_request->getParam('password_confirm');
+            $oldPassword = $this->_request->getParam('old_password');
+
+            if (!$this->isAuthorizedToChangeLevel($params, $editingUser)) {
+                if(($password || $password2) && !($action == 'edit-self')){
+                    $this->flashMessage($this->translator->trans('route.user.edit.message.not-allowed'), 'error');
+                    return $this->redirectUser($editingUser);
+                }
                 unset($params['user_level']);
+            }
+
+            if($action == 'edit-self' && ( $password || $password2 )){
+                $oldPasswordMatches = $this->verifyInput([$oldPassword => [
+                    'inputLabel' => $this->formInputLabels['old_password'],
+                    'validator' => new Validation\PasswordValidator($editingUser),
+                    'required' => true
+                ]]);
+
+                if(!$oldPasswordMatches){
+                    return $this->redirectUser($editingUser);
+                }
             }
 
             $isValidInput = $this->verifyInput([
@@ -300,20 +321,22 @@ class UserController extends BaseController
                     'inputLabel' => 'Email address',
                     'validator' => new Validation\EmailValidator(),
                     'required' => true
-                ]
+                ],
             ]);
-
+            
+            if(!$isValidInput){
+                return $this->redirectUser($editingUser);
+            }
+            
             $setProperties = $this->setProperties($editingUser, $params);
             $errorMessages = array();
 
-            if ($isRegistration &&
+            if ($action == 'register' &&
                 !$this->isValidEmailAddress($this->_request->getParam('email'))) {
                 $errorMessages[] = $this->translator->trans('route.user.edit.message.use-company-email', ['%company%' => $this->getCompanyName()]); //'To register, you must use a valid British Council email address';
             }
 
             if (!$errorMessages && $setProperties) {
-                $password = $this->_request->getParam('password');
-                $password2 = $this->_request->getParam('password_confirm');
                 // don't require a new password for existing users
                 if (!$editingUser->id && (!$password || !$password2)) {
                     $errorMessages[] = $this->translator->trans('route.user.edit.message.both-passwords-required'); //'Please enter the password in both boxes';
@@ -324,7 +347,7 @@ class UserController extends BaseController
                 }
             }
 
-            if ($isRegistration) {
+            if ($action == 'register') {
                 $code = $this->generateCode();
                 $editingUser->confirm_email_key = $code;
             }
@@ -335,13 +358,13 @@ class UserController extends BaseController
                 }
             }
 
-            if($isValidInput && !$errorMessages && $setProperties) {
+            if(!$errorMessages && $setProperties) {
                 try {
                     $editingUser->save();
                     $this->flashMessage($messageOnSave);
                     if ($this->view->user->isManager) {
                         $this->_helper->redirector->gotoSimple('index');
-                    } else if ($isRegistration) {
+                    } else if ($action == 'register') {
                         $this->sendRegisterEmail($editingUser);
                         $this->_helper->redirector->gotoRoute(['action' => 'register', 'result' => 'success']);
                     }
@@ -359,9 +382,12 @@ class UserController extends BaseController
                 }
             }
         }
+        $this->redirectUser($editingUser);
+    }
 
+    public function redirectUser($user){
         $this->view->userLevels = Model_User::$userLevels;
-        $this->view->editingUser = $editingUser;
+        $this->view->editingUser = $user;
         $this->view->showAccessTokens = false;
     }
 
@@ -548,10 +574,13 @@ class UserController extends BaseController
 	 * @param $params
 	 * @return bool
 	 */
-	protected function guardAgainstUnauthorizedUserLevelChanges($params)
+	protected function isAuthorizedToChangeLevel($params, $userToEdit)
 	{
-		return !$this->view->canChangeLevel || //check that the user making the change can edit the user level of a user
-			$params['user_level'] > $this->view->user->user_level || //check that the user making the change is a high enough level to make the user being edited to the given user_level
-			array_key_exists($params['user_level'], Model_User::$userLevels); //check that the user level is a valid user level
+        //check that the user making the change can edit the user level of a user
+		return $this->view->canChangeLevel &&
+            //check that the user making the change is a high enough level to make the user being edited to the given user_level
+            $this->view->user->user_level > $userToEdit->user_level &&
+            //check that the user level is a valid user level
+            array_key_exists($params['user_level'], Model_User::$userLevels);
 	}
 }

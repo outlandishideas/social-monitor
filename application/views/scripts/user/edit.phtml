@@ -15,7 +15,7 @@ $buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('butt
 <h2 class="page-title"><?php echo $this->pageTitle; ?></h2>
 <p><?php echo $translator->trans('views.scripts.user.edit.title'); ?></p>
 
-<form class="edit" method="post" action="<?php echo $this->url(array('controller'=>'user')); ?>">
+<form class="edit" id="edit-user" method="post" action="<?php echo $this->url(array('controller'=>'user')); ?>">
 	<?php echo CSRF::getHiddenInputString(); ?>
 
 	<div class="row">
@@ -57,6 +57,19 @@ $buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('butt
 						</select>
 					</div>
 				</div>
+
+				<?php if (!$this->canChangeLevel): ?>
+				<div class="row">
+					<div class="small-24 medium-8 large-8 columns">
+						<label for="old_password" class="requiredField">
+							<?php echo $translator->trans('route.user.edit.old-password'); ?><span class="asteriskField">*</span>
+						</label>
+					</div>
+					<div class="small-24 medium-16 large-16 end columns">
+						<input id="old_password" name="old_password" type="password" class="textInput" />
+					</div>
+				</div>
+				<?php endif; ?>
 
 				<div class="row">
 					<div class="small-24 medium-8 large-8 columns">
