@@ -392,6 +392,8 @@ class ConfigController extends BaseController {
                 }
 			}
             $adapter = new Zend_File_Transfer('Http', false, array('ignoreNoFile'=>true));
+			$adapter->addValidator('Extension', false, ['pdf']);
+			$adapter->addValidator('MimeType', false, ['application/pdf']);
 
             if ($adapter->isUploaded()) {
                 $adapter->addFilter('Rename', array(
