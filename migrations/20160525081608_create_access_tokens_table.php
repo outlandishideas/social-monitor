@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class UserTableEmailConfirmKey extends AbstractMigration
+class CreateAccessTokensTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -16,20 +16,21 @@ class UserTableEmailConfirmKey extends AbstractMigration
     {
     }
     */
-    
+
     /**
      * Migrate Up.
      */
     public function up()
     {
-        $table = $this->table('users');
-        $table->addColumn('confirm_email_key', 'string', [
-            'after' => 'reset_key',
-            'limit' => 20,
-            'null' => true,
-            'default' => null
-        ]);
-        $table->update();
+    	$this->execute("CREATE TABLE `access_tokens` (
+		  `id` int(11) NOT NULL AUTO_INCREMENT,
+		  `user_id` int(11) NOT NULL,
+		  `presence_type` varchar(20) NOT NULL,
+		  `token` varchar(1000) NOT NULL,
+		  `expires` int(11) NOT NULL,
+		  PRIMARY KEY (`id`),
+		  UNIQUE KEY `unique_user_type` (`user_id`,`presence_type`)
+		) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1");
     }
 
     /**
@@ -37,8 +38,6 @@ class UserTableEmailConfirmKey extends AbstractMigration
      */
     public function down()
     {
-        $table = $this->table('users');
-        $table->removeColumn('confirm_email_key');
-        $table->update();
+		$this->table('access_tokens')->drop();
     }
 }
