@@ -72,15 +72,40 @@ class UserController extends BaseController
             $result = $this->auth->authenticate($authAdapter);
 
             $redirect = $this->_request->getParam('redirect_to');
-            if ($result->isValid()) {
-                $user = Model_User::fetchById($this->auth->getIdentity());
-                $user->last_sign_in = gmdate('Y-m-d H:i:s');
-                $user->save();
+            $identity = $result->getIdentity();
+            if($identity){
+                $user = Model_User::fetchById($identity);
 
-                $this->redirect($redirect);
-            } else {
-                $this->view->redirect_to = $redirect;
-                $this->flashMessage($this->translator->trans('route.user.login.message.cannot-login'), 'error'); //'Incorrect username/password or email has not been confirmed'
+                if($user->last_failed_login){
+                    $timeToResetLoginAttempts = new DateTime($user->last_failed_login);
+                    $timeToResetLoginAttempts->modify('+ 1 hour');
+                    $currentTime = new DateTime(gmdate('Y-m-d H:i:s'));
+
+                    if($currentTime > $timeToResetLoginAttempts){
+                        $user->failed_logins = 0;
+                    }
+                }
+
+                if($user->failed_logins < 5){
+                    if ($result->isValid()) {
+                        $user->last_sign_in = gmdate('Y-m-d H:i:s');
+                        $user->failed_logins = 0;
+                        $user->save();
+
+                        $this->redirect($redirect);
+                    } else {
+                        $this->auth->clearIdentity();
+                        $user->failed_logins++;
+                        $user->last_failed_login = gmdate('Y-m-d H:i:s');
+                        $user->save();
+                        $this->view->redirect_to = $redirect;
+                        $this->flashMessage($this->translator->trans('route.user.login.message.cannot-login'), 'error'); //'Incorrect username/password or email has not been confirmed'
+                    }
+                }else{
+                    $this->auth->clearIdentity();
+                    $this->view->redirect_to = $redirect;
+                    $this->flashMessage($this->translator->trans('route.user.login.message.too-many-tries'), 'error'); // Too many tries
+                }
             }
         } else {
             $this->view->redirect_to = $this->_request->getPathInfo();

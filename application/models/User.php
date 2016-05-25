@@ -50,7 +50,7 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	function setName($name){
 		$this->setProperty('name', $name);
 	}
-	
+
 	function setUser_level($level){
 		$this->setProperty('user_level', $level);
 	}
@@ -68,11 +68,21 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	// required by Zend_Auth_Adapter_Interface. Used by Zend for authenticating users
 	function authenticate()
 	{
-		$statement = $this->_db->prepare('SELECT id FROM users WHERE (name = :name OR email = :name) AND password_hash = :hash AND confirm_email_key IS NULL');
-		$statement->execute(array(':name'=>$this->_authName, ':hash'=>sha1(self::PASSWORD_SALT.$this->_authPassword)));
+		$statement = $this->_db->prepare('SELECT id FROM users WHERE (name = :name OR email = :name)');
+		$statement->execute(array(':name'=>$this->_authName));
 		$id = $statement->fetchColumn();
-		$code = ($id ? Zend_Auth_Result::SUCCESS : Zend_Auth_Result::FAILURE);
-		return new Zend_Auth_Result($code, $id);
+		if(!$id){
+			return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND, $id);
+		}else{
+			$statement = $this->_db->prepare('SELECT id FROM users WHERE (name = :name OR email = :name) AND password_hash = :hash AND confirm_email_key IS NULL');
+			$statement->execute(array(':name' => $this->_authName, ':hash'=>sha1(self::PASSWORD_SALT.$this->_authPassword)));
+			if($statement->rowCount() > 0){
+				return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $id);
+			}else{
+				return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, $id);
+			}
+		}
+
 	}
 
 	/**
