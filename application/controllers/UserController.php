@@ -135,7 +135,7 @@ class UserController extends BaseController
 				}
 
                 if (!$user) {
-                    $this->flashMessage($this->translator->trans('route.user.forgotten.message.user-not-found'), 'error'); //'User not found'
+                    $this->flashMessage($this->translator->trans('route.user.forgotten.message.password-reset-email-sent')); //'User not found'
                 } else {
                     $code = $this->generateCode();
                     $user->reset_key = $code;
