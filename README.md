@@ -27,3 +27,17 @@ Currently there are also some parameters required in the `parameters.yml` that i
 To configure these, copy the `parameters.dist.yml` to `parameters.yml` and edit the database parameters to match your local settings. Some values should be copied from the dev/prod environment.
 
 Symfony's services are defined in services.yml in the root directory of the project.
+
+### Phinx Migrations
+
+Added migrations via Phinx migration library.
+
+To configure Phinx for your system, copy `phinx.dist.yml` to `phinx.yml`. Add your database details to the relevant environments and your ready to go.
+
+To migrate Phinx, you will need to start from a clean database so make a backup of your current database (if you have one) and then drop all the tables in it to start from square one.
+
+To migrate your database up to the latest version run `./vendor/bin/phinx migrate` from the base project folder. If this is your first migration Phinx will create a table in the database (called phinxlog by default) in which to store the status of the migrations. It will then run through all migrations that have not yet been run and apply the SQL to the database.
+
+To create a new migration run `./vendor/bin/phinx create ANewMigration` from the base project folder. The name of the migration must be in Camel-case. This will create a new migration file in the `migrations` folder, which you can start working on.
+
+For full documentation see the [Phinx Documentation](http://docs.phinx.org/en/latest/)
