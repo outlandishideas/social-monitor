@@ -70,6 +70,7 @@ if (PHP_SAPI == 'cli') {
 	//add layout to view
 	Zend_Layout::getMvcInstance()->setLayout('layout');
 
+	header("X-Frame-Options: SAMEORIGIN");
 	$front->dispatch();
 }
 

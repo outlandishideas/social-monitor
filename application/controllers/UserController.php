@@ -92,6 +92,9 @@ class UserController extends BaseController
                         $user->failed_logins = 0;
                         $user->save();
 
+                        // do not reuse session ids
+                        Zend_Session::regenerateId();
+
                         $this->redirect($redirect);
                     } else {
                         $this->auth->clearIdentity();
@@ -135,7 +138,7 @@ class UserController extends BaseController
 				}
 
                 if (!$user) {
-                    $this->flashMessage($this->translator->trans('route.user.forgotten.message.password-reset-email-sent')); //'User not found'
+                    $this->flashMessage($this->translator->trans('route.user.forgotten.message.user-not-found'), 'error'); //'User not found'
                 } else {
                     $code = $this->generateCode();
                     $user->reset_key = $code;
