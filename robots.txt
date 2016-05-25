@@ -1,2 +1,13 @@
 User-agent: *
-Disallow: /
+Disallow: /user/
+Disallow: /index/
+Disallow: /region/
+Disallow: /country/
+Disallow: /group/
+Disallow: /presence/
+Disallow: /hashtag/
+Disallow: /statuses/
+Disallow: /config/
+Disallow: /fetch/
+Disallow: /domain/
+Disallow: /feedback/
