@@ -22,7 +22,7 @@ class FeedbackController extends BaseController {
 			$name = $this->_request->getParam('name');
 			$from = $this->_request->getParam('from');
 			$body = $this->_request->getParam('body');
-			
+
             // Show an error if missing any parameters.
             // This is also enforced on the front end form.
             if(!$name) {
@@ -35,6 +35,12 @@ class FeedbackController extends BaseController {
 				$error = $this->translator->trans('route.feedback.index.error.missing-message');
                 $valid = false;
             }
+
+			$resp = $this->recaptcha->verify($this->_request->getParam('g-recaptcha-response'), $_SERVER['REMOTE_ADDR']);
+			if (!$resp->isSuccess()) {
+				$valid = false;
+				$error = $this->translator->trans('recaptcha.failure');
+			}
 
             // Limit body, from and name fields to 1000, 64 and 64 characters respectively.
             // This is also enforced on the front end.

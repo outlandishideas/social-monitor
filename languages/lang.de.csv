@@ -37,7 +37,7 @@ Global.tabs.charts.date-range.label,Datumszeitraum
 
 Global.tabs.statuses.label,Postings
 
-
+"recaptcha.failure","We couldn't verify that you weren't a robot. Please try again."
 
 
 navigation-menu.users,Benutzer

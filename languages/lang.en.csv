@@ -37,8 +37,7 @@
 
 "Global.tabs.statuses.label","Posts"
 
-
-
+"recaptcha.failure","We couldn't verify that you weren't a robot. Please try again."
 
 "navigation-menu.users","Users"
 "navigation-menu.account","Account"

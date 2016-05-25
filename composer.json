@@ -38,7 +38,8 @@
 		"zendframework/zendframework1": "^1.12",
 		"nesbot/carbon": "1.9.0",
 		"hwi/oauth-bundle": "^0.4.1",
-		"volnix/csrf": "1.2.0"
+		"volnix/csrf": "1.2.0",
+		"google/recaptcha": "1.1.2"
 	},
 	"repositories": [
 		{

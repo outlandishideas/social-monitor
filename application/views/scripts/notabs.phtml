@@ -9,6 +9,7 @@
 	<link href="<?php echo $this->cacheBust('lib/foundation/css/foundation.css'); ?>" rel="stylesheet" type="text/css">
 	<link href="<?php echo $this->cacheBust('lib/jquery/smoothness/jquery-ui-1.8.17.custom.css'); ?>" rel="stylesheet" type="text/css" />
 	<link href="<?php echo $this->cacheBust('css/social-monitor.css'); ?>" rel="stylesheet" type="text/css"/>
+	<?php echo $this->recaptcha()->generateScript(); ?>
 </head>
 <body class="<?php echo $this->bodyClass; ?>">
 

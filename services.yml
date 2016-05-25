@@ -506,3 +506,8 @@ services:
     joyride.presence:
         class: Outlandish\SocialMonitor\Joyride\JoyrideService
         arguments: ["joyride-presence", %joyride.presence.steps%]
+
+    # Recaptcha services
+    recaptcha.helper:
+        class: Outlandish\SocialMonitor\Helper\ReCaptcha
+        arguments: [%recaptcha.site_key%, %recaptcha.secret%]

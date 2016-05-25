@@ -17,3 +17,5 @@ parameters:
     db.password:
     pdf.base_url:
     report.base_url:
+    recaptcha.site_key:
+    recaptcha.secret:

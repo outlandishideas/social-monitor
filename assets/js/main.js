@@ -920,7 +920,8 @@ app.feedbackForm = {
 			name: form.find('#name').val(),
 			from: form.find('#from').val(),
 			body: form.find('#body').val(),
-			url: url
+			url: url,
+			"g-recaptcha-response": form.find('#g-recaptcha-response').val()
 		}
 
 		var tokenField = form.find('#token');

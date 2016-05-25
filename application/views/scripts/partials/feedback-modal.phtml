@@ -3,6 +3,7 @@
 use Volnix\CSRF\CSRF;
 
 $translator = $this->translate();
+$recaptcha = $this->recaptcha();
 
 ?>
 
@@ -27,6 +28,8 @@ $translator = $this->translate();
                       placeholder="<?php echo $translator->trans("Base.layout.feedback-modal.message-placeholder") ?>" required></textarea>
 
             <input id="url" name="url" maxlength="64" type="hidden" value="<?php echo $this->baseUrl('/feedback') ?>"/>
+
+			<?php echo $recaptcha->generateHtml(); ?>
 
             <ul class="button-group">
                 <li>
