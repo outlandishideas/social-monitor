@@ -188,7 +188,7 @@ class UserController extends BaseController
                     $this->flashMessage($this->translator->trans('route.user.reset-password.message.both-passwords-required'), 'error'); //'Both passwords are required'
                 } else if ($password != $password2) {
                     $this->flashMessage($this->translator->trans('route.user.reset-password.message.password-mismatch'), 'error'); //'Passwords do not match'
-                } else if (strlen($password) < 4) {
+                } else if (strlen($password) < 8) {
                     $this->flashMessage($this->translator->trans('route.user.reset-password.message.passwords-too-short'), 'error'); //'Password must be at least 4 characters'
                 } else {
                     $user->fromArray(array('password' => $password));
