@@ -36,8 +36,8 @@ $buttons = array(
                 <input id="password_confirm" name="password_confirm" type="password" size="26" required>
             </div>
         </fieldset>
+        <?php echo $translator->trans('views.scripts.user.register.password-strength') ?>
         <div class="progress" id="password-strength">
-            <?php echo $translator->trans('views.scripts.user.register.password-strength') ?>
                 <span class="meter" role="progressbar" style="width:0%">
                 </span>
         </div>
