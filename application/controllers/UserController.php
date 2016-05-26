@@ -16,8 +16,8 @@ class UserController extends BaseController
         'name'=>'Global.user',
         'email'=>'views.scripts.user.edit.label.user.email',
         'user_level' => 'views.scripts.user.edit.label.user.level',
-        'password'=>'Global.password', 
-        'password_confirm'=>'Global.password-confirm', 
+        'password'=>'Global.password',
+        'password_confirm'=>'Global.password-confirm',
         'old_password'=>'route.user.edit.old-password'
     );
 
@@ -150,7 +150,7 @@ class UserController extends BaseController
 				}
 
                 if (!$user) {
-                    $this->flashMessage($this->translator->trans('route.user.forgotten.message.user-not-found'), 'error'); //'User not found'
+                    $this->flashMessage($this->translator->trans('route.user.forgotten.message.password-reset-email-sent'), 'error'); //'User not found'
                 } else {
                     $code = $this->generateCode();
                     $user->reset_key = $code;
