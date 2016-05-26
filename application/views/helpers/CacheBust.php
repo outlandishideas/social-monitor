@@ -4,7 +4,7 @@ class Zend_View_Helper_CacheBust extends Zend_View_Helper_Abstract
 {
 	public function cacheBust($path)
 	{
-		$path = 'public/' . ltrim($path, '/\\');
+		$path = ltrim($path, '/\\');
 
 		if (file_exists($path)) {
 

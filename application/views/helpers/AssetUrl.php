@@ -9,7 +9,7 @@ class Zend_View_Helper_AssetUrl extends Zend_View_Helper_BaseUrl
 
 		$file = ltrim($file, '/\\');
 
-		return $baseUrl . '/public/' . $file;
+		return $baseUrl . '/' . $file;
 	}
 
 }
