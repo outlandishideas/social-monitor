@@ -41,3 +41,9 @@ To migrate your database up to the latest version run `./vendor/bin/phinx migrat
 To create a new migration run `./vendor/bin/phinx create ANewMigration` from the base project folder. The name of the migration must be in Camel-case. This will create a new migration file in the `migrations` folder, which you can start working on.
 
 For full documentation see the [Phinx Documentation](http://docs.phinx.org/en/latest/)
+
+## Public folder
+
+For security reasons, `index.php` has been moved to the `/public` folder so that configuration files in the base project folder are no longer publically accessible.
+
+You will need to alter the configuration on your machine to make the `/public` folder the `DocumentRoot` for this project using either apache or nginx.
