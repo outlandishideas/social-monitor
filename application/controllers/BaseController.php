@@ -3,6 +3,7 @@
 use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Exception\TokenMismatchException;
 use Outlandish\SocialMonitor\Helper\Gatekeeper;
+use Outlandish\SocialMonitor\Models\Option;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Outlandish\SocialMonitor\Exception\InvalidPropertiesException;
 use Outlandish\SocialMonitor\Exception\InvalidPropertyException;
@@ -445,15 +446,7 @@ class BaseController extends Zend_Controller_Action
      */
     public static function getOption($name)
     {
-        if (array_key_exists($name, BaseController::$optionCache)) {
-            return BaseController::$optionCache[$name];
-        }
-        $sql = 'SELECT value FROM options WHERE name = :name LIMIT 1';
-        $statement = self::db()->prepare($sql);
-        $statement->execute(array(':name' => $name));
-        $value = $statement->fetchColumn();
-        BaseController::$optionCache[$name] = $value;
-        return $value;
+        return Option::getOption($name);
     }
 
     /**
@@ -465,18 +458,11 @@ class BaseController extends Zend_Controller_Action
      */
     public static function setOption($name, $value)
     {
-        self::setOptions(array($name=>$value));
+        Option::setOption($name, $value);
     }
 
     public static function setOptions($options) {
-        $options = (array)$options;
-        $statement = self::db()->prepare('REPLACE INTO options (name, value) VALUES (:name, :value)');
-        foreach ($options as $name=>$value) {
-            $statement->execute(array(':name' => $name, ':value' => $value));
-            if (array_key_exists($name, BaseController::$optionCache)) {
-                unset(BaseController::$optionCache[$name]);
-            }
-        }
+        Option::setOptions($options);
     }
 
     /**

@@ -74,6 +74,7 @@ if (!file_exists(APP_ROOT_PATH . '/parameters.yml')) {
 	die('Please copy ' . APP_ROOT_PATH . '/parameters.yml.dist to ' . APP_ROOT_PATH . '/parameters.yml, and populate it');
 }
 
+use Outlandish\SocialMonitor\Models\Option;
 use Outlandish\SocialMonitor\PresenceType\PresenceType;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -102,4 +103,5 @@ BaseValidator::setTranslator($container->get('translation.translator'));
 
 //set db for PresenceFactory
 Model_PresenceFactory::setDatabase($container->get('db'));
+Option::setDb($container->get('db'));
 Zend_Registry::set('db', $container->get('db'));

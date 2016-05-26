@@ -2,6 +2,11 @@
 
 use Outlandish\SocialMonitor\Database\Database;
 
+/**
+ * TODO: delete this controller once things are settled as commands in here have been moved to symfony application
+ *
+ * Class FetchController
+ */
 class FetchController extends BaseController
 {
 	protected static $publicActions = array('index', 'populate-presence-history');
@@ -69,8 +74,8 @@ class FetchController extends BaseController
 
 
 	/**
-	 * Used to clear the lock if the fetch process failed 
-	 * 
+	 * Used to clear the lock if the fetch process failed
+	 *
 	 * @user-level user
 	 */
 	public function clearLockAction() {
