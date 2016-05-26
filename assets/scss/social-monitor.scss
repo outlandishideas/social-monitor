@@ -159,13 +159,14 @@ abbr {
     width: 200px;
     margin: 0;
   }
-  #password-strength{
-    margin-top: 5px;
-    border: none;
-    background-color: transparent;
-    &.secondary .meter{
-      background-color: yellow;
-    }
+}
+
+#password-strength{
+  margin-top: 5px;
+  border: none;
+  background-color: transparent;
+  &.secondary .meter{
+    background-color: yellow;
   }
 }
 

@@ -92,6 +92,17 @@ $buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('butt
 						<input id="password_confirm" name="password_confirm" type="password" class="textInput" />
 					</div>
 				</div>
+				<div class="row">
+					<div class="small-24 medium-8 large-8 columns">
+						<?php echo $translator->trans('views.scripts.user.register.password-strength') ?>
+					</div>
+					<div class="small-24 medium-16 large-16 end columns">
+						<div class="progress alert" id="password-strength">
+                            <span class="meter" role="progressbar" style="width:1%;">
+                            </span>
+						</div>
+					</div>
+				</div>
 
 				<?php if ($this->showAccessTokens) : ?>
 
@@ -113,10 +124,20 @@ $buttons[] = '<button type="submit" class="button-bc">'.$translator->trans('butt
 				<?php endif; ?>
 
 			</fieldset>
-		</div>
-	</div>
 
-    <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
+			<div class="recaptcha-wrapper">
+				<?php echo $this->captcha()->generateHtml(); ?>
+			</div>
+
+			<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
+</form>
+</div>
+</div>
+
+<?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
 
 </form>
 
+<script type="application/javascript" src="<?php echo $this->assetUrl('js/'.$this->locale.'/zxcvbn.js'); ?>"></script>
+<script type="application/javascript" src="<?php echo $this->assetUrl('js/'.$this->locale.'/password-strength.js'); ?>">
+</script>
