@@ -2,7 +2,9 @@
 <p><?php echo $this->text; ?></p>
 <!--
 <?php
-print_r($this->exception);
-print_r($this->request);
+if (APPLICATION_ENV != 'prod'){
+    print_r($this->exception);
+    print_r($this->request);
+}
 ?>
 -->
