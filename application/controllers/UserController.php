@@ -81,7 +81,7 @@ class UserController extends BaseController
 
                 if($user->last_failed_login){
                     $timeToResetLoginAttempts = new DateTime($user->last_failed_login);
-                    $timeToResetLoginAttempts->modify('+ 1 hour');
+                    $timeToResetLoginAttempts->modify('+ 5 minutes');
                     $currentTime = new DateTime(gmdate('Y-m-d H:i:s'));
 
                     if($currentTime > $timeToResetLoginAttempts){
