@@ -279,7 +279,7 @@ class PresenceController extends GraphingController
                     if (strpos($ex->getMessage(), '23000') !== false) {
                         $errorMessages[] = $this->translator->trans('route.presence.edit.message.already-exists'); //'Presence already exists';
                     } else {
-                        $errorMessages[] = $ex->getMessage();
+                        $errorMessages[] = htmlspecialchars($ex->getMessage());
                     }
                 }
             }

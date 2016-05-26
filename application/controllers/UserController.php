@@ -14,8 +14,11 @@ class UserController extends BaseController
 
     protected $formInputLabels = array(
         'name'=>'Global.user',
+        'email'=>'views.scripts.user.edit.label.user.email',
         'user_level' => 'views.scripts.user.edit.label.user.level',
-        'password'=>'Global.password', 'password_confirm'=>'Global.password-confirm', 'old_password'=>'route.user.edit.old-password'
+        'password'=>'Global.password', 
+        'password_confirm'=>'Global.password-confirm', 
+        'old_password'=>'route.user.edit.old-password'
     );
 
 
@@ -304,12 +307,17 @@ class UserController extends BaseController
             $password2 = $this->_request->getParam('password_confirm');
             $oldPassword = $this->_request->getParam('old_password');
 
-            if (!$this->isAuthorizedToChangeLevel($params, $editingUser)) {
+            if (($action == 'edit' || $action == 'edit-self') && !$this->isAuthorizedToChangeLevel($params, $editingUser)) {
                 if(($password || $password2) && !($action == 'edit-self')){
                     $this->flashMessage($this->translator->trans('route.user.edit.message.not-allowed'), 'error');
                     return $this->redirectUser($editingUser);
                 }
                 unset($params['user_level']);
+            }
+
+            if($action == 'new' && !$this->isAuthorizedToCreateUser($params)){
+                $this->flashMessage($this->translator->trans('route.user.edit.message.not-allowed'), 'error');
+                return $this->redirectUser($editingUser);
             }
 
             if($action == 'edit-self' && ( $password || $password2 )){
@@ -331,16 +339,16 @@ class UserController extends BaseController
                     'required' => true
                 ],
                 $this->_request->getParam('email') => [
-                    'inputLabel' => 'Email address',
+                    'inputLabel' => $this->formInputLabels['email'],
                     'validator' => new Validation\EmailValidator(),
                     'required' => true
                 ],
             ]);
-            
+
             if(!$isValidInput){
                 return $this->redirectUser($editingUser);
             }
-            
+
             $setProperties = $this->setProperties($editingUser, $params);
             $errorMessages = array();
 
@@ -603,4 +611,16 @@ class UserController extends BaseController
             //check that the user level is a valid user level
             array_key_exists($params['user_level'], Model_User::$userLevels);
 	}
+
+    /**
+     * Only allows managers and admins to create users with a certain level
+     *
+     * @param $params
+     * @return bool
+     */
+    protected function isAuthorizedToCreateUser($params){
+        return $this->view->canChangeLevel &&
+        $this->view->user->user_level >= $params['user_level'] &&
+        array_key_exists($params['user_level'], Model_User::$userLevels);
+    }
 }
