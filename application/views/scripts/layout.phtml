@@ -4,6 +4,8 @@
 	<meta charset="utf-8"/>
 	<meta name="baseUrl" content="<?php echo $this->baseUrl('/'); ?>"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="_token" content="<?php echo Volnix\CSRF\CSRF::getToken() ?>" />
+	<meta name="_token_name" content="<?php echo Volnix\CSRF\CSRF::getTokenName() ?>" />
 	<title><?php echo $this->clientName; ?> :: <?php echo strip_tags($this->pageTitle); ?></title>
     <link rel="shortcut icon" href="<?php echo $this->assetUrl('img/favicon.ico');?>"/>
 	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>

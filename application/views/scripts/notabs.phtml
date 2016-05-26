@@ -1,7 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
+	<meta name="_token" content="<?php echo Volnix\CSRF\CSRF::getToken() ?>" />
+	<meta name="_token_name" content="<?php echo Volnix\CSRF\CSRF::getTokenName() ?>" />
 	<title><?php echo $this->clientName; ?> :: <?php echo strip_tags($this->pageTitle); ?></title>
 	<link rel="shortcut icon" href="<?php echo $this->assetUrl('img/favicon.ico');?>"/>
 	<link rel="stylesheet" href="<?php echo $this->assetUrl('fonts/proxima-nova-fontfacekit/stylesheet.css'); ?>">

@@ -144,6 +144,11 @@ $.extend(app, {
 app.init = {
 	//application entry point, called at end of this file
 	bootstrap: function() {
+        //
+		// $.ajaxSetup({
+		// 	headers: { 'X-CSRF-TOKEN': app.csrf.getToken() }
+		// });
+
 		$('a.autoConfirm, .button-delete').on('click', app.autoConfirm.ask);
 
 		//randomise order of colours
@@ -643,6 +648,15 @@ app.api = {
 	}
 };
 
+app.csrf = {
+	getToken: function() {
+		return document.querySelector('meta[name="_token"]').getAttribute('content');
+	},
+	getTokenName: function() {
+		return document.querySelector('meta[name="_token_name"]').getAttribute('content');
+	}
+},
+
 /**
  * Add in-line "Are you sure?" style confirmation forms
  */
@@ -656,6 +670,7 @@ app.autoConfirm = {
 			title = '';
 		}
 		var $form = $('<form method="post" action="'+$(this).attr('href')+'">' +
+			'<input type="hidden" name="'+ app.csrf.getTokenName() +'" value="' + app.csrf.getToken() +'"/>' +
 			'{{ js.auto-confirm.are-you-sure | translate }} <input type="submit" value="'+$(this).text()+'"'+title+' class="button-bc inline"> ' +
 			'<a href="#">{{buttons.common.cancel | translate}}</a>' +
 			'</form>');
