@@ -362,7 +362,7 @@ class UserController extends BaseController
                     $errorMessages[] = $this->translator->trans('route.user.edit.message.both-passwords-required'); //'Please enter the password in both boxes';
                 } else if ($password != $password2) {
                     $errorMessages[] = $this->translator->trans('route.user.edit.message.password-mismatch'); //'Passwords do not match';
-                } else if ($password && strlen($password) < 4) {
+                } else if ($password && strlen($password) < 8) {
                     $errorMessages[] = $this->translator->trans('route.user.edit.message.passwords-too-short'); //'Password must be at least 4 characters';
                 }
             }
