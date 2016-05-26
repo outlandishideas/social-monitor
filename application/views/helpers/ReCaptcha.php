@@ -1,6 +1,6 @@
 <?php
 
-class Zend_View_Helper_Recaptcha extends Zend_View_Helper_Abstract {
+class Zend_View_Helper_ReCaptcha extends Zend_View_Helper_Abstract {
 
     /** @var \Outlandish\SocialMonitor\Helper\ReCaptcha */
     private $recaptcha;
