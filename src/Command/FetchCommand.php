@@ -8,6 +8,7 @@ use Model_PresenceFactory;
 use Outlandish\SocialMonitor\Database\Database;
 use Outlandish\SocialMonitor\Models\Option;
 use Outlandish\SocialMonitor\Translation\Translator;
+use PDO;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -286,6 +287,11 @@ class FetchCommand extends ContainerAwareCommand
 			$this->touchLock($lockName);
 		}
 		return $lockName;
+	}
+
+	protected function logFileName($name = null)
+	{
+		return APP_ROOT_PATH . '/log/' . $name . '.log';
 	}
 
 	/**
