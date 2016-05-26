@@ -14,8 +14,11 @@ class UserController extends BaseController
 
     protected $formInputLabels = array(
         'name'=>'Global.user',
+        'email'=>'views.scripts.user.edit.label.user.email',
         'user_level' => 'views.scripts.user.edit.label.user.level',
-        'password'=>'Global.password', 'password_confirm'=>'Global.password-confirm', 'old_password'=>'route.user.edit.old-password'
+        'password'=>'Global.password', 
+        'password_confirm'=>'Global.password-confirm', 
+        'old_password'=>'route.user.edit.old-password'
     );
 
 
@@ -336,7 +339,7 @@ class UserController extends BaseController
                     'required' => true
                 ],
                 $this->_request->getParam('email') => [
-                    'inputLabel' => 'Email address',
+                    'inputLabel' => $this->formInputLabels['email'],
                     'validator' => new Validation\EmailValidator(),
                     'required' => true
                 ],
