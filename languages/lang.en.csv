@@ -339,7 +339,7 @@
 "route.user.reset-password.page-title","Change password"
 "route.user.reset-password.message.both-passwords-required","Both passwords are required"
 "route.user.reset-password.message.password-mismatch","Passwords do not match"
-"route.user.reset-password.message.passwords-too-short","Password must be at least 4 characters"
+"route.user.reset-password.message.passwords-too-short","Password must be at least 8 characters"
 "route.user.reset-password.message.success","Password changed successfully"
 "route.user.reset-password.message.incorrect-user-key","Incorrect user/key combination for password reset"
 
@@ -358,7 +358,7 @@
 "route.user.edit.registered","User registered"
 "route.user.edit.message.both-passwords-required","Both passwords are required"
 "route.user.edit.message.password-mismatch","Passwords do not match"
-"route.user.edit.message.passwords-too-short","Password must be at least 4 characters"
+"route.user.edit.message.passwords-too-short","Password must be at least 8 characters"
 "route.user.edit.message.missing-email","Please enter an email address"
 "route.user.edit.message.invalid-email","Please enter a valid email address"
 "route.user.edit.message.use-company-email","To register, you must use a valid %company% email address"

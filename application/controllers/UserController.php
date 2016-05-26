@@ -191,7 +191,7 @@ class UserController extends BaseController
                     $this->flashMessage($this->translator->trans('route.user.reset-password.message.both-passwords-required'), 'error'); //'Both passwords are required'
                 } else if ($password != $password2) {
                     $this->flashMessage($this->translator->trans('route.user.reset-password.message.password-mismatch'), 'error'); //'Passwords do not match'
-                } else if (strlen($password) < 4) {
+                } else if (strlen($password) < 8) {
                     $this->flashMessage($this->translator->trans('route.user.reset-password.message.passwords-too-short'), 'error'); //'Password must be at least 4 characters'
                 } else {
                     $user->fromArray(array('password' => $password));
@@ -370,7 +370,7 @@ class UserController extends BaseController
                     $errorMessages[] = $this->translator->trans('route.user.edit.message.both-passwords-required'); //'Please enter the password in both boxes';
                 } else if ($password != $password2) {
                     $errorMessages[] = $this->translator->trans('route.user.edit.message.password-mismatch'); //'Passwords do not match';
-                } else if ($password && strlen($password) < 4) {
+                } else if ($password && strlen($password) < 8) {
                     $errorMessages[] = $this->translator->trans('route.user.edit.message.passwords-too-short'); //'Password must be at least 4 characters';
                 }
             }
