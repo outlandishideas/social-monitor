@@ -43,7 +43,7 @@ $buttons = array(
         </div>
 
 		<div class="recaptcha-wrapper">
-			<?php echo $this->recaptcha()->generateHtml(); ?>
+			<?php echo $this->captcha()->generateHtml(); ?>
 		</div>
 
         <?php echo $this->partial('partials/button-bar.phtml', array('buttons'=>$buttons, 'dark'=>true)); ?>
