@@ -9,7 +9,7 @@
 namespace Outlandish\SocialMonitor\Helper;
 
 
-class ReCaptcha
+class Recaptcha
 {
 	/** @var string */
 	private $key;

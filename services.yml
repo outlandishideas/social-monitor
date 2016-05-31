@@ -509,5 +509,5 @@ services:
 
     # Recaptcha services
     recaptcha.helper:
-        class: Outlandish\SocialMonitor\Helper\ReCaptcha
+        class: Outlandish\SocialMonitor\Helper\Recaptcha
         arguments: [%recaptcha.site_key%, %recaptcha.secret%]
