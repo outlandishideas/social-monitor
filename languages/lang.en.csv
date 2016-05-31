@@ -74,10 +74,10 @@
 
 
 
-"route.base.fetch-lock.day","one:1 day","more:%amount% days"
-"route.base.fetch-lock.hour","one:1 hour","more:%amount% hours"
-"route.base.fetch-lock.min","one:1 min","more:%amount% mins"
-"route.base.fetch-lock.sec","one:1 sec","more:%amount% secs"
+"route.base.fetch-lock.day","1 day|%amount% days"
+"route.base.fetch-lock.hour","1 hour|%amount% hours"
+"route.base.fetch-lock.min","1 min|%amount% mins"
+"route.base.fetch-lock.sec","1 sec|%amount% secs"
 "route.base.validation.required","%label% is required"
 "route.base.validation.invalid","%label% is not valid"
 "route.base.validation.string-forbidden","%label% contains forbidden characters"
@@ -639,9 +639,9 @@
 "route.domain.index.paragraph-2","You can say whether or not a domain belongs to the %company% by toggling the checkbox on the right, and clicking 'save'. Note that if you reorder the columns before saving, any changes will be lost."
 
 "route.domain.view.page-title","%domain%"
-"route.domain.view.site-count","one:1 site","many:%count% sites"
-"route.domain.view.status-count","one:1 post","many:%count% posts"
-"route.domain.view.mention-count","one:1 mention","many:%count% mentions"
+"route.domain.view.site-count","1 site|%count% sites"
+"route.domain.view.status-count","1 post|%count% posts"
+"route.domain.view.mention-count","1 mention|%count% mentions"
 "route.domain.view.linked-to-from","%sites% linked to from %statuses%"
 
 
@@ -906,8 +906,8 @@
 
 "views.scripts.partials.new-index-table.entity-list-toggle.title","Click to expand"
 "views.scripts.partials.new-index-table.not-available","N/A"
-"views.scripts.partials.new-index-table.country-count","one:1 country","more:%count% countries"
-"views.scripts.partials.new-index-table.presence-count","one:1 channel","more:%count% channels"
+"views.scripts.partials.new-index-table.country-count","1 country|%count% countries"
+"views.scripts.partials.new-index-table.presence-count","1 channel|%count% channels"
 
 "report.label.date-range","Date range"
 
