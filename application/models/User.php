@@ -107,8 +107,10 @@ class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 		$levels = self::$userLevels;
 		foreach ($levels as $l=>$label) {
 			if (strtolower($label) == $levelName && $this->user_level >= $l) {
+				$allowed_actions = ['view', 'graph-data', 'list'];
+
 				// only check specific entities if an id given and action not view
-				if (!$id || $action === 'view') {
+				if (!$id || in_array($action, $allowed_actions)) {
 					return true;
 				}
 				$entities = $this->getAccessEntities();
