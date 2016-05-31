@@ -23,7 +23,7 @@ class PresencesPageUrlDefault extends AbstractMigration
     public function up()
     {
         $table = $this->table('presences');
-        $table->changeColumn('page_url', 'string', array('limit' => 255, 'default' => ''))->update();
+        $table->changeColumn('page_url', 'string', array('limit' => 255, 'default' => '', 'null' => true))->update();
     }
 
     /**
