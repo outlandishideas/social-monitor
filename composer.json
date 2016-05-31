@@ -5,6 +5,11 @@
 		}
 	},
 	"name": "outlandish/social-monitor",
+	"config": {
+		"platform": {
+			"php": "5.4.45"
+		}
+	},
 	"authors": [
 		{
 			"name": "Outlandish",
