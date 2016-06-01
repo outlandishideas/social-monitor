@@ -44,7 +44,8 @@ class FeedFetcher {
         $posts = [];
 
         $parameters = [
-            'limit' =>  100
+            'limit' =>  100,
+            'fields' => 'message,created_time,from,shares,link'
         ];
         if(!is_null($since)) {
             $parameters['since'] = $since->getTimestamp();
