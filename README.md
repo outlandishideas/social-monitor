@@ -47,3 +47,7 @@ For full documentation see the [Phinx Documentation](http://docs.phinx.org/en/la
 For security reasons, `index.php` has been moved to the `/public` folder so that configuration files in the base project folder are no longer publically accessible.
 
 You will need to alter the configuration on your machine to make the `/public` folder the `DocumentRoot` for this project using either apache or nginx.
+
+## Facebook API changes
+
+As noted on the 01/06/2016 the Facebook API has a new limit on the number of posts it can return. It used to be 250 and it is now 100. We have changed this in the FeedFetcher class.

@@ -44,7 +44,7 @@ class FeedFetcher {
         $posts = [];
 
         $parameters = [
-            'limit' =>  250
+            'limit' =>  100
         ];
         if(!is_null($since)) {
             $parameters['since'] = $since->getTimestamp();
