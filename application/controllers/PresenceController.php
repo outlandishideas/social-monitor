@@ -257,11 +257,7 @@ class PresenceController extends GraphingController
                 try {
                     if (!$presence->id) {
                         $type = PresenceType::get($type);
-                        $presence = Model_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding);
-                        $presence->setSize($size);
-						if ($presence->getType()->getRequiresAccessToken()) {
-							$presence->user = $this->view->user;
-						}
+                        $presence = Model_PresenceFactory::createNewPresence($type, $handle, $signOff, $branding, $this->view->user, $size);
 						$presence->testUpdate();
                         $presence->save();
                     } else {

@@ -51,5 +51,10 @@ class AccessToken
     {
         return (new Carbon()) > $this->expires;
     }
+    
+    public function __toString()
+    {
+        return $this->token;
+    }
 
 }
