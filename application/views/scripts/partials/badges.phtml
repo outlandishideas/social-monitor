@@ -2,7 +2,7 @@
 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
 $translator = $this->translate();
 
-$locale = 'en_US';
+$locale = $translator->getLocale();
 $nf = new NumberFormatter($locale, NumberFormatter::ORDINAL);
 
 function metricAttributes($metric, $translator) {
