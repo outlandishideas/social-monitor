@@ -20,8 +20,6 @@ use RuntimeException;
 class LinkedinAdapter extends AbstractAdapter
 {
 
-    private $token = '***REMOVED***';
-
     /**
      * @var LinkedIn
      */
@@ -62,8 +60,7 @@ class LinkedinAdapter extends AbstractAdapter
      */
     public function getMetadataWithAccessToken($handle, $accessToken)
     {
-//        $this->linkedIn->setAccessToken($accessToken);
-        $this->linkedIn->setAccessToken($this->token);
+        $this->linkedIn->setAccessToken($accessToken);
         $metadata = $this->getMetadata($handle);
 
         return $metadata;
@@ -123,8 +120,7 @@ class LinkedinAdapter extends AbstractAdapter
      */
     public function getStatusesWithAccessToken($pageUID, $since, $handle, $accessToken)
     {
-//        $this->linkedIn->setAccessToken($accessToken);
-        $this->linkedIn->setAccessToken($this->token);
+        $this->linkedIn->setAccessToken($accessToken);
         $metadata = $this->getStatuses($pageUID, $since, $handle);
 
         return $metadata;

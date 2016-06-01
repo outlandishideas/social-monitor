@@ -84,7 +84,7 @@ abstract class Model_PresenceFactory
         return self::fetchPresences($sql, $campaignIds);
 	}
 
-	public static function createNewPresence(PresenceType $type, $handle, $signed_off, $branding)
+	public static function createNewPresence(PresenceType $type, $handle, $signed_off, $branding, $user, $size)
 	{
         // create a new presence
         $stmt = static::$db->prepare("
@@ -93,6 +93,10 @@ abstract class Model_PresenceFactory
 				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute(array($type->getValue(), $handle, '', '', '', '', 0, 0, 0));
         $presence = Model_PresenceFactory::getPresenceByHandle($handle, $type);
+		$presence->setSize($size);
+		if ($presence->getType()->getRequiresAccessToken()) {
+			$presence->user = $user;
+		}
 
         try {
             $presence->update();
