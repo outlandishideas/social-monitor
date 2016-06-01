@@ -11,8 +11,8 @@ Global.click-to-expand,Zum Vergrößern klicken
 Global.region,Region
 Global.country,Land
 Global.countries,Länder
-Global.group,SBU
-Global.groups,SBUs
+Global.group,Institut
+Global.groups,Institute
 Global.presence,Kanal
 Global.presences,Kanäle
 Global.select,Auswählen
@@ -33,11 +33,11 @@ Global.tabs.info.label,Info
 Global.tabs.charts.label,Ansichten
 Global.tabs.charts.unavailable,Leider ist diese Ansicht auf Ihrem Gerät nicht verfügbar
 Global.tabs.charts.chart.label,Ansicht
-Global.tabs.charts.date-range.label,Datumszeitraum
+Global.tabs.charts.date-range.label,Zeitraum
 
 Global.tabs.statuses.label,Postings
 
-"recaptcha.failure","We couldn't verify that you weren't a robot. Please try again."
+"recaptcha.failure","Wir konnten nicht sicherstellen, dass Sie kein Roboter sind. Bitte versuchen Sie es nochmal."
 
 
 navigation-menu.users,Benutzer
@@ -49,7 +49,7 @@ navigation-menu.user,Benutzer
 navigation-menu.home,Startseite
 navigation-menu.regions,Regionen
 navigation-menu.countries,Länder
-navigation-menu.sbus,SBUs
+navigation-menu.sbus,Institute
 navigation-menu.presences,Kanäle
 navigation-menu.domains,Domains
 navigation-menu.statuses,Postings
@@ -88,25 +88,25 @@ route.base.fetch-lock.sec,eins:1 Sek.,mehr:%amount% Sek.
 
 
 
-route.index.index.page-title,Social Media Monitor
+route.index.index.page-title,Social-Media-Monitor
 route.index.index.find-country,Suche
 route.index.index.date-range,Zeige Daten an für
 route.index.index.pdf-download-description,Diese Werte basieren auf der Social Media Auswertung der Organisation.<br /> Hier können Sie sich ein PDF mit Erklärungen dazu herunterladen:
 route.index.index.pdf-download-link,Hier können Sie sich die Kennzahlen herunterladen
 route.index.index.pdf-download-link-title,Info-PDF herunterladen
-route.index.index.contextual-help.page-title,"Wählen Sie Reichweite, Aktivität, Qualität oder Gesamt um Details zu jedem Land bzw. jeder SBU-Region zu erfahren."
-route.index.index.contextual-help.date-range,"Bewegen Sie den Datumsanzeiger, um die letzten Entwicklungen der Werte für jedes Land bzw. jede SBU-Region zu sehen."
-route.index.index.contextual-help.map,"Klicken Sie auf die Karte, um ein Land auszuwählen und eine Vorschau auf die einzelnen Social Media Kanäle  zu erhalten."
+route.index.index.contextual-help.page-title,"Wählen Sie Reichweite, Aktivität oder Qualität, um Details zu Institut, Land oder Region zu erfahren."
+route.index.index.contextual-help.date-range,"Bewegen Sie den Datumsanzeiger, um die letzten Entwicklungen der Werte von Institut, Land oder Region zu sehen."
+route.index.index.contextual-help.map,"Klicken Sie auf die Karte, um ein Land auszuwählen und eine Vorschau auf die einzelnen Social-Media-Kanäle zu erhalten."
 route.index.index.search-result-label,Suchergebnisse:
 
 
 buttons.common.delete,Löschen
 buttons.common.edit,Bearbeiten
 buttons.common.edit-all,Alles bearbeiten
-buttons.common.download-csv,Download CSV
+buttons.common.download-csv,Bericht herunterladen
 buttons.common.download-report,Bericht herunterladen
 buttons.common.save,Speichern
-buttons.common.cancel,Beenden
+buttons.common.cancel,Abbrechen
 buttons.common.add-new,Neu hinzufügen
 buttons.common.manage-presences,Kanäle
 buttons.common.manage-countries,Länder
@@ -121,10 +121,10 @@ buttons.country.delete,Land löschen
 buttons.country.manage,Kanäle verwalten
 buttons.country.view,Land ansehen
 
-buttons.group.edit,SBU bearbeiten
-buttons.group.delete,SBU löschen
+buttons.group.edit,Institut bearbeiten
+buttons.group.delete,Institut löschen
 buttons.group.manage,Kanäle verwalten
-buttons.group.view,SBU ansehen
+buttons.group.view,Institut ansehen
 
 buttons.presence.edit,Kanal bearbeiten
 buttons.presence.delete,Kanal löschen
@@ -204,7 +204,7 @@ route.country.graph-data.message.not-found,Land wurde nicht gefunden
 route.country.manage.page-title,Kanäle verwalten
 route.country.manage.message.success,Länderkanäle aktualisiert
 
-route.country.report.page-title,Social Media Monitor Report
+route.country.report.page-title,Social-Media-Monitor Report
 route.country.report.label.additional-info,Zusatzinformationen
 route.country.report.label.containing-region,Teil der %region% Region
 route.country.report.label.audience-size,Verfügbare Besuchermenge
@@ -227,35 +227,35 @@ route.feedback.index.email-subject,Social Monitor Feedback von %name%
 
 
 
-route.group.index.page-title,SBUs
-route.group.index.empty-table,Keine SBUs gefunden
+route.group.index.page-title,Institute
+route.group.index.empty-table,Keine Institute gefunden
 
-route.group.new.page-title,Neue SBU
+route.group.new.page-title,Neues Institut
 
-route.group.view.page-title,SBU: %group
+route.group.view.page-title,Institut: %group
 route.group.view.info-panel.presences,Kanäle: %count%
 
-route.group.edit.page-title,SBU bearbeiten
-route.group.edit.message.success,SBU gespeichert
+route.group.edit.page-title,Institut bearbeiten
+route.group.edit.message.success,Institut gespeichert
 route.group.edit.message.display-name-missing,Bitte einen Namen eingeben
 route.group.edit.label.display-name,Name
 route.group.edit.label.audience-size,Verfügbare Besuchermenge
 
-route.group.edit-all.page-title,alle SBUs bearbeiten
-route.group.edit-all.empty-table,Keine SBUs gefunden
+route.group.edit-all.page-title,alle Institute bearbeiten
+route.group.edit-all.empty-table,Keine Institute gefunden
 route.group.edit-all.message.display-name-missing,Bitte Name für %group% eingeben
-route.group.edit-all.message.success,%count% SBUs gespeichert
+route.group.edit-all.message.success,%count% Institute gespeichert
 route.group.edit-all.table-header.display-name,Name
 route.group.edit-all.table-header.audience-size,Besuchermenge
 
-route.group.delete.message.success,SBU gelöscht
+route.group.delete.message.success,Institut gelöscht
 
-route.group.graph-data.message.not-found,SBU wurde nicht gefunden
+route.group.graph-data.message.not-found,Institut wurde nicht gefunden
 
 route.group.manage.page-title,Kanäle Verwalten: %group%
-route.group.manage.message.success,SBU Kanäle aktualisiert
+route.group.manage.message.success,Institut Kanäle aktualisiert
 
-route.group.report.page-title,Social Media Monitor Report
+route.group.report.page-title,Social-Media-Monitor Report
 route.group.report.presence.header,Kanäle: %count%
 
 
@@ -275,8 +275,8 @@ route.presence.graph-data.message.not-found,Kanal wurde nicht gefunden
 
 route.presence.view.page-title,Kanal: %presence%
 route.presence.view.info.presence-type,Dies ist ein %type% Kanal
-route.presence.view.info.presence.score,Beteiligungswert von %type% gestern:
-route.presence.view.info.presence.average-score,Durchschnittlicher %type% monatlicher Beteiligungswert: %score%
+route.presence.view.info.presence.score,Beteiligungswert gestern:
+route.presence.view.info.presence.average-score,Durchschnittlicher monatlicher Beteiligungswert: %score%
 route.presence.view.info.twitter.score,Klout Wert von gestern: %score%%
 route.presence.view.info.twitter.average-score,Durchschnittlicher monatlicher Klout Wert: %score%
 route.presence.view.info.owner-name,Dieser Kanal umfasst die Statistiken für %link%
@@ -296,23 +296,23 @@ route.presence.edit.message.missing-type,Bitte einen Typ wählen
 route.presence.edit.label.handle,Kanal
 route.presence.edit.label.type,Typ
 route.presence.edit.label.size,Größe
-route.presence.edit.label.signed-off,Abgesegnet
-route.presence.edit.label.branding,Branding
+route.presence.edit.label.signed-off,Geprüft
+route.presence.edit.label.branding,Markenbild
 route.presence.edit.hint.connect-account,Bitte verbinden Sie Ihren Account mit %title%
-route.presence.edit.hint.handle.facebook,"Für www.facebook.com/<strong>platform</strong> ist der Kennwert <strong>platform</strong><br/> Für Seiten ohne Vanity-URLs ist der Kennwert die lange Zahlenfolge in der URL, z.B. www.facebook.com/pages/My-Facebook-Page/<strong>012345678901234</strong>"
-route.presence.edit.hint.handle.twitter,Für www.twitter.com/<strong>platform</strong> ist der Kennwert <strong>platform</strong>
-route.presence.edit.hint.handle.instagram,Für www.instagram.com/<strong>platform</strong> ist der Kennwert <strong>platform</strong>
-route.presence.edit.hint.handle.youtube,Für www.youtube.com/channel/<strong>platform</strong> ist der Kennwert <strong>platform</strong>
+route.presence.edit.hint.handle.facebook,"Für www.facebook.com/seitenname ist der Kennwert 'seitenname' (z.B. 'GoetheInstitutParis' bei www.facebook.com/GoetheInstitutParis). Für Seiten ohne Vanity-URLs ist der Kennwert die lange Zahlenfolge in der URL, z.B. www.facebook.com/pages/My-Facebook-Page/012345678901234. Die Größe eines Kanals wirkt sich auf den Beliebtheitsfaktor aus."
+route.presence.edit.hint.handle.twitter,Für www.twitter.com/<strong>Plattform</strong> ist der Kennwert <strong>Plattform</strong>
+route.presence.edit.hint.handle.instagram,Für www.instagram.com/<strong>Plattform</strong> ist der Kennwert <strong>Plattform</strong>
+route.presence.edit.hint.handle.youtube,Für www.youtube.com/channel/<strong>Plattform</strong> ist der Kennwert <strong>Plattform</strong>
 route.presence.edit.hint.handle.linkedin,"Benutzen Sie den Firmennamen so, wie er auf dieser Seite erscheint, z.B. für <a href=""https://www.linkedin.com/company/1337"" target=""_blank"">LinkedIn</a> benutzen Sie '<strong>LinkedIn</strong>'"
 route.presence.edit.hint.handle.sinaweibo,"Benutzen Sie den Firmennamen so wie er auf dieser Seite erscheint. Z.B. für <a href=""http://www.weibo.com/u/2463797455"" target=""_blank"">BBC World</a> benutzen Sie '<strong>BBCWorld</strong>'"
-route.presence.edit.hint.size,"Die Größe eines Kanals hat Auswirkungen auf die Auswertung eines Kanals bei der Ermittlung der Beliebtheit des Ziels.<br/>Die Größe beeinflusst nur die zur SBU-Region gehörenden Kanäle.<br/>Große Kanäle in einer SBU-Region nehmen innerhalb der SBU-Zielgruppe einen höheren Anteil ein, mittlere Kanäle einen kleineren."
+route.presence.edit.hint.size,"Die Größe eines Kanals hat Auswirkungen auf die Auswertung eines Kanals bei der Ermittlung der Beliebtheit des Ziels.<br/>Die Größe beeinflusst nur die zur Institut-Region gehörenden Kanäle.<br/>Große Kanäle in einer Institut-Region nehmen innerhalb der Institut-Zielgruppe einen höheren Anteil ein, mittlere Kanäle einen kleineren."
 route.presence.edit.access-token.title,"Token zugänglich machen, um Daten zu erfassen."
 route.presence.edit.access-token.message,Diese Art von Kanal erfordert ein Zugangs-Token
 route.presence.edit.access-token.has-user.message,Dieser Kanal benutzt momentan das Zugangs-Token folgenden Benutzers: <strong>%name%</strong>
 route.presence.edit.access-token.no-user.message,Dieser Kanal hat momentan kein Zugangs-Token u nd kann daher nicht erreicht werden
 route.presence.edit.access-token.button,Benutzen Sie Ihr Zugangs-Token
 
-route.presence.report.page-title,Social Media Monitor Report
+route.presence.report.page-title,Social-Media-Monitor Report
 route.presence.report.presence.header,Kanal: %presence%
 
 
@@ -346,7 +346,7 @@ route.user.reset-password.message.incorrect-user-key,Falscher Benutzer/Keycode f
 route.user.register.page-title,Benutzer registrieren
 route.user.register.registration-successful,Registrierung erfolgreich
 route.user.register.email.subject,Sie haben sich erfolgreich registriert
-route.user.register.email.message,"<p>Hallo %name%,<p>Danke, dass Sie sich für das %company% Social Monitor Programm registriert haben</p><p>Wenn Sie sich für diesen Service nicht angemeldet haben, ignorieren Sie bitte diese E-Mail.</p><p> Andernfalls klicken Sie hier, um Ihre E-Mail-Adresse zu bestätigen und sich mit Ihrem neuen Account einzuloggen <a href=""%link%"">E-Mail bestätigen</a></p><p>Danke, <br />das %company% Social Media Monitor Team</p>"
+route.user.register.email.message,"<p>Hallo %name%,<p>Danke, dass Sie sich für das %company% Social Monitor Programm registriert haben</p><p>Wenn Sie sich für diesen Service nicht angemeldet haben, ignorieren Sie bitte diese E-Mail.</p><p> Andernfalls klicken Sie hier, um Ihre E-Mail-Adresse zu bestätigen und sich mit Ihrem neuen Account einzuloggen <a href=""%link%"">E-Mail bestätigen</a></p><p>Danke, <br />das %company% Social-Media-Monitor Team</p>"
 route.user.register.email.from,Das %company% Social Media  Monitor Team
 route.user.register.email.from-address,nicht-antworten@beispiel.com
 
@@ -373,8 +373,8 @@ route.user.manage.page-title,Zugangsrechte für %user% bearbeiten
 route.user.manage.message.permissions-saved,Benutzerberechtigungen gespeichert
 
 route.user.forgotten.email.subject,Passwort-Zurücksetzung
-route.user.forgotten.email.message,"<p>Hallo %name%</p><p>Wir haben eine Anfrage zur Rücksetzung Ihres Passworts für Ihren %company% Social Media Monitor Account erhalten.</p><p>Wenn Sie keine Zurücksetzung angefordert haben, ignorieren Sie bitte diese E-Mail.</p>Ansonsten klicken Sie auf diesen Link um Ihr Passwort zurückzusetzen<a href=""""%link%"""">Password zurücksetzen</a></p><p>Danke, <br />das %company% Social Media Monitor Team</p>"""
-route.user.forgotten.email.from,Das %company% Social Media Monitor Team
+route.user.forgotten.email.message,"<p>Hallo %name%</p><p>Wir haben eine Anfrage zur Rücksetzung Ihres Passworts für Ihren %company% Social-Media-Monitor Account erhalten.</p><p>Wenn Sie keine Zurücksetzung angefordert haben, ignorieren Sie bitte diese E-Mail.</p>Ansonsten klicken Sie auf diesen Link um Ihr Passwort zurückzusetzen<a href=""""%link%"""">Password zurücksetzen</a></p><p>Danke, <br />das %company% Social-Media-Monitor Team</p>"""
+route.user.forgotten.email.from,Das %company% Social-Media-Monitor Team
 route.user.forgotten.email.from-address,bitte.nicht.antworten@beispiel.com
 
 route.user.confirm-email.message.success,"Vielen Dank, dass Sie Ihre E-Mail-Adresse bestätigt haben. Sie können sich nun einloggen. "
@@ -387,13 +387,13 @@ route.statuses.index.page-title,Postings
 route.statuses.index.filter.campaign-type.label,Filter
 route.statuses.index.filter.campaign-type.all,Filter auswählen
 route.statuses.index.filter.campaign-type.country,Nach Land filtern
-route.statuses.index.filter.campaign-type.group,Nach SBU filtern
+route.statuses.index.filter.campaign-type.group,Nach Institut filtern
 route.statuses.index.filter.campaign-type.region,Nach Region filtern
-route.statuses.index.filter.presence-type.label,Social Media
+route.statuses.index.filter.presence-type.label,Kanäle
 route.statuses.index.filter.countries.label,Länder
 route.statuses.index.filter.regions.label,Regionen
-route.statuses.index.filter.groups.label,SBUs
-route.statuses.index.filter.sort-by.label,Sorte
+route.statuses.index.filter.groups.label,Institute
+route.statuses.index.filter.sort-by.label,Datum / Aktivität
 route.statuses.index.filter.sort-by.date,Datum
 route.statuses.index.you-are-viewing,Sie sehen gerade:
 route.statuses.index.table-header.content,Inhalt
@@ -402,7 +402,7 @@ route.statuses.index.multi-select.all-selected.default,Alles ausgewählt
 route.statuses.index.multi-select.all-selected.all-presences,Kein Filter ausgewählt
 route.statuses.index.multi-select.all-selected.countries,Alle Länder
 route.statuses.index.multi-select.all-selected.regions,Alle Regionen
-route.statuses.index.multi-select.all-selected.groups,Alle SBUs
+route.statuses.index.multi-select.all-selected.groups,Alle Institute
 route.statuses.index.multi-select.count-selected.default,# von ausgewählten %
 route.statuses.index.multi-select.no-matches.default,Keine Übereinstimmung gefunden
 route.statuses.index.multi-select.placeholder.default,Keine Auswahl getroffen
@@ -444,7 +444,7 @@ route.fetch.log.fetch-statuses.error,Fehler:%message%
 
 
 route.config.index.page-title,Einstellungen
-route.config.index.introduction,"Alle metrischen Werte und Kennzeichnungen konfiguren, dann auf speichern klicken"
+route.config.index.introduction,"Hier können Sie alle Werte und Kennzeichnungen konfiguren."
 
 route.config.index.sections.general.title,Allgemein
 route.config.index.sections.general.feedback.title,Feedback
@@ -460,8 +460,8 @@ route.config.index.sections.reach.target-audience.tw-min,Mindestwert Twitter-Nut
 route.config.index.sections.reach.target-audience.tw-opt,Optimalwert Twitter-Nutzer (% von gesamt)
 route.config.index.sections.reach.target-audience.sw-min,Mindestwert Sina Weibo Nutzer (% von gesamt)
 route.config.index.sections.reach.target-audience.sw-opt,Optimalwert Sina Weibo Nutzer
-route.config.index.sections.reach.target-audience.ig-min,Mindestwert Instagramm-Nutzer (% von gesamt)
-route.config.index.sections.reach.target-audience.ig-opt,Optimalwert Instagramm-Nutzer (% von gesamt)
+route.config.index.sections.reach.target-audience.ig-min,Mindestwert Instagram-Nutzer (% von gesamt)
+route.config.index.sections.reach.target-audience.ig-opt,Optimalwert Instagram-Nutzer (% von gesamt)
 route.config.index.sections.reach.target-audience.yt-min,Mindestwert Youtube-Nutzer (% von gesamt)
 route.config.index.sections.reach.target-audience.yt-opt,Optimalwert Youtube-Nutzer (% von gesamt)
 route.config.index.sections.reach.target-audience.in-min,Mindeswert LinkedIn-Nutzer (% von gesamt)
@@ -480,7 +480,7 @@ route.config.index.sections.reach.time-to-target-audience.good-score-hint,"Anzah
 route.config.index.sections.reach.time-to-target-audience.bad-score-label,Schlechter Zielgruppenwert (Monate)
 route.config.index.sections.reach.time-to-target-audience.bad-score-hint,"Wenn die Zielgruppe erst nach dieser Anzahl von Monaten erreicht wird, wird der Kanal schlecht bewertet"
 route.config.index.sections.reach.sharing.title,Retweets/geteilte Inhalte
-route.config.index.sections.reach.sharing.description,Wie oft werden die Postsingsdes jeweiligen Kanals geteilt (Facebook) oder retweeted (Twitter)
+route.config.index.sections.reach.sharing.description,Wie oft werden die Postings des jeweiligen Kanals geteilt (Facebook) oder retweeted (Twitter)?
 route.config.index.sections.reach.sharing.weighting,Auswertung der Retweets/geteilten Inhalte
 route.config.index.sections.reach.sharing.fb-target,Durchschnittliche geteilte Inhalte innerhalb der Zielgruppe (% der Gesamtbesucherzahl)
 route.config.index.sections.reach.sharing.tw-target,Durchschnittliche Retweets der Zielgruppe (% der Gesamtbesucherzahl)
@@ -502,16 +502,16 @@ route.config.index.sections.engagement.fb.description,"Der Facebook-Aktivitätsw
 route.config.index.sections.engagement.fb.weighting,Auswertung des Facebook-Aktivitätswerts
 route.config.index.sections.engagement.fb.active-users-small,"Prozentsatz der Benutzer, die vermutlich auf Kanälen mit geringer Reichweiter aktiv sind"
 route.config.index.sections.engagement.fb.active-users-medium,Kanäle mit mittlerer Reichweite
-route.config.index.sections.engagement.fb.active-users-large, ...große Kanäle
-route.config.index.sections.engagement.fb.active-users-extra-large,… und Kanäle mit besonders hoher Reichweite
+route.config.index.sections.engagement.fb.active-users-large,Große Kanäle
+route.config.index.sections.engagement.fb.active-users-extra-large,Kanäle mit besonders hoher Reichweite
 
 route.config.index.sections.engagement.ig.title,Instagram-Aktivitätswert (nur Instagram)
 route.config.index.sections.engagement.ig.description,Der Instagram-Aktivitätswert beruht auf Favoriten und Kommentaren
 route.config.index.sections.engagement.ig.weighting,Auswertung des Instagram-Aktivitätswerts
 route.config.index.sections.engagement.ig.active-users-small,"Prozentsatz der Benutzer, die vermutlich auf Kanälen mit geringer Reichweite aktiv sind"
-route.config.index.sections.engagement.ig.active-users-medium,…Kanäle mit mittlerer Reichweite
+route.config.index.sections.engagement.ig.active-users-medium,Kanäle mit mittlerer Reichweite
 route.config.index.sections.engagement.ig.active-users-large,Kanäle mit hoher Reichweite
-route.config.index.sections.engagement.ig.active-users-extra-large,…und Kanälen mit besonders hoher Reichweite
+route.config.index.sections.engagement.ig.active-users-extra-large,Kanälen mit besonders hoher Reichweite
 
 route.config.index.sections.engagement.sw.title,Sina Weibo Aktivitätswert (nur Sina Weibo)
 route.config.index.sections.engagement.sw.description,"Der Sina Weibo Aktivitätswert beruht auf Gefällt-mir-Angaben, Kommentare und geteilten Inhalten."
@@ -519,7 +519,7 @@ route.config.index.sections.engagement.sw.weighting,Auswertung des Sina Weibo Ak
 route.config.index.sections.engagement.sw.active-users-small,"Prozentsatz von Benutzern, die vermutlich auf Kanälen mit geringer Reichweite aktiv sind"
 route.config.index.sections.engagement.sw.active-users-medium,Kanäle mit mittlerer Reichweite
 route.config.index.sections.engagement.sw.active-users-large,Kanäle mit hoher Reichweite
-route.config.index.sections.engagement.sw.active-users-extra-large,…und Kanäle mit besonders hoher Reichweite
+route.config.index.sections.engagement.sw.active-users-extra-large,Kanäle mit besonders hoher Reichweite
 
 route.config.index.sections.engagement.in.title,LinkedIn Aktivitätswert (nur LinkedIn)
 route.config.index.sections.engagement.in.description,Der LinkedIn-Aktivitätswert basiert auf Gefällt-mir-Angaben und Kommentaren
@@ -527,15 +527,15 @@ route.config.index.sections.engagement.in.weighting, Auswertung des LinkedIn Akt
 route.config.index.sections.engagement.in.active-users-small,"Prozentzahl der Nutzer, die vermutlich auf kleinen Kanälen aktiv sind"
 route.config.index.sections.engagement.in.active-users-medium,Kanäle mit mittlerer Reichweite
 route.config.index.sections.engagement.in.active-users-large,Kanäle mit hoher Reichweite
-route.config.index.sections.engagement.in.active-users-extra-large,…und Kanäle mit sehr hoher Reichweite
+route.config.index.sections.engagement.in.active-users-extra-large,Kanäle mit sehr hoher Reichweite
 
 route.config.index.sections.engagement.yt.title,Youtube Aktivitätswert (nur Youtube)
 route.config.index.sections.engagement.yt.description,"Der Youtube-Aktivitätswert beruht auf Gefällt-mir- bzw. Gefällt-mir-nicht-Angaben, Kommenataren und Abonnements."
 route.config.index.sections.engagement.yt.weighting,Auswertung des Youtube Aktivitäswerts
 route.config.index.sections.engagement.yt.active-users-small,"Prozentsatz von Benutzern, die vermutlich auf Kanälen mit geringer Reichweite aktiv sind"
-route.config.index.sections.engagement.yt.active-users-medium,…mittlere Reichweite
-route.config.index.sections.engagement.yt.active-users-large,...Kanäle mit hoher Reichweite
-route.config.index.sections.engagement.yt.active-users-extra-large,…und Kanäle mit besonders hoher Reichweite
+route.config.index.sections.engagement.yt.active-users-medium,Kanäle mit mittlere Reichweite
+route.config.index.sections.engagement.yt.active-users-large,Kanäle mit hoher Reichweite
+route.config.index.sections.engagement.yt.active-users-extra-large,Kanäle mit besonders hoher Reichweite
 
 "route.config.index.sections.engagement.number-of-posts.best.hint",""
 "route.config.index.sections.engagement.number-of-posts.best.label","Ideales Verhältnis von Antworten zu Anzahl von Postings"
@@ -556,7 +556,7 @@ route.config.index.sections.quality.actions-per-day.bad-range-hint,"Anzahl über
 
 route.config.index.sections.quality.likes-per-post.title,Gefällt-mir-Angaben pro Posting
 route.config.index.sections.quality.likes-per-post.description,Misst die durchschnittliche Anzahl von Gefällt-mir-Angaben der Benutzer für jedes Posting
-route.config.index.sections.quality.likes-per-post.weighting,Gefällt-mir-Angaben pro Posting Auswertung
+route.config.index.sections.quality.likes-per-post.weighting,Gefällt-mir-Angaben pro Posting
 route.config.index.sections.quality.likes-per-post.good-label,Guter Wert für Gefällt-mir-Angaben pro Posting
 route.config.index.sections.quality.likes-per-post.good-hint,"Der Kanal wird gut bewertet, wenn die durchschnittliche Anzahl der Postings genauso hoch oder höher liegt"
 route.config.index.sections.quality.likes-per-post.best-label,Bester Wert für Gefällt-mir-Angaben pro Posting
@@ -574,19 +574,19 @@ route.config.index.sections.quality.sign-off.title,Abmelden
 route.config.index.sections.quality.sign-off.description,Hauptakteure haben sich von diesem Kanal abgemeldet
 route.config.index.sections.quality.sign-off.weighting,Auswertung der Abmeldungen
 
-route.config.index.sections.quality.branding.title,Branding
-route.config.index.sections.quality.branding.description,Der Kanal verfügt über das richtige Branding
-route.config.index.sections.quality.branding.weighting,Auswertung des Brandings
+route.config.index.sections.quality.branding.title,Markenbild
+route.config.index.sections.quality.branding.description,Der Kanal verfügt über das richtige Markenbild
+route.config.index.sections.quality.branding.weighting,Auswertung des Markenbildes
 
 route.config.index.sections.quality.relevance.title,Relevanz
-route.config.index.sections.quality.relevance.description,"So relevant waren die Aktivitäten des Kanals. Dieser Wert beruht derzeit auf der Zahl der relevanten %company% Domains, die pro Tag mit ihren Aktivitäten verlinkt waren."
+route.config.index.sections.quality.relevance.description,"So relevant waren die Aktivitäten des Kanals. Dieser Wert beruht auf der Zahl der relevanten Social-Media-Präsenzen mit ihren Aktivitäten pro Tag."
 route.config.index.sections.quality.relevance.weighting,Auswertung der Relevanz
 route.config.index.sections.quality.relevance.facebook-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Facebook relevant sind"
 route.config.index.sections.quality.relevance.twitter-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Twitter relevant sind"
 route.config.index.sections.quality.relevance.sina-weibo-target,"Prozentsatz der Aktivitäten pro Tag, die offenbar für Sina Weibo relevant sind"
 
 "route.config.index.sections.quality.hashtags.title","Relevante Hashtags"
-"route.config.index.sections.quality.hashtags.description","Misst die Anzahl der relevanten Hashtags die innerhalb eines Monats gepostet wurden"
+"route.config.index.sections.quality.hashtags.description","Misst die Anzahl der relevanten Hashtags, die innerhalb eines Monats gepostet wurden."
 "route.config.index.sections.quality.hashtags.weighting","Hashtags Gewichtung"
 "route.config.index.sections.quality.hashtags.target","Beste Anzahl an Hashtags pro Monat"
 
@@ -599,15 +599,15 @@ route.config.index.sections.quality.relevance.sina-weibo-target,"Prozentsatz der
 "route.config.index.sections.quality.links-per-day.bad.label","Schlechte Anzahl an Links pro Tag"
 "route.config.index.sections.quality.links-per-day.bad.hint","Anzahl über oder unter dem Wert [Links pro Tag] die für zu hoch oder zu gering gehalten wird"
 
-route.config.index.sections.all.weighting-hint,Durch eine höhere Bewertung wird dieser Zahl bei der Berechnung des Zielwerts für den %section% Kennwert wichtiger
+route.config.index.sections.all.weighting-hint,Eine höhere Bewertung beeinflusst die Berechnung des Zielwerts für die Reichweite
 route.config.index.numeric-error,Wert muss numerisch sein
 route.config.index.email-error,Diese E-Mail-Adresse %email% ist ungültig
 route.config.index.upload-success,Datei erfolgreich hochgeladen
 route.config.index.settings-saved,Eingaben gespeichert
 route.config.index.invalid-values,Ungültiger Wert.Bitte vor dem Speichern überprüfen
 
-route.config.index.kpi-file-title,KPI Datei wird hochgeladen
-route.config.index.kpi-file-message,"Hochladen der KPI Datei, die von der Startseite heruntergeladen werden kann"
+route.config.index.kpi-file-title,Kennzahlen-Übersicht hochladen
+route.config.index.kpi-file-message,"Hier können Sie die Kennzahlen einstellen. Die Datei können Sie auf der Startseite herunterladen."
 route.config.index.kpi-file-prompt,Wählen Sie eine Datei zum Hochladen:
 
 
@@ -639,16 +639,16 @@ route.domain.view.linked-to-from,%sites% von %statuses% aus verlinkt
 
 
 badge.engagement.title,Aktivität
-badge.engagement.description,"<p>Der Aktivitäts-KPI ist ein Gesamtwert, wie gut der Kanal, das Land oder die SBU-Region mit seinen Nutzern interagiert. Der Wert verbindet die folgenden Angaben:</p><ul><li> Der Klout-Wert für diesen Kanal (nur Twitter).</li><li> Der Facebook-Aktivitätswert für diesen Kanal (nur Facebook). </li><li> Der Sina Weibo Aktivitätswert für diesen Kanal (nur Sina Weibo).</li><li> Der Instagram-Aktivitätswert für diesen Kanal (nur Instagram).</li><li> Der Youtube-Aktivitätswert für diesen Kanal (nur Youtube).</li><li>Der Linkedin-Aktivitätswert für diesen Kanal (nur Linkedin)</li></ul>"
+badge.engagement.description,"<p>Die Aktivität ist ein Gesamtwert, der besagt, wie gut der Kanal, das Institut, das Land oder die Region mit den Nutzern interagiert. Der Gesamtwert errechnet sich aus den Aktivitätswerten der jeweiligen Plattformen.</p>"
 
 badge.reach.title,Reichweite
-badge.reach.description,"<p>Der Reichweiten-KPI ist ein Gesamtwert, der ermittelt, wie gut ein Kanal, Land oder SBU seine Zielgruppe erreicht. Der Wert verbindet die folgenden Angaben:</p><ul><li>Derzeitige Anzahl von Freunden / Followern</li><li>Anzahl der Monate, in denen die Zielanzahl von Freunden / Followern erreicht wird</li><li>Durchschnittliche Anzahl geteilter Inhalte / Retweets für jedes Posting / Tweet</li></ul>"
+badge.reach.description,"<p>Die Reichweite ist ein Gesamtwert, der ermittelt, ob der Kanal, das Institut, das Land oder die Region die jeweilige Zielgruppe erreicht. Der Wert entsteht aus folgenden Angaben:</p><ul><li>Anzahl von Freunden / Followern</li><li>Anzahl der Monate, in denen die angestrebte Zahl an Freunden / Followern erreicht wird</li><li>Durchschnittliche Anzahl geteilter Inhalte / Retweets für jedes Posting / Tweet</li></ul>"
 
 badge.quality.title,Qualität
-badge.quality.description,"<p>Der Qualitäts-KPI-Wert ist ein Gesamtwert für die Qualität der Postings, die in einem Kanal oder Kanälen eines Landes oder einer SBU-Region produziert werden. Er beruht auf folgenden Werten:</p><ul><li>Die durchschnittliche Anzahl an Postings / Tweets am Tag.</li><li>Die durchschnittliche Anzahl von Links pro Tag.</li><li>Die durchschnittliche Anzahl von Gefällt-mir-Angaben / Retweets per Posting / Tweet / Videonutzung.</li><li>Der Abmeldestatus auf dem Kanal.</li><li>Der Branding-Status auf dem Kanal.</li><li>Die Anzahl der relevanten Postings pro Tag.</li><li>Die durchschnittliche Reaktionszeit auf Kommentare auf diesem Kanal.</li></ul>"
+badge.quality.description,"<p>Die Qualität ist ein Gesamtwert für die Qualität der Postings, die in einem Kanal oder Kanälen eines Landes oder einer Region produziert werden. Er beruht auf folgenden Werten:</p><ul><li>Die durchschnittliche Anzahl an Postings / Tweets am Tag.</li><li>Die durchschnittliche Anzahl von Links pro Tag.</li><li>Die durchschnittliche Anzahl von Gefällt-mir-Angaben / Retweets per Posting / Tweet / Videonutzung.</li><li>Der Abmeldestatus auf dem Kanal.</li><li>Der Markenbild-Status auf dem Kanal.</li><li>Die Anzahl der relevanten Postings pro Tag.</li><li>Die durchschnittliche Reaktionszeit auf Kommentare auf diesem Kanal.</li></ul>"
 
 badge.total.title,Gesamt
-badge.total.description,"<p>Der KPI-Gesamtwert beruht auf einem allgemeinen Wert, der bestimmt, wie gut ein Social Media Kanal, Land oder eine SBU-Region innerhalb der anderen drei KPI-Werte funktioniert. Der Wert kombiniert die Gesamtergebnisse der folgenden drei KPIs:</p><ul><li>Reichweiten-KPI</li><li>Aktivitäts- KPI</li><li>Qualitäts-KPI</li></ul>"
+badge.total.description,"<p>Der Gesamtwert beruht auf einem allgemeinen Wert, der bestimmt, wie gut ein Social Media Kanal, Land oder eine Institut-Region innerhalb der anderen drei KPI-Werte funktioniert. Der Wert kombiniert die Gesamtergebnisse der folgenden drei KPIs:</p><ul><li>Reichweiten-KPI</li><li>Aktivitäts- KPI</li><li>Qualitäts-KPI</li></ul>"
 
 
 
@@ -659,7 +659,7 @@ chart.actionsPerDay.x-axis-label,Datum
 chart.actionsPerDay.y-axis-label,Anzahl der Aktivitäten pro Tag
 chart.actionsPerDay.relevant-links,Relevante Links pro Tag
 
-chart.compare.title,Vergleiche:KPIs
+chart.compare.title,Vergleiche: Kennzahlen
 chart.compare.description
 chart.compare.x-axis-label,Zeit
 chart.compare.y-axis-label,KPI-Wert
@@ -700,7 +700,7 @@ chart.response-time.y-axis-label,Reaktionszeit in Stunden
 table-header.actions-per-day.label,Aktivität pro Tag
 table-header.actions-per-day.description
 
-table-header.branding.label,Branding
+table-header.branding.label,Markenbild
 
 table-header.countries.label,Länder
 table-header.countries.description
@@ -712,7 +712,7 @@ table-header.country-count.label,Länder
 table-header.country-count.description,Anzahl der Länder
 
 table-header.current-audience.label,Derzeitiges Besucherprofil
-table-header.current-audience.description
+table-header.current-audience.description,Länder der Region
 
 table-header.digital-population.label,Digitale Nutzergruppe
 table-header.digital-population.description
@@ -735,7 +735,7 @@ table-header.name.description
 table-header.options.label,Optionen
 table-header.options.description
 
-table-header.parent-name.label,Land/SBU
+table-header.parent-name.label,Land/Institut
 table-header.parent-name.description
 
 table-header.percent-target-audience.label,Prozentzahl der Zielgruppe
@@ -768,7 +768,7 @@ table-header.region.description
 table-header.response-time.label,Reaktionszeit
 table-header.response-time.description
 
-table-header.sign-off.label,Abgesegnet
+table-header.sign-off.label,Geprüft
 table-header.sign-off.description,"Abmelden zeigt an, ob sich jemand von dem Head Of Digital, abgemeldet hat."
 
 table-header.target-audience.label,Zielgruppe
@@ -784,7 +784,7 @@ table-header.total-score.description,"Gesamtwert zeigt die kombinierten Werte de
 
 
 metric.posts_per_day.title,Aktivität pro Tag
-metric.branding.title,Korrektes Branding
+metric.branding.title,Korrektes Markenbild
 metric.facebook_engagement.title,Facebook-Aktivitätswert
 metric.instagram_engagement.title,Instagram-Aktivitätswert
 metric.klout_score.title,Klout Score
@@ -796,7 +796,7 @@ metric.popularity_time.title,Beliebtheitstrend
 metric.relevance.title,Relevanz
 metric.response_ratio.title,Reaktionen
 metric.response_time.title,Reaktionsfreudigkeit
-metric.sign_off.title,Abgesegnet
+metric.sign_off.title,Geprüft
 metric.sina_weibo_engagement.title,Sina Weibo Aktivitätswert
 metric.youtube_engagement.title,Youtube-Aktivitätswert
 "metric.relevant_hashtags.title","Relevante Hashtags"
@@ -832,7 +832,7 @@ views.scripts.partials.badges.metric-attributes.no-data,"Es sind keine Daten ver
 views.scripts.partials.badges.metric-attributes.score-zero,Dieser Kanal hat 0% für %title% erreicht.
 views.scripts.partials.badges.metric-attributes.title-not-applicable,%title% für diesen Kanal nicht gültig
 views.scripts.partials.badges.metric-attributes.title-not-applicable,%title% ist für diesen Kanal nicht gültig
-views.scripts.notabs.small-heading,Social Media Monitor
+views.scripts.notabs.small-heading,Social-Media-Monitor
 
 views.scripts.user.edit.title,"Auf dieser Seite können Sie Ihre Benutzerinformationen bearbeiten, etwa Ihre E-Mail-Adresse aktualisieren oder Ihr Passwort ändern."
 views.scripts.user.edit.label.user.email,E-Mail-Adresse
@@ -867,8 +867,8 @@ views.scripts.user.login.button.forgot-password,Passwort vergessen?
 views.scripts.user.login.form.label.username,Name/E-Mail
 
 views.scripts.user.manage.automatic-access,Dieser Nutzer hat automatisch Zugang zu allen Bereichen der Auswertung.
-views.scripts.user.manage.form.form-hint,Bei der Eingabe eines Landes oder SBU-Bereichs werden die dazugehörigen Kanäle automatisch dem Nutzer zugeordnet.
-views.scripts.user.manage.label.available-groups,Verfügbare SBU-Bereiche
+views.scripts.user.manage.form.form-hint,Bei der Eingabe eines Landes oder Institut-Bereichs werden die dazugehörigen Kanäle automatisch dem Nutzer zugeordnet.
+views.scripts.user.manage.label.available-groups,Verfügbare Institut-Bereiche
 views.scripts.user.manage.label.twitter,Verfügbare Twitter-Kanäle
 views.scripts.user.manage.label.facebook,Verfügbare Facebook-Kanäle
 views.scripts.user.manage.label.assigned,Momentan zugeordnet
@@ -985,7 +985,7 @@ country.TF,Französische Süd- und Antarktisgebiete
 country.GA,Gabun
 country.GM,Gambia
 country.GE,Georgien
-country.DE,Germany
+country.DE,Deutschland
 country.GH,Ghana
 country.GI,Gibraltar
 country.GR,Griechenland
@@ -1184,15 +1184,15 @@ js.templates.errorPopup.message,Fehler
 js.templates.emptyCountryBadge.message,Dieses Land hat keine Präsenzen
 js.templates.globalScore.title,%company% im gesamten Web
 js.templates.globalScore.fans,Freunde/Follower
-js.templates.globalScore.description,Dies beruht auf den Gesamtwerten aller %company% Vertretungen auf der Welt.
-js.templates.globalScore.total-presences-description,Kanäle gesamt
+js.templates.globalScore.description,Dies beruht auf den Gesamtwerten aller %company%e auf der Welt.
+js.templates.globalScore.total-presences-description,Kanäle insgesamt
 
 js.datatables.filter.presence-type,Nach Art der Präsenz filtern
 js.datatables.filter.region,Nach Region filtern
-js.datatables.filter.group,nach SBU filtern
+js.datatables.filter.group,nach Institut filtern
 
 js.date-picker.specific-date,Bestimmtes Datum
-js.date-picker.date-range,Datumszeitraum
+js.date-picker.date-range,Zeitraum
 js.date-picker.last-30-days,Letzte 30 Tage
 js.date-picker.last-7-days,Letzte 7 Tage
 js.date-picker.month-to-date,Monatsanfang bis heute
