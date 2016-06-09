@@ -144,10 +144,19 @@ $.extend(app, {
 app.init = {
 	//application entry point, called at end of this file
 	bootstrap: function() {
-        //
-		// $.ajaxSetup({
-		// 	headers: { 'X-CSRF-TOKEN': app.csrf.getToken() }
-		// });
+
+		$.ajaxPrefilter(function(options, originalOptions, jqXHR){
+			if (options.type.toLowerCase() === "post") {
+				// initialize `data` to empty string if it does not exist
+				options.data = options.data || "";
+
+				// add leading ampersand if `data` is non-empty
+				options.data += options.data?"&":"";
+
+				// add _token entry
+				options.data += app.csrf.getTokenName() + "=" + app.csrf.getToken();
+			}
+		});
 
 		$('a.autoConfirm, .button-delete').on('click', app.autoConfirm.ask);
 
