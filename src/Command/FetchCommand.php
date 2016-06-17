@@ -41,7 +41,7 @@ class FetchCommand extends ContainerAwareCommand
             ->setName('sm:presence:fetch')
             ->setDescription('Fetches social media data for all channels')
 			->addOption('force', 'f', InputOption::VALUE_NONE)
-			->addOption('channel', 'c', InputOption::VALUE_REQUIRED, null);
+			->addOption('channel', 'c', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, array());
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -91,14 +91,13 @@ class FetchCommand extends ContainerAwareCommand
 			return strcmp($aVal, $bVal);
 		});
 
-		$index = 0;
+		$index = 1;
 		/** @var Model_Presence[] $presences */
 		foreach ($presences as $presence) {
 			$logPrefix = "[{$index}/{$presenceCount}] [{$presence->getType()->getTitle()}] [{$presence->getId()}]";
 			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
 			$this->db->closeConnection();
 			$this->db->getConnection();
-			$index++;
 			$now = time();
 			$lastUpdatedString = $presence->getLastUpdated();
 			$lastUpdated = strtotime($lastUpdatedString);
@@ -119,6 +118,7 @@ class FetchCommand extends ContainerAwareCommand
 			} else {
 				$this->log($this->translator->trans('route.fetch.log.update-info.skip', ['%message%' => $message, '%lastupdated%' => $lastUpdatedString]));
 			}
+			$index++;
 		}
 	}
 
@@ -165,13 +165,12 @@ class FetchCommand extends ContainerAwareCommand
 	private function updatePresenceHistory($presences)
 	{
 		$presenceCount = count($presences);
-		$index = 0;
+		$index = 1;
 		/** @var Model_Presence $presence */
 		foreach ($presences as $presence) {
 			//forcefully close the DB-connection and reopen it to prevent 'gone away' errors.
 			$this->db->closeConnection();
 			$this->db->getConnection();
-			$index++;
 			$this->log($this->translator->trans('route.fetch.log.presence-history.start') . " [{$index}/{$presenceCount}] [{$presence->getType()->getTitle()}] [{$presence->getId()}] [{$presence->getHandle()}] [{$presence->getName()}]");
 			try {
 				// add subset of properties into presence_history table
@@ -181,6 +180,7 @@ class FetchCommand extends ContainerAwareCommand
 			}
 
 			$this->touchLock($this->lock);
+			$index++;
 		}
 	}
 
@@ -300,14 +300,13 @@ class FetchCommand extends ContainerAwareCommand
 	 */
 	protected function getPresencesToFetch(InputInterface $input)
 	{
-		$id = $input->getOption('channel');
-		if ($id) {
-			$presences = [Model_PresenceFactory::getPresenceById($id)];
-			return $presences;
+		$ids = $input->getOption('channel');
+		if ($ids) {
+			$presences = Model_PresenceFactory::getPresencesByIds($ids);
 		} else {
 			$presences = Model_PresenceFactory::getPresences();
-			return $presences;
 		}
+		return $presences;
 	}
 
 }

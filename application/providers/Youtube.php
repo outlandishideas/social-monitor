@@ -2,7 +2,7 @@
 
 use Outlandish\SocialMonitor\Adapter\YoutubeAdapter;
 use Outlandish\SocialMonitor\Database\Database;
-use Outlandish\SocialMonitor\Engagement\EngagementScore;
+use Outlandish\SocialMonitor\Engagement\EngagementMetric;
 use Outlandish\SocialMonitor\Models\Status;
 use Outlandish\SocialMonitor\Models\YoutubeComment;
 use Outlandish\SocialMonitor\Models\YoutubeVideo;
@@ -14,13 +14,15 @@ class Provider_Youtube extends Provider_Abstract
 
     private $videoHistoryColumns = ['views', 'likes', 'dislikes', 'comments'];
     private $commentTableName;
+	protected $engagementMetric;
     public static $historyTableName = 'youtube_video_history';
 
-    public function __construct(Database $db, YoutubeAdapter $adapter, PresenceType $type)
+    public function __construct(Database $db, YoutubeAdapter $adapter, EngagementMetric $engagementMetric, PresenceType $type)
     {
         parent::__construct($db, $adapter, $type, 'youtube_video_stream');
         $this->commentTableName = 'youtube_comment_stream';
         $this->engagementStatement = '(likes + number_of_replies * 4)';
+		$this->engagementMetric = $engagementMetric;
     }
 
     public function fetchStatusData(Model_Presence $presence)
@@ -184,10 +186,7 @@ class Provider_Youtube extends Provider_Abstract
         $then = clone $now;
         $then->modify("-1 week");
 
-        $query = new Outlandish\SocialMonitor\Engagement\Query\WeightedYoutubeEngagementQuery($this->db);
-        $metric = new Outlandish\SocialMonitor\Engagement\EngagementMetric($query);
-
-        return $metric->get($presence->getId(), $now, $then);
+        return $this->engagementMetric->get($presence->getId(), $now, $then);
     }
 
     public function updateMetadata(Model_Presence $presence)

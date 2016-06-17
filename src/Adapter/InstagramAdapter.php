@@ -24,9 +24,9 @@ class InstagramAdapter extends AbstractAdapter
         /** @var object $users */
         /** @var object $user */
         $users = $this->instagram->searchUser($handle, 10);
-        if (count($users->data) === 1) {
+        if ($users && count($users->data) === 1) {
             $user = $users->data[0];
-        } else if (count($users->data) > 1) {
+        } else if ($users && count($users->data) > 1) {
             foreach($users->data as $u) {
                 if($u->username===$handle) {
                     $user = $u;

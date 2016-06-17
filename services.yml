@@ -93,7 +93,7 @@ services:
 
     provider.youtube:
         class: Provider_Youtube
-        arguments: [@db, @adapter.youtube, @presence-type.youtube]
+        arguments: [@db, @adapter.youtube, @youtube_engagement.weighted, @presence-type.youtube]
 
     provider.linkedin:
         class: Provider_Linkedin
@@ -110,9 +110,13 @@ services:
         class: Outlandish\SocialMonitor\InstagramApp
         arguments: [%instagram.app_token%]
 
-    instagram.query.weighted:
-        class:     Outlandish\SocialMonitor\Engagement\Query\WeightedInstagramEngagementQuery
-        arguments: [@db]
+
+    ###################################
+    # youtube engagement services
+    ###################################
+    youtube_engagement.weighted:
+        class: Outlandish\SocialMonitor\Engagement\EngagementMetric
+        arguments: [@engagement-query.youtube]
 
 
     ###################################
@@ -159,17 +163,13 @@ services:
         class:     Outlandish\SocialMonitor\Engagement\Query\StandardFacebookEngagementQuery
         arguments: [@db]
 
-    facebook_engagement.query.weighted:
-        class:     Outlandish\SocialMonitor\Engagement\Query\WeightedFacebookEngagementQuery
-        arguments: [@db]
-
     facebook_engagement.standard:
         class:     Outlandish\SocialMonitor\Engagement\EngagementMetric
         arguments: [@facebook_engagement.query.standard]
 
     facebook_engagement.weighted:
         class:     Outlandish\SocialMonitor\Engagement\EngagementMetric
-        arguments: [@facebook_engagement.query.weighted]
+        arguments: [@engagement-query.facebook]
 
     facebook.session_factory:
         class: Outlandish\SocialMonitor\FacebookFetcher\SessionFactory

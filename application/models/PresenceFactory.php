@@ -47,6 +47,16 @@ abstract class Model_PresenceFactory
         return $presences ? $presences[0] : null;
 	}
 
+    /**
+     * @param int[] $ids
+     * @return Model_Presence[]
+     */
+    public static function getPresencesByIds($ids)
+	{
+		$placeholders = implode(', ', array_fill(0, count($ids), '?'));
+        return self::fetchPresences("SELECT * FROM `" . self::TABLE_PRESENCES . "` WHERE `id` IN ($placeholders)", $ids);
+	}
+
 	public static function getPresenceByHandle($handle, PresenceType $type)
 	{
         $presences = self::fetchPresences("SELECT * FROM `" . self::TABLE_PRESENCES . "` WHERE `handle` = :handle AND `type` = :t", array(':handle' => $handle, ':t' => $type));

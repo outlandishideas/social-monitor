@@ -61,9 +61,9 @@ class YoutubeAdapter extends AbstractAdapter
      */
     private function getChannel($handle)
     {
-        $channel = $this->getChannelById($handle);
+        $channel = $this->getChannelByProperty($handle, 'id');
         if(!$channel) {
-            $channel = $this->getChannelByName($handle);
+            $channel = $this->getChannelByProperty($handle, 'forUsername');
             if(!$channel) {
                 throw new \Exception("Youtube Channel \"{$handle}\" not found.");
             }
@@ -72,39 +72,23 @@ class YoutubeAdapter extends AbstractAdapter
         return $channel;
     }
 
-    private function getChannelById($handle) {
-        if (!array_key_exists($handle, $this->channels)) {
-            $response = $this->youtube->channels->listChannels('id,snippet,statistics', ['id' => $handle]);
+	private function getChannelByProperty($propertyValue, $propertyName) {
+		$key = $propertyName . '_' . $propertyValue;
+		if (!array_key_exists($key, $this->channels)) {
+			$response = $this->youtube->channels->listChannels('id,snippet,statistics', [$propertyName => $propertyValue]);
 
-            /** @var Google_Service_Youtube_Channel[] $items */
-            $items = $response->getItems();
+			/** @var Google_Service_Youtube_Channel[] $items */
+			$items = $response->getItems();
 
-            if (empty($items)) {
-                return null;
-            }
+			if (empty($items)) {
+				$this->channels[$key] = null;
+			} else {
+				$this->channels[$key] = $items[0];
+			}
+		}
 
-            $this->channels[$handle] = $items[0];
-        }
-
-        return $this->channels[$handle];
-    }
-
-    private function getChannelByName($handle) {
-        if (!array_key_exists($handle, $this->channels)) {
-            $response = $this->youtube->channels->listChannels('id,snippet,statistics', ['forUsername' => $handle]);
-
-            /** @var Google_Service_Youtube_Channel[] $items */
-            $items = $response->getItems();
-
-            if (empty($items)) {
-                return null;
-            }
-
-            $this->channels[$handle] = $items[0];
-        }
-
-        return $this->channels[$handle];
-    }
+		return $this->channels[$key];
+	}
 
     public function getComments($handle)
     {

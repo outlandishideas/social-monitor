@@ -51,3 +51,12 @@ You will need to alter the configuration on your machine to make the `/public` f
 ## Facebook API changes
 
 As noted on the 01/06/2016 the Facebook API has a new limit on the number of posts it can return. It used to be 250 and it is now 100. We have changed this in the FeedFetcher class.
+
+### Deployments
+
+British Council Social Monitor is running on AWS. Deployment details can be found in [gitlab](https://gitlab.outlandish.com/social-monitor/social-monitor-infrastructure),
+and require Ansible (preferably running on a linux virtual machine if using Windows)
+
+The live site is at [socialmonitor.britishcouncil.net](https://socialmonitor.britishcouncil.net) (public IP: 54.72.25.164, internal IP: 10.0.0.131)
+
+The staging site is at [staging.bc.out.re](https://staging.bc.out.re) (public IP: 52.51.21.217, internal IP: 10.0.4.28)
