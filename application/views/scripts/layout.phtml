@@ -7,7 +7,7 @@
 	<meta name="_token" content="<?php echo Volnix\CSRF\CSRF::getToken() ?>" />
 	<meta name="_token_name" content="<?php echo Volnix\CSRF\CSRF::getTokenName() ?>" />
 	<title><?php echo $this->clientName; ?> :: <?php echo strip_tags($this->pageTitle); ?></title>
-    <link rel="shortcut icon" href="<?php echo $this->assetUrl('img/favicon.ico');?>"/>
+    <link rel="shortcut icon" href="<?php echo $this->assetUrl($this->favicon()->getPath());?>"/>
 	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
 	<link href="//netdna.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.css" rel="stylesheet"/>
 	<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css" rel="stylesheet"/>

@@ -10,6 +10,9 @@ defined('APPLICATION_PATH')
 defined('APP_ROOT_PATH')
 || define('APP_ROOT_PATH', __DIR__);
 
+defined('APP_PUBLIC_PATH')
+|| define('APP_PUBLIC_PATH', APP_ROOT_PATH .'/public');
+
 // Define application environment
 defined('APPLICATION_ENV')
 || define('APPLICATION_ENV', defined('OUTLANDISH_ENV') ? OUTLANDISH_ENV : (getenv('APPLICATION_ENV') ?: 'alpha'));
@@ -96,6 +99,7 @@ Badge_Factory::setContainer($container);
 
 //add translator to Zend_Registry
 Zend_Registry::set('symfony_translate', $container->get('translation.translator'));
+Zend_Registry::set('favicon', $container->get('favicon.helper'));
 Zend_Registry::set('recaptcha', $container->get('recaptcha.helper'));
 Model_Base::setTranslator($container->get('translation.translator'));
 Model_Presence::setTranslator($container->get('translation.translator'));
