@@ -3,8 +3,8 @@
 <!--
 <?php
 if (APPLICATION_ENV != 'prod'){
-    print_r($this->exception);
-    print_r($this->request);
+    print_r(htmlspecialchars($this->exception));
+    print_r(htmlspecialchars($this->request));
 }
 ?>
 -->
