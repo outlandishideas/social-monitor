@@ -68,7 +68,7 @@ The staging site is at [staging.bc.out.re](https://staging.bc.out.re) (public IP
 As well as defining what columns should appear in each of the index page tables, you can now also define rules to stop some columns being viewed by some users. In the parameters.yml file add the following data:
 ```
 
-table.rules
+table.rules:
   -
     user_level: 1
     columns:

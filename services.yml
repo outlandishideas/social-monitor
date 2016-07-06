@@ -27,6 +27,9 @@ parameters:
         yellow: '#FFFF50'
         white: '#fff'
     table.rules: []
+    csrf.exceptions:
+        user:
+            - login
 
 services:
     db:
@@ -545,3 +548,7 @@ services:
         factory: ["@table.guard_factory", createGuard]
         arguments:
             - %table.rules%
+
+    csrf.exceptions:
+        class: Outlandish\SocialMonitor\Services\CsrfExceptionsService
+        arguments: [%csrf.exceptions%]
