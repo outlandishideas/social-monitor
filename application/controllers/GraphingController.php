@@ -61,7 +61,8 @@ abstract class GraphingController extends BaseController {
 			'red' => '#D06959',
 			'green' => '#84af5b',
 			'orange' => '#F1DC63',
-			'yellow' => '#FFFF50'
+			'yellow' => '#FFFF50',
+			'white' => '#fff'
 		);
 		$metrics = array();
 
@@ -115,7 +116,7 @@ abstract class GraphingController extends BaseController {
         foreach($badges as $badge){
             $badgeArgs = new stdClass();
             $badgeArgs->range = array(0, 1, 20, 50, 80, 100);
-            $badgeArgs->colors = array($colors->grey, $colors->red, $colors->red, $colors->yellow, $colors->green, $colors->green);
+            $badgeArgs->colors = array($colors->grey, $colors->white, $colors->white, $colors->white, $colors->white, $colors->white);
             $badgeArgs->label = $badge->getTitle();
             $geochart[$badge->getName()] = $badgeArgs;
         }
