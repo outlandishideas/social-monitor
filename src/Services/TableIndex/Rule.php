@@ -55,7 +55,7 @@ class Rule implements Interfaces\Rule
 		$filtered = array_filter($this->blackListedColumns, function(Header $h) use($header) {
 			return $header->getName() == $h->getName();
 		});
-		
+
 		return empty($filtered);
 	}
 }

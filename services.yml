@@ -26,6 +26,11 @@ parameters:
         orange: '#F1DC63'
         yellow: '#FFFF50'
         white: '#fff'
+    table.rules:
+        -
+            user_level: 1
+            columns:
+                - @table.header.total_rank
 
 services:
     db:
@@ -534,3 +539,13 @@ services:
     colours.map:
         class: Outlandish\SocialMonitor\Services\Colours\MapColours
         arguments: [@colours.definitions, %map.cannot_see_colours%]
+
+    # Table Index guard
+    table.guard_factory:
+        class: Outlandish\SocialMonitor\Services\TableIndex\GuardFactory
+
+    table.guard:
+        class: Outlandish\SocialMonitor\Services\TableIndex\Guard
+        factory: ["@table.guard_factory", createGuard]
+        arguments:
+            - %table.rules%

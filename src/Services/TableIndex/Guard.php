@@ -1,8 +1,7 @@
 <?php
 
 namespace Outlandish\SocialMonitor\Services\TableIndex;
-
-use Outlandish\SocialMonitor\Services\TableIndex\Interfaces\Rule;
+use Outlandish\SocialMonitor\TableIndex\Header\Header;
 
 /**
  * This class checks to see whether a user of a given level can view the defined table column
@@ -25,14 +24,14 @@ class Guard
 		$this->rules = $rules;
 	}
 
-	public function userCanSee(\Model_User $user, Header $column)
+	public function userCanSee(\Model_User $user = null, Header $column)
 	{
 		return $this->findRuleForUser($user)->canSee($column);
 	}
 
 	/**
 	 * @param \Model_User|null $user
-	 * @return Rule
+	 * @return Interfaces\Rule
 	 */
 	private function findRuleForUser(\Model_User $user = null)
 	{
