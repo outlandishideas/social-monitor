@@ -44,7 +44,8 @@
 		"nesbot/carbon": "1.9.0",
 		"hwi/oauth-bundle": "^0.4.1",
 		"volnix/csrf": "1.2.0",
-		"google/recaptcha": "1.1.2"
+		"google/recaptcha": "1.1.2",
+		"league/csv": "7.2.0"
 	},
 	"repositories": [
 		{
