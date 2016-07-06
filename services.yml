@@ -17,6 +17,14 @@ parameters:
     table.presences.headers: []
     joyride.home.steps: []
     joyride.presence.steps: []
+    map.cannot_see_colours: []
+    colours.definitions:
+        grey: '#d2d2d2'
+        red: '#D06959'
+        green: '#84af5b'
+        orange: '#F1DC63'
+        yellow: '#FFFF50'
+        white: '#fff'
 
 services:
     db:
@@ -511,3 +519,12 @@ services:
     recaptcha.helper:
         class: Outlandish\SocialMonitor\Helper\Recaptcha
         arguments: [%recaptcha.site_key%, %recaptcha.secret%]
+
+    # Colour services
+    colours.definitions:
+        class: Outlandish\SocialMonitor\Services\Colours\ColourDefinitions
+        arguments: [%colours.definitions%]
+
+    colours.map:
+        class: Outlandish\SocialMonitor\Services\Colours\MapColours
+        arguments: [@colours.definitions, %map.cannot_see_colours%]

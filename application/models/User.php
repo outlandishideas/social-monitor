@@ -8,6 +8,7 @@ use Outlandish\SocialMonitor\PresenceType\PresenceType;
  * @property string|null name
  * @property int|null id
  * @property string confirm_email_key
+ * @property integer user_level
  */
 class Model_User extends Model_Base implements Zend_Auth_Adapter_Interface {
 	protected static $tableName = 'users';
