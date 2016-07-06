@@ -17,6 +17,7 @@ parameters:
     table.presences.headers: []
     joyride.home.steps: []
     joyride.presence.steps: []
+    favicon.name: 'default.ico'
     map.cannot_see_colours: []
     colours.definitions:
         grey: '#d2d2d2'
@@ -519,6 +520,11 @@ services:
     recaptcha.helper:
         class: Outlandish\SocialMonitor\Helper\Recaptcha
         arguments: [%recaptcha.site_key%, %recaptcha.secret%]
+
+    # favicon
+    favicon.helper:
+        class: Outlandish\SocialMonitor\Helper\Favicon
+        arguments: [%favicon.name%]
 
     # Colour services
     colours.definitions:
