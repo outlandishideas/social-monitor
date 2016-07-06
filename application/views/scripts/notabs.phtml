@@ -6,7 +6,7 @@
 	<meta name="_token" content="<?php echo Volnix\CSRF\CSRF::getToken() ?>" />
 	<meta name="_token_name" content="<?php echo Volnix\CSRF\CSRF::getTokenName() ?>" />
 	<title><?php echo $this->clientName; ?> :: <?php echo strip_tags($this->pageTitle); ?></title>
-	<link rel="shortcut icon" href="<?php echo $this->assetUrl('img/favicon.ico');?>"/>
+	<link rel="shortcut icon" href="<?php echo $this->assetUrl($this->favicon()->getPath());?>"/>
 	<link rel="stylesheet" href="<?php echo $this->assetUrl('fonts/proxima-nova-fontfacekit/stylesheet.css'); ?>">
 	<link href="<?php echo $this->cacheBust('lib/foundation/css/normalize.css'); ?>" rel="stylesheet" type="text/css">
 	<link href="<?php echo $this->cacheBust('lib/foundation/css/foundation.css'); ?>" rel="stylesheet" type="text/css">
