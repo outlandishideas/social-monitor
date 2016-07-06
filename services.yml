@@ -28,6 +28,7 @@ parameters:
         white: '#fff'
     table.rules: []
     rank.rules: []
+    csrf.exceptions:[]
 
 services:
     db:
@@ -551,3 +552,7 @@ services:
     rank.guard:
         class: Outlandish\SocialMonitor\Services\Rank\Guard
         arguments: [%rank.rules%]
+
+    csrf.exceptions:
+        class: Outlandish\SocialMonitor\Services\CsrfExceptionsService
+        arguments: [%csrf.exceptions%]
