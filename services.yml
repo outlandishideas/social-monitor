@@ -28,7 +28,7 @@ parameters:
         white: '#fff'
     table.rules: []
     rank.rules: []
-    csrf.exceptions:[]
+    csrf.exceptions: []
 
 services:
     db:
