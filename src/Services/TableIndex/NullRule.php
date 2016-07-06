@@ -1,7 +1,7 @@
 <?php
 
 namespace Outlandish\SocialMonitor\Services\TableIndex;
-use Outlandish\SocialMonitor\Services\TableIndex\Interfaces\Rule;
+
 use Outlandish\SocialMonitor\TableIndex\Header\Header;
 
 /**
@@ -13,7 +13,7 @@ use Outlandish\SocialMonitor\TableIndex\Header\Header;
  *
  * @package Outlandish\SocialMonitor\Services\TableIndex
  */
-class NullRule implements Rule
+class NullRule implements Interfaces\Rule
 {
 
 	/**
