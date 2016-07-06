@@ -1,14 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 06/07/2016
- * Time: 11:04
- */
 
 namespace Outlandish\SocialMonitor\Services\Colours;
 
-
+/**
+ * Define colours in an associative array and have them be available as an object
+ * 
+ * This class expects an associative array of colours with the key as the name of the colour
+ * and the value as the hex value of the colour.
+ * 
+ * It uses magic methods to get the colour from the associative array.
+ * 
+ * @package Outlandish\SocialMonitor\Services\Colours
+ * @author Matthew Kendon <matt@outlandish.com>
+ */
 class ColourDefinitions
 {
 	/**

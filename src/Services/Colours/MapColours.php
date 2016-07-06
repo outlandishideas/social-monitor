@@ -1,14 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Matthew
- * Date: 06/07/2016
- * Time: 11:03
- */
 
 namespace Outlandish\SocialMonitor\Services\Colours;
 
-
+/**
+ * This class generates colour ranges for the front page map
+ * 
+ * It also allows you to alter the colour range of the map to be blank depening on the user
+ * level of the logged in user. Non-logged in guests will be given a user level of 1 for
+ * this purpose.
+ * 
+ * @package Outlandish\SocialMonitor\Services\Colours
+ * @author Matthew Kendon <mkendon@gmail.com>
+ */
 class MapColours
 {
 	/**
@@ -64,6 +67,12 @@ class MapColours
 		}
 	}
 
+	/**
+	 * Checks the current level of the user against the disallowed user levels
+	 * 
+	 * @param \Model_User|null $user  if user is null, the user level be 1
+	 * @return bool return true       if the user can see colours, false if not.
+	 */
 	private function canSeeColours(\Model_User $user = null)
 	{
 		$level = $user ? $user->user_level : 1;

@@ -101,6 +101,7 @@ Badge_Factory::setContainer($container);
 Zend_Registry::set('symfony_translate', $container->get('translation.translator'));
 Zend_Registry::set('favicon', $container->get('favicon.helper'));
 Zend_Registry::set('recaptcha', $container->get('recaptcha.helper'));
+Zend_Registry::set('table_guard', $container->get('table.guard'));
 Model_Base::setTranslator($container->get('translation.translator'));
 Model_Presence::setTranslator($container->get('translation.translator'));
 BaseValidator::setTranslator($container->get('translation.translator'));

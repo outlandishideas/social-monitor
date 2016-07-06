@@ -60,3 +60,20 @@ and require Ansible (preferably running on a linux virtual machine if using Wind
 The live site is at [socialmonitor.britishcouncil.net](https://socialmonitor.britishcouncil.net) (public IP: 54.72.25.164, internal IP: 10.0.0.131)
 
 The staging site is at [staging.bc.out.re](https://staging.bc.out.re) (public IP: 52.51.21.217, internal IP: 10.0.4.28)
+
+## Parameters
+
+### Filtering index columns based on user level
+
+As well as defining what columns should appear in each of the index page tables, you can now also define rules to stop some columns being viewed by some users. In the parameters.yml file add the following data:
+```
+
+table.rules
+  -
+    user_level: 1
+    columns:
+      - @table.header.total_rank
+
+```
+
+The above configuration would hide the TotalRank Header from any index tables that include it for any user with a user_level of 1. Users with a different user_level would not be affected.
