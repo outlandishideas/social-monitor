@@ -27,6 +27,7 @@ parameters:
         yellow: '#FFFF50'
         white: '#fff'
     table.rules: []
+    rank.rules: []
 
 services:
     db:
@@ -545,3 +546,8 @@ services:
         factory: ["@table.guard_factory", createGuard]
         arguments:
             - %table.rules%
+
+    # Rank Guard
+    rank.guard:
+        class: Outlandish\SocialMonitor\Services\Rank\Guard
+        arguments: [%rank.rules%]

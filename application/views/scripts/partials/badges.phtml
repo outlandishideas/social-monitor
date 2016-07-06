@@ -43,13 +43,14 @@ function metricAttributes($metric, $translator) {
         <h2 class="bd-btm"><?php echo $badge['title']; ?></h2>
         <div class="row">
             <div class="small-24 medium-12 columns">
-
-                <div class="badge-rank">
-                    <h3><?php echo $translator->trans('Global.rank'); ?></h3>
-                    <div class="rank-value">
-                        <span class="numerator"><?php echo $badge['rank']['value']; ?><span><?php echo trim(str_replace(range(0,9),'',$nf->format($badge['rank']['value'])));?></span></span><span class="denominator">/<?php echo $badge['rank']['denominator']; ?></span>
-                    </div>
-                </div>
+				<?php if ($this->rankGuard()->canSee($this->user)) : ?>
+					<div class="badge-rank">
+						<h3><?php echo $translator->trans('Global.rank'); ?></h3>
+						<div class="rank-value">
+							<span class="numerator"><?php echo $badge['rank']['value']; ?><span><?php echo trim(str_replace(range(0,9),'',$nf->format($badge['rank']['value'])));?></span></span><span class="denominator">/<?php echo $badge['rank']['denominator']; ?></span>
+						</div>
+					</div>
+				<?php endif; ?>
 
             </div>
             <div class="small-24 medium-12 columns">
@@ -92,13 +93,15 @@ function metricAttributes($metric, $translator) {
                 <div class="badge-small">
                     <h2 class="bd-btm"><?php echo $badge['title']; ?></h2>
 
-                    <div class="badge-rank bd-btm">
-                        <h3><?php echo $translator->trans('Global.rank') ?></h3>
-                        <div class="rank-value">
-                            <!-- breaking the line causes the display not display properly -->
-                            <span class="numerator"><?php echo $badge['rank']['value']; ?><span><?php echo trim(str_replace(range(0,9),'',$nf->format($badge['rank']['value'])));?></span></span><span class="denominator">/<?php echo $badge['rank']['denominator']; ?></span>
-                        </div>
-                    </div>
+					<?php if ($this->rankGuard()->canSee($this->user)) : ?>
+						<div class="badge-rank bd-btm">
+							<h3><?php echo $translator->trans('Global.rank') ?></h3>
+							<div class="rank-value">
+								<!-- breaking the line causes the display not display properly -->
+								<span class="numerator"><?php echo $badge['rank']['value']; ?><span><?php echo trim(str_replace(range(0,9),'',$nf->format($badge['rank']['value'])));?></span></span><span class="denominator">/<?php echo $badge['rank']['denominator']; ?></span>
+							</div>
+						</div>
+					<?php endif; ?>
 
                     <div class="badge-score bd-btm">
                         <h3><?php echo $translator->trans('Global.score'); ?></h3>
