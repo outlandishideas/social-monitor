@@ -20,5 +20,3 @@ parameters:
     recaptcha.site_key:
     recaptcha.secret:
     favicon.name:
-    colours.definitions: []
-    map.cannot_see_colours: []
