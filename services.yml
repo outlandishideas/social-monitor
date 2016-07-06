@@ -26,11 +26,7 @@ parameters:
         orange: '#F1DC63'
         yellow: '#FFFF50'
         white: '#fff'
-    table.rules:
-        -
-            user_level: 1
-            columns:
-                - @table.header.total_rank
+    table.rules: []
 
 services:
     db:
