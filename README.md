@@ -63,17 +63,53 @@ The staging site is at [staging.bc.out.re](https://staging.bc.out.re) (public IP
 
 ## Parameters
 
+### Colour definitions
+
+Colours can now be defined in the `parameters.yml` file, but will fall back to defaults if they are not. Colours can be defined in the following way:
+
+```
+parameters:
+    colours.definitions:
+        grey: '#d2d2d2'
+        red: '#D06959'
+        green: '#84af5b'
+        orange: '#F1DC63'
+        yellow: '#FFFF50'
+        primary: '#a0c814'
+```
+
+If new colours are used in the application then these should be defined in the default definition found in the `services.yml` file.
+
+### Map colours
+
+You can limit what user levels can get to see the default map colours (ranging from red to green). Instead these user levels will see a plain grey map with the primary colour used for those countries with any score.
+
+```
+parameters:
+    map.cannot_see_colours: [1]
+```
+
+The above config example would make it so that only admins and managers can see the full colour map, and normal users can only see the one colour map. For the purposes of user level, guests (ie people who are not logged in, are treated as having a user level of 1 - the same as normal users).
+
+### Turn off ranks for any user level
+
+You can turn off the ranks that appear on the channel, country, region and group view pages for any user level. You can do this by adding the following to the `parameters.yml`:
+
+```
+parameters:
+    rank.rules: [1]
+```
+
 ### Filtering index columns based on user level
 
 As well as defining what columns should appear in each of the index page tables, you can now also define rules to stop some columns being viewed by some users. In the parameters.yml file add the following data:
 ```
-
-table.rules:
-  -
-    user_level: 1
-    columns:
-      - @table.header.total_rank
-
+parameters:
+    table.rules:
+      -
+        user_level: 1
+        columns:
+          - @table.header.total_rank
 ```
 
 The above configuration would hide the TotalRank Header from any index tables that include it for any user with a user_level of 1. Users with a different user_level would not be affected.
