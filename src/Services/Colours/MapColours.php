@@ -40,7 +40,7 @@ class MapColours
 		if ($this->canSeeColours($user)) {
 			return [0, 1, 20, 50, 80, 100];
 		} else {
-			return [0, 1];
+			return [0, 1, 100];
 		}
 	}
 
@@ -62,7 +62,8 @@ class MapColours
 		} else {
 			return [
 				$this->colours->grey,
-				$this->colours->white,
+				$this->colours->primary,
+				$this->colours->primary
 			];
 		}
 	}

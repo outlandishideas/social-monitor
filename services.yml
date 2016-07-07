@@ -25,7 +25,7 @@ parameters:
         green: '#84af5b'
         orange: '#F1DC63'
         yellow: '#FFFF50'
-        white: '#fff'
+        primary: '#84af5b'
     table.rules: []
     rank.rules: []
     csrf.exceptions: []
