@@ -29,7 +29,7 @@ if ($campaign instanceof Model_Country) {
             </div>
         </div>
 
-        <?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial, 'showMetrics' => false, 'pdfLink' => $this->pdfLink)); ?>
+        <?php echo $this->partial("partials/badges.phtml", array("badges" => $this->badgePartial, 'showMetrics' => false, 'pdfLink' => $this->pdfLink, 'user' => $this->user )); ?>
 
         <?php echo $this->partial("partials/campaign-view-country-list.phtml", array("countries" => $countries)); ?>
 

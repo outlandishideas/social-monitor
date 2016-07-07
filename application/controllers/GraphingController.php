@@ -53,16 +53,10 @@ abstract class GraphingController extends BaseController {
 		}
 	}
 
-	public function init() {
-		parent::init();
+	public function preDispatch() {
+		parent::preDispatch();
 
-		$colors = (object)array(
-            'grey' => '#d2d2d2',
-			'red' => '#D06959',
-			'green' => '#84af5b',
-			'orange' => '#F1DC63',
-			'yellow' => '#FFFF50'
-		);
+		$colors = $this->getContainer()->get('colours.definitions');
 		$metrics = array();
 
         $metrics['digital_population'] = (object)array(
@@ -112,10 +106,12 @@ abstract class GraphingController extends BaseController {
 
         $geochart = array();
         $badges = Badge_Factory::getBadges();
+		/** @var \Outlandish\SocialMonitor\Services\Colours\MapColours $mapColours */
+		$mapColours = $this->getContainer()->get('colours.map');
         foreach($badges as $badge){
             $badgeArgs = new stdClass();
-            $badgeArgs->range = array(0, 1, 20, 50, 80, 100);
-            $badgeArgs->colors = array($colors->grey, $colors->red, $colors->red, $colors->yellow, $colors->green, $colors->green);
+            $badgeArgs->range = $mapColours->getRange($this->view->user);
+            $badgeArgs->colors = $mapColours->getColours($this->view->user);
             $badgeArgs->label = $badge->getTitle();
             $geochart[$badge->getName()] = $badgeArgs;
         }

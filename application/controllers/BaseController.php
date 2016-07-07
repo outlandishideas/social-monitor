@@ -689,7 +689,9 @@ class BaseController extends Zend_Controller_Action
 
 	private function guardAgainstCrossSiteRequestForgery()
 	{
-		if ($this->_request->isPost() && !CSRF::validate($this->_request->getParams())) {
+		/** @var \Outlandish\SocialMonitor\Services\CsrfExceptionsService $csrfExceptions */
+		$csrfExceptions = $this->getContainer()->get('csrf.exceptions');
+		if ($this->_request->isPost() && $csrfExceptions->checkCsrfTokenForRoute($this->_request) && !CSRF::validate($this->_request->getParams())) {
 			throw new TokenMismatchException();
 		}
 	}

@@ -11,7 +11,7 @@ app.datatables = {
         // add a 'fuzzy numeric' sort type, which just ignores all non-numeric characters
         app.datatables.addSortFunction('fuzzy-numeric', function ( a ) {
 			var candidate = parseInt(a.trim());
-			return _.isNaN(candidate) ? Number.POSITIVE_INFINITY : candidate;
+			return _.isNaN(candidate) ? Number.NEGATIVE_INFINITY : candidate;
         });
 
         // sort by a numeric value in data-value on the direct child or a descendent of the table cell
@@ -301,7 +301,7 @@ app.datatables = {
 
 			app.datatables.moveSearchBox();
 		},
-		
+
 		// combined statuses on status controller
 		'#statuses .combined-statuses': function($div) {
 			app.statuses.init($div);

@@ -17,6 +17,18 @@ parameters:
     table.presences.headers: []
     joyride.home.steps: []
     joyride.presence.steps: []
+    favicon.name: 'default.ico'
+    map.cannot_see_colours: []
+    colours.definitions:
+        grey: '#d2d2d2'
+        red: '#D06959'
+        green: '#84af5b'
+        orange: '#F1DC63'
+        yellow: '#FFFF50'
+        primary: '#84af5b'
+    table.rules: []
+    rank.rules: []
+    csrf.exceptions: []
 
 services:
     db:
@@ -511,3 +523,36 @@ services:
     recaptcha.helper:
         class: Outlandish\SocialMonitor\Helper\Recaptcha
         arguments: [%recaptcha.site_key%, %recaptcha.secret%]
+
+    # favicon
+    favicon.helper:
+        class: Outlandish\SocialMonitor\Helper\Favicon
+        arguments: [%favicon.name%]
+
+    # Colour services
+    colours.definitions:
+        class: Outlandish\SocialMonitor\Services\Colours\ColourDefinitions
+        arguments: [%colours.definitions%]
+
+    colours.map:
+        class: Outlandish\SocialMonitor\Services\Colours\MapColours
+        arguments: [@colours.definitions, %map.cannot_see_colours%]
+
+    # Table Index guard
+    table.guard_factory:
+        class: Outlandish\SocialMonitor\Services\TableIndex\GuardFactory
+
+    table.guard:
+        class: Outlandish\SocialMonitor\Services\TableIndex\Guard
+        factory: ["@table.guard_factory", createGuard]
+        arguments:
+            - %table.rules%
+
+    # Rank Guard
+    rank.guard:
+        class: Outlandish\SocialMonitor\Services\Rank\Guard
+        arguments: [%rank.rules%]
+
+    csrf.exceptions:
+        class: Outlandish\SocialMonitor\Services\CsrfExceptionsService
+        arguments: [%csrf.exceptions%]

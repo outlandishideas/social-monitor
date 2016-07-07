@@ -14,15 +14,19 @@ use Outlandish\SocialMonitor\TableIndex\Header\Presences;
  * $tableHeaders = an array of Header_Abstract subclasses
  * $rows = an array of rows to show. Don't use this partial if no rows
  * $sortCol = Name of column to sort on, by default
+ * $user = logged in user or null if not logged in
  */
 
 /** @var \Symfony\Component\Translation\Translator $translator */
 $translator = $this->translate();
+/** @var \Outlandish\SocialMonitor\Services\TableIndex\Guard $guard */
+$guard = $this->tableGuard();
 
 /** @var Header[] $headers */
-$headers = array_filter($this->tableHeaders, function(Header $h) {
-        return $h->isForScreen();
+$headers = array_filter($this->tableHeaders, function(Header $h) use ($guard) {
+        return $h->isForScreen() && $guard->userCanSee($this->user, $h);
     });
+
 /** @var Gatekeeper $gatekeeper */
 $gatekeeper = $this->gatekeeper();
 ?>
@@ -32,7 +36,7 @@ $gatekeeper = $this->gatekeeper();
     <tr>
         <?php
         foreach($headers as $header){
-            echo $header->getTableHeaderElement();
+			echo $header->getTableHeaderElement();
         }
         ?>
     </tr>
