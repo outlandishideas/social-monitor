@@ -2,19 +2,19 @@ prod:
   presence:
     cache_data_hours: 4
   twitter:
-    consumer_key: ***REMOVED***
-    consumer_secret: ***REMOVED***
-    access_token: ***REMOVED***
-    access_token_secret: ***REMOVED***
+    consumer_key:
+    consumer_secret:
+    access_token:
+    access_token_secret:
     fetch_per_page: 200
     cache_user_data: 7
   facebook:
-    appId: ***REMOVED***
-    secret: ***REMOVED***
+    appId:
+    secret:
     fetch_per_page: 50
     cache_user_data: 7
   klout:
-    api_key: ***REMOVED***
+    api_key:
   app:
 # e.g. 7 Feb 2012 for PHP date()
     dateFormat: j M Y
