@@ -13,7 +13,7 @@ class CurrentAudience extends Header {
     {
 		parent::__construct($translator, self::NAME);
         $this->sort = self::SORT_TYPE_NUMERIC_FUZZY;
-        $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE);
+        $this->allowedTypes = array(self::MODEL_TYPE_PRESENCE, self::MODEL_TYPE_CAMPAIGN);
     }
 
     /**
